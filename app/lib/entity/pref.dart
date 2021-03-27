@@ -117,6 +117,7 @@ enum PrefKey implements PrefKeyInterface {
   isNewHttpEngine,
   mapDefaultRangeType,
   mapDefaultCustomRange,
+  lastAdRewardTime,
   ;
 
   @override
@@ -211,6 +212,8 @@ enum PrefKey implements PrefKeyInterface {
         return "mapDefaultRangeType";
       case PrefKey.mapDefaultCustomRange:
         return "mapDefaultCustomRange";
+      case PrefKey.lastAdRewardTime:
+        return "lastAdRewardTime";
     }
   }
 }

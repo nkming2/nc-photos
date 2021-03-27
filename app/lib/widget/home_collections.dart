@@ -27,6 +27,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
+import 'package:nc_photos/widget/ad.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
@@ -138,6 +139,13 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       ? const _AppBar()
                       : const _SelectionAppBar(),
                 ),
+                if (features.isSupportAds)
+                  const SliverPadding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    sliver: SliverToBoxAdapter(
+                      child: AdBanner(),
+                    ),
+                  ),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   sliver: _BlocBuilder(
