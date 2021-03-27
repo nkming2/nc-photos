@@ -35,18 +35,21 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
+import 'package:nc_photos/widget/ad.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/file_sharer_dialog.dart';
 import 'package:nc_photos/widget/finger_listener.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -68,6 +71,7 @@ import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+part 'home_photos/ads.dart';
 part 'home_photos/app_bar.dart';
 part 'home_photos/bloc.dart';
 part 'home_photos/minimap_view.dart';
@@ -302,7 +306,8 @@ class _BodyState extends State<_Body> {
                   (previous.isEnableMemoryCollection &&
                           previous.memoryCollections.isNotEmpty) !=
                       (current.isEnableMemoryCollection &&
-                          current.memoryCollections.isNotEmpty),
+                          current.memoryCollections.isNotEmpty) ||
+                  previous.bannerAdExtent != current.bannerAdExtent,
               builder: (context, state) {
                 final scrollExtent = _getScrollViewExtent(
                   context: context,
@@ -365,6 +370,7 @@ class _BodyState extends State<_Body> {
                                         ? const _AppBar()
                                         : const _SelectionAppBar(),
                                   ),
+                                  if (features.isSupportAds) const _BannerAd(),
                                   _BlocBuilder(
                                     buildWhen: (previous, current) =>
                                         (previous.isEnableMemoryCollection &&
@@ -452,7 +458,9 @@ class _BodyState extends State<_Body> {
     required bool hasMemoryCollection,
     required double? contentListMaxExtent,
   }) {
-    if (contentListMaxExtent != null && constraints.hasBoundedHeight) {
+    if (contentListMaxExtent != null &&
+        constraints.hasBoundedHeight &&
+        (!features.isSupportAds || context.state.bannerAdExtent != null)) {
       final appBarExtent = _getAppBarExtent(context);
       final bottomAppBarExtent =
           AppDimension.of(context).homeBottomAppBarHeight;
@@ -467,13 +475,15 @@ class _BodyState extends State<_Body> {
           appBarExtent +
           bottomAppBarExtent +
           // metadataTaskHeaderExtent +
-          smartAlbumListHeight;
+          smartAlbumListHeight +
+          (context.state.bannerAdExtent ?? 0);
       _log.info("[_getScrollViewExtent] $contentListMaxExtent "
           "- ${constraints.maxHeight} "
           "+ $appBarExtent "
           "+ $bottomAppBarExtent "
           // "+ $metadataTaskHeaderExtent "
           "+ $smartAlbumListHeight "
+          "+ ${context.state.bannerAdExtent} "
           "= $scrollExtent");
       return scrollExtent;
     } else {

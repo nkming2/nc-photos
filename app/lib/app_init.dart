@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
@@ -76,6 +77,8 @@ Future<void> init(InitIsolateType isolateType) async {
   GpsMap.init();
   // init session storage
   SessionStorage();
+
+  await _initAds();
 
   _hasInitedInThisIsolate = true;
 }
@@ -213,6 +216,10 @@ Future<Pref> _createSecurePref() async {
   final provider = PrefSecureStorageProvider();
   await provider.init();
   return Pref.scoped(provider);
+}
+
+Future<InitializationStatus> _initAds() {
+  return MobileAds.instance.initialize();
 }
 
 final _log = Logger("app_init");

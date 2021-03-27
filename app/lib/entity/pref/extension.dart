@@ -328,6 +328,13 @@ extension PrefExtension on Pref {
           (key, value) => provider.setString(key, value));
     }
   }
+
+  int? getLastAdRewardTime() => provider.getInt(PrefKey.lastAdRewardTime);
+  int getLastAdRewardTimeOr(int def) => getLastAdRewardTime() ?? def;
+  Future<bool> setLastAdRewardTime(int value) => _set<int>(
+      PrefKey.lastAdRewardTime,
+      value,
+      (key, value) => provider.setInt(key, value));
 }
 
 extension AccountPrefExtension on AccountPref {

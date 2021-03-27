@@ -25,6 +25,7 @@ class _State {
     this.minimapItems,
     required this.minimapYRatio,
     this.scrollDate,
+    this.bannerAdExtent,
     this.error,
   });
 
@@ -75,6 +76,8 @@ class _State {
   final List<_MinimapItem>? minimapItems;
   final double minimapYRatio;
   final Date? scrollDate;
+
+  final double? bannerAdExtent;
 
   final ExceptionEvent? error;
 }
@@ -313,6 +316,16 @@ class _UpdateMemories implements _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _UpdateBannerAdExtent implements _Event {
+  const _UpdateBannerAdExtent(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final double? value;
 }
 
 @toString
