@@ -117,6 +117,7 @@ enum PrefKey implements PrefKeyInterface {
   mapDefaultCustomRange,
   viewerAppBarButtons,
   viewerBottomAppBarButtons,
+  lastAdRewardTime,
   ;
 
   @override
@@ -215,6 +216,8 @@ enum PrefKey implements PrefKeyInterface {
         return "viewerAppBarButtons";
       case PrefKey.viewerBottomAppBarButtons:
         return "viewerBottomAppBarButtons";
+      case PrefKey.lastAdRewardTime:
+        return "lastAdRewardTime";
     }
   }
 }
