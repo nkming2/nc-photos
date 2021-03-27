@@ -15,6 +15,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/handler/ad_gate_handler.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
@@ -446,6 +447,15 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   Future<void> _onSavePressed(BuildContext context) async {
+    if (!await _adGateHandler(
+      context: context,
+      contentText:
+          "Photo editing is a premium feature but you can unlock it by watching an ad. Once unlocked it will last for 1 day.",
+      rewardedText: "Your photo will now be processed in the background",
+    )) {
+      return;
+    }
+
     await ImageProcessor.colorFilter(
       "${widget.account.url}/${widget.file.path}",
       widget.file.filename,
@@ -536,6 +546,8 @@ class _ImageEditorState extends State<ImageEditor> {
   Rgba8Image? _dst;
   final _filters = <_ColorFilterType, _FilterArguments>{};
   _ColorFilterType? _selectedFilter;
+
+  final _adGateHandler = AdGateHandler();
 }
 
 enum _ColorFilterType {

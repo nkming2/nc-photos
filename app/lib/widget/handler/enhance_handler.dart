@@ -21,6 +21,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/handler/ad_gate_handler.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -28,7 +29,7 @@ import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
 class EnhanceHandler {
-  const EnhanceHandler({
+  EnhanceHandler({
     required this.account,
     required this.file,
   });
@@ -54,6 +55,14 @@ class EnhanceHandler {
     final args = await _getArgs(context, selected);
     if (args == null) {
       // user canceled
+      return;
+    }
+    if (!await _adGateHandler(
+      context: context,
+      contentText:
+          "Photo enhancement is a premium feature but you can unlock it by watching an ad. Once unlocked it will last for 1 day.",
+      rewardedText: "Your photo will now be processed in the background",
+    )) {
       return;
     }
     switch (selected) {
@@ -353,6 +362,8 @@ class EnhanceHandler {
 
   final Account account;
   final File file;
+
+  final _adGateHandler = AdGateHandler();
 
   static final _log = Logger("widget.handler.enhance_handler.EnhanceHandler");
 }

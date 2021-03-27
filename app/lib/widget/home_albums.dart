@@ -24,6 +24,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:nc_photos/use_case/unimport_shared_album.dart';
+import 'package:nc_photos/widget/ad.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
@@ -133,6 +134,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
               child: CustomScrollView(
                 slivers: [
                   _buildAppBar(context),
+                  if (features.isSupportAds)
+                    const SliverPadding(
+                      padding: EdgeInsets.only(top: 8),
+                      sliver: SliverToBoxAdapter(
+                        child: AdBanner(),
+                      ),
+                    ),
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     sliver: buildItemStreamList(

@@ -27,6 +27,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
@@ -36,6 +37,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/startup_sync.dart';
+import 'package:nc_photos/widget/ad.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -43,6 +45,7 @@ import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -182,6 +185,7 @@ class _HomePhotosState extends State<HomePhotos>
                       slivers: [
                         _buildAppBar(context),
                         _web?.buildContent(context),
+                        if (features.isSupportAds) _buildBannerAd(context),
                         if (AccountPref.of(widget.account)
                                 .isEnableMemoryAlbumOr(true) &&
                             _smartAlbums.isNotEmpty)
@@ -374,6 +378,22 @@ class _HomePhotosState extends State<HomePhotos>
     } else {
       return const SizedBox();
     }
+  }
+
+  Widget _buildBannerAd(BuildContext context) {
+    return SliverMeasureExtent(
+      onChange: (extent) {
+        setState(() {
+          _bannerAdExtent = extent;
+        });
+      },
+      child: const SliverPadding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        sliver: SliverToBoxAdapter(
+          child: AdBanner(),
+        ),
+      ),
+    );
   }
 
   void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
@@ -616,7 +636,9 @@ class _HomePhotosState extends State<HomePhotos>
   /// Return the estimated scroll extent of the custom scroll view, or null
   double? _getScrollViewExtent(
       BuildContext context, BoxConstraints constraints) {
-    if (_itemListMaxExtent != null && constraints.hasBoundedHeight) {
+    if (_itemListMaxExtent != null &&
+        constraints.hasBoundedHeight &&
+        (!features.isSupportAds || _bannerAdExtent != null)) {
       final appBarExtent = _calcAppBarExtent(context);
       final bottomAppBarExtent = _calcBottomAppBarExtent(context);
       final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
@@ -633,9 +655,10 @@ class _HomePhotosState extends State<HomePhotos>
           appBarExtent +
           bottomAppBarExtent +
           metadataTaskHeaderExtent +
-          smartAlbumListHeight;
+          smartAlbumListHeight +
+          (_bannerAdExtent ?? 0);
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $appBarExtent + $bottomAppBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $appBarExtent + $bottomAppBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight + $_bannerAdExtent = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
@@ -691,6 +714,7 @@ class _HomePhotosState extends State<HomePhotos>
   final ScrollController _scrollController = ScrollController();
 
   double? _itemListMaxExtent;
+  double? _bannerAdExtent;
 
   final _visibleItems = HashSet<_VisibleItem>();
   late final _visibilityThrottler = Throttler(onTriggered: (_) {

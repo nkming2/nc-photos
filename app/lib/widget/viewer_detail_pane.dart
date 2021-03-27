@@ -26,6 +26,7 @@ import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/ad.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -185,6 +186,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             padding: EdgeInsets.symmetric(horizontal: 32),
             child: Divider(),
           ),
+          if (features.isSupportAds)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: AdBanner(),
+            ),
           ListTile(
             leading: ListTileCenterLeading(
               child: Icon(

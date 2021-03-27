@@ -244,6 +244,11 @@ class Pref {
   Future<bool> setDoubleTapExit(bool value) => _set<bool>(PrefKey.doubleTapExit,
       value, (key, value) => provider.setBool(key, value));
 
+  int? getLastAdRewardTime() => provider.getInt(PrefKey.lastAdRewardTime);
+  int getLastAdRewardTimeOr(int def) => getLastAdRewardTime() ?? def;
+  Future<bool> setLastAdRewardTime(int value) =>
+      provider.setInt(PrefKey.lastAdRewardTime, value);
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -555,6 +560,7 @@ enum PrefKey {
   isPhotosTabSortByName,
   shouldProcessExifWifiOnly,
   doubleTapExit,
+  lastAdRewardTime,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -624,6 +630,8 @@ extension on PrefKey {
         return "shouldProcessExifWifiOnly";
       case PrefKey.doubleTapExit:
         return "doubleTapExit";
+      case PrefKey.lastAdRewardTime:
+        return "lastAdRewardTime";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:
