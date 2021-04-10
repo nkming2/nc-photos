@@ -179,7 +179,7 @@ class _SettingsState extends State<Settings> {
 
   static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
   static const String _translationUrl =
-      "https://gitlab.com/nkming2/nc-photos/lib/l10n";
+      "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
 
   bool _isEnableExif;
 
