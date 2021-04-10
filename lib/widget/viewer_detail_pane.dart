@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:android_intent/android_intent.dart';
+import 'package:exifdart/exifdart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -13,6 +16,7 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -135,6 +139,36 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             title: Text(_model),
             subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
           ),
+        if (features.isSupportMapView && _gps != null)
+          SizedBox(
+            height: 256,
+            child: GoogleMap(
+              compassEnabled: false,
+              mapToolbarEnabled: false,
+              rotateGesturesEnabled: false,
+              scrollGesturesEnabled: false,
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: false,
+              tiltGesturesEnabled: false,
+              myLocationButtonEnabled: false,
+              buildingsEnabled: false,
+              // liteModeEnabled: true,
+              initialCameraPosition: CameraPosition(
+                target: _gps,
+                zoom: 16,
+              ),
+              markers: {
+                Marker(
+                  markerId: MarkerId("at"),
+                  position: _gps,
+                  // for some reason, GoogleMap's onTap is not triggered if
+                  // tapped on top of the marker
+                  onTap: _onMapTap,
+                ),
+              },
+              onTap: (_) => _onMapTap(),
+            ),
+          ),
       ],
     );
   }
@@ -207,6 +241,16 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
+  void _onMapTap() {
+    if (Platform.isAndroid) {
+      final intent = AndroidIntent(
+        action: "action_view",
+        data: Uri.encodeFull("geo:${_gps.latitude},${_gps.longitude}?z=16"),
+      );
+      intent.launch();
+    }
+  }
+
   void _updateMetadata(int imageWidth, int imageHeight, Exif exif) {
     if (imageWidth != null && imageHeight != null) {
       setState(() {
@@ -255,6 +299,30 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _isoSpeedRatings = exif.isoSpeedRatings;
       });
     }
+    if (exif.gpsLatitudeRef != null &&
+        exif.gpsLatitude != null &&
+        exif.gpsLongitudeRef != null &&
+        exif.gpsLongitude != null) {
+      final lat = _gpsDmsToDouble(exif.gpsLatitude) *
+          (exif.gpsLatitudeRef == "S" ? -1 : 1);
+      final lng = _gpsDmsToDouble(exif.gpsLongitude) *
+          (exif.gpsLongitudeRef == "W" ? -1 : 1);
+      _log.fine("GPS: ($lat, $lng)");
+      setState(() {
+        _gps = LatLng(lat, lng);
+      });
+    }
+  }
+
+  static double _gpsDmsToDouble(List<Rational> dms) {
+    double product = dms[0].toDouble();
+    if (dms.length > 1) {
+      product += dms[1].toDouble() / 60;
+    }
+    if (dms.length > 2) {
+      product += dms[2].toDouble() / 3600;
+    }
+    return product;
   }
 
   Future<void> _addToAlbum(BuildContext context, Album album) async {
@@ -287,6 +355,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   String _exposureTime;
   double _focalLength;
   int _isoSpeedRatings;
+  LatLng _gps;
 
   static final _log =
       Logger("widget.viewer_detail_pane._ViewerDetailPaneState");

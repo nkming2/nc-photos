@@ -89,6 +89,12 @@ class Exif {
   /// 0x920a FocalLength
   Rational get focalLength => data["FocalLength"];
 
+  /// 0x8825 GPS tags
+  String get gpsLatitudeRef => data["GPSLatitudeRef"];
+  List<Rational> get gpsLatitude => data["GPSLatitude"].cast<Rational>();
+  String get gpsLongitudeRef => data["GPSLongitudeRef"];
+  List<Rational> get gpsLongitude => data["GPSLongitude"].cast<Rational>();
+
   static final dateTimeFormat = DateFormat("yyyy:MM:dd HH:mm:ss");
 
   final Map<String, dynamic> data;
