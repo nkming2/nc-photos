@@ -1,0 +1,23 @@
+{
+    "name": "Photos (for Nextcloud)",
+    "short_name": "Photos",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#fafafa",
+    "description": "Gallery app for viewing your photos hosted on Nextcloud servers",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

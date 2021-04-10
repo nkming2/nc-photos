@@ -1,0 +1,345 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
+import 'package:nc_photos/double_extension.dart';
+import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:path/path.dart';
+
+class ViewerDetailPane extends StatefulWidget {
+  const ViewerDetailPane({
+    Key key,
+    @required this.account,
+    @required this.file,
+  }) : super(key: key);
+
+  @override
+  createState() => _ViewerDetailPaneState();
+
+  final Account account;
+  final File file;
+}
+
+class _ViewerDetailPaneState extends State<ViewerDetailPane> {
+  @override
+  initState() {
+    super.initState();
+
+    if (widget.file.metadata == null) {
+      _log.info("[initState] Metadata missing in File");
+    } else {
+      _log.info("[initState] Metadata exists in File");
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _updateMetadata(widget.file.metadata.imageWidth,
+            widget.file.metadata.imageHeight, widget.file.metadata.exif);
+      });
+    }
+  }
+
+  @override
+  build(BuildContext context) {
+    final dateTime = (_dateTime ?? widget.file.lastModified).toLocal();
+    final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(dateTime);
+    final timeStr = DateFormat(DateFormat.HOUR_MINUTE).format(dateTime);
+
+    String sizeSubStr = "";
+    const space = "    ";
+    if (_width != null && _height != null) {
+      final pixelCount = _width * _height;
+      if (pixelCount >= 500000) {
+        final mpCount = pixelCount / 1000000.0;
+        sizeSubStr += AppLocalizations.of(context)
+            .megapixelCount(mpCount.toStringAsFixed(1));
+        sizeSubStr += space;
+      }
+      sizeSubStr += _byteSizeToString(widget.file.contentLength);
+    }
+
+    String cameraSubStr = "";
+    if (_fNumber != null) {
+      cameraSubStr += "f/${_fNumber.toStringAsFixed(1)}$space";
+    }
+    if (_exposureTime != null) {
+      cameraSubStr +=
+          AppLocalizations.of(context).secondCountSymbol(_exposureTime);
+      cameraSubStr += space;
+    }
+    if (_focalLength != null) {
+      cameraSubStr += AppLocalizations.of(context)
+          .millimeterCountSymbol(_focalLength.toStringAsFixedTruncated(2));
+      cameraSubStr += space;
+    }
+    if (_isoSpeedRatings != null) {
+      cameraSubStr += "ISO$_isoSpeedRatings$space";
+    }
+    cameraSubStr = cameraSubStr.trim();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _DetailPaneButton(
+              icon: Icons.playlist_add_outlined,
+              label: AppLocalizations.of(context).addToAlbumTooltip,
+              onPressed: () => _onAddToAlbumPressed(context),
+            ),
+            _DetailPaneButton(
+              icon: Icons.delete_outline,
+              label: AppLocalizations.of(context).deleteTooltip,
+              onPressed: () => _onDeletePressed(context),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: const Divider(),
+        ),
+        ListTile(
+          leading: const Icon(Icons.image_outlined),
+          title: Text(basenameWithoutExtension(widget.file.path)),
+          subtitle: Text(widget.file.strippedPath),
+        ),
+        ListTile(
+          leading: const Icon(Icons.calendar_today_outlined),
+          title: Text("$dateStr $timeStr"),
+        ),
+        if (_width != null && _height != null)
+          ListTile(
+            leading: const Icon(Icons.aspect_ratio),
+            title: Text("$_width x $_height"),
+            subtitle: Text(sizeSubStr),
+          )
+        else
+          ListTile(
+            leading: const Icon(Icons.aspect_ratio),
+            title: Text(_byteSizeToString(widget.file.contentLength)),
+          ),
+        if (_model != null)
+          ListTile(
+            leading: const Icon(Icons.camera_outlined),
+            title: Text(_model),
+            subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
+          ),
+      ],
+    );
+  }
+
+  void _onAddToAlbumPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlbumPickerDialog(
+        account: widget.account,
+      ),
+    ).then((value) {
+      if (value == null) {
+        // user cancelled the dialog
+      } else if (value is Album) {
+        _log.info("[_onAddToAlbumPressed] Album picked: $value");
+        _addToAlbum(context, value).then((_) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)
+                .addToAlbumSuccessNotification(value.name)),
+            duration: k.snackBarDurationNormal,
+          ));
+        }).catchError((_) {});
+      } else {
+        SnackBarManager().showSnackBar(SnackBar(
+          content:
+              Text(AppLocalizations.of(context).addToAlbumFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
+    }).catchError((e, stacktrace) {
+      _log.severe(
+          "[_onAddToAlbumPressed] Failed while showDialog", e, stacktrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            "${AppLocalizations.of(context).addToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e, context)}"),
+        duration: k.snackBarDurationNormal,
+      ));
+    });
+  }
+
+  void _onDeletePressed(BuildContext context) async {
+    _log.info("[_onDeletePressed] Removing file: ${widget.file.path}");
+    var controller = SnackBarManager().showSnackBar(SnackBar(
+      content: Text(AppLocalizations.of(context).deleteProcessingNotification),
+      duration: k.snackBarDurationShort,
+    ));
+    controller?.closed?.whenComplete(() {
+      controller = null;
+    });
+    try {
+      await Remove(FileRepo(FileCachedDataSource()),
+          AlbumRepo(AlbumCachedDataSource()))(widget.account, widget.file);
+      controller?.close();
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context).deleteSuccessNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      Navigator.of(context).pop();
+    } catch (e, stacktrace) {
+      _log.severe("[_onDeletePressed] Failed while remove: ${widget.file.path}",
+          e, stacktrace);
+      controller?.close();
+      SnackBarManager().showSnackBar(SnackBar(
+        content:
+            Text("${AppLocalizations.of(context).deleteFailureNotification}: "
+                "${exception_util.toUserString(e, context)}"),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
+  }
+
+  void _updateMetadata(int imageWidth, int imageHeight, Exif exif) {
+    if (imageWidth != null && imageHeight != null) {
+      setState(() {
+        _width = imageWidth;
+        _height = imageHeight;
+      });
+    }
+    if (exif != null) {
+      _updateMetadataExif(exif);
+    }
+  }
+
+  void _updateMetadataExif(Exif exif) {
+    _log.info("[_updateMetadataExif] $exif");
+    if (exif.dateTimeOriginal != null) {
+      setState(() {
+        _dateTime = exif.dateTimeOriginal;
+      });
+    }
+    if (exif.make != null && exif.model != null) {
+      setState(() {
+        _model = "${exif.make} ${exif.model}";
+      });
+    }
+    if (exif.fNumber != null) {
+      setState(() {
+        _fNumber = exif.fNumber.toDouble();
+      });
+    }
+    if (exif.exposureTime != null) {
+      setState(() {
+        if (exif.exposureTime.denominator == 1) {
+          _exposureTime = exif.exposureTime.numerator.toString();
+        } else {
+          _exposureTime = exif.exposureTime.toString();
+        }
+      });
+    }
+    if (exif.focalLength != null) {
+      setState(() {
+        _focalLength = exif.focalLength.toDouble();
+      });
+    }
+    if (exif.isoSpeedRatings != null) {
+      setState(() {
+        _isoSpeedRatings = exif.isoSpeedRatings;
+      });
+    }
+  }
+
+  Future<void> _addToAlbum(BuildContext context, Album album) async {
+    try {
+      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      await UpdateAlbum(albumRepo)(
+          widget.account,
+          album.copyWith(
+            items: [...album.items, AlbumFileItem(file: widget.file)],
+          ));
+    } catch (e, stacktrace) {
+      _log.severe("[_addToAlbum] Failed while updating album", e, stacktrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            "${AppLocalizations.of(context).addToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e, context)}"),
+        duration: k.snackBarDurationNormal,
+      ));
+      rethrow;
+    }
+  }
+
+  // metadata
+  int _width;
+  int _height;
+  // EXIF data
+  DateTime _dateTime;
+  String _model;
+  double _fNumber;
+  String _exposureTime;
+  double _focalLength;
+  int _isoSpeedRatings;
+
+  static final _log =
+      Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
+}
+
+class _DetailPaneButton extends StatelessWidget {
+  const _DetailPaneButton({Key key, this.icon, this.label, this.onPressed})
+      : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: AppTheme.flatButtonStyle.copyWith(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.grey[700]),
+      ),
+      child: SizedBox(
+        width: 96,
+        height: 96,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Icon(icon),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+}
+
+String _byteSizeToString(int byteSize) {
+  const units = ["B", "KB", "MB", "GB"];
+  var remain = byteSize.toDouble();
+  int i = 0;
+  while (i < units.length) {
+    final next = remain / 1024;
+    if (next < 1) {
+      break;
+    }
+    remain = next;
+    ++i;
+  }
+  return "${remain.toStringAsFixed(2)}${units[i]}";
+}
