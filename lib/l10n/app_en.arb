@@ -347,5 +347,9 @@
 	"errorDisconnected": "Unable to connect. Server may be offline or your device may be disconnected",
 	"@errorDisconnected": {
 		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "File is locked on server. Please try again later",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
 	}
 }
