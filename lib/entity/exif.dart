@@ -17,8 +17,14 @@ class Exif {
         jsonValue = base64UrlEncode(value);
       } else if (value is Rational) {
         jsonValue = value.toJson();
-      } else if (value is List<Rational>) {
-        jsonValue = value.map((e) => e.toJson()).toList();
+      } else if (value is List) {
+        jsonValue = value.map((e) {
+          if (e is Rational) {
+            return e.toJson();
+          } else {
+            return e;
+          }
+        }).toList();
       } else {
         jsonValue = value;
       }
@@ -33,10 +39,14 @@ class Exif {
         exifValue = base64Decode(value);
       } else if (value is Map) {
         exifValue = Rational.fromJson(value.cast<String, dynamic>());
-      } else if (value is List<Map>) {
-        exifValue = value
-            .map((e) => Rational.fromJson(e.cast<String, dynamic>()))
-            .toList();
+      } else if (value is List) {
+        exifValue = value.map((e) {
+          if (e is Map) {
+            return Rational.fromJson(e.cast<String, dynamic>());
+          } else {
+            return value;
+          }
+        }).toList();
       } else {
         exifValue = value;
       }
