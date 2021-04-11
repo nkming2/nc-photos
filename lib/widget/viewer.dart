@@ -404,7 +404,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                   shouldAnimate: true);
             });
           });
-        } else {
+        } else if (scrollPos.userScrollDirection == ScrollDirection.forward) {
           // downward, close the pane
           Future.delayed(Duration.zero, () {
             _closeDetailPane(_pageController.page.toInt(), shouldAnimate: true);
