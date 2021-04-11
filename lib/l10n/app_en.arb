@@ -16,6 +16,10 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
+	"refreshMenuLabel": "Refresh",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
 	"settingsMenuLabel": "Settings",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"

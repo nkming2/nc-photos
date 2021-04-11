@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -189,6 +190,19 @@ class _HomePhotosState extends State<HomePhotos> {
           ],
         ),
       ],
+      menuActions: [
+        PopupMenuItem(
+          value: _menuValueRefresh,
+          child: Text(AppLocalizations.of(context).refreshMenuLabel),
+        ),
+      ],
+      onSelectedMenuActions: (option) {
+        switch (option) {
+          case _menuValueRefresh:
+            _onRefreshSelected();
+            break;
+        }
+      },
     );
   }
 
@@ -389,6 +403,15 @@ class _HomePhotosState extends State<HomePhotos> {
     }
   }
 
+  void _onRefreshSelected() {
+    _reqQuery();
+    if (Pref.inst().isEnableExif()) {
+      KiwiContainer()
+          .resolve<MetadataTaskManager>()
+          .addTask(MetadataTask(widget.account));
+    }
+  }
+
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
@@ -490,6 +513,7 @@ class _HomePhotosState extends State<HomePhotos> {
   final _selectedItems = <_GridFileItem>[];
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
+  static const _menuValueRefresh = 0;
 }
 
 abstract class _GridItem {
