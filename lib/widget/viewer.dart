@@ -395,7 +395,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
           _onDetailPaneClosed();
         });
       } else if (scrollPos.pixels <
-          _calcDetailPaneOpenedScrollPosition(index)) {
+          _calcDetailPaneOpenedScrollPosition(index) - 1) {
         if (scrollPos.userScrollDirection == ScrollDirection.reverse) {
           // upward, open the pane to its minimal size
           Future.delayed(Duration.zero, () {
