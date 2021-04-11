@@ -77,7 +77,7 @@ class _HomePhotosState extends State<HomePhotos> {
     _bloc = bloc;
     if (_bloc.state is ScanDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
-      _reqQuery(widget.account.roots);
+      _reqQuery();
     } else {
       // process the current state
       _onStateChange(context, _bloc.state);
@@ -240,7 +240,7 @@ class _HomePhotosState extends State<HomePhotos> {
         duration: k.snackBarDurationNormal,
       ));
     } else if (state is ScanDirBlocInconsistent) {
-      _reqQuery(widget.account.roots);
+      _reqQuery();
     }
   }
 
@@ -454,10 +454,10 @@ class _HomePhotosState extends State<HomePhotos> {
     return fileIndex;
   }
 
-  void _reqQuery(List<String> roots) {
+  void _reqQuery() {
     _bloc.add(ScanDirBlocQuery(
         widget.account,
-        roots
+        widget.account.roots
             .map((e) => File(
                 path:
                     "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
