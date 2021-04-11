@@ -61,21 +61,7 @@ class _HomePhotosState extends State<HomePhotos> {
   }
 
   void _initBloc() {
-    ScanDirBloc bloc;
-    final blocId =
-        "${widget.account.scheme}://${widget.account.username}@${widget.account.address}?${widget.account.roots.join('&')}";
-    try {
-      _log.fine("[_initBloc] Resolving bloc for '$blocId'");
-      bloc = KiwiContainer().resolve<ScanDirBloc>("ScanDirBloc($blocId)");
-    } catch (e) {
-      // no created instance for this account, make a new one
-      _log.info("[_initBloc] New bloc instance for account: ${widget.account}");
-      bloc = ScanDirBloc();
-      KiwiContainer()
-          .registerInstance<ScanDirBloc>(bloc, name: "ScanDirBloc($blocId)");
-    }
-
-    _bloc = bloc;
+    _bloc = ScanDirBloc.of(widget.account);
     if (_bloc.state is ScanDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
       _reqQuery();

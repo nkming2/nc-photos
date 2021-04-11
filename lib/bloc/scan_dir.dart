@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -103,6 +104,22 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
         AppEventListener<FileMetadataUpdatedEvent>(_onFileMetadataUpdatedEvent);
     _fileRemovedEventListener.begin();
     _fileMetadataUpdatedEventListener.begin();
+  }
+
+  static ScanDirBloc of(Account account) {
+    final id =
+        "${account.scheme}://${account.username}@${account.address}?${account.roots.join('&')}";
+    try {
+      _log.fine("[of] Resolving bloc for '$id'");
+      return KiwiContainer().resolve<ScanDirBloc>("ScanDirBloc($id)");
+    } catch (_) {
+      // no created instance for this account, make a new one
+      _log.info("[of] New bloc instance for account: $account");
+      final bloc = ScanDirBloc();
+      KiwiContainer()
+          .registerInstance<ScanDirBloc>(bloc, name: "ScanDirBloc($id)");
+      return bloc;
+    }
   }
 
   @override
