@@ -1,3 +1,5 @@
 import 'dart:io';
 
-final isSupportMapView = Platform.isAndroid;
+import 'package:flutter/foundation.dart';
+
+final isSupportMapView = !kIsWeb && Platform.isAndroid;
