@@ -82,7 +82,8 @@ class WebdavFileParser {
         final prop = child.children.whereType<XmlElement>().firstWhere(
             (element) => element.matchQualifiedName("prop",
                 prefix: "DAV:", namespaces: _namespaces));
-        final propParser = _PropParser(namespaces: _namespaces);
+        final propParser =
+            _PropParser(namespaces: _namespaces, logFilePath: path);
         propParser.parse(prop);
         contentLength = propParser.contentLength;
         contentType = propParser.contentType;
@@ -133,7 +134,7 @@ class WebdavFileParser {
 }
 
 class _PropParser {
-  _PropParser({this.namespaces = const {}});
+  _PropParser({this.namespaces = const {}, this.logFilePath});
 
   /// Parse <DAV:prop> element contents
   void parse(XmlElement element) {
@@ -171,6 +172,11 @@ class _PropParser {
           jsonDecode(child.innerText),
           upgraderV1: MetadataUpgraderV1(
             fileContentType: _contentType,
+            logFilePath: logFilePath,
+          ),
+          upgraderV2: MetadataUpgraderV2(
+            fileContentType: _contentType,
+            logFilePath: logFilePath,
           ),
         );
       }
@@ -187,6 +193,9 @@ class _PropParser {
   Metadata get metadata => _metadata;
 
   final Map<String, String> namespaces;
+
+  /// File path for logging only
+  final String logFilePath;
 
   DateTime _lastModified;
   int _contentLength;

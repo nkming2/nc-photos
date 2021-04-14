@@ -46,10 +46,18 @@ class Metadata {
   factory Metadata.fromJson(
     Map<String, dynamic> json, {
     MetadataUpgraderV1 upgraderV1,
+    MetadataUpgraderV2 upgraderV2,
   }) {
     final jsonVersion = json["version"];
     if (jsonVersion < 2) {
       json = upgraderV1?.call(json);
+      if (json == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 3) {
+      json = upgraderV2?.call(json);
       if (json == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -107,7 +115,7 @@ class Metadata {
   final Exif exif;
 
   /// versioning of this class, use to upgrade old persisted metadata
-  static const version = 2;
+  static const version = 3;
 
   static final _log = Logger("entity.file.Metadata");
 }
@@ -120,11 +128,13 @@ abstract class MetadataUpgrader {
 class MetadataUpgraderV1 implements MetadataUpgrader {
   MetadataUpgraderV1({
     @required this.fileContentType,
+    this.logFilePath,
   });
 
   Map<String, dynamic> call(Map<String, dynamic> json) {
     if (fileContentType == "image/webp") {
       // Version 1 metadata for webp is bugged, drop it
+      _log.fine("[call] Upgrade v1 metadata for file: $logFilePath");
       return null;
     } else {
       return json;
@@ -132,6 +142,43 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
   }
 
   final String fileContentType;
+
+  /// File path for logging only
+  final String logFilePath;
+
+  static final _log = Logger("entity.file.MetadataUpgraderV1");
+}
+
+/// Upgrade v2 Metadata to v3
+class MetadataUpgraderV2 implements MetadataUpgrader {
+  MetadataUpgraderV2({
+    @required this.fileContentType,
+    this.logFilePath,
+  });
+
+  Map<String, dynamic> call(Map<String, dynamic> json) {
+    if (fileContentType == "image/jpeg") {
+      // Version 2 metadata for jpeg doesn't consider orientation
+      if (json["exif"] != null && json["exif"].containsKey("Orientation")) {
+        // Check orientation
+        final orientation = json["exif"]["Orientation"];
+        if (orientation >= 5 && orientation <= 8) {
+          _log.fine("[call] Upgrade v2 metadata for file: $logFilePath");
+          final temp = json["imageWidth"];
+          json["imageWidth"] = json["imageHeight"];
+          json["imageHeight"] = temp;
+        }
+      }
+    }
+    return json;
+  }
+
+  final String fileContentType;
+
+  /// File path for logging only
+  final String logFilePath;
+
+  static final _log = Logger("entity.file.MetadataUpgraderV2");
 }
 
 class File {
@@ -165,6 +212,11 @@ class File {
               json["metadata"].cast<String, dynamic>(),
               upgraderV1: MetadataUpgraderV1(
                 fileContentType: json["contentType"],
+                logFilePath: json["path"],
+              ),
+              upgraderV2: MetadataUpgraderV2(
+                fileContentType: json["contentType"],
+                logFilePath: json["path"],
               ),
             ),
     );

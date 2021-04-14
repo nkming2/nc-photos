@@ -32,8 +32,17 @@ abstract class MetadataLoader {
     if (metadata.imageWidth == null || metadata.imageHeight == null) {
       final resolution =
           await AsyncImageSizeGetter.getSize(imageSizeGetterInputBuilder());
-      imageWidth = resolution.width;
-      imageHeight = resolution.height;
+      // image size getter doesn't handle exif orientation
+      if (metadata.exif?.containsKey("Orientation") == true &&
+          metadata.exif["Orientation"] >= 5 &&
+          metadata.exif["Orientation"] <= 8) {
+        // 90 deg CW/CCW
+        imageWidth = resolution.height;
+        imageHeight = resolution.width;
+      } else {
+        imageWidth = resolution.width;
+        imageHeight = resolution.height;
+      }
     } else {
       if (metadata.rotateAngleCcw != null &&
           metadata.rotateAngleCcw % 180 != 0) {
