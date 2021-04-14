@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:exifdart/exifdart_io.dart';
 import 'package:exifdart/exifdart_memory.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:image_size_getter/image_size_getter.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -42,17 +41,10 @@ class MetadataLoader implements itf.MetadataLoader {
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
     }
-    final resolution =
-        await AsyncImageSizeGetter.getSize(AsyncMemoryInput(response.body));
-    final exif = await readExifFromBytes(response.body);
-    return {
-      if (exif != null) "exif": exif,
-      if (resolution.width > 0 && resolution.height > 0)
-        "resolution": {
-          "width": resolution.width,
-          "height": resolution.height,
-        },
-    };
+    return itf.MetadataLoader.loadMetadata(
+      exifdartReaderBuilder: () => MemoryBlobReader(response.body),
+      imageSizeGetterInputBuilder: () => AsyncMemoryInput(response.body),
+    );
   }
 
   @override
@@ -72,18 +64,11 @@ class MetadataLoader implements itf.MetadataLoader {
     _getFileTask.cancel();
   }
 
-  Future<Map<String, dynamic>> _onGetFile(FileInfo f) async {
-    final resolution =
-        await AsyncImageSizeGetter.getSize(AsyncFileInput(f.file));
-    final exif = await readExifFromFile(f.file);
-    return {
-      if (exif != null) "exif": exif,
-      if (resolution.width > 0 && resolution.height > 0)
-        "resolution": {
-          "width": resolution.width,
-          "height": resolution.height,
-        },
-    };
+  Future<Map<String, dynamic>> _onGetFile(FileInfo f) {
+    return itf.MetadataLoader.loadMetadata(
+      exifdartReaderBuilder: () => FileReader(f.file),
+      imageSizeGetterInputBuilder: () => AsyncFileInput(f.file),
+    );
   }
 
   final _getFileTask = CancelableGetFile(DefaultCacheManager().store);

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:exifdart/exifdart_memory.dart';
-import 'package:image_size_getter/image_size_getter.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -27,17 +26,10 @@ class MetadataLoader implements itf.MetadataLoader {
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
     }
-    final resolution =
-        await AsyncImageSizeGetter.getSize(AsyncMemoryInput(response.body));
-    final exif = await readExifFromBytes(response.body);
-    return {
-      if (exif != null) "exif": exif,
-      if (resolution.width > 0 && resolution.height > 0)
-        "resolution": {
-          "width": resolution.width,
-          "height": resolution.height,
-        },
-    };
+    return itf.MetadataLoader.loadMetadata(
+      exifdartReaderBuilder: () => MemoryBlobReader(response.body),
+      imageSizeGetterInputBuilder: () => AsyncMemoryInput(response.body),
+    );
   }
 
   @override

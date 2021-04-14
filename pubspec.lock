@@ -110,11 +110,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1.0.0"
-      resolved-ref: "6d52c90f5e48dd1a2eeefb04b43d90b993387568"
+      ref: "1.1.0"
+      resolved-ref: "3b5712b23252e695c4767eb1be044af18668570d"
       url: "https://gitlab.com/nkming2/exifdart.git"
     source: git
-    version: "1.0.0"
+    version: "1.1.0"
   ffi:
     dependency: transitive
     description:

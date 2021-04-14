@@ -7,4 +7,5 @@ const _supportedFormatMimes = [
   "image/jpeg",
   "image/png",
   "image/webp",
+  "image/heic",
 ];
