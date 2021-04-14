@@ -106,12 +106,21 @@ class Album {
     File albumFile,
   }) {
     // there's only one version right now
-    return Album(
-      lastUpdated: lastUpdated,
-      name: name,
-      items: items,
-      albumFile: albumFile,
-    );
+    if (version < 2) {
+      return Album(
+        lastUpdated: lastUpdated,
+        name: name,
+        items: [],
+        albumFile: albumFile,
+      );
+    } else {
+      return Album(
+        lastUpdated: lastUpdated,
+        name: name,
+        items: items,
+        albumFile: albumFile,
+      );
+    }
   }
 
   factory Album.fromJson(Map<String, dynamic> json) {
@@ -191,7 +200,7 @@ class Album {
   final File albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 1;
+  static const version = 2;
 }
 
 class AlbumRepo {

@@ -44,7 +44,7 @@ class Exif {
           if (e is Map) {
             return Rational.fromJson(e.cast<String, dynamic>());
           } else {
-            return value;
+            return e;
           }
         }).toList();
       } else {
