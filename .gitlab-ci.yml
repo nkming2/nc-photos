@@ -1,23 +1,18 @@
 # This file is a template, and might need editing before it works on your project.
-# https://hub.docker.com/r/google/dart
-image: google/dart:2
-
-variables:
-  # Use to learn more:
-  # pub run test --help
-  PUB_VARS: "--platform vm --timeout 30s --concurrency=6 --test-randomize-ordering-seed=random --reporter=expanded"
-
-# Cache downloaded dependencies and plugins between builds.
-# To keep cache across branches add 'key: "$CI_JOB_NAME"'
-cache:
-  paths:
-    - .pub-cache/global_packages
-
-before_script:
-  - export PATH="$PATH":"~/.pub-cache/bin"
-  - pub get --no-precompile
-
 test:
   stage: test
+  image: "cirrusci/flutter:2.0.4"
+  before_script:
+    - pub global activate junitreport
+    - export PATH="$PATH":"$HOME/.pub-cache/bin"
   script:
-    - pub run test $PUB_VARS
+    - flutter test --machine --coverage | tojunit -o report.xml
+    - lcov --summary coverage/lcov.info
+    - genhtml coverage/lcov.info --output=coverage
+  coverage: '/lines\.*: \d+\.\d+\%/'
+  artifacts:
+    name: coverage
+    paths:
+      - $CI_PROJECT_DIR/coverage
+    reports:
+      junit: report.xml
