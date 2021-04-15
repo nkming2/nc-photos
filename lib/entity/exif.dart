@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:intl/intl.dart';
 
-class Exif {
+class Exif with EquatableMixin {
   Exif(this.data);
 
   dynamic operator [](String key) => data[key];
@@ -95,7 +96,12 @@ class Exif {
   String get gpsLongitudeRef => data["GPSLongitudeRef"];
   List<Rational> get gpsLongitude => data["GPSLongitude"].cast<Rational>();
 
-  static final dateTimeFormat = DateFormat("yyyy:MM:dd HH:mm:ss");
+  @override
+  get props => [
+        data,
+      ];
 
   final Map<String, dynamic> data;
+
+  static final dateTimeFormat = DateFormat("yyyy:MM:dd HH:mm:ss");
 }

@@ -258,7 +258,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
     final newItems = _album.items.where((element) {
       if (element is AlbumFileItem) {
-        return !selectedFiles.contains(element.file);
+        return !selectedFiles.any((select) => select.path == element.file.path);
       } else {
         return true;
       }

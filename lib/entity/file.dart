@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
@@ -28,7 +29,7 @@ int compareFileDateTimeDescending(File x, File y) {
 }
 
 /// Immutable object that hold metadata of a [File]
-class Metadata {
+class Metadata with EquatableMixin {
   Metadata({
     DateTime lastUpdated,
     this.fileEtag,
@@ -106,6 +107,15 @@ class Metadata {
     return product + "}";
   }
 
+  @override
+  get props => [
+        lastUpdated,
+        fileEtag,
+        imageWidth,
+        imageHeight,
+        exif,
+      ];
+
   final DateTime lastUpdated;
 
   /// Etag of the parent file when the metadata is saved
@@ -181,7 +191,7 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
   static final _log = Logger("entity.file.MetadataUpgraderV2");
 }
 
-class File {
+class File with EquatableMixin {
   File({
     @required String path,
     this.contentLength,
@@ -314,6 +324,19 @@ class File {
       return path;
     }
   }
+
+  @override
+  get props => [
+        path,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        isCollection,
+        usedBytes,
+        hasPreview,
+        metadata,
+      ];
 
   final String path;
   final int contentLength;

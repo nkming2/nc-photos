@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
@@ -59,7 +60,7 @@ abstract class AlbumItem {
   static final _log = Logger("entity.album.AlbumItem");
 }
 
-class AlbumFileItem extends AlbumItem {
+class AlbumFileItem extends AlbumItem with EquatableMixin {
   AlbumFileItem({this.file});
 
   factory AlbumFileItem.fromJson(Map<String, dynamic> json) {
@@ -82,13 +83,18 @@ class AlbumFileItem extends AlbumItem {
     };
   }
 
+  @override
+  get props => [
+        file,
+      ];
+
   final File file;
 
   static const _type = "file";
 }
 
 /// Immutable object that represents an album
-class Album {
+class Album with EquatableMixin {
   Album({
     DateTime lastUpdated,
     @required String name,
@@ -187,6 +193,14 @@ class Album {
       if (albumFile != null) "albumFile": albumFile.toJson(),
     };
   }
+
+  @override
+  get props => [
+        lastUpdated,
+        name,
+        items,
+        albumFile,
+      ];
 
   final DateTime lastUpdated;
   final String name;
