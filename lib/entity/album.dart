@@ -174,7 +174,8 @@ class Album with EquatableMixin {
     );
   }
 
-  Map<String, dynamic> _toRemoteJson() {
+  @visibleForTesting
+  Map<String, dynamic> toRemoteJson() {
     return {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
@@ -184,7 +185,8 @@ class Album with EquatableMixin {
     };
   }
 
-  Map<String, dynamic> _toAppDbJson() {
+  @visibleForTesting
+  Map<String, dynamic> toAppDbJson() {
     return {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
@@ -283,7 +285,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final fileRepo = FileRepo(FileWebdavDataSource());
     try {
       await PutFileBinary(fileRepo)(
-          account, filePath, utf8.encode(jsonEncode(album._toRemoteJson())));
+          account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
         _log.info("[create] Missing album dir, creating");
@@ -291,7 +293,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         await _createDir(account);
         // then retry
         await PutFileBinary(fileRepo)(
-            account, filePath, utf8.encode(jsonEncode(album._toRemoteJson())));
+            account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));
       } else {
         rethrow;
       }
@@ -307,7 +309,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     _log.info("[update] ${album.albumFile.path}");
     final fileRepo = FileRepo(FileWebdavDataSource());
     await PutFileBinary(fileRepo)(account, album.albumFile.path,
-        utf8.encode(jsonEncode(album._toRemoteJson())));
+        utf8.encode(jsonEncode(album.toRemoteJson())));
   }
 
   @override
@@ -359,7 +361,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
       await store.put(
-          album._toAppDbJson(), _getCacheKey(account, album.albumFile));
+          album.toAppDbJson(), _getCacheKey(account, album.albumFile));
     });
   }
 
@@ -433,7 +435,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
-      await store.put(result._toAppDbJson(), _getCacheKey(account, albumFile));
+      await store.put(result.toAppDbJson(), _getCacheKey(account, albumFile));
     });
   }
 
