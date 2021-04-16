@@ -79,7 +79,7 @@ class _SettingsState extends State<Settings> {
                   AppLocalizations.of(context).settingsAboutSectionTitle),
               ListTile(
                 title: Text(AppLocalizations.of(context).settingsVersionTitle),
-                subtitle: const Text(k.version),
+                subtitle: const Text(k.versionStr),
               ),
               ListTile(
                 title:

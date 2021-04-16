@@ -51,6 +51,11 @@ class Pref {
   Future<bool> setSetupProgress(int value) =>
       _pref.setInt("setupProgress", value);
 
+  /// Return the version number when the app last ran
+  int getLastVersion([int def = 0]) => _pref.getInt("lastVersion") ?? def;
+
+  Future<bool> setLastVersion(int value) => _pref.setInt("lastVersion", value);
+
   Pref._();
 
   static final _inst = Pref._();

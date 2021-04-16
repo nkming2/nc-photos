@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -51,7 +52,18 @@ void _initLog() {
   });
 }
 
-Future<void> _initPref() => Pref.init();
+Future<void> _initPref() async {
+  await Pref.init();
+  if (Pref.inst().getLastVersion(null) == null) {
+    if (Pref.inst().getSetupProgress(null) == null) {
+      // new install
+      await Pref.inst().setLastVersion(k.version);
+    } else {
+      // v6 is the last version without saving the version number in pref
+      await Pref.inst().setLastVersion(6);
+    }
+  }
+}
 
 void _initBloc() {
   Bloc.observer = _BlocObserver();

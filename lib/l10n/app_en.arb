@@ -344,6 +344,10 @@
 	"@downloadFailureNoPermissionNotification": {
 		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
 	},
+	"changelogTitle": "Changelog",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
