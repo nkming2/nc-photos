@@ -8,7 +8,8 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 
-bool isNeedSetup() => Pref.inst().getSetupProgress() != _PageId.all;
+bool isNeedSetup() =>
+    Pref.inst().getSetupProgress() & _PageId.all != _PageId.all;
 
 class Setup extends StatefulWidget {
   static const routeName = "/setup";
