@@ -36,3 +36,5 @@ const coverSize = 512;
 
 /// AppDb lock ID
 const appDbLockId = 1;
+
+const privacyPolicyUrl = "https://nc-photos.web.app/privacy.html";

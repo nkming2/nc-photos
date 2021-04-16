@@ -194,6 +194,16 @@ class _SettingsState extends State<Settings> {
                 label: L10n.global().settingsMiscellaneousTitle,
                 builder: () => const _MiscSettings(),
               ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.privacy_tip_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().settingsPrivacyTitle,
+                description: L10n.global().settingsPrivacyDescription,
+                builder: () => _PrivacySettings(),
+              ),
               if (_enabledExperiments.isNotEmpty)
                 _buildSubSettings(
                   context,
@@ -1646,6 +1656,47 @@ class _DevSettingsState extends State<_DevSettings> {
   }
 
   static final _log = Logger("widget.settings._DevSettingsState");
+}
+
+class _PrivacySettings extends StatefulWidget {
+  @override
+  createState() => _PrivacySettingsState();
+}
+
+class _PrivacySettingsState extends State<_PrivacySettings> {
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsPrivacyPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              ListTile(
+                title: Text(L10n.global().settingsPrivacyPolicyTitle),
+                onTap: () {
+                  launch(k.privacyPolicyUrl);
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 Widget _buildCaption(BuildContext context, String label) {
