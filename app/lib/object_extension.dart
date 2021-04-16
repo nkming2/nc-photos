@@ -13,4 +13,7 @@ extension ObjectExtension<T> on T {
 
   /// Deprecated, use [letFuture]
   Future<U> runFuture<U>(FutureOr<U> Function(T obj) fn) => letFuture(fn);
+
+  /// Return if this is contained inside [iterable]
+  bool isIn(Iterable<T> iterable) => iterable.contains(this);
 }
