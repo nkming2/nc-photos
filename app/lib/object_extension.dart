@@ -23,4 +23,7 @@ extension ObjectExtension<T> on T {
 
   /// Cast this as U, or null if this is not an object of U
   U? as<U>() => this is U ? this as U : null;
+
+  /// Return if this is contained inside [iterable]
+  bool isIn(Iterable<T> iterable) => iterable.contains(this);
 }

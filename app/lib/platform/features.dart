@@ -5,3 +5,4 @@ final isSupportSelfSignedCert = platform_k.isAndroid;
 final isSupportEnhancement = platform_k.isAndroid;
 
 const isSupportAds = !platform_k.isWeb;
+const isSupportCrashlytics = !platform_k.isWeb;

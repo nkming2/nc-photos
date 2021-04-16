@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -1665,6 +1666,15 @@ class _PrivacySettings extends StatefulWidget {
 
 class _PrivacySettingsState extends State<_PrivacySettings> {
   @override
+  initState() {
+    super.initState();
+    if (features.isSupportCrashlytics) {
+      _isEnableAnalytics =
+          FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
+    }
+  }
+
+  @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
@@ -1685,6 +1695,13 @@ class _PrivacySettingsState extends State<_PrivacySettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              if (features.isSupportCrashlytics)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsAnalyticsTitle),
+                  subtitle: Text(L10n.global().settingsAnalyticsSubtitle),
+                  value: _isEnableAnalytics,
+                  onChanged: (value) => _onAnalyticsChanged(value),
+                ),
               ListTile(
                 title: Text(L10n.global().settingsPrivacyPolicyTitle),
                 onTap: () {
@@ -1697,6 +1714,15 @@ class _PrivacySettingsState extends State<_PrivacySettings> {
       ],
     );
   }
+
+  void _onAnalyticsChanged(bool value) {
+    setState(() {
+      _isEnableAnalytics = value;
+    });
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(value);
+  }
+
+  late bool _isEnableAnalytics;
 }
 
 Widget _buildCaption(BuildContext context, String label) {
