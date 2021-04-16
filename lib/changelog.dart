@@ -12,5 +12,8 @@ const contents = [
   // v6
   null,
   // v7
-  null,
+  """1.7.0
+Added HEIC support
+Fixed a bug that corrupted the albums. Please re-add the photos after upgrading. Sorry for your inconvenience
+""",
 ];
