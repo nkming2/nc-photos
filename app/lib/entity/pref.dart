@@ -118,6 +118,7 @@ enum PrefKey implements PrefKeyInterface {
   viewerAppBarButtons,
   viewerBottomAppBarButtons,
   lastAdRewardTime,
+  isPersonalizedAds,
   ;
 
   @override
@@ -218,6 +219,8 @@ enum PrefKey implements PrefKeyInterface {
         return "viewerBottomAppBarButtons";
       case PrefKey.lastAdRewardTime:
         return "lastAdRewardTime";
+      case PrefKey.isPersonalizedAds:
+        return "isPersonalizedAds";
     }
   }
 }
