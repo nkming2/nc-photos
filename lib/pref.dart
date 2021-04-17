@@ -56,6 +56,10 @@ class Pref {
 
   Future<bool> setLastVersion(int value) => _pref.setInt("lastVersion", value);
 
+  bool isDarkTheme([bool def = false]) => _pref.getBool("isDarkTheme") ?? def;
+
+  Future<bool> setDarkTheme(bool value) => _pref.setBool("isDarkTheme", value);
+
   Pref._();
 
   static final _inst = Pref._();

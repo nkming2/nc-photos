@@ -1,7 +1,11 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -63,6 +67,19 @@ class HomeSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       actions: (actions ?? []) +
           [
+            Switch(
+              value: Theme.of(context).brightness == Brightness.dark,
+              onChanged: _onDarkModeChanged,
+              activeColor: AppTheme.getAppBarDarkModeSwitchColor(context),
+              inactiveThumbColor:
+                  AppTheme.getAppBarDarkModeSwitchColor(context),
+              activeTrackColor:
+                  AppTheme.getAppBarDarkModeSwitchTrackColor(context),
+              activeThumbImage:
+                  const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+              inactiveThumbImage:
+                  const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+            ),
             PopupMenuButton(
               tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
               itemBuilder: (context) =>
@@ -87,6 +104,12 @@ class HomeSliverAppBar extends StatelessWidget {
             ),
           ],
     );
+  }
+
+  void _onDarkModeChanged(bool value) {
+    Pref.inst().setDarkTheme(value).then((_) {
+      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
+    });
   }
 
   final Account account;

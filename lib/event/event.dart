@@ -61,3 +61,5 @@ class FileRemovedEvent {
   final Account account;
   final File file;
 }
+
+class ThemeChangedEvent {}

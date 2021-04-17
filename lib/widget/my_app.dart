@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
@@ -14,9 +16,18 @@ import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
-class MyApp extends StatelessWidget implements SnackBarHandler {
-  MyApp() {
+class MyApp extends StatefulWidget {
+  @override
+  createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> implements SnackBarHandler {
+  @override
+  void initState() {
+    super.initState();
     SnackBarManager().registerHandler(this);
+    _themeChangedListener =
+        AppEventListener<ThemeChangedEvent>(_onThemeChangedEvent)..begin();
   }
 
   @override
@@ -25,6 +36,7 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: _getLightTheme(),
       darkTheme: _getDarkTheme(),
+      themeMode: Pref.inst().isDarkTheme() ? ThemeMode.dark : ThemeMode.light,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -32,6 +44,13 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    SnackBarManager().unregisterHandler(this);
+    _themeChangedListener.end();
   }
 
   @override
@@ -65,6 +84,10 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
     route ??= _handleAlbumViewerRoute(settings);
     route ??= _handleSettingsRoute(settings);
     return route;
+  }
+
+  void _onThemeChangedEvent(ThemeChangedEvent ev) {
+    setState(() {});
   }
 
   Route<dynamic> _handleBasicRoute(RouteSettings settings) {
@@ -165,5 +188,7 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
 
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-  static final _log = Logger("widget.my_app.MyApp");
+  AppEventListener<ThemeChangedEvent> _themeChangedListener;
+
+  static final _log = Logger("widget.my_app.MyAppState");
 }

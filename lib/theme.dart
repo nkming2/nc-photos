@@ -105,6 +105,14 @@ class AppTheme extends StatelessWidget {
         : Colors.white60;
   }
 
+  static Color getAppBarDarkModeSwitchColor(BuildContext context) {
+    return Colors.black87;
+  }
+
+  static Color getAppBarDarkModeSwitchTrackColor(BuildContext context) {
+    return Colors.white.withOpacity(.5);
+  }
+
   static const primarySwatchLight = Colors.blue;
   static const primarySwatchDark = Colors.cyan;
 
