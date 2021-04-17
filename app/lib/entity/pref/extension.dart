@@ -292,6 +292,13 @@ extension PrefExtension on Pref {
       PrefKey.lastAdRewardTime,
       value,
       (key, value) => provider.setInt(key, value));
+
+  bool? isPersonalizedAds() => provider.getBool(PrefKey.isPersonalizedAds);
+  bool isPersonalizedAdsOr(bool def) => isPersonalizedAds() ?? def;
+  Future<bool> setPersonalizedAds(bool value) => _set<bool>(
+      PrefKey.isPersonalizedAds,
+      value,
+      (key, value) => provider.setBool(key, value));
 }
 
 extension AccountPrefExtension on AccountPref {
@@ -312,8 +319,7 @@ extension AccountPrefExtension on AccountPref {
 
   bool? isEnableMemoryAlbum() =>
       provider.getBool(AccountPrefKey.isEnableMemoryAlbum);
-  bool isEnableMemoryAlbumOr([bool def = true]) =>
-      isEnableMemoryAlbum() ?? def;
+  bool isEnableMemoryAlbumOr([bool def = true]) => isEnableMemoryAlbum() ?? def;
   Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
       AccountPrefKey.isEnableMemoryAlbum,
       value,
