@@ -261,6 +261,11 @@ class Pref {
 
   Future<bool> _remove(PrefKey key) => provider.remove(key);
 
+  bool? isPersonalizedAds() => provider.getBool(PrefKey.isPersonalizedAds);
+  bool isPersonalizedAdsOr(bool def) => isPersonalizedAds() ?? def;
+  Future<bool> setPersonalizedAds(bool value) =>
+      provider.setBool(PrefKey.isPersonalizedAds, value);
+
   final PrefProvider provider;
 
   static Pref? _inst;
@@ -561,6 +566,7 @@ enum PrefKey {
   shouldProcessExifWifiOnly,
   doubleTapExit,
   lastAdRewardTime,
+  isPersonalizedAds,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -632,6 +638,8 @@ extension on PrefKey {
         return "doubleTapExit";
       case PrefKey.lastAdRewardTime:
         return "lastAdRewardTime";
+      case PrefKey.isPersonalizedAds:
+        return "isPersonalizedAds";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

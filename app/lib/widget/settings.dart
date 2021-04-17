@@ -1672,6 +1672,9 @@ class _PrivacySettingsState extends State<_PrivacySettings> {
       _isEnableAnalytics =
           FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
     }
+    if (features.isSupportAds) {
+      _isEnablePersonalizedAds = Pref().isPersonalizedAdsOr(false);
+    }
   }
 
   @override
@@ -1702,6 +1705,13 @@ class _PrivacySettingsState extends State<_PrivacySettings> {
                   value: _isEnableAnalytics,
                   onChanged: (value) => _onAnalyticsChanged(value),
                 ),
+              if (features.isSupportAds)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsPersonalizedAdsTitle),
+                  subtitle: Text(L10n.global().settingsPersonalizedAdsSubtitle),
+                  value: _isEnablePersonalizedAds,
+                  onChanged: (value) => _onPersonalizedAdsChanged(value),
+                ),
               ListTile(
                 title: Text(L10n.global().settingsPrivacyPolicyTitle),
                 onTap: () {
@@ -1722,7 +1732,15 @@ class _PrivacySettingsState extends State<_PrivacySettings> {
     FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(value);
   }
 
+  void _onPersonalizedAdsChanged(bool value) {
+    Pref().setPersonalizedAds(value);
+    setState(() {
+      _isEnablePersonalizedAds = value;
+    });
+  }
+
   late bool _isEnableAnalytics;
+  late bool _isEnablePersonalizedAds;
 }
 
 Widget _buildCaption(BuildContext context, String label) {

@@ -201,4 +201,5 @@ class RewardedAdHandler {
   static final _log = Logger("widget.ad.RewardedAdHandler");
 }
 
-const _request = AdRequest();
+final _request =
+    AdRequest(nonPersonalizedAds: !Pref().isPersonalizedAdsOr(false));
