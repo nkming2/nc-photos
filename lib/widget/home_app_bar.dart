@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/settings.dart';
 
@@ -33,7 +34,7 @@ class HomeSliverAppBar extends StatelessWidget {
             children: [
               Icon(
                 Icons.cloud,
-                color: Theme.of(context).primaryColor,
+                color: AppTheme.getCloudIconColor(context),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -46,7 +47,10 @@ class HomeSliverAppBar extends StatelessWidget {
                     ),
                     Text(
                       account.username,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppTheme.getSecondaryTextColor(context),
+                      ),
                     ),
                   ],
                 ),

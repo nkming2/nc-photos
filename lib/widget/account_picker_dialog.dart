@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 
@@ -37,7 +38,10 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                 title: Text(a.url),
                 subtitle: Text(a.username),
                 trailing: IconButton(
-                    icon: const Icon(Icons.close),
+                    icon: Icon(
+                      Icons.close,
+                      color: AppTheme.getSecondaryTextColor(context),
+                    ),
                     onPressed: () => _onRemoveItemPressed(a)),
               ),
             ))
@@ -51,8 +55,11 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         },
         child: Tooltip(
           message: AppLocalizations.of(context).addServerTooltip,
-          child: const Center(
-            child: const Icon(Icons.add, color: Colors.black54),
+          child: Center(
+            child: Icon(
+              Icons.add,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
           ),
         ),
       ),

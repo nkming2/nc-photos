@@ -153,7 +153,8 @@ class _AlbumViewerState extends State<AlbumViewer>
     try {
       if (_coverPreviewUrl != null) {
         cover = Opacity(
-          opacity: 0.25,
+          opacity:
+              Theme.of(context).brightness == Brightness.light ? 0.25 : 0.35,
           child: FittedBox(
             clipBehavior: Clip.hardEdge,
             fit: BoxFit.cover,
@@ -179,7 +180,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         title: Text(
           _album.name,
           style: TextStyle(
-            color: Theme.of(context).textTheme.headline6.color,
+            color: AppTheme.getPrimaryTextColor(context),
           ),
         ),
       ),

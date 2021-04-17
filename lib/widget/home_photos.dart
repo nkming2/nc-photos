@@ -211,7 +211,7 @@ class _HomePhotosState extends State<HomePhotos> {
       child: Text(
         item.subtitle,
         style: Theme.of(context).textTheme.caption.copyWith(
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: AppTheme.getPrimaryTextColor(context),
               fontWeight: FontWeight.bold,
             ),
       ),

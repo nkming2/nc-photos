@@ -212,9 +212,9 @@ class _HomeAlbumsState extends State<HomeAlbums> {
         ),
       );
     } catch (_) {
-      cover = const Icon(
+      cover = Icon(
         Icons.panorama,
-        color: Colors.white,
+        color: Colors.white.withOpacity(.8),
         size: 96,
       );
     }
@@ -223,8 +223,8 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         color: Theme.of(context).brightness == Brightness.light
-            ? Colors.black.withAlpha(40)
-            : Colors.white.withAlpha(40),
+            ? Colors.black26
+            : Colors.white24,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),
@@ -237,12 +237,12 @@ class _HomeAlbumsState extends State<HomeAlbums> {
         borderRadius: BorderRadius.circular(8),
         child: Container(
           color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black.withAlpha(40)
-              : Colors.white.withAlpha(40),
+              ? Colors.black26
+              : Colors.white24,
           constraints: const BoxConstraints.expand(),
-          child: const Icon(
+          child: Icon(
             Icons.add,
-            color: Colors.white,
+            color: Colors.white.withOpacity(.8),
             size: 96,
           ),
         ),

@@ -201,10 +201,12 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   brightness: Brightness.dark,
-                  iconTheme:
-                      Theme.of(context).iconTheme.copyWith(color: Colors.white),
-                  actionsIconTheme:
-                      Theme.of(context).iconTheme.copyWith(color: Colors.white),
+                  iconTheme: Theme.of(context).iconTheme.copyWith(
+                        color: Colors.white.withOpacity(.87),
+                      ),
+                  actionsIconTheme: Theme.of(context).iconTheme.copyWith(
+                        color: Colors.white.withOpacity(.87),
+                      ),
                   actions: [
                     if (!_isDetailPaneActive && _canOpenDetailPane())
                       IconButton(
@@ -252,8 +254,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                   Expanded(
                     flex: 1,
                     child: IconButton(
-                      icon: const Icon(Icons.download_outlined,
-                          color: Colors.white),
+                      icon: Icon(
+                        Icons.download_outlined,
+                        color: Colors.white.withOpacity(.87),
+                      ),
                       tooltip: AppLocalizations.of(context).downloadTooltip,
                       onPressed: () => _onDownloadPressed(context),
                     ),
@@ -261,8 +265,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                   Expanded(
                     flex: 1,
                     child: IconButton(
-                      icon: const Icon(Icons.delete_outlined,
-                          color: Colors.white),
+                      icon: Icon(
+                        Icons.delete_outlined,
+                        color: Colors.white.withOpacity(.87),
+                      ),
                       tooltip: AppLocalizations.of(context).deleteTooltip,
                       onPressed: () => _onDeletePressed(context),
                     ),
@@ -316,8 +322,8 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                     alignment: Alignment.topLeft,
                     constraints: BoxConstraints(
                         minHeight: MediaQuery.of(context).size.height),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: const BorderRadius.vertical(
                           top: const Radius.circular(4)),
                     ),

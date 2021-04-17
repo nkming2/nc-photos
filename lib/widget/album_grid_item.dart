@@ -29,7 +29,9 @@ class AlbumGridItem extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 title ?? "",
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: AppTheme.getPrimaryTextColor(context),
+                    ),
                 textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -39,7 +41,7 @@ class AlbumGridItem extends StatelessWidget {
                 subtitle ?? "",
                 style: Theme.of(context).textTheme.bodyText2.copyWith(
                       fontSize: 10,
-                      color: Colors.grey,
+                      color: AppTheme.getSecondaryTextColor(context),
                     ),
                 textAlign: TextAlign.start,
                 maxLines: 1,

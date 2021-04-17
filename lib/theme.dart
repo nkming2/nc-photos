@@ -19,9 +19,9 @@ class AppTheme extends StatelessWidget {
     final appBarTheme = theme.appBarTheme.copyWith(
       brightness: Brightness.dark,
       color: theme.scaffoldBackgroundColor,
-      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black),
-      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black),
-      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black),
+      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
+      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
+      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
     );
     return theme.copyWith(appBarTheme: appBarTheme);
   }
@@ -30,9 +30,12 @@ class AppTheme extends StatelessWidget {
     final appBarTheme = theme.appBarTheme.copyWith(
       brightness: Brightness.dark,
       color: theme.scaffoldBackgroundColor,
-      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
-      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
-      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.white),
+      actionsIconTheme:
+          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
+      iconTheme:
+          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
+      textTheme: theme.primaryTextTheme
+          .apply(bodyColor: Colors.white.withOpacity(.87)),
     );
     return theme.copyWith(appBarTheme: appBarTheme);
   }
@@ -43,17 +46,21 @@ class AppTheme extends StatelessWidget {
       return theme.appBarTheme.copyWith(
         brightness: Brightness.dark,
         color: Colors.grey[800],
-        actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
-        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
-        textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.white),
+        actionsIconTheme: theme.primaryIconTheme
+            .copyWith(color: Colors.white.withOpacity(.87)),
+        iconTheme: theme.primaryIconTheme
+            .copyWith(color: Colors.white.withOpacity(.87)),
+        textTheme: theme.primaryTextTheme
+            .apply(bodyColor: Colors.white.withOpacity(.87)),
       );
     } else {
       return theme.appBarTheme.copyWith(
         brightness: Brightness.dark,
         color: Colors.grey[200],
-        actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black),
-        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black),
-        textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black),
+        actionsIconTheme:
+            theme.primaryIconTheme.copyWith(color: Colors.black87),
+        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
+        textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
       );
     }
   }
@@ -61,13 +68,13 @@ class AppTheme extends StatelessWidget {
   static Color getSelectionOverlayColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? primarySwatchLight[100].withOpacity(0.7)
-        : primarySwatchDark[100].withOpacity(0.7);
+        : primarySwatchDark[700].withOpacity(0.7);
   }
 
   static Color getSelectionCheckColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? Colors.grey[800]
-        : Colors.grey[200];
+        : Colors.grey[350];
   }
 
   static Color getOverscrollIndicatorColor(BuildContext context) {
@@ -78,6 +85,24 @@ class AppTheme extends StatelessWidget {
 
   static Color getRootPickerContentBoxColor(BuildContext context) {
     return Colors.blue[200];
+  }
+
+  static Color getCloudIconColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? primarySwatchLight
+        : primarySwatchDark;
+  }
+
+  static Color getPrimaryTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? Colors.black87
+        : Colors.white.withOpacity(.87);
+  }
+
+  static Color getSecondaryTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? Colors.black.withOpacity(.6)
+        : Colors.white60;
   }
 
   static const primarySwatchLight = Colors.blue;

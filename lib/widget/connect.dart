@@ -71,10 +71,10 @@ class _ConnectState extends State<Connect> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.cloud,
               size: 128,
-              color: Colors.blue,
+              color: AppTheme.getCloudIconColor(context),
             ),
             Text(
               AppLocalizations.of(context)

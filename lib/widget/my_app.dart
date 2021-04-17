@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: _getLightTheme(),
-      // darkTheme: _getDarkTheme(),
+      darkTheme: _getDarkTheme(),
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -43,10 +43,10 @@ class MyApp extends StatelessWidget implements SnackBarHandler {
         primarySwatch: AppTheme.primarySwatchLight,
       );
 
-  // ThemeData _getDarkTheme() => ThemeData(
-  //       brightness: Brightness.dark,
-  //       primarySwatch: AppTheme.primarySwatchDark,
-  //     );
+  ThemeData _getDarkTheme() => ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: AppTheme.primarySwatchDark,
+      );
 
   Map<String, WidgetBuilder> _getRouter() => {
         Setup.routeName: (context) => Setup(),

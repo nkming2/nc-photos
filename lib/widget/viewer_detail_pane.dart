@@ -114,28 +114,43 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           child: const Divider(),
         ),
         ListTile(
-          leading: const Icon(Icons.image_outlined),
+          leading: Icon(
+            Icons.image_outlined,
+            color: AppTheme.getSecondaryTextColor(context),
+          ),
           title: Text(basenameWithoutExtension(widget.file.path)),
           subtitle: Text(widget.file.strippedPath),
         ),
         ListTile(
-          leading: const Icon(Icons.calendar_today_outlined),
+          leading: Icon(
+            Icons.calendar_today_outlined,
+            color: AppTheme.getSecondaryTextColor(context),
+          ),
           title: Text("$dateStr $timeStr"),
         ),
         if (_width != null && _height != null)
           ListTile(
-            leading: const Icon(Icons.aspect_ratio),
+            leading: Icon(
+              Icons.aspect_ratio,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
             title: Text("$_width x $_height"),
             subtitle: Text(sizeSubStr),
           )
         else
           ListTile(
-            leading: const Icon(Icons.aspect_ratio),
+            leading: Icon(
+              Icons.aspect_ratio,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
             title: Text(_byteSizeToString(widget.file.contentLength)),
           ),
         if (_model != null)
           ListTile(
-            leading: const Icon(Icons.camera_outlined),
+            leading: Icon(
+              Icons.camera_outlined,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
             title: Text(_model),
             subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
           ),
@@ -369,9 +384,6 @@ class _DetailPaneButton extends StatelessWidget {
   build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      style: AppTheme.flatButtonStyle.copyWith(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.grey[700]),
-      ),
       child: SizedBox(
         width: 96,
         height: 96,
@@ -379,12 +391,18 @@ class _DetailPaneButton extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Icon(icon),
+              Icon(
+                icon,
+                color: AppTheme.getPrimaryTextColor(context),
+              ),
               const SizedBox(height: 4),
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
               ),
             ],
           ),

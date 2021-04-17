@@ -52,7 +52,7 @@ class _SplashState extends State<Splash> {
             Icon(
               Icons.cloud,
               size: 96,
-              color: Theme.of(context).primaryColor,
+              color: AppTheme.getCloudIconColor(context),
             ),
             const SizedBox(height: 8),
             Text(

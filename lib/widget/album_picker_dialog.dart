@@ -10,6 +10,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 
 class AlbumPickerDialog extends StatefulWidget {
@@ -74,8 +75,11 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
         onPressed: () => _onNewAlbumPressed(context),
         child: Tooltip(
           message: AppLocalizations.of(context).createAlbumTooltip,
-          child: const Center(
-            child: const Icon(Icons.add, color: Colors.black54),
+          child: Center(
+            child: Icon(
+              Icons.add,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
           ),
         ),
       ),
