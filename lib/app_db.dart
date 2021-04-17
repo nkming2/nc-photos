@@ -29,7 +29,7 @@ class AppDb {
 
   /// Open the database
   static Future<Database> _open() async {
-    final dbFactory = platform.MyApp.getDbFactory();
+    final dbFactory = platform.getDbFactory();
     return dbFactory.open(dbName, version: 1, onUpgradeNeeded: (event) {
       final db = event.database;
       if (event.oldVersion < 1) {

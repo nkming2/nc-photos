@@ -8,9 +8,8 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/widget/my_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,7 @@ void main() async {
   _initKiwi();
   _initEquatable();
 
-  runApp(platform.MyApp());
+  runApp(MyApp());
 }
 
 void _initLog() {

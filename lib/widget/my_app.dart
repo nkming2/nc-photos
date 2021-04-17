@@ -14,7 +14,7 @@ import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
-abstract class MyApp extends StatelessWidget implements SnackBarHandler {
+class MyApp extends StatelessWidget implements SnackBarHandler {
   MyApp() {
     SnackBarManager().registerHandler(this);
   }
