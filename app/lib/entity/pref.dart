@@ -118,6 +118,7 @@ enum PrefKey implements PrefKeyInterface {
   mapDefaultRangeType,
   mapDefaultCustomRange,
   lastAdRewardTime,
+  isPersonalizedAds,
   ;
 
   @override
@@ -214,6 +215,8 @@ enum PrefKey implements PrefKeyInterface {
         return "mapDefaultCustomRange";
       case PrefKey.lastAdRewardTime:
         return "lastAdRewardTime";
+      case PrefKey.isPersonalizedAds:
+        return "isPersonalizedAds";
     }
   }
 }
