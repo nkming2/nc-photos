@@ -30,7 +30,6 @@ dependencies:
   bloc: ^7.0.0
   cached_network_image: ^3.0.0
   connectivity: ^3.0.2
-  connectivity_for_web: ^0.4.0
   equatable: ^2.0.0
   event_bus: ^2.0.0
   exifdart:
