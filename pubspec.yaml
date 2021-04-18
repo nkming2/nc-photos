@@ -42,7 +42,6 @@ dependencies:
   http: ^0.13.1
   idb_shim: ^2.0.0
   idb_sqflite: ^1.0.0
-  # image_size_getter: ^1.0.0
   image_size_getter:
     git:
       url: https://github.com/nkming2/dart_image_size_getter
