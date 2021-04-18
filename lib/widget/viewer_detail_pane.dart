@@ -198,7 +198,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       if (value == null) {
         // user cancelled the dialog
       } else if (value is Album) {
-        _log.info("[_onAddToAlbumPressed] Album picked: $value");
+        _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
         _addToAlbum(context, value).then((_) {
           SnackBarManager().showSnackBar(SnackBar(
             content: Text(AppLocalizations.of(context)
