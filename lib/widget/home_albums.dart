@@ -362,14 +362,14 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     final sortedAlbums = albums.map((e) {
       // find the latest file in this album
       try {
+        final lastItem = e.items
+            .whereType<AlbumFileItem>()
+            .map((e) => e.file)
+            .where((element) => file_util.isSupportedFormat(element))
+            .sorted(compareFileDateTimeDescending)
+            .first;
         return Tuple2(
-            e.items
-                .whereType<AlbumFileItem>()
-                .map((e) => e.file)
-                .where((element) => file_util.isSupportedFormat(element))
-                .sorted(compareFileDateTimeDescending)
-                .first
-                .lastModified,
+            lastItem.metadata?.exif?.dateTimeOriginal ?? lastItem.lastModified,
             e);
       } catch (_) {
         return Tuple2(e.lastUpdated, e);
