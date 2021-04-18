@@ -331,10 +331,10 @@ class _HomePhotosState extends State<HomePhotos> {
       await UpdateAlbum(albumRepo)(
           widget.account,
           album.copyWith(
-            items: [
+            items: makeDistinctAlbumItems([
               ...album.items,
               ...selectedItems,
-            ],
+            ]),
           ));
     } catch (e, stacktrace) {
       _log.severe(

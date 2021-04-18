@@ -15,6 +15,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -343,6 +344,19 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   Future<void> _addToAlbum(BuildContext context, Album album) async {
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final newItem = AlbumFileItem(file: widget.file);
+      if (album.items
+          .whereType<AlbumFileItem>()
+          .containsIf(newItem, (a, b) => a.file.path == b.file.path)) {
+        // already added, do nothing
+        _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(
+              "${AppLocalizations.of(context).addToAlbumAlreadyAddedNotification}"),
+          duration: k.snackBarDurationNormal,
+        ));
+        return Future.error(ArgumentError("File already in album"));
+      }
       await UpdateAlbum(albumRepo)(
           widget.account,
           album.copyWith(

@@ -12,4 +12,9 @@ extension IterableExtension<T> on Iterable<T> {
       yield fn(i++, e);
     }
   }
+
+  /// Whether the collection contains an element equal to [element] using the
+  /// equality function [equalFn]
+  bool containsIf(T element, bool Function(T a, T b) equalFn) =>
+      any((e) => equalFn(e, element));
 }

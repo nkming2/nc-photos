@@ -67,6 +67,10 @@
 	"@addToAlbumFailureNotification": {
 		"description": "Inform user that the item cannot be added to an album"
 	},
+	"addToAlbumAlreadyAddedNotification": "Item already in album",
+	"@addToAlbumAlreadyAddedNotification": {
+		"description": "Inform user that the item is already in the album"
+	},
 	"deleteSelectedTooltip": "Delete selected",
 	"@deleteSelectedTooltip": {
 		"description": "Tooltip of the button that deletes selected items"

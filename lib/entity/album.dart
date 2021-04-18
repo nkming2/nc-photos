@@ -14,6 +14,7 @@ import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -24,6 +25,19 @@ String getAlbumFileRoot(Account account) =>
 
 bool isAlbumFile(File file) =>
     path.basename(path.dirname(file.path)) == ".com.nkming.nc_photos";
+
+List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
+    items.distinctIf(
+        (a, b) =>
+            a is AlbumFileItem &&
+            b is AlbumFileItem &&
+            a.file.path == b.file.path, (a) {
+      if (a is AlbumFileItem) {
+        return a.file.path.hashCode;
+      } else {
+        return Random().nextInt(0xFFFFFFFF);
+      }
+    });
 
 abstract class AlbumItem {
   AlbumItem();
