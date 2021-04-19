@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -17,6 +16,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/platform.dart'
+    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -24,6 +25,7 @@ import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:path/path.dart';
+import 'package:tuple/tuple.dart';
 
 class ViewerDetailPane extends StatefulWidget {
   const ViewerDetailPane({
@@ -158,31 +160,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         if (features.isSupportMapView && _gps != null)
           SizedBox(
             height: 256,
-            child: GoogleMap(
-              compassEnabled: false,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: false,
-              scrollGesturesEnabled: false,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: false,
-              tiltGesturesEnabled: false,
-              myLocationButtonEnabled: false,
-              buildingsEnabled: false,
-              // liteModeEnabled: true,
-              initialCameraPosition: CameraPosition(
-                target: _gps,
-                zoom: 16,
-              ),
-              markers: {
-                Marker(
-                  markerId: MarkerId("at"),
-                  position: _gps,
-                  // for some reason, GoogleMap's onTap is not triggered if
-                  // tapped on top of the marker
-                  onTap: _onMapTap,
-                ),
-              },
-              onTap: (_) => _onMapTap(),
+            child: platform.Map(
+              center: _gps,
+              zoom: 16,
+              onTap: _onMapTap,
             ),
           ),
       ],
@@ -261,7 +242,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (Platform.isAndroid) {
       final intent = AndroidIntent(
         action: "action_view",
-        data: Uri.encodeFull("geo:${_gps.latitude},${_gps.longitude}?z=16"),
+        data: Uri.encodeFull("geo:${_gps.item1},${_gps.item2}?z=16"),
       );
       intent.launch();
     }
@@ -325,7 +306,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           (exif.gpsLongitudeRef == "W" ? -1 : 1);
       _log.fine("GPS: ($lat, $lng)");
       setState(() {
-        _gps = LatLng(lat, lng);
+        _gps = Tuple2(lat, lng);
       });
     }
   }
@@ -384,7 +365,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   String _exposureTime;
   double _focalLength;
   int _isoSpeedRatings;
-  LatLng _gps;
+  Tuple2<double, double> _gps;
 
   static final _log =
       Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
