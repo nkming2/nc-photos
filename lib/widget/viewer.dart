@@ -126,6 +126,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                   ? null
                   : const NeverScrollableScrollPhysics(),
             ),
+            if (kIsWeb) ..._buildNavigationButtons(context),
             _buildBottomAppBar(context),
             _buildAppBar(context),
           ],
@@ -152,6 +153,77 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     }
 
     return content;
+  }
+
+  List<Widget> _buildNavigationButtons(BuildContext context) {
+    return [
+      Align(
+        alignment: Alignment.centerRight,
+        child: Material(
+          type: MaterialType.transparency,
+          child: Visibility(
+            visible: _canSwitchPage(),
+            child: AnimatedOpacity(
+              opacity: _isShowNext ? 1.0 : 0.0,
+              duration: k.animationDurationShort,
+              child: MouseRegion(
+                onEnter: (details) {
+                  setState(() {
+                    _isShowNext = true;
+                  });
+                },
+                onExit: (details) {
+                  setState(() {
+                    _isShowNext = false;
+                  });
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_forward_ios_outlined),
+                    onPressed: _switchToRightImage,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Material(
+          type: MaterialType.transparency,
+          child: Visibility(
+            visible: _canSwitchPage(),
+            child: AnimatedOpacity(
+              opacity: _isShowPrevious ? 1.0 : 0.0,
+              duration: k.animationDurationShort,
+              child: MouseRegion(
+                onEnter: (details) {
+                  setState(() {
+                    _isShowPrevious = true;
+                  });
+                },
+                onExit: (details) {
+                  setState(() {
+                    _isShowPrevious = false;
+                  });
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_ios_outlined),
+                    onPressed: _switchToLeftImage,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -721,6 +793,9 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   var _isShowDetailPane = false;
   var _isDetailPaneActive = false;
   var _isClosingDetailPane = false;
+
+  var _isShowNext = false;
+  var _isShowPrevious = false;
 
   var _isZooming = false;
   var _wasZoomed = false;
