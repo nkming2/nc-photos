@@ -16,4 +16,8 @@ const contents = [
 Added HEIC support
 Fixed a bug that corrupted the albums. Please re-add the photos after upgrading. Sorry for your inconvenience
 """,
+  // v8
+  """1.8.0
+Dark theme
+""",
 ];
