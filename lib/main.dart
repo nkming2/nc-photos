@@ -27,7 +27,7 @@ void _initLog() {
   if (kDebugMode) {
     debugPrintGestureArenaDiagnostics = true;
   }
-  Logger.root.level = Level.ALL;
+  Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
   Logger.root.onRecord.listen((record) {
     // dev.log(
     //   "${record.level.name} ${record.time}: ${record.message}",
@@ -36,9 +36,6 @@ void _initLog() {
     //   level: record.level.value,
     //   name: record.loggerName,
     // );
-    if (kReleaseMode && record.level <= Level.FINE) {
-      return;
-    }
     String msg =
         "[${record.loggerName}] ${record.level.name} ${record.time}: ${record.message}";
     if (record.error != null) {
