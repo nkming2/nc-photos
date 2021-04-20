@@ -122,7 +122,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
               controller: _pageController,
               itemCount: widget.streamFiles.length,
               itemBuilder: _buildPage,
-              physics: _canSwitchPage()
+              physics: !kIsWeb && _canSwitchPage()
                   ? null
                   : const NeverScrollableScrollPhysics(),
             ),
