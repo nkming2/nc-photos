@@ -140,22 +140,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
           if (!_canSwitchPage()) {
             return;
           }
-          toPrevPage() => _pageController.previousPage(
-              duration: k.animationDurationNormal, curve: Curves.easeInOut);
-          toNextPage() => _pageController.nextPage(
-              duration: k.animationDurationNormal, curve: Curves.easeInOut);
           if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-            if (Directionality.of(context) == TextDirection.ltr) {
-              toPrevPage();
-            } else {
-              toNextPage();
-            }
+            _switchToLeftImage();
           } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-            if (Directionality.of(context) == TextDirection.ltr) {
-              toNextPage();
-            } else {
-              toPrevPage();
-            }
+            _switchToRightImage();
           }
         },
         focusNode: _pageFocus,
@@ -681,6 +669,38 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
       })
       ..forward();
     _setIsZooming(true);
+  }
+
+  /// Switch to the previous image in the stream
+  void _switchToPrevImage() {
+    _pageController.previousPage(
+        duration: k.animationDurationNormal, curve: Curves.easeInOut);
+  }
+
+  /// Switch to the next image in the stream
+  void _switchToNextImage() {
+    _pageController.nextPage(
+        duration: k.animationDurationNormal, curve: Curves.easeInOut);
+  }
+
+  /// Switch to the image on the "left", what that means depend on the current
+  /// text direction
+  void _switchToLeftImage() {
+    if (Directionality.of(context) == TextDirection.ltr) {
+      _switchToPrevImage();
+    } else {
+      _switchToNextImage();
+    }
+  }
+
+  /// Switch to the image on the "right", what that means depend on the current
+  /// text direction
+  void _switchToRightImage() {
+    if (Directionality.of(context) == TextDirection.ltr) {
+      _switchToNextImage();
+    } else {
+      _switchToPrevImage();
+    }
   }
 
   bool _canSwitchPage() => !_isZoomed();
