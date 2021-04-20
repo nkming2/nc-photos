@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -61,7 +62,7 @@ class _SignInState extends State<SignIn> {
                           child: _buildForm(context),
                         ),
                       ),
-                      Expanded(child: Container()),
+                      if (!kIsWeb) Expanded(child: Container()),
                       Container(
                         constraints: const BoxConstraints(
                             maxWidth: AppTheme.widthLimitedContentMaxWidth),

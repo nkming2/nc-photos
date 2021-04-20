@@ -100,17 +100,10 @@ class _RootPickerState extends State<RootPicker> {
           Expanded(
             child: Align(
               alignment: Alignment.center,
-              child: Container(
-                constraints: const BoxConstraints(
-                    maxWidth: AppTheme.widthLimitedContentMaxWidth),
-                // needed otherwise no ripple effect
-                child: _buildList(context),
-              ),
+              child: _buildList(context),
             ),
           ),
-          Container(
-            constraints: const BoxConstraints(
-                maxWidth: AppTheme.widthLimitedContentMaxWidth),
+          Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
