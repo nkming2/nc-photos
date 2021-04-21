@@ -73,13 +73,34 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
+        body: Builder(
+            builder: (context) =>
+                kIsWeb ? _buildWebContent(context) : _buildContent(context)),
       ),
     );
   }
 
+  Widget _buildWebContent(BuildContext context) {
+    assert(kIsWeb);
+    // support switching pages with keyboard on web
+    return RawKeyboardListener(
+      onKey: (ev) {
+        if (!_canSwitchPage()) {
+          return;
+        }
+        if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+          _switchToLeftImage();
+        } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+          _switchToRightImage();
+        }
+      },
+      focusNode: _pageFocus,
+      child: _buildContent(context),
+    );
+  }
+
   Widget _buildContent(BuildContext context) {
-    Widget content = Listener(
+    return Listener(
       onPointerDown: (event) {
         ++_finger;
         if (_finger >= 2 && _canZoom()) {
@@ -133,26 +154,6 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
         ),
       ),
     );
-
-    // support switching pages with keyboard on web
-    if (kIsWeb) {
-      content = RawKeyboardListener(
-        onKey: (ev) {
-          if (!_canSwitchPage()) {
-            return;
-          }
-          if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-            _switchToLeftImage();
-          } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-            _switchToRightImage();
-          }
-        },
-        focusNode: _pageFocus,
-        child: content,
-      );
-    }
-
-    return content;
   }
 
   List<Widget> _buildNavigationButtons(BuildContext context) {
