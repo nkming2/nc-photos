@@ -71,6 +71,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
 
   @override
   build(BuildContext context) {
+    if (!_hasInit) {
+      _updateNavigationState(widget.startIndex);
+      _hasInit = true;
+    }
     return AppTheme(
       child: Scaffold(
         body: Builder(
@@ -158,72 +162,74 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
 
   List<Widget> _buildNavigationButtons(BuildContext context) {
     return [
-      Align(
-        alignment: Alignment.centerRight,
-        child: Material(
-          type: MaterialType.transparency,
-          child: Visibility(
-            visible: _canSwitchPage(),
-            child: AnimatedOpacity(
-              opacity: _isShowNext ? 1.0 : 0.0,
-              duration: k.animationDurationShort,
-              child: MouseRegion(
-                onEnter: (details) {
-                  setState(() {
-                    _isShowNext = true;
-                  });
-                },
-                onExit: (details) {
-                  setState(() {
-                    _isShowNext = false;
-                  });
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_forward_ios_outlined),
-                    onPressed: _switchToRightImage,
+      if (_canSwitchRight)
+        Align(
+          alignment: Alignment.centerRight,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Visibility(
+              visible: _canSwitchPage(),
+              child: AnimatedOpacity(
+                opacity: _isShowRight ? 1.0 : 0.0,
+                duration: k.animationDurationShort,
+                child: MouseRegion(
+                  onEnter: (details) {
+                    setState(() {
+                      _isShowRight = true;
+                    });
+                  },
+                  onExit: (details) {
+                    setState(() {
+                      _isShowRight = false;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 36),
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios_outlined),
+                      onPressed: _switchToRightImage,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Material(
-          type: MaterialType.transparency,
-          child: Visibility(
-            visible: _canSwitchPage(),
-            child: AnimatedOpacity(
-              opacity: _isShowPrevious ? 1.0 : 0.0,
-              duration: k.animationDurationShort,
-              child: MouseRegion(
-                onEnter: (details) {
-                  setState(() {
-                    _isShowPrevious = true;
-                  });
-                },
-                onExit: (details) {
-                  setState(() {
-                    _isShowPrevious = false;
-                  });
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios_outlined),
-                    onPressed: _switchToLeftImage,
+      if (_canSwitchLeft)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Visibility(
+              visible: _canSwitchPage(),
+              child: AnimatedOpacity(
+                opacity: _isShowLeft ? 1.0 : 0.0,
+                duration: k.animationDurationShort,
+                child: MouseRegion(
+                  onEnter: (details) {
+                    setState(() {
+                      _isShowLeft = true;
+                    });
+                  },
+                  onExit: (details) {
+                    setState(() {
+                      _isShowLeft = false;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 36),
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back_ios_outlined),
+                      onPressed: _switchToLeftImage,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
     ];
   }
 
@@ -746,14 +752,19 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
 
   /// Switch to the previous image in the stream
   void _switchToPrevImage() {
-    _pageController.previousPage(
-        duration: k.animationDurationNormal, curve: Curves.easeInOut);
+    _pageController
+        .previousPage(
+            duration: k.animationDurationNormal, curve: Curves.easeInOut)
+        .whenComplete(
+            () => _updateNavigationState(_pageController.page.round()));
   }
 
   /// Switch to the next image in the stream
   void _switchToNextImage() {
-    _pageController.nextPage(
-        duration: k.animationDurationNormal, curve: Curves.easeInOut);
+    _pageController
+        .nextPage(duration: k.animationDurationNormal, curve: Curves.easeInOut)
+        .whenComplete(
+            () => _updateNavigationState(_pageController.page.round()));
   }
 
   /// Switch to the image on the "left", what that means depend on the current
@@ -776,6 +787,36 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     }
   }
 
+  /// Update the navigation state for [page]
+  void _updateNavigationState(int page) {
+    // currently useless to run on non-web platform
+    if (!kIsWeb) {
+      return;
+    }
+    final hasNext = page < widget.streamFiles.length - 1;
+    final hasPrev = page > 0;
+    final hasLeft =
+        Directionality.of(context) == TextDirection.ltr ? hasPrev : hasNext;
+    if (_canSwitchLeft != hasLeft) {
+      setState(() {
+        _canSwitchLeft = hasLeft;
+        if (!_canSwitchLeft) {
+          _isShowLeft = false;
+        }
+      });
+    }
+    final hasRight =
+        Directionality.of(context) == TextDirection.ltr ? hasNext : hasPrev;
+    if (_canSwitchRight != hasRight) {
+      setState(() {
+        _canSwitchRight = hasRight;
+        if (!_canSwitchRight) {
+          _isShowRight = false;
+        }
+      });
+    }
+  }
+
   bool _canSwitchPage() => !_isZoomed();
   bool _canOpenDetailPane() => !_isZoomed();
   bool _canZoom() => !_isDetailPaneActive;
@@ -788,6 +829,8 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
         a: true,
       );
 
+  var _hasInit = false;
+
   var _isShowAppBar = true;
   var _isAppBarActive = true;
 
@@ -795,8 +838,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   var _isDetailPaneActive = false;
   var _isClosingDetailPane = false;
 
-  var _isShowNext = false;
-  var _isShowPrevious = false;
+  var _canSwitchRight = true;
+  var _canSwitchLeft = true;
+  var _isShowRight = false;
+  var _isShowLeft = false;
 
   var _isZooming = false;
   var _wasZoomed = false;
