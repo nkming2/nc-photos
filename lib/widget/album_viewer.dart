@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,6 +18,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -61,13 +65,16 @@ class _AlbumViewerState extends State<AlbumViewer>
     _transformItems();
     _initCover();
     _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevel(0);
+    _keyboardFocus.requestFocus();
   }
 
   @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
+        body: Builder(
+            builder: (context) =>
+                kIsWeb ? _buildWebContent(context) : _buildContent(context)),
       ),
     );
   }
@@ -82,6 +89,18 @@ class _AlbumViewerState extends State<AlbumViewer>
         _coverPreviewUrl = api_util.getFileUrl(widget.account, coverFile);
       }
     } catch (_) {}
+  }
+
+  Widget _buildWebContent(BuildContext context) {
+    assert(kIsWeb);
+    // support switching pages with keyboard on web
+    return RawKeyboardListener(
+      onKey: (ev) {
+        _isRangeSelectionMode = ev.isShiftPressed;
+      },
+      focusNode: _keyboardFocus,
+      child: _buildContent(context),
+    );
   }
 
   Widget _buildContent(BuildContext context) {
@@ -231,12 +250,23 @@ class _AlbumViewerState extends State<AlbumViewer>
         // unselect
         setState(() {
           _selectedItems.remove(item);
+          _lastSelectPosition = null;
         });
       } else {
         // select
-        setState(() {
-          _selectedItems.add(item);
-        });
+        if (_isRangeSelectionMode && _lastSelectPosition != null) {
+          setState(() {
+            _selectedItems.addAll(_items.sublist(
+                math.min(_lastSelectPosition, index),
+                math.max(_lastSelectPosition, index) + 1));
+            _lastSelectPosition = index;
+          });
+        } else {
+          setState(() {
+            _lastSelectPosition = index;
+            _selectedItems.add(item);
+          });
+        }
       }
     } else {
       Navigator.pushNamed(context, Viewer.routeName,
@@ -246,8 +276,17 @@ class _AlbumViewerState extends State<AlbumViewer>
 
   void _onItemLongPress(_GridItem item, int index) {
     setState(() {
+      _lastSelectPosition = index;
       _selectedItems.add(item);
     });
+
+    if (kIsWeb && !SessionStorage().hasShowRangeSelectNotification) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context).webSelectRangeNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      SessionStorage().hasShowRangeSelectNotification = true;
+    }
   }
 
   void _onSelectionAppBarRemovePressed() {
@@ -329,6 +368,8 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   bool get _isSelectionMode => _selectedItems.isNotEmpty;
+  int _lastSelectPosition;
+  bool _isRangeSelectionMode = false;
 
   Album _album;
   final _items = <_GridItem>[];
@@ -337,7 +378,10 @@ class _AlbumViewerState extends State<AlbumViewer>
   String _coverPreviewUrl;
   var _thumbZoomLevel = 0;
 
-  final _selectedItems = <_GridItem>[];
+  final _selectedItems = <_GridItem>{};
+
+  /// used to gain focus on web for keyboard support
+  final _keyboardFocus = FocusNode();
 
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }

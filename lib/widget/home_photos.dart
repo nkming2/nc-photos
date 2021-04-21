@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,6 +20,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -46,6 +49,7 @@ class _HomePhotosState extends State<HomePhotos> {
     super.initState();
     _initBloc();
     _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevel(0);
+    _keyboardFocus.requestFocus();
   }
 
   @override
@@ -55,7 +59,9 @@ class _HomePhotosState extends State<HomePhotos> {
       listener: (context, state) => _onStateChange(context, state),
       child: BlocBuilder<ScanDirBloc, ScanDirBlocState>(
         bloc: _bloc,
-        builder: (context, state) => _buildContent(context, state),
+        builder: (context, state) => kIsWeb
+            ? _buildWebContent(context, state)
+            : _buildContent(context, state),
       ),
     );
   }
@@ -69,6 +75,18 @@ class _HomePhotosState extends State<HomePhotos> {
       // process the current state
       _onStateChange(context, _bloc.state);
     }
+  }
+
+  Widget _buildWebContent(BuildContext context, ScanDirBlocState state) {
+    assert(kIsWeb);
+    // support switching pages with keyboard on web
+    return RawKeyboardListener(
+      onKey: (ev) {
+        _isRangeSelectionMode = ev.isShiftPressed;
+      },
+      focusNode: _keyboardFocus,
+      child: _buildContent(context, state),
+    );
   }
 
   Widget _buildContent(BuildContext context, ScanDirBlocState state) {
@@ -254,12 +272,24 @@ class _HomePhotosState extends State<HomePhotos> {
         // unselect
         setState(() {
           _selectedItems.remove(item);
+          _lastSelectPosition = null;
         });
       } else {
         // select
-        setState(() {
-          _selectedItems.add(item);
-        });
+        if (_isRangeSelectionMode && _lastSelectPosition != null) {
+          setState(() {
+            _selectedItems.addAll(_items
+                .sublist(math.min(_lastSelectPosition, index),
+                    math.max(_lastSelectPosition, index) + 1)
+                .whereType<_GridFileItem>());
+            _lastSelectPosition = index;
+          });
+        } else {
+          setState(() {
+            _lastSelectPosition = index;
+            _selectedItems.add(item);
+          });
+        }
       }
     } else {
       final fileIndex = _itemIndexToFileIndex(index);
@@ -275,8 +305,17 @@ class _HomePhotosState extends State<HomePhotos> {
       return;
     }
     setState(() {
+      _lastSelectPosition = index;
       _selectedItems.add(item);
     });
+
+    if (kIsWeb && !SessionStorage().hasShowRangeSelectNotification) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context).webSelectRangeNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      SessionStorage().hasShowRangeSelectNotification = true;
+    }
   }
 
   void _onSelectionAppBarAddToAlbumPressed(BuildContext context) {
@@ -404,6 +443,8 @@ class _HomePhotosState extends State<HomePhotos> {
         .where((element) => file_util.isSupportedFormat(element))
         .sorted(compareFileDateTimeDescending);
 
+    final lastSelectedItem =
+        _lastSelectPosition != null ? _items[_lastSelectPosition] : null;
     _items.clear();
     String currentDateStr;
     for (final f in _backingFiles) {
@@ -424,6 +465,18 @@ class _HomePhotosState extends State<HomePhotos> {
     }
 
     _transformSelectedItems();
+
+    // Keep _lastSelectPosition if no changes, drop otherwise
+    int newLastSelectPosition;
+    try {
+      if (lastSelectedItem != null &&
+          lastSelectedItem is _GridFileItem &&
+          (_items[_lastSelectPosition] as _GridFileItem).file.path ==
+              lastSelectedItem.file.path) {
+        newLastSelectPosition = _lastSelectPosition;
+      }
+    } catch (_) {}
+    _lastSelectPosition = newLastSelectPosition;
   }
 
   /// Map selected items to the new item list
@@ -488,6 +541,8 @@ class _HomePhotosState extends State<HomePhotos> {
   }
 
   bool get _isSelectionMode => _selectedItems.isNotEmpty;
+  int _lastSelectPosition;
+  bool _isRangeSelectionMode = false;
 
   ScanDirBloc _bloc;
 
@@ -496,7 +551,10 @@ class _HomePhotosState extends State<HomePhotos> {
 
   var _thumbZoomLevel = 0;
 
-  final _selectedItems = <_GridFileItem>[];
+  final _selectedItems = <_GridFileItem>{};
+
+  /// used to gain focus on web for keyboard support
+  final _keyboardFocus = FocusNode();
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;

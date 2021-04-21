@@ -356,6 +356,10 @@
 	"@previousTooltip": {
 		"description": "Tooltip of the previous button"
 	},
+	"webSelectRangeNotification": "Hold shift + click to select all in between",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
