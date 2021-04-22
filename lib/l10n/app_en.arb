@@ -360,6 +360,10 @@
 	"@webSelectRangeNotification": {
 		"description": "Inform web user how to select items in range"
 	},
+	"mobileSelectRangeNotification": "Long press another item to select all in between",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

@@ -242,8 +242,9 @@ class _HomePhotosState extends State<HomePhotos> {
       imageUrl: item.previewUrl,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item, index),
-      onLongPress:
-          _isSelectionMode ? null : () => _onItemLongPress(item, index),
+      onLongPress: _isSelectionMode && kIsWeb
+          ? null
+          : () => _onItemLongPress(item, index),
     );
   }
 
@@ -304,17 +305,33 @@ class _HomePhotosState extends State<HomePhotos> {
           "[_onItemLongPress] Item not found in backing list, ignoring");
       return;
     }
-    setState(() {
-      _lastSelectPosition = index;
-      _selectedItems.add(item);
-    });
+    final wasSelectionMode = _isSelectionMode;
+    if (!kIsWeb && wasSelectionMode && _lastSelectPosition != null) {
+      setState(() {
+        _selectedItems.addAll(_items
+            .sublist(math.min(_lastSelectPosition, index),
+                math.max(_lastSelectPosition, index) + 1)
+            .whereType<_GridFileItem>());
+        _lastSelectPosition = index;
+      });
+    } else {
+      setState(() {
+        _lastSelectPosition = index;
+        _selectedItems.add(item);
+      });
+    }
 
-    if (kIsWeb && !SessionStorage().hasShowRangeSelectNotification) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).webSelectRangeNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      SessionStorage().hasShowRangeSelectNotification = true;
+    // show notification on first entry to selection mode each session
+    if (!wasSelectionMode) {
+      if (!SessionStorage().hasShowRangeSelectNotification) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(kIsWeb
+              ? AppLocalizations.of(context).webSelectRangeNotification
+              : AppLocalizations.of(context).mobileSelectRangeNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        SessionStorage().hasShowRangeSelectNotification = true;
+      }
     }
   }
 
