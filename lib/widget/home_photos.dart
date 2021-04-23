@@ -1,5 +1,4 @@
-import 'dart:math' as math;
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/scan_dir.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -20,15 +20,14 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
-import 'package:nc_photos/widget/image_grid_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
+import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
 class HomePhotos extends StatefulWidget {
@@ -43,13 +42,13 @@ class HomePhotos extends StatefulWidget {
   final Account account;
 }
 
-class _HomePhotosState extends State<HomePhotos> {
+class _HomePhotosState extends State<HomePhotos>
+    with SelectableItemStreamListMixin<HomePhotos> {
   @override
   initState() {
     super.initState();
     _initBloc();
     _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevel(0);
-    _keyboardFocus.requestFocus();
   }
 
   @override
@@ -59,12 +58,13 @@ class _HomePhotosState extends State<HomePhotos> {
       listener: (context, state) => _onStateChange(context, state),
       child: BlocBuilder<ScanDirBloc, ScanDirBlocState>(
         bloc: _bloc,
-        builder: (context, state) => kIsWeb
-            ? _buildWebContent(context, state)
-            : _buildContent(context, state),
+        builder: (context, state) => _buildContent(context, state),
       ),
     );
   }
+
+  @override
+  int get itemStreamListCellSize => _thumbSize;
 
   void _initBloc() {
     _bloc = ScanDirBloc.of(widget.account);
@@ -77,46 +77,24 @@ class _HomePhotosState extends State<HomePhotos> {
     }
   }
 
-  Widget _buildWebContent(BuildContext context, ScanDirBlocState state) {
-    assert(kIsWeb);
-    // support switching pages with keyboard on web
-    return RawKeyboardListener(
-      onKey: (ev) {
-        _isRangeSelectionMode = ev.isShiftPressed;
-      },
-      focusNode: _keyboardFocus,
-      child: _buildContent(context, state),
-    );
-  }
-
   Widget _buildContent(BuildContext context, ScanDirBlocState state) {
     return Stack(
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            accentColor: AppTheme.getOverscrollIndicatorColor(context),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverStaggeredGrid.extentBuilder(
-                  // need to rebuild grid after zoom level changed
-                  key: ValueKey(_thumbZoomLevel),
-                  maxCrossAxisExtent: _thumbSize.toDouble(),
-                  itemCount: _items.length,
-                  itemBuilder: _buildItem,
-                  staggeredTileBuilder: (index) {
-                    if (_items[index] is _GridSubtitleItem) {
-                      return const StaggeredTile.extent(99, 32);
-                    } else {
-                      return const StaggeredTile.count(1, 1);
-                    }
-                  },
+        buildItemStreamListOuter(
+          context,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              accentColor: AppTheme.getOverscrollIndicatorColor(context),
+            ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: buildItemStreamList(context),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         if (state is ScanDirBlocLoading)
@@ -129,7 +107,7 @@ class _HomePhotosState extends State<HomePhotos> {
   }
 
   Widget _buildAppBar(BuildContext context) {
-    if (_isSelectionMode) {
+    if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
       return _buildNormalAppBar(context);
@@ -148,12 +126,12 @@ class _HomePhotosState extends State<HomePhotos> {
           tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: () {
             setState(() {
-              _selectedItems.clear();
+              clearSelectedItems();
             });
           },
         ),
         title: Text(AppLocalizations.of(context)
-            .selectionAppBarTitle(_selectedItems.length)),
+            .selectionAppBarTitle(selectedListItems.length)),
         actions: [
           IconButton(
             icon: const Icon(Icons.playlist_add),
@@ -210,47 +188,9 @@ class _HomePhotosState extends State<HomePhotos> {
     );
   }
 
-  Widget _buildItem(BuildContext context, int index) {
-    final item = _items[index];
-    if (item is _GridSubtitleItem) {
-      return _buildSubtitleItem(context, item, index);
-    } else if (item is _GridImageItem) {
-      return _buildImageItem(context, item, index);
-    } else {
-      _log.severe("[_buildItem] Unsupported item type: ${item.runtimeType}");
-      throw StateError("Unsupported item type: ${item.runtimeType}");
-    }
-  }
-
-  Widget _buildSubtitleItem(
-      BuildContext context, _GridSubtitleItem item, int index) {
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: Text(
-        item.subtitle,
-        style: Theme.of(context).textTheme.caption.copyWith(
-              color: AppTheme.getPrimaryTextColor(context),
-              fontWeight: FontWeight.bold,
-            ),
-      ),
-    );
-  }
-
-  Widget _buildImageItem(BuildContext context, _GridImageItem item, int index) {
-    return ImageGridItem(
-      account: widget.account,
-      imageUrl: item.previewUrl,
-      isSelected: _selectedItems.contains(item),
-      onTap: () => _onItemTap(item, index),
-      onLongPress: _isSelectionMode && kIsWeb
-          ? null
-          : () => _onItemLongPress(item, index),
-    );
-  }
-
   void _onStateChange(BuildContext context, ScanDirBlocState state) {
     if (state is ScanDirBlocInit) {
-      _items.clear();
+      itemStreamListItems = [];
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
     } else if (state is ScanDirBlocFailure) {
@@ -263,76 +203,9 @@ class _HomePhotosState extends State<HomePhotos> {
     }
   }
 
-  void _onItemTap(_GridFileItem item, int index) {
-    if (_isSelectionMode) {
-      if (!_items.contains(item)) {
-        _log.warning("[_onItemTap] Item not found in backing list, ignoring");
-        return;
-      }
-      if (_selectedItems.contains(item)) {
-        // unselect
-        setState(() {
-          _selectedItems.remove(item);
-          _lastSelectPosition = null;
-        });
-      } else {
-        // select
-        if (_isRangeSelectionMode && _lastSelectPosition != null) {
-          setState(() {
-            _selectedItems.addAll(_items
-                .sublist(math.min(_lastSelectPosition, index),
-                    math.max(_lastSelectPosition, index) + 1)
-                .whereType<_GridFileItem>());
-            _lastSelectPosition = index;
-          });
-        } else {
-          setState(() {
-            _lastSelectPosition = index;
-            _selectedItems.add(item);
-          });
-        }
-      }
-    } else {
-      final fileIndex = _itemIndexToFileIndex(index);
-      Navigator.pushNamed(context, Viewer.routeName,
-          arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
-    }
-  }
-
-  void _onItemLongPress(_GridFileItem item, int index) {
-    if (!_items.contains(item)) {
-      _log.warning(
-          "[_onItemLongPress] Item not found in backing list, ignoring");
-      return;
-    }
-    final wasSelectionMode = _isSelectionMode;
-    if (!kIsWeb && wasSelectionMode && _lastSelectPosition != null) {
-      setState(() {
-        _selectedItems.addAll(_items
-            .sublist(math.min(_lastSelectPosition, index),
-                math.max(_lastSelectPosition, index) + 1)
-            .whereType<_GridFileItem>());
-        _lastSelectPosition = index;
-      });
-    } else {
-      setState(() {
-        _lastSelectPosition = index;
-        _selectedItems.add(item);
-      });
-    }
-
-    // show notification on first entry to selection mode each session
-    if (!wasSelectionMode) {
-      if (!SessionStorage().hasShowRangeSelectNotification) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(kIsWeb
-              ? AppLocalizations.of(context).webSelectRangeNotification
-              : AppLocalizations.of(context).mobileSelectRangeNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        SessionStorage().hasShowRangeSelectNotification = true;
-      }
-    }
+  void _onItemTap(int index) {
+    Navigator.pushNamed(context, Viewer.routeName,
+        arguments: ViewerArguments(widget.account, _backingFiles, index));
   }
 
   void _onSelectionAppBarAddToAlbumPressed(BuildContext context) {
@@ -348,7 +221,7 @@ class _HomePhotosState extends State<HomePhotos> {
         _log.info("[_onSelectionAppBarAddToAlbumPressed] Album picked: $value");
         _addSelectedToAlbum(context, value).then((_) {
           setState(() {
-            _selectedItems.clear();
+            clearSelectedItems();
           });
           SnackBarManager().showSnackBar(SnackBar(
             content: Text(AppLocalizations.of(context)
@@ -378,8 +251,8 @@ class _HomePhotosState extends State<HomePhotos> {
   }
 
   Future<void> _addSelectedToAlbum(BuildContext context, Album album) async {
-    final selectedItems = _selectedItems
-        .whereType<_GridFileItem>()
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
         .map((e) => AlbumFileItem(file: e.file))
         .toList();
     try {
@@ -389,7 +262,7 @@ class _HomePhotosState extends State<HomePhotos> {
           album.copyWith(
             items: makeDistinctAlbumItems([
               ...album.items,
-              ...selectedItems,
+              ...selected,
             ]),
           ));
     } catch (e, stacktrace) {
@@ -408,13 +281,15 @@ class _HomePhotosState extends State<HomePhotos> {
   Future<void> _onSelectionAppBarDeletePressed(BuildContext context) async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(AppLocalizations.of(context)
-          .deleteSelectedProcessingNotification(_selectedItems.length)),
+          .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles =
-        _selectedItems.whereType<_GridFileItem>().map((e) => e.file).toList();
+    final selectedFiles = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
     setState(() {
-      _selectedItems.clear();
+      clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -460,77 +335,32 @@ class _HomePhotosState extends State<HomePhotos> {
         .where((element) => file_util.isSupportedFormat(element))
         .sorted(compareFileDateTimeDescending);
 
-    final lastSelectedItem =
-        _lastSelectPosition != null ? _items[_lastSelectPosition] : null;
-    _items.clear();
     String currentDateStr;
-    for (final f in _backingFiles) {
-      final newDateStr = (f.metadata?.exif?.dateTimeOriginal ?? f.lastModified)
-          ?.toSubtitleString();
-      if (newDateStr != currentDateStr) {
-        _items.add(_GridItem.subtitle(newDateStr));
-        currentDateStr = newDateStr;
+    itemStreamListItems = () sync* {
+      for (int i = 0; i < _backingFiles.length; ++i) {
+        final f = _backingFiles[i];
+        final newDateStr =
+            (f.metadata?.exif?.dateTimeOriginal ?? f.lastModified)
+                ?.toSubtitleString();
+        if (newDateStr != currentDateStr) {
+          yield _SubtitleListItem(subtitle: newDateStr);
+          currentDateStr = newDateStr;
+        }
+        var previewUrl;
+        if (f.hasPreview) {
+          previewUrl = api_util.getFilePreviewUrl(widget.account, f,
+              width: _thumbSize, height: _thumbSize);
+        } else {
+          previewUrl = api_util.getFileUrl(widget.account, f);
+        }
+        yield _ImageListItem(
+          file: f,
+          account: widget.account,
+          previewUrl: previewUrl,
+          onTap: () => _onItemTap(i),
+        );
       }
-      var previewUrl;
-      if (f.hasPreview) {
-        previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: _thumbSize, height: _thumbSize);
-      } else {
-        previewUrl = api_util.getFileUrl(widget.account, f);
-      }
-      _items.add(_GridItem.image(f, previewUrl));
-    }
-
-    _transformSelectedItems();
-
-    // Keep _lastSelectPosition if no changes, drop otherwise
-    int newLastSelectPosition;
-    try {
-      if (lastSelectedItem != null &&
-          lastSelectedItem is _GridFileItem &&
-          (_items[_lastSelectPosition] as _GridFileItem).file.path ==
-              lastSelectedItem.file.path) {
-        newLastSelectPosition = _lastSelectPosition;
-      }
-    } catch (_) {}
-    _lastSelectPosition = newLastSelectPosition;
-  }
-
-  /// Map selected items to the new item list
-  void _transformSelectedItems() {
-    final newSelectedItems = _selectedItems
-        .map((from) {
-          try {
-            return _items
-                .whereType<_GridFileItem>()
-                .firstWhere((to) => from.file.path == to.file.path);
-          } catch (_) {
-            return null;
-          }
-        })
-        .where((element) => element != null)
-        .toList();
-    _selectedItems
-      ..clear()
-      ..addAll(newSelectedItems);
-  }
-
-  /// Convert a grid item index to its corresponding file index
-  ///
-  /// These two indices differ when there's non file-based item on screen
-  int _itemIndexToFileIndex(int itemIndex) {
-    var fileIndex = 0;
-    final itemIt = _items.iterator;
-    for (int i = 0; i < itemIndex; ++i) {
-      if (!itemIt.moveNext()) {
-        // ???
-        break;
-      }
-      if (itemIt.current is _GridFileItem) {
-        ++fileIndex;
-      }
-    }
-    return fileIndex;
+    }();
   }
 
   void _reqQuery() {
@@ -557,50 +387,81 @@ class _HomePhotosState extends State<HomePhotos> {
     }
   }
 
-  bool get _isSelectionMode => _selectedItems.isNotEmpty;
-  int _lastSelectPosition;
-  bool _isRangeSelectionMode = false;
-
   ScanDirBloc _bloc;
 
-  final _items = <_GridItem>[];
   var _backingFiles = <File>[];
 
   var _thumbZoomLevel = 0;
-
-  final _selectedItems = <_GridFileItem>{};
-
-  /// used to gain focus on web for keyboard support
-  final _keyboardFocus = FocusNode();
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
 }
 
-abstract class _GridItem {
-  const _GridItem();
+class _SubtitleListItem extends SelectableItemStreamListItem {
+  _SubtitleListItem({
+    @required this.subtitle,
+  }) : super(staggeredTile: const StaggeredTile.extent(99, 32));
 
-  factory _GridItem.subtitle(String val) => _GridSubtitleItem(val);
-
-  factory _GridItem.image(File file, String previewUrl) =>
-      _GridImageItem(file, previewUrl);
-}
-
-class _GridSubtitleItem extends _GridItem {
-  _GridSubtitleItem(this.subtitle);
+  @override
+  buildWidget(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        subtitle,
+        style: Theme.of(context).textTheme.caption.copyWith(
+              color: AppTheme.getPrimaryTextColor(context),
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
 
   final String subtitle;
 }
 
-abstract class _GridFileItem extends _GridItem {
-  _GridFileItem(this.file);
+abstract class _FileListItem extends SelectableItemStreamListItem {
+  _FileListItem({
+    @required this.file,
+    VoidCallback onTap,
+  }) : super(onTap: onTap, isSelectable: true);
+
+  @override
+  operator ==(Object other) {
+    return other is _FileListItem && file.path == other.file.path;
+  }
+
+  @override
+  get hashCode => file.path.hashCode;
 
   final File file;
 }
 
-class _GridImageItem extends _GridFileItem {
-  _GridImageItem(File file, this.previewUrl) : super(file);
+class _ImageListItem extends _FileListItem {
+  _ImageListItem({
+    @required File file,
+    @required this.account,
+    @required this.previewUrl,
+    VoidCallback onTap,
+  }) : super(file: file, onTap: onTap);
 
+  @override
+  buildWidget(BuildContext context) {
+    return FittedBox(
+      clipBehavior: Clip.hardEdge,
+      fit: BoxFit.cover,
+      child: CachedNetworkImage(
+        imageUrl: previewUrl,
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(account),
+        },
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      ),
+    );
+  }
+
+  final Account account;
   final String previewUrl;
 }
 

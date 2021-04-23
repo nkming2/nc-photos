@@ -1,11 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -18,12 +15,11 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_album.dart';
-import 'package:nc_photos/widget/image_grid_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
+import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
 class AlbumViewerArguments {
@@ -57,7 +53,7 @@ class AlbumViewer extends StatefulWidget {
 }
 
 class _AlbumViewerState extends State<AlbumViewer>
-    with TickerProviderStateMixin {
+    with SelectableItemStreamListMixin<AlbumViewer>, TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
@@ -65,19 +61,19 @@ class _AlbumViewerState extends State<AlbumViewer>
     _transformItems();
     _initCover();
     _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevel(0);
-    _keyboardFocus.requestFocus();
   }
 
   @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(
-            builder: (context) =>
-                kIsWeb ? _buildWebContent(context) : _buildContent(context)),
+        body: Builder(builder: (context) => _buildContent(context)),
       ),
     );
   }
+
+  @override
+  get itemStreamListCellSize => _thumbSize;
 
   void _initCover() {
     try {
@@ -91,44 +87,28 @@ class _AlbumViewerState extends State<AlbumViewer>
     } catch (_) {}
   }
 
-  Widget _buildWebContent(BuildContext context) {
-    assert(kIsWeb);
-    // support switching pages with keyboard on web
-    return RawKeyboardListener(
-      onKey: (ev) {
-        _isRangeSelectionMode = ev.isShiftPressed;
-      },
-      focusNode: _keyboardFocus,
-      child: _buildContent(context),
-    );
-  }
-
   Widget _buildContent(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        accentColor: AppTheme.getOverscrollIndicatorColor(context),
-      ),
-      child: CustomScrollView(
-        slivers: [
-          _buildAppBar(context),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverStaggeredGrid.extentBuilder(
-              // need to rebuild grid after zoom level changed
-              key: ValueKey(_thumbZoomLevel),
-              maxCrossAxisExtent: _thumbSize.toDouble(),
-              itemCount: _items.length,
-              itemBuilder: _buildItem,
-              staggeredTileBuilder: (index) => const StaggeredTile.count(1, 1),
+    return buildItemStreamListOuter(
+      context,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          accentColor: AppTheme.getOverscrollIndicatorColor(context),
+        ),
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: buildItemStreamList(context),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildAppBar(BuildContext context) {
-    if (_isSelectionMode) {
+    if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
       return _buildNormalAppBar(context);
@@ -147,12 +127,12 @@ class _AlbumViewerState extends State<AlbumViewer>
           tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: () {
             setState(() {
-              _selectedItems.clear();
+              clearSelectedItems();
             });
           },
         ),
         title: Text(AppLocalizations.of(context)
-            .selectionAppBarTitle(_selectedItems.length)),
+            .selectionAppBarTitle(selectedListItems.length)),
         actions: [
           IconButton(
             icon: const Icon(Icons.remove),
@@ -223,86 +203,9 @@ class _AlbumViewerState extends State<AlbumViewer>
     );
   }
 
-  Widget _buildItem(BuildContext context, int index) {
-    final item = _items[index];
-    if (item is _GridImageItem) {
-      return _buildImageItem(context, item, index);
-    } else {
-      _log.severe("[_buildItem] Unsupported item type: ${item.runtimeType}");
-      throw StateError("Unsupported item type: ${item.runtimeType}");
-    }
-  }
-
-  Widget _buildImageItem(BuildContext context, _GridImageItem item, int index) {
-    return ImageGridItem(
-      account: widget.account,
-      imageUrl: item.previewUrl,
-      isSelected: _selectedItems.contains(item),
-      onTap: () => _onItemTap(item, index),
-      onLongPress: _isSelectionMode && kIsWeb
-          ? null
-          : () => _onItemLongPress(item, index),
-    );
-  }
-
-  void _onItemTap(_GridItem item, int index) {
-    if (_isSelectionMode) {
-      if (_selectedItems.contains(item)) {
-        // unselect
-        setState(() {
-          _selectedItems.remove(item);
-          _lastSelectPosition = null;
-        });
-      } else {
-        // select
-        if (_isRangeSelectionMode && _lastSelectPosition != null) {
-          setState(() {
-            _selectedItems.addAll(_items.sublist(
-                math.min(_lastSelectPosition, index),
-                math.max(_lastSelectPosition, index) + 1));
-            _lastSelectPosition = index;
-          });
-        } else {
-          setState(() {
-            _lastSelectPosition = index;
-            _selectedItems.add(item);
-          });
-        }
-      }
-    } else {
-      Navigator.pushNamed(context, Viewer.routeName,
-          arguments: ViewerArguments(widget.account, _backingFiles, index));
-    }
-  }
-
-  void _onItemLongPress(_GridItem item, int index) {
-    final wasSelectionMode = _isSelectionMode;
-    if (!kIsWeb && wasSelectionMode && _lastSelectPosition != null) {
-      setState(() {
-        _selectedItems.addAll(_items.sublist(
-            math.min(_lastSelectPosition, index),
-            math.max(_lastSelectPosition, index) + 1));
-        _lastSelectPosition = index;
-      });
-    } else {
-      setState(() {
-        _lastSelectPosition = index;
-        _selectedItems.add(item);
-      });
-    }
-
-    // show notification on first entry to selection mode each session
-    if (!wasSelectionMode) {
-      if (!SessionStorage().hasShowRangeSelectNotification) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(kIsWeb
-              ? AppLocalizations.of(context).webSelectRangeNotification
-              : AppLocalizations.of(context).mobileSelectRangeNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        SessionStorage().hasShowRangeSelectNotification = true;
-      }
-    }
+  void _onItemTap(int index) {
+    Navigator.pushNamed(context, Viewer.routeName,
+        arguments: ViewerArguments(widget.account, _backingFiles, index));
   }
 
   void _onSelectionAppBarRemovePressed() {
@@ -310,7 +213,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     // preserving the order. this will be problematic if we want to allow custom
     // sorting later
     final selectedIndexes =
-        _selectedItems.map((e) => _items.indexOf(e)).toList();
+        selectedListItems.map((e) => itemStreamListItems.indexOf(e)).toList();
     final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
     final newItems = _album.items.where((element) {
       if (element is AlbumFileItem) {
@@ -345,7 +248,7 @@ class _AlbumViewerState extends State<AlbumViewer>
       ));
     });
     setState(() {
-      _selectedItems.clear();
+      clearSelectedItems();
     });
   }
 
@@ -356,8 +259,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         .where((element) => file_util.isSupportedFormat(element))
         .sorted(compareFileDateTimeDescending);
 
-    _items.clear();
-    _items.addAll(_backingFiles.map((e) {
+    itemStreamListItems = _backingFiles.mapWithIndex((i, e) {
       var previewUrl;
       if (e.hasPreview) {
         previewUrl = api_util.getFilePreviewUrl(widget.account, e,
@@ -365,8 +267,12 @@ class _AlbumViewerState extends State<AlbumViewer>
       } else {
         previewUrl = api_util.getFileUrl(widget.account, e);
       }
-      return _GridItem.image(previewUrl);
-    }));
+      return _ImageListItem(
+        account: widget.account,
+        previewUrl: previewUrl,
+        onTap: () => _onItemTap(i),
+      );
+    });
   }
 
   int get _thumbSize {
@@ -383,33 +289,39 @@ class _AlbumViewerState extends State<AlbumViewer>
     }
   }
 
-  bool get _isSelectionMode => _selectedItems.isNotEmpty;
-  int _lastSelectPosition;
-  bool _isRangeSelectionMode = false;
-
   Album _album;
-  final _items = <_GridItem>[];
   var _backingFiles = <File>[];
 
   String _coverPreviewUrl;
   var _thumbZoomLevel = 0;
 
-  final _selectedItems = <_GridItem>{};
-
-  /// used to gain focus on web for keyboard support
-  final _keyboardFocus = FocusNode();
-
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }
 
-class _GridItem {
-  const _GridItem();
+class _ImageListItem extends SelectableItemStreamListItem {
+  _ImageListItem({
+    @required this.account,
+    @required this.previewUrl,
+    VoidCallback onTap,
+  }) : super(onTap: onTap, isSelectable: true);
 
-  factory _GridItem.image(String previewUrl) => _GridImageItem(previewUrl);
-}
+  @override
+  buildWidget(BuildContext context) {
+    return FittedBox(
+      clipBehavior: Clip.hardEdge,
+      fit: BoxFit.cover,
+      child: CachedNetworkImage(
+        imageUrl: previewUrl,
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(account),
+        },
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      ),
+    );
+  }
 
-class _GridImageItem extends _GridItem {
-  _GridImageItem(this.previewUrl);
-
+  final Account account;
   final String previewUrl;
 }
