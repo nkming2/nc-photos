@@ -61,9 +61,7 @@ void main() {
         final exif = Exif(<String, dynamic>{
           "MakerNote": Uint8List.fromList([0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF]),
         });
-        expect(exif.toJson(), <String, dynamic>{
-          "MakerNote": "ADNmmcz_",
-        });
+        expect(exif.toJson(), <String, dynamic>{});
       });
     });
 
@@ -127,12 +125,7 @@ void main() {
         final json = <String, dynamic>{
           "MakerNote": "ADNmmcz_",
         };
-        expect(
-            Exif.fromJson(json),
-            Exif(<String, dynamic>{
-              "MakerNote":
-                  Uint8List.fromList([0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF]),
-            }));
+        expect(Exif.fromJson(json), Exif(<String, dynamic>{}));
       });
     });
   });

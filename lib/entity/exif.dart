@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:intl/intl.dart';
@@ -12,57 +10,60 @@ class Exif with EquatableMixin {
   bool containsKey(String key) => data.containsKey(key);
 
   Map<String, dynamic> toJson() {
-    return data.map((key, value) {
-      var jsonValue;
-      if (key == "MakerNote") {
-        jsonValue = base64UrlEncode(value);
-      } else if (value is Rational) {
-        jsonValue = value.toJson();
-      } else if (value is List) {
-        jsonValue = value.map((e) {
-          if (e is Rational) {
-            return e.toJson();
-          } else {
-            return e;
-          }
-        }).toList();
-      } else {
-        jsonValue = value;
-      }
-      return MapEntry(key, jsonValue);
-    });
+    return Map.fromIterable(
+      data.entries.where((e) => e.key != "MakerNote").map((e) {
+        var jsonValue;
+        if (e.value is Rational) {
+          jsonValue = e.value.toJson();
+        } else if (e.value is List) {
+          jsonValue = e.value.map((e) {
+            if (e is Rational) {
+              return e.toJson();
+            } else {
+              return e;
+            }
+          }).toList();
+        } else {
+          jsonValue = e.value;
+        }
+        return MapEntry(e.key, jsonValue);
+      }),
+      key: (e) => e.key,
+      value: (e) => e.value,
+    );
   }
 
   factory Exif.fromJson(Map<String, dynamic> json) {
-    return Exif(json.map((key, value) {
-      var exifValue;
-      if (key == "MakerNote") {
-        exifValue = base64Decode(value);
-      } else if (value is Map) {
-        exifValue = Rational.fromJson(value.cast<String, dynamic>());
-      } else if (value is List) {
-        exifValue = value.map((e) {
-          if (e is Map) {
-            return Rational.fromJson(e.cast<String, dynamic>());
-          } else {
-            return e;
-          }
-        }).toList();
-      } else {
-        exifValue = value;
-      }
-      return MapEntry(key, exifValue);
-    }));
+    return Exif(Map.fromIterable(
+      // we are filtering out MakerNote here because it's generally very large
+      // and could exceed the 1MB cursor size limit on Android. Second, the
+      // content is proprietary and thus useless to us anyway
+      json.entries.where((e) => e.key != "MakerNote").map((e) {
+        var exifValue;
+        if (e.value is Map) {
+          exifValue = Rational.fromJson(e.value.cast<String, dynamic>());
+        } else if (e.value is List) {
+          exifValue = e.value.map((e) {
+            if (e is Map) {
+              return Rational.fromJson(e.cast<String, dynamic>());
+            } else {
+              return e;
+            }
+          }).toList();
+        } else {
+          exifValue = e.value;
+        }
+        return MapEntry(e.key, exifValue);
+      }),
+      key: (e) => e.key,
+      value: (e) => e.value,
+    ));
   }
 
   @override
   toString() {
     final dataStr = data.entries.map((e) {
-      if (e.key == "MakerNote") {
-        return "${e.key}: '${base64UrlEncode(e.value)}'";
-      } else {
-        return "${e.key}: '${e.value}'";
-      }
+      return "${e.key}: '${e.value}'";
     }).join(", ");
     return "$runtimeType {$dataStr}";
   }
