@@ -109,24 +109,6 @@ class WebdavFileParser {
     );
   }
 
-  MapEntry<XmlName, dynamic> _xmlElementToMapEntry(XmlElement element) {
-    final key = element.name;
-    try {
-      final textNode = element.children
-          .where((node) => node is XmlText && node.text.trim().isNotEmpty)
-          .first;
-      return MapEntry(key, textNode.text);
-    } on StateError {
-      // No text
-      final value = <XmlName, dynamic>{};
-      for (final e in element.children.whereType<XmlElement>()) {
-        final entry = _xmlElementToMapEntry(e);
-        value[entry.key] = entry.value;
-      }
-      return MapEntry(key, value);
-    }
-  }
-
   var _namespaces = <String, String>{};
 
   static final _log =
