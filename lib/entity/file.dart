@@ -398,10 +398,15 @@ abstract class FileDataSource {
 
 class FileWebdavDataSource implements FileDataSource {
   @override
-  list(Account account, File f) async {
+  list(
+    Account account,
+    File f, {
+    int depth,
+  }) async {
     _log.fine("[list] ${f.path}");
     final response = await Api(account).files().propfind(
       path: f.path,
+      depth: depth,
       getlastmodified: 1,
       resourcetype: 1,
       getetag: 1,
@@ -582,17 +587,26 @@ class FileCachedDataSource implements FileDataSource {
     try {
       cache = await _appDbSrc.list(account, f);
       // compare the cached root
-      final cacheRoot = cache.firstWhere(
-          (element) => element.path.trimAny("/") == trimmedRootPath,
-          orElse: () => null);
-      if (cacheRoot?.etag?.isNotEmpty == true && cacheRoot.etag == f.etag) {
-        // cache is good
-        _log.fine("[list] etag matched for ${_getCacheKey(account, f)}");
-        return cache;
-      } else {
-        _log.info(
-            "[list] Remote content updated for ${_getCacheKey(account, f)}");
+      final cacheEtag = cache
+          .firstWhere((element) => element.path.trimAny("/") == trimmedRootPath)
+          .etag;
+      if (cacheEtag != null) {
+        // compare the etag to see if the content has been updated
+        var remoteEtag = f.etag;
+        if (remoteEtag == null) {
+          // no etag supplied, we need to query it form remote
+          final remote = await _remoteSrc.list(account, f, depth: 0);
+          assert(remote.length == 1);
+          remoteEtag = remote.first.etag;
+        }
+        if (cacheEtag == remoteEtag) {
+          // cache is good
+          _log.fine("[list] etag matched for ${_getCacheKey(account, f)}");
+          return cache;
+        }
       }
+      _log.info(
+          "[list] Remote content updated for ${_getCacheKey(account, f)}");
     } catch (e, stacktrace) {
       // no cache
       if (e is! CacheNotFoundException) {
