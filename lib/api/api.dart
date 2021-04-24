@@ -258,6 +258,9 @@ class _Files {
           });
         });
       return await _api.request("PROPFIND", path,
+          header: {
+            if (depth != null) "Depth": depth.toString(),
+          },
           body: builder.buildDocument().toXmlString());
     } catch (e) {
       _log.severe("[propfind] Failed while propfind", e);
