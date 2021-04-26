@@ -141,15 +141,20 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
   Stream<ScanDirBlocState> _onEventQuery(ScanDirBlocQuery ev) async* {
     yield ScanDirBlocLoading(ev.account, state.files);
+    bool hasContent = state.files.isNotEmpty;
 
-    ScanDirBlocState cacheState = ScanDirBlocInit();
-    await for (final s in _queryOffline(ev, () => cacheState)) {
-      cacheState = s;
+    if (!hasContent) {
+      // show something instantly on first load
+      ScanDirBlocState cacheState = ScanDirBlocInit();
+      await for (final s in _queryOffline(ev, () => cacheState)) {
+        cacheState = s;
+      }
+      yield ScanDirBlocLoading(ev.account, cacheState.files);
+      hasContent = cacheState.files.isNotEmpty;
     }
-    yield ScanDirBlocLoading(ev.account, cacheState.files);
 
     ScanDirBlocState newState = ScanDirBlocInit();
-    if (cacheState.files.isEmpty) {
+    if (!hasContent) {
       await for (final s in _queryOnline(ev, () => newState)) {
         newState = s;
         yield s;
@@ -161,8 +166,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       if (newState is ScanDirBlocSuccess) {
         yield newState;
       } else if (newState is ScanDirBlocFailure) {
-        yield ScanDirBlocFailure(
-            ev.account, cacheState.files, newState.exception);
+        yield ScanDirBlocFailure(ev.account, state.files, newState.exception);
       }
     }
   }
