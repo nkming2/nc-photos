@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:idb_shim/idb.dart';
+import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:synchronized/synchronized.dart';
 
 class AppDb {
   static const dbName = "app.db";
+  static const dbVersion = 2;
   static const fileStoreName = "files";
   static const albumStoreName = "albums";
 
@@ -30,14 +34,67 @@ class AppDb {
   /// Open the database
   static Future<Database> _open() async {
     final dbFactory = platform.getDbFactory();
-    return dbFactory.open(dbName, version: 1, onUpgradeNeeded: (event) {
+    return dbFactory.open(dbName, version: dbVersion,
+        onUpgradeNeeded: (event) async {
+      _log.info("[_open] Upgrade database: ${event.oldVersion} -> $dbVersion");
+
       final db = event.database;
+      ObjectStore fileStore, albumStore;
       if (event.oldVersion < 1) {
-        db.createObjectStore(fileStoreName);
-        db.createObjectStore(albumStoreName);
+        fileStore = db.createObjectStore(fileStoreName);
+        albumStore = db.createObjectStore(albumStoreName);
+      } else {
+        fileStore = event.transaction.objectStore(fileStoreName);
+        albumStore = event.transaction.objectStore(albumStoreName);
+      }
+      if (event.oldVersion < 2) {
+        // version 2 store things in a new way, just drop all
+        await fileStore.clear();
+        await albumStore.clear();
+        fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
       }
     });
   }
 
+  static final _log = Logger("app_db.AppDb");
   static final _lock = Lock(reentrant: true);
+}
+
+class AppDbFileEntry {
+  static const indexName = "fileStore_path_index";
+  static const keyPath = ["path", "index"];
+  static const maxDataSize = 250;
+
+  AppDbFileEntry(this.path, this.index, this.data) {
+    assert(this.data.length <= maxDataSize);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "path": path,
+      "index": index,
+      "data": data.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  factory AppDbFileEntry.fromJson(Map<String, dynamic> json) {
+    return AppDbFileEntry(
+      json["path"],
+      json["index"],
+      json["data"]
+          .map((e) => File.fromJson(e.cast<String, dynamic>()))
+          .cast<File>()
+          .toList(),
+    );
+  }
+
+  static String toPath(Account account, File dir) =>
+      "${account.url}/${dir.path}";
+
+  static String toPrimaryKey(Account account, File dir, int index) =>
+      "${toPath(account, dir)}[$index]";
+
+  final String path;
+  final int index;
+  final List<File> data;
 }

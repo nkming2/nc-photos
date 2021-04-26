@@ -11,9 +11,11 @@ import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path;
+import 'package:quiver/iterables.dart';
 import 'package:xml/xml.dart';
 
 int compareFileDateTimeDescending(File x, File y) {
@@ -527,9 +529,17 @@ class FileAppDbDataSource implements FileDataSource {
     return AppDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
-      // we don't yet support removing dirs
-      // final range = KeyRange.bound(f.path, f.path + "\uffff");
-      await store.delete(_getCacheKey(account, f));
+      final index = store.index(AppDbFileEntry.indexName);
+      final path = AppDbFileEntry.toPath(account, f);
+      final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+      final keys = await index
+          .openKeyCursor(range: range, autoAdvance: true)
+          .map((cursor) => cursor.primaryKey)
+          .toList();
+      for (final k in keys) {
+        _log.fine("[remove] Removing DB entry: $k");
+        await store.delete(k);
+      }
     });
   }
 
@@ -555,24 +565,29 @@ class FileAppDbDataSource implements FileDataSource {
       final parentList = await _doList(store, account, parentDir);
       final jsonList = parentList.map((e) {
         if (e.path == f.path) {
-          return e.copyWith(metadata: metadata).toJson();
+          return e.copyWith(metadata: metadata);
         } else {
-          return e.toJson();
+          return e;
         }
-      }).toList();
-      await store.put(jsonList, _getCacheKey(account, parentDir));
+      });
+      await _cacheListResults(store, account, parentDir, jsonList);
     });
   }
 
   Future<List<File>> _doList(ObjectStore store, Account account, File f) async {
-    final List result = await store.getObject("${_getCacheKey(account, f)}");
-    if (result != null) {
-      return result
-          .cast<Map<dynamic, dynamic>>()
-          .map((e) => File.fromJson(e.cast()))
-          .toList();
+    final index = store.index(AppDbFileEntry.indexName);
+    final path = AppDbFileEntry.toPath(account, f);
+    final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+    final List results = await index.getAll(range);
+    if (results?.isNotEmpty == true) {
+      final entries = results
+          .map((e) => AppDbFileEntry.fromJson(e.cast<String, dynamic>()));
+      return entries.map((e) {
+        _log.info("[_doList] ${e.path}[${e.index}]");
+        return e.data;
+      }).reduce((value, element) => value + element);
     } else {
-      throw CacheNotFoundException("No entry: ${_getCacheKey(account, f)}");
+      throw CacheNotFoundException("No entry: $path");
     }
   }
 
@@ -601,12 +616,13 @@ class FileCachedDataSource implements FileDataSource {
         }
         if (cacheEtag == remoteEtag) {
           // cache is good
-          _log.fine("[list] etag matched for ${_getCacheKey(account, f)}");
+          _log.fine(
+              "[list] etag matched for ${AppDbFileEntry.toPath(account, f)}");
           return cache;
         }
       }
       _log.info(
-          "[list] Remote content updated for ${_getCacheKey(account, f)}");
+          "[list] Remote content updated for ${AppDbFileEntry.toPath(account, f)}");
     } catch (e, stacktrace) {
       // no cache
       if (e is! CacheNotFoundException) {
@@ -620,7 +636,7 @@ class FileCachedDataSource implements FileDataSource {
       await _cacheResult(account, f, remote);
       if (cache != null) {
         try {
-          await _cleanUpCachedList(account, remote, cache);
+          await _cleanUpCachedDir(account, remote, cache);
         } catch (e, stacktrace) {
           _log.severe("[list] Failed while _cleanUpCachedList", e, stacktrace);
           // ignore error
@@ -665,12 +681,12 @@ class FileCachedDataSource implements FileDataSource {
     return AppDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
-      await store.put(
-          result.map((e) => e.toJson()).toList(), _getCacheKey(account, f));
+      await _cacheListResults(store, account, f, result);
     });
   }
 
-  Future<void> _cleanUpCachedList(
+  /// Remove dangling dir entries in the file object store
+  Future<void> _cleanUpCachedDir(
       Account account, List<File> remoteResults, List<File> cachedResults) {
     final removed = cachedResults
         .where((cache) =>
@@ -679,27 +695,31 @@ class FileCachedDataSource implements FileDataSource {
     if (removed.isEmpty) {
       return Future.delayed(Duration.zero);
     }
-    _log.info(
-        "[_cleanUpCachedList] Removing cache: ${removed.toReadableString()}");
     return AppDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
+      final index = store.index(AppDbFileEntry.indexName);
       for (final r in removed) {
-        final key = _getCacheKey(account, r);
-        _log.fine("[_cleanUpCachedList] Removing DB entry: $key");
+        final path = AppDbFileEntry.toPath(account, r);
+        final keys = [];
         // delete the dir itself
-        await store.delete(key);
-
-        // then its children
-        final range = KeyRange.bound("$key/", "$key/\uffff");
+        final dirRange = KeyRange.bound([path, 0], [path, int_util.int32Max]);
         // delete with KeyRange is not supported in idb_shim/idb_sqflite
-        // await store.delete(range);
-        final keys = await store
-            .openKeyCursor(range: range, autoAdvance: true)
-            .map((cursor) => cursor.key)
-            .toList();
+        // await store.delete(dirRange);
+        keys.addAll(await index
+            .openKeyCursor(range: dirRange, autoAdvance: true)
+            .map((cursor) => cursor.primaryKey)
+            .toList());
+        // then its children
+        final childrenRange =
+            KeyRange.bound(["$path/", 0], ["$path/\uffff", int_util.int32Max]);
+        keys.addAll(await index
+            .openKeyCursor(range: childrenRange, autoAdvance: true)
+            .map((cursor) => cursor.primaryKey)
+            .toList());
+
         for (final k in keys) {
-          _log.fine("[_cleanUpCachedList] Removing DB entry: $k");
+          _log.fine("[_cleanUpCachedDir] Removing DB entry: $k");
           await store.delete(k);
         }
       }
@@ -712,5 +732,36 @@ class FileCachedDataSource implements FileDataSource {
   static final _log = Logger("entity.file.FileCachedDataSource");
 }
 
-String _getCacheKey(Account account, File file) =>
-    "${account.url}/${file.path}";
+Future<void> _cacheListResults(
+    ObjectStore store, Account account, File f, Iterable<File> results) async {
+  final index = store.index(AppDbFileEntry.indexName);
+  final path = AppDbFileEntry.toPath(account, f);
+  final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+  // count number of entries for this dir
+  final count = await index.count(range);
+  int newCount = 0;
+  for (final pair
+      in partition(results, AppDbFileEntry.maxDataSize).withIndex()) {
+    _log.info(
+        "[_cacheListResults] Caching $path[${pair.item1}], length: ${pair.item2.length}");
+    await store.put(
+      AppDbFileEntry(path, pair.item1, pair.item2).toJson(),
+      AppDbFileEntry.toPrimaryKey(account, f, pair.item1),
+    );
+    ++newCount;
+  }
+  if (count > newCount) {
+    // index is 0-based
+    final rmRange = KeyRange.bound([path, newCount], [path, int_util.int32Max]);
+    final rmKeys = await index
+        .openKeyCursor(range: rmRange, autoAdvance: true)
+        .map((cursor) => cursor.primaryKey)
+        .toList();
+    for (final k in rmKeys) {
+      _log.fine("[_cacheListResults] Removing DB entry: $k");
+      await store.delete(k);
+    }
+  }
+}
+
+final _log = Logger("entity.file");
