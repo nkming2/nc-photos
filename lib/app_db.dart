@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:idb_shim/idb.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -52,6 +53,8 @@ class AppDb {
         await fileStore.clear();
         await albumStore.clear();
         fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
+        albumStore.createIndex(
+            AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
       }
     });
   }
@@ -97,4 +100,42 @@ class AppDbFileEntry {
   final String path;
   final int index;
   final List<File> data;
+}
+
+class AppDbAlbumEntry {
+  static const indexName = "albumStore_path_index";
+  static const keyPath = ["path", "index"];
+  static const maxDataSize = 250;
+
+  AppDbAlbumEntry(this.path, this.index, this.album) {
+    assert(this.album.items.length <= maxDataSize);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "path": path,
+      "index": index,
+      "album": album.toAppDbJson(),
+    };
+  }
+
+  factory AppDbAlbumEntry.fromJson(Map<String, dynamic> json) {
+    return AppDbAlbumEntry(
+      json["path"],
+      json["index"],
+      Album.fromJson(json["album"].cast<String, dynamic>()),
+    );
+  }
+
+  static String toRootPath(Account account) =>
+      "${account.url}/${getAlbumFileRoot(account)}";
+  static String toPath(Account account, File albumFile) =>
+      "${account.url}/${albumFile.path}";
+  static String toPrimaryKey(Account account, File albumFile, int index) =>
+      "${toPath(account, albumFile)}[$index]";
+
+  final String path;
+  final int index;
+  // properties other than Album.items is undefined when index > 0
+  final Album album;
 }

@@ -13,12 +13,15 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:path/path.dart' as path;
+import 'package:quiver/iterables.dart';
+import 'package:tuple/tuple.dart';
 
 String getAlbumFileRoot(Account account) =>
     "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos";
@@ -188,7 +191,6 @@ class Album with EquatableMixin {
     );
   }
 
-  @visibleForTesting
   Map<String, dynamic> toRemoteJson() {
     return {
       "version": version,
@@ -199,7 +201,6 @@ class Album with EquatableMixin {
     };
   }
 
-  @visibleForTesting
   Map<String, dynamic> toAppDbJson() {
     return {
       "version": version,
@@ -350,13 +351,20 @@ class AlbumAppDbDataSource implements AlbumDataSource {
     return AppDb.use((db) async {
       final transaction = db.transaction(AppDb.albumStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.albumStoreName);
-      final Map result =
-          await store.getObject("${_getCacheKey(account, albumFile)}");
-      if (result != null) {
-        return Album.fromJson(result.cast<String, dynamic>());
+      final index = store.index(AppDbAlbumEntry.indexName);
+      final path = AppDbAlbumEntry.toPath(account, albumFile);
+      final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+      final List results = await index.getAll(range);
+      if (results?.isNotEmpty == true) {
+        final entries = results
+            .map((e) => AppDbAlbumEntry.fromJson(e.cast<String, dynamic>()));
+        final items = entries.map((e) {
+          _log.info("[get] ${e.path}[${e.index}]");
+          return e.album.items;
+        }).reduce((value, element) => value + element);
+        return entries.first.album.copyWith(items: items);
       } else {
-        throw CacheNotFoundException(
-            "No entry: ${_getCacheKey(account, albumFile)}");
+        throw CacheNotFoundException("No entry: $path");
       }
     });
   }
@@ -374,8 +382,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
-      await store.put(
-          album.toAppDbJson(), _getCacheKey(account, album.albumFile));
+      await _cacheAlbum(store, account, album);
     });
   }
 
@@ -393,12 +400,12 @@ class AlbumCachedDataSource implements AlbumDataSource {
       if (cache.albumFile.etag?.isNotEmpty == true &&
           cache.albumFile.etag == albumFile.etag) {
         // cache is good
-        _log.fine("[get] etag matched for ${_getCacheKey(account, albumFile)}");
+        _log.fine(
+            "[get] etag matched for ${AppDbAlbumEntry.toPath(account, albumFile)}");
         return cache;
-      } else {
-        _log.info(
-            "[get] Remote content updated for ${_getCacheKey(account, albumFile)}");
       }
+      _log.info(
+          "[get] Remote content updated for ${AppDbAlbumEntry.toPath(account, albumFile)}");
     } catch (e, stacktrace) {
       // no cache
       if (e is! CacheNotFoundException) {
@@ -408,7 +415,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
 
     // no cache
     final remote = await _remoteSrc.get(account, albumFile);
-    await _cacheResult(account, albumFile, remote);
+    await _cacheResult(account, remote);
     return remote;
   }
 
@@ -427,15 +434,19 @@ class AlbumCachedDataSource implements AlbumDataSource {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
-      final keyPrefix = _getCacheKeyPrefix(account);
-      final range = KeyRange.bound("$keyPrefix/", "$keyPrefix/\uffff");
-      final danglingKeys = await store
+      final index = store.index(AppDbAlbumEntry.indexName);
+      final rootPath = AppDbAlbumEntry.toRootPath(account);
+      final range = KeyRange.bound(
+          ["$rootPath/", 0], ["$rootPath/\uffff", int_util.int32Max]);
+      final danglingKeys = await index
           // get all albums for this account
           .openKeyCursor(range: range, autoAdvance: true)
-          .map((cursor) => cursor.key)
+          .map((cursor) => Tuple2((cursor.key as List)[0], cursor.primaryKey))
           // and pick the dangling ones
-          .where((key) =>
-              !albumFiles.any((f) => key == "${_getCacheKey(account, f)}"))
+          .where((pair) => !albumFiles
+              .any((f) => pair.item1 == AppDbAlbumEntry.toPath(account, f)))
+          // map to primary keys
+          .map((pair) => pair.item2)
           .toList();
       for (final k in danglingKeys) {
         _log.fine("[cleanUp] Removing DB entry: $k");
@@ -444,12 +455,12 @@ class AlbumCachedDataSource implements AlbumDataSource {
     });
   }
 
-  Future<void> _cacheResult(Account account, File albumFile, Album result) {
+  Future<void> _cacheResult(Account account, Album result) {
     return AppDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
-      await store.put(result.toAppDbJson(), _getCacheKey(account, albumFile));
+      await _cacheAlbum(store, account, result);
     });
   }
 
@@ -459,7 +470,37 @@ class AlbumCachedDataSource implements AlbumDataSource {
   static final _log = Logger("entity.album.AlbumCachedDataSource");
 }
 
-String _getCacheKeyPrefix(Account account) => account.url;
+Future<void> _cacheAlbum(
+    ObjectStore store, Account account, Album album) async {
+  final index = store.index(AppDbAlbumEntry.indexName);
+  final path = AppDbAlbumEntry.toPath(account, album.albumFile);
+  final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+  // count number of entries for this album
+  final count = await index.count(range);
+  int newCount = 0;
+  for (final pair
+      in partition(album.items, AppDbAlbumEntry.maxDataSize).withIndex()) {
+    _log.info(
+        "[_cacheAlbum] Caching $path[${pair.item1}], length: ${pair.item2.length}");
+    await store.put(
+      AppDbAlbumEntry(path, pair.item1, album.copyWith(items: pair.item2))
+          .toJson(),
+      AppDbAlbumEntry.toPrimaryKey(account, album.albumFile, pair.item1),
+    );
+    ++newCount;
+  }
+  if (count > newCount) {
+    // index is 0-based
+    final rmRange = KeyRange.bound([path, newCount], [path, int_util.int32Max]);
+    final rmKeys = await index
+        .openKeyCursor(range: rmRange, autoAdvance: true)
+        .map((cursor) => cursor.primaryKey)
+        .toList();
+    for (final k in rmKeys) {
+      _log.fine("[_cacheAlbum] Removing DB entry: $k");
+      await store.delete(k);
+    }
+  }
+}
 
-String _getCacheKey(Account account, File albumFile) =>
-    "${_getCacheKeyPrefix(account)}/${albumFile.path}";
+final _log = Logger("entity.album");
