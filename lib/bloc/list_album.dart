@@ -123,15 +123,20 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   Stream<ListAlbumBlocState> _onEventQuery(ListAlbumBlocQuery ev) async* {
     yield ListAlbumBlocLoading(ev.account, state.albums);
+    bool hasContent = state.albums.isNotEmpty;
 
-    ListAlbumBlocState cacheState = ListAlbumBlocInit();
-    await for (final s in _queryOffline(ev, () => cacheState)) {
-      cacheState = s;
+    if (!hasContent) {
+      // show something instantly on first load
+      ListAlbumBlocState cacheState = ListAlbumBlocInit();
+      await for (final s in _queryOffline(ev, () => cacheState)) {
+        cacheState = s;
+      }
+      yield ListAlbumBlocLoading(ev.account, cacheState.albums);
+      hasContent = cacheState.albums.isNotEmpty;
     }
-    yield ListAlbumBlocLoading(ev.account, cacheState.albums);
 
     ListAlbumBlocState newState = ListAlbumBlocInit();
-    if (cacheState.albums.isEmpty) {
+    if (!hasContent) {
       await for (final s in _queryOnline(ev, () => newState)) {
         newState = s;
         yield s;
@@ -144,7 +149,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
         yield newState;
       } else if (newState is ListAlbumBlocFailure) {
         yield ListAlbumBlocFailure(
-            ev.account, cacheState.albums, newState.exception);
+            ev.account, state.albums, newState.exception);
       }
     }
   }
