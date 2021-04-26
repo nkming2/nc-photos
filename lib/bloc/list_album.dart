@@ -212,8 +212,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       final results = await ListAlbum(
           FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account);
       yield ListAlbumBlocSuccess(ev.account, results);
-    } catch (e) {
-      _log.severe("[_queryWithAlbumDataSource] Exception while request", e);
+    } catch (e, stacktrace) {
+      _log.severe(
+          "[_queryWithAlbumDataSource] Exception while request", e, stacktrace);
       yield ListAlbumBlocFailure(ev.account, getState().albums, e);
     }
   }
