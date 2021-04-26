@@ -1,3 +1,5 @@
+import 'package:tuple/tuple.dart';
+
 extension IterableExtension<T> on Iterable<T> {
   /// Return a new sorted list
   List<T> sorted([int compare(T a, T b)]) => this.toList()..sort(compare);
@@ -12,6 +14,8 @@ extension IterableExtension<T> on Iterable<T> {
       yield fn(i++, e);
     }
   }
+
+  Iterable<Tuple2<int, T>> withIndex() => mapWithIndex((i, e) => Tuple2(i, e));
 
   /// Whether the collection contains an element equal to [element] using the
   /// equality function [equalFn]
