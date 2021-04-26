@@ -218,7 +218,8 @@ class _HomePhotosState extends State<HomePhotos>
       if (value == null) {
         // user cancelled the dialog
       } else if (value is Album) {
-        _log.info("[_onSelectionAppBarAddToAlbumPressed] Album picked: $value");
+        _log.info(
+            "[_onSelectionAppBarAddToAlbumPressed] Album picked: ${value.name}");
         _addSelectedToAlbum(context, value).then((_) {
           setState(() {
             clearSelectedItems();
