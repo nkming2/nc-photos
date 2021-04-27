@@ -322,7 +322,7 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onRefreshSelected() {
-    _reqQuery();
+    _reqRefresh();
     if (Pref.inst().isEnableExif()) {
       KiwiContainer()
           .resolve<MetadataTaskManager>()
@@ -366,6 +366,16 @@ class _HomePhotosState extends State<HomePhotos>
 
   void _reqQuery() {
     _bloc.add(ScanDirBlocQuery(
+        widget.account,
+        widget.account.roots
+            .map((e) => File(
+                path:
+                    "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
+            .toList()));
+  }
+
+  void _reqRefresh() {
+    _bloc.add(ScanDirBlocRefresh(
         widget.account,
         widget.account.roots
             .map((e) => File(

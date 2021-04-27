@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -13,8 +14,8 @@ abstract class ScanDirBlocEvent {
   const ScanDirBlocEvent();
 }
 
-class ScanDirBlocQuery extends ScanDirBlocEvent {
-  const ScanDirBlocQuery(this.account, this.roots);
+class ScanDirBlocQueryBase extends ScanDirBlocEvent {
+  const ScanDirBlocQueryBase(this.account, this.roots);
 
   @override
   toString() {
@@ -26,6 +27,22 @@ class ScanDirBlocQuery extends ScanDirBlocEvent {
 
   final Account account;
   final List<File> roots;
+}
+
+class ScanDirBlocQuery extends ScanDirBlocQueryBase with EquatableMixin {
+  const ScanDirBlocQuery(Account account, List<File> roots)
+      : super(account, roots);
+
+  @override
+  get props => [
+        account,
+        roots,
+      ];
+}
+
+class ScanDirBlocRefresh extends ScanDirBlocQueryBase {
+  const ScanDirBlocRefresh(Account account, List<File> roots)
+      : super(account, roots);
 }
 
 /// An external event has happened and may affect the state of this bloc
@@ -123,9 +140,21 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   }
 
   @override
+  transformEvents(Stream<ScanDirBlocEvent> events, transitionFn) {
+    return super.transformEvents(events.distinct((a, b) {
+      // only handle ScanDirBlocQuery
+      final r = a is ScanDirBlocQuery && b is ScanDirBlocQuery && a == b;
+      if (r) {
+        _log.fine("[transformEvents] Skip identical ScanDirBlocQuery event");
+      }
+      return r;
+    }), transitionFn);
+  }
+
+  @override
   mapEventToState(ScanDirBlocEvent event) async* {
     _log.info("[mapEventToState] $event");
-    if (event is ScanDirBlocQuery) {
+    if (event is ScanDirBlocQueryBase) {
       yield* _onEventQuery(event);
     } else if (event is _ScanDirBlocExternalEvent) {
       yield* _onExternalEvent(event);
@@ -139,7 +168,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     return super.close();
   }
 
-  Stream<ScanDirBlocState> _onEventQuery(ScanDirBlocQuery ev) async* {
+  Stream<ScanDirBlocState> _onEventQuery(ScanDirBlocQueryBase ev) async* {
     yield ScanDirBlocLoading(ev.account, state.files);
     bool hasContent = state.files.isNotEmpty;
 
@@ -193,14 +222,14 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   }
 
   Stream<ScanDirBlocState> _queryOffline(
-          ScanDirBlocQuery ev, ScanDirBlocState Function() getState) =>
+          ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) =>
       _queryWithFileDataSource(ev, getState, FileAppDbDataSource());
 
   Stream<ScanDirBlocState> _queryOnline(
-          ScanDirBlocQuery ev, ScanDirBlocState Function() getState) =>
+          ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) =>
       _queryWithFileDataSource(ev, getState, FileCachedDataSource());
 
-  Stream<ScanDirBlocState> _queryWithFileDataSource(ScanDirBlocQuery ev,
+  Stream<ScanDirBlocState> _queryWithFileDataSource(ScanDirBlocQueryBase ev,
       ScanDirBlocState Function() getState, FileDataSource dataSrc) async* {
     try {
       for (final r in ev.roots) {
