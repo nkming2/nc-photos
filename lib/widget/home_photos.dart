@@ -267,7 +267,7 @@ class _HomePhotosState extends State<HomePhotos>
             ]),
           ));
     } catch (e, stacktrace) {
-      _log.severe(
+      _log.shout(
           "[_addSelectedToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
@@ -299,8 +299,9 @@ class _HomePhotosState extends State<HomePhotos>
       try {
         await Remove(fileRepo, albumRepo)(widget.account, f);
       } catch (e, stacktrace) {
-        _log.severe(
-            "[_onSelectionAppBarDeletePressed] Failed while removing file: ${f.path}",
+        _log.shout(
+            "[_onSelectionAppBarDeletePressed] Failed while removing file" +
+                (kDebugMode ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);

@@ -54,7 +54,7 @@ class UpdateMissingMetadata {
             AlbumRepo(AlbumCachedDataSource()))(account, file, metadataObj);
         yield file;
       } catch (e, stacktrace) {
-        _log.severe("[call] Failed while getting metadata", e, stacktrace);
+        _log.shout("[call] Failed while getting metadata", e, stacktrace);
         yield e;
       }
     }

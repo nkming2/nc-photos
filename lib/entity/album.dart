@@ -52,7 +52,7 @@ abstract class AlbumItem {
       case AlbumFileItem._type:
         return AlbumFileItem.fromJson(content.cast<String, dynamic>());
       default:
-        _log.severe("[fromJson] Unknown type: $type");
+        _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
     }
   }
@@ -406,11 +406,10 @@ class AlbumCachedDataSource implements AlbumDataSource {
       }
       _log.info(
           "[get] Remote content updated for ${AppDbAlbumEntry.toPath(account, albumFile)}");
+    } on CacheNotFoundException catch (_) {
+      // normal when there's no cache
     } catch (e, stacktrace) {
-      // no cache
-      if (e is! CacheNotFoundException) {
-        _log.severe("[get] Cache failure", e, stacktrace);
-      }
+      _log.shout("[get] Cache failure", e, stacktrace);
     }
 
     // no cache

@@ -34,7 +34,7 @@ class Remove {
           await UpdateAlbum(albumRepo)(account, a.copyWith(items: newItems));
         }
       } catch (e, stacktrace) {
-        _log.severe(
+        _log.shout(
             "[_cleanUpAlbums] Failed while updating album", e, stacktrace);
         // continue to next album
       }

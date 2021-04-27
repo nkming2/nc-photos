@@ -25,7 +25,7 @@ class ListAlbum {
         albumRepo.cleanUp(account, albumFiles);
       } catch (e, stacktrace) {
         // not important, log and ignore
-        _log.severe("[call] Failed while cleanUp", e, stacktrace);
+        _log.shout("[call] Failed while cleanUp", e, stacktrace);
       }
       return albums;
     } catch (e) {

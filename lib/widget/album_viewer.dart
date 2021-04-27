@@ -238,7 +238,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         _transformItems();
       });
     }).catchError((e, stacktrace) {
-      _log.severe("[_onSelectionRemovePressed] Failed while updating album", e,
+      _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(

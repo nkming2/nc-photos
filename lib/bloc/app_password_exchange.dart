@@ -73,7 +73,7 @@ class AppPasswordExchangeBloc
       final appPwd = await api_util.exchangePassword(account);
       yield AppPasswordExchangeBlocSuccess(appPwd);
     } catch (e, stacktrace) {
-      _log.severe("[_exchangePassword] Failed while exchanging password", e,
+      _log.shout("[_exchangePassword] Failed while exchanging password", e,
           stacktrace);
       yield AppPasswordExchangeBlocFailure(e);
     }

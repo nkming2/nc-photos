@@ -576,7 +576,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
         duration: k.snackBarDurationNormal,
       ));
     } catch (e, stacktrace) {
-      _log.severe(
+      _log.shout(
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
@@ -608,7 +608,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
       ));
       Navigator.of(context).pop();
     } catch (e, stacktrace) {
-      _log.severe("[_onDeletePressed] Failed while remove: ${file.path}", e,
+      _log.shout(
+          "[_onDeletePressed] Failed while remove" +
+              (kDebugMode ? ": ${file.path}" : ""),
+          e,
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(

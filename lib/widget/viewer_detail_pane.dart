@@ -226,8 +226,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       ));
       Navigator.of(context).pop();
     } catch (e, stacktrace) {
-      _log.severe("[_onDeletePressed] Failed while remove: ${widget.file.path}",
-          e, stacktrace);
+      _log.shout(
+          "[_onDeletePressed] Failed while remove" +
+              (kDebugMode ? ": ${widget.file.path}" : ""),
+          e,
+          stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content:
@@ -344,7 +347,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             items: [...album.items, AlbumFileItem(file: widget.file)],
           ));
     } catch (e, stacktrace) {
-      _log.severe("[_addToAlbum] Failed while updating album", e, stacktrace);
+      _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
             "${AppLocalizations.of(context).addToAlbumFailureNotification}: "

@@ -15,7 +15,7 @@ class WebdavFileParser {
             element.matchQualifiedName("multistatus",
                 prefix: "DAV:", namespaces: _namespaces));
       } catch (_) {
-        _log.severe("[call] Missing element: multistatus");
+        _log.shout("[call] Missing element: multistatus");
         rethrow;
       }
     }();
@@ -27,7 +27,7 @@ class WebdavFileParser {
           try {
             return _toFile(element);
           } catch (e, stacktrace) {
-            _log.severe("[call] Failed parsing XML", e, stacktrace);
+            _log.shout("[call] Failed parsing XML", e, stacktrace);
             return null;
           }
         })

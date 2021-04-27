@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -22,7 +23,11 @@ class ScanDir {
         yield* this(account, i);
       }
     } catch (e, stacktrace) {
-      _log.severe("[call] Failed scanning \"${root.path}\"", e, stacktrace);
+      _log.shout(
+          "[call] Failed while listing dir" +
+              (kDebugMode ? ": ${root.path}" : ""),
+          e,
+          stacktrace);
       // for some reason exception thrown here can't be caught outside
       // rethrow;
       yield e;

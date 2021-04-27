@@ -623,11 +623,10 @@ class FileCachedDataSource implements FileDataSource {
       }
       _log.info(
           "[list] Remote content updated for ${AppDbFileEntry.toPath(account, f)}");
+    } on CacheNotFoundException catch (_) {
+      // normal when there's no cache
     } catch (e, stacktrace) {
-      // no cache
-      if (e is! CacheNotFoundException) {
-        _log.severe("[list] Cache failure", e, stacktrace);
-      }
+      _log.shout("[list] Cache failure", e, stacktrace);
     }
 
     // no cache
@@ -638,7 +637,7 @@ class FileCachedDataSource implements FileDataSource {
         try {
           await _cleanUpCachedDir(account, remote, cache);
         } catch (e, stacktrace) {
-          _log.severe("[list] Failed while _cleanUpCachedList", e, stacktrace);
+          _log.shout("[list] Failed while _cleanUpCachedList", e, stacktrace);
           // ignore error
         }
       }

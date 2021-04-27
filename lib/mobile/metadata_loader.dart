@@ -36,7 +36,7 @@ class MetadataLoader implements itf.MetadataLoader {
     final response =
         await Api(account).files().get(path: api_util.getFileUrlRelative(file));
     if (!response.isGood) {
-      _log.severe("[forceLoadFile] Failed requesting server: $response");
+      _log.severe("[loadNewFile] Failed requesting server: $response");
       throw ApiException(
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
