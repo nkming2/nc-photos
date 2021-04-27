@@ -20,4 +20,6 @@ Fixed a bug that corrupted the albums. Please re-add the photos after upgrading.
   """1.8.0
 Dark theme
 """,
+  // v9
+  null,
 ];
