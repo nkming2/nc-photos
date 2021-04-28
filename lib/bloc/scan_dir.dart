@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -165,6 +166,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   close() {
     _fileRemovedEventListener.end();
     _fileMetadataUpdatedEventListener.end();
+    _metadataUpdatedSubscription?.cancel();
     return super.close();
   }
 
@@ -218,7 +220,19 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    add(_ScanDirBlocExternalEvent());
+
+    _successiveMetadataUpdatedCount += 1;
+    _metadataUpdatedSubscription?.cancel();
+    // only trigger the event on the 10th update or 10s after the last update
+    if (_successiveMetadataUpdatedCount % 10 == 0) {
+      add(_ScanDirBlocExternalEvent());
+    } else {
+      _metadataUpdatedSubscription =
+          Future.delayed(const Duration(seconds: 10)).asStream().listen((_) {
+        add(_ScanDirBlocExternalEvent());
+        _successiveMetadataUpdatedCount = 0;
+      });
+    }
   }
 
   Stream<ScanDirBlocState> _queryOffline(
@@ -250,6 +264,9 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
   AppEventListener<FileRemovedEvent> _fileRemovedEventListener;
   AppEventListener<FileMetadataUpdatedEvent> _fileMetadataUpdatedEventListener;
+
+  int _successiveMetadataUpdatedCount = 0;
+  StreamSubscription<void> _metadataUpdatedSubscription;
 
   static final _log = Logger("bloc.scan_dir.ScanDirBloc");
 }
