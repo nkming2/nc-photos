@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 
@@ -12,7 +13,7 @@ class UpdateMetadata {
   UpdateMetadata(this.fileRepo, this.albumRepo);
 
   Future<void> call(Account account, File file, Metadata metadata) async {
-    if (file.etag != metadata.fileEtag) {
+    if (metadata != null && metadata.fileEtag != file.etag) {
       _log.warning(
           "[call] Metadata fileEtag mismatch with actual file's (metadata: ${metadata.fileEtag}, file: ${file.etag})");
     }
@@ -33,7 +34,7 @@ class UpdateMetadata {
           final newItems = a.items.map((e) {
             if (e is AlbumFileItem && e.file.path == file.path) {
               return AlbumFileItem(
-                file: e.file.copyWith(metadata: metadata),
+                file: e.file.copyWith(metadata: OrNull(metadata)),
               );
             } else {
               return e;

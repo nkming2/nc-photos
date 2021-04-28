@@ -1,5 +1,6 @@
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -657,7 +658,7 @@ void main() {
 
       test("metadata", () {
         final metadata = Metadata();
-        final file = src.copyWith(metadata: metadata);
+        final file = src.copyWith(metadata: OrNull(metadata));
         expect(
             file,
             File(
@@ -672,32 +673,33 @@ void main() {
               metadata: metadata,
             ));
       });
-    });
 
-    test("withoutMetadata", () {
-      final file = File(
-        path: "/remote.php/dav/files/admin/test.jpg",
-        contentLength: 123,
-        contentType: "image/jpeg",
-        etag: "8a3e0799b6f0711c23cc2d93950eceb5",
-        lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-        isCollection: true,
-        usedBytes: 123456,
-        hasPreview: true,
-        metadata: Metadata(),
-      );
-      expect(
-          file.withoutMetadata(),
-          File(
-            path: "/remote.php/dav/files/admin/test.jpg",
-            contentLength: 123,
-            contentType: "image/jpeg",
-            etag: "8a3e0799b6f0711c23cc2d93950eceb5",
-            lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-            isCollection: true,
-            usedBytes: 123456,
-            hasPreview: true,
-          ));
+      test("clear metadata", () {
+        final src = File(
+          path: "/remote.php/dav/files/admin/test.jpg",
+          contentLength: 123,
+          contentType: "image/jpeg",
+          etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+          isCollection: true,
+          usedBytes: 123456,
+          hasPreview: true,
+          metadata: Metadata(),
+        );
+        final file = src.copyWith(metadata: OrNull(null));
+        expect(
+            file,
+            File(
+              path: "/remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+            ));
+      });
     });
 
     test("strippedPath", () {

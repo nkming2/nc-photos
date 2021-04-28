@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
@@ -288,7 +289,7 @@ class File with EquatableMixin {
     bool isCollection,
     int usedBytes,
     bool hasPreview,
-    Metadata metadata,
+    OrNull<Metadata> metadata,
   }) {
     return File(
       path: path ?? this.path,
@@ -299,20 +300,7 @@ class File with EquatableMixin {
       isCollection: isCollection ?? this.isCollection,
       usedBytes: usedBytes ?? this.usedBytes,
       hasPreview: hasPreview ?? this.hasPreview,
-      metadata: metadata ?? this.metadata,
-    );
-  }
-
-  File withoutMetadata() {
-    return File(
-      path: path,
-      contentLength: contentLength,
-      contentType: contentType,
-      etag: etag,
-      lastModified: lastModified,
-      isCollection: isCollection,
-      usedBytes: usedBytes,
-      hasPreview: hasPreview,
+      metadata: metadata == null ? this.metadata : metadata.obj,
     );
   }
 
@@ -437,7 +425,7 @@ class FileWebdavDataSource implements FileDataSource {
         return e;
       } else {
         _log.info("[list] Ignore outdated metadata for ${e.path}");
-        return e.withoutMetadata();
+        return e.copyWith(metadata: OrNull(null));
       }
     }).toList();
   }
@@ -565,7 +553,7 @@ class FileAppDbDataSource implements FileDataSource {
       final parentList = await _doList(store, account, parentDir);
       final jsonList = parentList.map((e) {
         if (e.path == f.path) {
-          return e.copyWith(metadata: metadata);
+          return e.copyWith(metadata: OrNull(metadata));
         } else {
           return e;
         }
