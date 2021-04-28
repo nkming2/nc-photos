@@ -190,6 +190,8 @@ class _AlbumViewerState extends State<AlbumViewer>
           itemBuilder: (context) => [
             PopupMenuZoom(
               initialValue: _thumbZoomLevel,
+              minValue: 0,
+              maxValue: 2,
               onChanged: (value) {
                 setState(() {
                   _thumbZoomLevel = value.round();

@@ -162,9 +162,11 @@ class _HomePhotosState extends State<HomePhotos>
           itemBuilder: (context) => [
             PopupMenuZoom(
               initialValue: _thumbZoomLevel,
+              minValue: -1,
+              maxValue: 2,
               onChanged: (value) {
                 setState(() {
-                  _thumbZoomLevel = value.round();
+                  _setThumbZoomLevel(value.round());
                 });
                 Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
               },
@@ -341,13 +343,23 @@ class _HomePhotosState extends State<HomePhotos>
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
-        final newDateStr =
-            (f.metadata?.exif?.dateTimeOriginal ?? f.lastModified)
-                ?.toSubtitleString();
+
+        String newDateStr;
+        final date = f.metadata?.exif?.dateTimeOriginal ?? f.lastModified;
+        if (date == null) {
+          newDateStr = "";
+        } else if (_thumbZoomLevel >= 0) {
+          // daily
+          newDateStr = date.toDailySubtitleString();
+        } else {
+          // monthly
+          newDateStr = date.toMonthlySubtitleString();
+        }
         if (newDateStr != currentDateStr) {
           yield _SubtitleListItem(subtitle: newDateStr);
           currentDateStr = newDateStr;
         }
+
         var previewUrl;
         if (f.hasPreview) {
           previewUrl = api_util.getFilePreviewUrl(widget.account, f,
@@ -385,8 +397,19 @@ class _HomePhotosState extends State<HomePhotos>
             .toList()));
   }
 
+  void _setThumbZoomLevel(int level) {
+    final prevLevel = _thumbZoomLevel;
+    _thumbZoomLevel = level;
+    if ((prevLevel >= 0) != (level >= 0)) {
+      _transformItems(_backingFiles);
+    }
+  }
+
   int get _thumbSize {
     switch (_thumbZoomLevel) {
+      case -1:
+        return 96;
+
       case 1:
         return 176;
 
@@ -478,8 +501,13 @@ class _ImageListItem extends _FileListItem {
 }
 
 extension on DateTime {
-  String toSubtitleString() {
+  String toDailySubtitleString() {
     final format = DateFormat(DateFormat.YEAR_MONTH_DAY);
+    return format.format(this.toLocal());
+  }
+
+  String toMonthlySubtitleString() {
+    final format = DateFormat(DateFormat.YEAR_MONTH);
     return format.format(this.toLocal());
   }
 }
