@@ -6,12 +6,13 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/downloader.dart' as itf;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:path/path.dart' as path;
 
 class Downloader extends itf.Downloader {
   @override
   downloadFile(Account account, File file) {
-    if (Platform.isAndroid) {
+    if (platform_k.isAndroid) {
       return _downloadFileAndroid(account, file);
     } else {
       throw UnimplementedError();

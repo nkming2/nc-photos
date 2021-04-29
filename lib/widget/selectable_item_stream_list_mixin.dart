@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -37,7 +38,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     BuildContext context, {
     @required Widget child,
   }) {
-    if (kIsWeb) {
+    if (platform_k.isWeb) {
       // support switching pages with keyboard on web
       return RawKeyboardListener(
         onKey: (ev) {
@@ -108,7 +109,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       return _SelectableItemWidget(
         isSelected: _selectedItems.contains(item),
         onTap: () => _onItemTap(item, index),
-        onLongPress: isSelectionMode && kIsWeb
+        onLongPress: isSelectionMode && platform_k.isWeb
             ? null
             : () => _onItemLongPress(item, index),
         child: item.buildWidget(context),
@@ -159,7 +160,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       return;
     }
     final wasSelectionMode = isSelectionMode;
-    if (!kIsWeb && wasSelectionMode && _lastSelectPosition != null) {
+    if (!platform_k.isWeb && wasSelectionMode && _lastSelectPosition != null) {
       setState(() {
         _selectedItems.addAll(_items
             .sublist(math.min(_lastSelectPosition, index),
@@ -178,7 +179,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     if (!wasSelectionMode) {
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(kIsWeb
+          content: Text(platform_k.isWeb
               ? AppLocalizations.of(context).webSelectRangeNotification
               : AppLocalizations.of(context).mobileSelectRangeNotification),
           duration: k.snackBarDurationNormal,

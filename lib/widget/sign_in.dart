@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
@@ -62,7 +63,7 @@ class _SignInState extends State<SignIn> {
                           child: _buildForm(context),
                         ),
                       ),
-                      if (!kIsWeb) Expanded(child: Container()),
+                      if (!platform_k.isWeb) Expanded(child: Container()),
                       Container(
                         constraints: const BoxConstraints(
                             maxWidth: AppTheme.widthLimitedContentMaxWidth),

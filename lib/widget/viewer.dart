@@ -18,6 +18,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -78,14 +79,15 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     return AppTheme(
       child: Scaffold(
         body: Builder(
-            builder: (context) =>
-                kIsWeb ? _buildWebContent(context) : _buildContent(context)),
+            builder: (context) => platform_k.isWeb
+                ? _buildWebContent(context)
+                : _buildContent(context)),
       ),
     );
   }
 
   Widget _buildWebContent(BuildContext context) {
-    assert(kIsWeb);
+    assert(platform_k.isWeb);
     // support switching pages with keyboard on web
     return RawKeyboardListener(
       onKey: (ev) {
@@ -147,11 +149,11 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
               controller: _pageController,
               itemCount: widget.streamFiles.length,
               itemBuilder: _buildPage,
-              physics: !kIsWeb && _canSwitchPage()
+              physics: !platform_k.isWeb && _canSwitchPage()
                   ? null
                   : const NeverScrollableScrollPhysics(),
             ),
-            if (kIsWeb) ..._buildNavigationButtons(context),
+            if (platform_k.isWeb) ..._buildNavigationButtons(context),
             _buildBottomAppBar(context),
             _buildAppBar(context),
           ],
@@ -793,7 +795,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   /// Update the navigation state for [page]
   void _updateNavigationState(int page) {
     // currently useless to run on non-web platform
-    if (!kIsWeb) {
+    if (!platform_k.isWeb) {
       return;
     }
     final hasNext = page < widget.streamFiles.length - 1;

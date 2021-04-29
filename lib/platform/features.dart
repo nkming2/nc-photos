@@ -1,5 +1,3 @@
-import 'dart:io';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 
-import 'package:flutter/foundation.dart';
-
-final isSupportMapView = kIsWeb || Platform.isAndroid;
+final isSupportMapView = platform_k.isWeb || platform_k.isAndroid;

@@ -19,6 +19,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/features.dart' as features;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -242,7 +243,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   }
 
   void _onMapTap() {
-    if (Platform.isAndroid) {
+    if (platform_k.isAndroid) {
       final intent = AndroidIntent(
         action: "action_view",
         data: Uri.encodeFull("geo:${_gps.item1},${_gps.item2}?z=16"),
