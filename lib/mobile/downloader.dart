@@ -7,6 +7,7 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/downloader.dart' as itf;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:path/path.dart' as path;
 
 class Downloader extends itf.Downloader {
@@ -21,7 +22,7 @@ class Downloader extends itf.Downloader {
 
   Future<void> _downloadFileAndroid(Account account, File file) async {
     final fileRepo = FileRepo(FileCachedDataSource());
-    final fileContent = await fileRepo.getBinary(account, file);
+    final fileContent = await GetFileBinary(fileRepo)(account, file);
     try {
       await MediaStore.saveFileToDownload(
           path.basename(file.path), fileContent);
