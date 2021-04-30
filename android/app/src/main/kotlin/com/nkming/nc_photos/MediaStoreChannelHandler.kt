@@ -3,6 +3,7 @@ package com.nkming.nc_photos
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -11,6 +12,7 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.BufferedOutputStream
@@ -23,8 +25,9 @@ private const val PERMISSION_REQUEST_CODE = 11011
  * Save downloaded item on device
  *
  * Methods:
- * Write binary content to a file in the Download directory
- * fun saveFileToDownload(fileName: String, content: ByteArray)
+ * Write binary content to a file in the Download directory. Return the Uri to
+ * the file
+ * fun saveFileToDownload(fileName: String, content: ByteArray): String
  */
 class MediaStoreChannelHandler(activity: Activity)
 		: MethodChannel.MethodCallHandler {
@@ -77,7 +80,7 @@ class MediaStoreChannelHandler(activity: Activity)
 				stream -> stream.write(content)
 			}
 		}
-		result.success(null)
+		result.success(contentUri.toString())
 	}
 
 	private fun saveFileToDownload0(fileName: String, content: ByteArray,
@@ -107,7 +110,9 @@ class MediaStoreChannelHandler(activity: Activity)
 
 		val fileUri = Uri.fromFile(file)
 		triggerMediaScan(fileUri)
-		result.success(null)
+		val contentUri = FileProvider.getUriForFile(_context,
+				"com.nkming.nc_photos.fileprovider", file)
+		result.success(contentUri.toString())
 	}
 
 	private fun triggerMediaScan(uri: Uri) {

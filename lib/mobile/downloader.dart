@@ -20,11 +20,11 @@ class Downloader extends itf.Downloader {
     }
   }
 
-  Future<void> _downloadFileAndroid(Account account, File file) async {
+  Future<String> _downloadFileAndroid(Account account, File file) async {
     final fileRepo = FileRepo(FileCachedDataSource());
     final fileContent = await GetFileBinary(fileRepo)(account, file);
     try {
-      await MediaStore.saveFileToDownload(
+      return await MediaStore.saveFileToDownload(
           path.basename(file.path), fileContent);
     } on PlatformException catch (e) {
       if (e.code == MediaStore.exceptionCodePermissionError) {
