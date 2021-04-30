@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -103,7 +104,18 @@ class MediaStoreChannelHandler(activity: Activity)
 		BufferedOutputStream(FileOutputStream(file)).use {
 			stream -> stream.write(content)
 		}
+
+		val fileUri = Uri.fromFile(file)
+		triggerMediaScan(fileUri)
 		result.success(null)
+	}
+
+	private fun triggerMediaScan(uri: Uri) {
+		val scanIntent = Intent().apply {
+			action = Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
+			data = uri
+		}
+		_context.sendBroadcast(scanIntent)
 	}
 
 	private val _activity = activity
