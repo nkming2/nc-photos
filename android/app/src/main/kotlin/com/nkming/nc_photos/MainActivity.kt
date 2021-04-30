@@ -11,5 +11,8 @@ class MainActivity: FlutterActivity() {
 		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
 						MediaStoreChannelHandler.CHANNEL)
 				.setMethodCallHandler(MediaStoreChannelHandler(this))
+		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+						NotificationChannelHandler.CHANNEL)
+				.setMethodCallHandler(NotificationChannelHandler(this))
 	}
 }

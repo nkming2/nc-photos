@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -562,13 +563,10 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     controller?.closed?.whenComplete(() {
       controller = null;
     });
+    dynamic result;
     try {
-      await platform.Downloader().downloadFile(widget.account, file);
+      result = await platform.Downloader().downloadFile(widget.account, file);
       controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).downloadSuccessNotification),
-        duration: k.snackBarDurationShort,
-      ));
     } on PermissionException catch (_) {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
@@ -577,6 +575,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
             .downloadFailureNoPermissionNotification),
         duration: k.snackBarDurationNormal,
       ));
+      return;
     } catch (e, stacktrace) {
       _log.shout(
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
@@ -587,7 +586,35 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
                 "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
+      return;
     }
+
+    _onDownloadSuccessful(file, result);
+  }
+
+  void _onDownloadSuccessful(File file, dynamic result) {
+    var notif;
+    if (platform_k.isAndroid) {
+      notif =
+          AndroidItemDownloadSuccessfulNotification(result, file.contentType);
+    }
+    if (notif != null) {
+      try {
+        notif.notify();
+        return;
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_onDownloadSuccessful] Failed showing platform notification",
+            e,
+            stacktrace);
+      }
+    }
+
+    // fallback
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(AppLocalizations.of(context).downloadSuccessNotification),
+      duration: k.snackBarDurationShort,
+    ));
   }
 
   void _onDeletePressed(BuildContext context) async {

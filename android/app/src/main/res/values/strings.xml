@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Photos</string>
+
+	<string name="download_notification_channel_name">Download</string>
+	<string name="download_notification_channel_description">Download</string>
+	<string name="download_successful_notification_title">Download was successful</string>
+	<string name="download_successful_notification_text">Tap to view your downloaded item</string>
+	<string name="download_successful_notification_action_share">SHARE</string>
+	<string name="download_successful_notification_action_share_chooser">Share with:</string>
 </resources>
