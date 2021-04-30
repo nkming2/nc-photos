@@ -22,4 +22,6 @@ Dark theme
 """,
   // v9
   null,
+  // v10
+  null,
 ];
