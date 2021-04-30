@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:path/path.dart' as path;
 
@@ -22,6 +23,9 @@ class ScanDir {
       for (final i in items.where((element) => element.isCollection == true)) {
         yield* this(account, i);
       }
+    } on CacheNotFoundException catch (e) {
+      _log.info("[call] Cache not found");
+      yield e;
     } catch (e, stacktrace) {
       _log.shout(
           "[call] Failed while listing dir" +
