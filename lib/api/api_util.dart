@@ -31,7 +31,7 @@ String getFilePreviewUrlRelative(
   bool a,
 }) {
   final filePath = Uri.encodeQueryComponent(file.strippedPath);
-  var url = "core/preview.png?file=$filePath&x=$width&y=$height";
+  var url = "index.php/core/preview.png?file=$filePath&x=$width&y=$height";
   if (mode != null) {
     url = "$url&mode=$mode";
   }
