@@ -1,16 +1,12 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
@@ -23,7 +19,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
-import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
+import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 
 class ViewerArguments {
@@ -60,7 +56,7 @@ class Viewer extends StatefulWidget {
   final int startIndex;
 }
 
-class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
+class _ViewerState extends State<Viewer> {
   @override
   void initState() {
     super.initState();
@@ -107,58 +103,33 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) {
-        ++_finger;
-        if (_finger >= 2 && _canZoom()) {
-          _setIsZooming(true);
-        }
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _setShowActionBar(!_isShowAppBar);
+        });
       },
-      onPointerUp: (event) {
-        --_finger;
-        if (_finger < 2) {
-          _setIsZooming(false);
-        }
-        _prevFingerPosition = event.position;
-      },
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _setShowActionBar(!_isShowAppBar);
-          });
-        },
-        onDoubleTap: () {
-          if (_canZoom()) {
-            if (_isZoomed()) {
-              // restore transformation
-              _autoZoomOut();
-            } else {
-              _autoZoomIn();
-            }
-          }
-        },
-        child: Stack(
-          children: [
-            Container(color: Colors.black),
-            if (!_pageController.hasClients ||
-                !_pageStates[_pageController.page.round()].hasPreloaded)
-              Align(
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              ),
-            PageView.builder(
-              controller: _pageController,
-              itemCount: widget.streamFiles.length,
-              itemBuilder: _buildPage,
-              physics: !platform_k.isWeb && _canSwitchPage()
-                  ? null
-                  : const NeverScrollableScrollPhysics(),
+      child: Stack(
+        children: [
+          Container(color: Colors.black),
+          if (!_pageController.hasClients ||
+              !_pageStates[_pageController.page.round()].hasLoaded)
+            Align(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(),
             ),
-            if (platform_k.isWeb) ..._buildNavigationButtons(context),
-            _buildBottomAppBar(context),
-            _buildAppBar(context),
-          ],
-        ),
+          PageView.builder(
+            controller: _pageController,
+            itemCount: widget.streamFiles.length,
+            itemBuilder: _buildPage,
+            physics: !platform_k.isWeb && _canSwitchPage()
+                ? null
+                : const NeverScrollableScrollPhysics(),
+          ),
+          if (platform_k.isWeb) ..._buildNavigationButtons(context),
+          _buildBottomAppBar(context),
+          _buildAppBar(context),
+        ],
       ),
     );
   }
@@ -413,50 +384,22 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   }
 
   Widget _buildItemView(BuildContext context, int index) {
-    return InteractiveViewer(
-      minScale: 1.0,
-      maxScale: 3.0,
-      transformationController: _transformationController,
-      panEnabled: _canZoom(),
-      scaleEnabled: _canZoom(),
-      // allow the image to be zoomed to fill the whole screen
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        alignment: Alignment.center,
-        child: NotificationListener<SizeChangedLayoutNotification>(
-          onNotification: (_) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (_pageStates[index].key.currentContext != null) {
-                _updateItemHeight(
-                    index, _pageStates[index].key.currentContext.size.height);
-              }
-            });
-            return false;
-          },
-          child: SizeChangedLayoutNotifier(
-            child: mod.CachedNetworkImage(
-              key: _pageStates[index].key,
-              imageUrl: _getImageUrl(widget.account, widget.streamFiles[index]),
-              httpHeaders: {
-                "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
-              },
-              fit: BoxFit.contain,
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              imageBuilder: (context, child, imageProvider) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _onItemLoaded(index);
-                });
-                SizeChangedLayoutNotification().dispatch(context);
-                return child;
-              },
-            ),
-          ),
-        ),
-      ),
+    return ImageViewer(
+      account: widget.account,
+      file: widget.streamFiles[index],
+      canZoom: _canZoom(),
+      onLoaded: () => _onImageLoaded(index),
+      onHeightChanged: (height) => _updateItemHeight(index, height),
+      onZoomStarted: () {
+        setState(() {
+          _isZoomed = true;
+        });
+      },
+      onZoomEnded: () {
+        setState(() {
+          _isZoomed = false;
+        });
+      },
     );
   }
 
@@ -491,30 +434,22 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     return false;
   }
 
-  void _onItemLoaded(int index) {
+  void _onImageLoaded(int index) {
     // currently pageview doesn't pre-load pages, we do it manually
     // don't pre-load if user already navigated away
     if (_pageController.page.round() == index &&
-        !_pageStates[index].hasPreloaded) {
-      _log.info("[_onItemLoaded] Pre-loading nearby items");
+        !_pageStates[index].hasLoaded) {
+      _log.info("[_onImageLoaded] Pre-loading nearby images");
       if (index > 0) {
-        DefaultCacheManager().getFileStream(
-          _getImageUrl(widget.account, widget.streamFiles[index - 1]),
-          headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-          },
-        );
+        final prevFile = widget.streamFiles[index - 1];
+        ImageViewer.preloadImage(widget.account, prevFile);
       }
       if (index + 1 < widget.streamFiles.length) {
-        DefaultCacheManager().getFileStream(
-          _getImageUrl(widget.account, widget.streamFiles[index + 1]),
-          headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-          },
-        );
+        final nextFile = widget.streamFiles[index + 1];
+        ImageViewer.preloadImage(widget.account, nextFile);
       }
       setState(() {
-        _pageStates[index].hasPreloaded = true;
+        _pageStates[index].hasLoaded = true;
       });
     }
   }
@@ -721,67 +656,6 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     _isClosingDetailPane = false;
   }
 
-  void _setIsZooming(bool flag) {
-    _isZooming = flag;
-    final next = _isZoomed();
-    if (next != _wasZoomed) {
-      _wasZoomed = next;
-      setState(() {
-        _log.info("[_setIsZooming] Is zoomed: $next");
-      });
-    }
-  }
-
-  bool _isZoomed() {
-    return _isZooming ||
-        _transformationController.value.getMaxScaleOnAxis() != 1.0;
-  }
-
-  /// Called when double tapping the image to zoom in to the default level
-  void _autoZoomIn() {
-    final animController =
-        AnimationController(duration: k.animationDurationShort, vsync: this);
-    final originX = -_prevFingerPosition.dx / 2;
-    final originY = -_prevFingerPosition.dy / 2;
-    final anim = Matrix4Tween(
-            begin: Matrix4.identity(),
-            end: Matrix4.identity()
-              ..scale(2.0)
-              ..translate(originX, originY))
-        .animate(animController);
-    animController
-      ..addListener(() {
-        _transformationController.value = anim.value;
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _setIsZooming(false);
-        }
-      })
-      ..forward();
-    _setIsZooming(true);
-  }
-
-  /// Called when double tapping the zoomed image to zoom out
-  void _autoZoomOut() {
-    final animController =
-        AnimationController(duration: k.animationDurationShort, vsync: this);
-    final anim = Matrix4Tween(
-            begin: _transformationController.value, end: Matrix4.identity())
-        .animate(animController);
-    animController
-      ..addListener(() {
-        _transformationController.value = anim.value;
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _setIsZooming(false);
-        }
-      })
-      ..forward();
-    _setIsZooming(true);
-  }
-
   /// Switch to the previous image in the stream
   void _switchToPrevImage() {
     _pageController
@@ -849,17 +723,9 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
     }
   }
 
-  bool _canSwitchPage() => !_isZoomed();
-  bool _canOpenDetailPane() => !_isZoomed();
+  bool _canSwitchPage() => !_isZoomed;
+  bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
-
-  String _getImageUrl(Account account, File file) => api_util.getFilePreviewUrl(
-        account,
-        file,
-        width: 1080,
-        height: 1080,
-        a: true,
-      );
 
   var _hasInit = false;
 
@@ -875,12 +741,7 @@ class _ViewerState extends State<Viewer> with TickerProviderStateMixin {
   var _isShowRight = false;
   var _isShowLeft = false;
 
-  var _isZooming = false;
-  var _wasZoomed = false;
-  final _transformationController = TransformationController();
-
-  int _finger = 0;
-  Offset _prevFingerPosition;
+  var _isZoomed = false;
 
   PageController _pageController;
   final _pageStates = <int, _PageState>{};
@@ -896,6 +757,5 @@ class _PageState {
 
   ScrollController scrollController;
   double itemHeight;
-  bool hasPreloaded = false;
-  GlobalKey key = GlobalKey();
+  bool hasLoaded = false;
 }
