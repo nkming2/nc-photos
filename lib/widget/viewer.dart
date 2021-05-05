@@ -19,6 +19,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 
@@ -210,55 +211,45 @@ class _ViewerState extends State<Viewer> {
   Widget _buildAppBar(BuildContext context) {
     return Wrap(
       children: [
-        AnimatedOpacity(
+        AnimatedVisibility(
           opacity: _isShowAppBar ? 1.0 : 0.0,
           duration: k.animationDurationNormal,
-          onEnd: () {
-            if (!_isShowAppBar) {
-              setState(() {
-                _isAppBarActive = false;
-              });
-            }
-          },
-          child: Visibility(
-            visible: _isAppBarActive,
-            child: Stack(
-              children: [
-                Container(
-                  // + status bar height
-                  height: kToolbarHeight + MediaQuery.of(context).padding.top,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: const Alignment(0, -1),
-                      end: const Alignment(0, 1),
-                      colors: [
-                        Color.fromARGB(192, 0, 0, 0),
-                        Color.fromARGB(0, 0, 0, 0),
-                      ],
-                    ),
+          child: Stack(
+            children: [
+              Container(
+                // + status bar height
+                height: kToolbarHeight + MediaQuery.of(context).padding.top,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: const Alignment(0, -1),
+                    end: const Alignment(0, 1),
+                    colors: [
+                      Color.fromARGB(192, 0, 0, 0),
+                      Color.fromARGB(0, 0, 0, 0),
+                    ],
                   ),
                 ),
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  brightness: Brightness.dark,
-                  iconTheme: Theme.of(context).iconTheme.copyWith(
-                        color: Colors.white.withOpacity(.87),
-                      ),
-                  actionsIconTheme: Theme.of(context).iconTheme.copyWith(
-                        color: Colors.white.withOpacity(.87),
-                      ),
-                  actions: [
-                    if (!_isDetailPaneActive && _canOpenDetailPane())
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        tooltip: AppLocalizations.of(context).detailsTooltip,
-                        onPressed: _onDetailsPressed,
-                      ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              AppBar(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                brightness: Brightness.dark,
+                iconTheme: Theme.of(context).iconTheme.copyWith(
+                      color: Colors.white.withOpacity(.87),
+                    ),
+                actionsIconTheme: Theme.of(context).iconTheme.copyWith(
+                      color: Colors.white.withOpacity(.87),
+                    ),
+                actions: [
+                  if (!_isDetailPaneActive && _canOpenDetailPane())
+                    IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      tooltip: AppLocalizations.of(context).detailsTooltip,
+                      onPressed: _onDetailsPressed,
+                    ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
@@ -270,52 +261,51 @@ class _ViewerState extends State<Viewer> {
       alignment: Alignment.bottomCenter,
       child: Material(
         type: MaterialType.transparency,
-        child: AnimatedOpacity(
-          opacity: _isShowAppBar ? 1.0 : 0.0,
-          duration: k.animationDurationNormal,
-          child: Visibility(
-            visible: _isAppBarActive && !_isDetailPaneActive,
-            child: Container(
-              height: kToolbarHeight,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: const Alignment(0, -1),
-                  end: const Alignment(0, 1),
-                  colors: [
-                    Color.fromARGB(0, 0, 0, 0),
-                    Color.fromARGB(192, 0, 0, 0),
-                  ],
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.download_outlined,
-                        color: Colors.white.withOpacity(.87),
-                      ),
-                      tooltip: AppLocalizations.of(context).downloadTooltip,
-                      onPressed: () => _onDownloadPressed(context),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.delete_outlined,
-                        color: Colors.white.withOpacity(.87),
-                      ),
-                      tooltip: AppLocalizations.of(context).deleteTooltip,
-                      onPressed: () => _onDeletePressed(context),
-                    ),
-                  ),
+        child: AnimatedVisibility(
+          opacity: (_isShowAppBar && !_isDetailPaneActive) ? 1.0 : 0.0,
+          duration: !_isDetailPaneActive
+              ? k.animationDurationNormal
+              : const Duration(milliseconds: 1),
+          child: Container(
+            height: kToolbarHeight,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: const Alignment(0, -1),
+                end: const Alignment(0, 1),
+                colors: [
+                  Color.fromARGB(0, 0, 0, 0),
+                  Color.fromARGB(192, 0, 0, 0),
                 ],
               ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.download_outlined,
+                      color: Colors.white.withOpacity(.87),
+                    ),
+                    tooltip: AppLocalizations.of(context).downloadTooltip,
+                    onPressed: () => _onDownloadPressed(context),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.delete_outlined,
+                      color: Colors.white.withOpacity(.87),
+                    ),
+                    tooltip: AppLocalizations.of(context).deleteTooltip,
+                    onPressed: () => _onDeletePressed(context),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -618,9 +608,6 @@ class _ViewerState extends State<Viewer> {
 
   void _setShowActionBar(bool flag) {
     _isShowAppBar = flag;
-    if (flag) {
-      _isAppBarActive = true;
-    }
   }
 
   void _openDetailPane(int index, {bool shouldAnimate = false}) {
@@ -730,7 +717,6 @@ class _ViewerState extends State<Viewer> {
   var _hasInit = false;
 
   var _isShowAppBar = true;
-  var _isAppBarActive = true;
 
   var _isShowDetailPane = false;
   var _isDetailPaneActive = false;
