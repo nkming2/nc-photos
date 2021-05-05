@@ -77,13 +77,10 @@ class _AlbumViewerState extends State<AlbumViewer>
 
   void _initCover() {
     try {
-      final coverFile = _backingFiles.first;
-      if (coverFile.hasPreview) {
-        _coverPreviewUrl = api_util.getFilePreviewUrl(widget.account, coverFile,
-            width: 1024, height: 600);
-      } else {
-        _coverPreviewUrl = api_util.getFileUrl(widget.account, coverFile);
-      }
+      final coverFile =
+          _backingFiles.firstWhere((element) => element.hasPreview);
+      _coverPreviewUrl = api_util.getFilePreviewUrl(widget.account, coverFile,
+          width: 1024, height: 600);
     } catch (_) {}
   }
 
@@ -164,6 +161,10 @@ class _AlbumViewerState extends State<AlbumViewer>
                     Api.getAuthorizationHeaderValue(widget.account),
               },
               filterQuality: FilterQuality.high,
+              errorWidget: (context, url, error) {
+                // just leave it empty
+                return Container();
+              },
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
             ),
           ),
@@ -262,13 +263,8 @@ class _AlbumViewerState extends State<AlbumViewer>
         .sorted(compareFileDateTimeDescending);
 
     itemStreamListItems = _backingFiles.mapWithIndex((i, e) {
-      var previewUrl;
-      if (e.hasPreview) {
-        previewUrl = api_util.getFilePreviewUrl(widget.account, e,
-            width: _thumbSize, height: _thumbSize);
-      } else {
-        previewUrl = api_util.getFileUrl(widget.account, e);
-      }
+      final previewUrl = api_util.getFilePreviewUrl(widget.account, e,
+          width: _thumbSize, height: _thumbSize);
       return _ImageListItem(
         account: widget.account,
         previewUrl: previewUrl,
@@ -319,6 +315,21 @@ class _ImageListItem extends SelectableItemStreamListItem {
         },
         fadeInDuration: const Duration(),
         filterQuality: FilterQuality.high,
+        errorWidget: (context, url, error) {
+          // where's the preview???
+          return Container(
+            color: AppTheme.getListItemBackgroundColor(context),
+            width: 128,
+            height: 128,
+            child: Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 56,
+                color: Colors.white.withOpacity(.8),
+              ),
+            ),
+          );
+        },
         imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       ),
     );

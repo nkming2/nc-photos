@@ -360,13 +360,8 @@ class _HomePhotosState extends State<HomePhotos>
           currentDateStr = newDateStr;
         }
 
-        var previewUrl;
-        if (f.hasPreview) {
-          previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-              width: _thumbSize, height: _thumbSize);
-        } else {
-          previewUrl = api_util.getFileUrl(widget.account, f);
-        }
+        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
+            width: _thumbSize, height: _thumbSize);
         yield _ImageListItem(
           file: f,
           account: widget.account,
@@ -491,6 +486,21 @@ class _ImageListItem extends _FileListItem {
         },
         fadeInDuration: const Duration(),
         filterQuality: FilterQuality.high,
+        errorWidget: (context, url, error) {
+          // where's the preview???
+          return Container(
+            color: AppTheme.getListItemBackgroundColor(context),
+            width: 128,
+            height: 128,
+            child: Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 56,
+                color: Colors.white.withOpacity(.8),
+              ),
+            ),
+          );
+        },
         imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       ),
     );

@@ -113,6 +113,12 @@ class AppTheme extends StatelessWidget {
     return Colors.white.withOpacity(.5);
   }
 
+  static Color getListItemBackgroundColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? Colors.black26
+        : Colors.white12;
+  }
+
   static const primarySwatchLight = Colors.blue;
   static const primarySwatchDark = Colors.cyan;
 

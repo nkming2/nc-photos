@@ -188,17 +188,13 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       final latestFile = album.items
           .whereType<AlbumFileItem>()
           .map((e) => e.file)
-          .where((element) => file_util.isSupportedFormat(element))
+          .where((element) =>
+              file_util.isSupportedFormat(element) && element.hasPreview)
           .sorted(compareFileDateTimeDescending)
           .first;
 
-      String previewUrl;
-      if (latestFile.hasPreview) {
-        previewUrl = api_util.getFilePreviewUrl(widget.account, latestFile,
-            width: 512, height: 512);
-      } else {
-        previewUrl = api_util.getFileUrl(widget.account, latestFile);
-      }
+      final previewUrl = api_util.getFilePreviewUrl(widget.account, latestFile,
+          width: 512, height: 512);
       cover = FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
@@ -209,6 +205,10 @@ class _HomeAlbumsState extends State<HomeAlbums> {
           },
           fadeInDuration: const Duration(),
           filterQuality: FilterQuality.high,
+          errorWidget: (context, url, error) {
+            // just leave it empty
+            return Container();
+          },
           imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         ),
       );
