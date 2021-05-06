@@ -84,8 +84,6 @@ class NotificationChannelHandler(activity: Activity)
 				.setContentText(_context.getString(
 						R.string.download_successful_notification_text))
 				.setWhen(System.currentTimeMillis())
-				.setStyle(NotificationCompat.BigPictureStyle()
-						.bigPicture(loadNotificationImage(uri)))
 				.setContentIntent(openPendingIntent)
 				.addAction(0, _context.getString(
 						R.string.download_successful_notification_action_share),
@@ -96,26 +94,41 @@ class NotificationChannelHandler(activity: Activity)
 				.setOnlyAlertOnce(false)
 				.setAutoCancel(true)
 				.setLocalOnly(true)
+
+		// show preview if available
+		val preview = if (mimeType.startsWith("image/"))
+				loadNotificationImage(uri) else null;
+		if (preview != null) {
+			builder.setStyle(NotificationCompat.BigPictureStyle()
+					.bigPicture(loadNotificationImage(uri)))
+		}
+
 		with(NotificationManagerCompat.from(_context)) {
 			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
 		}
 	}
 
-	private fun loadNotificationImage(fileUri: Uri): Bitmap {
-		val resolver = _context.applicationContext.contentResolver
-		resolver.openFileDescriptor(fileUri, "r").use { pfd ->
-			val metaOpts = BitmapFactory.Options().apply {
-				inJustDecodeBounds = true
+	private fun loadNotificationImage(fileUri: Uri): Bitmap? {
+		try {
+			val resolver = _context.applicationContext.contentResolver
+			resolver.openFileDescriptor(fileUri, "r").use { pfd ->
+				val metaOpts = BitmapFactory.Options().apply {
+					inJustDecodeBounds = true
+				}
+				BitmapFactory.decodeFileDescriptor(pfd!!.fileDescriptor, null,
+						metaOpts)
+				val longSide = max(metaOpts.outWidth, metaOpts.outHeight)
+				val opts = BitmapFactory.Options().apply {
+					// just a preview in the panel, useless to be in high res
+					inSampleSize = longSide / 720
+				}
+				return BitmapFactory.decodeFileDescriptor(pfd.fileDescriptor,
+						null, opts)
 			}
-			BitmapFactory.decodeFileDescriptor(pfd!!.fileDescriptor, null,
-					metaOpts)
-			val longSide = max(metaOpts.outWidth, metaOpts.outHeight)
-			val opts = BitmapFactory.Options().apply {
-				// just a preview in the panel, useless to be in high res
-				inSampleSize = longSide / 720
-			}
-			return BitmapFactory.decodeFileDescriptor(pfd.fileDescriptor, null,
-					opts)
+		} catch (e: Throwable) {
+			Log.e("NotificationChannelHandler::loadNotificationImage",
+					"Failed generating preview image", e)
+			return null
 		}
 	}
 
