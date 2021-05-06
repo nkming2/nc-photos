@@ -18,6 +18,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -305,33 +306,9 @@ class _ImageListItem extends SelectableItemStreamListItem {
 
   @override
   buildWidget(BuildContext context) {
-    return FittedBox(
-      clipBehavior: Clip.hardEdge,
-      fit: BoxFit.cover,
-      child: CachedNetworkImage(
-        imageUrl: previewUrl,
-        httpHeaders: {
-          "Authorization": Api.getAuthorizationHeaderValue(account),
-        },
-        fadeInDuration: const Duration(),
-        filterQuality: FilterQuality.high,
-        errorWidget: (context, url, error) {
-          // where's the preview???
-          return Container(
-            color: AppTheme.getListItemBackgroundColor(context),
-            width: 128,
-            height: 128,
-            child: Center(
-              child: Icon(
-                Icons.image_not_supported,
-                size: 56,
-                color: Colors.white.withOpacity(.8),
-              ),
-            ),
-          );
-        },
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      ),
+    return PhotoListImage(
+      account: account,
+      previewUrl: previewUrl,
     );
   }
 
