@@ -239,5 +239,42 @@ void main() {
         ),
       ]);
     });
+
+    test("nextcloud hosed in subdir", () {
+      final xml = XmlDocument.parse("""
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:"
+	xmlns:s="http://sabredav.org/ns"
+	xmlns:oc="http://owncloud.org/ns"
+	xmlns:nc="http://nextcloud.org/ns">
+	<d:response>
+		<d:href>/nextcloud/remote.php/dav/files/admin/Nextcloud%20intro.mp4</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getlastmodified>Fri, 01 Jan 2021 02:03:04 GMT</d:getlastmodified>
+				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
+				<d:getcontenttype>video/mp4</d:getcontenttype>
+				<d:resourcetype/>
+				<d:getcontentlength>3963036</d:getcontentlength>
+				<nc:has-preview>false</nc:has-preview>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>
+""");
+      final results = WebdavFileParser()(xml);
+      expect(results, [
+        File(
+          path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+          contentLength: 3963036,
+          contentType: "video/mp4",
+          etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+          hasPreview: false,
+          isCollection: false,
+        ),
+      ]);
+    });
   });
 }

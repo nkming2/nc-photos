@@ -68,7 +68,7 @@ class WebdavFileParser {
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
           prefix: "DAV:", namespaces: _namespaces)) {
-        path = Uri.decodeComponent(child.innerText).trimLeftAny("/");
+        path = _hrefToPath(child);
       } else if (child.matchQualifiedName("propstat",
           prefix: "DAV:", namespaces: _namespaces)) {
         final status = child.children
@@ -107,6 +107,18 @@ class WebdavFileParser {
       hasPreview: hasPreview,
       metadata: metadata,
     );
+  }
+
+  String _hrefToPath(XmlElement href) {
+    final rawPath = Uri.decodeComponent(href.innerText).trimLeftAny("/");
+    final pos = rawPath.indexOf("remote.php");
+    if (pos == -1) {
+      // what?
+      _log.warning("[_hrefToPath] Unknown href value: $rawPath");
+      return rawPath;
+    } else {
+      return rawPath.substring(pos);
+    }
   }
 
   var _namespaces = <String, String>{};
