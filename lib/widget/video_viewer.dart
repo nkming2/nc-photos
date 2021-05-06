@@ -121,13 +121,14 @@ class _VideoViewerState extends State<VideoViewer> {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                  bottom: kToolbarHeight + 16, left: 16, right: 16),
+                  bottom: kToolbarHeight + 8, left: 16, right: 16),
               child: AnimatedVisibility(
                 opacity: widget.isControlVisible ? 1.0 : 0.0,
                 duration: k.animationDurationNormal,
                 child: VideoProgressIndicator(
                   _controller,
                   allowScrubbing: true,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   colors: VideoProgressColors(
                     backgroundColor: Colors.white24,
                     bufferedColor: Colors.white38,
