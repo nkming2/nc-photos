@@ -86,6 +86,12 @@ class _ViewerState extends State<Viewer> {
     );
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
+
   Widget _buildWebContent(BuildContext context) {
     assert(platform_k.isWeb);
     // support switching pages with keyboard on web
@@ -661,6 +667,11 @@ class _ViewerState extends State<Viewer> {
 
   void _setShowActionBar(bool flag) {
     _isShowAppBar = flag;
+    if (flag) {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    } else {
+      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    }
   }
 
   void _openDetailPane(int index, {bool shouldAnimate = false}) {
