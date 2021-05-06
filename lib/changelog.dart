@@ -26,4 +26,6 @@ Dark theme
   null,
   // v11
   null,
+  // v12
+  null,
 ];
