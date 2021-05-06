@@ -19,7 +19,7 @@ class ScanMissingMetadata {
         continue;
       }
       final missingMetadata = (d as List<File>).where((element) =>
-          file_util.isSupportedFormat(element) && element.metadata == null);
+          file_util.isSupportedImageFormat(element) && element.metadata == null);
       for (final f in missingMetadata) {
         yield f;
       }
