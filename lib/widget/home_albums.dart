@@ -223,9 +223,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        color: Theme.of(context).brightness == Brightness.light
-            ? Colors.black26
-            : Colors.white24,
+        color: AppTheme.getListItemBackgroundColor(context),
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),
@@ -237,9 +235,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       cover: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Colors.black26
-              : Colors.white24,
+          color: AppTheme.getListItemBackgroundColor(context),
           constraints: const BoxConstraints.expand(),
           child: Icon(
             Icons.add,
