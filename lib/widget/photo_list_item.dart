@@ -47,3 +47,47 @@ class PhotoListImage extends StatelessWidget {
   final Account account;
   final String previewUrl;
 }
+
+class PhotoListVideo extends StatelessWidget {
+  const PhotoListVideo({
+    Key key,
+    @required this.account,
+    @required this.previewUrl,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return FittedBox(
+      clipBehavior: Clip.hardEdge,
+      fit: BoxFit.cover,
+      child: CachedNetworkImage(
+        imageUrl: previewUrl,
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(account),
+        },
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+        errorWidget: (context, url, error) {
+          // no preview for this video. Normal since video preview is disabled
+          // by default
+          return Container(
+            color: AppTheme.getListItemBackgroundColor(context),
+            width: 128,
+            height: 128,
+            child: Center(
+              child: Icon(
+                Icons.videocam,
+                size: 56,
+                color: Colors.white.withOpacity(.8),
+              ),
+            ),
+          );
+        },
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      ),
+    );
+  }
+
+  final Account account;
+  final String previewUrl;
+}

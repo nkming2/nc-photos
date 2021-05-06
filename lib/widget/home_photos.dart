@@ -361,12 +361,24 @@ class _HomePhotosState extends State<HomePhotos>
 
         final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
             width: _thumbSize, height: _thumbSize);
-        yield _ImageListItem(
-          file: f,
-          account: widget.account,
-          previewUrl: previewUrl,
-          onTap: () => _onItemTap(i),
-        );
+        if (file_util.isSupportedImageFormat(f)) {
+          yield _ImageListItem(
+            file: f,
+            account: widget.account,
+            previewUrl: previewUrl,
+            onTap: () => _onItemTap(i),
+          );
+        } else if (file_util.isSupportedVideoFormat(f)) {
+          yield _VideoListItem(
+            file: f,
+            account: widget.account,
+            previewUrl: previewUrl,
+            onTap: () => _onItemTap(i),
+          );
+        } else {
+          _log.shout(
+              "[_transformItems] Unsupported file format: ${f.contentType}");
+        }
       }
     }();
   }
@@ -476,6 +488,26 @@ class _ImageListItem extends _FileListItem {
   @override
   buildWidget(BuildContext context) {
     return PhotoListImage(
+      account: account,
+      previewUrl: previewUrl,
+    );
+  }
+
+  final Account account;
+  final String previewUrl;
+}
+
+class _VideoListItem extends _FileListItem {
+  _VideoListItem({
+    @required File file,
+    @required this.account,
+    @required this.previewUrl,
+    VoidCallback onTap,
+  }) : super(file: file, onTap: onTap);
+
+  @override
+  buildWidget(BuildContext context) {
+    return PhotoListVideo(
       account: account,
       previewUrl: previewUrl,
     );

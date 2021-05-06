@@ -62,10 +62,11 @@ dependencies:
   synchronized: ^3.0.0
   tuple: ^2.0.0
   url_launcher: ^6.0.3
+  video_player: ^2.1.1
   xml: ^5.0.2
 
 dev_dependencies:
-  test: ^1.16.8
+  test: any
   # flutter_test:
   #   sdk: flutter
   # integration_test:

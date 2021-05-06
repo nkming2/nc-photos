@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -21,6 +22,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
+import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 
 class ViewerArguments {
@@ -374,6 +376,19 @@ class _ViewerState extends State<Viewer> {
   }
 
   Widget _buildItemView(BuildContext context, int index) {
+    final file = widget.streamFiles[index];
+    if (file_util.isSupportedImageFormat(file)) {
+      return _buildImageView(context, index);
+    } else if (file_util.isSupportedVideoFormat(file)) {
+      return _buildVideoView(context, index);
+    } else {
+      _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
+      _pageStates[index].itemHeight = 0;
+      return Container();
+    }
+  }
+
+  Widget _buildImageView(BuildContext context, int index) {
     return ImageViewer(
       account: widget.account,
       file: widget.streamFiles[index],
@@ -390,6 +405,19 @@ class _ViewerState extends State<Viewer> {
           _isZoomed = false;
         });
       },
+    );
+  }
+
+  Widget _buildVideoView(BuildContext context, int index) {
+    return VideoViewer(
+      account: widget.account,
+      file: widget.streamFiles[index],
+      onLoaded: () => _onVideoLoaded(index),
+      onHeightChanged: (height) => _updateItemHeight(index, height),
+      onPlay: _onVideoPlay,
+      onPause: _onVideoPause,
+      isControlVisible: _isShowAppBar && !_isDetailPaneActive,
+      canPlay: !_isDetailPaneActive,
     );
   }
 
@@ -432,16 +460,41 @@ class _ViewerState extends State<Viewer> {
       _log.info("[_onImageLoaded] Pre-loading nearby images");
       if (index > 0) {
         final prevFile = widget.streamFiles[index - 1];
-        ImageViewer.preloadImage(widget.account, prevFile);
+        if (file_util.isSupportedImageFormat(prevFile)) {
+          ImageViewer.preloadImage(widget.account, prevFile);
+        }
       }
       if (index + 1 < widget.streamFiles.length) {
         final nextFile = widget.streamFiles[index + 1];
-        ImageViewer.preloadImage(widget.account, nextFile);
+        if (file_util.isSupportedImageFormat(nextFile)) {
+          ImageViewer.preloadImage(widget.account, nextFile);
+        }
       }
       setState(() {
         _pageStates[index].hasLoaded = true;
       });
     }
+  }
+
+  void _onVideoLoaded(int index) {
+    if (_pageController.page.round() == index &&
+        !_pageStates[index].hasLoaded) {
+      setState(() {
+        _pageStates[index].hasLoaded = true;
+      });
+    }
+  }
+
+  void _onVideoPlay() {
+    setState(() {
+      _setShowActionBar(false);
+    });
+  }
+
+  void _onVideoPause() {
+    setState(() {
+      _setShowActionBar(true);
+    });
   }
 
   /// Called when the page is being built for the first time

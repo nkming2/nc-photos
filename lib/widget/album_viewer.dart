@@ -263,15 +263,30 @@ class _AlbumViewerState extends State<AlbumViewer>
         .where((element) => file_util.isSupportedFormat(element))
         .sorted(compareFileDateTimeDescending);
 
-    itemStreamListItems = _backingFiles.mapWithIndex((i, e) {
-      final previewUrl = api_util.getFilePreviewUrl(widget.account, e,
-          width: _thumbSize, height: _thumbSize);
-      return _ImageListItem(
-        account: widget.account,
-        previewUrl: previewUrl,
-        onTap: () => _onItemTap(i),
-      );
-    });
+    itemStreamListItems = () sync* {
+      for (int i = 0; i < _backingFiles.length; ++i) {
+        final f = _backingFiles[i];
+
+        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
+            width: _thumbSize, height: _thumbSize);
+        if (file_util.isSupportedImageFormat(f)) {
+          yield _ImageListItem(
+            account: widget.account,
+            previewUrl: previewUrl,
+            onTap: () => _onItemTap(i),
+          );
+        } else if (file_util.isSupportedVideoFormat(f)) {
+          yield _VideoListItem(
+            account: widget.account,
+            previewUrl: previewUrl,
+            onTap: () => _onItemTap(i),
+          );
+        } else {
+          _log.shout(
+              "[_transformItems] Unsupported file format: ${f.contentType}");
+        }
+      }
+    }();
   }
 
   int get _thumbSize {
@@ -307,6 +322,25 @@ class _ImageListItem extends SelectableItemStreamListItem {
   @override
   buildWidget(BuildContext context) {
     return PhotoListImage(
+      account: account,
+      previewUrl: previewUrl,
+    );
+  }
+
+  final Account account;
+  final String previewUrl;
+}
+
+class _VideoListItem extends SelectableItemStreamListItem {
+  _VideoListItem({
+    @required this.account,
+    @required this.previewUrl,
+    VoidCallback onTap,
+  }) : super(onTap: onTap, isSelectable: true);
+
+  @override
+  buildWidget(BuildContext context) {
+    return PhotoListVideo(
       account: account,
       previewUrl: previewUrl,
     );
