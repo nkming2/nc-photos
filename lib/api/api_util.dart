@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception.dart';
 
 /// Return the preview image URL for [file]. See [getFilePreviewUrlRelative]
 String getFilePreviewUrl(
@@ -62,9 +63,15 @@ Future<String> exchangePassword(Account account) async {
     },
   );
   if (response.isGood) {
-    final appPwdRegex = RegExp(r"<apppassword>(.*)</apppassword>");
-    final appPwdMatch = appPwdRegex.firstMatch(response.body);
-    return appPwdMatch.group(1);
+    try {
+      final appPwdRegex = RegExp(r"<apppassword>(.*)</apppassword>");
+      final appPwdMatch = appPwdRegex.firstMatch(response.body);
+      return appPwdMatch.group(1);
+    } catch (_) {
+      // this happens when the address is not the base URL and so Nextcloud
+      // returned the login page
+      throw InvalidBaseUrlException();
+    }
   } else if (response.statusCode == 403) {
     // If the client is authenticated with an app password a 403 will be
     // returned

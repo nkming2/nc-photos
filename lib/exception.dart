@@ -45,3 +45,19 @@ class PermissionException implements Exception {
 
   final dynamic message;
 }
+
+/// The Nextcloud base URL address is invalid
+class InvalidBaseUrlException implements Exception {
+  InvalidBaseUrlException([this.message]);
+
+  @override
+  toString() {
+    if (message == null) {
+      return "InvalidBaseUrlException";
+    } else {
+      return "InvalidBaseUrlException: $message";
+    }
+  }
+
+  final dynamic message;
+}

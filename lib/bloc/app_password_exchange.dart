@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/exception.dart';
 
 abstract class AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocEvent();
@@ -72,6 +73,9 @@ class AppPasswordExchangeBloc
     try {
       final appPwd = await api_util.exchangePassword(account);
       yield AppPasswordExchangeBlocSuccess(appPwd);
+    } on InvalidBaseUrlException catch (e) {
+      _log.warning("[_exchangePassword] Invalid base url");
+      yield AppPasswordExchangeBlocFailure(e);
     } catch (e, stacktrace) {
       _log.shout("[_exchangePassword] Failed while exchanging password", e,
           stacktrace);

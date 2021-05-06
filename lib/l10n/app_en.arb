@@ -379,5 +379,9 @@
 	"errorLocked": "File is locked on server. Please try again later",
 	"@errorLocked": {
 		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "Unable to communicate. Please make sure the address is the base URL of your Nextcloud instance",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
 	}
 }

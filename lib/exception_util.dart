@@ -16,6 +16,8 @@ String toUserString(dynamic exception, BuildContext context) {
     }
   } else if (exception is SocketException) {
     return AppLocalizations.of(context).errorDisconnected;
+  } else if (exception is InvalidBaseUrlException) {
+    return AppLocalizations.of(context).errorInvalidBaseUrl;
   }
   return exception.toString();
 }
