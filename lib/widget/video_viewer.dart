@@ -144,10 +144,9 @@ class _VideoViewerState extends State<VideoViewer> {
   }
 
   void _onPlayPressed() {
-    if (_isFinished) {
+    if (_controller.value.position == _controller.value.duration) {
       _controller.seekTo(const Duration()).then((_) {
         setState(() {
-          _isFinished = false;
           _play();
         });
       });
@@ -168,18 +167,18 @@ class _VideoViewerState extends State<VideoViewer> {
     if (!_controller.value.isInitialized) {
       return;
     }
-    if (!_isFinished) {
-      if (_controller.value.position == _controller.value.duration) {
-        setState(() {
-          _isFinished = true;
-          _pause();
-        });
-      }
+    if (!_isFinished &&
+        _controller.value.position == _controller.value.duration) {
+      _isFinished = true;
+      setState(() {
+        _pause();
+      });
     }
   }
 
   void _play() {
     if (widget.canPlay) {
+      _isFinished = false;
       _controller.play();
       widget.onPlay?.call();
     }
