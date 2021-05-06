@@ -48,12 +48,7 @@ class Api {
     Uint8List bodyBytes,
     bool isResponseString = true,
   }) async {
-    Uri url;
-    if (_account.scheme == "http") {
-      url = Uri.http(_account.address, endpoint);
-    } else {
-      url = Uri.https(_account.address, endpoint);
-    }
+    final url = _makeUri(endpoint);
     final req = http.Request(method, url)
       ..headers.addAll({
         "authorization": getAuthorizationHeaderValue(_account),
@@ -85,6 +80,19 @@ class Api {
     }
     return Response(response.statusCode, response.headers,
         isResponseString ? response.body : response.bodyBytes);
+  }
+
+  Uri _makeUri(String endpoint) {
+    final splits = _account.address.split("/");
+    final authority = splits[0];
+    final path = splits.length > 1
+        ? splits.sublist(1).join("/") + "/$endpoint"
+        : endpoint;
+    if (_account.scheme == "http") {
+      return Uri.http(authority, path);
+    } else {
+      return Uri.https(authority, path);
+    }
   }
 
   final Account _account;
