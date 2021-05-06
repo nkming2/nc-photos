@@ -31,6 +31,7 @@ class ApiException implements Exception {
   final dynamic message;
 }
 
+/// Platform permission is not granted by user
 class PermissionException implements Exception {
   PermissionException([this.message]);
 
