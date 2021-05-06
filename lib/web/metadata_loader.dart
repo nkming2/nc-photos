@@ -27,6 +27,7 @@ class MetadataLoader implements itf.MetadataLoader {
           message: "Failed communicating with server: ${response.statusCode}");
     }
     return itf.MetadataLoader.loadMetadata(
+      file: file,
       exifdartReaderBuilder: () => MemoryBlobReader(response.body),
       imageSizeGetterInputBuilder: () => AsyncMemoryInput(response.body),
     );

@@ -1,8 +1,9 @@
-import 'package:exifdart/exifdart.dart';
+import 'package:exifdart/exifdart.dart' as exifdart;
 import 'package:flutter/foundation.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 abstract class MetadataLoader {
   /// Load metadata for [file] from cache
@@ -24,10 +25,16 @@ abstract class MetadataLoader {
 
   @protected
   static Future<Map<String, dynamic>> loadMetadata({
-    AbstractBlobReader Function() exifdartReaderBuilder,
+    @required File file,
+    exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
     AsyncImageInput Function() imageSizeGetterInputBuilder,
   }) async {
-    final metadata = await readMetadata(exifdartReaderBuilder());
+    exifdart.Metadata metadata;
+    if (file_util.isMetadataSupportedFormat(file)) {
+      metadata = await exifdart.readMetadata(exifdartReaderBuilder());
+    } else {
+      metadata = exifdart.Metadata();
+    }
     int imageWidth, imageHeight;
     if (metadata.imageWidth == null || metadata.imageHeight == null) {
       final resolution =

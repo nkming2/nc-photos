@@ -10,6 +10,9 @@ bool isSupportedImageFormat(File file) =>
 bool isSupportedVideoFormat(File file) =>
     isSupportedFormat(file) && file.contentType?.startsWith("video/") == true;
 
+bool isMetadataSupportedFormat(File file) =>
+    _metadataSupportedFormatMimes.contains(file.contentType);
+
 const _supportedFormatMimes = [
   "image/jpeg",
   "image/png",
@@ -17,4 +20,9 @@ const _supportedFormatMimes = [
   "image/heic",
   // video player currently doesn't work on web
   if (!platform_k.isWeb) "video/mp4",
+];
+
+const _metadataSupportedFormatMimes = [
+  "image/jpeg",
+  "image/heic",
 ];

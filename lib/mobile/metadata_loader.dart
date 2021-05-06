@@ -23,7 +23,7 @@ class MetadataLoader implements itf.MetadataLoader {
       Future.delayed(Duration(seconds: 10)),
     ]);
     if (_getFileTask.isGood && result is FileInfo) {
-      return _onGetFile(result);
+      return _onGetFile(file, result);
     } else {
       // timeout
       _getFileTask.cancel();
@@ -42,6 +42,7 @@ class MetadataLoader implements itf.MetadataLoader {
           message: "Failed communicating with server: ${response.statusCode}");
     }
     return itf.MetadataLoader.loadMetadata(
+      file: file,
       exifdartReaderBuilder: () => MemoryBlobReader(response.body),
       imageSizeGetterInputBuilder: () => AsyncMemoryInput(response.body),
     );
@@ -55,7 +56,7 @@ class MetadataLoader implements itf.MetadataLoader {
       // no cache
       return loadNewFile(account, file);
     } else {
-      return _onGetFile(info);
+      return _onGetFile(file, info);
     }
   }
 
@@ -64,10 +65,11 @@ class MetadataLoader implements itf.MetadataLoader {
     _getFileTask.cancel();
   }
 
-  Future<Map<String, dynamic>> _onGetFile(FileInfo f) {
+  Future<Map<String, dynamic>> _onGetFile(File file, FileInfo info) {
     return itf.MetadataLoader.loadMetadata(
-      exifdartReaderBuilder: () => FileReader(f.file),
-      imageSizeGetterInputBuilder: () => AsyncFileInput(f.file),
+      file: file,
+      exifdartReaderBuilder: () => FileReader(info.file),
+      imageSizeGetterInputBuilder: () => AsyncFileInput(info.file),
     );
   }
 
