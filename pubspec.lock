@@ -782,9 +782,11 @@ packages:
   video_player:
     dependency: "direct main"
     description:
-      name: video_player
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/video_player/video_player"
+      ref: video-player-network-cache
+      resolved-ref: "61a307b29f12536e7b61ecae6b9a79a84bc82f31"
+      url: "https://gitlab.com/nkming2/flutter-plugins"
+    source: git
     version: "2.1.1"
   video_player_platform_interface:
     dependency: transitive
