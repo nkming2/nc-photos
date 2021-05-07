@@ -28,4 +28,8 @@ Dark theme
   null,
   // v12
   null,
+  // v13
+  """13.0
+Added MP4 support (Android only)
+""",
 ];
