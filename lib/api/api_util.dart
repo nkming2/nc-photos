@@ -80,8 +80,9 @@ Future<String> exchangePassword(Account account) async {
   } else {
     _log.severe(
         "[exchangePassword] Failed while requesting app password: $response");
-    throw HttpException(
-        "Failed communicating with server: ${response.statusCode}");
+    throw ApiException(
+        response: response,
+        message: "Failed communicating with server: ${response.statusCode}");
   }
 }
 

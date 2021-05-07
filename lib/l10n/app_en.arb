@@ -383,5 +383,9 @@
 	"errorInvalidBaseUrl": "Unable to communicate. Please make sure the address is the base URL of your Nextcloud instance",
 	"@errorInvalidBaseUrl": {
 		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "Unable to authenticate. Please double check the username and password",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
 	}
 }

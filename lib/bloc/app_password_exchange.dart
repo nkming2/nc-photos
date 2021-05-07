@@ -77,8 +77,14 @@ class AppPasswordExchangeBloc
       _log.warning("[_exchangePassword] Invalid base url");
       yield AppPasswordExchangeBlocFailure(e);
     } catch (e, stacktrace) {
-      _log.shout("[_exchangePassword] Failed while exchanging password", e,
-          stacktrace);
+      if (e is ApiException && e.response.statusCode == 401) {
+        // wrong password, normal
+        _log.warning(
+            "[_exchangePassword] Server response 401, wrong password?");
+      } else {
+        _log.shout("[_exchangePassword] Failed while exchanging password", e,
+            stacktrace);
+      }
       yield AppPasswordExchangeBlocFailure(e);
     }
   }

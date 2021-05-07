@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/app_password_exchange.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -95,10 +96,18 @@ class _ConnectState extends State<Connect> {
       _log.info("[_onStateChange] Account is good: $newAccount");
       Navigator.of(context).pop(newAccount);
     } else if (state is AppPasswordExchangeBlocFailure) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
-        duration: k.snackBarDurationNormal,
-      ));
+      if (state.exception is ApiException &&
+          (state.exception as ApiException).response.statusCode == 401) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context).errorWrongPassword),
+          duration: k.snackBarDurationNormal,
+        ));
+      } else {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(state.exception, context)),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
       Navigator.of(context).pop(null);
     }
   }
