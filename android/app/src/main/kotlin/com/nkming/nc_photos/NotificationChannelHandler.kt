@@ -106,6 +106,7 @@ class NotificationChannelHandler(activity: Activity)
 		with(NotificationManagerCompat.from(_context)) {
 			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
 		}
+		result.success(null)
 	}
 
 	private fun loadNotificationImage(fileUri: Uri): Bitmap? {
