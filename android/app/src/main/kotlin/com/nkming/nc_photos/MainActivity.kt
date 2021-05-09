@@ -14,5 +14,8 @@ class MainActivity : FlutterActivity() {
 		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
 				NotificationChannelHandler.CHANNEL).setMethodCallHandler(
 				NotificationChannelHandler(this))
+		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+				SelfSignedCertChannelHandler.CHANNEL).setMethodCallHandler(
+				SelfSignedCertChannelHandler(this))
 	}
 }

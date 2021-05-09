@@ -8,6 +8,8 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/widget/my_app.dart';
 
@@ -19,6 +21,9 @@ void main() async {
   _initBloc();
   _initKiwi();
   _initEquatable();
+  if (features.isSupportSelfSignedCert) {
+    _initSelfSignedCertManager();
+  }
 
   runApp(MyApp());
 }
@@ -73,6 +78,10 @@ void _initKiwi() {
 
 void _initEquatable() {
   EquatableConfig.stringify = false;
+}
+
+void _initSelfSignedCertManager() {
+  SelfSignedCertManager().init();
 }
 
 class _BlocObserver extends BlocObserver {

@@ -425,7 +425,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -783,8 +783,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/video_player/video_player"
-      ref: video-player-network-cache
-      resolved-ref: "61a307b29f12536e7b61ecae6b9a79a84bc82f31"
+      ref: video-player-nc-photos
+      resolved-ref: "8fdcdc2eddaa07ed92cd3ce8a33d83ffe0f413fb"
       url: "https://gitlab.com/nkming2/flutter-plugins"
     source: git
     version: "2.1.1"

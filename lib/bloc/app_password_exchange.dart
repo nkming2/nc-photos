@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -75,6 +77,9 @@ class AppPasswordExchangeBloc
       yield AppPasswordExchangeBlocSuccess(appPwd);
     } on InvalidBaseUrlException catch (e) {
       _log.warning("[_exchangePassword] Invalid base url");
+      yield AppPasswordExchangeBlocFailure(e);
+    } on HandshakeException catch (e) {
+      _log.info("[_exchangePassword] Self-signed cert");
       yield AppPasswordExchangeBlocFailure(e);
     } catch (e, stacktrace) {
       if (e is ApiException && e.response.statusCode == 401) {

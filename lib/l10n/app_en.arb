@@ -368,6 +368,38 @@
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
 	},
+	"serverCertErrorDialogTitle": "Server certificate cannot be trusted",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "The server may be hacked or someone is trying to steal your information",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"advancedButtonLabel": "ADVANCED",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "Whitelist unknown certificate?",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "You can whitelist the certificate to make the app accept it. WARNING: This poses a great security risk. Make sure the cert is self-signed by you or a trusted party\n\nHost: {host}\nFingerprint: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "ACCEPT THE RISK AND WHITELIST",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

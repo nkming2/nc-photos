@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,6 +11,8 @@ import 'package:nc_photos/bloc/app_password_exchange.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 
@@ -96,20 +100,86 @@ class _ConnectState extends State<Connect> {
       _log.info("[_onStateChange] Account is good: $newAccount");
       Navigator.of(context).pop(newAccount);
     } else if (state is AppPasswordExchangeBlocFailure) {
-      if (state.exception is ApiException &&
+      if (features.isSupportSelfSignedCert &&
+          state.exception is HandshakeException) {
+        _onSelfSignedCert(context);
+      } else if (state.exception is ApiException &&
           (state.exception as ApiException).response.statusCode == 401) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context).errorWrongPassword),
           duration: k.snackBarDurationNormal,
         ));
+        Navigator.of(context).pop(null);
       } else {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(exception_util.toUserString(state.exception, context)),
           duration: k.snackBarDurationNormal,
         ));
+        Navigator.of(context).pop(null);
       }
-      Navigator.of(context).pop(null);
     }
+  }
+
+  void _onSelfSignedCert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context).serverCertErrorDialogTitle),
+        content:
+            Text(AppLocalizations.of(context).serverCertErrorDialogContent),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text(AppLocalizations.of(context).advancedButtonLabel),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value != true) {
+        Navigator.of(context).pop(null);
+        return;
+      }
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(AppLocalizations.of(context).whitelistCertDialogTitle),
+          content: Text(AppLocalizations.of(context).whitelistCertDialogContent(
+              SelfSignedCertManager().getLastBadCertHost(),
+              SelfSignedCertManager().getLastBadCertFingerprint())),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child:
+                  Text(AppLocalizations.of(context).whitelistCertButtonLabel),
+            ),
+          ],
+        ),
+      ).then((value) {
+        if (value != true) {
+          Navigator.of(context).pop(null);
+          return;
+        }
+        SelfSignedCertManager().whitelistLastBadCert().then((value) {
+          Navigator.of(context).pop(null);
+        });
+      });
+    });
   }
 
   void _connect() {
