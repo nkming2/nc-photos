@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
@@ -50,6 +51,8 @@ class _VideoViewerState extends State<VideoViewer> {
             widget.onHeightChanged?.call(_key.currentContext.size.height);
           }
         });
+      }).catchError((e, stacktrace) {
+        _log.shout("[initState] Filed while initialize", e, stacktrace);
       });
     _controller.addListener(_onControllerChanged);
   }
@@ -192,4 +195,6 @@ class _VideoViewerState extends State<VideoViewer> {
   final _key = GlobalKey();
   VideoPlayerController _controller;
   var _isFinished = false;
+
+  static final _log = Logger("bloc.video_viewer._VideoViewerState");
 }
