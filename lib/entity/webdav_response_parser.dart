@@ -63,6 +63,7 @@ class WebdavFileParser {
     bool isCollection;
     int usedBytes;
     bool hasPreview;
+    int fileId;
     Metadata metadata;
 
     for (final child in element.children.whereType<XmlElement>()) {
@@ -92,6 +93,7 @@ class WebdavFileParser {
         isCollection = propParser.isCollection;
         usedBytes = propParser.usedBytes;
         hasPreview = propParser.hasPreview;
+        fileId = propParser.fileId;
         metadata = propParser.metadata;
       }
     }
@@ -105,6 +107,7 @@ class WebdavFileParser {
       isCollection: isCollection,
       usedBytes: usedBytes,
       hasPreview: hasPreview,
+      fileId: fileId,
       metadata: metadata,
     );
   }
@@ -156,6 +159,9 @@ class _PropParser {
       } else if (child.matchQualifiedName("has-preview",
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _hasPreview = child.innerText == "true";
+      } else if (child.matchQualifiedName("fileid",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _fileId = int.parse(child.innerText);
       }
     }
     // 2nd pass that depends on data in 1st pass
@@ -184,6 +190,7 @@ class _PropParser {
   int get usedBytes => _usedBytes;
   bool get isCollection => _isCollection;
   bool get hasPreview => _hasPreview;
+  int get fileId => _fileId;
   Metadata get metadata => _metadata;
 
   final Map<String, String> namespaces;
@@ -198,6 +205,7 @@ class _PropParser {
   int _usedBytes;
   bool _isCollection;
   bool _hasPreview;
+  int _fileId;
   Metadata _metadata;
 }
 

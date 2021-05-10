@@ -404,6 +404,15 @@ void main() {
         expect(file, File(path: "", hasPreview: true));
       });
 
+      test("fileId", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "fileId": 123,
+        };
+        final file = File.fromJson(json);
+        expect(file, File(path: "", fileId: 123));
+      });
+
       test("metadata", () {
         final json = <String, dynamic>{
           "path": "",
@@ -498,6 +507,15 @@ void main() {
         });
       });
 
+      test("fileId", () {
+        final file =
+            File(path: "/remote.php/dav/files/admin/test.jpg", fileId: 123);
+        expect(file.toJson(), <String, dynamic>{
+          "path": "/remote.php/dav/files/admin/test.jpg",
+          "fileId": 123,
+        });
+      });
+
       test("metadata", () {
         final file = File(
             path: "/remote.php/dav/files/admin/test.jpg",
@@ -524,6 +542,7 @@ void main() {
         isCollection: true,
         usedBytes: 123456,
         hasPreview: true,
+        fileId: 123,
         metadata: null,
       );
 
@@ -540,6 +559,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -556,6 +576,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -572,6 +593,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -588,6 +610,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -605,6 +628,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -621,6 +645,7 @@ void main() {
               isCollection: false,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -637,6 +662,7 @@ void main() {
               isCollection: true,
               usedBytes: 999999,
               hasPreview: true,
+              fileId: 123,
             ));
       });
 
@@ -653,6 +679,24 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: false,
+              fileId: 123,
+            ));
+      });
+
+      test("fileId", () {
+        final file = src.copyWith(fileId: 321);
+        expect(
+            file,
+            File(
+              path: "/remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 321,
             ));
       });
 
@@ -670,6 +714,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
               metadata: metadata,
             ));
       });
@@ -684,6 +729,7 @@ void main() {
           isCollection: true,
           usedBytes: 123456,
           hasPreview: true,
+          fileId: 123,
           metadata: Metadata(),
         );
         final file = src.copyWith(metadata: OrNull(null));
@@ -698,6 +744,7 @@ void main() {
               isCollection: true,
               usedBytes: 123456,
               hasPreview: true,
+              fileId: 123,
             ));
       });
     });

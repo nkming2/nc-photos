@@ -20,6 +20,7 @@ void main() {
 				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
 				<d:getcontenttype>video/mp4</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
 				<d:getcontentlength>3963036</d:getcontentlength>
 				<nc:has-preview>false</nc:has-preview>
 			</d:prop>
@@ -37,6 +38,7 @@ void main() {
           etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           hasPreview: false,
+          fileId: 123,
           isCollection: false,
         ),
       ]);
@@ -57,6 +59,7 @@ void main() {
 				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
 				<d:getcontenttype>video/mp4</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
 				<d:getcontentlength>3963036</d:getcontentlength>
 				<nc:has-preview>false</nc:has-preview>
 			</d:prop>
@@ -81,6 +84,7 @@ void main() {
           etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           hasPreview: false,
+          fileId: 123,
           isCollection: false,
         ),
       ]);
@@ -101,6 +105,7 @@ void main() {
 				<d:getetag>&quot;8950e39a034e369237d9285e2d815a50&quot;</d:getetag>
 				<d:getcontenttype>image/jpeg</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
 				<d:getcontentlength>797325</d:getcontentlength>
 				<nc:has-preview>true</nc:has-preview>
 				<x1:metadata xmlns:x1="com.nkming.nc_photos">{&quot;version&quot;:2,&quot;lastUpdated&quot;:&quot;2021-01-02T03:04:05.678Z&quot;,&quot;fileEtag&quot;:&quot;8950e39a034e369237d9285e2d815a50&quot;,&quot;imageWidth&quot;:3000,&quot;imageHeight&quot;:2000}</x1:metadata>
@@ -119,6 +124,7 @@ void main() {
           etag: "8950e39a034e369237d9285e2d815a50",
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           hasPreview: true,
+          fileId: 123,
           isCollection: false,
           metadata: Metadata(
             lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
@@ -145,6 +151,7 @@ void main() {
 				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
 				<d:getcontenttype>video/mp4</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
 				<d:getcontentlength>3963036</d:getcontentlength>
 				<nc:has-preview>false</nc:has-preview>
 			</d:prop>
@@ -159,6 +166,7 @@ void main() {
 				<d:getetag>&quot;48689d5b17c449d9db492ffe8f7ab8a6&quot;</d:getetag>
 				<d:getcontenttype>image/png</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>124</oc:fileid>
 				<d:getcontentlength>50598</d:getcontentlength>
 				<nc:has-preview>true</nc:has-preview>
 				<x1:metadata xmlns:x1="com.nkming.nc_photos">{&quot;version&quot;:2,&quot;lastUpdated&quot;:&quot;2021-01-02T03:04:05.678000Z&quot;,&quot;fileEtag&quot;:&quot;48689d5b17c449d9db492ffe8f7ab8a6&quot;,&quot;imageWidth&quot;:500,&quot;imageHeight&quot;:500}</x1:metadata>
@@ -177,6 +185,7 @@ void main() {
           etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           hasPreview: false,
+          fileId: 123,
           isCollection: false,
         ),
         File(
@@ -186,6 +195,7 @@ void main() {
           etag: "48689d5b17c449d9db492ffe8f7ab8a6",
           lastModified: DateTime.utc(2021, 1, 2, 3, 4, 5),
           hasPreview: true,
+          fileId: 124,
           isCollection: false,
           metadata: Metadata(
             fileEtag: "48689d5b17c449d9db492ffe8f7ab8a6",
@@ -213,6 +223,7 @@ void main() {
 				<d:resourcetype>
 					<d:collection/>
 				</d:resourcetype>
+        <oc:fileid>123</oc:fileid>
         <nc:has-preview>false</nc:has-preview>
 			</d:prop>
 			<d:status>HTTP/1.1 200 OK</d:status>
@@ -236,6 +247,7 @@ void main() {
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           isCollection: true,
           hasPreview: false,
+          fileId: 123,
         ),
       ]);
     });
@@ -255,6 +267,7 @@ void main() {
 				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
 				<d:getcontenttype>video/mp4</d:getcontenttype>
 				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
 				<d:getcontentlength>3963036</d:getcontentlength>
 				<nc:has-preview>false</nc:has-preview>
 			</d:prop>
@@ -272,6 +285,7 @@ void main() {
           etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
           lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
           hasPreview: false,
+          fileId: 123,
           isCollection: false,
         ),
       ]);

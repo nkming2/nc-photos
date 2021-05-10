@@ -204,6 +204,7 @@ class File with EquatableMixin {
     this.isCollection,
     this.usedBytes,
     this.hasPreview,
+    this.fileId,
     this.metadata,
   }) : this.path = path.trimRightAny("/");
 
@@ -219,6 +220,7 @@ class File with EquatableMixin {
       isCollection: json["isCollection"],
       usedBytes: json["usedBytes"],
       hasPreview: json["hasPreview"],
+      fileId: json["fileId"],
       metadata: json["metadata"] == null
           ? null
           : Metadata.fromJson(
@@ -260,6 +262,9 @@ class File with EquatableMixin {
     if (hasPreview != null) {
       product += "hasPreview: $hasPreview, ";
     }
+    if (fileId != null) {
+      product += "fileId: '$fileId', ";
+    }
     if (metadata != null) {
       product += "metadata: $metadata, ";
     }
@@ -276,6 +281,7 @@ class File with EquatableMixin {
       if (isCollection != null) "isCollection": isCollection,
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,
+      if (fileId != null) "fileId": fileId,
       if (metadata != null) "metadata": metadata.toJson(),
     };
   }
@@ -289,6 +295,7 @@ class File with EquatableMixin {
     bool isCollection,
     int usedBytes,
     bool hasPreview,
+    int fileId,
     OrNull<Metadata> metadata,
   }) {
     return File(
@@ -300,6 +307,7 @@ class File with EquatableMixin {
       isCollection: isCollection ?? this.isCollection,
       usedBytes: usedBytes ?? this.usedBytes,
       hasPreview: hasPreview ?? this.hasPreview,
+      fileId: fileId ?? this.fileId,
       metadata: metadata == null ? this.metadata : metadata.obj,
     );
   }
@@ -325,6 +333,7 @@ class File with EquatableMixin {
         isCollection,
         usedBytes,
         hasPreview,
+        fileId,
         metadata,
       ];
 
@@ -336,6 +345,8 @@ class File with EquatableMixin {
   final bool isCollection;
   final int usedBytes;
   final bool hasPreview;
+  // maybe null when loaded from old cache
+  final int fileId;
   // metadata
   final Metadata metadata;
 }
@@ -403,6 +414,7 @@ class FileWebdavDataSource implements FileDataSource {
       getcontenttype: 1,
       getcontentlength: 1,
       hasPreview: 1,
+      fileid: 1,
       customNamespaces: {
         "com.nkming.nc_photos": "app",
       },
