@@ -24,6 +24,7 @@ class UpdateMissingMetadata {
         yield d;
         continue;
       }
+      final File file = d;
       try {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
@@ -31,7 +32,6 @@ class UpdateMissingMetadata {
         if (!shouldRun) {
           return;
         }
-        final File file = d;
         _log.fine("[call] Updating metadata for ${file.path}");
         final metadata = await metadataLoader.loadFile(account, file);
         int imageWidth, imageHeight;
@@ -54,7 +54,10 @@ class UpdateMissingMetadata {
             AlbumRepo(AlbumCachedDataSource()))(account, file, metadataObj);
         yield file;
       } catch (e, stacktrace) {
-        _log.shout("[call] Failed while getting metadata", e, stacktrace);
+        _log.shout(
+            "[call] Failed while getting metadata for ${file.contentType} file",
+            e,
+            stacktrace);
         yield e;
       }
     }
