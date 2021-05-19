@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+typedef void OnWidgetSizeChanged(Size size);
+
+/// See: https://stackoverflow.com/a/60868972
+class MeasureSize extends SingleChildRenderObjectWidget {
+  final OnWidgetSizeChanged onChange;
+
+  const MeasureSize({
+    Key key,
+    @required this.onChange,
+    @required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _MeasureSizeRenderObject(onChange);
+  }
+}
+
+class _MeasureSizeRenderObject extends RenderProxyBox {
+  Size oldSize;
+  final OnWidgetSizeChanged onChange;
+
+  _MeasureSizeRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    Size newSize = child.size;
+    if (oldSize == newSize) return;
+
+    oldSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
+  }
+}
+
+class SliverMeasureExtent extends SingleChildRenderObjectWidget {
+  const SliverMeasureExtent({
+    Key key,
+    @required this.onChange,
+    @required Widget child,
+  }) : super(key: key, child: child);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return _SliverMeasureExtentRenderObject(onChange);
+  }
+
+  final void Function(double) onChange;
+}
+
+class _SliverMeasureExtentRenderObject extends RenderProxySliver {
+  _SliverMeasureExtentRenderObject(this.onChange);
+
+  @override
+  void performLayout() {
+    super.performLayout();
+
+    double newExent = child.geometry.scrollExtent;
+    if (_oldExtent == newExent) {
+      return;
+    }
+
+    _oldExtent = newExent;
+    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newExent));
+  }
+
+  final void Function(double) onChange;
+
+  double _oldExtent;
+}

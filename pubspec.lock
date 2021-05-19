@@ -148,6 +148,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  draggable_scrollbar:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "v0.1.0-nc-photos-1"
+      resolved-ref: d97c03ddea7b6bae0e170430e0cb7c27e725ff2a
+      url: "https://gitlab.com/nkming2/flutter-draggable-scrollbar"
+    source: git
+    version: "0.1.0"
   equatable:
     dependency: "direct main"
     description:

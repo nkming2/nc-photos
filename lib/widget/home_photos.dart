@@ -1,3 +1,4 @@
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +25,7 @@ import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -42,7 +44,7 @@ class HomePhotos extends StatefulWidget {
 }
 
 class _HomePhotosState extends State<HomePhotos>
-    with SelectableItemStreamListMixin<HomePhotos> {
+    with WidgetsBindingObserver, SelectableItemStreamListMixin<HomePhotos> {
   @override
   initState() {
     super.initState();
@@ -63,6 +65,11 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   @override
+  void onMaxExtentChanged(double maxExtent) {
+    setState(() {});
+  }
+
+  @override
   int get itemStreamListCellSize => _thumbSize;
 
   void _initBloc() {
@@ -77,32 +84,50 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildContent(BuildContext context, ScanDirBlocState state) {
-    return Stack(
-      children: [
-        buildItemStreamListOuter(
-          context,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              accentColor: AppTheme.getOverscrollIndicatorColor(context),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: buildItemStreamList(context),
+    return LayoutBuilder(builder: (context, constraints) {
+      if (_prevListWidth == null) {
+        _prevListWidth = constraints.maxWidth;
+      }
+      if (constraints.maxWidth != _prevListWidth) {
+        _log.info(
+            "[_buildContent] updateListHeight: list viewport width changed");
+        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
+        _prevListWidth = constraints.maxWidth;
+      }
+
+      final scrollExtent = _getScrollViewExtent(constraints);
+      return Stack(
+        children: [
+          buildItemStreamListOuter(
+            context,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                accentColor: AppTheme.getOverscrollIndicatorColor(context),
+              ),
+              child: DraggableScrollbar.semicircle(
+                controller: _scrollController,
+                overrideMaxScrollExtent: scrollExtent,
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    _buildAppBar(context),
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16),
+                      sliver: buildItemStreamList(context),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-        if (state is ScanDirBlocLoading)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: const LinearProgressIndicator(),
-          ),
-      ],
-    );
+          if (state is ScanDirBlocLoading)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: const LinearProgressIndicator(),
+            ),
+        ],
+      );
+    });
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -152,40 +177,45 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return HomeSliverAppBar(
-      account: widget.account,
-      actions: [
-        PopupMenuButton(
-          icon: const Icon(Icons.zoom_in),
-          tooltip: AppLocalizations.of(context).zoomTooltip,
-          itemBuilder: (context) => [
-            PopupMenuZoom(
-              initialValue: _thumbZoomLevel,
-              minValue: -1,
-              maxValue: 2,
-              onChanged: (value) {
-                setState(() {
-                  _setThumbZoomLevel(value.round());
-                });
-                Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
-              },
-            ),
-          ],
-        ),
-      ],
-      menuActions: [
-        PopupMenuItem(
-          value: _menuValueRefresh,
-          child: Text(AppLocalizations.of(context).refreshMenuLabel),
-        ),
-      ],
-      onSelectedMenuActions: (option) {
-        switch (option) {
-          case _menuValueRefresh:
-            _onRefreshSelected();
-            break;
-        }
+    return SliverMeasureExtent(
+      onChange: (extent) {
+        _appBarExtent = extent;
       },
+      child: HomeSliverAppBar(
+        account: widget.account,
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.zoom_in),
+            tooltip: AppLocalizations.of(context).zoomTooltip,
+            itemBuilder: (context) => [
+              PopupMenuZoom(
+                initialValue: _thumbZoomLevel,
+                minValue: -1,
+                maxValue: 2,
+                onChanged: (value) {
+                  setState(() {
+                    _setThumbZoomLevel(value.round());
+                  });
+                  Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
+                },
+              ),
+            ],
+          ),
+        ],
+        menuActions: [
+          PopupMenuItem(
+            value: _menuValueRefresh,
+            child: Text(AppLocalizations.of(context).refreshMenuLabel),
+          ),
+        ],
+        onSelectedMenuActions: (option) {
+          switch (option) {
+            case _menuValueRefresh:
+              _onRefreshSelected();
+              break;
+          }
+        },
+      ),
     );
   }
 
@@ -411,6 +441,22 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  /// Return the estimated scroll extent of the custom scroll view, or null
+  double _getScrollViewExtent(BoxConstraints constraints) {
+    if (calculatedMaxExtent != null &&
+        constraints.hasBoundedHeight &&
+        _appBarExtent != null) {
+      // scroll extent = list height - widget viewport height + sliver app bar height
+      final scrollExtent =
+          calculatedMaxExtent - constraints.maxHeight + _appBarExtent;
+      _log.info(
+          "[_getScrollViewExtent] $calculatedMaxExtent - ${constraints.maxHeight} + $_appBarExtent = $scrollExtent");
+      return scrollExtent;
+    } else {
+      return null;
+    }
+  }
+
   int get _thumbSize {
     switch (_thumbZoomLevel) {
       case -1:
@@ -433,6 +479,11 @@ class _HomePhotosState extends State<HomePhotos>
   var _backingFiles = <File>[];
 
   var _thumbZoomLevel = 0;
+
+  final ScrollController _scrollController = ScrollController();
+
+  double _prevListWidth;
+  double _appBarExtent;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;

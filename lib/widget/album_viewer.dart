@@ -54,7 +54,10 @@ class AlbumViewer extends StatefulWidget {
 }
 
 class _AlbumViewerState extends State<AlbumViewer>
-    with SelectableItemStreamListMixin<AlbumViewer>, TickerProviderStateMixin {
+    with
+        WidgetsBindingObserver,
+        SelectableItemStreamListMixin<AlbumViewer>,
+        TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
