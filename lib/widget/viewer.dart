@@ -670,7 +670,7 @@ class _ViewerState extends State<Viewer> {
     if (flag) {
       SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     } else {
-      SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+      SystemChrome.setEnabledSystemUIOverlays([]);
     }
   }
 
