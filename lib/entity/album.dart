@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -338,7 +337,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
   }
 
   Future<void> _createDir(Account account) {
-    return Api(account).files().mkcol(path: getAlbumFileRoot(account));
+    return FileWebdavDataSource().createDir(account, getAlbumFileRoot(account));
   }
 
   static final _log = Logger("entity.album.AlbumRemoteDataSource");

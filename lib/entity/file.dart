@@ -402,6 +402,10 @@ class FileRepo {
             shouldOverwrite: shouldOverwrite,
           );
 
+  /// See [FileDataSource.createDir]
+  Future<void> createDir(Account account, String path) =>
+      this.dataSrc.createDir(account, path);
+
   final FileDataSource dataSrc;
 }
 
@@ -445,6 +449,12 @@ abstract class FileDataSource {
     String destination, {
     bool shouldOverwrite,
   });
+
+  /// Create a directory at [path]
+  ///
+  /// [path] should be a relative WebDAV path like
+  /// remote.php/dav/files/admin/new/dir
+  Future<void> createDir(Account account, String path);
 }
 
 class FileWebdavDataSource implements FileDataSource {
@@ -601,6 +611,20 @@ class FileWebdavDataSource implements FileDataSource {
     }
   }
 
+  @override
+  createDir(Account account, String path) async {
+    _log.info("[createDir] $path");
+    final response = await Api(account).files().mkcol(
+          path: path,
+        );
+    if (!response.isGood) {
+      _log.severe("[createDir] Failed requesting sever: $response");
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
+    }
+  }
+
   static final _log = Logger("entity.file.FileWebdavDataSource");
 }
 
@@ -683,6 +707,11 @@ class FileAppDbDataSource implements FileDataSource {
     String destination, {
     bool shouldOverwrite,
   }) async {
+    // do nothing
+  }
+
+  @override
+  createDir(Account account, String path) async {
     // do nothing
   }
 
@@ -808,6 +837,11 @@ class FileCachedDataSource implements FileDataSource {
   }) async {
     await _remoteSrc.move(account, f, destination,
         shouldOverwrite: shouldOverwrite);
+  }
+
+  @override
+  createDir(Account account, String path) async {
+    await _remoteSrc.createDir(account, path);
   }
 
   Future<void> _cacheResult(Account account, File f, List<File> result) {
