@@ -44,7 +44,8 @@ dependencies:
   flutter_bloc: ^7.0.0
   flutter_staggered_grid_view: ^0.4.0
   # android/ios only
-  google_maps_flutter: ^2.0.3
+  # 2.0.3+ require Android SDK20, we don't want that for now
+  google_maps_flutter: 2.0.3
   http: ^0.13.1
   idb_shim: ^2.0.0
   # android/ios only
