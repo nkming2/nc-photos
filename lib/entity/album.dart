@@ -24,10 +24,10 @@ import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
 
 String getAlbumFileRoot(Account account) =>
-    "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos";
+    "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos/albums";
 
 bool isAlbumFile(File file) =>
-    path.basename(path.dirname(file.path)) == ".com.nkming.nc_photos";
+    path.dirname(file.path).endsWith(".com.nkming.nc_photos/albums");
 
 List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
     items.distinctIf(

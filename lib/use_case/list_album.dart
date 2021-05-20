@@ -3,6 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/use_case/compat/v15.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class ListAlbum {
@@ -10,6 +11,21 @@ class ListAlbum {
 
   /// List all albums associated with [account]
   Future<List<Album>> call(Account account) async {
+    final results = await _call(account);
+    if (results.isEmpty) {
+      if (await CompatV15.migrateAlbumFiles(account, fileRepo)) {
+        // migrated
+        return await _call(account);
+      } else {
+        // no need to migrate
+        return [];
+      }
+    } else {
+      return results;
+    }
+  }
+
+  Future<List<Album>> _call(Account account) async {
     try {
       final ls = await Ls(fileRepo)(
           account,
@@ -27,7 +43,7 @@ class ListAlbum {
         albumRepo.cleanUp(account, albumFiles);
       } catch (e, stacktrace) {
         // not important, log and ignore
-        _log.shout("[call] Failed while cleanUp", e, stacktrace);
+        _log.shout("[_call] Failed while cleanUp", e, stacktrace);
       }
       return albums;
     } catch (e) {
