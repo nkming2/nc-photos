@@ -335,5 +335,23 @@ class _Files {
     }
   }
 
+  /// A file or folder can be copied by sending a COPY request to the file or
+  /// folder and specifying the [destinationUrl] as full url
+  Future<Response> copy({
+    @required String path,
+    @required String destinationUrl,
+    bool overwrite,
+  }) async {
+    try {
+      return await _api.request("COPY", path, header: {
+        "Destination": destinationUrl,
+        if (overwrite != null) "Overwrite": overwrite ? "T" : "F",
+      });
+    } catch (e) {
+      _log.severe("[copy] Failed while delete", e);
+      rethrow;
+    }
+  }
+
   static final _log = Logger("api.api._Files");
 }

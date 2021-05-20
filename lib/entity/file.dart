@@ -374,6 +374,20 @@ class FileRepo {
   Future<void> updateMetadata(Account account, File file, Metadata metadata) =>
       this.dataSrc.updateMetadata(account, file, metadata);
 
+  /// See [FileDataSource.copy]
+  Future<void> copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) =>
+      this.dataSrc.copy(
+            account,
+            f,
+            destination,
+            shouldOverwrite: shouldOverwrite,
+          );
+
   final FileDataSource dataSrc;
 }
 
@@ -395,6 +409,17 @@ abstract class FileDataSource {
   /// This will completely replace the metadata of the file [f]. Partial update
   /// is not supported
   Future<void> updateMetadata(Account account, File f, Metadata metadata);
+
+  /// Copy [f] to [destination]
+  ///
+  /// [destination] should be a relative WebDAV path like
+  /// remote.php/dav/files/admin/new/location
+  Future<void> copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  });
 }
 
 class FileWebdavDataSource implements FileDataSource {
@@ -509,6 +534,27 @@ class FileWebdavDataSource implements FileDataSource {
     }
   }
 
+  @override
+  copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    _log.info("[copy] ${f.path} to $destination");
+    final response = await Api(account).files().copy(
+          path: f.path,
+          destinationUrl: "${account.url}/$destination",
+          overwrite: shouldOverwrite,
+        );
+    if (!response.isGood) {
+      _log.severe("[copy] Failed requesting sever: $response");
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
+    }
+  }
+
   static final _log = Logger("entity.file.FileWebdavDataSource");
 }
 
@@ -572,6 +618,16 @@ class FileAppDbDataSource implements FileDataSource {
       });
       await _cacheListResults(store, account, parentDir, jsonList);
     });
+  }
+
+  @override
+  copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    // do nothing
   }
 
   Future<List<File>> _doList(ObjectStore store, Account account, File f) async {
@@ -674,6 +730,17 @@ class FileCachedDataSource implements FileDataSource {
     await _remoteSrc
         .updateMetadata(account, f, metadata)
         .then((_) => _appDbSrc.updateMetadata(account, f, metadata));
+  }
+
+  @override
+  copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    await _remoteSrc.copy(account, f, destination,
+        shouldOverwrite: shouldOverwrite);
   }
 
   Future<void> _cacheResult(Account account, File f, List<File> result) {
