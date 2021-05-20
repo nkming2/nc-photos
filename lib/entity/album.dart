@@ -15,6 +15,7 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -304,7 +305,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
       if (e.response.statusCode == 404) {
         _log.info("[create] Missing album dir, creating");
         // no dir
-        await _createDir(account);
+        await CreateDir(fileRepo)(account, getAlbumFileRoot(account));
         // then retry
         await PutFileBinary(fileRepo)(
             account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));
@@ -334,10 +335,6 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final random = Random().nextInt(0xFFFFFF);
     return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.json";
-  }
-
-  Future<void> _createDir(Account account) {
-    return FileWebdavDataSource().createDir(account, getAlbumFileRoot(account));
   }
 
   static final _log = Logger("entity.album.AlbumRemoteDataSource");
