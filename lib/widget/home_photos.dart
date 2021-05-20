@@ -107,15 +107,19 @@ class _HomePhotosState extends State<HomePhotos>
               child: DraggableScrollbar.semicircle(
                 controller: _scrollController,
                 overrideMaxScrollExtent: scrollExtent,
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    _buildAppBar(context),
-                    SliverPadding(
-                      padding: const EdgeInsets.all(16),
-                      sliver: buildItemStreamList(context),
-                    ),
-                  ],
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: false),
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _buildAppBar(context),
+                      SliverPadding(
+                        padding: const EdgeInsets.all(16),
+                        sliver: buildItemStreamList(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
