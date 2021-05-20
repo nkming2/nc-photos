@@ -353,5 +353,23 @@ class _Files {
     }
   }
 
+  /// A file or folder can be moved by sending a MOVE request to the file or
+  /// folder and specifying the [destinationUrl] as full url
+  Future<Response> move({
+    @required String path,
+    @required String destinationUrl,
+    bool overwrite,
+  }) async {
+    try {
+      return await _api.request("MOVE", path, header: {
+        "Destination": destinationUrl,
+        if (overwrite != null) "Overwrite": overwrite ? "T" : "F",
+      });
+    } catch (e) {
+      _log.severe("[move] Failed while delete", e);
+      rethrow;
+    }
+  }
+
   static final _log = Logger("api.api._Files");
 }

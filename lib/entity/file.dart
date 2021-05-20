@@ -388,6 +388,20 @@ class FileRepo {
             shouldOverwrite: shouldOverwrite,
           );
 
+  /// See [FileDataSource.move]
+  Future<void> move(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) =>
+      this.dataSrc.move(
+            account,
+            f,
+            destination,
+            shouldOverwrite: shouldOverwrite,
+          );
+
   final FileDataSource dataSrc;
 }
 
@@ -415,6 +429,17 @@ abstract class FileDataSource {
   /// [destination] should be a relative WebDAV path like
   /// remote.php/dav/files/admin/new/location
   Future<void> copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  });
+
+  /// Move [f] to [destination]
+  ///
+  /// [destination] should be a relative WebDAV path like
+  /// remote.php/dav/files/admin/new/location
+  Future<void> move(
     Account account,
     File f,
     String destination, {
@@ -555,6 +580,27 @@ class FileWebdavDataSource implements FileDataSource {
     }
   }
 
+  @override
+  move(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    _log.info("[move] ${f.path} to $destination");
+    final response = await Api(account).files().move(
+          path: f.path,
+          destinationUrl: "${account.url}/$destination",
+          overwrite: shouldOverwrite,
+        );
+    if (!response.isGood) {
+      _log.severe("[move] Failed requesting sever: $response");
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
+    }
+  }
+
   static final _log = Logger("entity.file.FileWebdavDataSource");
 }
 
@@ -622,6 +668,16 @@ class FileAppDbDataSource implements FileDataSource {
 
   @override
   copy(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    // do nothing
+  }
+
+  @override
+  move(
     Account account,
     File f,
     String destination, {
@@ -740,6 +796,17 @@ class FileCachedDataSource implements FileDataSource {
     bool shouldOverwrite,
   }) async {
     await _remoteSrc.copy(account, f, destination,
+        shouldOverwrite: shouldOverwrite);
+  }
+
+  @override
+  move(
+    Account account,
+    File f,
+    String destination, {
+    bool shouldOverwrite,
+  }) async {
+    await _remoteSrc.move(account, f, destination,
         shouldOverwrite: shouldOverwrite);
   }
 
