@@ -11,11 +11,13 @@ class ListAlbum {
   /// List all albums associated with [account]
   Future<List<Album>> call(Account account) async {
     try {
-      final albumFiles = await Ls(fileRepo)(
+      final ls = await Ls(fileRepo)(
           account,
           File(
             path: getAlbumFileRoot(account),
           ));
+      final albumFiles =
+          ls.where((element) => element.isCollection != true).toList();
       final albums = <Album>[];
       for (final f in albumFiles) {
         final album = await albumRepo.get(account, f);
