@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:path/path.dart' as path;
 
@@ -20,7 +21,10 @@ class ScanDir {
         return;
       }
       yield items.where((element) => element.isCollection != true).toList();
-      for (final i in items.where((element) => element.isCollection == true)) {
+      for (final i in items.where((element) =>
+          element.isCollection == true &&
+          !element.path
+              .endsWith(remote_storage_util.getRemoteStorageDir(account)))) {
         yield* this(account, i);
       }
     } on CacheNotFoundException catch (e) {
