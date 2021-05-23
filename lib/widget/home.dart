@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/metadata_task_manager.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home_albums.dart';
 import 'package:nc_photos/widget/home_photos.dart';
@@ -39,11 +36,6 @@ class _HomeState extends State<Home> {
   @override
   initState() {
     super.initState();
-    if (Pref.inst().isEnableExif()) {
-      KiwiContainer()
-          .resolve<MetadataTaskManager>()
-          .addTask(MetadataTask(widget.account));
-    }
     _pageController = PageController(initialPage: 0, keepPage: false);
   }
 

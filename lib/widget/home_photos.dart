@@ -228,6 +228,14 @@ class _HomePhotosState extends State<HomePhotos>
       itemStreamListItems = [];
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
+      if (state is ScanDirBlocSuccess) {
+        if (Pref.inst().isEnableExif() && !_hasFiredMetadataTask) {
+          KiwiContainer()
+              .resolve<MetadataTaskManager>()
+              .addTask(MetadataTask(widget.account));
+          _hasFiredMetadataTask = true;
+        }
+      }
     } else if (state is ScanDirBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception, context)),
@@ -489,6 +497,7 @@ class _HomePhotosState extends State<HomePhotos>
   double _prevListWidth;
   double _appBarExtent;
 
+  static var _hasFiredMetadataTask = false;
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
 }
