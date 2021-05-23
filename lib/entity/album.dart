@@ -15,7 +15,6 @@ import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -296,22 +295,9 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final filePath =
         "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
     final fileRepo = FileRepo(FileWebdavDataSource());
-    try {
-      await PutFileBinary(fileRepo)(
-          account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));
-    } on ApiException catch (e) {
-      if (e.response.statusCode == 404) {
-        _log.info("[create] Missing album dir, creating");
-        // no dir
-        await CreateDir(fileRepo)(
-            account, remote_storage_util.getRemoteAlbumsDir(account));
-        // then retry
-        await PutFileBinary(fileRepo)(
-            account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));
-      } else {
-        rethrow;
-      }
-    }
+    await PutFileBinary(fileRepo)(
+        account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())),
+        shouldCreateMissingDir: true);
     // query album file
     final list = await Ls(fileRepo)(account, File(path: filePath),
         shouldExcludeRootDir: false);
