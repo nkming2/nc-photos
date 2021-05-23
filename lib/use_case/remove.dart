@@ -14,7 +14,10 @@ class Remove {
   /// Remove a file
   Future<void> call(Account account, File file) async {
     await fileRepo.remove(account, file);
-    await _cleanUpAlbums(account, file);
+    if (albumRepo != null) {
+      _log.info("[call] Skip albums cleanup as albumRepo == null");
+      await _cleanUpAlbums(account, file);
+    }
     KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, file));
   }
 
