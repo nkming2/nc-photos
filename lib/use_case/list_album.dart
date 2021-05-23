@@ -3,6 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/compat/v15.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
@@ -30,7 +31,7 @@ class ListAlbum {
       final ls = await Ls(fileRepo)(
           account,
           File(
-            path: getAlbumFileRoot(account),
+            path: remote_storage_util.getRemoteAlbumsDir(account),
           ));
       final albumFiles =
           ls.where((element) => element.isCollection != true).toList();

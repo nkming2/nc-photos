@@ -8,13 +8,13 @@ import 'package:flutter/foundation.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -22,9 +22,6 @@ import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
-
-String getAlbumFileRoot(Account account) =>
-    "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos/albums";
 
 bool isAlbumFile(File file) =>
     path.dirname(file.path).endsWith(".com.nkming.nc_photos/albums");
@@ -296,7 +293,8 @@ class AlbumRemoteDataSource implements AlbumDataSource {
   create(Account account, Album album) async {
     _log.info("[create]");
     final fileName = _makeAlbumFileName();
-    final filePath = "${getAlbumFileRoot(account)}/$fileName";
+    final filePath =
+        "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
     final fileRepo = FileRepo(FileWebdavDataSource());
     try {
       await PutFileBinary(fileRepo)(
@@ -305,7 +303,8 @@ class AlbumRemoteDataSource implements AlbumDataSource {
       if (e.response.statusCode == 404) {
         _log.info("[create] Missing album dir, creating");
         // no dir
-        await CreateDir(fileRepo)(account, getAlbumFileRoot(account));
+        await CreateDir(fileRepo)(
+            account, remote_storage_util.getRemoteAlbumsDir(account));
         // then retry
         await PutFileBinary(fileRepo)(
             account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())));

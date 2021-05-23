@@ -1,9 +1,9 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:path/path.dart' as path;
@@ -37,7 +37,8 @@ class _MigrateAlbumFiles {
         return false;
       }
       // copy to an intermediate location
-      final intermediateDir = "${getAlbumFileRoot(account)}.tmp";
+      final intermediateDir =
+          "${remote_storage_util.getRemoteAlbumsDir(account)}.tmp";
       _log.info("[call] Copy album files to '$intermediateDir'");
       if (!ls.any((element) =>
           element.isCollection == true && element.path == intermediateDir)) {
@@ -49,10 +50,10 @@ class _MigrateAlbumFiles {
             shouldOverwrite: true);
       }
       // rename intermediate
-      await fileRepo.move(
-          account, File(path: intermediateDir), getAlbumFileRoot(account));
+      await fileRepo.move(account, File(path: intermediateDir),
+          remote_storage_util.getRemoteAlbumsDir(account));
       _log.info(
-          "[call] Album files moved to '${getAlbumFileRoot(account)}' successfully");
+          "[call] Album files moved to '${remote_storage_util.getRemoteAlbumsDir(account)}' successfully");
       // remove old files
       for (final f in albumFiles) {
         try {

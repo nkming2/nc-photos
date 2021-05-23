@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:synchronized/synchronized.dart';
 
 class AppDb {
@@ -128,7 +129,7 @@ class AppDbAlbumEntry {
   }
 
   static String toRootPath(Account account) =>
-      "${account.url}/${getAlbumFileRoot(account)}";
+      "${account.url}/${remote_storage_util.getRemoteAlbumsDir(account)}";
   static String toPath(Account account, File albumFile) =>
       "${account.url}/${albumFile.path}";
   static String toPrimaryKey(Account account, File albumFile, int index) =>
