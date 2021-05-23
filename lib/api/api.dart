@@ -73,10 +73,16 @@ class Api {
     final response =
         await http.Response.fromStream(await http.Client().send(req));
     if (!_isHttpStatusGood(response.statusCode)) {
-      _log.severe(
-        "[request] HTTP $method (${response.statusCode}): $endpoint",
-        response.body,
-      );
+      if (response.statusCode == 404) {
+        _log.severe(
+          "[request] HTTP $method (${response.statusCode}): $endpoint",
+        );
+      } else {
+        _log.severe(
+          "[request] HTTP $method (${response.statusCode}): $endpoint",
+          response.body,
+        );
+      }
     }
     return Response(response.statusCode, response.headers,
         isResponseString ? response.body : response.bodyBytes);
