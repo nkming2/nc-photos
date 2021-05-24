@@ -240,8 +240,12 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       _queryWithFileDataSource(ev, getState, FileAppDbDataSource());
 
   Stream<ScanDirBlocState> _queryOnline(
-          ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) =>
-      _queryWithFileDataSource(ev, getState, FileCachedDataSource());
+      ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) {
+    final stream = _queryWithFileDataSource(ev, getState,
+        FileCachedDataSource(shouldCheckCache: _shouldCheckCache));
+    _shouldCheckCache = false;
+    return stream;
+  }
 
   Stream<ScanDirBlocState> _queryWithFileDataSource(ScanDirBlocQueryBase ev,
       ScanDirBlocState Function() getState, FileDataSource dataSrc) async* {
@@ -267,6 +271,8 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
   int _successiveMetadataUpdatedCount = 0;
   StreamSubscription<void> _metadataUpdatedSubscription;
+
+  bool _shouldCheckCache = true;
 
   static final _log = Logger("bloc.scan_dir.ScanDirBloc");
 }

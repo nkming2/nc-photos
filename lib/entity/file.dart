@@ -14,9 +14,12 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
+import 'package:nc_photos/touch_token_manager.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
 int compareFileDateTimeDescending(File x, File y) {
@@ -736,44 +739,38 @@ class FileAppDbDataSource implements FileDataSource {
 }
 
 class FileCachedDataSource implements FileDataSource {
+  FileCachedDataSource({
+    this.shouldCheckCache = false,
+  });
+
   @override
   list(Account account, File f) async {
-    final trimmedRootPath = f.path.trimAny("/");
-    List<File> cache;
-    try {
-      cache = await _appDbSrc.list(account, f);
-      // compare the cached root
-      final cacheEtag = cache
-          .firstWhere((element) => element.path.trimAny("/") == trimmedRootPath)
-          .etag;
-      if (cacheEtag != null) {
-        // compare the etag to see if the content has been updated
-        var remoteEtag = f.etag;
-        if (remoteEtag == null) {
-          // no etag supplied, we need to query it form remote
-          final remote = await _remoteSrc.list(account, f, depth: 0);
-          assert(remote.length == 1);
-          remoteEtag = remote.first.etag;
-        }
-        if (cacheEtag == remoteEtag) {
-          // cache is good
-          _log.fine(
-              "[list] etag matched for ${AppDbFileEntry.toPath(account, f)}");
-          return cache;
-        }
-      }
-      _log.info(
-          "[list] Remote content updated for ${AppDbFileEntry.toPath(account, f)}");
-    } on CacheNotFoundException catch (_) {
-      // normal when there's no cache
-    } catch (e, stacktrace) {
-      _log.shout("[list] Cache failure", e, stacktrace);
+    final cacheManager = _CacheManager(
+      appDbSrc: _appDbSrc,
+      remoteSrc: _remoteSrc,
+      shouldCheckCache: shouldCheckCache,
+    );
+    final cache = await cacheManager.list(account, f);
+    if (cacheManager.isGood) {
+      return cache;
     }
 
-    // no cache
+    // no cache or outdated
     try {
       final remote = await _remoteSrc.list(account, f);
       await _cacheResult(account, f, remote);
+      if (shouldCheckCache) {
+        // update our local touch token to match the remote one
+        final tokenManager = TouchTokenManager();
+        try {
+          await tokenManager.setLocalToken(
+              account, f, cacheManager.remoteTouchToken);
+        } catch (e, stacktrace) {
+          _log.shout("[list] Failed while setLocalToken", e, stacktrace);
+          // ignore error
+        }
+      }
+
       if (cache != null) {
         try {
           await _cleanUpCachedDir(account, remote, cache);
@@ -815,6 +812,16 @@ class FileCachedDataSource implements FileDataSource {
     await _remoteSrc
         .updateMetadata(account, f, metadata)
         .then((_) => _appDbSrc.updateMetadata(account, f, metadata));
+
+    // generate a new random token
+    final token = Uuid().v4().replaceAll("-", "");
+    final tokenManager = TouchTokenManager();
+    final dir = File(path: path.dirname(f.path));
+    await tokenManager.setLocalToken(account, dir, token);
+    final fileRepo = FileRepo(this);
+    await tokenManager.setRemoteToken(fileRepo, account, dir, token);
+    _log.info(
+        "[updateMetadata] New touch token '$token' for dir '${dir.path}'");
   }
 
   @override
@@ -893,10 +900,109 @@ class FileCachedDataSource implements FileDataSource {
     });
   }
 
+  final bool shouldCheckCache;
+
   final _remoteSrc = FileWebdavDataSource();
   final _appDbSrc = FileAppDbDataSource();
 
   static final _log = Logger("entity.file.FileCachedDataSource");
+}
+
+class _CacheManager {
+  _CacheManager({
+    @required this.appDbSrc,
+    @required this.remoteSrc,
+    this.shouldCheckCache = false,
+  });
+
+  /// Return the cached results of listing a directory [f]
+  ///
+  /// Should check [isGood] before using the cache returning by this method
+  Future<List<File>> list(Account account, File f) async {
+    final trimmedRootPath = f.path.trimAny("/");
+    List<File> cache;
+    try {
+      cache = await appDbSrc.list(account, f);
+      // compare the cached root
+      final cacheEtag = cache
+          .firstWhere((element) => element.path.trimAny("/") == trimmedRootPath)
+          .etag;
+      if (cacheEtag != null) {
+        // compare the etag to see if the content has been updated
+        var remoteEtag = f.etag;
+        if (remoteEtag == null) {
+          // no etag supplied, we need to query it form remote
+          final remote = await remoteSrc.list(account, f, depth: 0);
+          assert(remote.length == 1);
+          remoteEtag = remote.first.etag;
+        }
+        if (cacheEtag == remoteEtag) {
+          _log.fine(
+              "[_listCache] etag matched for ${AppDbFileEntry.toPath(account, f)}");
+          if (shouldCheckCache) {
+            await _checkTouchToken(account, f, cache);
+          } else {
+            _isGood = true;
+          }
+        }
+      } else {
+        _log.info(
+            "[_list] Remote content updated for ${AppDbFileEntry.toPath(account, f)}");
+      }
+    } on CacheNotFoundException catch (_) {
+      // normal when there's no cache
+    } catch (e, stacktrace) {
+      _log.shout("[_list] Cache failure", e, stacktrace);
+    }
+    return cache;
+  }
+
+  bool get isGood => _isGood;
+  String get remoteTouchToken => _remoteToken;
+
+  Future<void> _checkTouchToken(
+      Account account, File f, List<File> cache) async {
+    final touchPath =
+        "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final tokenManager = TouchTokenManager();
+    String remoteToken;
+    try {
+      remoteToken = await tokenManager.getRemoteToken(fileRepo, account, f);
+    } catch (e, stacktrace) {
+      _log.shout(
+          "[_checkTouchToken] Failed getting remote token at '$touchPath'",
+          e,
+          stacktrace);
+    }
+    _remoteToken = remoteToken;
+
+    String localToken;
+    try {
+      localToken = await tokenManager.getLocalToken(account, f);
+    } catch (e, stacktrace) {
+      _log.shout(
+          "[_checkTouchToken] Failed getting local token at '$touchPath'",
+          e,
+          stacktrace);
+    }
+
+    if (localToken != remoteToken) {
+      _log.info(
+          "[_checkTouchToken] Remote and local token differ, cache outdated");
+    } else {
+      _isGood = true;
+    }
+  }
+
+  final FileWebdavDataSource remoteSrc;
+  final FileAppDbDataSource appDbSrc;
+  final bool shouldCheckCache;
+
+  var _isGood = false;
+  String _remoteToken;
+
+  static final _log = Logger("entity.file._CacheManager");
 }
 
 Future<void> _cacheListResults(
