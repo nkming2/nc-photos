@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 

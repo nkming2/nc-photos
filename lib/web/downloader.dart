@@ -5,6 +5,7 @@ import 'dart:js' as js;
 
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/platform/downloader.dart' as itf;
 import 'package:path/path.dart' as path;
 

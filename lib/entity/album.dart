@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';

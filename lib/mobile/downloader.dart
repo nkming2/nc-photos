@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/downloader.dart' as itf;

@@ -4,6 +4,7 @@ import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
