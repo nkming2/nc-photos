@@ -1,6 +1,4 @@
 /// Helper functions working with remote Nextcloud server
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';

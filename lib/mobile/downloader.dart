@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';

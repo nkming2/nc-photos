@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:exifdart/exifdart_memory.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
