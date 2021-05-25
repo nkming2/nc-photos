@@ -327,6 +327,18 @@ void main() {
   });
 
   group("File", () {
+    group("constructor", () {
+      test("path trim slash", () {
+        final file = File(path: "/remote.php/dav/");
+        expect(file.path, "remote.php/dav");
+      });
+
+      test("path slash only", () {
+        final file = File(path: "/");
+        expect(file.path, "");
+      });
+    });
+
     group("fromJson", () {
       test("path", () {
         final json = <String, dynamic>{

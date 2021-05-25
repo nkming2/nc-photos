@@ -195,7 +195,7 @@ class File with EquatableMixin {
     this.hasPreview,
     this.fileId,
     this.metadata,
-  }) : this.path = path.trimRightAny("/");
+  }) : this.path = path.trimAny("/");
 
   factory File.fromJson(Map<String, dynamic> json) {
     return File(
