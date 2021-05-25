@@ -7,11 +7,11 @@ void main() {
   group("compareFileDateTimeDescending", () {
     test("lastModified a>b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         lastModified: DateTime.utc(2021),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         lastModified: DateTime.utc(2020),
       );
       expect(compareFileDateTimeDescending(a, b), lessThan(0));
@@ -19,11 +19,11 @@ void main() {
 
     test("lastModified a<b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         lastModified: DateTime.utc(2020),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         lastModified: DateTime.utc(2021),
       );
       expect(compareFileDateTimeDescending(a, b), greaterThan(0));
@@ -31,11 +31,11 @@ void main() {
 
     test("lastModified a==b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         lastModified: DateTime.utc(2021),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         lastModified: DateTime.utc(2021),
       );
       expect(compareFileDateTimeDescending(a, b), lessThan(0));
@@ -43,7 +43,7 @@ void main() {
 
     test("exif a>b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2021:01:02 03:04:05",
@@ -51,7 +51,7 @@ void main() {
         ),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2020:01:02 03:04:05",
@@ -63,7 +63,7 @@ void main() {
 
     test("exif a<b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2020:01:02 03:04:05",
@@ -71,7 +71,7 @@ void main() {
         ),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2021:01:02 03:04:05",
@@ -83,7 +83,7 @@ void main() {
 
     test("exif a==b", () {
       final a = File(
-        path: "/remote.php/dav/files/admin/test1.jpg",
+        path: "remote.php/dav/files/admin/test1.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2021:01:02 03:04:05",
@@ -91,7 +91,7 @@ void main() {
         ),
       );
       final b = File(
-        path: "/remote.php/dav/files/admin/test2.jpg",
+        path: "remote.php/dav/files/admin/test2.jpg",
         metadata: Metadata(
           exif: Exif({
             "DateTimeOriginal": "2021:01:02 03:04:05",
@@ -330,10 +330,10 @@ void main() {
     group("fromJson", () {
       test("path", () {
         final json = <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
         };
         final file = File.fromJson(json);
-        expect(file, File(path: "/remote.php/dav/files/admin/test.jpg"));
+        expect(file, File(path: "remote.php/dav/files/admin/test.jpg"));
       });
 
       test("contentLength", () {
@@ -435,95 +435,95 @@ void main() {
 
     group("toJson", () {
       test("path", () {
-        final file = File(path: "/remote.php/dav/files/admin/test.jpg");
+        final file = File(path: "remote.php/dav/files/admin/test.jpg");
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
         });
       });
 
       test("contentLength", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg", contentLength: 123);
+            path: "remote.php/dav/files/admin/test.jpg", contentLength: 123);
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "contentLength": 123,
         });
       });
 
       test("contentType", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg",
+            path: "remote.php/dav/files/admin/test.jpg",
             contentType: "image/jpeg");
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "contentType": "image/jpeg",
         });
       });
 
       test("etag", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg",
+            path: "remote.php/dav/files/admin/test.jpg",
             etag: "8a3e0799b6f0711c23cc2d93950eceb5");
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "etag": "8a3e0799b6f0711c23cc2d93950eceb5",
         });
       });
 
       test("lastModified", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg",
+            path: "remote.php/dav/files/admin/test.jpg",
             lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901));
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "lastModified": "2020-01-02T03:04:05.678901Z",
         });
       });
 
       test("isCollection", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg", isCollection: true);
+            path: "remote.php/dav/files/admin/test.jpg", isCollection: true);
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "isCollection": true,
         });
       });
 
       test("usedBytes", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg", usedBytes: 123456);
+            path: "remote.php/dav/files/admin/test.jpg", usedBytes: 123456);
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "usedBytes": 123456,
         });
       });
 
       test("hasPreview", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg", hasPreview: true);
+            path: "remote.php/dav/files/admin/test.jpg", hasPreview: true);
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "hasPreview": true,
         });
       });
 
       test("fileId", () {
         final file =
-            File(path: "/remote.php/dav/files/admin/test.jpg", fileId: 123);
+            File(path: "remote.php/dav/files/admin/test.jpg", fileId: 123);
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "fileId": 123,
         });
       });
 
       test("metadata", () {
         final file = File(
-            path: "/remote.php/dav/files/admin/test.jpg",
+            path: "remote.php/dav/files/admin/test.jpg",
             metadata: Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
             ));
         expect(file.toJson(), <String, dynamic>{
-          "path": "/remote.php/dav/files/admin/test.jpg",
+          "path": "remote.php/dav/files/admin/test.jpg",
           "metadata": <String, dynamic>{
             "version": Metadata.version,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -534,7 +534,7 @@ void main() {
 
     group("copyWith", () {
       final src = File(
-        path: "/remote.php/dav/files/admin/test.jpg",
+        path: "remote.php/dav/files/admin/test.jpg",
         contentLength: 123,
         contentType: "image/jpeg",
         etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -547,11 +547,11 @@ void main() {
       );
 
       test("path", () {
-        final file = src.copyWith(path: "/remote.php/dav/files/admin/test.png");
+        final file = src.copyWith(path: "remote.php/dav/files/admin/test.png");
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.png",
+              path: "remote.php/dav/files/admin/test.png",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -568,7 +568,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 321,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -585,7 +585,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/png",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -602,7 +602,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "000",
@@ -620,7 +620,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -637,7 +637,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -654,7 +654,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -671,7 +671,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -688,7 +688,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -706,7 +706,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -721,7 +721,7 @@ void main() {
 
       test("clear metadata", () {
         final src = File(
-          path: "/remote.php/dav/files/admin/test.jpg",
+          path: "remote.php/dav/files/admin/test.jpg",
           contentLength: 123,
           contentType: "image/jpeg",
           etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -736,7 +736,7 @@ void main() {
         expect(
             file,
             File(
-              path: "/remote.php/dav/files/admin/test.jpg",
+              path: "remote.php/dav/files/admin/test.jpg",
               contentLength: 123,
               contentType: "image/jpeg",
               etag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -751,12 +751,12 @@ void main() {
 
     group("strippedPath", () {
       test("file", () {
-        final file = File(path: "/remote.php/dav/files/admin/test.jpg");
-        expect(file.strippedPath, "admin/test.jpg");
+        final file = File(path: "remote.php/dav/files/admin/test.jpg");
+        expect(file.strippedPath, "test.jpg");
       });
 
       test("root dir", () {
-        final file = File(path: "/remote.php/dav/files/admin");
+        final file = File(path: "remote.php/dav/files/admin");
         expect(file.strippedPath, ".");
       });
     });

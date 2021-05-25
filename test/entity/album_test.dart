@@ -46,7 +46,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test1.jpg",
+                  "path": "remote.php/dav/files/admin/test1.jpg",
                 },
               },
             },
@@ -54,7 +54,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test2.jpg",
+                  "path": "remote.php/dav/files/admin/test2.jpg",
                 },
               },
             },
@@ -67,10 +67,10 @@ void main() {
               name: "",
               items: [
                 AlbumFileItem(
-                  file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+                  file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
-                  file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+                  file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
               ],
             ));
@@ -82,7 +82,7 @@ void main() {
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "items": [],
           "albumFile": <String, dynamic>{
-            "path": "/remote.php/dav/files/admin/test1.jpg",
+            "path": "remote.php/dav/files/admin/test1.jpg",
           },
         };
         expect(
@@ -91,7 +91,7 @@ void main() {
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
               items: [],
-              albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ));
       });
     });
@@ -131,10 +131,10 @@ void main() {
           name: "",
           items: [
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ),
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
             ),
           ],
         );
@@ -147,7 +147,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test1.jpg",
+                  "path": "remote.php/dav/files/admin/test1.jpg",
                 },
               },
             },
@@ -155,7 +155,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test2.jpg",
+                  "path": "remote.php/dav/files/admin/test2.jpg",
                 },
               },
             },
@@ -199,10 +199,10 @@ void main() {
           name: "",
           items: [
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ),
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
             ),
           ],
         );
@@ -215,7 +215,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test1.jpg",
+                  "path": "remote.php/dav/files/admin/test1.jpg",
                 },
               },
             },
@@ -223,7 +223,7 @@ void main() {
               "type": "file",
               "content": <String, dynamic>{
                 "file": <String, dynamic>{
-                  "path": "/remote.php/dav/files/admin/test2.jpg",
+                  "path": "remote.php/dav/files/admin/test2.jpg",
                 },
               },
             },
@@ -236,7 +236,7 @@ void main() {
           lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
           name: "",
           items: [],
-          albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+          albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
           "version": Album.version,
@@ -244,7 +244,7 @@ void main() {
           "name": "",
           "items": [],
           "albumFile": <String, dynamic>{
-            "path": "/remote.php/dav/files/admin/test1.jpg",
+            "path": "remote.php/dav/files/admin/test1.jpg",
           },
         });
       });
@@ -258,13 +258,13 @@ void main() {
           name: "album",
           items: [
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ),
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
             ),
           ],
-          albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+          albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
         );
         expect(
             album,
@@ -272,7 +272,7 @@ void main() {
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "album",
               items: [],
-              albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ));
       });
 
@@ -283,13 +283,13 @@ void main() {
           name: "album",
           items: [
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ),
             AlbumFileItem(
-              file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
             ),
           ],
-          albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+          albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
         );
         expect(
             album,
@@ -298,13 +298,13 @@ void main() {
               name: "album",
               items: [
                 AlbumFileItem(
-                  file: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+                  file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
-                  file: File(path: "/remote.php/dav/files/admin/test2.jpg"),
+                  file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
               ],
-              albumFile: File(path: "/remote.php/dav/files/admin/test1.jpg"),
+              albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ));
       });
     });
