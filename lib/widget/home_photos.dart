@@ -20,6 +20,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -230,11 +231,11 @@ class _HomePhotosState extends State<HomePhotos>
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanDirBlocSuccess) {
-        if (Pref.inst().isEnableExif() && !_hasFiredMetadataTask) {
+        if (Pref.inst().isEnableExif() && !_hasFiredMetadataTask.value) {
           KiwiContainer()
               .resolve<MetadataTaskManager>()
               .addTask(MetadataTask(widget.account));
-          _hasFiredMetadataTask = true;
+          _hasFiredMetadataTask.value = true;
         }
       }
     } else if (state is ScanDirBlocFailure) {
@@ -487,6 +488,23 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  Primitive<bool> get _hasFiredMetadataTask {
+    final blocId =
+        "${widget.account.scheme}://${widget.account.username}@${widget.account.address}";
+    try {
+      _log.fine("[_hasFiredMetadataTask] Resolving bloc for '$blocId'");
+      return KiwiContainer().resolve<Primitive<bool>>(
+          "HomePhotosState.hasFiredMetadataTask($blocId)");
+    } catch (_) {
+      _log.info(
+          "[_hasFiredMetadataTask] New bloc instance for account: ${widget.account}");
+      final obj = Primitive(false);
+      KiwiContainer().registerInstance<Primitive<bool>>(obj,
+          name: "HomePhotosState.hasFiredMetadataTask($blocId)");
+      return obj;
+    }
+  }
+
   ScanDirBloc _bloc;
 
   var _backingFiles = <File>[];
@@ -498,7 +516,6 @@ class _HomePhotosState extends State<HomePhotos>
   double _prevListWidth;
   double _appBarExtent;
 
-  static var _hasFiredMetadataTask = false;
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
 }
