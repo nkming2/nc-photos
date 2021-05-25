@@ -34,4 +34,8 @@ Added MP4 support (Android only)
 """,
   // v14
   null,
+  // v15
+  """15.0
+This version includes changes that are not compatible with older versions. Please also update your other devices if applicable
+""",
 ];
