@@ -368,12 +368,8 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onRefreshSelected() {
+    _hasFiredMetadataTask.value = false;
     _reqRefresh();
-    if (Pref.inst().isEnableExif()) {
-      KiwiContainer()
-          .resolve<MetadataTaskManager>()
-          .addTask(MetadataTask(widget.account));
-    }
   }
 
   /// Transform a File list to grid items
