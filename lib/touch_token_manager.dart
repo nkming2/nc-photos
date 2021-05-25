@@ -67,11 +67,23 @@ class TouchTokenManager {
     return platform.UniversalStorage().getString(name);
   }
 
-  String _getRemotePath(Account account, File file) =>
-      "${remote_storage_util.getRemoteTouchDir(account)}/${file.strippedPath}/token.txt";
+  String _getRemotePath(Account account, File file) {
+    final strippedPath = file.strippedPath;
+    if (strippedPath == ".") {
+      return "${remote_storage_util.getRemoteTouchDir(account)}/token.txt";
+    } else {
+      return "${remote_storage_util.getRemoteTouchDir(account)}/${file.strippedPath}/token.txt";
+    }
+  }
 
-  String _getLocalStorageName(Account account, File file) =>
-      "touch/${account.url.replaceFirst('://', '_')}/${file.strippedPath}/token";
+  String _getLocalStorageName(Account account, File file) {
+    final strippedPath = file.strippedPath;
+    if (strippedPath == ".") {
+      return "touch/${account.url.replaceFirst('://', '_')}/token";
+    } else {
+      return "touch/${account.url.replaceFirst('://', '_')}/${file.strippedPath}/token";
+    }
+  }
 
   static final _log = Logger("touch_token_manager.TouchTokenManager");
 }
