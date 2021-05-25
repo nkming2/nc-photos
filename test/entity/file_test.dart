@@ -749,9 +749,16 @@ void main() {
       });
     });
 
-    test("strippedPath", () {
-      final file = File(path: "/remote.php/dav/files/admin/test.jpg");
-      expect(file.strippedPath, "admin/test.jpg");
+    group("strippedPath", () {
+      test("file", () {
+        final file = File(path: "/remote.php/dav/files/admin/test.jpg");
+        expect(file.strippedPath, "admin/test.jpg");
+      });
+
+      test("root dir", () {
+        final file = File(path: "/remote.php/dav/files/admin");
+        expect(file.strippedPath, ".");
+      });
     });
   });
 }

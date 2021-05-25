@@ -302,11 +302,17 @@ class File with EquatableMixin {
   }
 
   /// Return the path of this file with the DAV part stripped
+  ///
+  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}
   String get strippedPath {
-    // WebDAV path: remote.php/dav/files/{username}/{path}
     if (path.contains("remote.php/dav/files")) {
-      return path
-          .substring(path.indexOf("/", "remote.php/dav/files/".length) + 1);
+      final position = path.indexOf("/", "remote.php/dav/files/".length) + 1;
+      if (position == 0) {
+        // root dir path
+        return ".";
+      } else {
+        return path.substring(position);
+      }
     } else {
       return path;
     }
