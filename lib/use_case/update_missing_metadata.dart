@@ -7,8 +7,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
-import 'package:nc_photos/use_case/update_metadata.dart';
+import 'package:nc_photos/use_case/update_property.dart';
 
 class UpdateMissingMetadata {
   UpdateMissingMetadata(this.fileRepo);
@@ -51,8 +52,13 @@ class UpdateMissingMetadata {
           exif: exif,
         );
 
-        await UpdateMetadata(FileRepo(FileCachedDataSource()),
-            AlbumRepo(AlbumCachedDataSource()))(account, file, metadataObj);
+        final updateOp = UpdateProperty(FileRepo(FileCachedDataSource()),
+            AlbumRepo(AlbumCachedDataSource()));
+        await updateOp(
+          account,
+          file,
+          metadata: OrNull(metadataObj),
+        );
         yield file;
       } catch (e, stacktrace) {
         _log.shout(

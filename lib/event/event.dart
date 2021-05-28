@@ -48,11 +48,15 @@ class AlbumUpdatedEvent {
   final Album album;
 }
 
-class FileMetadataUpdatedEvent {
-  FileMetadataUpdatedEvent(this.account, this.file);
+class FilePropertyUpdatedEvent {
+  FilePropertyUpdatedEvent(this.account, this.file, this.properties);
 
   final Account account;
   final File file;
+  final int properties;
+
+  // Bit masks for properties field
+  static const propMetadata = 0x01;
 }
 
 class FileRemovedEvent {
@@ -63,3 +67,8 @@ class FileRemovedEvent {
 }
 
 class ThemeChangedEvent {}
+
+extension FilePropertyUpdatedEventExtension on FilePropertyUpdatedEvent {
+  bool hasAnyProperties(List<int> properties) =>
+      properties.any((p) => this.properties & p != 0);
+}

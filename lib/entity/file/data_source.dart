@@ -105,17 +105,22 @@ class FileWebdavDataSource implements FileDataSource {
   }
 
   @override
-  updateMetadata(Account account, File f, Metadata metadata) async {
-    _log.info("[updateMetadata] ${f.path}");
-    if (metadata != null && metadata.fileEtag != f.etag) {
+  updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata> metadata,
+  }) async {
+    _log.info("[updateProperty] ${f.path}");
+    if (metadata?.obj != null && metadata.obj.fileEtag != f.etag) {
       _log.warning(
-          "[updateMetadata] etag mismatch (metadata: ${metadata.fileEtag}, file: ${f.etag})");
+          "[updateProperty] Metadata etag mismatch (metadata: ${metadata.obj.fileEtag}, file: ${f.etag})");
     }
     final setProps = {
-      if (metadata != null) "app:metadata": jsonEncode(metadata.toJson()),
+      if (metadata?.obj != null)
+        "app:metadata": jsonEncode(metadata.obj.toJson()),
     };
     final removeProps = [
-      if (metadata == null) "app:metadata",
+      if (OrNull.isNull(metadata)) "app:metadata",
     ];
     final response = await Api(account).files().proppatch(
           path: f.path,
@@ -126,7 +131,7 @@ class FileWebdavDataSource implements FileDataSource {
           remove: removeProps.isNotEmpty ? removeProps : null,
         );
     if (!response.isGood) {
-      _log.severe("[updateMetadata] Failed requesting server: $response");
+      _log.severe("[updateProperty] Failed requesting server: $response");
       throw ApiException(
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
@@ -236,8 +241,12 @@ class FileAppDbDataSource implements FileDataSource {
   }
 
   @override
-  updateMetadata(Account account, File f, Metadata metadata) {
-    _log.info("[updateMetadata] ${f.path}");
+  updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata> metadata,
+  }) {
+    _log.info("[updateProperty] ${f.path}");
     return AppDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
@@ -245,7 +254,9 @@ class FileAppDbDataSource implements FileDataSource {
       final parentList = await _doList(store, account, parentDir);
       final jsonList = parentList.map((e) {
         if (e.path == f.path) {
-          return e.copyWith(metadata: OrNull(metadata));
+          return e.copyWith(
+            metadata: metadata,
+          );
         } else {
           return e;
         }
@@ -369,10 +380,22 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  updateMetadata(Account account, File f, Metadata metadata) async {
+  updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata> metadata,
+  }) async {
     await _remoteSrc
-        .updateMetadata(account, f, metadata)
-        .then((_) => _appDbSrc.updateMetadata(account, f, metadata));
+        .updateProperty(
+          account,
+          f,
+          metadata: metadata,
+        )
+        .then((_) => _appDbSrc.updateProperty(
+              account,
+              f,
+              metadata: metadata,
+            ));
 
     // generate a new random token
     final token = Uuid().v4().replaceAll("-", "");

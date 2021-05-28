@@ -366,8 +366,16 @@ class FileRepo {
       this.dataSrc.putBinary(account, path, content);
 
   /// See [FileDataSource.updateMetadata]
-  Future<void> updateMetadata(Account account, File file, Metadata metadata) =>
-      this.dataSrc.updateMetadata(account, file, metadata);
+  Future<void> updateProperty(
+    Account account,
+    File file, {
+    OrNull<Metadata> metadata,
+  }) =>
+      this.dataSrc.updateProperty(
+            account,
+            file,
+            metadata: metadata,
+          );
 
   /// See [FileDataSource.copy]
   Future<void> copy(
@@ -417,11 +425,12 @@ abstract class FileDataSource {
   /// Upload content to [path]
   Future<void> putBinary(Account account, String path, Uint8List content);
 
-  /// Update metadata for a file
-  ///
-  /// This will completely replace the metadata of the file [f]. Partial update
-  /// is not supported
-  Future<void> updateMetadata(Account account, File f, Metadata metadata);
+  /// Update one or more properties of a file
+  Future<void> updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata> metadata,
+  });
 
   /// Copy [f] to [destination]
   ///

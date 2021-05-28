@@ -89,15 +89,15 @@ class ListAlbumBlocInconsistent extends ListAlbumBlocState {
 
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   ListAlbumBloc() : super(ListAlbumBlocInit()) {
-    _fileMetadataUpdatedListener =
-        AppEventListener<FileMetadataUpdatedEvent>(_onFileMetadataUpdatedEvent);
+    _filePropertyUpdatedListener =
+        AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _fileRemovedListener =
         AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
     _albumCreatedListener =
         AppEventListener<AlbumCreatedEvent>(_onAlbumCreatedEvent);
-    _fileMetadataUpdatedListener.begin();
+    _filePropertyUpdatedListener.begin();
     _albumUpdatedListener.begin();
     _fileRemovedListener.begin();
     _albumCreatedListener.begin();
@@ -115,7 +115,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   @override
   close() {
-    _fileMetadataUpdatedListener.end();
+    _filePropertyUpdatedListener.end();
     _albumUpdatedListener.end();
     _fileRemovedListener.end();
     _albumCreatedListener.end();
@@ -160,7 +160,11 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     yield ListAlbumBlocInconsistent(state.account, state.albums);
   }
 
-  void _onFileMetadataUpdatedEvent(FileMetadataUpdatedEvent ev) {
+  void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
+    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
+      // not interested
+      return;
+    }
     if (state is ListAlbumBlocInit) {
       // no data in this bloc, ignore
       return;
@@ -220,7 +224,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     }
   }
 
-  AppEventListener<FileMetadataUpdatedEvent> _fileMetadataUpdatedListener;
+  AppEventListener<FilePropertyUpdatedEvent> _filePropertyUpdatedListener;
   AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   AppEventListener<FileRemovedEvent> _fileRemovedListener;
   AppEventListener<AlbumCreatedEvent> _albumCreatedListener;

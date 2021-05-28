@@ -118,10 +118,10 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   ScanDirBloc() : super(ScanDirBlocInit()) {
     _fileRemovedEventListener =
         AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
-    _fileMetadataUpdatedEventListener =
-        AppEventListener<FileMetadataUpdatedEvent>(_onFileMetadataUpdatedEvent);
+    _filePropertyUpdatedEventListener =
+        AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
     _fileRemovedEventListener.begin();
-    _fileMetadataUpdatedEventListener.begin();
+    _filePropertyUpdatedEventListener.begin();
   }
 
   static ScanDirBloc of(Account account) {
@@ -165,8 +165,8 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   @override
   close() {
     _fileRemovedEventListener.end();
-    _fileMetadataUpdatedEventListener.end();
-    _metadataUpdatedSubscription?.cancel();
+    _filePropertyUpdatedEventListener.end();
+    _propertyUpdatedSubscription?.cancel();
     return super.close();
   }
 
@@ -215,22 +215,28 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     add(_ScanDirBlocExternalEvent());
   }
 
-  void _onFileMetadataUpdatedEvent(FileMetadataUpdatedEvent ev) {
+  void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
+    if (!ev.hasAnyProperties([
+      FilePropertyUpdatedEvent.propMetadata,
+    ])) {
+      // not interested
+      return;
+    }
     if (state is ScanDirBlocInit) {
       // no data in this bloc, ignore
       return;
     }
 
-    _successiveMetadataUpdatedCount += 1;
-    _metadataUpdatedSubscription?.cancel();
+    _successivePropertyUpdatedCount += 1;
+    _propertyUpdatedSubscription?.cancel();
     // only trigger the event on the 10th update or 10s after the last update
-    if (_successiveMetadataUpdatedCount % 10 == 0) {
+    if (_successivePropertyUpdatedCount % 10 == 0) {
       add(_ScanDirBlocExternalEvent());
     } else {
-      _metadataUpdatedSubscription =
+      _propertyUpdatedSubscription =
           Future.delayed(const Duration(seconds: 10)).asStream().listen((_) {
         add(_ScanDirBlocExternalEvent());
-        _successiveMetadataUpdatedCount = 0;
+        _successivePropertyUpdatedCount = 0;
       });
     }
   }
@@ -267,10 +273,10 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   }
 
   AppEventListener<FileRemovedEvent> _fileRemovedEventListener;
-  AppEventListener<FileMetadataUpdatedEvent> _fileMetadataUpdatedEventListener;
+  AppEventListener<FilePropertyUpdatedEvent> _filePropertyUpdatedEventListener;
 
-  int _successiveMetadataUpdatedCount = 0;
-  StreamSubscription<void> _metadataUpdatedSubscription;
+  int _successivePropertyUpdatedCount = 0;
+  StreamSubscription<void> _propertyUpdatedSubscription;
 
   bool _shouldCheckCache = true;
 
