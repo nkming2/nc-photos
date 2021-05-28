@@ -25,6 +25,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
@@ -175,6 +176,19 @@ class _HomePhotosState extends State<HomePhotos>
             tooltip: AppLocalizations.of(context).deleteSelectedTooltip,
             onPressed: () {
               _onSelectionAppBarDeletePressed(context);
+            },
+          ),
+          PopupMenuButton(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _SelectionAppBarMenuOption.archive,
+                child:
+                    Text(AppLocalizations.of(context).archiveSelectedMenuLabel),
+              ),
+            ],
+            onSelected: (option) {
+              _onSelectionAppBarMenuSelected(context, option);
             },
           ),
         ],
@@ -362,6 +376,63 @@ class _HomePhotosState extends State<HomePhotos>
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context)
             .deleteSelectedFailureNotification(failures.length)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
+  }
+
+  void _onSelectionAppBarMenuSelected(
+      BuildContext context, _SelectionAppBarMenuOption option) {
+    switch (option) {
+      case _SelectionAppBarMenuOption.archive:
+        _onSelectionAppBarArchivePressed(context);
+        break;
+
+      default:
+        _log.shout("[_onSelectionAppBarMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  Future<void> _onSelectionAppBarArchivePressed(BuildContext context) async {
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(AppLocalizations.of(context)
+          .archiveSelectedProcessingNotification(selectedListItems.length)),
+      duration: k.snackBarDurationShort,
+    ));
+    final selectedFiles = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    setState(() {
+      clearSelectedItems();
+    });
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final failures = <File>[];
+    for (final f in selectedFiles) {
+      try {
+        await UpdateProperty(fileRepo, albumRepo)
+            .updateIsArchived(widget.account, f, true);
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_onSelectionAppBarArchivePressed] Failed while archiving file" +
+                (kDebugMode ? ": ${f.path}" : ""),
+            e,
+            stacktrace);
+        failures.add(f);
+      }
+    }
+    if (failures.isEmpty) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            AppLocalizations.of(context).archiveSelectedSuccessNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+    } else {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)
+            .archiveSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -594,6 +665,10 @@ class _VideoListItem extends _FileListItem {
 
   final Account account;
   final String previewUrl;
+}
+
+enum _SelectionAppBarMenuOption {
+  archive,
 }
 
 extension on DateTime {

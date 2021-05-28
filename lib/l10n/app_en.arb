@@ -97,6 +97,58 @@
 			}
 		}
 	},
+	"archiveSelectedMenuLabel": "Archive selected",
+	"@archiveSelectedMenuLabel": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Archiving 1 item} other{Archiving {count} items}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "All items archived successfully",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, =1{Failed archiving 1 item} other{Failed archiving {count} items}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedTooltip": "Unarchive selected",
+	"@unarchiveSelectedTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Unarchiving 1 item} other{Unarchiving {count} items}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "All items unarchived successfully",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Failed unarchiving 1 item} other{Failed unarchiving {count} items}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
 	"deleteTooltip": "Delete",
 	"@deleteTooltip": {
 		"description": "Tooltip for the delete button"
@@ -159,6 +211,10 @@
 				"example": "1"
 			}
 		}
+	},
+	"albumArchiveLabel": "Archive",
+	"@albumArchiveLabel": {
+		"description": "Archive"
 	},
 	"connectingToServer": "Connecting to\n{server}",
 	"@connectingToServer": {

@@ -23,6 +23,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
+import 'package:nc_photos/widget/archive_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:tuple/tuple.dart';
@@ -98,7 +99,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
                 sliver: SliverStaggeredGrid.extentBuilder(
                   maxCrossAxisExtent: 256,
                   mainAxisSpacing: 8,
-                  itemCount: _items.length + (_isSelectionMode ? 0 : 1),
+                  itemCount: _items.length + (_isSelectionMode ? 0 : 2),
                   itemBuilder: _buildItem,
                   staggeredTileBuilder: (index) {
                     return const StaggeredTile.count(1, 1);
@@ -165,6 +166,8 @@ class _HomeAlbumsState extends State<HomeAlbums> {
   Widget _buildItem(BuildContext context, int index) {
     if (index < _items.length) {
       return _buildAlbumItem(context, index);
+    } else if (index == _items.length) {
+      return _buildArchiveItem(context);
     } else {
       return _buildNewAlbumItem(context);
     }
@@ -228,6 +231,28 @@ class _HomeAlbumsState extends State<HomeAlbums> {
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),
+    );
+  }
+
+  Widget _buildArchiveItem(BuildContext context) {
+    return AlbumGridItem(
+      cover: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          color: AppTheme.getListItemBackgroundColor(context),
+          constraints: const BoxConstraints.expand(),
+          child: Icon(
+            Icons.archive,
+            color: Colors.white.withOpacity(.8),
+            size: 96,
+          ),
+        ),
+      ),
+      title: AppLocalizations.of(context).albumArchiveLabel,
+      onTap: () {
+        Navigator.of(context).pushNamed(ArchiveViewer.routeName,
+            arguments: ArchiveViewerArguments(widget.account));
+      },
     );
   }
 
