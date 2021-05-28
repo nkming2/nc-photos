@@ -218,6 +218,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
     if (!ev.hasAnyProperties([
       FilePropertyUpdatedEvent.propMetadata,
+      FilePropertyUpdatedEvent.propIsArchived,
     ])) {
       // not interested
       return;
@@ -233,11 +234,19 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     if (_successivePropertyUpdatedCount % 10 == 0) {
       add(_ScanDirBlocExternalEvent());
     } else {
-      _propertyUpdatedSubscription =
-          Future.delayed(const Duration(seconds: 10)).asStream().listen((_) {
-        add(_ScanDirBlocExternalEvent());
-        _successivePropertyUpdatedCount = 0;
-      });
+      if (ev.hasAnyProperties([FilePropertyUpdatedEvent.propIsArchived])) {
+        _propertyUpdatedSubscription =
+            Future.delayed(const Duration(seconds: 2)).asStream().listen((_) {
+          add(_ScanDirBlocExternalEvent());
+          _successivePropertyUpdatedCount = 0;
+        });
+      } else {
+        _propertyUpdatedSubscription =
+            Future.delayed(const Duration(seconds: 10)).asStream().listen((_) {
+          add(_ScanDirBlocExternalEvent());
+          _successivePropertyUpdatedCount = 0;
+        });
+      }
     }
   }
 

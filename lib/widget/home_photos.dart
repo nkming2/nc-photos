@@ -375,7 +375,8 @@ class _HomePhotosState extends State<HomePhotos>
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
-        .where((element) => file_util.isSupportedFormat(element))
+        .where((element) =>
+            file_util.isSupportedFormat(element) && element.isArchived != true)
         .sorted(compareFileDateTimeDescending);
 
     String currentDateStr;

@@ -44,6 +44,7 @@ class FileWebdavDataSource implements FileDataSource {
       },
       customProperties: [
         "app:metadata",
+        "app:is-archived",
       ],
     );
     if (!response.isGood) {
@@ -109,6 +110,7 @@ class FileWebdavDataSource implements FileDataSource {
     Account account,
     File f, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) async {
     _log.info("[updateProperty] ${f.path}");
     if (metadata?.obj != null && metadata.obj.fileEtag != f.etag) {
@@ -118,9 +120,11 @@ class FileWebdavDataSource implements FileDataSource {
     final setProps = {
       if (metadata?.obj != null)
         "app:metadata": jsonEncode(metadata.obj.toJson()),
+      if (isArchived?.obj != null) "app:is-archived": isArchived.obj,
     };
     final removeProps = [
       if (OrNull.isNull(metadata)) "app:metadata",
+      if (OrNull.isNull(isArchived)) "app:is-archived",
     ];
     final response = await Api(account).files().proppatch(
           path: f.path,
@@ -245,6 +249,7 @@ class FileAppDbDataSource implements FileDataSource {
     Account account,
     File f, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) {
     _log.info("[updateProperty] ${f.path}");
     return AppDb.use((db) async {
@@ -256,6 +261,7 @@ class FileAppDbDataSource implements FileDataSource {
         if (e.path == f.path) {
           return e.copyWith(
             metadata: metadata,
+            isArchived: isArchived,
           );
         } else {
           return e;
@@ -384,17 +390,20 @@ class FileCachedDataSource implements FileDataSource {
     Account account,
     File f, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) async {
     await _remoteSrc
         .updateProperty(
           account,
           f,
           metadata: metadata,
+          isArchived: isArchived,
         )
         .then((_) => _appDbSrc.updateProperty(
               account,
               f,
               metadata: metadata,
+              isArchived: isArchived,
             ));
 
     // generate a new random token

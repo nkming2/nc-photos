@@ -16,8 +16,9 @@ class UpdateProperty {
     Account account,
     File file, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) async {
-    if (metadata == null) {
+    if (metadata == null && isArchived == null) {
       // ?
       _log.warning("[call] Nothing to update");
       return;
@@ -31,16 +32,21 @@ class UpdateProperty {
       account,
       file,
       metadata: metadata,
+      isArchived: isArchived,
     );
     await _cleanUpAlbums(
       account,
       file,
       metadata: metadata,
+      isArchived: isArchived,
     );
 
     int properties = 0;
     if (metadata != null) {
       properties |= FilePropertyUpdatedEvent.propMetadata;
+    }
+    if (isArchived != null) {
+      properties |= FilePropertyUpdatedEvent.propIsArchived;
     }
     assert(properties != 0);
     KiwiContainer()
@@ -52,6 +58,7 @@ class UpdateProperty {
     Account account,
     File file, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) async {
     final albums = await ListAlbum(fileRepo, albumRepo)(account);
     for (final a in albums) {
@@ -63,6 +70,7 @@ class UpdateProperty {
               return AlbumFileItem(
                 file: e.file.copyWith(
                   metadata: metadata,
+                  isArchived: isArchived,
                 ),
               );
             } else {
@@ -91,4 +99,10 @@ extension UpdatePropertyExtension on UpdateProperty {
   /// See [UpdateProperty.call]
   Future<void> updateMetadata(Account account, File file, Metadata metadata) =>
       call(account, file, metadata: OrNull(metadata));
+
+  /// Convenience function to only update isArchived
+  ///
+  /// See [UpdateProperty.call]
+  Future<void> updateIsArchived(Account account, File file, bool isArchived) =>
+      call(account, file, isArchived: OrNull(isArchived));
 }

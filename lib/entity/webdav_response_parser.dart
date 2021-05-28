@@ -65,6 +65,7 @@ class WebdavFileParser {
     bool hasPreview;
     int fileId;
     Metadata metadata;
+    bool isArchived;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -95,6 +96,7 @@ class WebdavFileParser {
         hasPreview = propParser.hasPreview;
         fileId = propParser.fileId;
         metadata = propParser.metadata;
+        isArchived = propParser.isArchived;
       }
     }
 
@@ -109,6 +111,7 @@ class WebdavFileParser {
       hasPreview: hasPreview,
       fileId: fileId,
       metadata: metadata,
+      isArchived: isArchived,
     );
   }
 
@@ -162,6 +165,9 @@ class _PropParser {
       } else if (child.matchQualifiedName("fileid",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _fileId = int.parse(child.innerText);
+      } else if (child.matchQualifiedName("is-archived",
+          prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
+        _isArchived = child.innerText == "true";
       }
     }
     // 2nd pass that depends on data in 1st pass
@@ -192,6 +198,7 @@ class _PropParser {
   bool get hasPreview => _hasPreview;
   int get fileId => _fileId;
   Metadata get metadata => _metadata;
+  bool get isArchived => _isArchived;
 
   final Map<String, String> namespaces;
 
@@ -207,6 +214,7 @@ class _PropParser {
   bool _hasPreview;
   int _fileId;
   Metadata _metadata;
+  bool _isArchived;
 }
 
 extension on XmlElement {

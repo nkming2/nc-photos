@@ -136,6 +136,45 @@ void main() {
       ]);
     });
 
+    test("file w/ is-archived", () {
+      final xml = XmlDocument.parse("""
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:"
+	xmlns:s="http://sabredav.org/ns"
+	xmlns:oc="http://owncloud.org/ns"
+	xmlns:nc="http://nextcloud.org/ns">
+	<d:response>
+		<d:href>/remote.php/dav/files/admin/Photos/Nextcloud%20community.jpg</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getlastmodified>Fri, 01 Jan 2021 02:03:04 GMT</d:getlastmodified>
+				<d:getetag>&quot;8950e39a034e369237d9285e2d815a50&quot;</d:getetag>
+				<d:getcontenttype>image/jpeg</d:getcontenttype>
+				<d:resourcetype/>
+				<d:getcontentlength>797325</d:getcontentlength>
+				<nc:has-preview>true</nc:has-preview>
+				<x1:is-archived xmlns:x1="com.nkming.nc_photos">true</x1:is-archived>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>
+""");
+      final results = WebdavFileParser()(xml);
+      expect(results, [
+        File(
+          path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+          contentLength: 797325,
+          contentType: "image/jpeg",
+          etag: "8950e39a034e369237d9285e2d815a50",
+          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+          hasPreview: true,
+          isCollection: false,
+          isArchived: true,
+        ),
+      ]);
+    });
+
     test("multiple files", () {
       final xml = XmlDocument.parse("""
 <?xml version="1.0"?>

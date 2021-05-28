@@ -195,6 +195,7 @@ class File with EquatableMixin {
     this.hasPreview,
     this.fileId,
     this.metadata,
+    this.isArchived,
   }) : this.path = path.trimAny("/");
 
   factory File.fromJson(Map<String, dynamic> json) {
@@ -223,6 +224,7 @@ class File with EquatableMixin {
                 logFilePath: json["path"],
               ),
             ),
+      isArchived: json["isArchived"],
     );
   }
 
@@ -257,6 +259,9 @@ class File with EquatableMixin {
     if (metadata != null) {
       product += "metadata: $metadata, ";
     }
+    if (isArchived != null) {
+      product += "isArchived: $isArchived, ";
+    }
     return product + "}";
   }
 
@@ -272,6 +277,7 @@ class File with EquatableMixin {
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
       if (metadata != null) "metadata": metadata.toJson(),
+      if (isArchived != null) "isArchived": isArchived,
     };
   }
 
@@ -286,6 +292,7 @@ class File with EquatableMixin {
     bool hasPreview,
     int fileId,
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) {
     return File(
       path: path ?? this.path,
@@ -298,6 +305,7 @@ class File with EquatableMixin {
       hasPreview: hasPreview ?? this.hasPreview,
       fileId: fileId ?? this.fileId,
       metadata: metadata == null ? this.metadata : metadata.obj,
+      isArchived: isArchived == null ? this.isArchived : isArchived.obj,
     );
   }
 
@@ -330,6 +338,7 @@ class File with EquatableMixin {
         hasPreview,
         fileId,
         metadata,
+        isArchived,
       ];
 
   final String path;
@@ -344,6 +353,7 @@ class File with EquatableMixin {
   final int fileId;
   // metadata
   final Metadata metadata;
+  final bool isArchived;
 }
 
 class FileRepo {
@@ -370,11 +380,13 @@ class FileRepo {
     Account account,
     File file, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   }) =>
       this.dataSrc.updateProperty(
             account,
             file,
             metadata: metadata,
+            isArchived: isArchived,
           );
 
   /// See [FileDataSource.copy]
@@ -430,6 +442,7 @@ abstract class FileDataSource {
     Account account,
     File f, {
     OrNull<Metadata> metadata,
+    OrNull<bool> isArchived,
   });
 
   /// Copy [f] to [destination]

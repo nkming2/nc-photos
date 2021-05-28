@@ -443,6 +443,15 @@ void main() {
               ),
             ));
       });
+
+      test("isArchived", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "isArchived": true,
+        };
+        final file = File.fromJson(json);
+        expect(file, File(path: "", isArchived: true));
+      });
     });
 
     group("toJson", () {
@@ -511,8 +520,8 @@ void main() {
       });
 
       test("hasPreview", () {
-        final file = File(
-            path: "remote.php/dav/files/admin/test.jpg", hasPreview: true);
+        final file =
+            File(path: "remote.php/dav/files/admin/test.jpg", hasPreview: true);
         expect(file.toJson(), <String, dynamic>{
           "path": "remote.php/dav/files/admin/test.jpg",
           "hasPreview": true,
@@ -542,6 +551,15 @@ void main() {
           },
         });
       });
+
+      test("isArchived", () {
+        final file =
+            File(path: "remote.php/dav/files/admin/test.jpg", isArchived: true);
+        expect(file.toJson(), <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test.jpg",
+          "isArchived": true,
+        });
+      });
     });
 
     group("copyWith", () {
@@ -556,6 +574,7 @@ void main() {
         hasPreview: true,
         fileId: 123,
         metadata: null,
+        isArchived: true,
       );
 
       test("path", () {
@@ -572,6 +591,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -589,6 +609,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -606,6 +627,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -623,6 +645,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -641,6 +664,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -658,6 +682,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -675,6 +700,7 @@ void main() {
               usedBytes: 999999,
               hasPreview: true,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -692,6 +718,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: false,
               fileId: 123,
+              isArchived: true,
             ));
       });
 
@@ -709,6 +736,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 321,
+              isArchived: true,
             ));
       });
 
@@ -728,6 +756,7 @@ void main() {
               hasPreview: true,
               fileId: 123,
               metadata: metadata,
+              isArchived: true,
             ));
       });
 
@@ -743,8 +772,45 @@ void main() {
           hasPreview: true,
           fileId: 123,
           metadata: Metadata(),
+          isArchived: true,
         );
         final file = src.copyWith(metadata: OrNull(null));
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              isArchived: true,
+            ));
+      });
+
+      test("isArchived", () {
+        final file = src.copyWith(isArchived: OrNull(false));
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              isArchived: false,
+            ));
+      });
+
+      test("clear isArchived", () {
+        final file = src.copyWith(isArchived: OrNull(null));
         expect(
             file,
             File(
