@@ -419,5 +419,9 @@
 	"errorWrongPassword": "Unable to authenticate. Please double check the username and password",
 	"@errorWrongPassword": {
 		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "Server error. Please make sure the server is setup correctly",
+	"@errorServerError": {
+		"description": "HTTP 500"
 	}
 }

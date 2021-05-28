@@ -13,6 +13,8 @@ String toUserString(dynamic exception, BuildContext context) {
       return AppLocalizations.of(context).errorUnauthenticated;
     } else if (exception.response.statusCode == 423) {
       return AppLocalizations.of(context).errorLocked;
+    } else if (exception.response.statusCode == 500) {
+      return AppLocalizations.of(context).errorServerError;
     }
   } else if (exception is SocketException) {
     return AppLocalizations.of(context).errorDisconnected;
