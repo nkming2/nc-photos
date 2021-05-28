@@ -295,7 +295,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   int get _thumbSize {
     switch (_thumbZoomLevel) {
       case 1:
-        return 192;
+        return 176;
 
       case 2:
         return 256;
