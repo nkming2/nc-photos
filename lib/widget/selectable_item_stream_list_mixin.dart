@@ -12,6 +12,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class SelectableItemStreamListItem {
   const SelectableItemStreamListItem({
@@ -85,7 +86,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
       WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
       _prevItemStreamListCellSize = cellSize;
     }
-    _gridKey = _GridKey(cellSize);
+    _gridKey = _GridKey("$_uniqueToken $cellSize");
     return _SliverStaggeredGrid.extentBuilder(
       key: _gridKey,
       maxCrossAxisExtent: itemStreamListCellSize.toDouble(),
@@ -279,6 +280,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
   final _items = <SelectableItemStreamListItem>[];
   final _selectedItems = <SelectableItemStreamListItem>{};
 
+  // this unique token is there to keep the globalkey unique
+  final _uniqueToken = Uuid().v4();
   GlobalObjectKey _gridKey;
 
   /// used to gain focus on web for keyboard support
