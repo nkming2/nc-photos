@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,8 @@ class _RootPickerState extends State<RootPicker> {
   @override
   initState() {
     super.initState();
+    _root = LsDirBlocItem(
+        File(path: api_util.getWebdavRootUrlRelative(widget.account)), []);
     _initBloc();
   }
 
@@ -65,8 +68,8 @@ class _RootPickerState extends State<RootPicker> {
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
     _bloc = LsDirBloc();
-    _bloc.add(LsDirBlocQuery(widget.account,
-        [File(path: api_util.getWebdavRootUrlRelative(widget.account))]));
+    _navigateInto(
+        File(path: api_util.getWebdavRootUrlRelative(widget.account)));
   }
 
   Widget _buildContent(BuildContext context, LsDirBlocState state) {
@@ -100,7 +103,9 @@ class _RootPickerState extends State<RootPicker> {
           Expanded(
             child: Align(
               alignment: Alignment.center,
-              child: _buildList(context),
+              child: state is LsDirBlocLoading
+                  ? Container()
+                  : _buildList(context, state),
             ),
           ),
           Padding(
@@ -127,9 +132,9 @@ class _RootPickerState extends State<RootPicker> {
     );
   }
 
-  Widget _buildList(BuildContext context) {
-    final current = _findCurrentNavigateLevel();
-    final isTopLevel = _positions.isEmpty;
+  Widget _buildList(BuildContext context, LsDirBlocState state) {
+    final isTopLevel =
+        _currentPath == api_util.getWebdavRootUrlRelative(widget.account);
     return Theme(
       data: Theme.of(context).copyWith(
         accentColor: AppTheme.getOverscrollIndicatorColor(context),
@@ -145,7 +150,7 @@ class _RootPickerState extends State<RootPicker> {
           alignment: Alignment.topLeft,
         ),
         child: ListView.separated(
-          key: ObjectKey(current),
+          key: Key(_currentPath),
           itemBuilder: (context, index) {
             if (!isTopLevel && index == 0) {
               return ListTile(
@@ -155,7 +160,7 @@ class _RootPickerState extends State<RootPicker> {
                     AppLocalizations.of(context).rootPickerNavigateUpItemText),
                 onTap: () {
                   try {
-                    _navigateUp();
+                    _navigateInto(File(path: path.dirname(_currentPath)));
                   } catch (e) {
                     SnackBarManager().showSnackBar(SnackBar(
                       content: Text(exception_util.toUserString(e, context)),
@@ -165,11 +170,12 @@ class _RootPickerState extends State<RootPicker> {
                 },
               );
             } else {
-              return _buildItem(context, current[index - (isTopLevel ? 0 : 1)]);
+              return _buildItem(
+                  context, state.items[index - (isTopLevel ? 0 : 1)]);
             }
           },
           separatorBuilder: (context, index) => const Divider(),
-          itemCount: current.length + (isTopLevel ? 0 : 1),
+          itemCount: state.items.length + (isTopLevel ? 0 : 1),
         ),
       ),
     );
@@ -232,8 +238,12 @@ class _RootPickerState extends State<RootPicker> {
 
   void _onStateChange(BuildContext context, LsDirBlocState state) {
     if (state is LsDirBlocSuccess) {
-      _positions = [];
-      _root = LsDirBlocItem(File(path: "/"), state.items);
+      if (!_fillResult(_root, state)) {
+        _log.shout("[_onStateChange] Failed while _fillResult" +
+            (kDebugMode
+                ? ", root:\n${_root.toString(isDeep: true)}\nstate: ${state.root.path}"
+                : ""));
+      }
     } else if (state is LsDirBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception, context)),
@@ -272,16 +282,34 @@ class _RootPickerState extends State<RootPicker> {
   }
 
   void _onConfirmPressed(BuildContext context) {
-    final roots = _picks.map((e) => e.file.strippedPath).toList();
+    final roots = _picks.map((e) => File(path: e).strippedPath).toList();
     final newAccount = widget.account.copyWith(roots: roots);
     _log.info("[_onConfirmPressed] Account is good: $newAccount");
     Navigator.of(context).pop(newAccount);
   }
 
+  /// Fill query results from bloc to our item tree
+  bool _fillResult(LsDirBlocItem root, LsDirBlocSuccess state) {
+    if (root.file.path == state.root.path) {
+      root.children = state.items;
+      return true;
+    } else if (state.root.path.startsWith(root.file.path)) {
+      for (final child in root.children ?? <LsDirBlocItem>[]) {
+        if (_fillResult(child, state)) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      // not us, not child of us
+      return false;
+    }
+  }
+
   /// Pick an item
   void _pick(LsDirBlocItem item) {
     setState(() {
-      _picks.add(item);
+      _picks.add(item.file.path);
       _picks = _optimizePicks(_root);
     });
     _log.fine("[_pick] Picked: ${_pickListToString(_picks)}");
@@ -290,16 +318,16 @@ class _RootPickerState extends State<RootPicker> {
   /// Optimize the picked array
   ///
   /// 1) If a parent directory is picked, all children will be ignored
-  List<LsDirBlocItem> _optimizePicks(LsDirBlocItem item) {
-    if (_picks.contains(item)) {
+  List<String> _optimizePicks(LsDirBlocItem item) {
+    if (_picks.contains(item.file.path)) {
       // this dir is explicitly picked, nothing more to do
-      return [item];
+      return [item.file.path];
     }
-    if (item.children.isEmpty) {
+    if (item.children == null || item.children.isEmpty) {
       return [];
     }
 
-    final products = <LsDirBlocItem>[];
+    final products = <String>[];
     for (final i in item.children) {
       products.addAll(_optimizePicks(i));
     }
@@ -322,28 +350,46 @@ class _RootPickerState extends State<RootPicker> {
   /// Unpick an item
   void _unpick(LsDirBlocItem item) {
     setState(() {
-      if (_picks.contains(item)) {
+      if (_picks.contains(item.file.path)) {
         // ourself is being picked, simple
-        _picks = _picks.where((element) => element != item).toList();
+        _picks = _picks.where((element) => element != item.file.path).toList();
       } else {
         // Look for the closest picked dir
         final parents = _picks
-            .where((element) => item.file.path.startsWith(element.file.path))
+            .where((element) => item.file.path.startsWith(element))
             .toList()
-              ..sort(
-                  (a, b) => b.file.path.length.compareTo(a.file.path.length));
+              ..sort((a, b) => b.length.compareTo(a.length));
         final parent = parents.first;
-        _picks.remove(parent);
-        _picks.addAll(_pickedAllExclude(parent, item));
+        try {
+          _picks.addAll(_pickedAllExclude(path: parent, exclude: item)
+              .map((e) => e.file.path));
+          _picks.remove(parent);
+        } catch (_) {
+          SnackBarManager().showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)
+                  .rootPickerUnpickFailureNotification)));
+        }
       }
     });
     _log.fine("[_unpick] Picked: ${_pickListToString(_picks)}");
   }
 
-  /// Return a list where all children of [item] but [exclude] are picked
-  List<LsDirBlocItem> _pickedAllExclude(
-      LsDirBlocItem item, LsDirBlocItem exclude) {
-    if (item == exclude) {
+  /// Return a list where all children of [path] or [item], except [exclude],
+  /// are picked
+  ///
+  /// Either [path] or [item] must be set, If both are set, [item] takes
+  /// priority
+  List<LsDirBlocItem> _pickedAllExclude({
+    String path,
+    LsDirBlocItem item,
+    @required LsDirBlocItem exclude,
+  }) {
+    if (item == null) {
+      final item = _findChildItemByPath(_root, path);
+      return _pickedAllExclude(item: item, exclude: exclude);
+    }
+
+    if (item.file.path == exclude.file.path) {
       return [];
     }
     _log.fine(
@@ -352,7 +398,7 @@ class _RootPickerState extends State<RootPicker> {
     for (final i in item.children) {
       if (exclude.file.path.startsWith(i.file.path)) {
         // [i] is a parent of exclude
-        products.addAll(_pickedAllExclude(i, exclude));
+        products.addAll(_pickedAllExclude(item: i, exclude: exclude));
       } else {
         products.add(i);
       }
@@ -360,17 +406,32 @@ class _RootPickerState extends State<RootPicker> {
     return products;
   }
 
+  /// Return the child/grandchild/... item of [parent] with [path]
+  LsDirBlocItem _findChildItemByPath(LsDirBlocItem parent, String path) {
+    if (path == parent.file.path) {
+      return parent;
+    }
+    for (final c in parent.children) {
+      if (path == c.file.path || path.startsWith("${c.file.path}/")) {
+        return _findChildItemByPath(c, path);
+      }
+    }
+    // ???
+    _log.shout(
+        "[_findChildItemByPath] Failed finding child item for '$path' under '${parent.file.path}'");
+    throw ArgumentError("Path not found");
+  }
+
   PickState _isItemPicked(LsDirBlocItem item) {
     var product = PickState.notPicked;
     for (final p in _picks) {
       // exact match, or parent is picked
-      if (p.file.path == item.file.path ||
-          item.file.path.startsWith("${p.file.path}/")) {
+      if (p == item.file.path || item.file.path.startsWith("$p/")) {
         product = PickState.picked;
         // no need to check the remaining ones
         break;
       }
-      if (p.file.path.startsWith("${item.file.path}/")) {
+      if (p.startsWith("${item.file.path}/")) {
         product = PickState.childPicked;
       }
     }
@@ -379,48 +440,20 @@ class _RootPickerState extends State<RootPicker> {
   }
 
   /// Return the string representation of a list of LsDirBlocItem
-  static _pickListToString(List<LsDirBlocItem> items) =>
-      "['${items.map((e) => e.file.path).join('\', \'')}']";
+  static _pickListToString(List<String> items) => "['${items.join('\', \'')}']";
 
   void _navigateInto(File file) {
-    final current = _findCurrentNavigateLevel();
-    final navPosition =
-        current.indexWhere((element) => element.file.path == file.path);
-    if (navPosition == -1) {
-      _log.severe("[_navigateInto] File not found: '${file.path}', "
-          "current level: ['${current.map((e) => e.file.path).join('\', \'')}']");
-      throw StateError("Can't navigate into directory");
-    }
-    setState(() {
-      _positions.add(navPosition);
-    });
-  }
-
-  void _navigateUp() {
-    if (_positions.isEmpty) {
-      throw StateError("Can't navigate up in the root directory");
-    }
-    setState(() {
-      _positions.removeLast();
-    });
-  }
-
-  /// Find and return the list of items currently navigated to
-  List<LsDirBlocItem> _findCurrentNavigateLevel() {
-    var product = _root.children;
-    for (final i in _positions) {
-      product = product[i].children;
-    }
-    return product;
+    _currentPath = file.path;
+    _bloc.add(LsDirBlocQuery(widget.account, file, depth: 2));
   }
 
   LsDirBloc _bloc;
 
-  var _root = LsDirBlocItem(File(path: "/"), const []);
+  LsDirBlocItem _root;
 
   /// Track where the user is navigating in [_backingFiles]
-  var _positions = <int>[];
-  var _picks = <LsDirBlocItem>[];
+  String _currentPath;
+  var _picks = <String>[];
 
   static final _log = Logger("widget.root_picker._RootPickerState");
 }

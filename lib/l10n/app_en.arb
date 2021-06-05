@@ -225,6 +225,10 @@
 	"@rootPickerNavigateUpItemText": {
 		"description": "Text of the list item to navigate up the directory tree"
 	},
+	"rootPickerUnpickFailureNotification": "Failed unpicking item",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
 	"setupWidgetTitle": "Getting started",
 	"@setupWidgetTitle": {
 		"description": "Title of the introductory widget"
