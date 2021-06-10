@@ -321,6 +321,10 @@
 	"@settingsSourceCodeTitle": {
 		"description": "Title of the source code item"
 	},
+	"settingsBugReportTitle": "Report issue",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
 	"settingsTranslatorTitle": "Translator",
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
