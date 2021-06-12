@@ -159,11 +159,13 @@ class Album with EquatableMixin {
   }
 
   @override
-  toString() {
+  toString({bool isDeep = false}) {
+    final itemsStr =
+        isDeep ? items.toReadableString() : "List {length: ${items.length}}";
     return "$runtimeType {"
         "lastUpdated: $lastUpdated, "
         "name: $name, "
-        "items: ${items.toReadableString()}, "
+        "items: $itemsStr, "
         "albumFile: $albumFile, "
         "}";
   }
