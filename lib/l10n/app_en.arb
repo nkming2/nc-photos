@@ -285,6 +285,10 @@
 	"@rootPickerUnpickFailureNotification": {
 		"description": "Failed while unpicking an item in the root picker list"
 	},
+	"rootPickerListEmptyNotification": "Please pick at least one folder or press skip to include all",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
 	"setupWidgetTitle": "Getting started",
 	"@setupWidgetTitle": {
 		"description": "Title of the introductory widget"

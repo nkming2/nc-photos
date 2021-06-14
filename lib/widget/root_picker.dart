@@ -283,6 +283,14 @@ class _RootPickerState extends State<RootPicker> {
 
   void _onConfirmPressed(BuildContext context) {
     final roots = _picks.map((e) => File(path: e).strippedPath).toList();
+    if (roots.isEmpty) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content:
+            Text(AppLocalizations.of(context).rootPickerListEmptyNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      return;
+    }
     final newAccount = widget.account.copyWith(roots: roots);
     _log.info("[_onConfirmPressed] Account is good: $newAccount");
     Navigator.of(context).pop(newAccount);
