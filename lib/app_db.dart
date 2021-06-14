@@ -12,9 +12,12 @@ import 'package:synchronized/synchronized.dart';
 
 class AppDb {
   static const dbName = "app.db";
-  static const dbVersion = 2;
+  static const dbVersion = 3;
   static const fileStoreName = "files";
   static const albumStoreName = "albums";
+
+  /// this is a stupid name but 'files' is already being used so...
+  static const fileDbStoreName = "filesDb";
 
   /// Run [fn] with an opened database instance
   ///
@@ -41,7 +44,7 @@ class AppDb {
       _log.info("[_open] Upgrade database: ${event.oldVersion} -> $dbVersion");
 
       final db = event.database;
-      ObjectStore fileStore, albumStore;
+      ObjectStore fileStore, albumStore, fileDbStore;
       if (event.oldVersion < 1) {
         fileStore = db.createObjectStore(fileStoreName);
         albumStore = db.createObjectStore(albumStoreName);
@@ -56,6 +59,20 @@ class AppDb {
         fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
         albumStore.createIndex(
             AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
+      }
+      if (event.oldVersion < 3) {
+        // new object store in v3
+        fileDbStore = db.createObjectStore(fileDbStoreName);
+        fileDbStore.createIndex(
+            AppDbFileDbEntry.indexName, AppDbFileDbEntry.keyPath,
+            unique: false);
+
+        // drop files
+        // ObjectStore.clear is bugged when there's index created on Android
+        final cursor = fileStore.openKeyCursor(autoAdvance: true);
+        await for (final k in cursor) {
+          await fileStore.delete(k.primaryKey);
+        }
       }
     });
   }
@@ -139,4 +156,39 @@ class AppDbAlbumEntry {
   final int index;
   // properties other than Album.items is undefined when index > 0
   final Album album;
+}
+
+class AppDbFileDbEntry {
+  static const indexName = "fileDbStore_namespacedFileId";
+  static const keyPath = "namespacedFileId";
+
+  AppDbFileDbEntry(this.namespacedFileId, this.file);
+
+  factory AppDbFileDbEntry.fromFile(Account account, File file) {
+    return AppDbFileDbEntry(toNamespacedFileId(account, file), file);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "namespacedFileId": namespacedFileId,
+      "file": file.toJson(),
+    };
+  }
+
+  factory AppDbFileDbEntry.fromJson(Map<String, dynamic> json) {
+    return AppDbFileDbEntry(
+      json["namespacedFileId"],
+      File.fromJson(json["file"].cast<String, dynamic>()),
+    );
+  }
+
+  /// File ID namespaced by the server URL
+  final String namespacedFileId;
+  final File file;
+
+  static String toPrimaryKey(Account account, File file) =>
+      "${account.url}/${file.path}";
+
+  static String toNamespacedFileId(Account account, File file) =>
+      "${account.url}/${file.fileId}";
 }

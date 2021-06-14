@@ -254,10 +254,13 @@ class FileAppDbDataSource implements FileDataSource {
   }) {
     _log.info("[updateProperty] ${f.path}");
     return AppDb.use((db) async {
-      final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.fileStoreName);
+      final transaction = db.transaction(
+          [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
+
+      // update file store
+      final fileStore = transaction.objectStore(AppDb.fileStoreName);
       final parentDir = File(path: path.dirname(f.path));
-      final parentList = await _doList(store, account, parentDir);
+      final parentList = await _doList(fileStore, account, parentDir);
       final jsonList = parentList.map((e) {
         if (e.path == f.path) {
           return e.copyWith(
@@ -268,7 +271,17 @@ class FileAppDbDataSource implements FileDataSource {
           return e;
         }
       });
-      await _cacheListResults(store, account, parentDir, jsonList);
+      await _cacheListResults(fileStore, account, parentDir, jsonList);
+
+      // update file db store
+      final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
+      final newFile = f.copyWith(
+        metadata: metadata,
+        isArchived: isArchived,
+      );
+      await fileDbStore.put(
+          AppDbFileDbEntry.fromFile(account, newFile).toJson(),
+          AppDbFileDbEntry.toPrimaryKey(account, newFile));
     });
   }
 
@@ -351,12 +364,21 @@ class FileCachedDataSource implements FileDataSource {
       }
 
       if (cache != null) {
-        try {
-          await _cleanUpCachedDir(account, remote, cache);
-        } catch (e, stacktrace) {
-          _log.shout("[list] Failed while _cleanUpCachedList", e, stacktrace);
-          // ignore error
-        }
+        _syncCacheWithRemote(account, remote, cache);
+      } else {
+        AppDb.use((db) async {
+          final transaction =
+              db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+          final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
+          for (final f in remote) {
+            try {
+              await _upsertFileDbStoreCache(account, f, fileDbStore);
+            } catch (e, stacktrace) {
+              _log.shout(
+                  "[list] Failed while _upsertFileDbStoreCache", e, stacktrace);
+            }
+          }
+        });
       }
       return remote;
     } on ApiException catch (e) {
@@ -453,45 +475,101 @@ class FileCachedDataSource implements FileDataSource {
     });
   }
 
-  /// Remove dangling dir entries in the file object store
-  Future<void> _cleanUpCachedDir(
-      Account account, List<File> remoteResults, List<File> cachedResults) {
-    final removed = cachedResults
-        .where((cache) =>
-            !remoteResults.any((remote) => remote.path == cache.path))
-        .toList();
-    if (removed.isEmpty) {
-      return Future.delayed(Duration.zero);
-    }
-    return AppDb.use((db) async {
-      final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.fileStoreName);
-      final index = store.index(AppDbFileEntry.indexName);
-      for (final r in removed) {
-        final path = AppDbFileEntry.toPath(account, r);
-        final keys = [];
-        // delete the dir itself
-        final dirRange = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-        // delete with KeyRange is not supported in idb_shim/idb_sqflite
-        // await store.delete(dirRange);
-        keys.addAll(await index
-            .openKeyCursor(range: dirRange, autoAdvance: true)
-            .map((cursor) => cursor.primaryKey)
-            .toList());
-        // then its children
-        final childrenRange =
-            KeyRange.bound(["$path/", 0], ["$path/\uffff", int_util.int32Max]);
-        keys.addAll(await index
-            .openKeyCursor(range: childrenRange, autoAdvance: true)
-            .map((cursor) => cursor.primaryKey)
-            .toList());
+  /// Sync the remote result and local cache
+  void _syncCacheWithRemote(
+      Account account, List<File> remote, List<File> cache) async {
+    final removed =
+        cache.where((c) => !remote.any((r) => r.path == c.path)).toList();
+    _log.info(
+        "[_syncCacheWithRemote] Removed: ${removed.map((f) => f.path).toReadableString()}");
 
-        for (final k in keys) {
-          _log.fine("[_cleanUpCachedDir] Removing DB entry: $k");
-          await store.delete(k);
+    AppDb.use((db) async {
+      final transaction = db.transaction(
+          [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
+      final fileStore = transaction.objectStore(AppDb.fileStoreName);
+      final fileStoreIndex = fileStore.index(AppDbFileEntry.indexName);
+      final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
+      for (final f in removed) {
+        try {
+          await _removeFileDbStoreCache(account, f, fileDbStore);
+        } catch (e, stacktrace) {
+          _log.shout(
+              "[_syncCacheWithRemote] Failed while _removeFileDbStoreCache",
+              e,
+              stacktrace);
+        }
+        try {
+          await _removeFileStoreCache(account, f, fileStore, fileStoreIndex);
+        } catch (e, stacktrace) {
+          _log.shout(
+              "[_syncCacheWithRemote] Failed while _removeFileStoreCache",
+              e,
+              stacktrace);
+        }
+      }
+      for (final f in remote) {
+        try {
+          await _upsertFileDbStoreCache(account, f, fileDbStore);
+        } catch (e, stacktrace) {
+          _log.shout(
+              "[_syncCacheWithRemote] Failed while _upsertFileDbStoreCache",
+              e,
+              stacktrace);
         }
       }
     });
+  }
+
+  Future<void> _removeFileDbStoreCache(
+      Account account, File file, ObjectStore objStore) async {
+    if (file.isCollection == true) {
+      final fullPath = AppDbFileDbEntry.toPrimaryKey(account, file);
+      final range = KeyRange.bound("$fullPath/", "$fullPath/\uffff");
+      await for (final k
+          in objStore.openKeyCursor(range: range, autoAdvance: true)) {
+        _log.fine(
+            "[_removeFileDbStoreCache] Removing DB entry: ${k.primaryKey}");
+        objStore.delete(k.primaryKey);
+      }
+    } else {
+      await objStore.delete(AppDbFileDbEntry.toPrimaryKey(account, file));
+    }
+  }
+
+  Future<void> _upsertFileDbStoreCache(
+      Account account, File file, ObjectStore objStore) async {
+    if (file.isCollection == true) {
+      return;
+    }
+    await objStore.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, file));
+  }
+
+  /// Remove dangling dir entries in the file object store
+  Future<void> _removeFileStoreCache(
+      Account account, File file, ObjectStore objStore, Index index) async {
+    if (file.isCollection != true) {
+      return;
+    }
+
+    final path = AppDbFileEntry.toPath(account, file);
+    // delete the dir itself
+    final dirRange = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+    // delete with KeyRange is not supported in idb_shim/idb_sqflite
+    // await store.delete(dirRange);
+    await for (final k
+        in index.openKeyCursor(range: dirRange, autoAdvance: true)) {
+      _log.fine("[_removeFileStoreCache] Removing DB entry: ${k.primaryKey}");
+      objStore.delete(k.primaryKey);
+    }
+    // then its children
+    final childrenRange =
+        KeyRange.bound(["$path/", 0], ["$path/\uffff", int_util.int32Max]);
+    await for (final k
+        in index.openKeyCursor(range: childrenRange, autoAdvance: true)) {
+      _log.fine("[_removeFileStoreCache] Removing DB entry: ${k.primaryKey}");
+      objStore.delete(k.primaryKey);
+    }
   }
 
   final bool shouldCheckCache;
