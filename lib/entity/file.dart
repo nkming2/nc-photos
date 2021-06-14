@@ -254,7 +254,7 @@ class File with EquatableMixin {
       product += "hasPreview: $hasPreview, ";
     }
     if (fileId != null) {
-      product += "fileId: '$fileId', ";
+      product += "fileId: $fileId, ";
     }
     if (metadata != null) {
       product += "metadata: $metadata, ";
