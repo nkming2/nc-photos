@@ -240,6 +240,7 @@ class _AlbumViewerState extends State<AlbumViewer>
       setState(() {
         _album = newAlbum;
         _transformItems();
+        _initCover();
       });
     }).catchError((e, stacktrace) {
       _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
