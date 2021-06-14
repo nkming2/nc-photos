@@ -30,6 +30,20 @@ class Metadata with EquatableMixin {
     this.exif,
   }) : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) => equals(other, isDeep: true);
+
+  bool equals(Object other, {bool isDeep = false}) {
+    if (other is Metadata) {
+      return super == other &&
+          (exif == null) == (other.exif == null) &&
+          (exif?.equals(other.exif, isDeep: isDeep) ?? true);
+    } else {
+      return false;
+    }
+  }
+
   /// Parse Metadata from [json]
   ///
   /// If the version saved in json does not match the active one, the
@@ -105,7 +119,7 @@ class Metadata with EquatableMixin {
         fileEtag,
         imageWidth,
         imageHeight,
-        exif,
+        // exif is handled separately, see [equals]
       ];
 
   final DateTime lastUpdated;
@@ -198,6 +212,20 @@ class File with EquatableMixin {
     this.metadata,
     this.isArchived,
   }) : this.path = path.trimAny("/");
+
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) => equals(other, isDeep: true);
+
+  bool equals(Object other, {bool isDeep = false}) {
+    if (other is File) {
+      return super == other &&
+          (metadata == null) == (other.metadata == null) &&
+          (metadata?.equals(other.metadata, isDeep: isDeep) ?? true);
+    } else {
+      return false;
+    }
+  }
 
   factory File.fromJson(Map<String, dynamic> json) {
     return File(
@@ -346,7 +374,7 @@ class File with EquatableMixin {
         hasPreview,
         fileId,
         ownerId,
-        metadata,
+        // metadata is handled separately, see [equals]
         isArchived,
       ];
 

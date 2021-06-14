@@ -7,6 +7,24 @@ class Exif with EquatableMixin {
 
   dynamic operator [](String key) => data[key];
 
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) => equals(other, isDeep: true);
+
+  /// Compare two Exif objects
+  ///
+  /// If [isDeep] is false, two Exif objects are considered identical if they
+  /// contain the same number of fields. This hack is to save time comparing a
+  /// large amount of data that are mostly immutable
+  bool equals(Object other, {bool isDeep = false}) {
+    if (isDeep) {
+      return super == other;
+    } else {
+      return identical(this, other) ||
+          other is Exif && data.keys.length == other.data.keys.length;
+    }
+  }
+
   bool containsKey(String key) => data.containsKey(key);
 
   Map<String, dynamic> toJson() {

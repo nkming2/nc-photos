@@ -76,6 +76,20 @@ abstract class AlbumItem {
 class AlbumFileItem extends AlbumItem with EquatableMixin {
   AlbumFileItem({this.file});
 
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) => equals(other, isDeep: true);
+
+  bool equals(Object other, {bool isDeep = false}) {
+    if (other is AlbumFileItem) {
+      return super == other &&
+          (file == null) == (other.file == null) &&
+          (file?.equals(other.file, isDeep: isDeep) ?? true);
+    } else {
+      return false;
+    }
+  }
+
   factory AlbumFileItem.fromJson(Map<String, dynamic> json) {
     return AlbumFileItem(
       file: File.fromJson(json["file"].cast<String, dynamic>()),
@@ -98,7 +112,7 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
 
   @override
   get props => [
-        file,
+        // file is handled separately, see [equals]
       ];
 
   final File file;

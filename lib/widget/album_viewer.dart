@@ -17,11 +17,13 @@ import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:quiver/iterables.dart';
 
 class AlbumViewerArguments {
   AlbumViewerArguments(this.account, this.album);
@@ -58,10 +60,8 @@ class _AlbumViewerState extends State<AlbumViewer>
   @override
   initState() {
     super.initState();
-    _album = widget.album;
-    _transformItems();
-    _initCover();
     _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevel(0);
+    _initAlbum();
   }
 
   @override
@@ -76,6 +76,24 @@ class _AlbumViewerState extends State<AlbumViewer>
   @override
   get itemStreamListCellSize => _thumbSize;
 
+  void _initAlbum() {
+    ResyncAlbum()(widget.account, widget.album).then((album) {
+      if (_shouldPropagateResyncedAlbum(album)) {
+        UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, album)
+            .catchError((e, stacktrace) {
+          _log.shout("[_initAlbum] Failed while updating album", e, stacktrace);
+        });
+      }
+      if (mounted) {
+        setState(() {
+          _album = album;
+          _transformItems();
+          _initCover();
+        });
+      }
+    });
+  }
+
   void _initCover() {
     try {
       final coverFile =
@@ -86,6 +104,16 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   Widget _buildContent(BuildContext context) {
+    if (_album == null) {
+      return CustomScrollView(
+        slivers: [
+          _buildNormalAppBar(context),
+          const SliverToBoxAdapter(
+            child: const LinearProgressIndicator(),
+          ),
+        ],
+      );
+    }
     return buildItemStreamListOuter(
       context,
       child: Theme(
@@ -179,7 +207,7 @@ class _AlbumViewerState extends State<AlbumViewer>
       flexibleSpace: FlexibleSpaceBar(
         background: cover,
         title: Text(
-          _album.name,
+          (_album ?? widget.album).name,
           style: TextStyle(
             color: AppTheme.getPrimaryTextColor(context),
           ),
@@ -288,6 +316,31 @@ class _AlbumViewerState extends State<AlbumViewer>
         }
       }
     }();
+  }
+
+  bool _shouldPropagateResyncedAlbum(Album album) {
+    if (widget.album.items.length != album.items.length) {
+      _log.info(
+          "[_shouldPropagateResyncedAlbum] Item length differ: ${widget.album.items.length}, ${album.items.length}");
+      return true;
+    }
+    for (final z in zip([widget.album.items, album.items])) {
+      final a = z[0], b = z[1];
+      bool isEqual;
+      if (a is AlbumFileItem && b is AlbumFileItem) {
+        // faster compare
+        isEqual = a.equals(b, isDeep: false);
+      } else {
+        isEqual = a == b;
+      }
+      if (!isEqual) {
+        _log.info(
+            "[_shouldPropagateResyncedAlbum] Item differ:\nOriginal: ${z[0]}\nResynced: ${z[1]}");
+        return true;
+      }
+    }
+    _log.info("[_shouldPropagateResyncedAlbum] false");
+    return false;
   }
 
   int get _thumbSize {

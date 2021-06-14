@@ -7,6 +7,54 @@ import 'package:test/test.dart';
 
 void main() {
   group("Exif", () {
+    group("equals", () {
+      test("deep equal", () {
+        final exif = Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        });
+        expect(exif.equals(Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        }), isDeep: true), true);
+      });
+
+      test("deep unequal", () {
+        final exif = Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        });
+        expect(exif.equals(Exif(<String, dynamic>{
+          "ImageWidth": 2048,
+        }), isDeep: true), false);
+      });
+
+      test("shallow equal", () {
+        final exif = Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        });
+        expect(exif.equals(Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        }), isDeep: false), true);
+      });
+
+      test("shallow equal (different value)", () {
+        final exif = Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        });
+        expect(exif.equals(Exif(<String, dynamic>{
+          "ImageWidth": 2048,
+        }), isDeep: false), true);
+      });
+
+      test("shallow unequal", () {
+        final exif = Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+        });
+        expect(exif.equals(Exif(<String, dynamic>{
+          "ImageWidth": 1024,
+          "ImageHeight": 1024,
+        }), isDeep: false), false);
+      });
+    });
+
     group("toJson", () {
       test("int", () {
         final exif = Exif(<String, dynamic>{
