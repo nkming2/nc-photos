@@ -408,11 +408,10 @@ class _HomePhotosState extends State<HomePhotos>
       clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
-        await UpdateProperty(fileRepo, albumRepo)
+        await UpdateProperty(fileRepo)
             .updateIsArchived(widget.account, f, true);
       } catch (e, stacktrace) {
         _log.shout(

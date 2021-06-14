@@ -7,7 +7,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/scan_dir.dart';
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -216,11 +215,10 @@ class _ArchiveViewerState extends State<ArchiveViewer>
       clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
-        await UpdateProperty(fileRepo, albumRepo)
+        await UpdateProperty(fileRepo)
             .updateIsArchived(widget.account, f, false);
       } catch (e, stacktrace) {
         _log.shout(

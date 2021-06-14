@@ -1,7 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -52,8 +51,7 @@ class UpdateMissingMetadata {
           exif: exif,
         );
 
-        final updateOp = UpdateProperty(FileRepo(FileCachedDataSource()),
-            AlbumRepo(AlbumCachedDataSource()));
+        final updateOp = UpdateProperty(FileRepo(FileCachedDataSource()));
         await updateOp(
           account,
           file,

@@ -89,15 +89,12 @@ class ListAlbumBlocInconsistent extends ListAlbumBlocState {
 
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   ListAlbumBloc() : super(ListAlbumBlocInit()) {
-    _filePropertyUpdatedListener =
-        AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _fileRemovedListener =
         AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
     _albumCreatedListener =
         AppEventListener<AlbumCreatedEvent>(_onAlbumCreatedEvent);
-    _filePropertyUpdatedListener.begin();
     _albumUpdatedListener.begin();
     _fileRemovedListener.begin();
     _albumCreatedListener.begin();
@@ -115,7 +112,6 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   @override
   close() {
-    _filePropertyUpdatedListener.end();
     _albumUpdatedListener.end();
     _fileRemovedListener.end();
     _albumCreatedListener.end();
@@ -158,18 +154,6 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   Stream<ListAlbumBlocState> _onExternalEvent(
       _ListAlbumBlocExternalEvent ev) async* {
     yield ListAlbumBlocInconsistent(state.account, state.albums);
-  }
-
-  void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
-    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
-      // not interested
-      return;
-    }
-    if (state is ListAlbumBlocInit) {
-      // no data in this bloc, ignore
-      return;
-    }
-    add(_ListAlbumBlocExternalEvent());
   }
 
   void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {
@@ -224,7 +208,6 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     }
   }
 
-  AppEventListener<FilePropertyUpdatedEvent> _filePropertyUpdatedListener;
   AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   AppEventListener<FileRemovedEvent> _fileRemovedListener;
   AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
