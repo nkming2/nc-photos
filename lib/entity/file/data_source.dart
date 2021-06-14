@@ -39,6 +39,7 @@ class FileWebdavDataSource implements FileDataSource {
       getcontentlength: 1,
       hasPreview: 1,
       fileid: 1,
+      ownerId: 1,
       customNamespaces: {
         "com.nkming.nc_photos": "app",
       },

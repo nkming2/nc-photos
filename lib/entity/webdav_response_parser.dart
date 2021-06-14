@@ -64,6 +64,7 @@ class WebdavFileParser {
     int usedBytes;
     bool hasPreview;
     int fileId;
+    String ownerId;
     Metadata metadata;
     bool isArchived;
 
@@ -95,6 +96,7 @@ class WebdavFileParser {
         usedBytes = propParser.usedBytes;
         hasPreview = propParser.hasPreview;
         fileId = propParser.fileId;
+        ownerId = propParser.ownerId;
         metadata = propParser.metadata;
         isArchived = propParser.isArchived;
       }
@@ -110,6 +112,7 @@ class WebdavFileParser {
       usedBytes: usedBytes,
       hasPreview: hasPreview,
       fileId: fileId,
+      ownerId: ownerId,
       metadata: metadata,
       isArchived: isArchived,
     );
@@ -165,6 +168,9 @@ class _PropParser {
       } else if (child.matchQualifiedName("fileid",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _fileId = int.parse(child.innerText);
+      } else if (child.matchQualifiedName("owner-id",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _ownerId = child.innerText;
       } else if (child.matchQualifiedName("is-archived",
           prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
         _isArchived = child.innerText == "true";
@@ -197,6 +203,7 @@ class _PropParser {
   bool get isCollection => _isCollection;
   bool get hasPreview => _hasPreview;
   int get fileId => _fileId;
+  String get ownerId => _ownerId;
   Metadata get metadata => _metadata;
   bool get isArchived => _isArchived;
 
@@ -213,6 +220,7 @@ class _PropParser {
   bool _isCollection;
   bool _hasPreview;
   int _fileId;
+  String _ownerId;
   Metadata _metadata;
   bool _isArchived;
 }

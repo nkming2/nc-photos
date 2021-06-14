@@ -425,6 +425,15 @@ void main() {
         expect(file, File(path: "", fileId: 123));
       });
 
+      test("ownerId", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "ownerId": "admin",
+        };
+        final file = File.fromJson(json);
+        expect(file, File(path: "", ownerId: "admin"));
+      });
+
       test("metadata", () {
         final json = <String, dynamic>{
           "path": "",
@@ -537,6 +546,15 @@ void main() {
         });
       });
 
+      test("ownerId", () {
+        final file =
+            File(path: "remote.php/dav/files/admin/test.jpg", ownerId: "admin");
+        expect(file.toJson(), <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test.jpg",
+          "ownerId": "admin",
+        });
+      });
+
       test("metadata", () {
         final file = File(
             path: "remote.php/dav/files/admin/test.jpg",
@@ -573,6 +591,7 @@ void main() {
         usedBytes: 123456,
         hasPreview: true,
         fileId: 123,
+        ownerId: "admin",
         metadata: null,
         isArchived: true,
       );
@@ -591,6 +610,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -609,6 +629,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -627,6 +648,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -645,6 +667,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -664,6 +687,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -682,6 +706,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -700,6 +725,7 @@ void main() {
               usedBytes: 999999,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -718,6 +744,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: false,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -736,6 +763,26 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 321,
+              ownerId: "admin",
+              isArchived: true,
+            ));
+      });
+
+      test("ownerId", () {
+        final file = src.copyWith(ownerId: "user");
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "user",
               isArchived: true,
             ));
       });
@@ -755,6 +802,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               metadata: metadata,
               isArchived: true,
             ));
@@ -771,6 +819,7 @@ void main() {
           usedBytes: 123456,
           hasPreview: true,
           fileId: 123,
+          ownerId: "admin",
           metadata: Metadata(),
           isArchived: true,
         );
@@ -787,6 +836,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: true,
             ));
       });
@@ -805,6 +855,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
               isArchived: false,
             ));
       });
@@ -823,6 +874,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
+              ownerId: "admin",
             ));
       });
     });

@@ -194,6 +194,7 @@ class File with EquatableMixin {
     this.usedBytes,
     this.hasPreview,
     this.fileId,
+    this.ownerId,
     this.metadata,
     this.isArchived,
   }) : this.path = path.trimAny("/");
@@ -211,6 +212,7 @@ class File with EquatableMixin {
       usedBytes: json["usedBytes"],
       hasPreview: json["hasPreview"],
       fileId: json["fileId"],
+      ownerId: json["ownerId"],
       metadata: json["metadata"] == null
           ? null
           : Metadata.fromJson(
@@ -256,6 +258,9 @@ class File with EquatableMixin {
     if (fileId != null) {
       product += "fileId: $fileId, ";
     }
+    if (ownerId != null) {
+      product += "ownerId: '$ownerId', ";
+    }
     if (metadata != null) {
       product += "metadata: $metadata, ";
     }
@@ -276,6 +281,7 @@ class File with EquatableMixin {
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
+      if (ownerId != null) "ownerId": ownerId,
       if (metadata != null) "metadata": metadata.toJson(),
       if (isArchived != null) "isArchived": isArchived,
     };
@@ -291,6 +297,7 @@ class File with EquatableMixin {
     int usedBytes,
     bool hasPreview,
     int fileId,
+    String ownerId,
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
   }) {
@@ -304,6 +311,7 @@ class File with EquatableMixin {
       usedBytes: usedBytes ?? this.usedBytes,
       hasPreview: hasPreview ?? this.hasPreview,
       fileId: fileId ?? this.fileId,
+      ownerId: ownerId ?? this.ownerId,
       metadata: metadata == null ? this.metadata : metadata.obj,
       isArchived: isArchived == null ? this.isArchived : isArchived.obj,
     );
@@ -337,6 +345,7 @@ class File with EquatableMixin {
         usedBytes,
         hasPreview,
         fileId,
+        ownerId,
         metadata,
         isArchived,
       ];
@@ -351,6 +360,7 @@ class File with EquatableMixin {
   final bool hasPreview;
   // maybe null when loaded from old cache
   final int fileId;
+  final String ownerId;
   // metadata
   final Metadata metadata;
   final bool isArchived;
