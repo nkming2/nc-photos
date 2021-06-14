@@ -15,7 +15,7 @@ abstract class ScanDirBlocEvent {
   const ScanDirBlocEvent();
 }
 
-class ScanDirBlocQueryBase extends ScanDirBlocEvent {
+class ScanDirBlocQueryBase extends ScanDirBlocEvent with EquatableMixin {
   const ScanDirBlocQueryBase(this.account, this.roots);
 
   @override
@@ -26,19 +26,19 @@ class ScanDirBlocQueryBase extends ScanDirBlocEvent {
         "}";
   }
 
-  final Account account;
-  final List<File> roots;
-}
-
-class ScanDirBlocQuery extends ScanDirBlocQueryBase with EquatableMixin {
-  const ScanDirBlocQuery(Account account, List<File> roots)
-      : super(account, roots);
-
   @override
   get props => [
         account,
         roots,
       ];
+
+  final Account account;
+  final List<File> roots;
+}
+
+class ScanDirBlocQuery extends ScanDirBlocQueryBase {
+  const ScanDirBlocQuery(Account account, List<File> roots)
+      : super(account, roots);
 }
 
 class ScanDirBlocRefresh extends ScanDirBlocQueryBase {
