@@ -45,34 +45,31 @@ class AppDb {
 
       final db = event.database;
       ObjectStore fileStore, albumStore, fileDbStore;
-      if (event.oldVersion < 1) {
-        fileStore = db.createObjectStore(fileStoreName);
-        albumStore = db.createObjectStore(albumStoreName);
-      } else {
-        fileStore = event.transaction.objectStore(fileStoreName);
-        albumStore = event.transaction.objectStore(albumStoreName);
-      }
       if (event.oldVersion < 2) {
         // version 2 store things in a new way, just drop all
-        await fileStore.clear();
-        await albumStore.clear();
-        fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
+        try {
+          db.deleteObjectStore(albumStoreName);
+        } catch (_) {}
+        albumStore = db.createObjectStore(albumStoreName);
         albumStore.createIndex(
             AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
       }
       if (event.oldVersion < 3) {
         // new object store in v3
+        try {
+          db.deleteObjectStore(fileDbStoreName);
+        } catch (_) {}
         fileDbStore = db.createObjectStore(fileDbStoreName);
         fileDbStore.createIndex(
             AppDbFileDbEntry.indexName, AppDbFileDbEntry.keyPath,
             unique: false);
 
-        // drop files
-        // ObjectStore.clear is bugged when there's index created on Android
-        final cursor = fileStore.openKeyCursor(autoAdvance: true);
-        await for (final k in cursor) {
-          await fileStore.delete(k.primaryKey);
-        }
+        // recreate file store from scratch
+        try {
+          db.deleteObjectStore(fileStoreName);
+        } catch (_) {}
+        fileStore = db.createObjectStore(fileStoreName);
+        fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
       }
     });
   }
