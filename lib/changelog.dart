@@ -40,4 +40,9 @@ This version includes changes that are not compatible with older versions. Pleas
 """,
   // v16
   null,
+  // v17
+  """17.0
+Archive photos to only show them in albums
+Link to report issues in Settings
+""",
 ];
