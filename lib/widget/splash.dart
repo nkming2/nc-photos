@@ -118,9 +118,13 @@ class _SplashState extends State<Splash> {
   }
 
   String _gatherChangelog(int from) {
+    if (from < 100) {
+      from *= 10;
+    }
+    final fromMajor = from ~/ 10;
     try {
       return changelog.contents
-          .sublist(from)
+          .sublist(fromMajor)
           .reversed
           .where((element) => element != null)
           .join("\n\n");
