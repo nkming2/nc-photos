@@ -196,5 +196,5 @@ class _VideoViewerState extends State<VideoViewer> {
   VideoPlayerController _controller;
   var _isFinished = false;
 
-  static final _log = Logger("bloc.video_viewer._VideoViewerState");
+  static final _log = Logger("widget.video_viewer._VideoViewerState");
 }
