@@ -9,7 +9,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -50,10 +49,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.info("[initState] Metadata missing in File");
     } else {
       _log.info("[initState] Metadata exists in File");
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _updateMetadata(widget.file.metadata.imageWidth,
-            widget.file.metadata.imageHeight, widget.file.metadata.exif);
-      });
+      if (widget.file.metadata.exif != null) {
+        _initMetadata();
+      }
     }
   }
 
@@ -65,8 +63,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
     String sizeSubStr = "";
     const space = "    ";
-    if (_width != null && _height != null) {
-      final pixelCount = _width * _height;
+    if (widget.file.metadata?.imageWidth != null &&
+        widget.file.metadata?.imageHeight != null) {
+      final pixelCount =
+          widget.file.metadata.imageWidth * widget.file.metadata.imageHeight;
       if (pixelCount >= 500000) {
         final mpCount = pixelCount / 1000000.0;
         sizeSubStr += AppLocalizations.of(context)
@@ -131,13 +131,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           ),
           title: Text("$dateStr $timeStr"),
         ),
-        if (_width != null && _height != null)
+        if (widget.file.metadata?.imageWidth != null &&
+            widget.file.metadata?.imageHeight != null)
           ListTile(
             leading: Icon(
               Icons.aspect_ratio,
               color: AppTheme.getSecondaryTextColor(context),
             ),
-            title: Text("$_width x $_height"),
+            title: Text(
+                "${widget.file.metadata.imageWidth} x ${widget.file.metadata.imageHeight}"),
             subtitle: Text(sizeSubStr),
           )
         else
@@ -168,6 +170,43 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           ),
       ],
     );
+  }
+
+  /// Convert EXIF data to readable format
+  void _initMetadata() {
+    final exif = widget.file.metadata.exif;
+    _log.info("[_initMetadata] $exif");
+
+    if (exif.make != null && exif.model != null) {
+      _model = "${exif.make} ${exif.model}";
+    }
+    if (exif.fNumber != null) {
+      _fNumber = exif.fNumber.toDouble();
+    }
+    if (exif.exposureTime != null) {
+      if (exif.exposureTime.denominator == 1) {
+        _exposureTime = exif.exposureTime.numerator.toString();
+      } else {
+        _exposureTime = exif.exposureTime.toString();
+      }
+    }
+    if (exif.focalLength != null) {
+      _focalLength = exif.focalLength.toDouble();
+    }
+    if (exif.isoSpeedRatings != null) {
+      _isoSpeedRatings = exif.isoSpeedRatings;
+    }
+    if (exif.gpsLatitudeRef != null &&
+        exif.gpsLatitude != null &&
+        exif.gpsLongitudeRef != null &&
+        exif.gpsLongitude != null) {
+      final lat = _gpsDmsToDouble(exif.gpsLatitude) *
+          (exif.gpsLatitudeRef == "S" ? -1 : 1);
+      final lng = _gpsDmsToDouble(exif.gpsLongitude) *
+          (exif.gpsLongitudeRef == "W" ? -1 : 1);
+      _log.fine("GPS: ($lat, $lng)");
+      _gps = Tuple2(lat, lng);
+    }
   }
 
   void _onAddToAlbumPressed(BuildContext context) {
@@ -251,64 +290,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
-  void _updateMetadata(int imageWidth, int imageHeight, Exif exif) {
-    if (imageWidth != null && imageHeight != null) {
-      setState(() {
-        _width = imageWidth;
-        _height = imageHeight;
-      });
-    }
-    if (exif != null) {
-      _updateMetadataExif(exif);
-    }
-  }
-
-  void _updateMetadataExif(Exif exif) {
-    _log.info("[_updateMetadataExif] $exif");
-    if (exif.make != null && exif.model != null) {
-      setState(() {
-        _model = "${exif.make} ${exif.model}";
-      });
-    }
-    if (exif.fNumber != null) {
-      setState(() {
-        _fNumber = exif.fNumber.toDouble();
-      });
-    }
-    if (exif.exposureTime != null) {
-      setState(() {
-        if (exif.exposureTime.denominator == 1) {
-          _exposureTime = exif.exposureTime.numerator.toString();
-        } else {
-          _exposureTime = exif.exposureTime.toString();
-        }
-      });
-    }
-    if (exif.focalLength != null) {
-      setState(() {
-        _focalLength = exif.focalLength.toDouble();
-      });
-    }
-    if (exif.isoSpeedRatings != null) {
-      setState(() {
-        _isoSpeedRatings = exif.isoSpeedRatings;
-      });
-    }
-    if (exif.gpsLatitudeRef != null &&
-        exif.gpsLatitude != null &&
-        exif.gpsLongitudeRef != null &&
-        exif.gpsLongitude != null) {
-      final lat = _gpsDmsToDouble(exif.gpsLatitude) *
-          (exif.gpsLatitudeRef == "S" ? -1 : 1);
-      final lng = _gpsDmsToDouble(exif.gpsLongitude) *
-          (exif.gpsLongitudeRef == "W" ? -1 : 1);
-      _log.fine("GPS: ($lat, $lng)");
-      setState(() {
-        _gps = Tuple2(lat, lng);
-      });
-    }
-  }
-
   static double _gpsDmsToDouble(List<Rational> dms) {
     double product = dms[0].toDouble();
     if (dms.length > 1) {
@@ -353,9 +334,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
-  // metadata
-  int _width;
-  int _height;
   // EXIF data
   String _model;
   double _fNumber;
