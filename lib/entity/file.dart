@@ -9,9 +9,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 
 int compareFileDateTimeDescending(File x, File y) {
-  final xDate = x.metadata?.exif?.dateTimeOriginal ?? x.lastModified;
-  final yDate = y.metadata?.exif?.dateTimeOriginal ?? y.lastModified;
-  final tmp = yDate.compareTo(xDate);
+  final tmp = y.bestDateTime.compareTo(x.bestDateTime);
   if (tmp != 0) {
     return tmp;
   } else {
@@ -392,6 +390,12 @@ class File with EquatableMixin {
   // metadata
   final Metadata metadata;
   final bool isArchived;
+}
+
+extension FileExtension on File {
+  DateTime get bestDateTime {
+    return metadata?.exif?.dateTimeOriginal ?? lastModified;
+  }
 }
 
 class FileRepo {

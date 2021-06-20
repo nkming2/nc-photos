@@ -59,7 +59,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   @override
   build(BuildContext context) {
-    final dateTime = (_dateTime ?? widget.file.lastModified).toLocal();
+    final dateTime = widget.file.bestDateTime.toLocal();
     final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(dateTime);
     final timeStr = DateFormat(DateFormat.HOUR_MINUTE).format(dateTime);
 
@@ -265,11 +265,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   void _updateMetadataExif(Exif exif) {
     _log.info("[_updateMetadataExif] $exif");
-    if (exif.dateTimeOriginal != null) {
-      setState(() {
-        _dateTime = exif.dateTimeOriginal;
-      });
-    }
     if (exif.make != null && exif.model != null) {
       setState(() {
         _model = "${exif.make} ${exif.model}";
@@ -362,7 +357,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   int _width;
   int _height;
   // EXIF data
-  DateTime _dateTime;
   String _model;
   double _fNumber;
   String _exposureTime;

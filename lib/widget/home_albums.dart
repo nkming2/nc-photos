@@ -392,9 +392,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
             .where((element) => file_util.isSupportedFormat(element))
             .sorted(compareFileDateTimeDescending)
             .first;
-        return Tuple2(
-            lastItem.metadata?.exif?.dateTimeOriginal ?? lastItem.lastModified,
-            e);
+        return Tuple2(lastItem.bestDateTime, e);
       } catch (_) {
         return Tuple2(e.lastUpdated, e);
       }

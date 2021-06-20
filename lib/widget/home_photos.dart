@@ -455,7 +455,7 @@ class _HomePhotosState extends State<HomePhotos>
         final f = _backingFiles[i];
 
         String newDateStr;
-        final date = f.metadata?.exif?.dateTimeOriginal ?? f.lastModified;
+        final date = f.bestDateTime;
         if (date == null) {
           newDateStr = "";
         } else if (_thumbZoomLevel >= 0) {
