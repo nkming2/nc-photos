@@ -302,7 +302,8 @@ class File with EquatableMixin {
       if (contentLength != null) "contentLength": contentLength,
       if (contentType != null) "contentType": contentType,
       if (etag != null) "etag": etag,
-      if (lastModified != null) "lastModified": lastModified.toIso8601String(),
+      if (lastModified != null)
+        "lastModified": lastModified.toUtc().toIso8601String(),
       if (isCollection != null) "isCollection": isCollection,
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,

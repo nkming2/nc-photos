@@ -134,8 +134,8 @@ class _CertInfo {
       "sha1": sha1,
       "subject": subject,
       "issuer": issuer,
-      "startValidity": startValidity.toIso8601String(),
-      "endValidity": endValidity.toIso8601String(),
+      "startValidity": startValidity.toUtc().toIso8601String(),
+      "endValidity": endValidity.toUtc().toIso8601String(),
     };
   }
 
