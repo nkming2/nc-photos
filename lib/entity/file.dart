@@ -209,6 +209,7 @@ class File with EquatableMixin {
     this.ownerId,
     this.metadata,
     this.isArchived,
+    this.overrideDateTime,
   }) : this.path = path.trimAny("/");
 
   @override
@@ -253,6 +254,9 @@ class File with EquatableMixin {
               ),
             ),
       isArchived: json["isArchived"],
+      overrideDateTime: json["overrideDateTime"] == null
+          ? null
+          : DateTime.parse(json["overrideDateTime"]),
     );
   }
 
@@ -293,6 +297,9 @@ class File with EquatableMixin {
     if (isArchived != null) {
       product += "isArchived: $isArchived, ";
     }
+    if (overrideDateTime != null) {
+      product += "overrideDateTime: $overrideDateTime, ";
+    }
     return product + "}";
   }
 
@@ -311,6 +318,8 @@ class File with EquatableMixin {
       if (ownerId != null) "ownerId": ownerId,
       if (metadata != null) "metadata": metadata.toJson(),
       if (isArchived != null) "isArchived": isArchived,
+      if (overrideDateTime != null)
+        "overrideDateTime": overrideDateTime.toUtc().toIso8601String(),
     };
   }
 
@@ -327,6 +336,7 @@ class File with EquatableMixin {
     String ownerId,
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) {
     return File(
       path: path ?? this.path,
@@ -341,6 +351,9 @@ class File with EquatableMixin {
       ownerId: ownerId ?? this.ownerId,
       metadata: metadata == null ? this.metadata : metadata.obj,
       isArchived: isArchived == null ? this.isArchived : isArchived.obj,
+      overrideDateTime: overrideDateTime == null
+          ? this.overrideDateTime
+          : overrideDateTime.obj,
     );
   }
 
@@ -375,6 +388,7 @@ class File with EquatableMixin {
         ownerId,
         // metadata is handled separately, see [equals]
         isArchived,
+        overrideDateTime,
       ];
 
   final String path;
@@ -391,11 +405,12 @@ class File with EquatableMixin {
   // metadata
   final Metadata metadata;
   final bool isArchived;
+  final DateTime overrideDateTime;
 }
 
 extension FileExtension on File {
   DateTime get bestDateTime {
-    return metadata?.exif?.dateTimeOriginal ?? lastModified;
+    return overrideDateTime ?? metadata?.exif?.dateTimeOriginal ?? lastModified;
   }
 }
 
@@ -424,12 +439,14 @@ class FileRepo {
     File file, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) =>
       this.dataSrc.updateProperty(
             account,
             file,
             metadata: metadata,
             isArchived: isArchived,
+            overrideDateTime: overrideDateTime,
           );
 
   /// See [FileDataSource.copy]
@@ -486,6 +503,7 @@ abstract class FileDataSource {
     File f, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   });
 
   /// Copy [f] to [destination]

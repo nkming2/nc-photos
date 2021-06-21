@@ -461,6 +461,18 @@ void main() {
         final file = File.fromJson(json);
         expect(file, File(path: "", isArchived: true));
       });
+
+      test("overrideDateTime", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "overrideDateTime": "2021-01-02T03:04:05.000Z",
+        };
+        final file = File.fromJson(json);
+        expect(
+            file,
+            File(
+                path: "", overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5)));
+      });
     });
 
     group("toJson", () {
@@ -578,6 +590,16 @@ void main() {
           "isArchived": true,
         });
       });
+
+      test("overrideDateTime", () {
+        final file = File(
+            path: "remote.php/dav/files/admin/test.jpg",
+            overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5));
+        expect(file.toJson(), <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test.jpg",
+          "overrideDateTime": "2021-01-02T03:04:05.000Z",
+        });
+      });
     });
 
     group("copyWith", () {
@@ -594,6 +616,7 @@ void main() {
         ownerId: "admin",
         metadata: null,
         isArchived: true,
+        overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
       );
 
       test("path", () {
@@ -612,6 +635,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -631,6 +655,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -650,6 +675,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -669,6 +695,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -689,6 +716,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -708,6 +736,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -727,6 +756,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -746,6 +776,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -765,6 +796,7 @@ void main() {
               fileId: 321,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -784,6 +816,7 @@ void main() {
               fileId: 123,
               ownerId: "user",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -805,6 +838,7 @@ void main() {
               ownerId: "admin",
               metadata: metadata,
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -822,6 +856,7 @@ void main() {
           ownerId: "admin",
           metadata: Metadata(),
           isArchived: true,
+          overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
         );
         final file = src.copyWith(metadata: OrNull(null));
         expect(
@@ -838,6 +873,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -857,6 +893,7 @@ void main() {
               fileId: 123,
               ownerId: "admin",
               isArchived: false,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
 
@@ -875,6 +912,47 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+            ));
+      });
+
+      test("overrideDateTime", () {
+        final file = src.copyWith(
+            overrideDateTime: OrNull(DateTime.utc(2022, 3, 4, 5, 6, 7)));
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "admin",
+              isArchived: true,
+              overrideDateTime: DateTime.utc(2022, 3, 4, 5, 6, 7),
+            ));
+      });
+
+      test("clear overrideDateTime", () {
+        final file = src.copyWith(overrideDateTime: OrNull(null));
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "admin",
+              isArchived: true,
             ));
       });
     });

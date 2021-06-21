@@ -219,6 +219,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     if (!ev.hasAnyProperties([
       FilePropertyUpdatedEvent.propMetadata,
       FilePropertyUpdatedEvent.propIsArchived,
+      FilePropertyUpdatedEvent.propOverrideDateTime,
     ])) {
       // not interested
       return;
@@ -234,7 +235,10 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     if (_successivePropertyUpdatedCount % 10 == 0) {
       add(_ScanDirBlocExternalEvent());
     } else {
-      if (ev.hasAnyProperties([FilePropertyUpdatedEvent.propIsArchived])) {
+      if (ev.hasAnyProperties([
+        FilePropertyUpdatedEvent.propIsArchived,
+        FilePropertyUpdatedEvent.propOverrideDateTime,
+      ])) {
         _propertyUpdatedSubscription =
             Future.delayed(const Duration(seconds: 2)).asStream().listen((_) {
           add(_ScanDirBlocExternalEvent());

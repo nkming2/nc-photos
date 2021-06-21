@@ -46,6 +46,7 @@ class FileWebdavDataSource implements FileDataSource {
       customProperties: [
         "app:metadata",
         "app:is-archived",
+        "app:override-date-time"
       ],
     );
     if (!response.isGood) {
@@ -112,6 +113,7 @@ class FileWebdavDataSource implements FileDataSource {
     File f, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) async {
     _log.info("[updateProperty] ${f.path}");
     if (metadata?.obj != null && metadata.obj.fileEtag != f.etag) {
@@ -122,10 +124,13 @@ class FileWebdavDataSource implements FileDataSource {
       if (metadata?.obj != null)
         "app:metadata": jsonEncode(metadata.obj.toJson()),
       if (isArchived?.obj != null) "app:is-archived": isArchived.obj,
+      if (overrideDateTime?.obj != null)
+        "app:override-date-time": overrideDateTime.obj.toUtc().toIso8601String(),
     };
     final removeProps = [
       if (OrNull.isNull(metadata)) "app:metadata",
       if (OrNull.isNull(isArchived)) "app:is-archived",
+      if (OrNull.isNull(overrideDateTime)) "app:override-date-time",
     ];
     final response = await Api(account).files().proppatch(
           path: f.path,
@@ -251,6 +256,7 @@ class FileAppDbDataSource implements FileDataSource {
     File f, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) {
     _log.info("[updateProperty] ${f.path}");
     return AppDb.use((db) async {
@@ -266,6 +272,7 @@ class FileAppDbDataSource implements FileDataSource {
           return e.copyWith(
             metadata: metadata,
             isArchived: isArchived,
+            overrideDateTime: overrideDateTime,
           );
         } else {
           return e;
@@ -278,6 +285,7 @@ class FileAppDbDataSource implements FileDataSource {
       final newFile = f.copyWith(
         metadata: metadata,
         isArchived: isArchived,
+        overrideDateTime: overrideDateTime,
       );
       await fileDbStore.put(
           AppDbFileDbEntry.fromFile(account, newFile).toJson(),
@@ -414,6 +422,7 @@ class FileCachedDataSource implements FileDataSource {
     File f, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) async {
     await _remoteSrc
         .updateProperty(
@@ -421,12 +430,14 @@ class FileCachedDataSource implements FileDataSource {
           f,
           metadata: metadata,
           isArchived: isArchived,
+          overrideDateTime: overrideDateTime,
         )
         .then((_) => _appDbSrc.updateProperty(
               account,
               f,
               metadata: metadata,
               isArchived: isArchived,
+              overrideDateTime: overrideDateTime,
             ));
 
     // generate a new random token

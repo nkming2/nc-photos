@@ -14,8 +14,9 @@ class UpdateProperty {
     File file, {
     OrNull<Metadata> metadata,
     OrNull<bool> isArchived,
+    OrNull<DateTime> overrideDateTime,
   }) async {
-    if (metadata == null && isArchived == null) {
+    if (metadata == null && isArchived == null && overrideDateTime == null) {
       // ?
       _log.warning("[call] Nothing to update");
       return;
@@ -30,6 +31,7 @@ class UpdateProperty {
       file,
       metadata: metadata,
       isArchived: isArchived,
+      overrideDateTime: overrideDateTime,
     );
 
     int properties = 0;
@@ -38,6 +40,9 @@ class UpdateProperty {
     }
     if (isArchived != null) {
       properties |= FilePropertyUpdatedEvent.propIsArchived;
+    }
+    if (overrideDateTime != null) {
+      properties |= FilePropertyUpdatedEvent.propOverrideDateTime;
     }
     assert(properties != 0);
     KiwiContainer()
@@ -62,4 +67,11 @@ extension UpdatePropertyExtension on UpdateProperty {
   /// See [UpdateProperty.call]
   Future<void> updateIsArchived(Account account, File file, bool isArchived) =>
       call(account, file, isArchived: OrNull(isArchived));
+
+  /// Convenience function to only update overrideDateTime
+  ///
+  /// See [UpdateProperty.call]
+  Future<void> updateOverrideDateTime(
+          Account account, File file, DateTime overrideDateTime) =>
+      call(account, file, overrideDateTime: OrNull(overrideDateTime));
 }

@@ -67,6 +67,7 @@ class WebdavFileParser {
     String ownerId;
     Metadata metadata;
     bool isArchived;
+    DateTime overrideDateTime;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -99,6 +100,7 @@ class WebdavFileParser {
         ownerId = propParser.ownerId;
         metadata = propParser.metadata;
         isArchived = propParser.isArchived;
+        overrideDateTime = propParser.overrideDateTime;
       }
     }
 
@@ -115,6 +117,7 @@ class WebdavFileParser {
       ownerId: ownerId,
       metadata: metadata,
       isArchived: isArchived,
+      overrideDateTime: overrideDateTime,
     );
   }
 
@@ -174,6 +177,9 @@ class _PropParser {
       } else if (child.matchQualifiedName("is-archived",
           prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
         _isArchived = child.innerText == "true";
+      } else if (child.matchQualifiedName("override-date-time",
+          prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
+        _overrideDateTime = DateTime.parse(child.innerText);
       }
     }
     // 2nd pass that depends on data in 1st pass
@@ -206,6 +212,7 @@ class _PropParser {
   String get ownerId => _ownerId;
   Metadata get metadata => _metadata;
   bool get isArchived => _isArchived;
+  DateTime get overrideDateTime => _overrideDateTime;
 
   final Map<String, String> namespaces;
 
@@ -223,6 +230,7 @@ class _PropParser {
   String _ownerId;
   Metadata _metadata;
   bool _isArchived;
+  DateTime _overrideDateTime;
 }
 
 extension on XmlElement {

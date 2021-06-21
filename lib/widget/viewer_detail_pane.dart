@@ -22,7 +22,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
 
@@ -45,6 +47,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   initState() {
     super.initState();
 
+    _dateTime = widget.file.bestDateTime.toLocal();
     if (widget.file.metadata == null) {
       _log.info("[initState] Metadata missing in File");
     } else {
@@ -57,9 +60,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   @override
   build(BuildContext context) {
-    final dateTime = widget.file.bestDateTime.toLocal();
-    final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(dateTime);
-    final timeStr = DateFormat(DateFormat.HOUR_MINUTE).format(dateTime);
+    final dateStr =
+        DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(_dateTime);
+    final timeStr = DateFormat(DateFormat.HOUR_MINUTE).format(_dateTime);
 
     String sizeSubStr = "";
     const space = "    ";
@@ -95,80 +98,88 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
     cameraSubStr = cameraSubStr.trim();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            _DetailPaneButton(
-              icon: Icons.playlist_add_outlined,
-              label: AppLocalizations.of(context).addToAlbumTooltip,
-              onPressed: () => _onAddToAlbumPressed(context),
-            ),
-            _DetailPaneButton(
-              icon: Icons.delete_outline,
-              label: AppLocalizations.of(context).deleteTooltip,
-              onPressed: () => _onDeletePressed(context),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: const Divider(),
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.image_outlined,
-            color: AppTheme.getSecondaryTextColor(context),
+    return Material(
+      type: MaterialType.transparency,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _DetailPaneButton(
+                icon: Icons.playlist_add_outlined,
+                label: AppLocalizations.of(context).addToAlbumTooltip,
+                onPressed: () => _onAddToAlbumPressed(context),
+              ),
+              _DetailPaneButton(
+                icon: Icons.delete_outline,
+                label: AppLocalizations.of(context).deleteTooltip,
+                onPressed: () => _onDeletePressed(context),
+              ),
+            ],
           ),
-          title: Text(basenameWithoutExtension(widget.file.path)),
-          subtitle: Text(widget.file.strippedPath),
-        ),
-        ListTile(
-          leading: Icon(
-            Icons.calendar_today_outlined,
-            color: AppTheme.getSecondaryTextColor(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: const Divider(),
           ),
-          title: Text("$dateStr $timeStr"),
-        ),
-        if (widget.file.metadata?.imageWidth != null &&
-            widget.file.metadata?.imageHeight != null)
           ListTile(
             leading: Icon(
-              Icons.aspect_ratio,
+              Icons.image_outlined,
               color: AppTheme.getSecondaryTextColor(context),
             ),
-            title: Text(
-                "${widget.file.metadata.imageWidth} x ${widget.file.metadata.imageHeight}"),
-            subtitle: Text(sizeSubStr),
-          )
-        else
+            title: Text(basenameWithoutExtension(widget.file.path)),
+            subtitle: Text(widget.file.strippedPath),
+          ),
           ListTile(
             leading: Icon(
-              Icons.aspect_ratio,
+              Icons.calendar_today_outlined,
               color: AppTheme.getSecondaryTextColor(context),
             ),
-            title: Text(_byteSizeToString(widget.file.contentLength)),
-          ),
-        if (_model != null)
-          ListTile(
-            leading: Icon(
-              Icons.camera_outlined,
+            title: Text("$dateStr $timeStr"),
+            trailing: Icon(
+              Icons.edit_outlined,
               color: AppTheme.getSecondaryTextColor(context),
             ),
-            title: Text(_model),
-            subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
+            onTap: () => _onDateTimeTap(context),
           ),
-        if (features.isSupportMapView && _gps != null)
-          SizedBox(
-            height: 256,
-            child: platform.Map(
-              center: _gps,
-              zoom: 16,
-              onTap: _onMapTap,
+          if (widget.file.metadata?.imageWidth != null &&
+              widget.file.metadata?.imageHeight != null)
+            ListTile(
+              leading: Icon(
+                Icons.aspect_ratio,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
+              title: Text(
+                  "${widget.file.metadata.imageWidth} x ${widget.file.metadata.imageHeight}"),
+              subtitle: Text(sizeSubStr),
+            )
+          else
+            ListTile(
+              leading: Icon(
+                Icons.aspect_ratio,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
+              title: Text(_byteSizeToString(widget.file.contentLength)),
             ),
-          ),
-      ],
+          if (_model != null)
+            ListTile(
+              leading: Icon(
+                Icons.camera_outlined,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
+              title: Text(_model),
+              subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
+            ),
+          if (features.isSupportMapView && _gps != null)
+            SizedBox(
+              height: 256,
+              child: platform.Map(
+                center: _gps,
+                zoom: 16,
+                onTap: _onMapTap,
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -290,6 +301,38 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
+  void _onDateTimeTap(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => PhotoDateTimeEditDialog(initialDateTime: _dateTime),
+    ).then((value) async {
+      if (value == null || value is! DateTime) {
+        return;
+      }
+      final fileRepo = FileRepo(FileCachedDataSource());
+      try {
+        await UpdateProperty(fileRepo)
+            .updateOverrideDateTime(widget.account, widget.file, value);
+        setState(() {
+          _dateTime = value;
+        });
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_onDateTimeTap] Failed while updateOverrideDateTime" +
+                (kDebugMode ? ": ${widget.file.path}" : ""),
+            e,
+            stacktrace);
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(
+              AppLocalizations.of(context).updateDateTimeFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
+    }).catchError((e, stacktrace) {
+      _log.shout("[_onDateTimeTap] Failed while showDialog", e, stacktrace);
+    });
+  }
+
   static double _gpsDmsToDouble(List<Rational> dms) {
     double product = dms[0].toDouble();
     if (dms.length > 1) {
@@ -334,6 +377,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
+  DateTime _dateTime;
   // EXIF data
   String _model;
   double _fNumber;

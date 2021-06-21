@@ -58,6 +58,7 @@ class FilePropertyUpdatedEvent {
   // Bit masks for properties field
   static const propMetadata = 0x01;
   static const propIsArchived = 0x02;
+  static const propOverrideDateTime = 0x04;
 }
 
 class FileRemovedEvent {

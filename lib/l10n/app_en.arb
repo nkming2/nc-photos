@@ -432,6 +432,25 @@
 	"@mobileSelectRangeNotification": {
 		"description": "Inform mobile user how to select items in range"
 	},
+	"updateDateTimeDialogTitle": "Modify date & time",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Date",
+	"timeSubtitle": "Time",
+	"dateYearInputHint": "Year",
+	"dateMonthInputHint": "Month",
+	"dateDayInputHint": "Day",
+	"timeHourInputHint": "Hour",
+	"timeMinuteInputHint": "Minute",
+	"dateTimeInputInvalid": "Invalid value",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "Failed modifying date & time",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
