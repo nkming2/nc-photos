@@ -474,8 +474,14 @@ Future<void> _cacheAlbum(
   // count number of entries for this album
   final count = await index.count(range);
   int newCount = 0;
-  for (final pair
-      in partition(album.items, AppDbAlbumEntry.maxDataSize).withIndex()) {
+
+  var albumItemLists =
+      partition(album.items, AppDbAlbumEntry.maxDataSize).toList();
+  if (albumItemLists.isEmpty) {
+    albumItemLists = [<AlbumItem>[]];
+  }
+
+  for (final pair in albumItemLists.withIndex()) {
     _log.info(
         "[_cacheAlbum] Caching $path[${pair.item1}], length: ${pair.item2.length}");
     await store.put(
