@@ -171,7 +171,10 @@ class _ViewerState extends State<Viewer> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 36),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_forward_ios_outlined),
+                      icon: Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: Colors.white,
+                      ),
                       onPressed: _switchToRightImage,
                     ),
                   ),
@@ -205,7 +208,10 @@ class _ViewerState extends State<Viewer> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 36),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back_ios_outlined),
+                      icon: Icon(
+                        Icons.arrow_back_ios_outlined,
+                        color: Colors.white,
+                      ),
                       onPressed: _switchToLeftImage,
                     ),
                   ),
