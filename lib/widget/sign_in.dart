@@ -63,6 +63,17 @@ class _SignInState extends State<SignIn> {
                           child: _buildForm(context),
                         ),
                       ),
+                      Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        constraints: const BoxConstraints(
+                            maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        child: Text(
+                          AppLocalizations.of(context).signIn2faHintText,
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
                       if (!platform_k.isWeb) Expanded(child: Container()),
                       Container(
                         constraints: const BoxConstraints(

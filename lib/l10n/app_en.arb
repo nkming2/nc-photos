@@ -245,6 +245,10 @@
 	"@signInHeaderText": {
 		"description": "Inform user what to do in sign in widget"
 	},
+	"signIn2faHintText": "*Use an app password if you have two-factor authentication enabled in the server",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
 	"serverAddressInputHint": "Sever address",
 	"@serverAddressInputHint": {
 		"description": "Hint of the text field expecting server address data"
