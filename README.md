@@ -6,12 +6,15 @@ Photos (for Nextcloud) is a new gallery app for viewing your photos hosted on Ne
 *\*See [Web Support](#web-support) if you want to try the experimental web app*
 
 Features:
-- Sign-in to multiple servers
-- Support JPEG, PNG, WebP, HEIC images
+- Support JPEG, PNG, WebP, HEIC, GIF images
 - Support MP4 videos (Android only)
 - EXIF support (JPEG and HEIC only)
 - Organize photos with albums that are independent of your file hierarchy
+- Sign-in to multiple servers
 - and more to come!
+
+Translations:
+- Español (contributed by luckkmaxx)
 
 This app does not require any server-side plugins.
 
