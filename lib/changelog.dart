@@ -45,4 +45,9 @@ This version includes changes that are not compatible with older versions. Pleas
 Archive photos to only show them in albums
 Link to report issues in Settings
 """,
+  // v18
+  """18.0
+Modify date/time of photos
+Support GIF
+""",
 ];
