@@ -1,0 +1,495 @@
+{
+	"appTitle": "Fotos",
+	"translator": "luckkmaxx",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "Fotos",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"albumsTabLabel": "Álbumes",
+	"@albumsTabLabel": {
+		"description": "Label of the tab that lists user albums"
+	},
+	"zoomTooltip": "Zoom",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "Refrescar",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "Ajustes",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "{count} seleccionado",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"addSelectedToAlbumTooltip": "Añadir selección a álbum",
+	"@addSelectedToAlbumTooltip": {
+		"description": "Tooltip of the button that adds selected items to an album"
+	},
+	"addSelectedToAlbumSuccessNotification": "Selección añadida a {album} con éxito",
+	"@addSelectedToAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addSelectedToAlbumFailureNotification": "No se pudo añadir selección al álbum",
+	"@addSelectedToAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be added to an album"
+	},
+	"addToAlbumTooltip": "Añadir a álbum",
+	"@addToAlbumTooltip": {
+		"description": "Tooltip for the add to album button"
+	},
+	"addToAlbumSuccessNotification": "Archivo añadido a {album} con éxito",
+	"@addToAlbumSuccessNotification": {
+		"description": "Inform user that the item is added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addToAlbumFailureNotification": "Error al añadir al álbum",
+	"@addToAlbumFailureNotification": {
+		"description": "Inform user that the item cannot be added to an album"
+	},
+	"addToAlbumAlreadyAddedNotification": "El archivo ya está en el álbum",
+	"@addToAlbumAlreadyAddedNotification": {
+		"description": "Inform user that the item is already in the album"
+	},
+	"deleteSelectedTooltip": "Borrar seleccionados",
+	"@deleteSelectedTooltip": {
+		"description": "Tooltip of the button that deletes selected items"
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 archivo} other{Borrando {count} archivos}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "Archivos borrados con éxito",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotificationdeleteSelectedFailureNotification": "{count, plural, =1{Error al borrar 1 archivo} other{Error al borrar {count} archivos}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedMenuLabel": "Archivar selección",
+	"@archiveSelectedMenuLabel": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivando 1 archivo} other{Archivando {count} archivos}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "Selección archivada con éxito",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, =1{Error al archivar 1 archivo} other{Error al archivar {count} archivos}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedTooltip": "Desarchivar selección",
+	"@unarchiveSelectedTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Desarchivando 1 archivo} other{Desarchivando {count} archivos}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "Selección desarchivada con éxito",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Error al desarchivar 1 archivo} other{Error al desarchivar {count} archivos}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "Borrar",
+	"@deleteTooltip": {
+		"description": "Tooltip for the delete button"
+	},
+	"deleteProcessingNotification": "Borrando archivo",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "Archivo borrado en éxito",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "Error al borrar archivo",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumTooltip": "Quitar selección del álbum",
+	"@removeSelectedFromAlbumTooltip": {
+		"description": "Tooltip of the button that remove selected items from an album"
+	},
+	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 archivo quitado del álbum} other{{count} archivos quitados del álbum}}",
+	"@removeSelectedFromAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are removed from an album successfully",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"removeSelectedFromAlbumFailureNotification": "Error al quitar archivos del álbum",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "Añadir servidor",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "Quitado {server} con éxito",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "Crear álbum nuevo",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"createAlbumFailureNotification": "Error al crear álbum",
+	"@createAlbumFailureNotification": {
+		"description": "Inform user that an album cannot be created"
+	},
+	"albumSize": "{count, plural, =0{Empty} =1{1 archivo} other{{count} archivos}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "Archivados",
+	"@albumArchiveLabel": {
+		"description": "Archive"
+	},
+	"connectingToServer": "Conectando a\n{server}",
+	"@connectingToServer": {
+		"description": "Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"nameInputHint": "Nombre",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"albumNameInputInvalidEmpty": "Introduce un nombre para el álbum",
+	"@albumNameInputInvalidEmpty": {
+		"description": "Inform user that the album name input field cannot be empty"
+	},
+	"skipButtonLabel": "SALTAR",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "CONFIRMAR",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "Iniciar sesión en Nextcloud",
+	"@signInHeaderText": {
+		"description": "Inform user what to do in sign in widget"
+	},
+	"serverAddressInputHint": "Dirección del servidor",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "Introduce la dirección del servidor",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "Usuario",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "Introduce tu nombre de usuario",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "Contraseña",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "Introduce tu contraseña",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "Marca las carpetas que serán añadidas",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "Solo se mostrará el contenido de las carpetas marcadas. Toca SALTAR para incluir todas",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(atrás)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "Error al desmarcar item",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "Por favor, selecciona al menos una carpeta o toca SALTAR para seleccionar todas",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "Comenzando",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "Puedes cambiar esto luego en Ajustes",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "Está aplicación crea una carpeta en Nextcloud para guardar las preferencias. Por favor no la modifiques o elimines a no ser que quieras eliminar ésta aplicación.",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "Ajustes",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsExifSupportTitle": "soporte EXIF",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsExifSupportTrueSubtitle": "Requiere un uso mayor de datos",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsAboutSectionTitle": "Acerca de",
+	"@settingsAboutSectionTitle": {
+		"description": "Title of the about section in settings widget"
+	},
+	"settingsVersionTitle": "Versión",
+	"@settingsVersionTitle": {
+		"description": "Title of the version data item"
+	},
+	"settingsSourceCodeTitle": "Código fuente",
+	"@settingsSourceCodeTitle": {
+		"description": "Title of the source code item"
+	},
+	"settingsBugReportTitle": "Reportar problema",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
+	"settingsTranslatorTitle": "Traductor",
+	"@settingsTranslatorTitle": {
+		"description": "Title of the translator item"
+	},
+	"writePreferenceFailureNotification": "Error al establecer preferencias",
+	"@writePreferenceFailureNotification": {
+		"description": "Inform user that the preference file cannot be modified"
+	},
+	"enableButtonLabel": "HABILITAR",
+	"@enableButtonLabel": {
+		"description": "Label of the enable button"
+	},
+	"exifSupportDetails": "Habilitando el soporte EXIF tendrá disponible metadatos como fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño origina. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
+	"@exifSupportDetails": {
+		"description": "Detailed description of the exif support feature"
+	},
+	"exifSupportConfirmationDialogTitle": "¿Habilitar soporte EXIF?",
+	"@exifSupportConfirmationDialogTitle": {
+		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"doneButtonLabel": "LISTO",
+	"@doneButtonLabel": {
+		"description": "Label of the done button"
+	},
+	"nextButtonLabel": "SIGUIENTE",
+	"@nextButtonLabel": {
+		"description": "Label of the next button"
+	},
+	"connectButtonLabel": "CONECTAR",
+	"@connectButtonLabel": {
+		"description": "Label of the connect button"
+	},
+	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos los archivos",
+	"@rootPickerSkipConfirmationDialogContent": {
+		"description": "Inform user what happens after skipping root picker"
+	},
+	"megapixelCount": "{count}MP",
+	"@megapixelCount": {
+		"description": "Resolution of an image in megapixel",
+		"placeholders": {
+			"count": {
+				"example": "1.3"
+			}
+		}
+	},
+	"secondCountSymbol": "{count}s",
+	"@secondCountSymbol": {
+		"description": "Number of seconds",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"millimeterCountSymbol": "{count}mm",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "Detalles",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "Descargar",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "Descargando archivo",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "Descargado con éxito",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "Error al descargar",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"downloadFailureNoPermissionNotification": "Se requiere permiso de acceso al almacenamiento",
+	"@downloadFailureNoPermissionNotification": {
+		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
+	},
+	"nextTooltip": "Siguiente",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "Anterior",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "Mantén Shift + click para seleccionar todo entre medias",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "Mantenga presionado otro ítem para seleccionar todo entre medias",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"changelogTitle": "Registro de cambios",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
+	"serverCertErrorDialogTitle": "No se puede confiar en el certificado del servidor",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "El servidor podría ser hackeado o alguien podría rondar su información",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"advancedButtonLabel": "AVANZADO",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "¿Poner en lista blanca certificado desconocido?",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "Puedes poner en lista blanca el certificado para hacer que la aplicación lo acepte. ADVERTENCIA: Esto supone un gran riesgo de seguridad. Asegúrate de que el certificado está firmado por ti mismo o una entidad de confianza\n\nHost: {host}\nFingerprint: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "ASUMIR RIESGO Y PONER EN LISTA BLANCA",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
+	"errorUnauthenticated": "Acceso sin identificar. Por favor inicia sesión otra vez si el problema continúa.",
+	"@errorUnauthenticated": {
+		"description": "Error message when server responds with HTTP401"
+	},
+	"errorDisconnected": "No se pudo conectar. El servidor no está en línea o tu dispositivo está desconectado.",
+	"@errorDisconnected": {
+		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "Archivo bloqueado en el servidor. Inténtalo de nuevo más tarde.",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "No se pudo comunicar. Asegúrate que la dirección es la URL base de tu Nextcloud.",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "No se pudo autentificar. Verifica tu usuario y contraseña.Unable to authenticate.",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "Error del servidor. Asegúrate que el servidor está configurado correctamente.",
+	"@errorServerError": {
+		"description": "HTTP 500"
+	}
+}
