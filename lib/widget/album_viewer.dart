@@ -300,6 +300,7 @@ class _AlbumViewerState extends State<AlbumViewer>
             width: _thumbSize, height: _thumbSize);
         if (file_util.isSupportedImageFormat(f)) {
           yield _ImageListItem(
+            file: f,
             account: widget.account,
             previewUrl: previewUrl,
             onTap: () => _onItemTap(i),
@@ -368,6 +369,7 @@ class _AlbumViewerState extends State<AlbumViewer>
 
 class _ImageListItem extends SelectableItemStreamListItem {
   _ImageListItem({
+    @required this.file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
@@ -378,9 +380,11 @@ class _ImageListItem extends SelectableItemStreamListItem {
     return PhotoListImage(
       account: account,
       previewUrl: previewUrl,
+      isGif: file.contentType == "image/gif",
     );
   }
 
+  final File file;
   final Account account;
   final String previewUrl;
 }

@@ -30,6 +30,7 @@ const _supportedFormatMimes = [
   "image/png",
   "image/webp",
   "image/heic",
+  "image/gif",
   // video player currently doesn't work on web
   if (!platform_k.isWeb) "video/mp4",
 ];

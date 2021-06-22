@@ -210,10 +210,16 @@ class _ImageViewerState extends State<ImageViewer>
   static final _log = Logger("widget.image_viewer._ImageViewerState");
 }
 
-String _getImageUrl(Account account, File file) => api_util.getFilePreviewUrl(
+String _getImageUrl(Account account, File file) {
+  if (file.contentType == "image/gif") {
+    return api_util.getFileUrl(account, file);
+  } else {
+    return api_util.getFilePreviewUrl(
       account,
       file,
       width: 1080,
       height: 1080,
       a: true,
     );
+  }
+}

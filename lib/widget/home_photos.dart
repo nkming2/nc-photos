@@ -639,6 +639,7 @@ class _ImageListItem extends _FileListItem {
     return PhotoListImage(
       account: account,
       previewUrl: previewUrl,
+      isGif: file.contentType == "image/gif",
     );
   }
 
