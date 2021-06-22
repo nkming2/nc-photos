@@ -96,12 +96,15 @@ class _SettingsState extends State<Settings> {
                   launch(_bugReportUrl);
                 },
               ),
+              if (translator.isNotEmpty)
+                ListTile(
+                  title: Text(
+                      AppLocalizations.of(context).settingsTranslatorTitle),
+                  subtitle: Text(translator),
+                ),
               ListTile(
-                title:
-                    Text(AppLocalizations.of(context).settingsTranslatorTitle),
-                subtitle: Text(translator.isEmpty
-                    ? "Help translating to your language"
-                    : translator),
+                title: Text("Improve translation"),
+                subtitle: Text("Help translating to your language"),
                 onTap: () async {
                   await launch(_translationUrl);
                 },
