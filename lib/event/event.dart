@@ -70,6 +70,8 @@ class FileRemovedEvent {
 
 class ThemeChangedEvent {}
 
+class LanguageChangedEvent {}
+
 extension FilePropertyUpdatedEventExtension on FilePropertyUpdatedEvent {
   bool hasAnyProperties(List<int> properties) =>
       properties.any((p) => this.properties & p != 0);

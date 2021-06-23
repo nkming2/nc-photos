@@ -309,6 +309,10 @@
 	"@settingsWidgetTitle": {
 		"description": "Title of the Settings widget"
 	},
+	"settingsLanguageTitle": "Language",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
 	"settingsExifSupportTitle": "EXIF support",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"

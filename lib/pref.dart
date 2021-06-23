@@ -60,6 +60,9 @@ class Pref {
 
   Future<bool> setDarkTheme(bool value) => _pref.setBool("isDarkTheme", value);
 
+  int getLanguage([int def = 0]) => _pref.getInt("language") ?? def;
+  Future<bool> setLanguage(int value) => _pref.setInt("language", value);
+
   Pref._();
 
   static final _inst = Pref._();

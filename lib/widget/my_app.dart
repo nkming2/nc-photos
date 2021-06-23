@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -29,6 +30,8 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     SnackBarManager().registerHandler(this);
     _themeChangedListener =
         AppEventListener<ThemeChangedEvent>(_onThemeChangedEvent)..begin();
+    _langChangedListener =
+        AppEventListener<LanguageChangedEvent>(_onLangChangedEvent)..begin();
   }
 
   @override
@@ -41,6 +44,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       scaffoldMessengerKey: _scaffoldMessengerKey,
+      locale: language_util.getSelectedLocale(context),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
@@ -52,6 +56,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     super.dispose();
     SnackBarManager().unregisterHandler(this);
     _themeChangedListener.end();
+    _langChangedListener.end();
   }
 
   @override
@@ -89,6 +94,10 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   }
 
   void _onThemeChangedEvent(ThemeChangedEvent ev) {
+    setState(() {});
+  }
+
+  void _onLangChangedEvent(LanguageChangedEvent ev) {
     setState(() {});
   }
 
@@ -206,6 +215,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   AppEventListener<ThemeChangedEvent> _themeChangedListener;
+  AppEventListener<LanguageChangedEvent> _langChangedListener;
 
   static final _log = Logger("widget.my_app.MyAppState");
 }

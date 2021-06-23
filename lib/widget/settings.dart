@@ -1,10 +1,14 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -65,6 +69,11 @@ class _SettingsState extends State<Settings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              ListTile(
+                title: Text(AppLocalizations.of(context).settingsLanguageTitle),
+                subtitle: Text(language_util.getSelectedLanguageName(context)),
+                onTap: () => _onLanguageTap(context),
+              ),
               SwitchListTile(
                 title:
                     Text(AppLocalizations.of(context).settingsExifSupportTitle),
@@ -126,6 +135,32 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
+  }
+
+  void _onLanguageTap(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        children: language_util.supportedLanguages.values
+            .map<Widget>((lang) => SimpleDialogOption(
+                  onPressed: () {
+                    _log.info(
+                        "[_onLanguageTap] Set language: ${lang.nativeName}");
+                    Navigator.of(context).pop(lang.langId);
+                  },
+                  child: ListTile(
+                    title: Text(lang.nativeName),
+                  ),
+                ))
+            .toList(),
+      ),
+    ).then((value) {
+      if (value != null) {
+        Pref.inst().setLanguage(value).then((_) {
+          KiwiContainer().resolve<EventBus>().fire(LanguageChangedEvent());
+        });
+      }
+    });
   }
 
   void _onExifSupportChanged(BuildContext context, bool value) {
