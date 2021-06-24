@@ -12,6 +12,7 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -175,10 +176,15 @@ class _HomeAlbumsState extends State<HomeAlbums> {
 
   Widget _buildAlbumItem(BuildContext context, int index) {
     final item = _items[index];
+    var subtitle = "";
+    if (item.album.provider is AlbumStaticProvider) {
+      subtitle = AppLocalizations.of(context)
+          .albumSize(AlbumStaticProvider.of(item.album).items.length);
+    }
     return AlbumGridItem(
       cover: _buildAlbumCover(context, item.album),
       title: item.album.name,
-      subtitle: AppLocalizations.of(context).albumSize(item.album.items.length),
+      subtitle: subtitle,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
@@ -386,7 +392,8 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     final sortedAlbums = albums.map((e) {
       // find the latest file in this album
       try {
-        final lastItem = e.items
+        final lastItem = AlbumStaticProvider.of(e)
+            .items
             .whereType<AlbumFileItem>()
             .map((e) => e.file)
             .where((element) => file_util.isSupportedFormat(element))

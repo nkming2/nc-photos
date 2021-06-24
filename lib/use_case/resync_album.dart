@@ -4,18 +4,24 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
   Future<Album> call(Account account, Album album) async {
+    if (album.provider is! AlbumStaticProvider) {
+      _log.warning(
+          "[call] Resync only make sense for static albums: ${album.name}");
+      return album;
+    }
     return await AppDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
       final index = store.index(AppDbFileDbEntry.indexName);
       final newItems = <AlbumItem>[];
-      for (final item in album.items) {
+      for (final item in AlbumStaticProvider.of(album).items) {
         if (item is AlbumFileItem) {
           try {
             newItems.add(await _syncOne(account, item, store, index));
@@ -30,7 +36,7 @@ class ResyncAlbum {
           newItems.add(item);
         }
       }
-      return album.copyWith(items: newItems);
+      return album.copyWith(provider: AlbumStaticProvider(items: newItems));
     });
   }
 

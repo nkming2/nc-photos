@@ -3,6 +3,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/list_album.dart';
@@ -23,18 +24,27 @@ class Remove {
 
   Future<void> _cleanUpAlbums(Account account, File file) async {
     final albums = await ListAlbum(fileRepo, albumRepo)(account);
-    for (final a in albums) {
+    // clean up only make sense for static albums
+    for (final a
+        in albums.where((element) => element.provider is AlbumStaticProvider)) {
       try {
-        if (a.items.any((element) =>
+        final provider = AlbumStaticProvider.of(a);
+        if (provider.items.any((element) =>
             element is AlbumFileItem && element.file.path == file.path)) {
-          final newItems = a.items.where((element) {
+          final newItems = provider.items.where((element) {
             if (element is AlbumFileItem) {
               return element.file.path != file.path;
             } else {
               return true;
             }
           }).toList();
-          await UpdateAlbum(albumRepo)(account, a.copyWith(items: newItems));
+          await UpdateAlbum(albumRepo)(
+              account,
+              a.copyWith(
+                provider: AlbumStaticProvider(
+                  items: newItems,
+                ),
+              ));
         }
       } catch (e, stacktrace) {
         _log.shout(

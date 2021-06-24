@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -348,10 +349,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   }
 
   Future<void> _addToAlbum(BuildContext context, Album album) async {
+    assert(album.provider is AlbumStaticProvider);
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
       final newItem = AlbumFileItem(file: widget.file);
-      if (album.items
+      if (AlbumStaticProvider.of(album)
+          .items
           .whereType<AlbumFileItem>()
           .containsIf(newItem, (a, b) => a.file.path == b.file.path)) {
         // already added, do nothing
@@ -366,7 +369,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       await UpdateAlbum(albumRepo)(
           widget.account,
           album.copyWith(
-            items: [...album.items, AlbumFileItem(file: widget.file)],
+            provider: AlbumStaticProvider(
+              items: [
+                ...AlbumStaticProvider.of(album).items,
+                AlbumFileItem(file: widget.file),
+              ],
+            ),
           ));
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);

@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
@@ -8,6 +7,7 @@ import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -126,19 +126,26 @@ class Album with EquatableMixin {
   Album({
     DateTime lastUpdated,
     @required String name,
-    @required List<AlbumItem> items,
+    @required this.provider,
     this.albumFile,
   })  : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
-        this.name = name ?? "",
-        this.items = UnmodifiableListView(items);
+        this.name = name ?? "";
 
   factory Album.fromJson(
     Map<String, dynamic> json, {
     AlbumUpgraderV1 upgraderV1,
+    AlbumUpgraderV2 upgraderV2,
   }) {
     final jsonVersion = json["version"];
     if (jsonVersion < 2) {
       json = upgraderV1?.call(json);
+      if (json == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 3) {
+      json = upgraderV2?.call(json);
       if (json == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -149,9 +156,8 @@ class Album with EquatableMixin {
           ? null
           : DateTime.parse(json["lastUpdated"]),
       name: json["name"],
-      items: (json["items"] as List)
-          .map((e) => AlbumItem.fromJson(e.cast<String, dynamic>()))
-          .toList(),
+      provider:
+          AlbumProvider.fromJson(json["provider"].cast<String, dynamic>()),
       albumFile: json["albumFile"] == null
           ? null
           : File.fromJson(json["albumFile"].cast<String, dynamic>()),
@@ -160,12 +166,10 @@ class Album with EquatableMixin {
 
   @override
   toString({bool isDeep = false}) {
-    final itemsStr =
-        isDeep ? items.toReadableString() : "List {length: ${items.length}}";
     return "$runtimeType {"
         "lastUpdated: $lastUpdated, "
         "name: $name, "
-        "items: $itemsStr, "
+        "provider: ${provider.toString(isDeep: isDeep)}, "
         "albumFile: $albumFile, "
         "}";
   }
@@ -178,13 +182,13 @@ class Album with EquatableMixin {
   Album copyWith({
     DateTime lastUpdated,
     String name,
-    List<AlbumItem> items,
+    AlbumProvider provider,
     File albumFile,
   }) {
     return Album(
       lastUpdated: lastUpdated,
       name: name ?? this.name,
-      items: items ?? this.items,
+      provider: provider ?? this.provider,
       albumFile: albumFile ?? this.albumFile,
     );
   }
@@ -194,7 +198,7 @@ class Album with EquatableMixin {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
       "name": name,
-      "items": items.map((e) => e.toJson()).toList(),
+      "provider": provider.toJson(),
       // ignore albumFile
     };
   }
@@ -204,7 +208,7 @@ class Album with EquatableMixin {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
       "name": name,
-      "items": items.map((e) => e.toJson()).toList(),
+      "provider": provider.toJson(),
       if (albumFile != null) "albumFile": albumFile.toJson(),
     };
   }
@@ -213,15 +217,14 @@ class Album with EquatableMixin {
   get props => [
         lastUpdated,
         name,
-        items,
+        provider,
         albumFile,
       ];
 
   final DateTime lastUpdated;
   final String name;
 
-  /// Immutable list of items. Modifying the list will result in an error
-  final List<AlbumItem> items;
+  final AlbumProvider provider;
 
   /// How is this album stored on server
   ///
@@ -229,7 +232,7 @@ class Album with EquatableMixin {
   final File albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 2;
+  static const version = 3;
 }
 
 class AlbumRepo {
@@ -281,6 +284,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
       return Album.fromJson(
         jsonDecode(utf8.decode(data)),
         upgraderV1: AlbumUpgraderV1(),
+        upgraderV2: AlbumUpgraderV2(),
       ).copyWith(albumFile: albumFile);
     } catch (e, stacktrace) {
       dynamic d = data;
@@ -343,11 +347,19 @@ class AlbumAppDbDataSource implements AlbumDataSource {
       if (results?.isNotEmpty == true) {
         final entries = results
             .map((e) => AppDbAlbumEntry.fromJson(e.cast<String, dynamic>()));
-        final items = entries.map((e) {
-          _log.info("[get] ${e.path}[${e.index}]");
-          return e.album.items;
-        }).reduce((value, element) => value + element);
-        return entries.first.album.copyWith(items: items);
+        if (entries.length > 1) {
+          final items = entries.map((e) {
+            _log.info("[get] ${e.path}[${e.index}]");
+            return AlbumStaticProvider.of(e.album).items;
+          }).reduce((value, element) => value + element);
+          return entries.first.album.copyWith(
+            provider: AlbumStaticProvider(
+              items: items,
+            ),
+          );
+        } else {
+          return entries.first.album;
+        }
       } else {
         throw CacheNotFoundException("No entry: $path");
       }
@@ -461,27 +473,37 @@ Future<void> _cacheAlbum(
   final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
   // count number of entries for this album
   final count = await index.count(range);
-  int newCount = 0;
 
-  var albumItemLists =
-      partition(album.items, AppDbAlbumEntry.maxDataSize).toList();
-  if (albumItemLists.isEmpty) {
-    albumItemLists = [<AlbumItem>[]];
+  // cut large album into smaller pieces, needed to workaround Android DB
+  // limitation
+  final entries = <AppDbAlbumEntry>[];
+  if (album.provider is AlbumStaticProvider) {
+    var albumItemLists = partition(
+            AlbumStaticProvider.of(album).items, AppDbAlbumEntry.maxDataSize)
+        .toList();
+    if (albumItemLists.isEmpty) {
+      albumItemLists = [<AlbumItem>[]];
+    }
+    entries.addAll(albumItemLists.withIndex().map((pair) => AppDbAlbumEntry(
+        path,
+        pair.item1,
+        album.copyWith(
+          provider: AlbumStaticProvider(items: pair.item2),
+        ))));
+  } else {
+    entries.add(AppDbAlbumEntry(path, 0, album));
   }
 
-  for (final pair in albumItemLists.withIndex()) {
-    _log.info(
-        "[_cacheAlbum] Caching $path[${pair.item1}], length: ${pair.item2.length}");
-    await store.put(
-      AppDbAlbumEntry(path, pair.item1, album.copyWith(items: pair.item2))
-          .toJson(),
-      AppDbAlbumEntry.toPrimaryKey(account, album.albumFile, pair.item1),
-    );
-    ++newCount;
+  for (final e in entries) {
+    _log.info("[_cacheAlbum] Caching ${e.path}[${e.index}]");
+    await store.put(e.toJson(),
+        AppDbAlbumEntry.toPrimaryKey(account, e.album.albumFile, e.index));
   }
-  if (count > newCount) {
+
+  if (count > entries.length) {
     // index is 0-based
-    final rmRange = KeyRange.bound([path, newCount], [path, int_util.int32Max]);
+    final rmRange =
+        KeyRange.bound([path, entries.length], [path, int_util.int32Max]);
     final rmKeys = await index
         .openKeyCursor(range: rmRange, autoAdvance: true)
         .map((cursor) => cursor.primaryKey)

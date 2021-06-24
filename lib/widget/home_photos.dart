@@ -12,6 +12,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/scan_dir.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -311,6 +312,7 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _addSelectedToAlbum(BuildContext context, Album album) async {
+    assert(album.provider is AlbumStaticProvider);
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => AlbumFileItem(file: e.file))
@@ -320,10 +322,12 @@ class _HomePhotosState extends State<HomePhotos>
       await UpdateAlbum(albumRepo)(
           widget.account,
           album.copyWith(
-            items: makeDistinctAlbumItems([
-              ...album.items,
-              ...selected,
-            ]),
+            provider: AlbumStaticProvider(
+              items: makeDistinctAlbumItems([
+                ...AlbumStaticProvider.of(album).items,
+                ...selected,
+              ]),
+            ),
           ));
     } catch (e, stacktrace) {
       _log.shout(

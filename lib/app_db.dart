@@ -138,6 +138,7 @@ class AppDbAlbumEntry {
       Album.fromJson(
         json["album"].cast<String, dynamic>(),
         upgraderV1: AlbumUpgraderV1(),
+        upgraderV2: AlbumUpgraderV2(),
       ),
     );
   }

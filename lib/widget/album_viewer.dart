@@ -8,6 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -77,6 +78,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   get itemStreamListCellSize => _thumbSize;
 
   void _initAlbum() {
+    assert(widget.album.provider is AlbumStaticProvider);
     ResyncAlbum()(widget.account, widget.album).then((album) {
       if (_shouldPropagateResyncedAlbum(album)) {
         UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, album)
@@ -247,7 +249,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     final selectedIndexes =
         selectedListItems.map((e) => itemStreamListItems.indexOf(e)).toList();
     final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
-    final newItems = _album.items.where((element) {
+    final newItems = _getAlbumItemsOf(_album).where((element) {
       if (element is AlbumFileItem) {
         return !selectedFiles.any((select) => select.path == element.file.path);
       } else {
@@ -256,7 +258,9 @@ class _AlbumViewerState extends State<AlbumViewer>
     }).toList();
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final newAlbum = _album.copyWith(
-      items: newItems,
+      provider: AlbumStaticProvider(
+        items: newItems,
+      ),
     );
     UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
       SnackBarManager().showSnackBar(SnackBar(
@@ -286,7 +290,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _transformItems() {
-    _backingFiles = _album.items
+    _backingFiles = _getAlbumItemsOf(_album)
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
@@ -320,12 +324,14 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   bool _shouldPropagateResyncedAlbum(Album album) {
-    if (widget.album.items.length != album.items.length) {
+    final origItems = _getAlbumItemsOf(widget.album);
+    final resyncItems = _getAlbumItemsOf(album);
+    if (origItems.length != resyncItems.length) {
       _log.info(
-          "[_shouldPropagateResyncedAlbum] Item length differ: ${widget.album.items.length}, ${album.items.length}");
+          "[_shouldPropagateResyncedAlbum] Item length differ: ${origItems.length}, ${resyncItems.length}");
       return true;
     }
-    for (final z in zip([widget.album.items, album.items])) {
+    for (final z in zip([origItems, resyncItems])) {
       final a = z[0], b = z[1];
       bool isEqual;
       if (a is AlbumFileItem && b is AlbumFileItem) {
@@ -343,6 +349,9 @@ class _AlbumViewerState extends State<AlbumViewer>
     _log.info("[_shouldPropagateResyncedAlbum] false");
     return false;
   }
+
+  static List<AlbumItem> _getAlbumItemsOf(Album a) =>
+      AlbumStaticProvider.of(a).items;
 
   int get _thumbSize {
     switch (_thumbZoomLevel) {

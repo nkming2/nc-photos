@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 
 /// Dialog to create a new album
@@ -63,7 +64,9 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
       _formKey.currentState.save();
       final album = Album(
         name: _formValue.name,
-        items: const [],
+        provider: AlbumStaticProvider(
+          items: const [],
+        ),
       );
       _log.info("[_onOkPressed] Creating album: $album");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());

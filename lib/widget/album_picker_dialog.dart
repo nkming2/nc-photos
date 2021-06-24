@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -139,7 +140,8 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
 
   void _transformItems(List<Album> albums) {
     _items.clear();
-    _items.addAll(albums);
+    _items.addAll(
+        albums.where((element) => element.provider is AlbumStaticProvider));
   }
 
   void _reqQuery() {
