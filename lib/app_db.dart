@@ -4,6 +4,7 @@ import 'package:idb_shim/idb.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -134,7 +135,10 @@ class AppDbAlbumEntry {
     return AppDbAlbumEntry(
       json["path"],
       json["index"],
-      Album.fromJson(json["album"].cast<String, dynamic>()),
+      Album.fromJson(
+        json["album"].cast<String, dynamic>(),
+        upgraderV1: AlbumUpgraderV1(),
+      ),
     );
   }
 

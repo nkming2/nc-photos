@@ -1,4 +1,5 @@
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:test/test.dart';
 
@@ -250,62 +251,31 @@ void main() {
       });
     });
 
-    group("versioned", () {
-      test("v1", () {
-        final album = Album.versioned(
-          version: 1,
-          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-          name: "album",
-          items: [
-            AlbumFileItem(
-              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-            ),
-            AlbumFileItem(
-              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-            ),
-          ],
-          albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
-        );
-        expect(
-            album,
-            Album(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-              name: "album",
-              items: [],
-              albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
-            ));
-      });
-
-      test("v2", () {
-        final album = Album.versioned(
-          version: 2,
-          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-          name: "album",
-          items: [
-            AlbumFileItem(
-              file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-            ),
-            AlbumFileItem(
-              file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-            ),
-          ],
-          albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
-        );
-        expect(
-            album,
-            Album(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-              name: "album",
-              items: [
-                AlbumFileItem(
-                  file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-                ),
-                AlbumFileItem(
-                  file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-                ),
-              ],
-              albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
-            ));
+    test("AlbumUpgraderV1", () {
+      final json = <String, dynamic>{
+        "version": 1,
+        "lastUpdated": "2020-01-02T03:04:05.678901Z",
+        "items": [
+          <String, dynamic>{
+            "type": "file",
+            "content": <String, dynamic>{
+              "file": <String, dynamic>{
+                "path": "remote.php/dav/files/admin/test1.jpg",
+              },
+            },
+          },
+        ],
+        "albumFile": <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test1.json",
+        },
+      };
+      expect(AlbumUpgraderV1()(json), <String, dynamic>{
+        "version": 1,
+        "lastUpdated": "2020-01-02T03:04:05.678901Z",
+        "items": [],
+        "albumFile": <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test1.json",
+        },
       });
     });
   });

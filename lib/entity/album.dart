@@ -8,6 +8,7 @@ import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
@@ -131,34 +132,19 @@ class Album with EquatableMixin {
         this.name = name ?? "",
         this.items = UnmodifiableListView(items);
 
-  factory Album.versioned({
-    int version,
-    DateTime lastUpdated,
-    @required String name,
-    @required List<AlbumItem> items,
-    File albumFile,
+  factory Album.fromJson(
+    Map<String, dynamic> json, {
+    AlbumUpgraderV1 upgraderV1,
   }) {
-    // there's only one version right now
-    if (version < 2) {
-      return Album(
-        lastUpdated: lastUpdated,
-        name: name,
-        items: [],
-        albumFile: albumFile,
-      );
-    } else {
-      return Album(
-        lastUpdated: lastUpdated,
-        name: name,
-        items: items,
-        albumFile: albumFile,
-      );
+    final jsonVersion = json["version"];
+    if (jsonVersion < 2) {
+      json = upgraderV1?.call(json);
+      if (json == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
     }
-  }
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album.versioned(
-      version: json["version"],
+    return Album(
       lastUpdated: json["lastUpdated"] == null
           ? null
           : DateTime.parse(json["lastUpdated"]),
@@ -292,8 +278,10 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final fileRepo = FileRepo(FileWebdavDataSource());
     final data = await GetFileBinary(fileRepo)(account, albumFile);
     try {
-      return Album.fromJson(jsonDecode(utf8.decode(data)))
-          .copyWith(albumFile: albumFile);
+      return Album.fromJson(
+        jsonDecode(utf8.decode(data)),
+        upgraderV1: AlbumUpgraderV1(),
+      ).copyWith(albumFile: albumFile);
     } catch (e, stacktrace) {
       dynamic d = data;
       try {
