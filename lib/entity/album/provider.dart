@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 
 abstract class AlbumProvider with EquatableMixin {
@@ -15,6 +16,8 @@ abstract class AlbumProvider with EquatableMixin {
     switch (type) {
       case AlbumStaticProvider._type:
         return AlbumStaticProvider.fromJson(content.cast<String, dynamic>());
+      case AlbumDirProvider._type:
+        return AlbumDirProvider.fromJson(content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -25,6 +28,8 @@ abstract class AlbumProvider with EquatableMixin {
     String getType() {
       if (this is AlbumStaticProvider) {
         return AlbumStaticProvider._type;
+      } else if (this is AlbumDirProvider) {
+        return AlbumDirProvider._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -57,6 +62,9 @@ class AlbumStaticProvider extends AlbumProvider {
     );
   }
 
+  factory AlbumStaticProvider.of(Album parent) =>
+      (parent.provider as AlbumStaticProvider);
+
   @override
   toString({bool isDeep = false}) {
     final itemsStr =
@@ -82,4 +90,41 @@ class AlbumStaticProvider extends AlbumProvider {
   final List<AlbumItem> items;
 
   static const _type = "static";
+}
+
+class AlbumDirProvider extends AlbumProvider {
+  AlbumDirProvider({
+    @required this.dirs,
+  });
+
+  factory AlbumDirProvider.fromJson(Map<String, dynamic> json) {
+    return AlbumDirProvider(
+      dirs: (json["dirs"] as List)
+          .map((e) => File.fromJson(e.cast<String, dynamic>()))
+          .toList(),
+    );
+  }
+
+  @override
+  toString({bool isDeep = false}) {
+    return "$runtimeType {"
+        "dirs: ${dirs.map((e) => e.path).toReadableString()}, "
+        "}";
+  }
+
+  @override
+  get props => [
+        dirs,
+      ];
+
+  @override
+  _toContentJson() {
+    return {
+      "dirs": dirs.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  final List<File> dirs;
+
+  static const _type = "dir";
 }

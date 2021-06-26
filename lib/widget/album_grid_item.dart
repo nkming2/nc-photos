@@ -8,6 +8,7 @@ class AlbumGridItem extends StatelessWidget {
     @required this.cover,
     @required this.title,
     this.subtitle,
+    this.isDynamic = false,
     this.isSelected = false,
     this.onTap,
     this.onLongPress,
@@ -45,10 +46,23 @@ class AlbumGridItem extends StatelessWidget {
                     ),
                 textAlign: TextAlign.start,
                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
+        if (isDynamic)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Align(
+              alignment: AlignmentDirectional.topEnd,
+              child: Icon(
+                Icons.auto_awesome,
+                size: 16,
+                color: Colors.white,
+              ),
+            ),
+          ),
         if (isSelected)
           Positioned.fill(
             child: Container(
@@ -86,6 +100,7 @@ class AlbumGridItem extends StatelessWidget {
   final Widget cover;
   final String title;
   final String subtitle;
+  final bool isDynamic;
   final bool isSelected;
   final VoidCallback onTap;
   final VoidCallback onLongPress;

@@ -6,40 +6,40 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/resync_album.dart';
+import 'package:nc_photos/use_case/populate_album.dart';
+import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_viewer_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
-import 'package:quiver/iterables.dart';
 
-class AlbumViewerArguments {
-  AlbumViewerArguments(this.account, this.album);
+class DynamicAlbumViewerArguments {
+  DynamicAlbumViewerArguments(this.account, this.album);
 
   final Account account;
   final Album album;
 }
 
-class AlbumViewer extends StatefulWidget {
-  static const routeName = "/album-viewer";
+class DynamicAlbumViewer extends StatefulWidget {
+  static const routeName = "/dynamic-album-viewer";
 
-  AlbumViewer({
+  DynamicAlbumViewer({
     Key key,
     @required this.account,
     @required this.album,
   }) : super(key: key);
 
-  AlbumViewer.fromArgs(AlbumViewerArguments args, {Key key})
+  DynamicAlbumViewer.fromArgs(DynamicAlbumViewerArguments args, {Key key})
       : this(
           key: key,
           account: args.account,
@@ -47,17 +47,17 @@ class AlbumViewer extends StatefulWidget {
         );
 
   @override
-  createState() => _AlbumViewerState();
+  createState() => _DynamicAlbumViewerState();
 
   final Account account;
   final Album album;
 }
 
-class _AlbumViewerState extends State<AlbumViewer>
+class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     with
         WidgetsBindingObserver,
-        SelectableItemStreamListMixin<AlbumViewer>,
-        AlbumViewerMixin<AlbumViewer> {
+        SelectableItemStreamListMixin<DynamicAlbumViewer>,
+        AlbumViewerMixin<DynamicAlbumViewer> {
   @override
   initState() {
     super.initState();
@@ -74,19 +74,26 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _initAlbum() {
-    assert(widget.album.provider is AlbumStaticProvider);
-    ResyncAlbum()(widget.account, widget.album).then((album) {
-      if (_shouldPropagateResyncedAlbum(album)) {
-        UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, album)
-            .catchError((e, stacktrace) {
-          _log.shout("[_initAlbum] Failed while updating album", e, stacktrace);
-        });
-      }
+    PopulateAlbum()(widget.account, widget.album).then((items) {
       if (mounted) {
         setState(() {
-          _album = album;
-          _transformItems();
-          initCover(widget.account, _backingFiles);
+          _album = widget.album;
+          _transformItems(items);
+          final coverFile = initCover(widget.account, _backingFiles);
+          if (coverFile != null &&
+              _album.coverProvider is AlbumAutoCoverProvider) {
+            // cache the result for later use
+            if (coverFile.path !=
+                (_album.coverProvider as AlbumAutoCoverProvider)
+                    .coverFile
+                    ?.path) {
+              _log.info("[_initAlbum] Updating album cover");
+              _album = _album.copyWith(
+                  coverProvider: AlbumAutoCoverProvider(coverFile: coverFile));
+              UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
+                  widget.account, _album);
+            }
+          }
         });
       }
     });
@@ -125,13 +132,20 @@ class _AlbumViewerState extends State<AlbumViewer>
   Widget _buildAppBar(BuildContext context) {
     if (isSelectionMode) {
       return buildSelectionAppBar(context, [
-        IconButton(
-          icon: const Icon(Icons.remove),
-          tooltip: AppLocalizations.of(context).removeSelectedFromAlbumTooltip,
-          onPressed: () {
-            _onSelectionAppBarRemovePressed();
+        PopupMenuButton(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: _SelectionAppBarOption.delete,
+              child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
+            ),
+          ],
+          onSelected: (option) {
+            if (option == _SelectionAppBarOption.delete) {
+              _onSelectionAppBarDeletePressed();
+            }
           },
-        )
+        ),
       ]);
     } else {
       return buildNormalAppBar(context, widget.account, _album);
@@ -143,60 +157,70 @@ class _AlbumViewerState extends State<AlbumViewer>
         arguments: ViewerArguments(widget.account, _backingFiles, index));
   }
 
-  void _onSelectionAppBarRemovePressed() {
-    // currently album's are auto sorted by date, so it's ok to remove items w/o
-    // preserving the order. this will be problematic if we want to allow custom
-    // sorting later
+  void _onSelectionAppBarDeletePressed() async {
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(AppLocalizations.of(context)
+          .deleteSelectedProcessingNotification(selectedListItems.length)),
+      duration: k.snackBarDurationShort,
+    ));
+
     final selectedIndexes =
         selectedListItems.map((e) => itemStreamListItems.indexOf(e)).toList();
     final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
-    final newItems = _getAlbumItemsOf(_album).where((element) {
-      if (element is AlbumFileItem) {
-        return !selectedFiles.any((select) => select.path == element.file.path);
-      } else {
-        return true;
-      }
-    }).toList();
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final newAlbum = _album.copyWith(
-      provider: AlbumStaticProvider(
-        items: newItems,
-      ),
-    );
-    UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
-            .removeSelectedFromAlbumSuccessNotification(
-                selectedIndexes.length)),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _album = newAlbum;
-        _transformItems();
-        initCover(widget.account, _backingFiles);
-      });
-    }).catchError((e, stacktrace) {
-      _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
-          stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            "${AppLocalizations.of(context).removeSelectedFromAlbumFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-    });
     setState(() {
       clearSelectedItems();
     });
+
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final failures = <File>[];
+    for (final f in selectedFiles) {
+      try {
+        await Remove(fileRepo, albumRepo).call(widget.account, f);
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_onSelectionAppBarDeletePressed] Failed while removing file" +
+                (kDebugMode ? ": ${f.path}" : ""),
+            e,
+            stacktrace);
+        failures.add(f);
+      }
+    }
+
+    if (failures.isEmpty) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            AppLocalizations.of(context).deleteSelectedSuccessNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+    } else {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)
+            .deleteSelectedFailureNotification(failures.length)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
+    final successes =
+        selectedFiles.where((element) => !failures.containsIdentical(element));
+    if (successes.isNotEmpty) {
+      setState(() {
+        _backingFiles
+            .removeWhere((element) => successes.containsIdentical(element));
+        _onBackingFilesUpdated();
+      });
+    }
   }
 
-  void _transformItems() {
-    _backingFiles = _getAlbumItemsOf(_album)
+  void _transformItems(List<AlbumItem> items) {
+    _backingFiles = items
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
         .sorted(compareFileDateTimeDescending);
+    _onBackingFilesUpdated();
+  }
 
+  void _onBackingFilesUpdated() {
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
@@ -218,46 +242,17 @@ class _AlbumViewerState extends State<AlbumViewer>
           );
         } else {
           _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
+              "[_onBackingFilesUpdated] Unsupported file format: ${f.contentType}");
         }
       }
     }();
   }
 
-  bool _shouldPropagateResyncedAlbum(Album album) {
-    final origItems = _getAlbumItemsOf(widget.album);
-    final resyncItems = _getAlbumItemsOf(album);
-    if (origItems.length != resyncItems.length) {
-      _log.info(
-          "[_shouldPropagateResyncedAlbum] Item length differ: ${origItems.length}, ${resyncItems.length}");
-      return true;
-    }
-    for (final z in zip([origItems, resyncItems])) {
-      final a = z[0], b = z[1];
-      bool isEqual;
-      if (a is AlbumFileItem && b is AlbumFileItem) {
-        // faster compare
-        isEqual = a.equals(b, isDeep: false);
-      } else {
-        isEqual = a == b;
-      }
-      if (!isEqual) {
-        _log.info(
-            "[_shouldPropagateResyncedAlbum] Item differ:\nOriginal: ${z[0]}\nResynced: ${z[1]}");
-        return true;
-      }
-    }
-    _log.info("[_shouldPropagateResyncedAlbum] false");
-    return false;
-  }
-
-  static List<AlbumItem> _getAlbumItemsOf(Album a) =>
-      AlbumStaticProvider.of(a).items;
-
   Album _album;
   var _backingFiles = <File>[];
 
-  static final _log = Logger("widget.album_viewer._AlbumViewerState");
+  static final _log =
+      Logger("widget.dynamic_album_viewer._DynamicAlbumViewerState");
 }
 
 class _ImageListItem extends SelectableItemStreamListItem {
@@ -299,4 +294,8 @@ class _VideoListItem extends SelectableItemStreamListItem {
 
   final Account account;
   final String previewUrl;
+}
+
+enum _SelectionAppBarOption {
+  delete,
 }

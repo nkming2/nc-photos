@@ -25,6 +25,7 @@ import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_viewer.dart';
+import 'package:nc_photos/widget/dynamic_album_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:tuple/tuple.dart';
@@ -180,11 +181,15 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     if (item.album.provider is AlbumStaticProvider) {
       subtitle = AppLocalizations.of(context)
           .albumSize(AlbumStaticProvider.of(item.album).items.length);
+    } else if (item.album.provider is AlbumDirProvider) {
+      subtitle =
+          (item.album.provider as AlbumDirProvider).dirs.first.strippedPath;
     }
     return AlbumGridItem(
       cover: _buildAlbumCover(context, item.album),
       title: item.album.name,
       subtitle: subtitle,
+      isDynamic: item.album.provider is! AlbumStaticProvider,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
@@ -306,8 +311,13 @@ class _HomeAlbumsState extends State<HomeAlbums> {
         });
       }
     } else {
-      Navigator.of(context).pushNamed(AlbumViewer.routeName,
-          arguments: AlbumViewerArguments(widget.account, item.album));
+      if (item.album.provider is AlbumStaticProvider) {
+        Navigator.of(context).pushNamed(AlbumViewer.routeName,
+            arguments: AlbumViewerArguments(widget.account, item.album));
+      } else {
+        Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
+            arguments: DynamicAlbumViewerArguments(widget.account, item.album));
+      }
     }
   }
 

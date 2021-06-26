@@ -21,4 +21,8 @@ extension IterableExtension<T> on Iterable<T> {
   /// equality function [equalFn]
   bool containsIf(T element, bool Function(T a, T b) equalFn) =>
       any((e) => equalFn(e, element));
+
+  /// Same as [contains] but uses [identical] to compare the objects
+  bool containsIdentical(T element) =>
+      containsIf(element, (a, b) => identical(a, b));
 }
