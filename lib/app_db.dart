@@ -81,11 +81,9 @@ class AppDb {
 class AppDbFileEntry {
   static const indexName = "fileStore_path_index";
   static const keyPath = ["path", "index"];
-  static const maxDataSize = 250;
+  static const maxDataSize = 160;
 
-  AppDbFileEntry(this.path, this.index, this.data) {
-    assert(this.data.length <= maxDataSize);
-  }
+  AppDbFileEntry(this.path, this.index, this.data);
 
   Map<String, dynamic> toJson() {
     return {
@@ -120,11 +118,9 @@ class AppDbFileEntry {
 class AppDbAlbumEntry {
   static const indexName = "albumStore_path_index";
   static const keyPath = ["path", "index"];
-  static const maxDataSize = 250;
+  static const maxDataSize = 160;
 
-  AppDbAlbumEntry(this.path, this.index, this.album) {
-    assert(this.album.items.length <= maxDataSize);
-  }
+  AppDbAlbumEntry(this.path, this.index, this.album);
 
   Map<String, dynamic> toJson() {
     return {
