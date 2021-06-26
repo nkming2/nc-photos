@@ -16,7 +16,7 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Refrescar",
+	"refreshMenuLabel": "Actualizar",
 	"@refreshMenuLabel": {
 		"description": "Label of the refresh entry in menu"
 	},
@@ -341,7 +341,7 @@
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
 	},
-	"exifSupportDetails": "Habilitando el soporte EXIF tendrá disponible metadatos como fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño origina. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
+	"exifSupportDetails": "Habilitando el soporte EXIF podrás ver metadatos como fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño original. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
@@ -431,6 +431,25 @@
 	"mobileSelectRangeNotification": "Mantenga presionado otro ítem para seleccionar todo entre medias",
 	"@mobileSelectRangeNotification": {
 		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "Modificar fecha y hora",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Fecha",
+	"timeSubtitle": "Hora",
+	"dateYearInputHint": "Año",
+	"dateMonthInputHint": "Mes",
+	"dateDayInputHint": "Día",
+	"timeHourInputHint": "Hora",
+	"timeMinuteInputHint": "Minuto",
+	"dateTimeInputInvalid": "Valor inválido",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "Error al modificar fecha y hora",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
 	},
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
