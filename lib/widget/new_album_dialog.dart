@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 
@@ -67,6 +68,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         provider: AlbumStaticProvider(
           items: const [],
         ),
+        coverProvider: AlbumAutoCoverProvider(),
       );
       _log.info("[_onOkPressed] Creating album: $album");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());

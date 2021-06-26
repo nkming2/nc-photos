@@ -194,16 +194,8 @@ class _HomeAlbumsState extends State<HomeAlbums> {
   Widget _buildAlbumCover(BuildContext context, Album album) {
     Widget cover;
     try {
-      // use the latest file as cover
-      final latestFile = album.items
-          .whereType<AlbumFileItem>()
-          .map((e) => e.file)
-          .where((element) =>
-              file_util.isSupportedFormat(element) && element.hasPreview)
-          .sorted(compareFileDateTimeDescending)
-          .first;
-
-      final previewUrl = api_util.getFilePreviewUrl(widget.account, latestFile,
+      final coverFile = album.coverProvider.getCover(album);
+      final previewUrl = api_util.getFilePreviewUrl(widget.account, coverFile,
           width: 512, height: 512);
       cover = FittedBox(
         clipBehavior: Clip.hardEdge,

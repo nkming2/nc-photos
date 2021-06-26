@@ -1,4 +1,5 @@
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -17,6 +18,10 @@ void main() {
               "items": [],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
         };
         expect(
             Album.fromJson(json),
@@ -26,6 +31,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
+              coverProvider: AlbumAutoCoverProvider(),
             ));
       });
 
@@ -40,6 +46,10 @@ void main() {
               "items": [],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
         };
         expect(
             Album.fromJson(json),
@@ -49,6 +59,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
+              coverProvider: AlbumAutoCoverProvider(),
             ));
       });
 
@@ -79,6 +90,10 @@ void main() {
                 },
               ],
             },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
           },
         };
         expect(
@@ -96,6 +111,43 @@ void main() {
                   ),
                 ],
               ),
+              coverProvider: AlbumAutoCoverProvider(),
+            ));
+      });
+
+      test("AlbumAutoCoverProvider", () {
+        final json = <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{
+              "coverFile": <String, dynamic>{
+                "path": "remote.php/dav/files/admin/test1.jpg",
+              },
+            },
+          },
+        };
+        expect(
+            Album.fromJson(json),
+            Album(
+              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              name: "",
+              provider: AlbumStaticProvider(
+                items: [],
+              ),
+              coverProvider: AlbumAutoCoverProvider(
+                coverFile: File(
+                  path: "remote.php/dav/files/admin/test1.jpg",
+                ),
+              ),
             ));
       });
 
@@ -109,6 +161,10 @@ void main() {
               "items": [],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
           "albumFile": <String, dynamic>{
             "path": "remote.php/dav/files/admin/test1.jpg",
           },
@@ -121,6 +177,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
+              coverProvider: AlbumAutoCoverProvider(),
               albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ));
       });
@@ -134,6 +191,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
           "version": Album.version,
@@ -145,6 +203,10 @@ void main() {
               "items": [],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
         });
       });
 
@@ -155,6 +217,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
           "version": Album.version,
@@ -165,6 +228,10 @@ void main() {
             "content": <String, dynamic>{
               "items": [],
             },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
           },
         });
       });
@@ -183,6 +250,7 @@ void main() {
               ),
             ],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
           "version": Album.version,
@@ -209,6 +277,41 @@ void main() {
                   },
                 },
               ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+        });
+      });
+
+      test("AlbumAutoCoverProvider", () {
+        final album = Album(
+          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+          name: "",
+          provider: AlbumStaticProvider(
+            items: [],
+          ),
+          coverProvider: AlbumAutoCoverProvider(
+              coverFile: File(path: "remote.php/dav/files/admin/test1.jpg")),
+        );
+        expect(album.toRemoteJson(), <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{
+              "coverFile": <String, dynamic>{
+                "path": "remote.php/dav/files/admin/test1.jpg",
+              },
             },
           },
         });
@@ -223,6 +326,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
           "version": Album.version,
@@ -234,6 +338,10 @@ void main() {
               "items": [],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
         });
       });
 
@@ -244,6 +352,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
           "version": Album.version,
@@ -254,6 +363,10 @@ void main() {
             "content": <String, dynamic>{
               "items": [],
             },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
           },
         });
       });
@@ -272,6 +385,7 @@ void main() {
               ),
             ],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
           "version": Album.version,
@@ -300,6 +414,44 @@ void main() {
               ],
             },
           },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+        });
+      });
+
+      test("AlbumAutoCoverProvider", () {
+        final album = Album(
+          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+          name: "",
+          provider: AlbumStaticProvider(
+            items: [],
+          ),
+          coverProvider: AlbumAutoCoverProvider(
+            coverFile: File(
+              path: "remote.php/dav/files/admin/test1.jpg",
+            ),
+          ),
+        );
+        expect(album.toAppDbJson(), <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{
+              "coverFile": <String, dynamic>{
+                "path": "remote.php/dav/files/admin/test1.jpg",
+              },
+            },
+          },
         });
       });
 
@@ -310,6 +462,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
+          coverProvider: AlbumAutoCoverProvider(),
           albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
@@ -321,6 +474,10 @@ void main() {
             "content": <String, dynamic>{
               "items": [],
             },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
           },
           "albumFile": <String, dynamic>{
             "path": "remote.php/dav/files/admin/test1.jpg",
@@ -392,6 +549,10 @@ void main() {
               },
             ],
           },
+        },
+        "coverProvider": <String, dynamic>{
+          "type": "auto",
+          "content": <String, dynamic>{},
         },
         "albumFile": <String, dynamic>{
           "path": "remote.php/dav/files/admin/test1.json",

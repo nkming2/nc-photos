@@ -7,6 +7,7 @@ import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -127,6 +128,7 @@ class Album with EquatableMixin {
     DateTime lastUpdated,
     @required String name,
     @required this.provider,
+    @required this.coverProvider,
     this.albumFile,
   })  : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
         this.name = name ?? "";
@@ -158,6 +160,8 @@ class Album with EquatableMixin {
       name: json["name"],
       provider:
           AlbumProvider.fromJson(json["provider"].cast<String, dynamic>()),
+      coverProvider: AlbumCoverProvider.fromJson(
+          json["coverProvider"].cast<String, dynamic>()),
       albumFile: json["albumFile"] == null
           ? null
           : File.fromJson(json["albumFile"].cast<String, dynamic>()),
@@ -170,6 +174,7 @@ class Album with EquatableMixin {
         "lastUpdated: $lastUpdated, "
         "name: $name, "
         "provider: ${provider.toString(isDeep: isDeep)}, "
+        "coverProvider: $coverProvider, "
         "albumFile: $albumFile, "
         "}";
   }
@@ -183,12 +188,14 @@ class Album with EquatableMixin {
     DateTime lastUpdated,
     String name,
     AlbumProvider provider,
+    AlbumCoverProvider coverProvider,
     File albumFile,
   }) {
     return Album(
       lastUpdated: lastUpdated,
       name: name ?? this.name,
       provider: provider ?? this.provider,
+      coverProvider: coverProvider ?? this.coverProvider,
       albumFile: albumFile ?? this.albumFile,
     );
   }
@@ -199,6 +206,7 @@ class Album with EquatableMixin {
       "lastUpdated": lastUpdated.toIso8601String(),
       "name": name,
       "provider": provider.toJson(),
+      "coverProvider": coverProvider.toJson(),
       // ignore albumFile
     };
   }
@@ -209,6 +217,7 @@ class Album with EquatableMixin {
       "lastUpdated": lastUpdated.toIso8601String(),
       "name": name,
       "provider": provider.toJson(),
+      "coverProvider": coverProvider.toJson(),
       if (albumFile != null) "albumFile": albumFile.toJson(),
     };
   }
@@ -218,6 +227,7 @@ class Album with EquatableMixin {
         lastUpdated,
         name,
         provider,
+        coverProvider,
         albumFile,
       ];
 
@@ -225,6 +235,7 @@ class Album with EquatableMixin {
   final String name;
 
   final AlbumProvider provider;
+  final AlbumCoverProvider coverProvider;
 
   /// How is this album stored on server
   ///

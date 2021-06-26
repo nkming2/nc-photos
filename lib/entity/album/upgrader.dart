@@ -41,6 +41,12 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
       }
     };
     result.remove("items");
+
+    // add the auto cover provider
+    result["coverProvider"] = <String, dynamic>{
+      "type": "auto",
+      "content": {},
+    };
     return result;
   }
 
