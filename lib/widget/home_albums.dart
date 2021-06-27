@@ -15,7 +15,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -391,21 +390,9 @@ class _HomeAlbumsState extends State<HomeAlbums> {
 
   /// Transform an Album list to grid items
   void _transformItems(List<Album> albums) {
-    final sortedAlbums = albums.map((e) {
-      // find the latest file in this album
-      try {
-        final lastItem = AlbumStaticProvider.of(e)
-            .items
-            .whereType<AlbumFileItem>()
-            .map((e) => e.file)
-            .where((element) => file_util.isSupportedFormat(element))
-            .sorted(compareFileDateTimeDescending)
-            .first;
-        return Tuple2(lastItem.bestDateTime, e);
-      } catch (_) {
-        return Tuple2(e.lastUpdated, e);
-      }
-    }).sorted((a, b) {
+    final sortedAlbums = albums
+        .map((e) => Tuple2(e.provider.latestItemTime ?? e.lastUpdated, e))
+        .sorted((a, b) {
       // then sort in descending order
       final tmp = b.item1.compareTo(a.item1);
       if (tmp != 0) {

@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -74,29 +75,56 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   void _initAlbum() {
+    assert(widget.album.provider is AlbumDynamicProvider);
     PopulateAlbum()(widget.account, widget.album).then((items) {
       if (mounted) {
         setState(() {
           _album = widget.album;
           _transformItems(items);
           final coverFile = initCover(widget.account, _backingFiles);
-          if (coverFile != null &&
-              _album.coverProvider is AlbumAutoCoverProvider) {
-            // cache the result for later use
-            if (coverFile.path !=
-                (_album.coverProvider as AlbumAutoCoverProvider)
-                    .coverFile
-                    ?.path) {
-              _log.info("[_initAlbum] Updating album cover");
-              _album = _album.copyWith(
-                  coverProvider: AlbumAutoCoverProvider(coverFile: coverFile));
-              UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
-                  widget.account, _album);
-            }
-          }
+          _updateAlbumPostPopulate(coverFile, items);
         });
       }
     });
+  }
+
+  void _updateAlbumPostPopulate(File coverFile, List<AlbumItem> items) {
+    bool shouldUpdate = false;
+    if (coverFile != null && _album.coverProvider is AlbumAutoCoverProvider) {
+      // cache the result for later use
+      if (coverFile.path !=
+          (_album.coverProvider as AlbumAutoCoverProvider).coverFile?.path) {
+        _log.info("[_updateAlbumPostPopulate] Update album cover");
+        _album = _album.copyWith(
+            coverProvider: AlbumAutoCoverProvider(coverFile: coverFile));
+        shouldUpdate = true;
+      }
+    }
+    DateTime latestItemTime;
+    try {
+      latestItemTime = items
+          .whereType<AlbumFileItem>()
+          .map((e) => e.file)
+          .where((element) => file_util.isSupportedFormat(element))
+          .sorted(compareFileDateTimeDescending)
+          .first
+          .bestDateTime;
+    } catch (_) {
+      latestItemTime = null;
+    }
+    if (latestItemTime != _album.provider.latestItemTime) {
+      _log.info(
+          "[_updateAlbumPostPopulate] Update album time: $latestItemTime");
+      _album = _album.copyWith(
+        provider: (_album.provider as AlbumDynamicProvider).copyWith(
+          latestItemTime: latestItemTime,
+        ),
+      );
+      shouldUpdate = true;
+    }
+    if (shouldUpdate) {
+      UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, _album);
+    }
   }
 
   Widget _buildContent(BuildContext context) {
