@@ -60,9 +60,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   @override
   build(BuildContext context) {
-    final dateStr =
-        DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY).format(_dateTime);
-    final timeStr = DateFormat(DateFormat.HOUR_MINUTE).format(_dateTime);
+    final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY,
+            Localizations.localeOf(context).languageCode)
+        .format(_dateTime);
+    final timeStr = DateFormat(DateFormat.HOUR_MINUTE,
+            Localizations.localeOf(context).languageCode)
+        .format(_dateTime);
 
     String sizeSubStr = "";
     const space = "    ";

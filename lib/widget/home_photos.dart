@@ -51,8 +51,8 @@ class _HomePhotosState extends State<HomePhotos>
   @override
   initState() {
     super.initState();
-    _initBloc();
     _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevel(0);
+    _initBloc();
   }
 
   @override
@@ -449,25 +449,18 @@ class _HomePhotosState extends State<HomePhotos>
             file_util.isSupportedFormat(element) && element.isArchived != true)
         .sorted(compareFileDateTimeDescending);
 
-    String currentDateStr;
+    DateTime currentDate;
+    final isMonthOnly = _thumbZoomLevel < 0;
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
 
-        String newDateStr;
-        final date = f.bestDateTime;
-        if (date == null) {
-          newDateStr = "";
-        } else if (_thumbZoomLevel >= 0) {
-          // daily
-          newDateStr = date.toDailySubtitleString();
-        } else {
-          // monthly
-          newDateStr = date.toMonthlySubtitleString();
-        }
-        if (newDateStr != currentDateStr) {
-          yield _SubtitleListItem(subtitle: newDateStr);
-          currentDateStr = newDateStr;
+        final newDate = f.bestDateTime?.toLocal();
+        if (newDate?.year != currentDate?.year ||
+            newDate?.month != currentDate?.month ||
+            (!isMonthOnly && newDate?.day != currentDate?.day)) {
+          yield _DateListItem(date: newDate, isMonthOnly: isMonthOnly);
+          currentDate = newDate;
         }
 
         final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
@@ -587,13 +580,22 @@ class _HomePhotosState extends State<HomePhotos>
   static const _menuValueRefresh = 0;
 }
 
-class _SubtitleListItem extends SelectableItemStreamListItem {
-  _SubtitleListItem({
-    @required this.subtitle,
+class _DateListItem extends SelectableItemStreamListItem {
+  _DateListItem({
+    @required this.date,
+    this.isMonthOnly = false,
   }) : super(staggeredTile: const StaggeredTile.extent(99, 32));
 
   @override
   buildWidget(BuildContext context) {
+    String subtitle = "";
+    if (date != null) {
+      final pattern =
+          isMonthOnly ? DateFormat.YEAR_MONTH : DateFormat.YEAR_MONTH_DAY;
+      subtitle =
+          DateFormat(pattern, Localizations.localeOf(context).languageCode)
+              .format(date.toLocal());
+    }
     return Align(
       alignment: AlignmentDirectional.centerStart,
       child: Text(
@@ -606,7 +608,8 @@ class _SubtitleListItem extends SelectableItemStreamListItem {
     );
   }
 
-  final String subtitle;
+  final DateTime date;
+  final bool isMonthOnly;
 }
 
 abstract class _FileListItem extends SelectableItemStreamListItem {
@@ -669,16 +672,4 @@ class _VideoListItem extends _FileListItem {
 
 enum _SelectionAppBarMenuOption {
   archive,
-}
-
-extension on DateTime {
-  String toDailySubtitleString() {
-    final format = DateFormat(DateFormat.YEAR_MONTH_DAY);
-    return format.format(this.toLocal());
-  }
-
-  String toMonthlySubtitleString() {
-    final format = DateFormat(DateFormat.YEAR_MONTH);
-    return format.format(this.toLocal());
-  }
 }
