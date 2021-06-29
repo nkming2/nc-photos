@@ -280,7 +280,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
   final _items = <SelectableItemStreamListItem>[];
   final _selectedItems = <SelectableItemStreamListItem>{};
 
-  // this unique token is there to keep the globalkey unique
+  // this unique token is there to keep the global key unique
   final _uniqueToken = Uuid().v4();
   GlobalObjectKey _gridKey;
 
