@@ -7,6 +7,7 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_viewer.dart';
 import 'package:nc_photos/widget/connect.dart';
@@ -92,6 +93,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleSettingsRoute(settings);
     route ??= _handleArchiveViewerRoute(settings);
     route ??= _handleDynamicAlbumViewerRoute(settings);
+    route ??= _handleAlbumDirPickerRoute(settings);
     return route;
   }
 
@@ -226,6 +228,22 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleDynamicAlbumViewerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic> _handleAlbumDirPickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AlbumDirPicker.routeName &&
+          settings.arguments != null) {
+        final AlbumDirPickerArguments args = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) => AlbumDirPicker.fromArgs(args),
+        );
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleAlbumDirPickerRoute] Failed while handling route", e);
     }
     return null;
   }

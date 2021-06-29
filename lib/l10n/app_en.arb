@@ -459,6 +459,34 @@
 	"@updateDateTimeFailureNotification": {
 		"description": "Failed to set the date & time of a file"
 	},
+	"albumDirPickerHeaderText": "Pick the folders to be associated",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "Only photos in the associated folders will be included in this album",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "Please pick at least one folder",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"createAlbumDialogBasicLabel": "Basic",
+	"@createAlbumDialogBasicLabel": {
+		"description": "Basic album"
+	},
+	"createAlbumDialogBasicDescription": "Basic album organizes photos regardless of the file hierarchy on the server",
+	"@createAlbumDialogBasicDescription": {
+		"description": "Describe what a basic album is"
+	},
+	"createAlbumDialogFolderBasedLabel": "Folder based",
+	"@createAlbumDialogFolderBasedLabel": {
+		"description": "Folder based album"
+	},
+	"createAlbumDialogFolderBasedDescription": "Folder based album reflects contents of a folder",
+	"@createAlbumDialogFolderBasedDescription": {
+		"description": "Describe what a folder based album is"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

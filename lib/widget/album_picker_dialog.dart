@@ -128,6 +128,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
       context: context,
       builder: (_) => NewAlbumDialog(
         account: widget.account,
+        isAllowDynamic: false,
       ),
     ).then((value) {
       Navigator.of(context).pop(value);

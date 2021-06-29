@@ -337,7 +337,17 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       builder: (_) => NewAlbumDialog(
         account: widget.account,
       ),
-    ).catchError((e, stacktrace) {
+    ).then((album) {
+      if (album == null || album is! Album) {
+        return;
+      }
+      if (album.provider is AlbumDynamicProvider) {
+        // open the album automatically to refresh its content, otherwise it'll
+        // be empty
+        Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
+            arguments: DynamicAlbumViewerArguments(widget.account, album));
+      }
+    }).catchError((e, stacktrace) {
       _log.severe(
           "[_onNewAlbumItemTap] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
