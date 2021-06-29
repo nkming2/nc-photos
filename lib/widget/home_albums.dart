@@ -188,7 +188,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       cover: _buildAlbumCover(context, item.album),
       title: item.album.name,
       subtitle: subtitle,
-      isDynamic: item.album.provider is! AlbumStaticProvider,
+      icon: item.album.provider is AlbumDirProvider ? Icons.folder : null,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
