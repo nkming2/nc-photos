@@ -8,6 +8,7 @@ class AlbumGridItem extends StatelessWidget {
     @required this.cover,
     @required this.title,
     this.subtitle,
+    this.subtitle2,
     this.icon,
     this.isSelected = false,
     this.onTap,
@@ -38,16 +39,32 @@ class AlbumGridItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              Text(
-                subtitle ?? "",
-                style: Theme.of(context).textTheme.bodyText2.copyWith(
-                      fontSize: 10,
-                      color: AppTheme.getSecondaryTextColor(context),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      subtitle ?? "",
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                            fontSize: 10,
+                            color: AppTheme.getSecondaryTextColor(context),
+                          ),
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                textAlign: TextAlign.start,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+                  ),
+                  if (subtitle2?.isNotEmpty == true)
+                    Text(
+                      subtitle2,
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                            fontSize: 10,
+                            color: AppTheme.getSecondaryTextColor(context),
+                          ),
+                      textAlign: TextAlign.end,
+                      maxLines: 1,
+                    ),
+                ],
+              )
             ],
           ),
         ),
@@ -100,6 +117,9 @@ class AlbumGridItem extends StatelessWidget {
   final Widget cover;
   final String title;
   final String subtitle;
+
+  /// Appears after [subtitle], aligned to the end side of parent
+  final String subtitle2;
   final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;

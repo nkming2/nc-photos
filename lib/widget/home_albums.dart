@@ -177,17 +177,22 @@ class _HomeAlbumsState extends State<HomeAlbums> {
   Widget _buildAlbumItem(BuildContext context, int index) {
     final item = _items[index];
     var subtitle = "";
+    String subtitle2;
     if (item.album.provider is AlbumStaticProvider) {
       subtitle = AppLocalizations.of(context)
           .albumSize(AlbumStaticProvider.of(item.album).items.length);
     } else if (item.album.provider is AlbumDirProvider) {
-      subtitle =
-          (item.album.provider as AlbumDirProvider).dirs.first.strippedPath;
+      final provider = item.album.provider as AlbumDirProvider;
+      subtitle = provider.dirs.first.strippedPath;
+      if (provider.dirs.length > 1) {
+        subtitle2 = "+${provider.dirs.length - 1}";
+      }
     }
     return AlbumGridItem(
       cover: _buildAlbumCover(context, item.album),
       title: item.album.name,
       subtitle: subtitle,
+      subtitle2: subtitle2,
       icon: item.album.provider is AlbumDirProvider ? Icons.folder : null,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item),
