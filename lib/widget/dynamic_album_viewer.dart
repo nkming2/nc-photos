@@ -11,6 +11,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
@@ -80,6 +81,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       if (mounted) {
         setState(() {
           _album = widget.album;
+          _items = items;
           _transformItems(items);
           final coverFile = initCover(widget.account, _backingFiles);
           _updateAlbumPostPopulate(coverFile, items);
@@ -157,32 +159,121 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    if (isSelectionMode) {
-      return buildSelectionAppBar(context, [
+  Widget _buildAppBar(BuildContext context) => isSelectionMode
+      ? _buildSelectionAppBar(context)
+      : _buildNormalAppBar(context);
+
+  Widget _buildNormalAppBar(BuildContext context) {
+    return buildNormalAppBar(
+      context,
+      widget.account,
+      _album,
+      actions: [
         PopupMenuButton(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
             PopupMenuItem(
-              value: _SelectionAppBarOption.delete,
-              child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
+              value: _AppBarOption.convertBasic,
+              child:
+                  Text(AppLocalizations.of(context).convertBasicAlbumMenuLabel),
             ),
           ],
           onSelected: (option) {
-            if (option == _SelectionAppBarOption.delete) {
-              _onSelectionAppBarDeletePressed();
+            switch (option) {
+              case _AppBarOption.convertBasic:
+                _onAppBarConvertBasicPressed(context);
+                break;
+
+              default:
+                _log.shout("[_buildNormalAppBar] Unknown value: $option");
+                break;
             }
           },
         ),
-      ]);
-    } else {
-      return buildNormalAppBar(context, widget.account, _album);
-    }
+      ],
+    );
+  }
+
+  Widget _buildSelectionAppBar(BuildContext context) {
+    return buildSelectionAppBar(context, [
+      PopupMenuButton(
+        tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: _SelectionAppBarOption.delete,
+            child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
+          ),
+        ],
+        onSelected: (option) {
+          if (option == _SelectionAppBarOption.delete) {
+            _onSelectionAppBarDeletePressed();
+          }
+        },
+      ),
+    ]);
   }
 
   void _onItemTap(int index) {
     Navigator.pushNamed(context, Viewer.routeName,
         arguments: ViewerArguments(widget.account, _backingFiles, index));
+  }
+
+  void _onAppBarConvertBasicPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)
+            .convertBasicAlbumConfirmationDialogTitle),
+        content: Text(AppLocalizations.of(context)
+            .convertBasicAlbumConfirmationDialogContent),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          ),
+        ],
+      ),
+    ).then((value) {
+      if (value != true) {
+        return;
+      }
+      _log.info(
+          "[_onAppBarConvertBasicPressed] Converting album '${_album.name}' to static");
+      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      UpdateAlbum(albumRepo)(
+        widget.account,
+        _album.copyWith(
+          provider: AlbumStaticProvider(items: _items),
+          coverProvider: AlbumAutoCoverProvider(),
+        ),
+      ).then((value) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .convertBasicAlbumSuccessNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      }).catchError((e, stacktrace) {
+        _log.shout(
+            "[_onAppBarConvertBasicPressed] Failed while converting to basic album",
+            e,
+            stacktrace);
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(e, context)),
+          duration: k.snackBarDurationNormal,
+        ));
+      });
+    });
   }
 
   void _onSelectionAppBarDeletePressed() async {
@@ -277,6 +368,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   Album _album;
+  List<AlbumItem> _items;
   var _backingFiles = <File>[];
 
   static final _log =
@@ -322,6 +414,10 @@ class _VideoListItem extends SelectableItemStreamListItem {
 
   final Account account;
   final String previewUrl;
+}
+
+enum _AppBarOption {
+  convertBasic,
 }
 
 enum _SelectionAppBarOption {

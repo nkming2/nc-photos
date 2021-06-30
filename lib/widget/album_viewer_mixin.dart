@@ -34,7 +34,12 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   }
 
   @protected
-  Widget buildNormalAppBar(BuildContext context, Account account, Album album) {
+  Widget buildNormalAppBar(
+    BuildContext context,
+    Account account,
+    Album album, {
+    List<Widget> actions,
+  }) {
     Widget cover;
     try {
       if (_coverPreviewUrl != null) {
@@ -91,6 +96,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
             ),
           ],
         ),
+        ...(actions ?? []),
       ],
     );
   }

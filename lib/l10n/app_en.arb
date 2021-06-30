@@ -487,6 +487,22 @@
 	"@createAlbumDialogFolderBasedDescription": {
 		"description": "Describe what a folder based album is"
 	},
+	"convertBasicAlbumMenuLabel": "Convert to basic album",
+	"@convertBasicAlbumMenuLabel": {
+		"description": "Convert a non-basic album to a basic one"
+	},
+	"convertBasicAlbumConfirmationDialogTitle": "Convert to basic album",
+	"@convertBasicAlbumConfirmationDialogTitle": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumConfirmationDialogContent": "The contents of this album will no longer be managed by the app. You will be able to freely add or remove photos.\n\nThis conversion is nonreversible",
+	"@convertBasicAlbumConfirmationDialogContent": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumSuccessNotification": "Album converted successfully",
+	"@convertBasicAlbumSuccessNotification": {
+		"description": "Successfully converted the album"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
