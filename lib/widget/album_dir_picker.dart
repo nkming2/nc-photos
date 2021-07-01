@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -60,6 +61,13 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
 
   @override
   getAccount() => widget.account;
+
+  @override
+  canPickDir(File dir) {
+    final root = api_util.getWebdavRootUrlRelative(widget.account);
+    return widget.account.roots
+        .any((r) => dir.path == "$root/$r" || dir.path.startsWith("$root/$r/"));
+  }
 
   Widget _buildContent(BuildContext context) {
     return SafeArea(

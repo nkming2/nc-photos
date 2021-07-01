@@ -44,6 +44,9 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   @protected
   List<File> getPickedDirs() => UnmodifiableListView(_picks);
 
+  @protected
+  bool canPickDir(File file) => true;
+
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
     _bloc = LsDirBloc();
@@ -117,42 +120,50 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   }
 
   Widget _buildItem(BuildContext context, LsDirBlocItem item) {
+    final canPick = canPickDir(item.file);
     final pickState = _isItemPicked(item);
 
     IconData iconData;
-    switch (pickState) {
-      case _PickState.picked:
-        iconData = Icons.check_box;
-        break;
-      case _PickState.childPicked:
-        iconData = Icons.indeterminate_check_box;
-        break;
-      case _PickState.notPicked:
-      default:
-        iconData = Icons.check_box_outline_blank;
-        break;
+    if (canPick) {
+      switch (pickState) {
+        case _PickState.picked:
+          iconData = Icons.check_box;
+          break;
+        case _PickState.childPicked:
+          iconData = Icons.indeterminate_check_box;
+          break;
+        case _PickState.notPicked:
+        default:
+          iconData = Icons.check_box_outline_blank;
+          break;
+      }
     }
 
     return ListTile(
       dense: true,
-      leading: IconButton(
-        icon: AnimatedSwitcher(
-          duration: k.animationDurationShort,
-          transitionBuilder: (child, animation) =>
-              ScaleTransition(child: child, scale: animation),
-          child: Icon(
-            iconData,
-            key: ValueKey(pickState),
-          ),
-        ),
-        onPressed: () {
-          if (pickState == _PickState.picked) {
-            _unpick(item);
-          } else {
-            _pick(item);
-          }
-        },
-      ),
+      leading: canPick
+          ? IconButton(
+              icon: AnimatedSwitcher(
+                duration: k.animationDurationShort,
+                transitionBuilder: (child, animation) =>
+                    ScaleTransition(child: child, scale: animation),
+                child: Icon(
+                  iconData,
+                  key: ValueKey(pickState),
+                ),
+              ),
+              onPressed: () {
+                if (pickState == _PickState.picked) {
+                  _unpick(item);
+                } else {
+                  _pick(item);
+                }
+              },
+            )
+          : IconButton(
+              icon: Icon(null),
+              onPressed: null,
+            ),
       title: Text(path.basename(item.file.path)),
       trailing:
           item.children.isNotEmpty ? const Icon(Icons.arrow_forward_ios) : null,
