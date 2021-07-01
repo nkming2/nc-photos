@@ -20,6 +20,8 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/populate_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
+import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
 import 'package:nc_photos/widget/album_viewer_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -92,38 +94,23 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
   void _updateAlbumPostPopulate(File coverFile, List<AlbumItem> items) {
     bool shouldUpdate = false;
-    if (coverFile != null && _album.coverProvider is AlbumAutoCoverProvider) {
-      // cache the result for later use
-      if (coverFile.path !=
-          (_album.coverProvider as AlbumAutoCoverProvider).coverFile?.path) {
-        _log.info("[_updateAlbumPostPopulate] Update album cover");
-        _album = _album.copyWith(
-            coverProvider: AlbumAutoCoverProvider(coverFile: coverFile));
-        shouldUpdate = true;
-      }
-    }
-    DateTime latestItemTime;
-    try {
-      latestItemTime = items
-          .whereType<AlbumFileItem>()
-          .map((e) => e.file)
-          .where((element) => file_util.isSupportedFormat(element))
-          .sorted(compareFileDateTimeDescending)
-          .first
-          .bestDateTime;
-    } catch (_) {
-      latestItemTime = null;
-    }
-    if (latestItemTime != _album.provider.latestItemTime) {
-      _log.info(
-          "[_updateAlbumPostPopulate] Update album time: $latestItemTime");
-      _album = _album.copyWith(
-        provider: (_album.provider as AlbumDynamicProvider).copyWith(
-          latestItemTime: latestItemTime,
-        ),
-      );
+    final albumUpdatedCover =
+        UpdateDynamicAlbumCover().updateWithSortedFiles(_album, _backingFiles);
+    if (!identical(albumUpdatedCover, _album)) {
+      _log.info("[_updateAlbumPostPopulate] Update album cover");
       shouldUpdate = true;
     }
+    _album = albumUpdatedCover;
+
+    final albumUpdatedTime =
+        UpdateDynamicAlbumTime().updateWithSortedFiles(_album, _backingFiles);
+    if (!identical(albumUpdatedTime, _album)) {
+      _log.info(
+          "[_updateAlbumPostPopulate] Update album time: ${albumUpdatedTime.provider.latestItemTime}");
+      shouldUpdate = true;
+    }
+    _album = albumUpdatedTime;
+
     if (shouldUpdate) {
       UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, _album);
     }
