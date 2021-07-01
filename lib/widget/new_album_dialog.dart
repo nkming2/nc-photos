@@ -166,7 +166,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
 
   var _isVisible = true;
 
-  static final _log = Logger("widget.new_album_dialog._AlbumPickerDialogState");
+  static final _log = Logger("widget.new_album_dialog._NewAlbumDialogState");
 }
 
 class _FormValue {
