@@ -50,7 +50,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
 
   @override
   getPickerRoot() {
-    var root = api_util.getWebdavRootUrlRelative(widget.account);
+    final root = api_util.getWebdavRootUrlRelative(widget.account);
     if (widget.account.roots.length == 1) {
       return "$root/${widget.account.roots.first}";
     } else {
