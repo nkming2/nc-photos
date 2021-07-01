@@ -503,6 +503,23 @@
 	"@convertBasicAlbumSuccessNotification": {
 		"description": "Successfully converted the album"
 	},
+	"importFoldersTooltip": "Import folders",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "Import folders as albums",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "Suggested folders are listed below. Depending on the number of files on your server, it might take a while to finish",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "IMPORT",
+	"albumImporterProgressText": "Importing folders",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

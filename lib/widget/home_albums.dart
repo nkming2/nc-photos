@@ -22,6 +22,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
+import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_viewer.dart';
 import 'package:nc_photos/widget/dynamic_album_viewer.dart';
@@ -161,6 +162,19 @@ class _HomeAlbumsState extends State<HomeAlbums> {
   Widget _buildNormalAppBar(BuildContext context) {
     return HomeSliverAppBar(
       account: widget.account,
+      menuActions: [
+        PopupMenuItem(
+          value: _menuValueImport,
+          child: Text(AppLocalizations.of(context).importFoldersTooltip),
+        ),
+      ],
+      onSelectedMenuActions: (option) {
+        switch (option) {
+          case _menuValueImport:
+            _onAppBarImportPressed(context);
+            break;
+        }
+      },
     );
   }
 
@@ -363,6 +377,11 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     });
   }
 
+  void _onAppBarImportPressed(BuildContext context) {
+    Navigator.of(context).pushNamed(AlbumImporter.routeName,
+        arguments: AlbumImporterArguments(widget.account));
+  }
+
   Future<void> _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(AppLocalizations.of(context)
@@ -452,6 +471,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
   final _selectedItems = <_GridItem>[];
 
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
+  static const _menuValueImport = 0;
 }
 
 class _GridItem {
