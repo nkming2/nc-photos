@@ -241,7 +241,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       cover = Icon(
         Icons.panorama,
         color: Colors.white.withOpacity(.8),
-        size: 96,
+        size: 88,
       );
     }
 
@@ -265,7 +265,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
           child: Icon(
             Icons.archive,
             color: Colors.white.withOpacity(.8),
-            size: 96,
+            size: 88,
           ),
         ),
       ),
@@ -287,7 +287,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
           child: Icon(
             Icons.add,
             color: Colors.white.withOpacity(.8),
-            size: 96,
+            size: 88,
           ),
         ),
       ),
