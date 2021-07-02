@@ -245,6 +245,10 @@
 	"@signInHeaderText": {
 		"description": "Inform user what to do in sign in widget"
 	},
+	"signIn2faHintText": "*Usa una contraseña de aplicación si tienes activada en el servidor la autentificación en dos pasos.",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
 	"serverAddressInputHint": "Dirección del servidor",
 	"@serverAddressInputHint": {
 		"description": "Hint of the text field expecting server address data"
@@ -289,7 +293,7 @@
 	"@rootPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"setupWidgetTitle": "Comenzando",
+	"setupWidgetTitle": "Empecemos",
 	"@setupWidgetTitle": {
 		"description": "Title of the introductory widget"
 	},
@@ -304,6 +308,10 @@
 	"settingsWidgetTitle": "Ajustes",
 	"@settingsWidgetTitle": {
 		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "Idioma",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
 	},
 	"settingsExifSupportTitle": "soporte EXIF",
 	"@settingsExifSupportTitle": {
@@ -450,6 +458,50 @@
 	"updateDateTimeFailureNotification": "Error al modificar fecha y hora",
 	"@updateDateTimeFailureNotification": {
 		"description": "Failed to set the date & time of a file"
+	},
+		"albumDirPickerHeaderText": "Selecciona las carpetas para asociarlas",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "Sólo el contenido de las carpetas asociadas se incluirán en éste álbum",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "Por favor selecciona al menos una carpeta",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"createAlbumDialogBasicLabel": "Básico",
+	"@createAlbumDialogBasicLabel": {
+		"description": "Basic album"
+	},
+	"createAlbumDialogBasicDescription": "El álbum básico organiza el contenido sin tener en cuenta la jerarquía de archivos en el servidor",
+	"@createAlbumDialogBasicDescription": {
+		"description": "Describe what a basic album is"
+	},
+	"createAlbumDialogFolderBasedLabel": "Basado en carpetas",
+	"@createAlbumDialogFolderBasedLabel": {
+		"description": "Folder based album"
+	},
+	"createAlbumDialogFolderBasedDescription": "Los álbumes basados en carpetas reflejan el contenido de las carpetas tal cual",
+	"@createAlbumDialogFolderBasedDescription": {
+		"description": "Describe what a folder based album is"
+	},
+	"convertBasicAlbumMenuLabel": "Convertir en álbum básico",
+	"@convertBasicAlbumMenuLabel": {
+		"description": "Convert a non-basic album to a basic one"
+	},
+	"convertBasicAlbumConfirmationDialogTitle": "Convertir en álbum básico",
+	"@convertBasicAlbumConfirmationDialogTitle": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumConfirmationDialogContent": "El contenido de éste álbum ya no será gestionado por la aplicación. Podrás añadir o eliminar fotos libremente.\n\nÉsta conversión es irreversible",
+	"@convertBasicAlbumConfirmationDialogContent": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumSuccessNotification": "Álbum convertido con éxito",
+	"@convertBasicAlbumSuccessNotification": {
+		"description": "Successfully converted the album"
 	},
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
