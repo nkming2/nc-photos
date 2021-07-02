@@ -65,7 +65,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
     @required Widget child,
   }) {
     if (platform_k.isWeb) {
-      // support switching pages with keyboard on web
+      // support shift+click group selection on web
       return RawKeyboardListener(
         onKey: (ev) {
           _isRangeSelectionMode = ev.isShiftPressed;
