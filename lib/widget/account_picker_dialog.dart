@@ -38,11 +38,13 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                 title: Text(a.url),
                 subtitle: Text(a.username),
                 trailing: IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      color: AppTheme.getSecondaryTextColor(context),
-                    ),
-                    onPressed: () => _onRemoveItemPressed(a)),
+                  icon: Icon(
+                    Icons.close,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                  tooltip: AppLocalizations.of(context).deleteTooltip,
+                  onPressed: () => _onRemoveItemPressed(a),
+                ),
               ),
             ))
         .toList();
