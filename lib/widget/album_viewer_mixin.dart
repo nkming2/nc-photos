@@ -101,6 +101,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     );
   }
 
+  @protected
   Widget buildSelectionAppBar(BuildContext context, List<Widget> actions) {
     return Theme(
       data: Theme.of(context).copyWith(

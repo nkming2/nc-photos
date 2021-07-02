@@ -60,6 +60,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
     });
   }
 
+  @protected
   Widget buildItemStreamListOuter(
     BuildContext context, {
     @required Widget child,
@@ -78,6 +79,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
     }
   }
 
+  @protected
   Widget buildItemStreamList(BuildContext context) {
     // need to rebuild grid after cell size changed
     final cellSize = itemStreamListCellSize;
@@ -96,6 +98,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
     );
   }
 
+  @protected
   void onMaxExtentChanged(double newExtent) {}
 
   @protected
