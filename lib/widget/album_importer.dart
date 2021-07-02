@@ -20,6 +20,7 @@ import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/use_case/populate_album.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
+import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:path/path.dart' as path;
 
 class AlbumImporterArguments {
@@ -210,19 +211,8 @@ class _AlbumImporterState extends State<AlbumImporter> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => WillPopScope(
-        onWillPop: () => Future.value(false),
-        child: AlertDialog(
-          content: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(),
-              const SizedBox(width: 24),
-              Text(AppLocalizations.of(context).albumImporterProgressText),
-            ],
-          ),
-        ),
-      ),
+      builder: (context) => ProcessingDialog(
+          text: AppLocalizations.of(context).albumImporterProgressText),
     );
     try {
       await _createAllAlbums(context);
