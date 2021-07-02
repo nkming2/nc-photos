@@ -226,6 +226,7 @@ class _SignInState extends State<SignIn> {
     }).then((result) {
       if (result != null) {
         // we've got a good account
+        // only signing in with app password would trigger distinct
         final accounts = (Pref.inst().getAccounts([])..add(result)).distinct();
         Pref.inst()
           ..setAccounts(accounts)
