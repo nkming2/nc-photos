@@ -520,6 +520,12 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
+	"editAlbumMenuLabel": "Edit album",
+	"@editAlbumMenuLabel": {
+		"description": "Edit the opened album"
+	},
+	"doneButtonTooltip": "Done",
+
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

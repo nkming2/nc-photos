@@ -68,9 +68,46 @@ class _AlbumViewerState extends State<AlbumViewer>
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
+        body: Builder(
+          builder: (context) {
+            if (isEditMode) {
+              return Form(
+                key: _editFormKey,
+                child: _buildContent(context),
+              );
+            } else {
+              return _buildContent(context);
+            }
+          },
+        ),
       ),
     );
+  }
+
+  @override
+  doneEditMode() {
+    if (_editFormKey?.currentState?.validate() == true) {
+      _editFormKey.currentState.save();
+      final newAlbum = makeEdited(_album);
+      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+        _log.info("[doneEditMode] Album modified: $newAlbum");
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        setState(() {
+          _album = newAlbum;
+        });
+        UpdateAlbum(albumRepo)(widget.account, newAlbum)
+            .catchError((e, stacktrace) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(exception_util.toUserString(e, context)),
+            duration: k.snackBarDurationNormal,
+          ));
+        });
+      } else {
+        _log.fine("[doneEditMode] Album not modified");
+      }
+      return true;
+    }
+    return false;
   }
 
   void _initAlbum() {
@@ -114,7 +151,13 @@ class _AlbumViewerState extends State<AlbumViewer>
             _buildAppBar(context),
             SliverPadding(
               padding: const EdgeInsets.all(16),
-              sliver: buildItemStreamList(context),
+              sliver: SliverIgnorePointer(
+                ignoring: isEditMode,
+                sliver: SliverOpacity(
+                  opacity: isEditMode ? .25 : 1,
+                  sliver: buildItemStreamList(context),
+                ),
+              ),
             ),
           ],
         ),
@@ -123,19 +166,29 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   Widget _buildAppBar(BuildContext context) {
-    if (isSelectionMode) {
-      return buildSelectionAppBar(context, [
-        IconButton(
-          icon: const Icon(Icons.remove),
-          tooltip: AppLocalizations.of(context).removeSelectedFromAlbumTooltip,
-          onPressed: () {
-            _onSelectionAppBarRemovePressed();
-          },
-        )
-      ]);
+    if (isEditMode) {
+      return _buildEditAppBar(context);
+    } else if (isSelectionMode) {
+      return _buildSelectionAppBar(context);
     } else {
       return buildNormalAppBar(context, widget.account, _album);
     }
+  }
+
+  Widget _buildSelectionAppBar(BuildContext context) {
+    return buildSelectionAppBar(context, [
+      IconButton(
+        icon: const Icon(Icons.remove),
+        tooltip: AppLocalizations.of(context).removeSelectedFromAlbumTooltip,
+        onPressed: () {
+          _onSelectionAppBarRemovePressed();
+        },
+      )
+    ]);
+  }
+
+  Widget _buildEditAppBar(BuildContext context) {
+    return buildEditAppBar(context, widget.account, widget.album);
   }
 
   void _onItemTap(int index) {
@@ -256,6 +309,8 @@ class _AlbumViewerState extends State<AlbumViewer>
 
   Album _album;
   var _backingFiles = <File>[];
+
+  final _editFormKey = GlobalKey<FormState>();
 
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }

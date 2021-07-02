@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
@@ -39,38 +40,14 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     Account account,
     Album album, {
     List<Widget> actions,
+    List<PopupMenuEntry<int>> Function(BuildContext) menuItemBuilder,
+    void Function(int) onSelectedMenuItem,
   }) {
-    Widget cover;
-    try {
-      if (_coverPreviewUrl != null) {
-        cover = Opacity(
-          opacity:
-              Theme.of(context).brightness == Brightness.light ? 0.25 : 0.35,
-          child: FittedBox(
-            clipBehavior: Clip.hardEdge,
-            fit: BoxFit.cover,
-            child: CachedNetworkImage(
-              imageUrl: _coverPreviewUrl,
-              httpHeaders: {
-                "Authorization": Api.getAuthorizationHeaderValue(account),
-              },
-              filterQuality: FilterQuality.high,
-              errorWidget: (context, url, error) {
-                // just leave it empty
-                return Container();
-              },
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-            ),
-          ),
-        );
-      }
-    } catch (_) {}
-
     return SliverAppBar(
       floating: true,
       expandedHeight: 160,
       flexibleSpace: FlexibleSpaceBar(
-        background: cover,
+        background: _getAppBarCover(context, account),
         title: Text(
           album.name,
           style: TextStyle(
@@ -97,6 +74,31 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
           ],
         ),
         ...(actions ?? []),
+        PopupMenuButton(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: -1,
+              child: Text(AppLocalizations.of(context).editAlbumMenuLabel),
+            ),
+            ...(menuItemBuilder?.call(context) ?? []),
+          ],
+          onSelected: (option) {
+            if (option >= 0) {
+              onSelectedMenuItem?.call(option);
+            } else {
+              switch (option) {
+                case _menuValueEdit:
+                  _onAppBarEditPressed(context, album);
+                  break;
+
+                default:
+                  _log.shout("[buildNormalAppBar] Unknown value: $option");
+                  break;
+              }
+            }
+          },
+        ),
       ],
     );
   }
@@ -125,8 +127,74 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     );
   }
 
+  @protected
+  Widget buildEditAppBar(
+    BuildContext context,
+    Account account,
+    Album album, {
+    List<Widget> actions,
+  }) {
+    return SliverAppBar(
+      floating: true,
+      expandedHeight: 160,
+      flexibleSpace: FlexibleSpaceBar(
+        background: _getAppBarCover(context, account),
+        title: TextFormField(
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context).nameInputHint,
+          ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return AppLocalizations.of(context).albumNameInputInvalidEmpty;
+            }
+            return null;
+          },
+          onSaved: (value) {
+            _editFormValue.name = value;
+          },
+          onChanged: (value) {
+            // need to save the value otherwise it'll return to the initial
+            // after scrolling out of the view
+            _editNameValue = value;
+          },
+          style: TextStyle(
+            color: AppTheme.getPrimaryTextColor(context),
+          ),
+          initialValue: _editNameValue,
+        ),
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.check),
+        color: Theme.of(context).colorScheme.primary,
+        tooltip: AppLocalizations.of(context).doneButtonTooltip,
+        onPressed: () {
+          if (doneEditMode()) {
+            setState(() {
+              _isEditMode = false;
+            });
+          }
+        },
+      ),
+      actions: actions,
+    );
+  }
+
   @override
   get itemStreamListCellSize => thumbSize;
+
+  @protected
+  get isEditMode => _isEditMode;
+
+  @protected
+  bool doneEditMode();
+
+  /// Return a new album with the edits
+  @protected
+  Album makeEdited(Album album) {
+    return album.copyWith(
+      name: _editFormValue.name,
+    );
+  }
 
   @protected
   int get thumbSize {
@@ -143,6 +211,53 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     }
   }
 
+  void _onAppBarEditPressed(BuildContext context, Album album) {
+    setState(() {
+      _isEditMode = true;
+      _editNameValue = album.name;
+      _editFormValue = _EditFormValue();
+    });
+  }
+
+  Widget _getAppBarCover(BuildContext context, Account account) {
+    try {
+      if (_coverPreviewUrl != null) {
+        return Opacity(
+          opacity:
+              Theme.of(context).brightness == Brightness.light ? 0.25 : 0.35,
+          child: FittedBox(
+            clipBehavior: Clip.hardEdge,
+            fit: BoxFit.cover,
+            child: CachedNetworkImage(
+              imageUrl: _coverPreviewUrl,
+              httpHeaders: {
+                "Authorization": Api.getAuthorizationHeaderValue(account),
+              },
+              filterQuality: FilterQuality.high,
+              errorWidget: (context, url, error) {
+                // just leave it empty
+                return Container();
+              },
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+            ),
+          ),
+        );
+      }
+    } catch (_) {}
+    return null;
+  }
+
   String _coverPreviewUrl;
   var _thumbZoomLevel = 0;
+
+  var _isEditMode = false;
+  String _editNameValue;
+  var _editFormValue = _EditFormValue();
+
+  static final _log = Logger("widget.album_viewer_mixin.AlbumViewerMixin");
+  static const _menuValueEdit = -1;
+}
+
+class _EditFormValue {
+  String name;
 }

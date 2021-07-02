@@ -72,9 +72,46 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
+        body: Builder(
+          builder: (context) {
+            if (isEditMode) {
+              return Form(
+                key: _editFormKey,
+                child: _buildContent(context),
+              );
+            } else {
+              return _buildContent(context);
+            }
+          },
+        ),
       ),
     );
+  }
+
+  @override
+  doneEditMode() {
+    if (_editFormKey?.currentState?.validate() == true) {
+      _editFormKey.currentState.save();
+      final newAlbum = makeEdited(_album);
+      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+        _log.info("[doneEditMode] Album modified: $newAlbum");
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        setState(() {
+          _album = newAlbum;
+        });
+        UpdateAlbum(albumRepo)(widget.account, newAlbum)
+            .catchError((e, stacktrace) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(exception_util.toUserString(e, context)),
+            duration: k.snackBarDurationNormal,
+          ));
+        });
+      } else {
+        _log.fine("[doneEditMode] Album not modified");
+      }
+      return true;
+    }
+    return false;
   }
 
   void _initAlbum() {
@@ -138,7 +175,13 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
             _buildAppBar(context),
             SliverPadding(
               padding: const EdgeInsets.all(16),
-              sliver: buildItemStreamList(context),
+              sliver: SliverIgnorePointer(
+                ignoring: isEditMode,
+                sliver: SliverOpacity(
+                  opacity: isEditMode ? .25 : 1,
+                  sliver: buildItemStreamList(context),
+                ),
+              ),
             ),
           ],
         ),
@@ -146,38 +189,38 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     );
   }
 
-  Widget _buildAppBar(BuildContext context) => isSelectionMode
-      ? _buildSelectionAppBar(context)
-      : _buildNormalAppBar(context);
+  Widget _buildAppBar(BuildContext context) {
+    if (isEditMode) {
+      return _buildEditAppBar(context);
+    } else if (isSelectionMode) {
+      return _buildSelectionAppBar(context);
+    } else {
+      return _buildNormalAppBar(context);
+    }
+  }
 
   Widget _buildNormalAppBar(BuildContext context) {
     return buildNormalAppBar(
       context,
       widget.account,
       _album,
-      actions: [
-        PopupMenuButton(
-          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: _AppBarOption.convertBasic,
-              child:
-                  Text(AppLocalizations.of(context).convertBasicAlbumMenuLabel),
-            ),
-          ],
-          onSelected: (option) {
-            switch (option) {
-              case _AppBarOption.convertBasic:
-                _onAppBarConvertBasicPressed(context);
-                break;
-
-              default:
-                _log.shout("[_buildNormalAppBar] Unknown value: $option");
-                break;
-            }
-          },
+      menuItemBuilder: (context) => [
+        PopupMenuItem(
+          value: _menuValueConvertBasic,
+          child: Text(AppLocalizations.of(context).convertBasicAlbumMenuLabel),
         ),
       ],
+      onSelectedMenuItem: (option) {
+        switch (option) {
+          case _menuValueConvertBasic:
+            _onAppBarConvertBasicPressed(context);
+            break;
+
+          default:
+            _log.shout("[_buildNormalAppBar] Unknown value: $option");
+            break;
+        }
+      },
     );
   }
 
@@ -198,6 +241,10 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         },
       ),
     ]);
+  }
+
+  Widget _buildEditAppBar(BuildContext context) {
+    return buildEditAppBar(context, widget.account, widget.album);
   }
 
   void _onItemTap(int index) {
@@ -358,8 +405,11 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   List<AlbumItem> _items;
   var _backingFiles = <File>[];
 
+  final _editFormKey = GlobalKey<FormState>();
+
   static final _log =
       Logger("widget.dynamic_album_viewer._DynamicAlbumViewerState");
+  static const _menuValueConvertBasic = 0;
 }
 
 class _ImageListItem extends SelectableItemStreamListItem {
@@ -401,10 +451,6 @@ class _VideoListItem extends SelectableItemStreamListItem {
 
   final Account account;
   final String previewUrl;
-}
-
-enum _AppBarOption {
-  convertBasic,
 }
 
 enum _SelectionAppBarOption {
