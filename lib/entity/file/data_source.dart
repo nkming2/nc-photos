@@ -126,7 +126,8 @@ class FileWebdavDataSource implements FileDataSource {
         "app:metadata": jsonEncode(metadata.obj.toJson()),
       if (isArchived?.obj != null) "app:is-archived": isArchived.obj,
       if (overrideDateTime?.obj != null)
-        "app:override-date-time": overrideDateTime.obj.toUtc().toIso8601String(),
+        "app:override-date-time":
+            overrideDateTime.obj.toUtc().toIso8601String(),
     };
     final removeProps = [
       if (OrNull.isNull(metadata)) "app:metadata",
