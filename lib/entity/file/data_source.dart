@@ -16,6 +16,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/touch_token_manager.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
 import 'package:uuid/uuid.dart';
@@ -615,9 +616,7 @@ class _CacheManager {
         var remoteEtag = f.etag;
         if (remoteEtag == null) {
           // no etag supplied, we need to query it form remote
-          final remote = await remoteSrc.list(account, f, depth: 0);
-          assert(remote.length == 1);
-          remoteEtag = remote.first.etag;
+          remoteEtag = (await LsSingleFile(remoteSrc)(account, f.path)).etag;
         }
         if (cacheEtag == remoteEtag) {
           _log.fine(
