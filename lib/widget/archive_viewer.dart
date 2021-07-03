@@ -191,6 +191,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
     } else if (state is ScanDirBlocFailure) {
+      _transformItems(state.files);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception, context)),
         duration: k.snackBarDurationNormal,

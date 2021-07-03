@@ -258,6 +258,7 @@ class _HomePhotosState extends State<HomePhotos>
         }
       }
     } else if (state is ScanDirBlocFailure) {
+      _transformItems(state.files);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception, context)),
         duration: k.snackBarDurationNormal,

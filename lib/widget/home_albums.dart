@@ -306,6 +306,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
     } else if (state is ListAlbumBlocSuccess || state is ListAlbumBlocLoading) {
       _transformItems(state.albums);
     } else if (state is ListAlbumBlocFailure) {
+      _transformItems(state.albums);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception, context)),
         duration: k.snackBarDurationNormal,
