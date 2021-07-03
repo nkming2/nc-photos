@@ -64,6 +64,9 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
 
   @override
   canPickDir(File dir) {
+    if (widget.account.roots.contains("")) {
+      return true;
+    }
     final root = api_util.getWebdavRootUrlRelative(widget.account);
     return widget.account.roots
         .any((r) => dir.path == "$root/$r" || dir.path.startsWith("$root/$r/"));
