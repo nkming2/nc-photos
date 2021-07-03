@@ -52,7 +52,7 @@ Support GIF
 """,
   // v19
   """19.0
-- Create a folder based album to show what's inside a folder
+- Folder based album to browse photos in an existing folder (read only)
 - Batch import folder based albums
 
 This version includes changes that are not compatible with older versions. Please also update your other devices if applicable
