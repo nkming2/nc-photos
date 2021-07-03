@@ -109,14 +109,18 @@ class _SettingsState extends State<Settings> {
                   title: Text(
                       AppLocalizations.of(context).settingsTranslatorTitle),
                   subtitle: Text(translator),
+                  onTap: () {
+                    launch(_translationUrl);
+                  },
+                )
+              else
+                ListTile(
+                  title: Text("Improve translation"),
+                  subtitle: Text("Help translating to your language"),
+                  onTap: () {
+                    launch(_translationUrl);
+                  },
                 ),
-              ListTile(
-                title: Text("Improve translation"),
-                subtitle: Text("Help translating to your language"),
-                onTap: () async {
-                  await launch(_translationUrl);
-                },
-              ),
             ],
           ),
         ),
