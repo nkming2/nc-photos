@@ -125,13 +125,10 @@ class _RootPickerState extends State<RootPicker>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (!ModalRoute.of(context).isFirst)
-                  TextButton(
-                    onPressed: () => _onSkipPressed(context),
-                    child: Text(AppLocalizations.of(context).skipButtonLabel),
-                  )
-                else
-                  Container(),
+                TextButton(
+                  onPressed: () => _onSkipPressed(context),
+                  child: Text(AppLocalizations.of(context).skipButtonLabel),
+                ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
                   child: Text(AppLocalizations.of(context).confirmButtonLabel),
