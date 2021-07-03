@@ -47,6 +47,11 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   @protected
   bool canPickDir(File file) => true;
 
+  @protected
+  void pickAll(List<File> dirs) {
+    _picks.addAll(dirs);
+  }
+
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
     _bloc = LsDirBloc();

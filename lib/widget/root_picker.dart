@@ -1,14 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/dir_picker_mixin.dart';
+import 'package:nc_photos/widget/processing_dialog.dart';
 
 class RootPickerArguments {
   RootPickerArguments(this.account);
@@ -38,6 +44,38 @@ class RootPicker extends StatefulWidget {
 
 class _RootPickerState extends State<RootPicker>
     with DirPickerMixin<RootPicker> {
+  @override
+  initState() {
+    super.initState();
+    _initAccount();
+  }
+
+  void _initAccount() async {
+    try {
+      final fileSrc = FileWebdavDataSource();
+      final files = <File>[];
+      for (final r in widget.account.roots) {
+        if (r.isNotEmpty) {
+          _isIniting = true;
+          _ensureInitDialog();
+          files.add(await LsSingleFile(fileSrc).call(widget.account,
+              "${api_util.getWebdavRootUrlRelative(widget.account)}/$r"));
+        }
+      }
+      setState(() {
+        _isIniting = false;
+        pickAll(files);
+      });
+    } catch (e) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e, context)),
+        duration: k.snackBarDurationNormal,
+      ));
+    } finally {
+      _dismissInitDialog();
+    }
+  }
+
   @override
   build(BuildContext context) {
     return AppTheme(
@@ -77,7 +115,10 @@ class _RootPickerState extends State<RootPicker>
             ),
           ),
           Expanded(
-            child: buildDirPicker(context),
+            child: IgnorePointer(
+              ignoring: _isIniting,
+              child: buildDirPicker(context),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -126,8 +167,7 @@ class _RootPickerState extends State<RootPicker>
               ],
             )).then((value) {
       if (value == true) {
-        // default is to include all files, so we just return the same account
-        Navigator.of(context).pop(widget.account);
+        Navigator.of(context).pop(widget.account.copyWith(roots: [""]));
       }
     });
   }
@@ -146,6 +186,31 @@ class _RootPickerState extends State<RootPicker>
     _log.info("[_onConfirmPressed] Account is good: $newAccount");
     Navigator.of(context).pop(newAccount);
   }
+
+  void _ensureInitDialog() {
+    if (_isInitDialogShown) {
+      return;
+    }
+    _isInitDialogShown = true;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => ProcessingDialog(
+            text: AppLocalizations.of(context).genericProcessingDialogContent),
+      );
+    });
+  }
+
+  void _dismissInitDialog() {
+    if (!_isInitDialogShown) {
+      return;
+    }
+    Navigator.of(context).pop();
+  }
+
+  bool _isIniting = false;
+  bool _isInitDialogShown = false;
 
   static final _log = Logger("widget.root_picker._RootPickerState");
 }

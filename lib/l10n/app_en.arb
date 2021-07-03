@@ -525,6 +525,15 @@
 		"description": "Edit the opened album"
 	},
 	"doneButtonTooltip": "Done",
+	"editTooltip": "Edit",
+	"editAccountConflictFailureNotification": "An account already exists with the same settings",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"genericProcessingDialogContent": "Please wait",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
