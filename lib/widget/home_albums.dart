@@ -82,7 +82,11 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       _reqQuery();
     } else {
       // process the current state
-      _onStateChange(context, _bloc.state);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _onStateChange(context, _bloc.state);
+        });
+      });
     }
   }
 

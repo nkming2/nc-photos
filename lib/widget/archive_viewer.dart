@@ -83,7 +83,11 @@ class _ArchiveViewerState extends State<ArchiveViewer>
       _reqQuery();
     } else {
       // process the current state
-      _onStateChange(context, _bloc.state);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _onStateChange(context, _bloc.state);
+        });
+      });
     }
   }
 

@@ -83,7 +83,11 @@ class _HomePhotosState extends State<HomePhotos>
       _reqQuery();
     } else {
       // process the current state
-      _onStateChange(context, _bloc.state);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _onStateChange(context, _bloc.state);
+        });
+      });
     }
   }
 
