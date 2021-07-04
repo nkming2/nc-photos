@@ -25,7 +25,7 @@ String getUserDirName(File file) {
   throw ArgumentError("Invalid path: ${file.path}");
 }
 
-const _supportedFormatMimes = [
+final _supportedFormatMimes = [
   "image/jpeg",
   "image/png",
   "image/webp",
@@ -33,6 +33,7 @@ const _supportedFormatMimes = [
   "image/gif",
   // video player currently doesn't work on web
   if (!platform_k.isWeb) "video/mp4",
+  if (platform_k.isAndroid) "video/webm",
 ];
 
 const _metadataSupportedFormatMimes = [
