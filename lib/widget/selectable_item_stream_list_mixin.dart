@@ -325,28 +325,26 @@ class _SelectableItemWidget extends StatelessWidget {
           Positioned.fill(
             child: Container(
               color: AppTheme.getSelectionOverlayColor(context),
-            ),
-          ),
-        if (isSelected)
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.check_circle_outlined,
-                size: 32,
-                color: AppTheme.getSelectionCheckColor(context),
+              child: Align(
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.check_circle_outlined,
+                  size: 32,
+                  color: AppTheme.getSelectionCheckColor(context),
+                ),
               ),
             ),
           ),
-        Positioned.fill(
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: onTap,
-              onLongPress: onLongPress,
+        if (onTap != null || onLongPress != null)
+          Positioned.fill(
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                onTap: onTap,
+                onLongPress: onLongPress,
+              ),
             ),
           ),
-        )
       ],
     );
   }
