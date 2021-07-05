@@ -8,6 +8,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/list_importable_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
+import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
