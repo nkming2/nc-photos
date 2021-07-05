@@ -37,8 +37,10 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     final otherAccountOptions = _accounts
         .where((a) => a != widget.account)
         .map((a) => SimpleDialogOption(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               onPressed: () => _onItemPressed(a),
               child: ListTile(
+                dense: true,
                 title: Text(a.url),
                 subtitle: Text(a.username),
                 trailing: IconButton(
@@ -54,6 +56,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         .toList();
     final addAccountOptions = [
       SimpleDialogOption(
+        padding: const EdgeInsets.all(8),
         onPressed: () {
           Navigator.of(context)
             ..pop()
@@ -72,6 +75,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     ];
     return SimpleDialog(
       title: ListTile(
+        dense: true,
         title: Text(
           widget.account.url,
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -89,6 +93,8 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           onPressed: () => _onEditPressed(),
         ),
       ),
+      titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
+      contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
       children: otherAccountOptions + addAccountOptions,
     );
   }
