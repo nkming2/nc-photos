@@ -11,8 +11,8 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
+import 'package:nc_photos/widget/selectable.dart';
 
 abstract class SelectableItemStreamListItem {
   const SelectableItemStreamListItem({
@@ -121,21 +121,22 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _items[index];
+    final content = Padding(
+      padding: const EdgeInsets.all(2),
+      child: item.buildWidget(context),
+    );
     if (item.isSelectable) {
-      return _SelectableItemWidget(
+      return Selectable(
         isSelected: _selectedItems.contains(item),
+        iconSize: 32,
         onTap: () => _onItemTap(item, index),
         onLongPress: isSelectionMode && platform_k.isWeb
             ? null
             : () => _onItemLongPress(item, index),
-        child: item.buildWidget(context),
+        child: content,
       );
     } else {
-      // add padding to align with selectable items
-      return Padding(
-        padding: const EdgeInsets.all(2),
-        child: item.buildWidget(context),
-      );
+      return content;
     }
   }
 
@@ -243,56 +244,4 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   static final _log = Logger(
       "widget.selectable_item_stream_list_mixin.SelectableItemStreamListMixin");
-}
-
-class _SelectableItemWidget extends StatelessWidget {
-  _SelectableItemWidget({
-    Key key,
-    @required this.child,
-    this.isSelected = false,
-    this.onTap,
-    this.onLongPress,
-  }) : super(key: key);
-
-  @override
-  build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(2),
-          child: child,
-        ),
-        if (isSelected)
-          Positioned.fill(
-            child: Container(
-              color: AppTheme.getSelectionOverlayColor(context),
-              child: Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.check_circle_outlined,
-                  size: 32,
-                  color: AppTheme.getSelectionCheckColor(context),
-                ),
-              ),
-            ),
-          ),
-        if (onTap != null || onLongPress != null)
-          Positioned.fill(
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                onTap: onTap,
-                onLongPress: onLongPress,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  final bool isSelected;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
-  final Widget child;
 }
