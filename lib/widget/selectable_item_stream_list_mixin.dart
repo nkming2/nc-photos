@@ -12,8 +12,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/measureable_sliver_staggered_grid.dart';
-import 'package:uuid/uuid.dart';
+import 'package:nc_photos/widget/measurable_item_list.dart';
 
 abstract class SelectableItemStreamListItem {
   const SelectableItemStreamListItem({
@@ -29,36 +28,11 @@ abstract class SelectableItemStreamListItem {
   final StaggeredTile staggeredTile;
 }
 
-mixin SelectableItemStreamListMixin<T extends StatefulWidget>
-    on State<T>, WidgetsBindingObserver {
+mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @override
   initState() {
     super.initState();
     _keyboardFocus.requestFocus();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _prevOrientation = MediaQuery.of(context).orientation;
-      WidgetsBinding.instance.addObserver(this);
-    });
-  }
-
-  @override
-  dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  didChangeMetrics() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orientation = MediaQuery.of(context).orientation;
-      if (orientation != _prevOrientation) {
-        _log.info(
-            "[didChangeMetrics] updateListHeight: orientation changed: $orientation");
-        _prevOrientation = orientation;
-        updateListHeight();
-      }
-    });
   }
 
   @protected
@@ -82,20 +56,16 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
 
   @protected
   Widget buildItemStreamList(BuildContext context) {
-    // need to rebuild grid after cell size changed
-    final cellSize = itemStreamListCellSize;
-    if (cellSize != _prevItemStreamListCellSize) {
-      _log.info("[buildItemStreamList] updateListHeight: cell size changed");
-      WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
-      _prevItemStreamListCellSize = cellSize;
-    }
-    _gridKey = _GridKey("$_uniqueToken $cellSize");
-    return MeasurableSliverStaggeredGrid.extentBuilder(
-      key: _gridKey,
+    return MeasurableItemList(
+      key: _listKey,
       maxCrossAxisExtent: itemStreamListCellSize.toDouble(),
       itemCount: _items.length,
       itemBuilder: _buildItem,
       staggeredTileBuilder: (index) => _items[index].staggeredTile,
+      onMaxExtentChanged: (newExtent) {
+        _calculatedMaxExtent = newExtent;
+        onMaxExtentChanged(newExtent);
+      },
     );
   }
 
@@ -105,27 +75,6 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
   @protected
   void clearSelectedItems() {
     _selectedItems.clear();
-  }
-
-  @protected
-  void updateListHeight() {
-    try {
-      final renderObj = _gridKey.currentContext.findRenderObject()
-          as RenderMeasurableSliverStaggeredGrid;
-      final maxExtent = renderObj.calculateExtent();
-      _log.info("[updateListHeight] Max extent: $maxExtent");
-      if (maxExtent == 0) {
-        // ?
-        _calculatedMaxExtent = null;
-      } else {
-        _calculatedMaxExtent = maxExtent;
-        onMaxExtentChanged(maxExtent);
-      }
-    } catch (e, stacktrace) {
-      _log.shout("[updateListHeight] Failed while calculateMaxScrollExtent", e,
-          stacktrace);
-      _calculatedMaxExtent = null;
-    }
   }
 
   @protected
@@ -160,7 +109,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
     _lastSelectPosition = newLastSelectPosition;
 
     _log.info("[itemStreamListItems] updateListHeight: list item changed");
-    WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        (_listKey.currentState as MeasurableItemListState)?.updateListHeight());
   }
 
   @protected
@@ -281,26 +231,18 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
 
   int _lastSelectPosition;
   bool _isRangeSelectionMode = false;
-  int _prevItemStreamListCellSize;
-  double _calculatedMaxExtent;
-  Orientation _prevOrientation;
 
   final _items = <SelectableItemStreamListItem>[];
   final _selectedItems = <SelectableItemStreamListItem>{};
 
-  // this unique token is there to keep the global key unique
-  final _uniqueToken = Uuid().v4();
-  GlobalObjectKey _gridKey;
+  final _listKey = GlobalKey();
+  double _calculatedMaxExtent;
 
   /// used to gain focus on web for keyboard support
   final _keyboardFocus = FocusNode();
 
   static final _log = Logger(
       "widget.selectable_item_stream_list_mixin.SelectableItemStreamListMixin");
-}
-
-class _GridKey extends GlobalObjectKey {
-  const _GridKey(Object value) : super(value);
 }
 
 class _SelectableItemWidget extends StatelessWidget {

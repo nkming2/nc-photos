@@ -94,16 +94,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   Widget _buildContent(BuildContext context, ScanDirBlocState state) {
     return LayoutBuilder(builder: (context, constraints) {
-      if (_prevListWidth == null) {
-        _prevListWidth = constraints.maxWidth;
-      }
-      if (constraints.maxWidth != _prevListWidth) {
-        _log.info(
-            "[_buildContent] updateListHeight: list viewport width changed");
-        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
-        _prevListWidth = constraints.maxWidth;
-      }
-
       final scrollExtent = _getScrollViewExtent(constraints);
       return Stack(
         children: [
@@ -583,7 +573,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   final ScrollController _scrollController = ScrollController();
 
-  double _prevListWidth;
   double _appBarExtent;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
