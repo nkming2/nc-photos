@@ -101,7 +101,7 @@ class _HomeAlbumsState extends State<HomeAlbums> {
             slivers: [
               _buildAppBar(context),
               SliverPadding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 sliver: SliverStaggeredGrid.extentBuilder(
                   maxCrossAxisExtent: 256,
                   mainAxisSpacing: 8,

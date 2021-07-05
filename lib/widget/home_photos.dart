@@ -123,7 +123,7 @@ class _HomePhotosState extends State<HomePhotos>
                     slivers: [
                       _buildAppBar(context),
                       SliverPadding(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                         sliver: buildItemStreamList(context),
                       ),
                     ],
@@ -607,12 +607,15 @@ class _DateListItem extends SelectableItemStreamListItem {
     }
     return Align(
       alignment: AlignmentDirectional.centerStart,
-      child: Text(
-        subtitle,
-        style: Theme.of(context).textTheme.caption.copyWith(
-              color: AppTheme.getPrimaryTextColor(context),
-              fontWeight: FontWeight.bold,
-            ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.caption.copyWith(
+                color: AppTheme.getPrimaryTextColor(context),
+                fontWeight: FontWeight.bold,
+              ),
+        ),
       ),
     );
   }

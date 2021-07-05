@@ -150,7 +150,7 @@ class _AlbumViewerState extends State<AlbumViewer>
           slivers: [
             _buildAppBar(context),
             SliverPadding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               sliver: SliverIgnorePointer(
                 ignoring: isEditMode,
                 sliver: SliverOpacity(
