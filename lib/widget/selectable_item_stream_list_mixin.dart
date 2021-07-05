@@ -181,7 +181,11 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
         child: item.buildWidget(context),
       );
     } else {
-      return item.buildWidget(context);
+      // add padding to align with selectable items
+      return Padding(
+        padding: const EdgeInsets.all(2),
+        child: item.buildWidget(context),
+      );
     }
   }
 
