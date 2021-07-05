@@ -12,6 +12,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/measureable_sliver_staggered_grid.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class SelectableItemStreamListItem {
@@ -89,7 +90,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
       _prevItemStreamListCellSize = cellSize;
     }
     _gridKey = _GridKey("$_uniqueToken $cellSize");
-    return _SliverStaggeredGrid.extentBuilder(
+    return MeasurableSliverStaggeredGrid.extentBuilder(
       key: _gridKey,
       maxCrossAxisExtent: itemStreamListCellSize.toDouble(),
       itemCount: _items.length,
@@ -110,7 +111,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget>
   void updateListHeight() {
     try {
       final renderObj = _gridKey.currentContext.findRenderObject()
-          as _RenderSliverStaggeredGrid;
+          as RenderMeasurableSliverStaggeredGrid;
       final maxExtent = renderObj.calculateExtent();
       _log.info("[updateListHeight] Max extent: $maxExtent");
       if (maxExtent == 0) {
@@ -350,105 +351,4 @@ class _SelectableItemWidget extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onLongPress;
   final Widget child;
-}
-
-// ignore: must_be_immutable
-class _SliverStaggeredGrid extends SliverStaggeredGrid {
-  _SliverStaggeredGrid.extentBuilder({
-    Key key,
-    @required double maxCrossAxisExtent,
-    @required IndexedStaggeredTileBuilder staggeredTileBuilder,
-    @required IndexedWidgetBuilder itemBuilder,
-    @required int itemCount,
-    double mainAxisSpacing = 0,
-    double crossAxisSpacing = 0,
-  }) : super(
-          key: key,
-          gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: maxCrossAxisExtent,
-            mainAxisSpacing: mainAxisSpacing,
-            crossAxisSpacing: crossAxisSpacing,
-            staggeredTileBuilder: staggeredTileBuilder,
-            staggeredTileCount: itemCount,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            itemBuilder,
-            childCount: itemCount,
-          ),
-        );
-
-  @override
-  RenderSliverStaggeredGrid createRenderObject(BuildContext context) {
-    final element = context as SliverVariableSizeBoxAdaptorElement;
-    _renderObject = _RenderSliverStaggeredGrid(
-        childManager: element, gridDelegate: gridDelegate);
-    return _renderObject;
-  }
-
-  _RenderSliverStaggeredGrid get renderObject => _renderObject;
-
-  _RenderSliverStaggeredGrid _renderObject;
-}
-
-class _RenderSliverStaggeredGrid extends RenderSliverStaggeredGrid
-    with WidgetsBindingObserver {
-  _RenderSliverStaggeredGrid({
-    @required RenderSliverVariableSizeBoxChildManager childManager,
-    @required SliverStaggeredGridDelegate gridDelegate,
-  }) : super(childManager: childManager, gridDelegate: gridDelegate);
-
-  /// Calculate the height of this staggered grid view
-  ///
-  /// This basically requires a complete layout of every child, so only call
-  /// when necessary
-  double calculateExtent() {
-    childManager.didStartLayout();
-    childManager.setDidUnderflow(false);
-
-    double product = 0;
-    final configuration = gridDelegate.getConfiguration(constraints);
-    final mainAxisOffsets = configuration.generateMainAxisOffsets();
-
-    // Iterate through all children
-    for (var index = 0; true; index++) {
-      var geometry = RenderSliverStaggeredGrid.getSliverStaggeredGeometry(
-          index, configuration, mainAxisOffsets);
-      if (geometry == null) {
-        // There are either no children, or we are past the end of all our children.
-        break;
-      }
-
-      final bool hasTrailingScrollOffset = geometry.hasTrailingScrollOffset;
-      RenderBox child;
-      if (!hasTrailingScrollOffset) {
-        // Layout the child to compute its tailingScrollOffset.
-        final constraints =
-            BoxConstraints.tightFor(width: geometry.crossAxisExtent);
-        child = addAndLayoutChild(index, constraints, parentUsesSize: true);
-        geometry = geometry.copyWith(mainAxisExtent: paintExtentOf(child));
-      }
-
-      if (child != null) {
-        final childParentData =
-            child.parentData as SliverVariableSizeBoxAdaptorParentData;
-        childParentData.layoutOffset = geometry.scrollOffset;
-        childParentData.crossAxisOffset = geometry.crossAxisOffset;
-        assert(childParentData.index == index);
-      }
-
-      final double endOffset =
-          geometry.trailingScrollOffset + configuration.mainAxisSpacing;
-      for (var i = 0; i < geometry.crossAxisCellCount; i++) {
-        mainAxisOffsets[i + geometry.blockIndex] = endOffset;
-      }
-      if (endOffset > product) {
-        product = endOffset;
-      }
-    }
-    childManager.didFinishLayout();
-    return product;
-  }
-
-  static final _log = Logger(
-      "widget.selectable_item_stream_list_mixin._RenderSliverStaggeredGrid");
 }
