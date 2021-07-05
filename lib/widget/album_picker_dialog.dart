@@ -92,10 +92,13 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
     return Visibility(
       visible: _isVisible,
       child: SimpleDialog(
+        contentPadding: const EdgeInsets.symmetric(vertical: 8),
         children: _items
                 .map((e) => SimpleDialogOption(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       onPressed: () => _onItemPressed(context, e),
                       child: ListTile(
+                        dense: true,
                         title: Text("${e.name}"),
                       ),
                     ))
