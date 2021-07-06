@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
@@ -415,13 +416,30 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   static const _menuValueConvertBasic = 0;
 }
 
-class _ImageListItem extends SelectableItemStreamListItem {
+abstract class _ListItem implements SelectableItem {
+  _ListItem({
+    VoidCallback onTap,
+  }) : _onTap = onTap;
+
+  @override
+  get onTap => _onTap;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  get staggeredTile => const StaggeredTile.count(1, 1);
+
+  final VoidCallback _onTap;
+}
+
+class _ImageListItem extends _ListItem {
   _ImageListItem({
     @required this.file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap, isSelectable: true);
+  }) : super(onTap: onTap);
 
   @override
   buildWidget(BuildContext context) {
@@ -437,12 +455,12 @@ class _ImageListItem extends SelectableItemStreamListItem {
   final String previewUrl;
 }
 
-class _VideoListItem extends SelectableItemStreamListItem {
+class _VideoListItem extends _ListItem {
   _VideoListItem({
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap, isSelectable: true);
+  }) : super(onTap: onTap);
 
   @override
   buildWidget(BuildContext context) {

@@ -14,18 +14,12 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
 
-abstract class SelectableItemStreamListItem {
-  const SelectableItemStreamListItem({
-    this.onTap,
-    this.isSelectable = false,
-    this.staggeredTile = const StaggeredTile.count(1, 1),
-  });
-
+abstract class SelectableItem {
   Widget buildWidget(BuildContext context);
 
-  final VoidCallback onTap;
-  final bool isSelectable;
-  final StaggeredTile staggeredTile;
+  VoidCallback get onTap => null;
+  bool get isSelectable => false;
+  StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
 
 mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
@@ -78,15 +72,13 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   bool get isSelectionMode => _selectedItems.isNotEmpty;
 
   @protected
-  Iterable<SelectableItemStreamListItem> get selectedListItems =>
-      _selectedItems;
+  Iterable<SelectableItem> get selectedListItems => _selectedItems;
 
   @protected
-  List<SelectableItemStreamListItem> get itemStreamListItems =>
-      UnmodifiableListView(_items);
+  List<SelectableItem> get itemStreamListItems => UnmodifiableListView(_items);
 
   @protected
-  set itemStreamListItems(Iterable<SelectableItemStreamListItem> newItems) {
+  set itemStreamListItems(Iterable<SelectableItem> newItems) {
     final lastSelectedItem =
         _lastSelectPosition != null ? _items[_lastSelectPosition] : null;
 
@@ -131,7 +123,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  void _onItemTap(SelectableItemStreamListItem item, int index) {
+  void _onItemTap(SelectableItem item, int index) {
     if (isSelectionMode) {
       if (!_items.contains(item)) {
         _log.warning("[_onItemTap] Item not found in backing list, ignoring");
@@ -165,7 +157,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  void _onItemLongPress(SelectableItemStreamListItem item, int index) {
+  void _onItemLongPress(SelectableItem item, int index) {
     if (!_items.contains(item)) {
       _log.warning(
           "[_onItemLongPress] Item not found in backing list, ignoring");
@@ -224,8 +216,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   int _lastSelectPosition;
   bool _isRangeSelectionMode = false;
 
-  final _items = <SelectableItemStreamListItem>[];
-  final _selectedItems = <SelectableItemStreamListItem>{};
+  final _items = <SelectableItem>[];
+  final _selectedItems = <SelectableItem>{};
 
   final _listKey = GlobalKey();
 

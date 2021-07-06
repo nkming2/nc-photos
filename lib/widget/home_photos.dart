@@ -579,11 +579,34 @@ class _HomePhotosState extends State<HomePhotos>
   static const _menuValueRefresh = 0;
 }
 
-class _DateListItem extends SelectableItemStreamListItem {
+abstract class _ListItem implements SelectableItem {
+  _ListItem({
+    VoidCallback onTap,
+  }) : _onTap = onTap;
+
+  @override
+  get onTap => _onTap;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  get staggeredTile => const StaggeredTile.count(1, 1);
+
+  final VoidCallback _onTap;
+}
+
+class _DateListItem extends _ListItem {
   _DateListItem({
     @required this.date,
     this.isMonthOnly = false,
-  }) : super(staggeredTile: const StaggeredTile.extent(99, 32));
+  });
+
+  @override
+  get isSelectable => false;
+
+  @override
+  get staggeredTile => const StaggeredTile.extent(99, 32);
 
   @override
   buildWidget(BuildContext context) {
@@ -614,11 +637,11 @@ class _DateListItem extends SelectableItemStreamListItem {
   final bool isMonthOnly;
 }
 
-abstract class _FileListItem extends SelectableItemStreamListItem {
+abstract class _FileListItem extends _ListItem {
   _FileListItem({
     @required this.file,
     VoidCallback onTap,
-  }) : super(onTap: onTap, isSelectable: true);
+  }) : super(onTap: onTap);
 
   @override
   operator ==(Object other) {

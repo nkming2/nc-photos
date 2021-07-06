@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
@@ -315,11 +316,28 @@ class _ArchiveViewerState extends State<ArchiveViewer>
   static final _log = Logger("widget.archive_viewer._ArchiveViewerState");
 }
 
-abstract class _FileListItem extends SelectableItemStreamListItem {
+abstract class _ListItem implements SelectableItem {
+  _ListItem({
+    VoidCallback onTap,
+  }) : _onTap = onTap;
+
+  @override
+  get onTap => _onTap;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  get staggeredTile => const StaggeredTile.count(1, 1);
+
+  final VoidCallback _onTap;
+}
+
+abstract class _FileListItem extends _ListItem {
   _FileListItem({
     @required this.file,
     VoidCallback onTap,
-  }) : super(onTap: onTap, isSelectable: true);
+  }) : super(onTap: onTap);
 
   @override
   operator ==(Object other) {
