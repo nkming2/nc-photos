@@ -73,9 +73,6 @@ class _ArchiveViewerState extends State<ArchiveViewer>
     );
   }
 
-  @override
-  get itemStreamListCellSize => _thumbSize;
-
   void _initBloc() {
     _bloc = ScanDirBloc.of(widget.account);
     if (_bloc.state is ScanDirBlocInit) {
@@ -105,7 +102,9 @@ class _ArchiveViewerState extends State<ArchiveViewer>
                 _buildAppBar(context),
                 SliverPadding(
                   padding: const EdgeInsets.all(16),
-                  sliver: buildItemStreamList(context),
+                  sliver: buildItemStreamList(
+                    maxCrossAxisExtent: _thumbSize.toDouble(),
+                  ),
                 ),
               ],
             ),

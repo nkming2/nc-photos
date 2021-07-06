@@ -179,9 +179,6 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     );
   }
 
-  @override
-  get itemStreamListCellSize => thumbSize;
-
   @protected
   get isEditMode => _isEditMode;
 

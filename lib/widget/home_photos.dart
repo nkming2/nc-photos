@@ -69,14 +69,6 @@ class _HomePhotosState extends State<HomePhotos>
     );
   }
 
-  @override
-  void onMaxExtentChanged(double maxExtent) {
-    setState(() {});
-  }
-
-  @override
-  int get itemStreamListCellSize => _thumbSize;
-
   void _initBloc() {
     _bloc = ScanDirBloc.of(widget.account);
     if (_bloc.state is ScanDirBlocInit) {
@@ -115,7 +107,14 @@ class _HomePhotosState extends State<HomePhotos>
                       _buildAppBar(context),
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        sliver: buildItemStreamList(context),
+                        sliver: buildItemStreamList(
+                          maxCrossAxisExtent: _thumbSize.toDouble(),
+                          onMaxExtentChanged: (value) {
+                            setState(() {
+                              _itemListMaxExtent = value;
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -517,14 +516,14 @@ class _HomePhotosState extends State<HomePhotos>
 
   /// Return the estimated scroll extent of the custom scroll view, or null
   double _getScrollViewExtent(BoxConstraints constraints) {
-    if (calculatedMaxExtent != null &&
+    if (_itemListMaxExtent != null &&
         constraints.hasBoundedHeight &&
         _appBarExtent != null) {
       // scroll extent = list height - widget viewport height + sliver app bar height
       final scrollExtent =
-          calculatedMaxExtent - constraints.maxHeight + _appBarExtent;
+          _itemListMaxExtent - constraints.maxHeight + _appBarExtent;
       _log.info(
-          "[_getScrollViewExtent] $calculatedMaxExtent - ${constraints.maxHeight} + $_appBarExtent = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
@@ -574,6 +573,7 @@ class _HomePhotosState extends State<HomePhotos>
   final ScrollController _scrollController = ScrollController();
 
   double _appBarExtent;
+  double _itemListMaxExtent;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;

@@ -55,22 +55,19 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   }
 
   @protected
-  Widget buildItemStreamList(BuildContext context) {
+  Widget buildItemStreamList({
+    @required double maxCrossAxisExtent,
+    ValueChanged<double> onMaxExtentChanged,
+  }) {
     return MeasurableItemList(
       key: _listKey,
-      maxCrossAxisExtent: itemStreamListCellSize.toDouble(),
+      maxCrossAxisExtent: maxCrossAxisExtent,
       itemCount: _items.length,
       itemBuilder: _buildItem,
       staggeredTileBuilder: (index) => _items[index].staggeredTile,
-      onMaxExtentChanged: (newExtent) {
-        _calculatedMaxExtent = newExtent;
-        onMaxExtentChanged(newExtent);
-      },
+      onMaxExtentChanged: onMaxExtentChanged,
     );
   }
-
-  @protected
-  void onMaxExtentChanged(double newExtent) {}
 
   @protected
   void clearSelectedItems() {
@@ -112,12 +109,6 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         (_listKey.currentState as MeasurableItemListState)?.updateListHeight());
   }
-
-  @protected
-  int get itemStreamListCellSize;
-
-  @protected
-  double get calculatedMaxExtent => _calculatedMaxExtent;
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _items[index];
@@ -237,7 +228,6 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   final _selectedItems = <SelectableItemStreamListItem>{};
 
   final _listKey = GlobalKey();
-  double _calculatedMaxExtent;
 
   /// used to gain focus on web for keyboard support
   final _keyboardFocus = FocusNode();

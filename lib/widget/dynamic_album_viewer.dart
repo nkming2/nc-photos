@@ -180,7 +180,9 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
                 ignoring: isEditMode,
                 sliver: SliverOpacity(
                   opacity: isEditMode ? .25 : 1,
-                  sliver: buildItemStreamList(context),
+                  sliver: buildItemStreamList(
+                    maxCrossAxisExtent: thumbSize.toDouble(),
+                  ),
                 ),
               ),
             ),
