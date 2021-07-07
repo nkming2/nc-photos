@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
@@ -123,7 +124,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   void _onItemTap(SelectableItem item, int index) {
     if (isSelectionMode) {
-      if (!_items.contains(item)) {
+      if (!_items.containsIdentical(item)) {
         _log.warning("[_onItemTap] Item not found in backing list, ignoring");
         return;
       }
@@ -156,7 +157,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   }
 
   void _onItemLongPress(SelectableItem item, int index) {
-    if (!_items.contains(item)) {
+    if (!_items.containsIdentical(item)) {
       _log.warning(
           "[_onItemLongPress] Item not found in backing list, ignoring");
       return;
