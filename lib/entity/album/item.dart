@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/list_extension.dart';
@@ -54,7 +55,9 @@ abstract class AlbumItem {
 }
 
 class AlbumFileItem extends AlbumItem with EquatableMixin {
-  AlbumFileItem({this.file});
+  AlbumFileItem({
+    @required this.file,
+  });
 
   @override
   // ignore: hash_and_equals
