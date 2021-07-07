@@ -280,7 +280,8 @@ class _ArchiveViewerState extends State<ArchiveViewer>
               "[_transformItems] Unsupported file format: ${f.contentType}");
         }
       }
-    }();
+    }()
+        .toList();
   }
 
   void _reqQuery() {

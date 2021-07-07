@@ -402,7 +402,8 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
               "[_onBackingFilesUpdated] Unsupported file format: ${f.contentType}");
         }
       }
-    }();
+    }()
+        .toList();
   }
 
   Album _album;

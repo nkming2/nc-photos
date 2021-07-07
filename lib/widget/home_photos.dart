@@ -483,7 +483,8 @@ class _HomePhotosState extends State<HomePhotos>
               "[_transformItems] Unsupported file format: ${f.contentType}");
         }
       }
-    }();
+    }()
+        .toList();
   }
 
   void _reqQuery() {

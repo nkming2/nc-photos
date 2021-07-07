@@ -278,7 +278,8 @@ class _AlbumViewerState extends State<AlbumViewer>
               "[_transformItems] Unsupported file format: ${f.contentType}");
         }
       }
-    }();
+    }()
+        .toList();
   }
 
   bool _shouldPropagateResyncedAlbum(Album album) {

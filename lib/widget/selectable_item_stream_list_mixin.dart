@@ -78,13 +78,11 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   List<SelectableItem> get itemStreamListItems => UnmodifiableListView(_items);
 
   @protected
-  set itemStreamListItems(Iterable<SelectableItem> newItems) {
+  set itemStreamListItems(List<SelectableItem> newItems) {
     final lastSelectedItem =
         _lastSelectPosition != null ? _items[_lastSelectPosition] : null;
 
-    _items.clear();
-    _items.addAll(newItems);
-
+    _items = newItems;
     _transformSelectedItems();
 
     // Keep _lastSelectPosition if no changes, drop otherwise
@@ -216,7 +214,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   int _lastSelectPosition;
   bool _isRangeSelectionMode = false;
 
-  final _items = <SelectableItem>[];
+  var _items = <SelectableItem>[];
   final _selectedItems = <SelectableItem>{};
 
   final _listKey = GlobalKey();
