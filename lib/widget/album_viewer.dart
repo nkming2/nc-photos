@@ -9,10 +9,10 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -248,11 +248,11 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _transformItems() {
-    _backingFiles = _getAlbumItemsOf(_album)
+    _backingFiles = _album.sortProvider.sort(_getAlbumItemsOf(_album))
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
-        .sorted(compareFileDateTimeDescending);
+        .toList();
 
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {

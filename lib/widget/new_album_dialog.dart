@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 
@@ -120,6 +121,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         items: const [],
       ),
       coverProvider: AlbumAutoCoverProvider(),
+      sortProvider: AlbumTimeSortProvider(isAscending: false),
     );
     _log.info("[_onOkPressed] Creating static album: $album");
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -147,6 +149,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
           dirs: value,
         ),
         coverProvider: AlbumAutoCoverProvider(),
+        sortProvider: AlbumTimeSortProvider(isAscending: false),
       );
       _log.info("[_onOkPressed] Creating dir album: $album");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());

@@ -10,6 +10,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -233,6 +234,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
             dirs: [p],
           ),
           coverProvider: AlbumAutoCoverProvider(),
+          sortProvider: AlbumTimeSortProvider(isAscending: false),
         );
         _log.info("[_onImportPressed] Creating dir album: $album");
 

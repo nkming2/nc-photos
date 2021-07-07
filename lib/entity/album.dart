@@ -10,6 +10,7 @@ import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -34,6 +35,7 @@ class Album with EquatableMixin {
     @required String name,
     @required this.provider,
     @required this.coverProvider,
+    @required this.sortProvider,
     this.albumFile,
   })  : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
         this.name = name ?? "";
@@ -42,6 +44,7 @@ class Album with EquatableMixin {
     Map<String, dynamic> json, {
     AlbumUpgraderV1 upgraderV1,
     AlbumUpgraderV2 upgraderV2,
+    AlbumUpgraderV3 upgraderV3,
   }) {
     final jsonVersion = json["version"];
     if (jsonVersion < 2) {
@@ -58,6 +61,13 @@ class Album with EquatableMixin {
         return null;
       }
     }
+    if (jsonVersion < 4) {
+      json = upgraderV3?.call(json);
+      if (json == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
     return Album(
       lastUpdated: json["lastUpdated"] == null
           ? null
@@ -67,6 +77,8 @@ class Album with EquatableMixin {
           AlbumProvider.fromJson(json["provider"].cast<String, dynamic>()),
       coverProvider: AlbumCoverProvider.fromJson(
           json["coverProvider"].cast<String, dynamic>()),
+      sortProvider: AlbumSortProvider.fromJson(
+          json["sortProvider"].cast<String, dynamic>()),
       albumFile: json["albumFile"] == null
           ? null
           : File.fromJson(json["albumFile"].cast<String, dynamic>()),
@@ -80,6 +92,7 @@ class Album with EquatableMixin {
         "name: $name, "
         "provider: ${provider.toString(isDeep: isDeep)}, "
         "coverProvider: $coverProvider, "
+        "sortProvider: $sortProvider, "
         "albumFile: $albumFile, "
         "}";
   }
@@ -94,6 +107,7 @@ class Album with EquatableMixin {
     String name,
     AlbumProvider provider,
     AlbumCoverProvider coverProvider,
+    AlbumSortProvider sortProvider,
     File albumFile,
   }) {
     return Album(
@@ -101,6 +115,7 @@ class Album with EquatableMixin {
       name: name ?? this.name,
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
+      sortProvider: sortProvider??this.sortProvider,
       albumFile: albumFile ?? this.albumFile,
     );
   }
@@ -112,6 +127,7 @@ class Album with EquatableMixin {
       "name": name,
       "provider": provider.toJson(),
       "coverProvider": coverProvider.toJson(),
+      "sortProvider": sortProvider.toJson(),
       // ignore albumFile
     };
   }
@@ -123,6 +139,7 @@ class Album with EquatableMixin {
       "name": name,
       "provider": provider.toJson(),
       "coverProvider": coverProvider.toJson(),
+      "sortProvider": sortProvider.toJson(),
       if (albumFile != null) "albumFile": albumFile.toJson(),
     };
   }
@@ -133,6 +150,7 @@ class Album with EquatableMixin {
         name,
         provider,
         coverProvider,
+        sortProvider,
         albumFile,
       ];
 
@@ -141,6 +159,7 @@ class Album with EquatableMixin {
 
   final AlbumProvider provider;
   final AlbumCoverProvider coverProvider;
+  final AlbumSortProvider sortProvider;
 
   /// How is this album stored on server
   ///
@@ -148,7 +167,7 @@ class Album with EquatableMixin {
   final File albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 3;
+  static const version = 4;
 }
 
 class AlbumRepo {
@@ -201,6 +220,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         jsonDecode(utf8.decode(data)),
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
+        upgraderV3: AlbumUpgraderV3(),
       ).copyWith(albumFile: albumFile);
     } catch (e, stacktrace) {
       dynamic d = data;

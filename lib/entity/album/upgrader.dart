@@ -55,3 +55,29 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV2");
 }
+
+/// Upgrade v3 Album to v4
+class AlbumUpgraderV3 implements AlbumUpgrader {
+  AlbumUpgraderV3({
+    this.logFilePath,
+  });
+
+  Map<String, dynamic> call(Map<String, dynamic> json) {
+    // move v3 items to v4 provider
+    _log.fine("[call] Upgrade v3 Album for file: $logFilePath");
+    final result = Map<String, dynamic>.from(json);
+    // add the descending time sort provider
+    result["sortProvider"] = <String, dynamic>{
+      "type": "time",
+      "content": {
+        "isAscending": false,
+      },
+    };
+    return result;
+  }
+
+  /// File path for logging only
+  final String logFilePath;
+
+  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV3");
+}
