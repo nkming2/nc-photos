@@ -15,11 +15,13 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_viewer_mixin.dart';
+import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -59,6 +61,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     with
         WidgetsBindingObserver,
         SelectableItemStreamListMixin<AlbumViewer>,
+        DraggableItemListMixin<AlbumViewer>,
         AlbumViewerMixin<AlbumViewer> {
   @override
   initState() {
@@ -90,6 +93,15 @@ class _AlbumViewerState extends State<AlbumViewer>
   enterEditMode() {
     super.enterEditMode();
     _editAlbum = _album.copyWith();
+
+    if (!SessionStorage().hasShowDragRearrangeNotification) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            AppLocalizations.of(context).albumEditDragRearrangeNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      SessionStorage().hasShowDragRearrangeNotification = true;
+    }
   }
 
   @override
@@ -158,29 +170,39 @@ class _AlbumViewerState extends State<AlbumViewer>
         ],
       );
     }
+
+    Widget content = CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        _buildAppBar(context),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          sliver: isEditMode
+              ? buildDraggableItemList(
+                  maxCrossAxisExtent: thumbSize.toDouble(),
+                  onMaxExtentChanged: (value) {
+                    _itemListMaxExtent = value;
+                  },
+                )
+              : buildItemStreamList(
+                  maxCrossAxisExtent: thumbSize.toDouble(),
+                ),
+        ),
+      ],
+    );
+    if (isEditMode) {
+      content = Listener(
+        onPointerMove: _onEditModePointerMove,
+        child: content,
+      );
+    }
     return buildItemStreamListOuter(
       context,
       child: Theme(
         data: Theme.of(context).copyWith(
           accentColor: AppTheme.getOverscrollIndicatorColor(context),
         ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              sliver: SliverIgnorePointer(
-                ignoring: isEditMode,
-                sliver: SliverOpacity(
-                  opacity: isEditMode ? .25 : 1,
-                  sliver: buildItemStreamList(
-                    maxCrossAxisExtent: thumbSize.toDouble(),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: content,
       ),
     );
   }
@@ -342,21 +364,82 @@ class _AlbumViewerState extends State<AlbumViewer>
     });
   }
 
+  void _onEditModePointerMove(PointerMoveEvent event) {
+    assert(isEditMode);
+    if (!_isDragging) {
+      return;
+    }
+    if (event.position.dy >= MediaQuery.of(context).size.height - 100) {
+      // near bottom of screen
+      if (_isDragScrollingDown == true) {
+        return;
+      }
+      final maxExtent =
+          _itemListMaxExtent ?? _scrollController.position.maxScrollExtent;
+      _log.fine("[_onEditModePointerMove] Begin scrolling down");
+      if (_scrollController.offset <
+          _scrollController.position.maxScrollExtent) {
+        _scrollController.animateTo(maxExtent,
+            duration: Duration(
+                milliseconds:
+                    ((maxExtent - _scrollController.offset) * 1.6).round()),
+            curve: Curves.linear);
+        _isDragScrollingDown = true;
+      }
+    } else if (event.position.dy <= 100) {
+      // near top of screen
+      if (_isDragScrollingDown == false) {
+        return;
+      }
+      _log.fine("[_onEditModePointerMove] Begin scrolling up");
+      if (_scrollController.offset > 0) {
+        _scrollController.animateTo(0,
+            duration: Duration(
+                milliseconds: (_scrollController.offset * 1.6).round()),
+            curve: Curves.linear);
+        _isDragScrollingDown = false;
+      }
+    } else if (_isDragScrollingDown != null) {
+      _log.fine("[_onEditModePointerMove] Stop scrolling");
+      _scrollController.jumpTo(_scrollController.offset);
+      _isDragScrollingDown = null;
+    }
+  }
+
+  void _onItemMoved(int fromIndex, int toIndex, bool isBefore) {
+    if (fromIndex == toIndex) {
+      return;
+    }
+    final item = _sortedItems.removeAt(fromIndex);
+    final newIndex =
+        toIndex + (isBefore ? 0 : 1) + (fromIndex < toIndex ? -1 : 0);
+    _sortedItems.insert(newIndex, item);
+    _editAlbum = _editAlbum.copyWith(
+      sortProvider: AlbumNullSortProvider(),
+      // save the current order
+      provider: AlbumStaticProvider(
+        items: _sortedItems,
+      ),
+    );
+    setState(() {
+      _transformItems();
+    });
+  }
+
   void _transformItems() {
-    List<AlbumItem> sortedItems;
     if (_editAlbum != null) {
       // edit mode
-      sortedItems = _editAlbum.sortProvider.sort(_getAlbumItemsOf(_editAlbum));
+      _sortedItems = _editAlbum.sortProvider.sort(_getAlbumItemsOf(_editAlbum));
     } else {
-      sortedItems = _album.sortProvider.sort(_getAlbumItemsOf(_album));
+      _sortedItems = _album.sortProvider.sort(_getAlbumItemsOf(_album));
     }
-    _backingFiles = sortedItems
+    _backingFiles = _sortedItems
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
         .toList();
 
-    itemStreamListItems = () sync* {
+    final items = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
 
@@ -364,16 +447,38 @@ class _AlbumViewerState extends State<AlbumViewer>
             width: thumbSize, height: thumbSize);
         if (file_util.isSupportedImageFormat(f)) {
           yield _ImageListItem(
+            index: i,
             file: f,
             account: widget.account,
             previewUrl: previewUrl,
             onTap: () => _onItemTap(i),
+            onDropBefore: (dropItem) =>
+                _onItemMoved((dropItem as _ListItem).index, i, true),
+            onDropAfter: (dropItem) =>
+                _onItemMoved((dropItem as _ListItem).index, i, false),
+            onDragStarted: () {
+              _isDragging = true;
+            },
+            onDragEndedAny: () {
+              _isDragging = false;
+            },
           );
         } else if (file_util.isSupportedVideoFormat(f)) {
           yield _VideoListItem(
+            index: i,
             account: widget.account,
             previewUrl: previewUrl,
             onTap: () => _onItemTap(i),
+            onDropBefore: (dropItem) =>
+                _onItemMoved((dropItem as _ListItem).index, i, true),
+            onDropAfter: (dropItem) =>
+                _onItemMoved((dropItem as _ListItem).index, i, false),
+            onDragStarted: () {
+              _isDragging = true;
+            },
+            onDragEndedAny: () {
+              _isDragging = false;
+            },
           );
         } else {
           _log.shout(
@@ -382,6 +487,8 @@ class _AlbumViewerState extends State<AlbumViewer>
       }
     }()
         .toList();
+    itemStreamListItems = items;
+    draggableItemList = items;
   }
 
   bool _shouldPropagateResyncedAlbum(Album album) {
@@ -415,18 +522,33 @@ class _AlbumViewerState extends State<AlbumViewer>
       AlbumStaticProvider.of(a).items;
 
   Album _album;
+  var _sortedItems = <AlbumItem>[];
   var _backingFiles = <File>[];
 
+  final _scrollController = ScrollController();
+  double _itemListMaxExtent;
+  bool _isDragging = false;
+  // == null if not drag scrolling
+  bool _isDragScrollingDown;
   final _editFormKey = GlobalKey<FormState>();
   Album _editAlbum;
 
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }
 
-abstract class _ListItem implements SelectableItem {
+abstract class _ListItem implements SelectableItem, DraggableItem {
   _ListItem({
+    @required this.index,
     VoidCallback onTap,
-  }) : _onTap = onTap;
+    DragTargetAccept<DraggableItem> onDropBefore,
+    DragTargetAccept<DraggableItem> onDropAfter,
+    VoidCallback onDragStarted,
+    VoidCallback onDragEndedAny,
+  })  : _onTap = onTap,
+        _onDropBefore = onDropBefore,
+        _onDropAfter = onDropAfter,
+        _onDragStarted = onDragStarted,
+        _onDragEndedAny = onDragEndedAny;
 
   @override
   get onTap => _onTap;
@@ -435,18 +557,58 @@ abstract class _ListItem implements SelectableItem {
   get isSelectable => true;
 
   @override
+  get isDraggable => true;
+
+  @override
+  get onDropBefore => _onDropBefore;
+
+  @override
+  get onDropAfter => _onDropAfter;
+
+  @override
+  get onDragStarted => _onDragStarted;
+
+  @override
+  get onDragEndedAny => _onDragEndedAny;
+
+  @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
+  @override
+  toString() {
+    return "$runtimeType {"
+        "index: $index, "
+        "}";
+  }
+
+  final int index;
+
   final VoidCallback _onTap;
+  final DragTargetAccept<DraggableItem> _onDropBefore;
+  final DragTargetAccept<DraggableItem> _onDropAfter;
+  final VoidCallback _onDragStarted;
+  final VoidCallback _onDragEndedAny;
 }
 
 class _ImageListItem extends _ListItem {
   _ImageListItem({
+    @required int index,
     @required this.file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap);
+    DragTargetAccept<DraggableItem> onDropBefore,
+    DragTargetAccept<DraggableItem> onDropAfter,
+    VoidCallback onDragStarted,
+    VoidCallback onDragEndedAny,
+  }) : super(
+          index: index,
+          onTap: onTap,
+          onDropBefore: onDropBefore,
+          onDropAfter: onDropAfter,
+          onDragStarted: onDragStarted,
+          onDragEndedAny: onDragEndedAny,
+        );
 
   @override
   buildWidget(BuildContext context) {
@@ -464,10 +626,22 @@ class _ImageListItem extends _ListItem {
 
 class _VideoListItem extends _ListItem {
   _VideoListItem({
+    @required int index,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap);
+    DragTargetAccept<DraggableItem> onDropBefore,
+    DragTargetAccept<DraggableItem> onDropAfter,
+    VoidCallback onDragStarted,
+    VoidCallback onDragEndedAny,
+  }) : super(
+          index: index,
+          onTap: onTap,
+          onDropBefore: onDropBefore,
+          onDropAfter: onDropAfter,
+          onDragStarted: onDragStarted,
+          onDragEndedAny: onDragEndedAny,
+        );
 
   @override
   buildWidget(BuildContext context) {

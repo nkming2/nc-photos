@@ -547,6 +547,10 @@
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
 	},
+	"albumEditDragRearrangeNotification": "Long press and drag an item to rearrange it manually",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
