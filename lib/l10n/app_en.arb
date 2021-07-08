@@ -534,6 +534,19 @@
 	"@genericProcessingDialogContent": {
 		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
 	},
+	"sortTooltip": "Sort",
+	"sortOptionDialogTitle": "Sort by",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "Oldest first",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "Newest first",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

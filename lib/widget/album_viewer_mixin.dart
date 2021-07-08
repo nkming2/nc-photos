@@ -183,6 +183,10 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   get isEditMode => _isEditMode;
 
   @protected
+  @mustCallSuper
+  void enterEditMode() {}
+
+  @protected
   bool doneEditMode();
 
   /// Return a new album with the edits
@@ -211,6 +215,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   void _onAppBarEditPressed(BuildContext context, Album album) {
     setState(() {
       _isEditMode = true;
+      enterEditMode();
       _editNameValue = album.name;
       _editFormValue = _EditFormValue();
     });

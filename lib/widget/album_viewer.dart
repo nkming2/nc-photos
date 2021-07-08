@@ -87,27 +87,43 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   @override
+  enterEditMode() {
+    super.enterEditMode();
+    _editAlbum = _album.copyWith();
+  }
+
+  @override
   doneEditMode() {
     if (_editFormKey?.currentState?.validate() == true) {
-      _editFormKey.currentState.save();
-      final newAlbum = makeEdited(_album);
-      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
-        _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      try {
+        // persist the changes
+        _editFormKey.currentState.save();
+        final newAlbum = makeEdited(_editAlbum);
+        if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+          _log.info("[doneEditMode] Album modified: $newAlbum");
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          setState(() {
+            _album = newAlbum;
+          });
+          UpdateAlbum(albumRepo)(widget.account, newAlbum)
+              .catchError((e, stacktrace) {
+            SnackBarManager().showSnackBar(SnackBar(
+              content: Text(exception_util.toUserString(e, context)),
+              duration: k.snackBarDurationNormal,
+            ));
+          });
+        } else {
+          _log.fine("[doneEditMode] Album not modified");
+        }
+        return true;
+      } finally {
         setState(() {
-          _album = newAlbum;
+          // reset edits
+          _editAlbum = null;
+          // update the list to show the real album
+          _transformItems();
         });
-        UpdateAlbum(albumRepo)(widget.account, newAlbum)
-            .catchError((e, stacktrace) {
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e, context)),
-            duration: k.snackBarDurationNormal,
-          ));
-        });
-      } else {
-        _log.fine("[doneEditMode] Album not modified");
       }
-      return true;
     }
     return false;
   }
@@ -192,7 +208,13 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   Widget _buildEditAppBar(BuildContext context) {
-    return buildEditAppBar(context, widget.account, widget.album);
+    return buildEditAppBar(context, widget.account, widget.album, actions: [
+      IconButton(
+        icon: Icon(Icons.sort_by_alpha),
+        tooltip: AppLocalizations.of(context).sortTooltip,
+        onPressed: _onEditAppBarSortPressed,
+      ),
+    ]);
   }
 
   void _onItemTap(int index) {
@@ -247,8 +269,88 @@ class _AlbumViewerState extends State<AlbumViewer>
     });
   }
 
+  void _onEditAppBarSortPressed() {
+    final sortProvider = _editAlbum.sortProvider;
+    final isOldest =
+        sortProvider is AlbumTimeSortProvider && sortProvider.isAscending;
+    final isNewest =
+        sortProvider is AlbumTimeSortProvider && !sortProvider.isAscending;
+    final activeTextStyle = TextStyle(
+      color: Theme.of(context).colorScheme.primary,
+    );
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(AppLocalizations.of(context).sortOptionDialogTitle),
+        children: [
+          SimpleDialogOption(
+            child: ListTile(
+              leading: Icon(
+                isOldest ? Icons.check : null,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              title: Text(
+                AppLocalizations.of(context).sortOptionTimeAscendingLabel,
+                style: isOldest ? activeTextStyle : null,
+              ),
+              onTap: isOldest
+                  ? null
+                  : () {
+                      _onSortOldestPressed();
+                      Navigator.of(context).pop();
+                    },
+            ),
+          ),
+          SimpleDialogOption(
+            child: ListTile(
+              leading: Icon(
+                isNewest ? Icons.check : null,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              title: Text(
+                AppLocalizations.of(context).sortOptionTimeDescendingLabel,
+                style: isNewest ? activeTextStyle : null,
+              ),
+              onTap: isNewest
+                  ? null
+                  : () {
+                      _onSortNewestPressed();
+                      Navigator.of(context).pop();
+                    },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSortOldestPressed() {
+    _editAlbum = _editAlbum.copyWith(
+      sortProvider: AlbumTimeSortProvider(isAscending: true),
+    );
+    setState(() {
+      _transformItems();
+    });
+  }
+
+  void _onSortNewestPressed() {
+    _editAlbum = _editAlbum.copyWith(
+      sortProvider: AlbumTimeSortProvider(isAscending: false),
+    );
+    setState(() {
+      _transformItems();
+    });
+  }
+
   void _transformItems() {
-    _backingFiles = _album.sortProvider.sort(_getAlbumItemsOf(_album))
+    List<AlbumItem> sortedItems;
+    if (_editAlbum != null) {
+      // edit mode
+      sortedItems = _editAlbum.sortProvider.sort(_getAlbumItemsOf(_editAlbum));
+    } else {
+      sortedItems = _album.sortProvider.sort(_getAlbumItemsOf(_album));
+    }
+    _backingFiles = sortedItems
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
@@ -316,6 +418,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   var _backingFiles = <File>[];
 
   final _editFormKey = GlobalKey<FormState>();
+  Album _editAlbum;
 
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }
