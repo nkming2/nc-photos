@@ -91,29 +91,28 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   @override
+  validateEditMode() => _editFormKey?.currentState?.validate() == true;
+
+  @override
   doneEditMode() {
-    if (_editFormKey?.currentState?.validate() == true) {
-      _editFormKey.currentState.save();
-      final newAlbum = makeEdited(_album);
-      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
-        _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
-        setState(() {
-          _album = newAlbum;
-        });
-        UpdateAlbum(albumRepo)(widget.account, newAlbum)
-            .catchError((e, stacktrace) {
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e, context)),
-            duration: k.snackBarDurationNormal,
-          ));
-        });
-      } else {
-        _log.fine("[doneEditMode] Album not modified");
-      }
-      return true;
+    _editFormKey.currentState.save();
+    final newAlbum = makeEdited(_album);
+    if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+      _log.info("[doneEditMode] Album modified: $newAlbum");
+      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      setState(() {
+        _album = newAlbum;
+      });
+      UpdateAlbum(albumRepo)(widget.account, newAlbum)
+          .catchError((e, stacktrace) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(e, context)),
+          duration: k.snackBarDurationNormal,
+        ));
+      });
+    } else {
+      _log.fine("[doneEditMode] Album not modified");
     }
-    return false;
   }
 
   void _initAlbum() {

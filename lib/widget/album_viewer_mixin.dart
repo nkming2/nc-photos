@@ -168,10 +168,11 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
         color: Theme.of(context).colorScheme.primary,
         tooltip: AppLocalizations.of(context).doneButtonTooltip,
         onPressed: () {
-          if (doneEditMode()) {
+          if (validateEditMode()) {
             setState(() {
               _isEditMode = false;
             });
+            doneEditMode();
           }
         },
       ),
@@ -186,8 +187,12 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   @mustCallSuper
   void enterEditMode() {}
 
+  /// Validates the pending modifications
   @protected
-  bool doneEditMode();
+  bool validateEditMode();
+
+  @protected
+  void doneEditMode();
 
   /// Return a new album with the edits
   @protected
