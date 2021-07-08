@@ -137,7 +137,7 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
           return Tuple2(
               prevFileTime ?? DateTime.fromMillisecondsSinceEpoch(0), e);
         })
-        .sorted((x, y) {
+        .stableSorted((x, y) {
           if (isAscending) {
             return x.item1.compareTo(y.item1);
           } else {
