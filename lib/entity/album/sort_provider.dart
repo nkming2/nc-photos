@@ -134,10 +134,17 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
             prevFileTime = e.file.bestDateTime;
           }
           // for non file items, use the sibling file's time
-          return Tuple2(
-              prevFileTime ?? DateTime.fromMillisecondsSinceEpoch(0), e);
+          return Tuple2(prevFileTime, e);
         })
         .stableSorted((x, y) {
+          if (x.item1 == null && y.item1 == null) {
+            return 0;
+          }
+          else if (x.item1 == null) {
+            return -1;
+          } else if (y.item1 == null) {
+            return 1;
+          }
           if (isAscending) {
             return x.item1.compareTo(y.item1);
           } else {
