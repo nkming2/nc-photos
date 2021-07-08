@@ -67,7 +67,7 @@
 	"@addToAlbumFailureNotification": {
 		"description": "Inform user that the item cannot be added to an album"
 	},
-	"addToAlbumAlreadyAddedNotification": "El archivo ya está en el álbum",
+	"addToAlbumAlreadyAddedNotification": "El elemento ya está en el álbum",
 	"@addToAlbumAlreadyAddedNotification": {
 		"description": "Inform user that the item is already in the album"
 	},
@@ -75,7 +75,7 @@
 	"@deleteSelectedTooltip": {
 		"description": "Tooltip of the button that deletes selected items"
 	},
-	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 archivo} other{Borrando {count} archivos}}",
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 elemento} other{Borrando {count} archivos}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
 		"placeholders": {
@@ -84,11 +84,11 @@
 			}
 		}
 	},
-	"deleteSelectedSuccessNotification": "Archivos borrados con éxito",
+	"deleteSelectedSuccessNotification": "Elementos borrados con éxito",
 	"@deleteSelectedSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully"
 	},
-	"deleteSelectedFailureNotificationdeleteSelectedFailureNotification": "{count, plural, =1{Error al borrar 1 archivo} other{Error al borrar {count} archivos}}",
+	"deleteSelectedFailureNotification": "{count, plural, =1{Error al borrar 1 elemento} other{Error al borrar {count} elementos}}",
 	"@deleteSelectedFailureNotification": {
 		"description": "Inform user that some/all the selected items cannot be deleted",
 		"placeholders": {
@@ -101,7 +101,7 @@
 	"@archiveSelectedMenuLabel": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivando 1 archivo} other{Archivando {count} archivos}}",
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivando 1 elemento} other{Archivando {count} archivos}}",
 	"@archiveSelectedProcessingNotification": {
 		"description": "Archiving the selected items",
 		"placeholders": {
@@ -114,7 +114,7 @@
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
 	},
-	"archiveSelectedFailureNotification": "{count, plural, =1{Error al archivar 1 archivo} other{Error al archivar {count} archivos}}",
+	"archiveSelectedFailureNotification": "{count, plural, =1{Error al archivar 1 elemento} other{Error al archivar {count} elementos}}",
 	"@archiveSelectedFailureNotification": {
 		"description": "Cannot archive some of the selected items",
 		"placeholders": {
@@ -127,7 +127,7 @@
 	"@unarchiveSelectedTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Desarchivando 1 archivo} other{Desarchivando {count} archivos}}",
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Desarchivando 1 elemento} other{Desarchivando {count} elementos}}",
 	"@unarchiveSelectedProcessingNotification": {
 		"description": "Unarchiving selected items",
 		"placeholders": {
@@ -140,7 +140,7 @@
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
 	},
-	"unarchiveSelectedFailureNotification": "{count, plural, =1{Error al desarchivar 1 archivo} other{Error al desarchivar {count} archivos}}",
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Error al desarchivar 1 elemento} other{Error al desarchivar {count} elementos}}",
 	"@unarchiveSelectedFailureNotification": {
 		"description": "Cannot unarchive some of the selected items",
 		"placeholders": {
@@ -149,19 +149,19 @@
 			}
 		}
 	},
-	"deleteTooltip": "Borrar",
+	"deleteTooltip": "Eliminar",
 	"@deleteTooltip": {
 		"description": "Tooltip for the delete button"
 	},
-	"deleteProcessingNotification": "Borrando archivo",
+	"deleteProcessingNotification": "Eliminando elemento",
 	"@deleteProcessingNotification": {
 		"description": "Inform user that the item is being deleted"
 	},
-	"deleteSuccessNotification": "Archivo borrado en éxito",
+	"deleteSuccessNotification": "Elemento borrado en éxito",
 	"@deleteSuccessNotification": {
 		"description": "Inform user that the item is deleted successfully"
 	},
-	"deleteFailureNotification": "Error al borrar archivo",
+	"deleteFailureNotification": "Error al borrar elemento",
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
@@ -169,7 +169,7 @@
 	"@removeSelectedFromAlbumTooltip": {
 		"description": "Tooltip of the button that remove selected items from an album"
 	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 archivo quitado del álbum} other{{count} archivos quitados del álbum}}",
+	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 elemento quitado del álbum} other{{count} elementos quitados del álbum}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
 		"placeholders": {
@@ -178,7 +178,7 @@
 			}
 		}
 	},
-	"removeSelectedFromAlbumFailureNotification": "Error al quitar archivos del álbum",
+	"removeSelectedFromAlbumFailureNotification": "Error al quitar elementos del álbum",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
 	},
@@ -195,7 +195,7 @@
 			}
 		}
 	},
-	"createAlbumTooltip": "Crear álbum nuevo",
+	"createAlbumTooltip": "Crear nuevo álbum",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
@@ -203,7 +203,7 @@
 	"@createAlbumFailureNotification": {
 		"description": "Inform user that an album cannot be created"
 	},
-	"albumSize": "{count, plural, =0{Empty} =1{1 archivo} other{{count} archivos}}",
+	"albumSize": "{count, plural, =0{Empty} =1{1 elemento} other{{count} elementos}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
 		"placeholders": {
@@ -212,7 +212,7 @@
 			}
 		}
 	},
-	"albumArchiveLabel": "Archivados",
+	"albumArchiveLabel": "Archivo",
 	"@albumArchiveLabel": {
 		"description": "Archive"
 	},
@@ -221,7 +221,7 @@
 		"description": "Inform user that the app is connecting to a server",
 		"placeholders": {
 			"server": {
-				"example": "http://www.example.com"
+				"example": "http://www.ejemplo.com"
 			}
 		}
 	},
@@ -285,7 +285,7 @@
 	"@rootPickerNavigateUpItemText": {
 		"description": "Text of the list item to navigate up the directory tree"
 	},
-	"rootPickerUnpickFailureNotification": "Error al desmarcar item",
+	"rootPickerUnpickFailureNotification": "Error al desmarcar elemento",
 	"@rootPickerUnpickFailureNotification": {
 		"description": "Failed while unpicking an item in the root picker list"
 	},
@@ -301,7 +301,7 @@
 	"@setupSettingsModifyLaterHint": {
 		"description": "Inform user that they can modify this setting after the setup process"
 	},
-	"setupHiddenPrefDirNoticeDetail": "Está aplicación crea una carpeta en Nextcloud para guardar las preferencias. Por favor no la modifiques o elimines a no ser que quieras eliminar ésta aplicación.",
+	"setupHiddenPrefDirNoticeDetail": "Está aplicación crea una carpeta en Nextcloud para guardar las preferencias. Por favor no la modifiques o elimines a no ser que quieras desinstalar ésta aplicación.",
 	"@setupHiddenPrefDirNoticeDetail": {
 		"description": "Inform user about the preference folder created by this app"
 	},
@@ -317,7 +317,7 @@
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
 	},
-	"settingsExifSupportTrueSubtitle": "Requiere un uso mayor de datos",
+	"settingsExifSupportTrueSubtitle": "Requiere un uso mayor de la red",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
@@ -333,7 +333,7 @@
 	"@settingsSourceCodeTitle": {
 		"description": "Title of the source code item"
 	},
-	"settingsBugReportTitle": "Reportar problema",
+	"settingsBugReportTitle": "Comunicar un problema",
 	"@settingsBugReportTitle": {
 		"description": "Report issue"
 	},
@@ -349,7 +349,7 @@
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
 	},
-	"exifSupportDetails": "Habilitando el soporte EXIF podrás ver metadatos como fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño original. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
+	"exifSupportDetails": "Habilitando el soporte EXIF podrás ver metadatos como la fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño original. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
@@ -369,7 +369,7 @@
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
 	},
-	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos los archivos",
+	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos tus archivos",
 	"@rootPickerSkipConfirmationDialogContent": {
 		"description": "Inform user what happens after skipping root picker"
 	},
@@ -436,7 +436,7 @@
 	"@webSelectRangeNotification": {
 		"description": "Inform web user how to select items in range"
 	},
-	"mobileSelectRangeNotification": "Mantenga presionado otro ítem para seleccionar todo entre medias",
+	"mobileSelectRangeNotification": "Mantenga presionado otro elemento para seleccionar todo entre ellos",
 	"@mobileSelectRangeNotification": {
 		"description": "Inform mobile user how to select items in range"
 	},
@@ -459,7 +459,7 @@
 	"@updateDateTimeFailureNotification": {
 		"description": "Failed to set the date & time of a file"
 	},
-		"albumDirPickerHeaderText": "Selecciona las carpetas para asociarlas",
+	"albumDirPickerHeaderText": "Selecciona las carpetas a asociar con el álbum",
 	"@albumDirPickerHeaderText": {
 		"description": "Pick the folders for a folder based album"
 	},
@@ -471,31 +471,31 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Básico",
+	"createAlbumDialogBasicLabel": "Álbum simple",
 	"@createAlbumDialogBasicLabel": {
 		"description": "Basic album"
 	},
-	"createAlbumDialogBasicDescription": "El álbum básico organiza el contenido sin tener en cuenta la jerarquía de archivos en el servidor",
+	"createAlbumDialogBasicDescription": "El álbum simple organiza el contenido de los elementos que vayas añadiendo, sin importar de las carpetas del servidor que procedan",
 	"@createAlbumDialogBasicDescription": {
 		"description": "Describe what a basic album is"
 	},
-	"createAlbumDialogFolderBasedLabel": "Basado en carpetas",
+	"createAlbumDialogFolderBasedLabel": "Álbum de carpetas",
 	"@createAlbumDialogFolderBasedLabel": {
 		"description": "Folder based album"
 	},
-	"createAlbumDialogFolderBasedDescription": "Los álbumes basados en carpetas reflejan el contenido de las carpetas tal cual",
+	"createAlbumDialogFolderBasedDescription": "Los álbumes de carpetas muestran el contenido de las carpetas que elijas",
 	"@createAlbumDialogFolderBasedDescription": {
 		"description": "Describe what a folder based album is"
 	},
-	"convertBasicAlbumMenuLabel": "Convertir en álbum básico",
+	"convertBasicAlbumMenuLabel": "Convertir en álbum simple",
 	"@convertBasicAlbumMenuLabel": {
 		"description": "Convert a non-basic album to a basic one"
 	},
-	"convertBasicAlbumConfirmationDialogTitle": "Convertir en álbum básico",
+	"convertBasicAlbumConfirmationDialogTitle": "Convertir en álbum simple",
 	"@convertBasicAlbumConfirmationDialogTitle": {
 		"description": "Make sure the user wants to perform the conversion"
 	},
-	"convertBasicAlbumConfirmationDialogContent": "El contenido de éste álbum ya no será gestionado por la aplicación. Podrás añadir o eliminar fotos libremente.\n\nÉsta conversión es irreversible",
+	"convertBasicAlbumConfirmationDialogContent": "El contenido de éste álbum ya no será gestionado por la aplicación segun el contenido de las carpetas asociadas. Podrás añadir o eliminar elementos libremente.\n\nÉsta conversión es irreversible",
 	"@convertBasicAlbumConfirmationDialogContent": {
 		"description": "Make sure the user wants to perform the conversion"
 	},
@@ -503,6 +503,38 @@
 	"@convertBasicAlbumSuccessNotification": {
 		"description": "Successfully converted the album"
 	},
+	"importFoldersTooltip": "Importar carpetas",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "Importar carpetas como álbumes",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "Las carpetas sugeridas se alistan a continuación. Dependiendo de la cantidad de archivos en tu servidor, esto podría tardar un rato en terminar.",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "IMPORTAR",
+	"albumImporterProgressText": "Importando carpetas",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
+	"editAlbumMenuLabel": "Editar álbum",
+	"@editAlbumMenuLabel": {
+		"description": "Edit the opened album"
+	},
+	"doneButtonTooltip": "Listo",
+	"editTooltip": "Editar",
+	"editAccountConflictFailureNotification": "Ya existe una cuenta con los mismos ajustes",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"genericProcessingDialogContent": "Por favor, espera",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
+
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
@@ -528,7 +560,7 @@
 		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
 		"placeholders": {
 			"host": {
-				"example": "www.example.com"
+				"example": "www.ejemplo.com"
 			},
 			"fingerprint": {
 				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
