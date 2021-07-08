@@ -471,13 +471,13 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Basic",
+	"createAlbumDialogBasicLabel": "Simple",
 	"@createAlbumDialogBasicLabel": {
-		"description": "Basic album"
+		"description": "Simple album"
 	},
-	"createAlbumDialogBasicDescription": "Basic album organizes photos regardless of the file hierarchy on the server",
+	"createAlbumDialogBasicDescription": "Simple album organizes photos regardless of the file hierarchy on the server",
 	"@createAlbumDialogBasicDescription": {
-		"description": "Describe what a basic album is"
+		"description": "Describe what a simple album is"
 	},
 	"createAlbumDialogFolderBasedLabel": "Folder based",
 	"@createAlbumDialogFolderBasedLabel": {
@@ -487,11 +487,11 @@
 	"@createAlbumDialogFolderBasedDescription": {
 		"description": "Describe what a folder based album is"
 	},
-	"convertBasicAlbumMenuLabel": "Convert to basic album",
+	"convertBasicAlbumMenuLabel": "Convert to simple album",
 	"@convertBasicAlbumMenuLabel": {
-		"description": "Convert a non-basic album to a basic one"
+		"description": "Convert a non-simple album to a simple one"
 	},
-	"convertBasicAlbumConfirmationDialogTitle": "Convert to basic album",
+	"convertBasicAlbumConfirmationDialogTitle": "Convert to simple album",
 	"@convertBasicAlbumConfirmationDialogTitle": {
 		"description": "Make sure the user wants to perform the conversion"
 	},
