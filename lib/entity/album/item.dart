@@ -28,6 +28,8 @@ abstract class AlbumItem {
     switch (type) {
       case AlbumFileItem._type:
         return AlbumFileItem.fromJson(content.cast<String, dynamic>());
+      case AlbumLabelItem._type:
+        return AlbumLabelItem.fromJson(content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -38,6 +40,8 @@ abstract class AlbumItem {
     String getType() {
       if (this is AlbumFileItem) {
         return AlbumFileItem._type;
+      } else if (this is AlbumLabelItem) {
+        return AlbumLabelItem._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -101,4 +105,39 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
   final File file;
 
   static const _type = "file";
+}
+
+class AlbumLabelItem extends AlbumItem with EquatableMixin {
+  AlbumLabelItem({
+    @required this.text,
+  });
+
+  factory AlbumLabelItem.fromJson(Map<String, dynamic> json) {
+    return AlbumLabelItem(
+      text: json["text"],
+    );
+  }
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "text: '$text', "
+        "}";
+  }
+
+  @override
+  toContentJson() {
+    return {
+      "text": text,
+    };
+  }
+
+  @override
+  get props => [
+        text,
+      ];
+
+  final String text;
+
+  static const _type = "label";
 }

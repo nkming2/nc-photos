@@ -551,6 +551,10 @@
 	"@albumEditDragRearrangeNotification": {
 		"description": "Instructions on how to rearrange photos"
 	},
+	"albumAddTextTooltip": "Add text",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

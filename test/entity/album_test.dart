@@ -75,61 +75,107 @@ void main() {
             ));
       });
 
-      test("AlbumStaticProvider", () {
-        final json = <String, dynamic>{
-          "version": Album.version,
-          "lastUpdated": "2020-01-02T03:04:05.678901Z",
-          "name": "",
-          "provider": <String, dynamic>{
-            "type": "static",
-            "content": <String, dynamic>{
-              "items": [
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test1.jpg",
+      group("AlbumStaticProvider", () {
+        test("AlbumFileItem", () {
+          final json = <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                      },
                     },
                   },
-                },
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test2.jpg",
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test2.jpg",
+                      },
                     },
                   },
-                },
-              ],
-            },
-          },
-          "coverProvider": <String, dynamic>{
-            "type": "auto",
-            "content": <String, dynamic>{},
-          },
-          "sortProvider": <String, dynamic>{
-            "type": "null",
-            "content": <String, dynamic>{},
-          },
-        };
-        expect(
-            Album.fromJson(json),
-            Album(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-              name: "",
-              provider: AlbumStaticProvider(
-                items: [
-                  AlbumFileItem(
-                    file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-                  ),
-                  AlbumFileItem(
-                    file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-                  ),
                 ],
-              ),
-              coverProvider: AlbumAutoCoverProvider(),
-              sortProvider: AlbumNullSortProvider(),
-            ));
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          };
+          expect(
+              Album.fromJson(json),
+              Album(
+                lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+                name: "",
+                provider: AlbumStaticProvider(
+                  items: [
+                    AlbumFileItem(
+                      file: File(path: "remote.php/dav/files/admin/test1.jpg"),
+                    ),
+                    AlbumFileItem(
+                      file: File(path: "remote.php/dav/files/admin/test2.jpg"),
+                    ),
+                  ],
+                ),
+                coverProvider: AlbumAutoCoverProvider(),
+                sortProvider: AlbumNullSortProvider(),
+              ));
+        });
+
+        test("AlbumLabelItem", () {
+          final json = <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "label",
+                    "content": <String, dynamic>{
+                      "text": "Testing",
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          };
+          expect(
+              Album.fromJson(json),
+              Album(
+                lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+                name: "",
+                provider: AlbumStaticProvider(
+                  items: [
+                    AlbumLabelItem(
+                      text: "Testing",
+                    ),
+                  ],
+                ),
+                coverProvider: AlbumAutoCoverProvider(),
+                sortProvider: AlbumNullSortProvider(),
+              ));
+        });
       });
 
       test("AlbumAutoCoverProvider", () {
@@ -310,58 +356,102 @@ void main() {
         });
       });
 
-      test("AlbumStaticProvider", () {
-        final album = Album(
-          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-          name: "",
-          provider: AlbumStaticProvider(
-            items: [
-              AlbumFileItem(
-                file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-              ),
-              AlbumFileItem(
-                file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-              ),
-            ],
-          ),
-          coverProvider: AlbumAutoCoverProvider(),
-          sortProvider: AlbumNullSortProvider(),
-        );
-        expect(album.toRemoteJson(), <String, dynamic>{
-          "version": Album.version,
-          "lastUpdated": "2020-01-02T03:04:05.678901Z",
-          "name": "",
-          "provider": <String, dynamic>{
-            "type": "static",
-            "content": <String, dynamic>{
-              "items": [
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test1.jpg",
-                    },
-                  },
-                },
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test2.jpg",
-                    },
-                  },
-                },
+      group("AlbumStaticProvider", () {
+        test("AlbumFileItem", () {
+          final album = Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [
+                AlbumFileItem(
+                  file: File(path: "remote.php/dav/files/admin/test1.jpg"),
+                ),
+                AlbumFileItem(
+                  file: File(path: "remote.php/dav/files/admin/test2.jpg"),
+                ),
               ],
+            ),
+            coverProvider: AlbumAutoCoverProvider(),
+            sortProvider: AlbumNullSortProvider(),
+          );
+          expect(album.toRemoteJson(), <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                      },
+                    },
+                  },
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test2.jpg",
+                      },
+                    },
+                  },
+                ],
+              },
             },
-          },
-          "coverProvider": <String, dynamic>{
-            "type": "auto",
-            "content": <String, dynamic>{},
-          },
-          "sortProvider": <String, dynamic>{
-            "type": "null",
-            "content": <String, dynamic>{},
-          },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          });
+        });
+
+        test("AlbumLabelItem", () {
+          final album = Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [
+                AlbumLabelItem(
+                  text: "Testing",
+                ),
+              ],
+            ),
+            coverProvider: AlbumAutoCoverProvider(),
+            sortProvider: AlbumNullSortProvider(),
+          );
+          expect(album.toRemoteJson(), <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "label",
+                    "content": <String, dynamic>{
+                      "text": "Testing",
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          });
         });
       });
 
@@ -500,58 +590,102 @@ void main() {
         });
       });
 
-      test("AlbumStaticProvider", () {
-        final album = Album(
-          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-          name: "",
-          provider: AlbumStaticProvider(
-            items: [
-              AlbumFileItem(
-                file: File(path: "remote.php/dav/files/admin/test1.jpg"),
-              ),
-              AlbumFileItem(
-                file: File(path: "remote.php/dav/files/admin/test2.jpg"),
-              ),
-            ],
-          ),
-          coverProvider: AlbumAutoCoverProvider(),
-          sortProvider: AlbumNullSortProvider(),
-        );
-        expect(album.toAppDbJson(), <String, dynamic>{
-          "version": Album.version,
-          "lastUpdated": "2020-01-02T03:04:05.678901Z",
-          "name": "",
-          "provider": <String, dynamic>{
-            "type": "static",
-            "content": <String, dynamic>{
-              "items": [
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test1.jpg",
-                    },
-                  },
-                },
-                <String, dynamic>{
-                  "type": "file",
-                  "content": <String, dynamic>{
-                    "file": <String, dynamic>{
-                      "path": "remote.php/dav/files/admin/test2.jpg",
-                    },
-                  },
-                },
+      group("AlbumStaticProvider", () {
+        test("AlbumFileItem", () {
+          final album = Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [
+                AlbumFileItem(
+                  file: File(path: "remote.php/dav/files/admin/test1.jpg"),
+                ),
+                AlbumFileItem(
+                  file: File(path: "remote.php/dav/files/admin/test2.jpg"),
+                ),
               ],
+            ),
+            coverProvider: AlbumAutoCoverProvider(),
+            sortProvider: AlbumNullSortProvider(),
+          );
+          expect(album.toAppDbJson(), <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                      },
+                    },
+                  },
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test2.jpg",
+                      },
+                    },
+                  },
+                ],
+              },
             },
-          },
-          "coverProvider": <String, dynamic>{
-            "type": "auto",
-            "content": <String, dynamic>{},
-          },
-          "sortProvider": <String, dynamic>{
-            "type": "null",
-            "content": <String, dynamic>{},
-          },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          });
+        });
+
+        test("AlbumLabelItem", () {
+          final album = Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [
+                AlbumLabelItem(
+                  text: "Testing",
+                ),
+              ],
+            ),
+            coverProvider: AlbumAutoCoverProvider(),
+            sortProvider: AlbumNullSortProvider(),
+          );
+          expect(album.toAppDbJson(), <String, dynamic>{
+            "version": Album.version,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "name": "",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "label",
+                    "content": <String, dynamic>{
+                      "text": "Testing",
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "null",
+              "content": <String, dynamic>{},
+            },
+          });
         });
       });
 

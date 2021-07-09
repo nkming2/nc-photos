@@ -24,6 +24,7 @@ import 'package:nc_photos/widget/album_viewer_mixin.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:quiver/iterables.dart';
 
@@ -93,6 +94,9 @@ class _AlbumViewerState extends State<AlbumViewer>
   enterEditMode() {
     super.enterEditMode();
     _editAlbum = _album.copyWith();
+    setState(() {
+      _transformItems();
+    });
 
     if (!SessionStorage().hasShowDragRearrangeNotification) {
       SnackBarManager().showSnackBar(SnackBar(
@@ -230,6 +234,11 @@ class _AlbumViewerState extends State<AlbumViewer>
 
   Widget _buildEditAppBar(BuildContext context) {
     return buildEditAppBar(context, widget.account, widget.album, actions: [
+      IconButton(
+        icon: Icon(Icons.text_fields),
+        tooltip: AppLocalizations.of(context).albumAddTextTooltip,
+        onPressed: _onEditAppBarAddTextPressed,
+      ),
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
         tooltip: AppLocalizations.of(context).sortTooltip,
@@ -429,6 +438,50 @@ class _AlbumViewerState extends State<AlbumViewer>
     });
   }
 
+  void _onEditAppBarAddTextPressed() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleInputDialog(),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+      _editAlbum = _editAlbum.copyWith(
+        provider: AlbumStaticProvider(
+          items: [
+            AlbumLabelItem(text: value),
+            ..._sortedItems,
+          ],
+        ),
+      );
+      setState(() {
+        _transformItems();
+      });
+    });
+  }
+
+  void _onLabelItemEditPressed(AlbumLabelItem item, int index) {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleInputDialog(
+        initialText: item.text,
+      ),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+      _sortedItems[index] = AlbumLabelItem(text: value);
+      _editAlbum = _editAlbum.copyWith(
+        provider: AlbumStaticProvider(
+          items: _sortedItems,
+        ),
+      );
+      setState(() {
+        _transformItems();
+      });
+    });
+  }
+
   void _transformItems() {
     if (_editAlbum != null) {
       // edit mode
@@ -490,6 +543,29 @@ class _AlbumViewerState extends State<AlbumViewer>
           } else {
             _log.shout(
                 "[_transformItems] Unsupported file format: ${item.file.contentType}");
+          }
+        } else if (item is AlbumLabelItem) {
+          if (isEditMode) {
+            yield _EditLabelListItem(
+              index: i,
+              text: item.text,
+              onEditPressed: () => _onLabelItemEditPressed(item, i),
+              onDropBefore: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, true),
+              onDropAfter: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, false),
+              onDragStarted: () {
+                _isDragging = true;
+              },
+              onDragEndedAny: () {
+                _isDragging = false;
+              },
+            );
+          } else {
+            yield _LabelListItem(
+              index: i,
+              text: item.text,
+            );
           }
         }
       }
@@ -583,6 +659,9 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
   get staggeredTile => const StaggeredTile.count(1, 1);
 
   @override
+  buildDragFeedbackWidget(BuildContext context) => null;
+
+  @override
   toString() {
     return "$runtimeType {"
         "index: $index, "
@@ -661,4 +740,89 @@ class _VideoListItem extends _ListItem {
 
   final Account account;
   final String previewUrl;
+}
+
+class _LabelListItem extends _ListItem {
+  _LabelListItem({
+    @required int index,
+    @required this.text,
+    DragTargetAccept<DraggableItem> onDropBefore,
+    DragTargetAccept<DraggableItem> onDropAfter,
+    VoidCallback onDragStarted,
+    VoidCallback onDragEndedAny,
+  }) : super(
+          index: index,
+          onDropBefore: onDropBefore,
+          onDropAfter: onDropAfter,
+          onDragStarted: onDragStarted,
+          onDragEndedAny: onDragEndedAny,
+        );
+
+  @override
+  get staggeredTile => const StaggeredTile.extent(99, 56);
+
+  @override
+  buildWidget(BuildContext context) {
+    return Container(
+      alignment: AlignmentDirectional.centerStart,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.subtitle1,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  final String text;
+}
+
+class _EditLabelListItem extends _LabelListItem {
+  _EditLabelListItem({
+    @required int index,
+    @required String text,
+    @required this.onEditPressed,
+    DragTargetAccept<DraggableItem> onDropBefore,
+    DragTargetAccept<DraggableItem> onDropAfter,
+    VoidCallback onDragStarted,
+    VoidCallback onDragEndedAny,
+  }) : super(
+          index: index,
+          text: text,
+          onDropBefore: onDropBefore,
+          onDropAfter: onDropAfter,
+          onDragStarted: onDragStarted,
+          onDragEndedAny: onDragEndedAny,
+        );
+
+  @override
+  buildWidget(BuildContext context) {
+    return Stack(
+      children: [
+        // needed to expand the touch sensitive area to the whole row
+        Container(
+          color: Colors.transparent,
+        ),
+        super.buildWidget(context),
+        PositionedDirectional(
+          top: 0,
+          bottom: 0,
+          end: 0,
+          child: IconButton(
+            icon: Icon(Icons.edit),
+            tooltip: AppLocalizations.of(context).editTooltip,
+            onPressed: onEditPressed,
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  buildDragFeedbackWidget(BuildContext context) {
+    return super.buildWidget(context);
+  }
+
+  final VoidCallback onEditPressed;
 }
