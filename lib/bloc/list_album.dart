@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/list_album.dart';
+import 'package:tuple/tuple.dart';
 
 abstract class ListAlbumBlocEvent {
   const ListAlbumBlocEvent();
@@ -124,30 +125,19 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
     if (!hasContent) {
       // show something instantly on first load
-      ListAlbumBlocState cacheState = ListAlbumBlocInit();
-      await for (final s in _queryOffline(ev, () => cacheState)) {
-        cacheState = s;
-      }
+      final cacheState = await _queryOffline(ev);
       yield ListAlbumBlocLoading(ev.account, cacheState.albums);
       hasContent = cacheState.albums.isNotEmpty;
     }
 
-    ListAlbumBlocState newState = ListAlbumBlocInit();
-    if (!hasContent) {
-      await for (final s in _queryOnline(ev, () => newState)) {
-        newState = s;
-        yield s;
-      }
+    final newState = await _queryOnline(ev);
+    if (newState is ListAlbumBlocFailure) {
+      yield ListAlbumBlocFailure(
+          ev.account,
+          newState.albums?.isNotEmpty == true ? newState.albums : state.albums,
+          newState.exception);
     } else {
-      await for (final s in _queryOnline(ev, () => newState)) {
-        newState = s;
-      }
-      if (newState is ListAlbumBlocSuccess) {
-        yield newState;
-      } else if (newState is ListAlbumBlocFailure) {
-        yield ListAlbumBlocFailure(
-            ev.account, state.albums, newState.exception);
-      }
+      yield newState;
     }
   }
 
@@ -182,29 +172,37 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     add(_ListAlbumBlocExternalEvent());
   }
 
-  Stream<ListAlbumBlocState> _queryOffline(
-          ListAlbumBlocQuery ev, ListAlbumBlocState Function() getState) =>
+  Future<ListAlbumBlocState> _queryOffline(ListAlbumBlocQuery ev) =>
       _queryWithAlbumDataSource(
-          ev, getState, FileAppDbDataSource(), AlbumAppDbDataSource());
+          ev, FileAppDbDataSource(), AlbumAppDbDataSource());
 
-  Stream<ListAlbumBlocState> _queryOnline(
-          ListAlbumBlocQuery ev, ListAlbumBlocState Function() getState) =>
+  Future<ListAlbumBlocState> _queryOnline(ListAlbumBlocQuery ev) =>
       _queryWithAlbumDataSource(
-          ev, getState, FileCachedDataSource(), AlbumCachedDataSource());
+          ev, FileCachedDataSource(), AlbumCachedDataSource());
 
-  Stream<ListAlbumBlocState> _queryWithAlbumDataSource(
-      ListAlbumBlocQuery ev,
-      ListAlbumBlocState Function() getState,
-      FileDataSource fileDataSource,
-      AlbumDataSource albumDataSrc) async* {
+  Future<ListAlbumBlocState> _queryWithAlbumDataSource(ListAlbumBlocQuery ev,
+      FileDataSource fileDataSource, AlbumDataSource albumDataSrc) async {
     try {
-      final results = await ListAlbum(
-          FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account);
-      yield ListAlbumBlocSuccess(ev.account, results);
+      final albums = <Album>[];
+      final errors = <dynamic>[];
+      await for (final result in ListAlbum(
+          FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account)) {
+        if (result is Tuple2) {
+          _log.severe("[_queryWithAlbumDataSource] Exception while ListAlbum",
+              result.item1, result.item2);
+          errors.add(result.item1);
+        } else if (result is Album) {
+          albums.add(result);
+        }
+      }
+      if (errors.isEmpty) {
+        return ListAlbumBlocSuccess(ev.account, albums);
+      } else {
+        return ListAlbumBlocFailure(ev.account, albums, errors.first);
+      }
     } catch (e, stacktrace) {
-      _log.severe(
-          "[_queryWithAlbumDataSource] Exception while request", e, stacktrace);
-      yield ListAlbumBlocFailure(ev.account, getState().albums, e);
+      _log.severe("[_queryWithAlbumDataSource] Exception", e, stacktrace);
+      return ListAlbumBlocFailure(ev.account, [], e);
     }
   }
 

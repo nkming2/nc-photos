@@ -24,7 +24,9 @@ class Remove {
   }
 
   Future<void> _cleanUpAlbums(Account account, File file) async {
-    final albums = await ListAlbum(fileRepo, albumRepo)(account);
+    final albums = (await ListAlbum(fileRepo, albumRepo)(account)
+        .where((event) => event is Album)
+        .toList()).cast<Album>();
     // clean up only make sense for static albums
     for (final a
         in albums.where((element) => element.provider is AlbumStaticProvider)) {

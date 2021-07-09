@@ -102,7 +102,9 @@ class ListImportableAlbumBloc
     try {
       final fileRepo = FileRepo(FileCachedDataSource());
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      final albums = await ListAlbum(fileRepo, albumRepo)(ev.account);
+      final albums = (await ListAlbum(fileRepo, albumRepo)(ev.account)
+          .where((event) => event is Album)
+          .toList()).cast<Album>();
       final importedDirs = albums.map((a) {
         if (a.provider is! AlbumDirProvider) {
           return <File>[];
