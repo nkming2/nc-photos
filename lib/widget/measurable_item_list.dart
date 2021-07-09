@@ -62,6 +62,8 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
   @override
   build(BuildContext context) {
+    // on mobile, LayoutBuilder conflicts with TextFields.
+    // See https://github.com/flutter/flutter/issues/63919
     return SliverLayoutBuilder(builder: (context, constraints) {
       if (_prevListWidth == null) {
         _prevListWidth = constraints.crossAxisExtent;
