@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 class VideoViewer extends StatefulWidget {
   VideoViewer({
@@ -55,6 +56,8 @@ class _VideoViewerState extends State<VideoViewer> {
         _log.shout("[initState] Filed while initialize", e, stacktrace);
       });
     _controller.addListener(_onControllerChanged);
+
+    Wakelock.enable();
   }
 
   @override
@@ -78,6 +81,7 @@ class _VideoViewerState extends State<VideoViewer> {
   dispose() {
     super.dispose();
     _controller?.dispose();
+    Wakelock.disable();
   }
 
   Widget _buildPlayer(BuildContext context) {

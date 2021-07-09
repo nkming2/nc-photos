@@ -73,6 +73,7 @@ dependencies:
       url: https://gitlab.com/nkming2/flutter-plugins
       ref: video-player-nc-photos
       path: packages/video_player/video_player
+  wakelock: ^0.5.2
   xml: ^5.0.2
 
 dev_dependencies:
