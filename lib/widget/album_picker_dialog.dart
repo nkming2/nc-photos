@@ -9,10 +9,12 @@ import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
+import 'package:tuple/tuple.dart';
 
 class AlbumPickerDialog extends StatefulWidget {
   AlbumPickerDialog({
@@ -148,9 +150,20 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
   }
 
   void _transformItems(List<Album> albums) {
+    final sortedAlbums = albums
+        .where((element) => element.provider is AlbumStaticProvider)
+        .map((e) => Tuple2(e.provider.latestItemTime ?? e.lastUpdated, e))
+        .sorted((a, b) {
+      // then sort in descending order
+      final tmp = b.item1.compareTo(a.item1);
+      if (tmp != 0) {
+        return tmp;
+      } else {
+        return a.item2.name.compareTo(b.item2.name);
+      }
+    }).map((e) => e.item2);
     _items.clear();
-    _items.addAll(
-        albums.where((element) => element.provider is AlbumStaticProvider));
+    _items.addAll(sortedAlbums);
   }
 
   void _reqQuery() {
