@@ -6,6 +6,11 @@ import 'package:nc_photos/widget/measurable_item_list.dart';
 abstract class DraggableItem {
   Widget buildWidget(BuildContext context);
 
+  /// The widget to show under the pointer when a drag is under way.
+  ///
+  /// Return null if you wish to just use the same widget as display
+  Widget buildDragFeedbackWidget(BuildContext context) => null;
+
   bool get isDraggable => false;
   DragTargetAccept<DraggableItem> get onDropBefore => null;
   DragTargetAccept<DraggableItem> get onDropAfter => null;
@@ -40,6 +45,7 @@ mixin DraggableItemListMixin<T extends StatefulWidget> on State<T> {
     return _.Draggable(
       data: item,
       child: item.buildWidget(context),
+      feedback: item.buildDragFeedbackWidget(context),
       onDropBefore: item.onDropBefore,
       onDropAfter: item.onDropAfter,
       onDragStarted: item.onDragStarted,

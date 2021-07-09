@@ -7,6 +7,7 @@ class Draggable<T> extends StatelessWidget {
     Key key,
     @required this.data,
     @required this.child,
+    this.feedback,
     this.onDropBefore,
     this.onDropAfter,
     this.onDragStarted,
@@ -53,7 +54,7 @@ class Draggable<T> extends StatelessWidget {
                 height: feedbackSize?.height ?? 128,
                 child: Opacity(
                   opacity: .5,
-                  child: child,
+                  child: feedback ?? child,
                 ),
               ),
             ),
@@ -104,6 +105,7 @@ class Draggable<T> extends StatelessWidget {
 
   final T data;
   final Widget child;
+  final Widget feedback;
 
   /// Called when some item dropped before this item
   final DragTargetAccept<T> onDropBefore;
