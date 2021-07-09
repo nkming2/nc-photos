@@ -372,8 +372,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           album.copyWith(
             provider: AlbumStaticProvider(
               items: [
-                ...AlbumStaticProvider.of(album).items,
                 AlbumFileItem(file: widget.file),
+                ...AlbumStaticProvider.of(album).items,
               ],
             ),
           ));

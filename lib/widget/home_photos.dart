@@ -319,8 +319,8 @@ class _HomePhotosState extends State<HomePhotos>
           album.copyWith(
             provider: AlbumStaticProvider(
               items: makeDistinctAlbumItems([
-                ...AlbumStaticProvider.of(album).items,
                 ...selected,
+                ...AlbumStaticProvider.of(album).items,
               ]),
             ),
           ));
