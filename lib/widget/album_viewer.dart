@@ -13,8 +13,8 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -239,24 +239,28 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onItemTap(int index) {
+    // convert item index to file index
+    var fileIndex = index;
+    for (int i = 0; i < index; ++i) {
+      if (_sortedItems[i] is! AlbumFileItem ||
+          !file_util
+              .isSupportedFormat((_sortedItems[i] as AlbumFileItem).file)) {
+        --fileIndex;
+      }
+    }
     Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, index));
+        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
   }
 
   void _onSelectionAppBarRemovePressed() {
-    // currently album's are auto sorted by date, so it's ok to remove items w/o
-    // preserving the order. this will be problematic if we want to allow custom
-    // sorting later
     final selectedIndexes =
-        selectedListItems.map((e) => itemStreamListItems.indexOf(e)).toList();
-    final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
-    final newItems = _getAlbumItemsOf(_album).where((element) {
-      if (element is AlbumFileItem) {
-        return !selectedFiles.any((select) => select.path == element.file.path);
-      } else {
-        return true;
-      }
-    }).toList();
+        selectedListItems.map((e) => (e as _ListItem).index).toList();
+    final newItems = _sortedItems
+        .withIndex()
+        .where((element) => !selectedIndexes.contains(element.item1))
+        .map((e) => e.item2)
+        .toList();
+
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final newAlbum = _album.copyWith(
       provider: AlbumStaticProvider(
@@ -439,49 +443,54 @@ class _AlbumViewerState extends State<AlbumViewer>
         .toList();
 
     final items = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: thumbSize, height: thumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            index: i,
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-            onDropBefore: (dropItem) =>
-                _onItemMoved((dropItem as _ListItem).index, i, true),
-            onDropAfter: (dropItem) =>
-                _onItemMoved((dropItem as _ListItem).index, i, false),
-            onDragStarted: () {
-              _isDragging = true;
-            },
-            onDragEndedAny: () {
-              _isDragging = false;
-            },
+      for (int i = 0; i < _sortedItems.length; ++i) {
+        final item = _sortedItems[i];
+        if (item is AlbumFileItem) {
+          final previewUrl = api_util.getFilePreviewUrl(
+            widget.account,
+            item.file,
+            width: thumbSize,
+            height: thumbSize,
           );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            index: i,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-            onDropBefore: (dropItem) =>
-                _onItemMoved((dropItem as _ListItem).index, i, true),
-            onDropAfter: (dropItem) =>
-                _onItemMoved((dropItem as _ListItem).index, i, false),
-            onDragStarted: () {
-              _isDragging = true;
-            },
-            onDragEndedAny: () {
-              _isDragging = false;
-            },
-          );
-        } else {
-          _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
+          if (file_util.isSupportedImageFormat(item.file)) {
+            yield _ImageListItem(
+              index: i,
+              file: item.file,
+              account: widget.account,
+              previewUrl: previewUrl,
+              onTap: () => _onItemTap(i),
+              onDropBefore: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, true),
+              onDropAfter: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, false),
+              onDragStarted: () {
+                _isDragging = true;
+              },
+              onDragEndedAny: () {
+                _isDragging = false;
+              },
+            );
+          } else if (file_util.isSupportedVideoFormat(item.file)) {
+            yield _VideoListItem(
+              index: i,
+              account: widget.account,
+              previewUrl: previewUrl,
+              onTap: () => _onItemTap(i),
+              onDropBefore: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, true),
+              onDropAfter: (dropItem) =>
+                  _onItemMoved((dropItem as _ListItem).index, i, false),
+              onDragStarted: () {
+                _isDragging = true;
+              },
+              onDragEndedAny: () {
+                _isDragging = false;
+              },
+            );
+          } else {
+            _log.shout(
+                "[_transformItems] Unsupported file format: ${item.file.contentType}");
+          }
         }
       }
     }()
