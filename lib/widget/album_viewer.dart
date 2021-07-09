@@ -179,7 +179,7 @@ class _AlbumViewerState extends State<AlbumViewer>
       slivers: [
         _buildAppBar(context),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.only(top: 8),
           sliver: isEditMode
               ? buildDraggableItemList(
                   maxCrossAxisExtent: thumbSize.toDouble(),
