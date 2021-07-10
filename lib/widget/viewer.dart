@@ -586,8 +586,8 @@ class _ViewerState extends State<Viewer> {
   void _onDownloadSuccessful(File file, dynamic result) {
     var notif;
     if (platform_k.isAndroid) {
-      notif =
-          AndroidItemDownloadSuccessfulNotification(result, file.contentType);
+      notif = AndroidItemDownloadSuccessfulNotification(
+          [result], [file.contentType]);
     }
     if (notif != null) {
       try {

@@ -22,7 +22,8 @@ import kotlin.math.max
  * Show notification on device
  *
  * Methods:
- * fun notifyItemDownloadSuccessful(fileUri: String, mimeType: String): Unit
+ * fun notifyItemsDownloadSuccessful(fileUris: List<String>,
+ * 		mimeTypes: List<String>): Unit
  */
 class NotificationChannelHandler(activity: Activity)
 		: MethodChannel.MethodCallHandler {
@@ -38,10 +39,12 @@ class NotificationChannelHandler(activity: Activity)
 	}
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-		if (call.method == "notifyItemDownloadSuccessful") {
+		if (call.method == "notifyItemsDownloadSuccessful") {
 			try {
-				notifyItemDownloadSuccessful(call.argument<String>("fileUri")!!,
-						call.argument<String>("mimeType")!!, result)
+				notifyItemsDownloadSuccessful(
+						call.argument<List<String>>("fileUris")!!,
+						call.argument<List<String?>>("mimeTypes")!!,
+						result)
 			} catch (e: Throwable) {
 				result.error("systemException", e.toString(), null)
 			}
@@ -50,23 +53,66 @@ class NotificationChannelHandler(activity: Activity)
 		}
 	}
 
-	private fun notifyItemDownloadSuccessful(fileUri: String, mimeType: String,
-			result: MethodChannel.Result) {
-		val uriStr = fileUri
-		val uri = Uri.parse(uriStr)
-		val openIntent = Intent().apply {
-			action = Intent.ACTION_VIEW
-			setDataAndType(uri, mimeType)
+	private fun notifyItemsDownloadSuccessful(fileUris: List<String>,
+			mimeTypes: List<String?>, result: MethodChannel.Result) {
+		assert(fileUris.isNotEmpty())
+		assert(fileUris.size == mimeTypes.size)
+		val uris = fileUris.map { Uri.parse(it) }
+		val builder = NotificationCompat.Builder(_context, DOWNLOAD_CHANNEL_ID)
+				.setSmallIcon(R.drawable.baseline_download_white_18)
+				.setWhen(System.currentTimeMillis())
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setSound(RingtoneManager.getDefaultUri(
+						RingtoneManager.TYPE_NOTIFICATION))
+				.setOnlyAlertOnce(true)
+				.setAutoCancel(true)
+				.setLocalOnly(true)
+
+		if (uris.size == 1) {
+			builder.setTicker(_context.getString(
+							R.string.download_successful_notification_title))
+					.setContentTitle(_context.getString(
+							R.string.download_successful_notification_title))
+					.setContentText(_context.getString(
+							R.string.download_successful_notification_text))
+
+			val openIntent = Intent().apply {
+				action = Intent.ACTION_VIEW
+				setDataAndType(uris[0], mimeTypes[0])
+				addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+				addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+			}
+			val openPendingIntent = PendingIntent.getActivity(_context, 0,
+					openIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+			builder.setContentIntent(openPendingIntent)
+
+			// show preview if available
+			if (mimeTypes[0]?.startsWith("image/") == true) {
+				val preview = loadNotificationImage(uris[0])
+				if (preview != null) {
+					builder.setStyle(NotificationCompat.BigPictureStyle()
+							.bigPicture(loadNotificationImage(uris[0])))
+				}
+			}
+		} else {
+			val title = _context.getString(
+					R.string.download_multiple_successful_notification_title,
+					fileUris.size)
+			builder.setTicker(title)
+					.setContentTitle(title)
+		}
+
+		val shareIntent = if (uris.size == 1) Intent().apply {
+			action = Intent.ACTION_SEND
+			putExtra(Intent.EXTRA_STREAM, uris[0])
+			type = mimeTypes[0] ?: "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-		}
-		val openPendingIntent = PendingIntent.getActivity(_context, 0,
-				openIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-		val shareIntent = Intent().apply {
-			action = Intent.ACTION_SEND
-			putExtra(Intent.EXTRA_STREAM, uri)
-			type = mimeType
+		} else Intent().apply {
+			action = Intent.ACTION_SEND_MULTIPLE
+			putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
+			type = if (mimeTypes.all { it?.startsWith("image/") == true })
+					"image/*" else "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		}
@@ -74,34 +120,9 @@ class NotificationChannelHandler(activity: Activity)
 				R.string.download_successful_notification_action_share_chooser))
 		val sharePendingIntent = PendingIntent.getActivity(_context, 1,
 				shareChooser, PendingIntent.FLAG_UPDATE_CURRENT)
-
-		val builder = NotificationCompat.Builder(_context, DOWNLOAD_CHANNEL_ID)
-				.setSmallIcon(R.drawable.baseline_download_white_18)
-				.setTicker(_context.getString(
-						R.string.download_successful_notification_title))
-				.setContentTitle(_context.getString(
-						R.string.download_successful_notification_title))
-				.setContentText(_context.getString(
-						R.string.download_successful_notification_text))
-				.setWhen(System.currentTimeMillis())
-				.setContentIntent(openPendingIntent)
-				.addAction(0, _context.getString(
-						R.string.download_successful_notification_action_share),
-						sharePendingIntent)
-				.setPriority(NotificationCompat.PRIORITY_HIGH)
-				.setSound(RingtoneManager.getDefaultUri(
-						RingtoneManager.TYPE_NOTIFICATION))
-				.setOnlyAlertOnce(false)
-				.setAutoCancel(true)
-				.setLocalOnly(true)
-
-		// show preview if available
-		val preview = if (mimeType.startsWith("image/"))
-				loadNotificationImage(uri) else null;
-		if (preview != null) {
-			builder.setStyle(NotificationCompat.BigPictureStyle()
-					.bigPicture(loadNotificationImage(uri)))
-		}
+		builder.addAction(0, _context.getString(
+				R.string.download_successful_notification_action_share),
+				sharePendingIntent)
 
 		with(NotificationManagerCompat.from(_context)) {
 			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())

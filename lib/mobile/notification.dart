@@ -3,13 +3,13 @@ import 'package:nc_photos/platform/notification.dart' as itf;
 
 class AndroidItemDownloadSuccessfulNotification
     extends itf.ItemDownloadSuccessfulNotification {
-  AndroidItemDownloadSuccessfulNotification(this.fileUri, this.mimeType);
+  AndroidItemDownloadSuccessfulNotification(this.fileUris, this.mimeTypes);
 
   @override
   Future<void> notify() {
-    return Notification.notifyItemDownloadSuccessful(fileUri, mimeType);
+    return Notification.notifyItemsDownloadSuccessful(fileUris, mimeTypes);
   }
 
-  final String fileUri;
-  final String mimeType;
+  final List<String> fileUris;
+  final List<String> mimeTypes;
 }
