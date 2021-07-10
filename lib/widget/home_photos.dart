@@ -166,13 +166,6 @@ class _HomePhotosState extends State<HomePhotos>
               _onSelectionAppBarAddToAlbumPressed(context);
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: AppLocalizations.of(context).deleteSelectedTooltip,
-            onPressed: () {
-              _onSelectionAppBarDeletePressed(context);
-            },
-          ),
           PopupMenuButton(
             tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
             itemBuilder: (context) => [
@@ -180,6 +173,10 @@ class _HomePhotosState extends State<HomePhotos>
                 value: _SelectionAppBarMenuOption.archive,
                 child:
                     Text(AppLocalizations.of(context).archiveSelectedMenuLabel),
+              ),
+              PopupMenuItem(
+                value: _SelectionAppBarMenuOption.delete,
+                child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
               ),
             ],
             onSelected: (option) {
@@ -385,6 +382,10 @@ class _HomePhotosState extends State<HomePhotos>
     switch (option) {
       case _SelectionAppBarMenuOption.archive:
         _onSelectionAppBarArchivePressed(context);
+        break;
+
+      case _SelectionAppBarMenuOption.delete:
+        _onSelectionAppBarDeletePressed(context);
         break;
 
       default:
