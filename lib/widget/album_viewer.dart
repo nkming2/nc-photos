@@ -24,6 +24,7 @@ import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_viewer_mixin.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
+import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
@@ -336,53 +337,28 @@ class _AlbumViewerState extends State<AlbumViewer>
 
   void _onEditAppBarSortPressed() {
     final sortProvider = _editAlbum.sortProvider;
-    final isOldest =
-        sortProvider is AlbumTimeSortProvider && sortProvider.isAscending;
-    final isNewest =
-        sortProvider is AlbumTimeSortProvider && !sortProvider.isAscending;
-    final activeTextStyle = TextStyle(
-      color: Theme.of(context).colorScheme.primary,
-    );
     showDialog(
       context: context,
-      builder: (context) => SimpleDialog(
-        title: Text(AppLocalizations.of(context).sortOptionDialogTitle),
-        children: [
-          SimpleDialogOption(
-            child: ListTile(
-              leading: Icon(
-                isOldest ? Icons.check : null,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              title: Text(
-                AppLocalizations.of(context).sortOptionTimeAscendingLabel,
-                style: isOldest ? activeTextStyle : null,
-              ),
-              onTap: isOldest
-                  ? null
-                  : () {
-                      _onSortOldestPressed();
-                      Navigator.of(context).pop();
-                    },
-            ),
+      builder: (context) => FancyOptionPicker(
+        title: AppLocalizations.of(context).sortOptionDialogTitle,
+        items: [
+          FancyOptionPickerItem(
+            label: AppLocalizations.of(context).sortOptionTimeAscendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                sortProvider.isAscending,
+            onSelect: () {
+              _onSortOldestPressed();
+              Navigator.of(context).pop();
+            },
           ),
-          SimpleDialogOption(
-            child: ListTile(
-              leading: Icon(
-                isNewest ? Icons.check : null,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              title: Text(
-                AppLocalizations.of(context).sortOptionTimeDescendingLabel,
-                style: isNewest ? activeTextStyle : null,
-              ),
-              onTap: isNewest
-                  ? null
-                  : () {
-                      _onSortNewestPressed();
-                      Navigator.of(context).pop();
-                    },
-            ),
+          FancyOptionPickerItem(
+            label: AppLocalizations.of(context).sortOptionTimeDescendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                !sortProvider.isAscending,
+            onSelect: () {
+              _onSortNewestPressed();
+              Navigator.of(context).pop();
+            },
           ),
         ],
       ),
