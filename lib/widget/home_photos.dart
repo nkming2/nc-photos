@@ -21,8 +21,10 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
+import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -159,6 +161,14 @@ class _HomePhotosState extends State<HomePhotos>
         title: Text(AppLocalizations.of(context)
             .selectionAppBarTitle(selectedListItems.length)),
         actions: [
+          if (platform_k.isAndroid)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: AppLocalizations.of(context).shareSelectedTooltip,
+              onPressed: () {
+                _onSelectionAppBarSharePressed(context);
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.playlist_add),
             tooltip: AppLocalizations.of(context).addSelectedToAlbumTooltip,
@@ -258,6 +268,19 @@ class _HomePhotosState extends State<HomePhotos>
   void _onItemTap(int index) {
     Navigator.pushNamed(context, Viewer.routeName,
         arguments: ViewerArguments(widget.account, _backingFiles, index));
+  }
+
+  void _onSelectionAppBarSharePressed(BuildContext context) {
+    assert(platform_k.isAndroid);
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
+      setState(() {
+        clearSelectedItems();
+      });
+    });
   }
 
   void _onSelectionAppBarAddToAlbumPressed(BuildContext context) {
@@ -699,4 +722,5 @@ class _VideoListItem extends _FileListItem {
 
 enum _SelectionAppBarMenuOption {
   archive,
+  delete,
 }

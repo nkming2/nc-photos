@@ -17,5 +17,8 @@ class MainActivity : FlutterActivity() {
 		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
 				SelfSignedCertChannelHandler.CHANNEL).setMethodCallHandler(
 				SelfSignedCertChannelHandler(this))
+		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
+				ShareChannelHandler.CHANNEL).setMethodCallHandler(
+				ShareChannelHandler(this))
 	}
 }

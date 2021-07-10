@@ -18,6 +18,7 @@ import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -298,6 +299,18 @@ class _ViewerState extends State<Viewer> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                if (platform_k.isAndroid)
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.share_outlined,
+                        color: Colors.white.withOpacity(.87),
+                      ),
+                      tooltip: AppLocalizations.of(context).shareTooltip,
+                      onPressed: () => _onSharePressed(context),
+                    ),
+                  ),
                 Expanded(
                   flex: 1,
                   child: IconButton(
@@ -541,6 +554,12 @@ class _ViewerState extends State<Viewer> {
         _openDetailPane(_pageController.page.toInt(), shouldAnimate: true);
       });
     }
+  }
+
+  void _onSharePressed(BuildContext context) {
+    assert(platform_k.isAndroid);
+    final file = widget.streamFiles[_pageController.page.round()];
+    ShareHandler().shareFiles(context, widget.account, [file]);
   }
 
   void _onDownloadPressed(BuildContext context) async {

@@ -17,6 +17,8 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/populate_album.dart';
@@ -229,6 +231,14 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
   Widget _buildSelectionAppBar(BuildContext context) {
     return buildSelectionAppBar(context, [
+      if (platform_k.isAndroid)
+        IconButton(
+          icon: const Icon(Icons.share),
+          tooltip: AppLocalizations.of(context).shareSelectedTooltip,
+          onPressed: () {
+            _onSelectionAppBarSharePressed(context);
+          },
+        ),
       PopupMenuButton(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         itemBuilder: (context) => [
@@ -313,6 +323,19 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     });
   }
 
+  void _onSelectionAppBarSharePressed(BuildContext context) {
+    assert(platform_k.isAndroid);
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
+      setState(() {
+        clearSelectedItems();
+      });
+    });
+  }
+
   void _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(AppLocalizations.of(context)
@@ -392,6 +415,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
           );
         } else if (file_util.isSupportedVideoFormat(f)) {
           yield _VideoListItem(
+            file: f,
             account: widget.account,
             previewUrl: previewUrl,
             onTap: () => _onItemTap(i),
@@ -433,13 +457,27 @@ abstract class _ListItem implements SelectableItem {
   final VoidCallback _onTap;
 }
 
-class _ImageListItem extends _ListItem {
-  _ImageListItem({
+abstract class _FileListItem extends _ListItem {
+  _FileListItem({
     @required this.file,
+    VoidCallback onTap,
+  }) : super(
+          onTap: onTap,
+        );
+
+  final File file;
+}
+
+class _ImageListItem extends _FileListItem {
+  _ImageListItem({
+    @required File file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap);
+  }) : super(
+          file: file,
+          onTap: onTap,
+        );
 
   @override
   buildWidget(BuildContext context) {
@@ -450,17 +488,20 @@ class _ImageListItem extends _ListItem {
     );
   }
 
-  final File file;
   final Account account;
   final String previewUrl;
 }
 
-class _VideoListItem extends _ListItem {
+class _VideoListItem extends _FileListItem {
   _VideoListItem({
+    @required File file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
-  }) : super(onTap: onTap);
+  }) : super(
+          file: file,
+          onTap: onTap,
+        );
 
   @override
   buildWidget(BuildContext context) {

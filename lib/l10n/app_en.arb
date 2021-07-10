@@ -555,6 +555,22 @@
 	"@albumAddTextTooltip": {
 		"description": "Add some text that display between photos to an album"
 	},
+	"shareTooltip": "Share",
+	"@shareTooltip": {
+		"description": "Share the current item to other apps"
+	},
+	"shareSelectedTooltip": "Share selected",
+	"@shareSelectedTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "Select some photos to share",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Downloading",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
