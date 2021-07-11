@@ -57,4 +57,10 @@ Support GIF
 
 This version includes changes that are not compatible with older versions. Please also update your other devices if applicable
 """,
+  // v20
+  """20.0
+- Improved albums: sorting, text labels
+- Simplify sharing to other apps
+- Added WebM support (Android only)
+""",
 ];
