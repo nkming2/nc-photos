@@ -10,13 +10,13 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -27,6 +27,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
 import 'package:nc_photos/widget/album_viewer_mixin.dart';
+import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -93,27 +94,43 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   @override
+  enterEditMode() {
+    super.enterEditMode();
+    _editAlbum = _album.copyWith();
+  }
+
+  @override
   validateEditMode() => _editFormKey?.currentState?.validate() == true;
 
   @override
   doneEditMode() {
-    _editFormKey.currentState.save();
-    final newAlbum = makeEdited(_album);
-    if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
-      _log.info("[doneEditMode] Album modified: $newAlbum");
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    try {
+      // persist the changes
+      _editFormKey.currentState.save();
+      final newAlbum = makeEdited(_editAlbum);
+      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+        _log.info("[doneEditMode] Album modified: $newAlbum");
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        setState(() {
+          _album = newAlbum;
+        });
+        UpdateAlbum(albumRepo)(widget.account, newAlbum)
+            .catchError((e, stacktrace) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(exception_util.toUserString(e, context)),
+            duration: k.snackBarDurationNormal,
+          ));
+        });
+      } else {
+        _log.fine("[doneEditMode] Album not modified");
+      }
+    } finally {
       setState(() {
-        _album = newAlbum;
+        // reset edits
+        _editAlbum = null;
+        // update the list to show the real album
+        _transformItems(_sortedItems);
       });
-      UpdateAlbum(albumRepo)(widget.account, newAlbum)
-          .catchError((e, stacktrace) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
-          duration: k.snackBarDurationNormal,
-        ));
-      });
-    } else {
-      _log.fine("[doneEditMode] Album not modified");
     }
   }
 
@@ -123,7 +140,6 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       if (mounted) {
         setState(() {
           _album = widget.album;
-          _items = items;
           _transformItems(items);
           final coverFile = initCover(widget.account, _backingFiles);
           _updateAlbumPostPopulate(coverFile, items);
@@ -133,17 +149,33 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   void _updateAlbumPostPopulate(File coverFile, List<AlbumItem> items) {
+    List<File> timeDescSortedFiles;
+    if (widget.album.sortProvider is AlbumTimeSortProvider) {
+      if ((widget.album.sortProvider as AlbumTimeSortProvider).isAscending) {
+        timeDescSortedFiles = _backingFiles.reversed.toList();
+      } else {
+        timeDescSortedFiles = _backingFiles;
+      }
+    } else {
+      timeDescSortedFiles = AlbumTimeSortProvider(isAscending: false)
+          .sort(items)
+          .whereType<AlbumFileItem>()
+          .map((e) => e.file)
+          .where((element) => file_util.isSupportedFormat(element))
+          .toList();
+    }
+
     bool shouldUpdate = false;
-    final albumUpdatedCover =
-        UpdateDynamicAlbumCover().updateWithSortedFiles(_album, _backingFiles);
+    final albumUpdatedCover = UpdateDynamicAlbumCover()
+        .updateWithSortedFiles(_album, timeDescSortedFiles);
     if (!identical(albumUpdatedCover, _album)) {
       _log.info("[_updateAlbumPostPopulate] Update album cover");
       shouldUpdate = true;
     }
     _album = albumUpdatedCover;
 
-    final albumUpdatedTime =
-        UpdateDynamicAlbumTime().updateWithSortedFiles(_album, _backingFiles);
+    final albumUpdatedTime = UpdateDynamicAlbumTime()
+        .updateWithSortedFiles(_album, timeDescSortedFiles);
     if (!identical(albumUpdatedTime, _album)) {
       _log.info(
           "[_updateAlbumPostPopulate] Update album time: ${albumUpdatedTime.provider.latestItemTime}");
@@ -257,12 +289,27 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   Widget _buildEditAppBar(BuildContext context) {
-    return buildEditAppBar(context, widget.account, widget.album);
+    return buildEditAppBar(context, widget.account, widget.album, actions: [
+      IconButton(
+        icon: Icon(Icons.sort_by_alpha),
+        tooltip: AppLocalizations.of(context).sortTooltip,
+        onPressed: _onEditAppBarSortPressed,
+      ),
+    ]);
   }
 
   void _onItemTap(int index) {
+    // convert item index to file index
+    var fileIndex = index;
+    for (int i = 0; i < index; ++i) {
+      if (_sortedItems[i] is! AlbumFileItem ||
+          !file_util
+              .isSupportedFormat((_sortedItems[i] as AlbumFileItem).file)) {
+        --fileIndex;
+      }
+    }
     Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, index));
+        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
   }
 
   void _onAppBarConvertBasicPressed(BuildContext context) {
@@ -298,7 +345,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       UpdateAlbum(albumRepo)(
         widget.account,
         _album.copyWith(
-          provider: AlbumStaticProvider(items: _items),
+          provider: AlbumStaticProvider(items: _sortedItems),
           coverProvider: AlbumAutoCoverProvider(),
         ),
       ).then((value) {
@@ -343,26 +390,26 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       duration: k.snackBarDurationShort,
     ));
 
-    final selectedIndexes =
-        selectedListItems.map((e) => itemStreamListItems.indexOf(e)).toList();
-    final selectedFiles = _backingFiles.takeIndex(selectedIndexes).toList();
+    final selected = selectedListItems.whereType<_FileListItem>().toList();
     setState(() {
       clearSelectedItems();
     });
 
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final failures = <File>[];
-    for (final f in selectedFiles) {
+    final successes = <_FileListItem>[];
+    final failures = <_FileListItem>[];
+    for (final item in selected) {
       try {
-        await Remove(fileRepo, albumRepo).call(widget.account, f);
+        await Remove(fileRepo, albumRepo).call(widget.account, item.file);
+        successes.add(item);
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarDeletePressed] Failed while removing file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (kDebugMode ? ": ${item.file.path}" : ""),
             e,
             stacktrace);
-        failures.add(f);
+        failures.add(item);
       }
     }
 
@@ -379,50 +426,111 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         duration: k.snackBarDurationNormal,
       ));
     }
-    final successes =
-        selectedFiles.where((element) => !failures.containsIdentical(element));
     if (successes.isNotEmpty) {
+      final indexes = successes.map((e) => e.index).sorted();
       setState(() {
-        _backingFiles
-            .removeWhere((element) => successes.containsIdentical(element));
-        _onBackingFilesUpdated();
+        for (final i in indexes.reversed) {
+          _sortedItems.removeAt(i);
+        }
+        _onSortedItemsUpdated();
       });
     }
   }
 
+  void _onEditAppBarSortPressed() {
+    final sortProvider = _editAlbum.sortProvider;
+    showDialog(
+      context: context,
+      builder: (context) => FancyOptionPicker(
+        title: AppLocalizations.of(context).sortOptionDialogTitle,
+        items: [
+          FancyOptionPickerItem(
+            label: AppLocalizations.of(context).sortOptionTimeAscendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                sortProvider.isAscending,
+            onSelect: () {
+              _onSortOldestPressed();
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: AppLocalizations.of(context).sortOptionTimeDescendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                !sortProvider.isAscending,
+            onSelect: () {
+              _onSortNewestPressed();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSortOldestPressed() {
+    _editAlbum = _editAlbum.copyWith(
+      sortProvider: AlbumTimeSortProvider(isAscending: true),
+    );
+    setState(() {
+      _transformItems(_sortedItems);
+    });
+  }
+
+  void _onSortNewestPressed() {
+    _editAlbum = _editAlbum.copyWith(
+      sortProvider: AlbumTimeSortProvider(isAscending: false),
+    );
+    setState(() {
+      _transformItems(_sortedItems);
+    });
+  }
+
   void _transformItems(List<AlbumItem> items) {
-    _backingFiles = items
+    if (_editAlbum != null) {
+      // edit mode
+      _sortedItems = _editAlbum.sortProvider.sort(items);
+    } else {
+      _sortedItems = _album.sortProvider.sort(items);
+    }
+    _onSortedItemsUpdated();
+  }
+
+  void _onSortedItemsUpdated() {
+    _backingFiles = _sortedItems
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
-        .sorted(compareFileDateTimeDescending);
-    _onBackingFilesUpdated();
-  }
-
-  void _onBackingFilesUpdated() {
+        .toList();
     itemStreamListItems = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: thumbSize, height: thumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
+      for (int i = 0; i < _sortedItems.length; ++i) {
+        final item = _sortedItems[i];
+        if (item is AlbumFileItem) {
+          final previewUrl = api_util.getFilePreviewUrl(
+            widget.account,
+            item.file,
+            width: thumbSize,
+            height: thumbSize,
           );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else {
-          _log.shout(
-              "[_onBackingFilesUpdated] Unsupported file format: ${f.contentType}");
+          if (file_util.isSupportedImageFormat(item.file)) {
+            yield _ImageListItem(
+              index: i,
+              file: item.file,
+              account: widget.account,
+              previewUrl: previewUrl,
+              onTap: () => _onItemTap(i),
+            );
+          } else if (file_util.isSupportedVideoFormat(item.file)) {
+            yield _VideoListItem(
+              index: i,
+              file: item.file,
+              account: widget.account,
+              previewUrl: previewUrl,
+              onTap: () => _onItemTap(i),
+            );
+          } else {
+            _log.shout(
+                "[_onBackingFilesUpdated] Unsupported file format: ${item.file.contentType}");
+          }
         }
       }
     }()
@@ -430,10 +538,11 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   Album _album;
-  List<AlbumItem> _items;
+  var _sortedItems = <AlbumItem>[];
   var _backingFiles = <File>[];
 
   final _editFormKey = GlobalKey<FormState>();
+  Album _editAlbum;
 
   static final _log =
       Logger("widget.dynamic_album_viewer._DynamicAlbumViewerState");
@@ -442,6 +551,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
 abstract class _ListItem implements SelectableItem {
   _ListItem({
+    @required this.index,
     VoidCallback onTap,
   }) : _onTap = onTap;
 
@@ -454,14 +564,25 @@ abstract class _ListItem implements SelectableItem {
   @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
+  @override
+  toString() {
+    return "$runtimeType {"
+        "index: $index, "
+        "}";
+  }
+
+  final int index;
+
   final VoidCallback _onTap;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
+    @required int index,
     @required this.file,
     VoidCallback onTap,
   }) : super(
+          index: index,
           onTap: onTap,
         );
 
@@ -470,11 +591,13 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
+    @required int index,
     @required File file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
   }) : super(
+          index: index,
           file: file,
           onTap: onTap,
         );
@@ -494,11 +617,13 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
+    @required int index,
     @required File file,
     @required this.account,
     @required this.previewUrl,
     VoidCallback onTap,
   }) : super(
+          index: index,
           file: file,
           onTap: onTap,
         );
