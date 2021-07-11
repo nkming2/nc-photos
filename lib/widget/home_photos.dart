@@ -33,6 +33,7 @@ import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -51,7 +52,11 @@ class HomePhotos extends StatefulWidget {
 }
 
 class _HomePhotosState extends State<HomePhotos>
-    with WidgetsBindingObserver, SelectableItemStreamListMixin<HomePhotos> {
+    with
+        WidgetsBindingObserver,
+        SelectableItemStreamListMixin<HomePhotos>,
+        RouteAware,
+        PageVisibilityMixin {
   @override
   initState() {
     super.initState();
@@ -256,10 +261,12 @@ class _HomePhotosState extends State<HomePhotos>
       }
     } else if (state is ScanDirBlocFailure) {
       _transformItems(state.files);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
-        duration: k.snackBarDurationNormal,
-      ));
+      if (isPageVisible()) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(state.exception, context)),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
     } else if (state is ScanDirBlocInconsistent) {
       _reqQuery();
     }

@@ -24,6 +24,10 @@ import 'package:nc_photos/widget/viewer.dart';
 class MyApp extends StatefulWidget {
   @override
   createState() => _MyAppState();
+
+  static RouteObserver get routeObserver => _routeObserver;
+
+  static final _routeObserver = RouteObserver<PageRoute>();
 }
 
 class _MyAppState extends State<MyApp> implements SnackBarHandler {
@@ -46,6 +50,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       themeMode: Pref.inst().isDarkTheme() ? ThemeMode.dark : ThemeMode.light,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
+      navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
       scaffoldMessengerKey: _scaffoldMessengerKey,
       locale: language_util.getSelectedLocale(context),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

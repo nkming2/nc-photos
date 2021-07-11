@@ -28,6 +28,7 @@ import 'package:nc_photos/widget/archive_viewer.dart';
 import 'package:nc_photos/widget/dynamic_album_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
@@ -42,7 +43,8 @@ class HomeAlbums extends StatefulWidget {
   final Account account;
 }
 
-class _HomeAlbumsState extends State<HomeAlbums> {
+class _HomeAlbumsState extends State<HomeAlbums>
+    with RouteAware, PageVisibilityMixin<HomeAlbums> {
   @override
   initState() {
     super.initState();
@@ -307,10 +309,12 @@ class _HomeAlbumsState extends State<HomeAlbums> {
       _transformItems(state.albums);
     } else if (state is ListAlbumBlocFailure) {
       _transformItems(state.albums);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
-        duration: k.snackBarDurationNormal,
-      ));
+      if (isPageVisible()) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(state.exception, context)),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
     } else if (state is ListAlbumBlocInconsistent) {
       _reqQuery();
     }
