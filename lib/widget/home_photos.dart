@@ -551,11 +551,11 @@ class _HomePhotosState extends State<HomePhotos>
     if (_itemListMaxExtent != null &&
         constraints.hasBoundedHeight &&
         _appBarExtent != null) {
-      // scroll extent = list height - widget viewport height + sliver app bar height
+      // scroll extent = list height - widget viewport height + sliver app bar height + list padding
       final scrollExtent =
-          _itemListMaxExtent - constraints.maxHeight + _appBarExtent;
+          _itemListMaxExtent - constraints.maxHeight + _appBarExtent + 16;
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + 16 = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
