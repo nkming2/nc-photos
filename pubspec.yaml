@@ -56,7 +56,7 @@ dependencies:
       ref: support-webp-extended-format
       path: library
   intl: ^0.17.0
-  kiwi: ^2.1.1
+  kiwi: ^3.0.0
   logging: ^1.0.1
   page_view_indicators: ^2.0.0
   path: ^1.8.0
