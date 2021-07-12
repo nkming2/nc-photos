@@ -209,7 +209,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
           slivers: [
             _buildAppBar(context),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.only(top: 8),
               sliver: SliverIgnorePointer(
                 ignoring: isEditMode,
                 sliver: SliverOpacity(
