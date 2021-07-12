@@ -1,4 +1,4 @@
-import 'package:android_intent/android_intent.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

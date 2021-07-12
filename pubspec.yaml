@@ -27,7 +27,7 @@ dependencies:
     sdk: flutter
 
   # android only
-  android_intent: ^2.0.0
+  android_intent_plus: ^1.0.2
   bloc: ^7.0.0
   cached_network_image: ^3.0.0
   connectivity: ^3.0.2
