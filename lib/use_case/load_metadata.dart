@@ -4,6 +4,7 @@ import 'package:exifdart/exifdart.dart' as exifdart;
 import 'package:exifdart/exifdart_memory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_size_getter/image_size_getter.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -25,26 +26,43 @@ class LoadMetadata {
     exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
     AsyncImageInput Function() imageSizeGetterInputBuilder,
   }) async {
-    exifdart.Metadata metadata;
+    var metadata = exifdart.Metadata();
     if (file_util.isMetadataSupportedFormat(file)) {
-      metadata = await exifdart.readMetadata(exifdartReaderBuilder());
-    } else {
-      metadata = exifdart.Metadata();
+      try {
+        metadata = await exifdart.readMetadata(exifdartReaderBuilder());
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_loadMetadata] Failed while readMetadata for ${file.contentType} file" +
+                (kDebugMode ? ": ${file.path}" : ""),
+            e,
+            stacktrace);
+        // ignore exif
+      }
     }
-    int imageWidth, imageHeight;
+
+    int imageWidth = 0, imageHeight = 0;
     if (metadata.imageWidth == null || metadata.imageHeight == null) {
-      final resolution =
-          await AsyncImageSizeGetter.getSize(imageSizeGetterInputBuilder());
-      // image size getter doesn't handle exif orientation
-      if (metadata.exif?.containsKey("Orientation") == true &&
-          metadata.exif["Orientation"] >= 5 &&
-          metadata.exif["Orientation"] <= 8) {
-        // 90 deg CW/CCW
-        imageWidth = resolution.height;
-        imageHeight = resolution.width;
-      } else {
-        imageWidth = resolution.width;
-        imageHeight = resolution.height;
+      try {
+        final resolution =
+            await AsyncImageSizeGetter.getSize(imageSizeGetterInputBuilder());
+        // image size getter doesn't handle exif orientation
+        if (metadata.exif?.containsKey("Orientation") == true &&
+            metadata.exif["Orientation"] >= 5 &&
+            metadata.exif["Orientation"] <= 8) {
+          // 90 deg CW/CCW
+          imageWidth = resolution.height;
+          imageHeight = resolution.width;
+        } else {
+          imageWidth = resolution.width;
+          imageHeight = resolution.height;
+        }
+      } catch (e, stacktrace) {
+        // is this even an image file?
+        _log.shout(
+            "[_loadMetadata] Failed while getSize for ${file.contentType} file" +
+                (kDebugMode ? ": ${file.path}" : ""),
+            e,
+            stacktrace);
       }
     } else {
       if (metadata.rotateAngleCcw != null &&
@@ -56,6 +74,7 @@ class LoadMetadata {
         imageHeight = metadata.imageHeight;
       }
     }
+
     return {
       if (metadata.exif != null) "exif": metadata.exif,
       if (imageWidth > 0 && imageHeight > 0)
@@ -65,4 +84,6 @@ class LoadMetadata {
         },
     };
   }
+
+  static final _log = Logger("use_case.load_metadata.LoadMetadata");
 }

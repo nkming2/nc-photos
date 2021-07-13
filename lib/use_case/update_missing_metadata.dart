@@ -59,9 +59,7 @@ class UpdateMissingMetadata {
         );
         yield file;
       } catch (e, stacktrace) {
-        _log.shout(
-            "[call] Failed while getting metadata for ${file.contentType} file",
-            e,
+        _log.severe("[call] Failed while updating metadata: ${file.path}", e,
             stacktrace);
         yield e;
       }
