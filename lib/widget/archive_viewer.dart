@@ -102,7 +102,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
               slivers: [
                 _buildAppBar(context),
                 SliverPadding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(top: 8),
                   sliver: buildItemStreamList(
                     maxCrossAxisExtent: _thumbSize.toDouble(),
                   ),
