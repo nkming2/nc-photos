@@ -79,7 +79,7 @@ class _ConnectState extends State<Connect> {
             Icon(
               Icons.cloud,
               size: 128,
-              color: AppTheme.getCloudIconColor(context),
+              color: Theme.of(context).colorScheme.primary,
             ),
             Text(
               AppLocalizations.of(context)

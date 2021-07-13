@@ -87,12 +87,6 @@ class AppTheme extends StatelessWidget {
     return Colors.blue[200];
   }
 
-  static Color getCloudIconColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? primarySwatchLight
-        : primarySwatchDark;
-  }
-
   static Color getPrimaryTextColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? Colors.black87

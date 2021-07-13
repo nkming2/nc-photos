@@ -123,7 +123,7 @@ class _SignInState extends State<SignIn> {
         Center(
           child: Icon(
             Icons.cloud,
-            color: AppTheme.getCloudIconColor(context),
+            color: Theme.of(context).colorScheme.primary,
             size: 72,
           ),
         ),
