@@ -52,8 +52,8 @@ dependencies:
   idb_sqflite: ^1.0.0
   image_size_getter:
     git:
-      url: https://github.com/nkming2/dart_image_size_getter
-      ref: support-webp-extended-format
+      url: https://gitlab.com/nkming2/dart_image_size_getter
+      ref: 1.0.0-nc-photos-1
       path: library
   intl: ^0.17.0
   kiwi: ^3.0.0

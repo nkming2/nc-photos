@@ -351,9 +351,9 @@ packages:
     dependency: "direct main"
     description:
       path: library
-      ref: support-webp-extended-format
-      resolved-ref: "1f16c459f478ebbf902048382eda652a2b46a4d1"
-      url: "https://github.com/nkming2/dart_image_size_getter"
+      ref: "1.0.0-nc-photos-1"
+      resolved-ref: "16fb557ff338cdaa26f408ffe2f7262f235fbf59"
+      url: "https://gitlab.com/nkming2/dart_image_size_getter"
     source: git
     version: "1.0.0"
   intl:
