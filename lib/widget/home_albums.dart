@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +7,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -23,8 +20,10 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_importer.dart';
+import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_viewer.dart';
+import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
@@ -196,69 +195,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   Widget _buildAlbumItem(BuildContext context, int index) {
     final item = _items[index];
-    var subtitle = "";
-    String subtitle2;
-    if (item.album.provider is AlbumStaticProvider) {
-      subtitle = AppLocalizations.of(context)
-          .albumSize(AlbumStaticProvider.of(item.album).items.length);
-    } else if (item.album.provider is AlbumDirProvider) {
-      final provider = item.album.provider as AlbumDirProvider;
-      subtitle = provider.dirs.first.strippedPath;
-      if (provider.dirs.length > 1) {
-        subtitle2 = "+${provider.dirs.length - 1}";
-      }
-    }
-    return AlbumGridItem(
-      cover: _buildAlbumCover(context, item.album),
-      title: item.album.name,
-      subtitle: subtitle,
-      subtitle2: subtitle2,
-      icon: item.album.provider is AlbumDirProvider ? Icons.folder : null,
+    return AlbumGridItemBuilder(
+      account: widget.account,
+      album: item.album,
       isSelected: _selectedItems.contains(item),
       onTap: () => _onItemTap(item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
-    );
-  }
-
-  Widget _buildAlbumCover(BuildContext context, Album album) {
-    Widget cover;
-    try {
-      final coverFile = album.coverProvider.getCover(album);
-      final previewUrl = api_util.getFilePreviewUrl(widget.account, coverFile,
-          width: 512, height: 512);
-      cover = FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: CachedNetworkImage(
-          imageUrl: previewUrl,
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-          },
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          errorWidget: (context, url, error) {
-            // just leave it empty
-            return Container();
-          },
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        ),
-      );
-    } catch (_) {
-      cover = Icon(
-        Icons.panorama,
-        color: Colors.white.withOpacity(.8),
-        size: 88,
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
-        constraints: const BoxConstraints.expand(),
-        child: cover,
-      ),
-    );
+    ).build(context);
   }
 
   Widget _buildArchiveItem(BuildContext context) {
