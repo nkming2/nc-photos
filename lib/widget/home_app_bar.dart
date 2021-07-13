@@ -36,9 +36,19 @@ class HomeSliverAppBar extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Row(
             children: [
-              Icon(
-                Icons.cloud,
-                color: AppTheme.getCloudIconColor(context),
+              Stack(
+                children: [
+                  if (account.scheme == "http")
+                    Icon(
+                      Icons.no_encryption_outlined,
+                      color: Colors.orange,
+                    )
+                  else
+                    Icon(
+                      Icons.https,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                ],
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -46,7 +56,7 @@ class HomeSliverAppBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      account.url,
+                      account.url.substring(account.scheme.length + 3),
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
