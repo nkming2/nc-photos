@@ -1,30 +1,26 @@
+import 'dart:typed_data';
+
 import 'package:exifdart/exifdart.dart' as exifdart;
+import 'package:exifdart/exifdart_memory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/image_size_getter_util.dart';
 
-abstract class MetadataLoader {
-  /// Load metadata for [file] from cache
-  ///
-  /// If the file is not found in cache after a certain amount of time, an
-  /// exception will be thrown
-  Future<Map<String, dynamic>> loadCacheFile(Account account, File file);
+class LoadMetadata {
+  /// Load metadata of [binary], which is the content of [file]
+  Future<Map<String, dynamic>> call(
+      Account account, File file, Uint8List binary) {
+    return _loadMetadata(
+      file: file,
+      exifdartReaderBuilder: () => MemoryBlobReader(binary),
+      imageSizeGetterInputBuilder: () => AsyncMemoryInput(binary),
+    );
+  }
 
-  /// Download and load metadata for [file]
-  ///
-  /// This function will always try to download the file, no matter it's cached
-  /// or not
-  Future<Map<String, dynamic>> loadNewFile(Account account, File file);
-
-  /// Load metadata for [file], either from cache or a new download
-  Future<Map<String, dynamic>> loadFile(Account account, File file);
-
-  void cancel();
-
-  @protected
-  static Future<Map<String, dynamic>> loadMetadata({
+  Future<Map<String, dynamic>> _loadMetadata({
     @required File file,
     exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
     AsyncImageInput Function() imageSizeGetterInputBuilder,

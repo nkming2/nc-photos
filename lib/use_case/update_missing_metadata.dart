@@ -4,9 +4,9 @@ import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/use_case/get_file_binary.dart';
+import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 
@@ -19,7 +19,6 @@ class UpdateMissingMetadata {
   /// would emit either File data (for each updated files) or an exception
   Stream<dynamic> call(Account account, File root) async* {
     final dataStream = ScanMissingMetadata(fileRepo)(account, root);
-    final metadataLoader = platform.MetadataLoader();
     await for (final d in dataStream) {
       if (d is Exception || d is Error) {
         yield d;
@@ -34,7 +33,8 @@ class UpdateMissingMetadata {
           return;
         }
         _log.fine("[call] Updating metadata for ${file.path}");
-        final metadata = await metadataLoader.loadFile(account, file);
+        final binary = await GetFileBinary(fileRepo)(account, file);
+        final metadata = await LoadMetadata()(account, file, binary);
         int imageWidth, imageHeight;
         Exif exif;
         if (metadata.containsKey("resolution")) {
