@@ -53,7 +53,6 @@ class HomePhotos extends StatefulWidget {
 
 class _HomePhotosState extends State<HomePhotos>
     with
-        WidgetsBindingObserver,
         SelectableItemStreamListMixin<HomePhotos>,
         RouteAware,
         PageVisibilityMixin {

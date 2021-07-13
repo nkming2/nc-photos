@@ -64,7 +64,6 @@ class DynamicAlbumViewer extends StatefulWidget {
 
 class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     with
-        WidgetsBindingObserver,
         SelectableItemStreamListMixin<DynamicAlbumViewer>,
         AlbumViewerMixin<DynamicAlbumViewer> {
   @override

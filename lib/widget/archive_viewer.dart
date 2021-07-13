@@ -50,7 +50,7 @@ class ArchiveViewer extends StatefulWidget {
 }
 
 class _ArchiveViewerState extends State<ArchiveViewer>
-    with WidgetsBindingObserver, SelectableItemStreamListMixin<ArchiveViewer> {
+    with SelectableItemStreamListMixin<ArchiveViewer> {
   @override
   initState() {
     super.initState();

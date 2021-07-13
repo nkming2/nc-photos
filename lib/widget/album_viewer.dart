@@ -63,7 +63,6 @@ class AlbumViewer extends StatefulWidget {
 
 class _AlbumViewerState extends State<AlbumViewer>
     with
-        WidgetsBindingObserver,
         SelectableItemStreamListMixin<AlbumViewer>,
         DraggableItemListMixin<AlbumViewer>,
         AlbumViewerMixin<AlbumViewer> {
