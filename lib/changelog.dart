@@ -63,4 +63,6 @@ This version includes changes that are not compatible with older versions. Pleas
 - Simplify sharing to other apps
 - Added WebM support (Android only)
 """,
+  // v21
+  null,
 ];
