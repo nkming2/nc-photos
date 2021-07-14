@@ -1,6 +1,6 @@
 /// Version string shown in settings page
-const versionStr = "21.1-b94d5c";
-const version = 211;
+const versionStr = "21.2-f762eb";
+const version = 212;
 
 /// Show a snack bar for a short amount of time
 const snackBarDurationShort = const Duration(seconds: 4);
