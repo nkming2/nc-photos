@@ -534,6 +534,43 @@
 	"@genericProcessingDialogContent": {
 		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
 	},
+	"sortTooltip": "Ordenar",
+	"sortOptionDialogTitle": "Ordenar por",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "Antiguos primero",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "Nuevos primero",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
+	"albumEditDragRearrangeNotification": "Mantén presionado y arrastra un elemento para reordenarlo manualmente",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "Añadir texto",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "Compartir",
+	"@shareTooltip": {
+		"description": "Share the current item to other apps"
+	},
+	"shareSelectedTooltip": "Compartir selección",
+	"@shareSelectedTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "Selecciona algunas fotos para compartir",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Descargando",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
 
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
