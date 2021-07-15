@@ -266,7 +266,7 @@ class _Files {
             if (richWorkspace != null) {
               builder.element("nc:rich-workspace");
             }
-            for (final p in customProperties) {
+            for (final p in customProperties ?? []) {
               builder.element(p);
             }
           });
