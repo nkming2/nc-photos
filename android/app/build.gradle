@@ -52,6 +52,13 @@ android {
         }
     }
 
+    flavorDimensions "version"
+    productFlavors {
+        free {
+            dimension "version"
+        }
+    }
+
     splits {
         abi {
             enable true
