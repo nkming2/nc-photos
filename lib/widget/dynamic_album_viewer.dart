@@ -526,9 +526,6 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
               previewUrl: previewUrl,
               onTap: () => _onItemTap(i),
             );
-          } else {
-            _log.shout(
-                "[_onBackingFilesUpdated] Unsupported file format: ${item.file.contentType}");
           }
         }
       }
