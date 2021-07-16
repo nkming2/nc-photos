@@ -25,6 +25,11 @@ class UpdateMissingMetadata {
         continue;
       }
       final File file = d;
+      // check if this is a federation share. Nextcloud doesn't support
+      // properties for such files
+      if (file.ownerId?.contains("/") == true) {
+        continue;
+      }
       try {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
