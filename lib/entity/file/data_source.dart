@@ -60,7 +60,7 @@ class FileWebdavDataSource implements FileDataSource {
     final xml = XmlDocument.parse(response.body);
     final files = WebdavFileParser()(xml);
     // _log.fine("[list] Parsed files: [$files]");
-    return files.map((e) {
+    return files.where((element) => _validateFile(element)).map((e) {
       if (e.metadata == null || e.metadata.fileEtag == e.etag) {
         return e;
       } else {
@@ -328,10 +328,14 @@ class FileAppDbDataSource implements FileDataSource {
     if (results?.isNotEmpty == true) {
       final entries = results
           .map((e) => AppDbFileEntry.fromJson(e.cast<String, dynamic>()));
-      return entries.map((e) {
-        _log.info("[_doList] ${e.path}[${e.index}]");
-        return e.data;
-      }).reduce((value, element) => value + element);
+      return entries
+          .map((e) {
+            _log.info("[_doList] ${e.path}[${e.index}]");
+            return e.data;
+          })
+          .reduce((value, element) => value + element)
+          .where((element) => _validateFile(element))
+          .toList();
     } else {
       throw CacheNotFoundException("No entry: $path");
     }
@@ -718,6 +722,11 @@ Future<void> _cacheListResults(
       await store.delete(k);
     }
   }
+}
+
+bool _validateFile(File f) {
+  // See: https://gitlab.com/nkming2/nc-photos/-/issues/9
+  return f.lastModified != null;
 }
 
 final _log = Logger("entity.file.data_source");
