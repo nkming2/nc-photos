@@ -74,6 +74,7 @@ dependencies:
       ref: video-player-nc-photos
       path: packages/video_player/video_player
   wakelock: ^0.5.2
+  woozy_search: ^2.0.3
   xml: ^5.0.2
 
 dev_dependencies:

@@ -902,6 +902,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  woozy_search:
+    dependency: "direct main"
+    description:
+      name: woozy_search
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   xdg_directories:
     dependency: transitive
     description:
@@ -924,5 +931,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.12.2 <3.0.0"
   flutter: ">=2.0.0"

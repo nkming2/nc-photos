@@ -167,6 +167,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
   Widget _buildNormalAppBar(BuildContext context) {
     return HomeSliverAppBar(
       account: widget.account,
+      actions: [
+        IconButton(
+          onPressed: () => _onSearchPressed(context),
+          icon: const Icon(Icons.search),
+          tooltip: AppLocalizations.of(context).searchTooltip,
+        ),
+      ],
       menuActions: [
         PopupMenuItem(
           value: _menuValueImport,
@@ -281,13 +288,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
         });
       }
     } else {
-      if (item.album.provider is AlbumStaticProvider) {
-        Navigator.of(context).pushNamed(AlbumViewer.routeName,
-            arguments: AlbumViewerArguments(widget.account, item.album));
-      } else {
-        Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
-            arguments: DynamicAlbumViewerArguments(widget.account, item.album));
-      }
+      _openAlbum(item.album);
     }
   }
 
@@ -374,6 +375,17 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
+  void _onSearchPressed(BuildContext context) {
+    showSearch(
+      context: context,
+      delegate: AlbumSearchDelegate(context, widget.account),
+    ).then((value) {
+      if (value is Album) {
+        _openAlbum(value);
+      }
+    });
+  }
+
   /// Transform an Album list to grid items
   void _transformItems(List<Album> albums) {
     final sortedAlbums = albums
@@ -409,6 +421,16 @@ class _HomeAlbumsState extends State<HomeAlbums>
     _selectedItems
       ..clear()
       ..addAll(newSelectedItems);
+  }
+
+  void _openAlbum(Album album) {
+    if (album.provider is AlbumStaticProvider) {
+      Navigator.of(context).pushNamed(AlbumViewer.routeName,
+          arguments: AlbumViewerArguments(widget.account, album));
+    } else {
+      Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
+          arguments: DynamicAlbumViewerArguments(widget.account, album));
+    }
   }
 
   void _reqQuery() {

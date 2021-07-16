@@ -6,38 +6,17 @@ class AppTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Theme(
-      data: theme.brightness == Brightness.light
-          ? _buildLightThemeData(context, theme)
-          : _buildDarkThemeData(context, theme),
+      data: buildThemeData(context),
       child: child,
     );
   }
 
-  ThemeData _buildLightThemeData(BuildContext context, ThemeData theme) {
-    final appBarTheme = theme.appBarTheme.copyWith(
-      brightness: Brightness.dark,
-      color: theme.scaffoldBackgroundColor,
-      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
-      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
-      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
-    );
-    return theme.copyWith(appBarTheme: appBarTheme);
-  }
-
-  ThemeData _buildDarkThemeData(BuildContext context, ThemeData theme) {
-    final appBarTheme = theme.appBarTheme.copyWith(
-      brightness: Brightness.dark,
-      color: theme.scaffoldBackgroundColor,
-      actionsIconTheme:
-          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
-      iconTheme:
-          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
-      textTheme: theme.primaryTextTheme
-          .apply(bodyColor: Colors.white.withOpacity(.87)),
-    );
-    return theme.copyWith(appBarTheme: appBarTheme);
+  static ThemeData buildThemeData(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.brightness == Brightness.light
+        ? _buildLightThemeData(context, theme)
+        : _buildDarkThemeData(context, theme);
   }
 
   static AppBarTheme getContextualAppBarTheme(BuildContext context) {
@@ -111,6 +90,31 @@ class AppTheme extends StatelessWidget {
     return Theme.of(context).brightness == Brightness.light
         ? Colors.black26
         : Colors.white12;
+  }
+
+  static ThemeData _buildLightThemeData(BuildContext context, ThemeData theme) {
+    final appBarTheme = theme.appBarTheme.copyWith(
+      brightness: Brightness.dark,
+      color: theme.scaffoldBackgroundColor,
+      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
+      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
+      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
+    );
+    return theme.copyWith(appBarTheme: appBarTheme);
+  }
+
+  static ThemeData _buildDarkThemeData(BuildContext context, ThemeData theme) {
+    final appBarTheme = theme.appBarTheme.copyWith(
+      brightness: Brightness.dark,
+      color: theme.scaffoldBackgroundColor,
+      actionsIconTheme:
+          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
+      iconTheme:
+          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
+      textTheme: theme.primaryTextTheme
+          .apply(bodyColor: Colors.white.withOpacity(.87)),
+    );
+    return theme.copyWith(appBarTheme: appBarTheme);
   }
 
   static const primarySwatchLight = Colors.blue;

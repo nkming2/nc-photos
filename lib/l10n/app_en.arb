@@ -571,6 +571,16 @@
 	"@shareDownloadingDialogContent": {
 		"description": "Downloading photos to be shared"
 	},
+	"searchTooltip": "Search",
+	"albumSearchTextFieldHint": "Search albums",
+	"clearTooltip": "Clear",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "No results",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
