@@ -165,7 +165,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
       floating: true,
       actions: [
         PopupMenuButton(
-          icon: const Icon(Icons.zoom_in),
+          icon: const Icon(Icons.photo_size_select_large),
           tooltip: AppLocalizations.of(context).zoomTooltip,
           itemBuilder: (context) => [
             PopupMenuZoom(

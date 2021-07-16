@@ -57,7 +57,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       ),
       actions: [
         PopupMenuButton(
-          icon: const Icon(Icons.zoom_in),
+          icon: const Icon(Icons.photo_size_select_large),
           tooltip: AppLocalizations.of(context).zoomTooltip,
           itemBuilder: (context) => [
             PopupMenuZoom(

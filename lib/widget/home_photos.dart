@@ -211,7 +211,7 @@ class _HomePhotosState extends State<HomePhotos>
         account: widget.account,
         actions: [
           PopupMenuButton(
-            icon: const Icon(Icons.zoom_in),
+            icon: const Icon(Icons.photo_size_select_large),
             tooltip: AppLocalizations.of(context).zoomTooltip,
             itemBuilder: (context) => [
               PopupMenuZoom(
