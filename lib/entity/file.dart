@@ -410,7 +410,10 @@ class File with EquatableMixin {
 
 extension FileExtension on File {
   DateTime get bestDateTime {
-    return overrideDateTime ?? metadata?.exif?.dateTimeOriginal ?? lastModified;
+    return overrideDateTime ??
+        metadata?.exif?.dateTimeOriginal ??
+        lastModified ??
+        DateTime.now().toUtc();
   }
 }
 
