@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/iterable_extension.dart';
+import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
 
 abstract class AlbumSearchSuggestionBlocEvent {
@@ -81,7 +83,22 @@ class AlbumSearchSuggestionBloc extends Bloc<AlbumSearchSuggestionBlocEvent,
     }
     final matches = results
         .where((element) => element.score > 0)
-        .map((e) => e.value as Album)
+        .map((e) {
+          if ((e.value as Album)
+              .name
+              .toLowerCase()
+              .startsWith(ev.phrase.toLowerCase())) {
+            // prefer names that start exactly with the search phrase
+            return Tuple2(e.score + 1, e.value as Album);
+          } else {
+            return Tuple2(e.score, e.value as Album);
+          }
+        })
+        .sorted((a, b) {
+          return a.item1.compareTo(b.item1);
+        })
+        .reversed
+        .map((e) => e.item2)
         .toList();
     yield AlbumSearchSuggestionBlocSuccess(matches);
     _lastSearch = ev;
