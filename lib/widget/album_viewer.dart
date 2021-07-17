@@ -149,10 +149,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     assert(widget.album.provider is AlbumStaticProvider);
     ResyncAlbum()(widget.account, widget.album).then((album) {
       if (_shouldPropagateResyncedAlbum(album)) {
-        UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, album)
-            .catchError((e, stacktrace) {
-          _log.shout("[_initAlbum] Failed while updating album", e, stacktrace);
-        });
+        _propagateResyncedAlbum(album);
       }
       if (mounted) {
         setState(() {
@@ -582,6 +579,36 @@ class _AlbumViewerState extends State<AlbumViewer>
     draggableItemList = items;
   }
 
+  void _propagateResyncedAlbum(Album album) {
+    final propagateItems =
+        zip([_getAlbumItemsOf(album), _getAlbumItemsOf(widget.album)]).map((e) {
+      if (e[0] is AlbumFileItem) {
+        final item = e[0] as AlbumFileItem;
+        if (item.file.ownerId != null &&
+            item.file.ownerId != widget.account.username) {
+          // don't propagate shared file not owned by this user, this is to
+          // prevent multiple user having different properties to keep
+          // overriding each others
+          _log.info(
+              "[_propagateResyncedAlbum] Skip shared file: ${item.file.path}");
+          return e[1];
+        }
+      }
+      return e[0];
+    }).toList();
+    final propagateAlbum = album.copyWith(
+      provider: AlbumStaticProvider(
+        items: propagateItems,
+      ),
+    );
+    UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
+            widget.account, propagateAlbum)
+        .catchError((e, stacktrace) {
+      _log.shout("[_propagateResyncedAlbum] Failed while updating album", e,
+          stacktrace);
+    });
+  }
+
   bool _shouldPropagateResyncedAlbum(Album album) {
     final origItems = _getAlbumItemsOf(widget.album);
     final resyncItems = _getAlbumItemsOf(album);
@@ -594,6 +621,11 @@ class _AlbumViewerState extends State<AlbumViewer>
       final a = z[0], b = z[1];
       bool isEqual;
       if (a is AlbumFileItem && b is AlbumFileItem) {
+        if (a.file.ownerId != null &&
+            a.file.ownerId != widget.account.username) {
+          // ignore shared files
+          continue;
+        }
         // faster compare
         isEqual = a.equals(b, isDeep: false);
       } else {
