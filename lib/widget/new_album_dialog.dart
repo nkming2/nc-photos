@@ -106,7 +106,8 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
   void _onOkPressed(BuildContext context) {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      if (_formValue.provider == _Provider.static) {
+      if (_formValue.provider == _Provider.static ||
+          _formValue.provider == null) {
         _onConfirmStaticAlbum();
       } else {
         _onConfirmDirAlbum();
