@@ -65,4 +65,6 @@ This version includes changes that are not compatible with older versions. Pleas
 """,
   // v21
   null,
+  // v22
+  null,
 ];
