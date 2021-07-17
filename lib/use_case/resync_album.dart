@@ -32,6 +32,7 @@ class ResyncAlbum {
                     (kDebugMode ? ": '${item.file.path}'" : ""),
                 e,
                 stacktrace);
+            newItems.add(item);
           }
         } else {
           newItems.add(item);
