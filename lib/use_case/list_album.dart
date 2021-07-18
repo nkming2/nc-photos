@@ -37,12 +37,13 @@ class ListAlbum {
           File(
             path: remote_storage_util.getRemoteAlbumsDir(account),
           ));
-    } catch (e) {
+    } catch (e, stacktrace) {
       if (e is ApiException && e.response.statusCode == 404) {
         // no albums
         return;
       }
-      rethrow;
+      yield Tuple2(e, stacktrace);
+      return;
     }
     final albumFiles =
         ls.where((element) => element.isCollection != true).toList();
