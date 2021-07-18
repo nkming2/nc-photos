@@ -114,7 +114,7 @@ class Album with EquatableMixin {
       name: name ?? this.name,
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
-      sortProvider: sortProvider??this.sortProvider,
+      sortProvider: sortProvider ?? this.sortProvider,
       albumFile: albumFile ?? this.albumFile,
     );
   }
