@@ -159,7 +159,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    if (isAlbumFile(ev.file)) {
+    if (isAlbumFile(ev.account, ev.file)) {
       add(_ListAlbumBlocExternalEvent());
     }
   }

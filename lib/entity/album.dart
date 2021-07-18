@@ -21,12 +21,11 @@ import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
-import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
 
-bool isAlbumFile(File file) =>
-    path.dirname(file.path).endsWith(".com.nkming.nc_photos/albums");
+bool isAlbumFile(Account account, File file) =>
+    file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
 
 /// Immutable object that represents an album
 class Album with EquatableMixin {
