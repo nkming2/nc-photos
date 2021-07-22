@@ -55,7 +55,8 @@ class ListAlbum {
       }
     }
     try {
-      albumRepo.cleanUp(account, albumFiles);
+      albumRepo.cleanUp(
+          account, remote_storage_util.getRemoteAlbumsDir(account), albumFiles);
     } catch (e, stacktrace) {
       // not important, log and ignore
       _log.shout("[_call] Failed while cleanUp", e, stacktrace);

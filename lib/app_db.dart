@@ -144,12 +144,12 @@ class AppDbAlbumEntry {
     );
   }
 
-  static String toRootPath(Account account) =>
-      "${account.url}/${remote_storage_util.getRemoteAlbumsDir(account)}";
-  static String toPath(Account account, File albumFile) =>
-      "${account.url}/${albumFile.path}";
+  static String toPath(Account account, String filePath) =>
+      "${account.url}/$filePath";
+  static String toPathFromFile(Account account, File albumFile) =>
+      toPath(account, albumFile.path);
   static String toPrimaryKey(Account account, File albumFile, int index) =>
-      "${toPath(account, albumFile)}[$index]";
+      "${toPathFromFile(account, albumFile)}[$index]";
 
   final String path;
   final int index;

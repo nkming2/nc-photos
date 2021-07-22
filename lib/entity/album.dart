@@ -187,8 +187,9 @@ class AlbumRepo {
       this.dataSrc.update(account, album);
 
   /// See [AlbumDataSource.cleanUp]
-  Future<void> cleanUp(Account account, List<File> albumFiles) =>
-      this.dataSrc.cleanUp(account, albumFiles);
+  Future<void> cleanUp(
+          Account account, String rootDir, List<File> albumFiles) =>
+      this.dataSrc.cleanUp(account, rootDir, albumFiles);
 
   final AlbumDataSource dataSrc;
 }
@@ -205,9 +206,10 @@ abstract class AlbumDataSource {
 
   /// Clean up cached albums
   ///
-  /// Remove dangling albums in cache not listed in [albumFiles]. Do nothing if
-  /// this data source does not cache previous results
-  Future<void> cleanUp(Account account, List<File> albumFiles);
+  /// Remove dangling albums in cache not listed in [albumFiles] and located
+  /// inside [rootDir]. Do nothing if this data source does not cache previous
+  /// results
+  Future<void> cleanUp(Account account, String rootDir, List<File> albumFiles);
 }
 
 class AlbumRemoteDataSource implements AlbumDataSource {
@@ -261,7 +263,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
   }
 
   @override
-  cleanUp(Account account, List<File> albumFiles) async {}
+  cleanUp(Account account, String rootDir, List<File> albumFiles) async {}
 
   String _makeAlbumFileName() {
     // just make up something
@@ -281,7 +283,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
       final transaction = db.transaction(AppDb.albumStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.albumStoreName);
       final index = store.index(AppDbAlbumEntry.indexName);
-      final path = AppDbAlbumEntry.toPath(account, albumFile);
+      final path = AppDbAlbumEntry.toPathFromFile(account, albumFile);
       final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
       final List results = await index.getAll(range);
       if (results?.isNotEmpty == true) {
@@ -325,7 +327,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
   }
 
   @override
-  cleanUp(Account account, List<File> albumFiles) async {}
+  cleanUp(Account account, String rootDir, List<File> albumFiles) async {}
 
   static final _log = Logger("entity.album.AlbumAppDbDataSource");
 }
@@ -339,11 +341,11 @@ class AlbumCachedDataSource implements AlbumDataSource {
           cache.albumFile.etag == albumFile.etag) {
         // cache is good
         _log.fine(
-            "[get] etag matched for ${AppDbAlbumEntry.toPath(account, albumFile)}");
+            "[get] etag matched for ${AppDbAlbumEntry.toPathFromFile(account, albumFile)}");
         return cache;
       }
       _log.info(
-          "[get] Remote content updated for ${AppDbAlbumEntry.toPath(account, albumFile)}");
+          "[get] Remote content updated for ${AppDbAlbumEntry.toPathFromFile(account, albumFile)}");
     } on CacheNotFoundException catch (_) {
       // normal when there's no cache
     } catch (e, stacktrace) {
@@ -366,13 +368,13 @@ class AlbumCachedDataSource implements AlbumDataSource {
   create(Account account, Album album) => _remoteSrc.create(account, album);
 
   @override
-  cleanUp(Account account, List<File> albumFiles) async {
+  cleanUp(Account account, String rootDir, List<File> albumFiles) async {
     AppDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
       final index = store.index(AppDbAlbumEntry.indexName);
-      final rootPath = AppDbAlbumEntry.toRootPath(account);
+      final rootPath = AppDbAlbumEntry.toPath(account, rootDir);
       final range = KeyRange.bound(
           ["$rootPath/", 0], ["$rootPath/\uffff", int_util.int32Max]);
       final danglingKeys = await index
@@ -380,8 +382,8 @@ class AlbumCachedDataSource implements AlbumDataSource {
           .openKeyCursor(range: range, autoAdvance: true)
           .map((cursor) => Tuple2((cursor.key as List)[0], cursor.primaryKey))
           // and pick the dangling ones
-          .where((pair) => !albumFiles
-              .any((f) => pair.item1 == AppDbAlbumEntry.toPath(account, f)))
+          .where((pair) => !albumFiles.any(
+              (f) => pair.item1 == AppDbAlbumEntry.toPathFromFile(account, f)))
           // map to primary keys
           .map((pair) => pair.item2)
           .toList();
@@ -410,7 +412,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
 Future<void> _cacheAlbum(
     ObjectStore store, Account account, Album album) async {
   final index = store.index(AppDbAlbumEntry.indexName);
-  final path = AppDbAlbumEntry.toPath(account, album.albumFile);
+  final path = AppDbAlbumEntry.toPathFromFile(account, album.albumFile);
   final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
   // count number of entries for this album
   final count = await index.count(range);
