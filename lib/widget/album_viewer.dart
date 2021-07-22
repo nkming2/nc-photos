@@ -15,6 +15,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -119,7 +120,8 @@ class _AlbumViewerState extends State<AlbumViewer>
       // persist the changes
       _editFormKey.currentState.save();
       final newAlbum = makeEdited(_editAlbum);
-      if (newAlbum.copyWith(lastUpdated: _album.lastUpdated) != _album) {
+      if (newAlbum.copyWith(lastUpdated: OrNull(_album.lastUpdated)) !=
+          _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         setState(() {

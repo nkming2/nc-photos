@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -98,11 +99,11 @@ class Album with EquatableMixin {
 
   /// Return a copy with specified field modified
   ///
-  /// [lastUpdated] is handled differently where if null, the current time will
-  /// be used. In order to keep [lastUpdated], you must explicitly assign it
-  /// with value from this
+  /// [lastUpdated] is handled differently where if not set, the current time
+  /// will be used. In order to keep [lastUpdated], you must explicitly assign
+  /// it with value from this or a null value
   Album copyWith({
-    DateTime lastUpdated,
+    OrNull<DateTime> lastUpdated,
     String name,
     AlbumProvider provider,
     AlbumCoverProvider coverProvider,
@@ -110,7 +111,8 @@ class Album with EquatableMixin {
     File albumFile,
   }) {
     return Album(
-      lastUpdated: lastUpdated,
+      lastUpdated:
+          lastUpdated == null ? null : (lastUpdated.obj ?? this.lastUpdated),
       name: name ?? this.name,
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
@@ -220,7 +222,10 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
         upgraderV3: AlbumUpgraderV3(),
-      ).copyWith(albumFile: albumFile);
+      ).copyWith(
+        lastUpdated: OrNull(null),
+        albumFile: albumFile,
+      );
     } catch (e, stacktrace) {
       dynamic d = data;
       try {
@@ -288,6 +293,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
             return AlbumStaticProvider.of(e.album).items;
           }).reduce((value, element) => value + element);
           return entries.first.album.copyWith(
+            lastUpdated: OrNull(null),
             provider: AlbumStaticProvider(
               items: items,
             ),
@@ -423,6 +429,7 @@ Future<void> _cacheAlbum(
         path,
         pair.item1,
         album.copyWith(
+          lastUpdated: OrNull(null),
           provider: AlbumStaticProvider(items: pair.item2),
         ))));
   } else {
