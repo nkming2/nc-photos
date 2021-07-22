@@ -415,6 +415,8 @@ extension FileExtension on File {
         lastModified ??
         DateTime.now().toUtc();
   }
+
+  bool isOwned(String username) => ownerId == null || ownerId == username;
 }
 
 class FileRepo {

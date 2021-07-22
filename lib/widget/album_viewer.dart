@@ -586,8 +586,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         zip([_getAlbumItemsOf(album), _getAlbumItemsOf(widget.album)]).map((e) {
       if (e[0] is AlbumFileItem) {
         final item = e[0] as AlbumFileItem;
-        if (item.file.ownerId != null &&
-            item.file.ownerId != widget.account.username) {
+        if (!item.file.isOwned(widget.account.username)) {
           // don't propagate shared file not owned by this user, this is to
           // prevent multiple user having different properties to keep
           // overriding each others
@@ -623,8 +622,7 @@ class _AlbumViewerState extends State<AlbumViewer>
       final a = z[0], b = z[1];
       bool isEqual;
       if (a is AlbumFileItem && b is AlbumFileItem) {
-        if (a.file.ownerId != null &&
-            a.file.ownerId != widget.account.username) {
+        if (!a.file.isOwned(widget.account.username)) {
           // ignore shared files
           continue;
         }
