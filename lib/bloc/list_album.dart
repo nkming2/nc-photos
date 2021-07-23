@@ -47,7 +47,7 @@ abstract class ListAlbumBlocState {
         "}";
   }
 
-  final Account account;
+  final Account? account;
   final List<Album> albums;
 }
 
@@ -56,18 +56,18 @@ class ListAlbumBlocInit extends ListAlbumBlocState {
 }
 
 class ListAlbumBlocLoading extends ListAlbumBlocState {
-  const ListAlbumBlocLoading(Account account, List<Album> albums)
+  const ListAlbumBlocLoading(Account? account, List<Album> albums)
       : super(account, albums);
 }
 
 class ListAlbumBlocSuccess extends ListAlbumBlocState {
-  const ListAlbumBlocSuccess(Account account, List<Album> albums)
+  const ListAlbumBlocSuccess(Account? account, List<Album> albums)
       : super(account, albums);
 }
 
 class ListAlbumBlocFailure extends ListAlbumBlocState {
   const ListAlbumBlocFailure(
-      Account account, List<Album> albums, this.exception)
+      Account? account, List<Album> albums, this.exception)
       : super(account, albums);
 
   @override
@@ -84,7 +84,7 @@ class ListAlbumBlocFailure extends ListAlbumBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class ListAlbumBlocInconsistent extends ListAlbumBlocState {
-  const ListAlbumBlocInconsistent(Account account, List<Album> albums)
+  const ListAlbumBlocInconsistent(Account? account, List<Album> albums)
       : super(account, albums);
 }
 
@@ -134,7 +134,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     if (newState is ListAlbumBlocFailure) {
       yield ListAlbumBlocFailure(
           ev.account,
-          newState.albums?.isNotEmpty == true ? newState.albums : state.albums,
+          newState.albums.isNotEmpty ? newState.albums : state.albums,
           newState.exception);
     } else {
       yield newState;
@@ -206,9 +206,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     }
   }
 
-  AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
-  AppEventListener<FileRemovedEvent> _fileRemovedListener;
-  AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
+  late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
+  late AppEventListener<FileRemovedEvent> _fileRemovedListener;
+  late AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
 
   static final _log = Logger("bloc.list_album.ListAlbumBloc");
 }

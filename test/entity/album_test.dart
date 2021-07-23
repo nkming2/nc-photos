@@ -14,6 +14,7 @@ void main() {
         final json = <String, dynamic>{
           "version": Album.version,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
           "provider": <String, dynamic>{
             "type": "static",
             "content": <String, dynamic>{
@@ -30,7 +31,8 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json),
+            Album.fromJson(json,
+                upgraderV1: null, upgraderV2: null, upgraderV3: null),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -63,7 +65,8 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json),
+            Album.fromJson(json,
+                upgraderV1: null, upgraderV2: null, upgraderV3: null),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "album",
@@ -114,7 +117,8 @@ void main() {
             },
           };
           expect(
-              Album.fromJson(json),
+              Album.fromJson(json,
+                  upgraderV1: null, upgraderV2: null, upgraderV3: null),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                 name: "",
@@ -161,7 +165,8 @@ void main() {
             },
           };
           expect(
-              Album.fromJson(json),
+              Album.fromJson(json,
+                  upgraderV1: null, upgraderV2: null, upgraderV3: null),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                 name: "",
@@ -203,7 +208,8 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json),
+            Album.fromJson(json,
+                upgraderV1: null, upgraderV2: null, upgraderV3: null),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -242,7 +248,8 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json),
+            Album.fromJson(json,
+                upgraderV1: null, upgraderV2: null, upgraderV3: null),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -260,6 +267,7 @@ void main() {
         final json = <String, dynamic>{
           "version": Album.version,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
           "provider": <String, dynamic>{
             "type": "static",
             "content": <String, dynamic>{
@@ -279,7 +287,8 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json),
+            Album.fromJson(json,
+                upgraderV1: null, upgraderV2: null, upgraderV3: null),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",

@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 
 class ProcessingDialog extends StatelessWidget {
   ProcessingDialog({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
   });
 
   @override

@@ -13,9 +13,11 @@ class LsDirBlocItem {
     if (isDeep) {
       return "$runtimeType:${_toDeepString(0)}";
     } else {
+      final childrenStr =
+          children == null ? "null" : "List {length: ${children!.length}}";
       return "$runtimeType {"
           "file: '${file.path}', "
-          "children: List {length: ${children.length}}, "
+          "children: $childrenStr, "
           "}";
     }
   }
@@ -23,19 +25,19 @@ class LsDirBlocItem {
   String _toDeepString(int level) {
     String product = "\n" + " " * (level * 2) + "-${file.path}";
     if (children != null) {
-      for (final c in children) {
+      for (final c in children!) {
         product += c._toDeepString(level + 1);
       }
     }
     return product;
   }
 
-  File file;
+  final File file;
 
   /// Child directories under this directory
   ///
   /// Null if this dir is not listed, due to things like depth limitation
-  List<LsDirBlocItem> children;
+  List<LsDirBlocItem>? children;
 }
 
 abstract class LsDirBlocEvent {
@@ -59,9 +61,9 @@ class LsDirBlocQuery extends LsDirBlocEvent {
   }
 
   LsDirBlocQuery copyWith({
-    Account account,
-    File root,
-    int depth,
+    Account? account,
+    File? root,
+    int? depth,
   }) {
     return LsDirBlocQuery(
       account ?? this.account,
@@ -76,11 +78,7 @@ class LsDirBlocQuery extends LsDirBlocEvent {
 }
 
 abstract class LsDirBlocState {
-  const LsDirBlocState(this._account, this._root, this._items);
-
-  Account get account => _account;
-  File get root => _root;
-  List<LsDirBlocItem> get items => _items;
+  const LsDirBlocState(this.account, this.root, this.items);
 
   @override
   toString() {
@@ -91,9 +89,9 @@ abstract class LsDirBlocState {
         "}";
   }
 
-  final Account _account;
-  final File _root;
-  final List<LsDirBlocItem> _items;
+  final Account? account;
+  final File root;
+  final List<LsDirBlocItem> items;
 }
 
 class LsDirBlocInit extends LsDirBlocState {
@@ -101,18 +99,18 @@ class LsDirBlocInit extends LsDirBlocState {
 }
 
 class LsDirBlocLoading extends LsDirBlocState {
-  const LsDirBlocLoading(Account account, File root, List<LsDirBlocItem> items)
+  const LsDirBlocLoading(Account? account, File root, List<LsDirBlocItem> items)
       : super(account, root, items);
 }
 
 class LsDirBlocSuccess extends LsDirBlocState {
-  const LsDirBlocSuccess(Account account, File root, List<LsDirBlocItem> items)
+  const LsDirBlocSuccess(Account? account, File root, List<LsDirBlocItem> items)
       : super(account, root, items);
 }
 
 class LsDirBlocFailure extends LsDirBlocState {
   const LsDirBlocFailure(
-      Account account, File root, List<LsDirBlocItem> items, this.exception)
+      Account? account, File root, List<LsDirBlocItem> items, this.exception)
       : super(account, root, items);
 
   @override
@@ -153,12 +151,12 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
     var files = _cache[ev.root.path];
     if (files == null) {
       files = (await Ls(FileRepo(FileWebdavDataSource()))(ev.account, ev.root))
-          .where((f) => f.isCollection)
+          .where((f) => f.isCollection ?? false)
           .toList();
       _cache[ev.root.path] = files;
     }
     for (final f in files) {
-      List<LsDirBlocItem> children;
+      List<LsDirBlocItem>? children;
       if (ev.depth > 1) {
         children = await _query(ev.copyWith(root: f, depth: ev.depth - 1));
       }

@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 class SimpleInputDialog extends StatefulWidget {
   SimpleInputDialog({
-    Key key,
+    Key? key,
     this.initialText,
     this.hintText,
     this.validator,
@@ -12,9 +12,9 @@ class SimpleInputDialog extends StatefulWidget {
   @override
   createState() => _SimpleInputDialogState();
 
-  final String initialText;
-  final String hintText;
-  final FormFieldValidator<String> validator;
+  final String? initialText;
+  final String? hintText;
+  final FormFieldValidator<String>? validator;
 }
 
 class _SimpleInputDialogState extends State<SimpleInputDialog> {
@@ -29,7 +29,7 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
               : InputDecoration(hintText: widget.hintText),
           validator: widget.validator,
           onSaved: (value) {
-            _formValue.text = value;
+            _formValue.text = value!;
           },
           initialValue: widget.initialText,
         ),
@@ -48,15 +48,15 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
   void _onSavePressed() {
     if (_formKey.currentState?.validate() == true) {
       _formValue = _FormValue();
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       Navigator.of(context).pop(_formValue.text);
     }
   }
 
   final _formKey = GlobalKey<FormState>();
-  _FormValue _formValue;
+  var _formValue = _FormValue();
 }
 
 class _FormValue {
-  String text;
+  late String text;
 }

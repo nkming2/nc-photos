@@ -18,7 +18,7 @@ import 'package:nc_photos/widget/selectable.dart';
 abstract class SelectableItem {
   Widget buildWidget(BuildContext context);
 
-  VoidCallback get onTap => null;
+  VoidCallback? get onTap => null;
   bool get isSelectable => false;
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
@@ -33,7 +33,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @protected
   Widget buildItemStreamListOuter(
     BuildContext context, {
-    @required Widget child,
+    required Widget child,
   }) {
     if (platform_k.isWeb) {
       // support shift+click group selection on web
@@ -51,8 +51,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   @protected
   Widget buildItemStreamList({
-    @required double maxCrossAxisExtent,
-    ValueChanged<double> onMaxExtentChanged,
+    required double maxCrossAxisExtent,
+    ValueChanged<double?>? onMaxExtentChanged,
   }) {
     return MeasurableItemList(
       key: _listKey,
@@ -81,24 +81,25 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @protected
   set itemStreamListItems(List<SelectableItem> newItems) {
     final lastSelectedItem =
-        _lastSelectPosition != null ? _items[_lastSelectPosition] : null;
+        _lastSelectPosition != null ? _items[_lastSelectPosition!] : null;
 
     _items = newItems;
     _transformSelectedItems();
 
     // Keep _lastSelectPosition if no changes, drop otherwise
-    int newLastSelectPosition;
+    int? newLastSelectPosition;
     try {
       if (lastSelectedItem != null &&
-          lastSelectedItem == _items[_lastSelectPosition]) {
-        newLastSelectPosition = _lastSelectPosition;
+          lastSelectedItem == _items[_lastSelectPosition!]) {
+        newLastSelectPosition = _lastSelectPosition!;
       }
     } catch (_) {}
     _lastSelectPosition = newLastSelectPosition;
 
     _log.info("[itemStreamListItems] updateListHeight: list item changed");
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-        (_listKey.currentState as MeasurableItemListState)?.updateListHeight());
+    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+        (_listKey.currentState as MeasurableItemListState?)
+            ?.updateListHeight());
   }
 
   Widget _buildItem(BuildContext context, int index) {
@@ -139,8 +140,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         if (_isRangeSelectionMode && _lastSelectPosition != null) {
           setState(() {
             _selectedItems.addAll(_items
-                .sublist(math.min(_lastSelectPosition, index),
-                    math.max(_lastSelectPosition, index) + 1)
+                .sublist(math.min(_lastSelectPosition!, index),
+                    math.max(_lastSelectPosition!, index) + 1)
                 .where((e) => e.isSelectable));
             _lastSelectPosition = index;
           });
@@ -166,8 +167,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     if (!platform_k.isWeb && wasSelectionMode && _lastSelectPosition != null) {
       setState(() {
         _selectedItems.addAll(_items
-            .sublist(math.min(_lastSelectPosition, index),
-                math.max(_lastSelectPosition, index) + 1)
+            .sublist(math.min(_lastSelectPosition!, index),
+                math.max(_lastSelectPosition!, index) + 1)
             .where((e) => e.isSelectable));
         _lastSelectPosition = index;
       });
@@ -183,8 +184,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(platform_k.isWeb
-              ? AppLocalizations.of(context).webSelectRangeNotification
-              : AppLocalizations.of(context).mobileSelectRangeNotification),
+              ? AppLocalizations.of(context)!.webSelectRangeNotification
+              : AppLocalizations.of(context)!.mobileSelectRangeNotification),
           duration: k.snackBarDurationNormal,
         ));
         SessionStorage().hasShowRangeSelectNotification = true;
@@ -205,14 +206,14 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
             return null;
           }
         })
-        .where((element) => element != null)
+        .whereType<SelectableItem>()
         .toList();
     _selectedItems
       ..clear()
       ..addAll(newSelectedItems);
   }
 
-  int _lastSelectPosition;
+  int? _lastSelectPosition;
   bool _isRangeSelectionMode = false;
 
   var _items = <SelectableItem>[];

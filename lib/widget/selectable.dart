@@ -5,10 +5,10 @@ import 'package:nc_photos/theme.dart';
 // Overlay a check mark if an item is selected
 class Selectable extends StatelessWidget {
   Selectable({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.isSelected = false,
-    @required this.iconSize,
+    required this.iconSize,
     this.borderRadius,
     this.onTap,
     this.onLongPress,
@@ -55,8 +55,8 @@ class Selectable extends StatelessWidget {
   final Widget child;
   final bool isSelected;
   final double iconSize;
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadius? borderRadius;
 
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 }

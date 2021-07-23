@@ -18,8 +18,8 @@ import 'package:tuple/tuple.dart';
 
 class AlbumPickerDialog extends StatefulWidget {
   AlbumPickerDialog({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -68,7 +68,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
       _reqQuery();
     } else {
       // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           _onStateChange(context, _bloc.state);
         });
@@ -81,7 +81,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
       SimpleDialogOption(
         onPressed: () => _onNewAlbumPressed(context),
         child: Tooltip(
-          message: AppLocalizations.of(context).createAlbumTooltip,
+          message: AppLocalizations.of(context)!.createAlbumTooltip,
           child: Center(
             child: Icon(
               Icons.add,
@@ -170,7 +170,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
     _bloc.add(ListAlbumBlocQuery(widget.account));
   }
 
-  ListAlbumBloc _bloc;
+  late ListAlbumBloc _bloc;
 
   final _items = <Album>[];
 

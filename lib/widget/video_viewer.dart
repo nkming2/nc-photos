@@ -12,8 +12,8 @@ import 'package:wakelock/wakelock.dart';
 
 class VideoViewer extends StatefulWidget {
   VideoViewer({
-    @required this.account,
-    @required this.file,
+    required this.account,
+    required this.file,
     this.onLoaded,
     this.onHeightChanged,
     this.onPlay,
@@ -27,10 +27,10 @@ class VideoViewer extends StatefulWidget {
 
   final Account account;
   final File file;
-  final VoidCallback onLoaded;
-  final void Function(double height) onHeightChanged;
-  final VoidCallback onPlay;
-  final VoidCallback onPause;
+  final VoidCallback? onLoaded;
+  final ValueChanged<double>? onHeightChanged;
+  final VoidCallback? onPlay;
+  final VoidCallback? onPause;
   final bool isControlVisible;
   final bool canPlay;
 }
@@ -47,9 +47,9 @@ class _VideoViewerState extends State<VideoViewer> {
     )..initialize().then((_) {
         widget.onLoaded?.call();
         setState(() {});
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
           if (_key.currentContext != null) {
-            widget.onHeightChanged?.call(_key.currentContext.size.height);
+            widget.onHeightChanged?.call(_key.currentContext!.size!.height);
           }
         });
       }).catchError((e, stacktrace) {
@@ -80,13 +80,13 @@ class _VideoViewerState extends State<VideoViewer> {
   @override
   dispose() {
     super.dispose();
-    _controller?.dispose();
+    _controller.dispose();
     Wakelock.disable();
   }
 
   Widget _buildPlayer(BuildContext context) {
     if (_controller.value.isPlaying && !widget.canPlay) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         _pause();
       });
     }
@@ -197,7 +197,7 @@ class _VideoViewerState extends State<VideoViewer> {
   }
 
   final _key = GlobalKey();
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
   var _isFinished = false;
 
   static final _log = Logger("widget.video_viewer._VideoViewerState");

@@ -18,20 +18,17 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   @override
   initState() {
     super.initState();
-    _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevel(0);
+    _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevelOr(0);
   }
 
   @protected
-  File initCover(Account account, List<File> backingFiles) {
+  void initCover(Account account, List<File> backingFiles) {
     try {
       final coverFile =
-          backingFiles.firstWhere((element) => element.hasPreview);
+          backingFiles.firstWhere((element) => element.hasPreview ?? false);
       _coverPreviewUrl = api_util.getFilePreviewUrl(account, coverFile,
           width: 1024, height: 600);
-      return coverFile;
-    } catch (_) {
-      return null;
-    }
+    } catch (_) {}
   }
 
   @protected
@@ -39,9 +36,9 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     BuildContext context,
     Account account,
     Album album, {
-    List<Widget> actions,
-    List<PopupMenuEntry<int>> Function(BuildContext) menuItemBuilder,
-    void Function(int) onSelectedMenuItem,
+    List<Widget>? actions,
+    List<PopupMenuEntry<int>> Function(BuildContext)? menuItemBuilder,
+    void Function(int)? onSelectedMenuItem,
   }) {
     return SliverAppBar(
       floating: true,
@@ -58,7 +55,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       actions: [
         PopupMenuButton(
           icon: const Icon(Icons.photo_size_select_large),
-          tooltip: AppLocalizations.of(context).zoomTooltip,
+          tooltip: AppLocalizations.of(context)!.zoomTooltip,
           itemBuilder: (context) => [
             PopupMenuZoom(
               initialValue: _thumbZoomLevel,
@@ -74,12 +71,12 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
           ],
         ),
         ...(actions ?? []),
-        PopupMenuButton(
+        PopupMenuButton<int>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
             PopupMenuItem(
               value: -1,
-              child: Text(AppLocalizations.of(context).editAlbumMenuLabel),
+              child: Text(AppLocalizations.of(context)!.editAlbumMenuLabel),
             ),
             ...(menuItemBuilder?.call(context) ?? []),
           ],
@@ -120,7 +117,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)
+        title: Text(AppLocalizations.of(context)!
             .selectionAppBarTitle(selectedListItems.length)),
         actions: actions,
       ),
@@ -132,7 +129,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     BuildContext context,
     Account account,
     Album album, {
-    List<Widget> actions,
+    List<Widget>? actions,
   }) {
     return SliverAppBar(
       floating: true,
@@ -141,16 +138,17 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
         background: _getAppBarCover(context, account),
         title: TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context).nameInputHint,
+            hintText: AppLocalizations.of(context)!.nameInputHint,
           ),
           validator: (value) {
-            if (value.isEmpty) {
-              return AppLocalizations.of(context).albumNameInputInvalidEmpty;
+            if (value?.isNotEmpty == true) {
+              return null;
+            } else {
+              return AppLocalizations.of(context)!.albumNameInputInvalidEmpty;
             }
-            return null;
           },
           onSaved: (value) {
-            _editFormValue.name = value;
+            _editFormValue.name = value!;
           },
           onChanged: (value) {
             // need to save the value otherwise it'll return to the initial
@@ -166,7 +164,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       leading: IconButton(
         icon: const Icon(Icons.check),
         color: Theme.of(context).colorScheme.primary,
-        tooltip: AppLocalizations.of(context).doneButtonTooltip,
+        tooltip: AppLocalizations.of(context)!.doneButtonTooltip,
         onPressed: () {
           if (validateEditMode()) {
             setState(() {
@@ -226,7 +224,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     });
   }
 
-  Widget _getAppBarCover(BuildContext context, Account account) {
+  Widget? _getAppBarCover(BuildContext context, Account account) {
     try {
       if (_coverPreviewUrl != null) {
         return Opacity(
@@ -236,7 +234,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
             clipBehavior: Clip.hardEdge,
             fit: BoxFit.cover,
             child: CachedNetworkImage(
-              imageUrl: _coverPreviewUrl,
+              imageUrl: _coverPreviewUrl!,
               httpHeaders: {
                 "Authorization": Api.getAuthorizationHeaderValue(account),
               },
@@ -254,11 +252,11 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     return null;
   }
 
-  String _coverPreviewUrl;
+  String? _coverPreviewUrl;
   var _thumbZoomLevel = 0;
 
   var _isEditMode = false;
-  String _editNameValue;
+  String? _editNameValue;
   var _editFormValue = _EditFormValue();
 
   static final _log = Logger("widget.album_viewer_mixin.AlbumViewerMixin");
@@ -266,5 +264,5 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
 }
 
 class _EditFormValue {
-  String name;
+  late String name;
 }

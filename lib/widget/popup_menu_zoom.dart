@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class PopupMenuZoom extends PopupMenuEntry<void> {
   PopupMenuZoom({
-    Key key,
-    @required this.initialValue,
-    @required this.minValue,
-    @required this.maxValue,
+    Key? key,
+    required this.initialValue,
+    required this.minValue,
+    required this.maxValue,
     this.onChanged,
   }) : super(key: key);
 
@@ -22,7 +22,7 @@ class PopupMenuZoom extends PopupMenuEntry<void> {
   final int initialValue;
   final double minValue;
   final double maxValue;
-  final void Function(double) onChanged;
+  final void Function(double)? onChanged;
 }
 
 class _PopupMenuZoomState extends State<PopupMenuZoom> {

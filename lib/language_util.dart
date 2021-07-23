@@ -6,12 +6,12 @@ class AppLanguage {
 
   final int langId;
   final String nativeName;
-  final Locale locale;
+  final Locale? locale;
 }
 
 String getSelectedLanguageName(BuildContext context) =>
     _getSelectedLanguage(context).nativeName;
-Locale getSelectedLocale(BuildContext context) =>
+Locale? getSelectedLocale(BuildContext context) =>
     _getSelectedLanguage(context).locale;
 
 final supportedLanguages = {
@@ -32,9 +32,9 @@ enum _AppLanguageEnum {
 
 AppLanguage _getSelectedLanguage(BuildContext context) {
   try {
-    final lang = Pref.inst().getLanguage();
-    return supportedLanguages[lang];
+    final lang = Pref.inst().getLanguageOr(0);
+    return supportedLanguages[lang]!;
   } catch (_) {
-    return supportedLanguages[_AppLanguageEnum.systemDefault.index];
+    return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;
   }
 }

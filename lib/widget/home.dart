@@ -16,12 +16,16 @@ class HomeArguments {
 class Home extends StatefulWidget {
   static const routeName = "/home";
 
+  static Route buildRoute(HomeArguments args) => MaterialPageRoute(
+        builder: (context) => Home.fromArgs(args),
+      );
+
   Home({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  Home.fromArgs(HomeArguments args, {Key key})
+  Home.fromArgs(HomeArguments args, {Key? key})
       : this(
           account: args.account,
         );
@@ -33,12 +37,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0, keepPage: false);
-  }
-
   @override
   build(BuildContext context) {
     return AppTheme(
@@ -54,11 +52,11 @@ class _HomeState extends State<Home> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_outlined),
-          label: AppLocalizations.of(context).photosTabLabel,
+          label: AppLocalizations.of(context)!.photosTabLabel,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_album_outlined),
-          label: AppLocalizations.of(context).albumsTabLabel,
+          label: AppLocalizations.of(context)!.albumsTabLabel,
         ),
       ],
       currentIndex: _nextPage,
@@ -108,6 +106,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-  PageController _pageController;
+  final _pageController = PageController(initialPage: 0, keepPage: false);
   int _nextPage = 0;
 }

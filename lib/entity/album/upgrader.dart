@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
 
 abstract class AlbumUpgrader {
-  Map<String, dynamic> call(Map<String, dynamic> json);
+  Map<String, dynamic>? call(Map<String, dynamic> json);
 }
 
 /// Upgrade v1 Album to v2
@@ -10,7 +10,8 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
     this.logFilePath,
   });
 
-  Map<String, dynamic> call(Map<String, dynamic> json) {
+  @override
+  call(Map<String, dynamic> json) {
     // v1 album items are corrupted in one of the updates, drop it
     _log.fine("[call] Upgrade v1 Album for file: $logFilePath");
     final result = Map<String, dynamic>.from(json);
@@ -19,7 +20,7 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
   }
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV1");
 }
@@ -30,7 +31,8 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
     this.logFilePath,
   });
 
-  Map<String, dynamic> call(Map<String, dynamic> json) {
+  @override
+  call(Map<String, dynamic> json) {
     // move v2 items to v3 provider
     _log.fine("[call] Upgrade v2 Album for file: $logFilePath");
     final result = Map<String, dynamic>.from(json);
@@ -51,7 +53,7 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
   }
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV2");
 }
@@ -62,7 +64,8 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
     this.logFilePath,
   });
 
-  Map<String, dynamic> call(Map<String, dynamic> json) {
+  @override
+  call(Map<String, dynamic> json) {
     // move v3 items to v4 provider
     _log.fine("[call] Upgrade v3 Album for file: $logFilePath");
     final result = Map<String, dynamic>.from(json);
@@ -77,7 +80,7 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
   }
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV3");
 }

@@ -40,8 +40,8 @@ class UpdateMissingMetadata {
         _log.fine("[call] Updating metadata for ${file.path}");
         final binary = await GetFileBinary(fileRepo)(account, file);
         final metadata = await LoadMetadata()(account, file, binary);
-        int imageWidth, imageHeight;
-        Exif exif;
+        int? imageWidth, imageHeight;
+        Exif? exif;
         if (metadata.containsKey("resolution")) {
           imageWidth = metadata["resolution"]["width"];
           imageHeight = metadata["resolution"]["height"];

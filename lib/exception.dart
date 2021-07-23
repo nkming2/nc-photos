@@ -16,7 +16,10 @@ class CacheNotFoundException implements Exception {
 }
 
 class ApiException implements Exception {
-  ApiException({this.response, this.message});
+  ApiException({
+    required this.response,
+    this.message,
+  });
 
   @override
   toString() {

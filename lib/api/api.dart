@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -43,9 +42,9 @@ class Api {
   Future<Response> request(
     String method,
     String endpoint, {
-    Map<String, String> header,
-    String body,
-    Uint8List bodyBytes,
+    Map<String, String>? header,
+    String? body,
+    Uint8List? bodyBytes,
     bool isResponseString = true,
   }) async {
     final url = _makeUri(endpoint);
@@ -114,7 +113,7 @@ class _Files {
   Api _api;
 
   Future<Response> delete({
-    @required String path,
+    required String path,
   }) async {
     try {
       return await _api.request("DELETE", path);
@@ -125,7 +124,7 @@ class _Files {
   }
 
   Future<Response> get({
-    @required String path,
+    required String path,
   }) async {
     try {
       return await _api.request("GET", path, isResponseString: false);
@@ -136,9 +135,9 @@ class _Files {
   }
 
   Future<Response> put({
-    @required String path,
+    required String path,
     String mime = "application/octet-stream",
-    Uint8List content,
+    required Uint8List content,
   }) async {
     try {
       return await _api.request(
@@ -156,8 +155,8 @@ class _Files {
   }
 
   Future<Response> propfind({
-    @required String path,
-    int depth,
+    required String path,
+    int? depth,
     getlastmodified,
     getetag,
     getcontenttype,
@@ -176,8 +175,8 @@ class _Files {
     hasPreview,
     size,
     richWorkspace,
-    Map<String, String> customNamespaces,
-    List<String> customProperties,
+    Map<String, String>? customNamespaces,
+    List<String>? customProperties,
   }) async {
     try {
       final bool hasDavNs = (getlastmodified != null ||
@@ -287,10 +286,10 @@ class _Files {
   /// [namespaces] should be specified in the format {"URI": "prefix"}, eg,
   /// {"DAV:": "d"}
   Future<Response> proppatch({
-    @required String path,
-    Map<String, String> namespaces,
-    Map<String, dynamic> set,
-    List<String> remove,
+    required String path,
+    Map<String, String>? namespaces,
+    Map<String, dynamic>? set,
+    List<String>? remove,
   }) async {
     try {
       final ns = <String, String>{
@@ -300,7 +299,7 @@ class _Files {
       builder
         ..processing("xml", "version=\"1.0\"")
         ..element("d:propertyupdate", namespaces: ns, nest: () {
-          if (set?.isNotEmpty == true) {
+          if (set != null && set.isNotEmpty) {
             builder.element("d:set", nest: () {
               builder.element("d:prop", nest: () {
                 for (final e in set.entries) {
@@ -311,7 +310,7 @@ class _Files {
               });
             });
           }
-          if (remove?.isNotEmpty == true) {
+          if (remove != null && remove.isNotEmpty) {
             builder.element("d:remove", nest: () {
               builder.element("d:prop", nest: () {
                 for (final e in remove) {
@@ -331,7 +330,7 @@ class _Files {
 
   /// A folder can be created by sending a MKCOL request to the folder
   Future<Response> mkcol({
-    @required String path,
+    required String path,
   }) async {
     try {
       return await _api.request("MKCOL", path);
@@ -344,9 +343,9 @@ class _Files {
   /// A file or folder can be copied by sending a COPY request to the file or
   /// folder and specifying the [destinationUrl] as full url
   Future<Response> copy({
-    @required String path,
-    @required String destinationUrl,
-    bool overwrite,
+    required String path,
+    required String destinationUrl,
+    bool? overwrite,
   }) async {
     try {
       return await _api.request("COPY", path, header: {
@@ -362,9 +361,9 @@ class _Files {
   /// A file or folder can be moved by sending a MOVE request to the file or
   /// folder and specifying the [destinationUrl] as full url
   Future<Response> move({
-    @required String path,
-    @required String destinationUrl,
-    bool overwrite,
+    required String path,
+    required String destinationUrl,
+    bool? overwrite,
   }) async {
     try {
       return await _api.request("MOVE", path, header: {

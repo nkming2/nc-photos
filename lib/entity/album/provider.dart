@@ -50,7 +50,7 @@ abstract class AlbumProvider with EquatableMixin {
   toString({bool isDeep = false});
 
   /// Return the date time associated with the latest item, or null
-  DateTime get latestItemTime;
+  DateTime? get latestItemTime;
 
   AlbumProvider copyWith();
 
@@ -59,7 +59,7 @@ abstract class AlbumProvider with EquatableMixin {
 
 class AlbumStaticProvider extends AlbumProvider {
   AlbumStaticProvider({
-    @required List<AlbumItem> items,
+    required List<AlbumItem> items,
   }) : this.items = UnmodifiableListView(items);
 
   factory AlbumStaticProvider.fromJson(Map<String, dynamic> json) {
@@ -90,7 +90,9 @@ class AlbumStaticProvider extends AlbumProvider {
   }
 
   @override
-  AlbumStaticProvider copyWith({List<AlbumItem> items}) {
+  AlbumStaticProvider copyWith({
+    List<AlbumItem>? items,
+  }) {
     return AlbumStaticProvider(
       items: items ?? this.items,
     );
@@ -124,7 +126,7 @@ class AlbumStaticProvider extends AlbumProvider {
 
 abstract class AlbumDynamicProvider extends AlbumProvider {
   AlbumDynamicProvider({
-    DateTime latestItemTime,
+    DateTime? latestItemTime,
   }) : _latestItemTime = latestItemTime;
 
   @override
@@ -137,13 +139,13 @@ abstract class AlbumDynamicProvider extends AlbumProvider {
   @override
   toContentJson() {
     return {
-      "latestItemTime": _latestItemTime?.toUtc()?.toIso8601String(),
+      "latestItemTime": _latestItemTime?.toUtc().toIso8601String(),
     };
   }
 
   @override
   AlbumDynamicProvider copyWith({
-    DateTime latestItemTime,
+    DateTime? latestItemTime,
   });
 
   @override
@@ -154,13 +156,13 @@ abstract class AlbumDynamicProvider extends AlbumProvider {
         _latestItemTime,
       ];
 
-  final DateTime _latestItemTime;
+  final DateTime? _latestItemTime;
 }
 
 class AlbumDirProvider extends AlbumDynamicProvider {
   AlbumDirProvider({
-    @required this.dirs,
-    DateTime latestItemTime,
+    required this.dirs,
+    DateTime? latestItemTime,
   }) : super(latestItemTime: latestItemTime);
 
   factory AlbumDirProvider.fromJson(Map<String, dynamic> json) {
@@ -192,8 +194,8 @@ class AlbumDirProvider extends AlbumDynamicProvider {
 
   @override
   AlbumDirProvider copyWith({
-    List<File> dirs,
-    DateTime latestItemTime,
+    List<File>? dirs,
+    DateTime? latestItemTime,
   }) {
     return AlbumDirProvider(
       dirs: dirs ?? this.dirs,

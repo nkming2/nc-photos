@@ -1,5 +1,4 @@
 /// Helper functions working with remote Nextcloud server
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -10,10 +9,10 @@ import 'package:nc_photos/exception.dart';
 String getFilePreviewUrl(
   Account account,
   File file, {
-  @required int width,
-  @required int height,
-  String mode,
-  bool a,
+  required int width,
+  required int height,
+  String? mode,
+  bool? a,
 }) {
   return "${account.url}/"
       "${getFilePreviewUrlRelative(file, width: width, height: height, mode: mode, a: a)}";
@@ -24,10 +23,10 @@ String getFilePreviewUrl(
 /// cropped
 String getFilePreviewUrlRelative(
   File file, {
-  @required int width,
-  @required int height,
-  String mode,
-  bool a,
+  required int width,
+  required int height,
+  String? mode,
+  bool? a,
 }) {
   String url;
   if (file.fileId != null) {
@@ -70,7 +69,7 @@ Future<String> exchangePassword(Account account) async {
     try {
       final appPwdRegex = RegExp(r"<apppassword>(.*)</apppassword>");
       final appPwdMatch = appPwdRegex.firstMatch(response.body);
-      return appPwdMatch.group(1);
+      return appPwdMatch!.group(1)!;
     } catch (_) {
       // this happens when the address is not the base URL and so Nextcloud
       // returned the login page

@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:synchronized/synchronized.dart';
 
 class AppDb {
@@ -140,7 +139,7 @@ class AppDbAlbumEntry {
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
         upgraderV3: AlbumUpgraderV3(),
-      ),
+      )!,
     );
   }
 

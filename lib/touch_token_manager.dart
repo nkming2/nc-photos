@@ -21,7 +21,7 @@ import 'package:nc_photos/use_case/remove.dart';
 /// doing it on every query
 class TouchTokenManager {
   Future<void> setRemoteToken(
-      FileRepo fileRepo, Account account, File file, String token) async {
+      FileRepo fileRepo, Account account, File file, String? token) async {
     _log.info(
         "[setRemoteToken] Set remote token for file '${file.path}': $token");
     final path = _getRemotePath(account, file);
@@ -36,7 +36,7 @@ class TouchTokenManager {
 
   /// Return the touch token for [file] from remote source, or null if no such
   /// file
-  Future<String> getRemoteToken(
+  Future<String?> getRemoteToken(
       FileRepo fileRepo, Account account, File file) async {
     final path = _getRemotePath(account, file);
     try {
@@ -51,7 +51,7 @@ class TouchTokenManager {
     }
   }
 
-  Future<void> setLocalToken(Account account, File file, String token) {
+  Future<void> setLocalToken(Account account, File file, String? token) {
     _log.info(
         "[setLocalToken] Set local token for file '${file.path}': $token");
     final name = _getLocalStorageName(account, file);
@@ -62,7 +62,7 @@ class TouchTokenManager {
     }
   }
 
-  Future<String> getLocalToken(Account account, File file) async {
+  Future<String?> getLocalToken(Account account, File file) async {
     final name = _getLocalStorageName(account, file);
     return platform.UniversalStorage().getString(name);
   }

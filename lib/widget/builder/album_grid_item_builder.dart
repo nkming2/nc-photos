@@ -13,8 +13,8 @@ import 'package:nc_photos/widget/album_grid_item.dart';
 /// Build a standard [AlbumGridItem] for an [Album]
 class AlbumGridItemBuilder {
   AlbumGridItemBuilder({
-    @required this.account,
-    @required this.album,
+    required this.account,
+    required this.album,
     this.isSelected = false,
     this.onTap,
     this.onLongPress,
@@ -22,9 +22,9 @@ class AlbumGridItemBuilder {
 
   AlbumGridItem build(BuildContext context) {
     var subtitle = "";
-    String subtitle2;
+    String? subtitle2;
     if (album.provider is AlbumStaticProvider) {
-      subtitle = AppLocalizations.of(context)
+      subtitle = AppLocalizations.of(context)!
           .albumSize(AlbumStaticProvider.of(album).items.length);
     } else if (album.provider is AlbumDirProvider) {
       final provider = album.provider as AlbumDirProvider;
@@ -49,7 +49,7 @@ class AlbumGridItemBuilder {
     Widget cover;
     try {
       final coverFile = album.coverProvider.getCover(album);
-      final previewUrl = api_util.getFilePreviewUrl(account, coverFile,
+      final previewUrl = api_util.getFilePreviewUrl(account, coverFile!,
           width: 512, height: 512);
       cover = FittedBox(
         clipBehavior: Clip.hardEdge,
@@ -89,6 +89,6 @@ class AlbumGridItemBuilder {
   final Account account;
   final Album album;
   final bool isSelected;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 }

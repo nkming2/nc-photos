@@ -6,8 +6,8 @@ import 'package:nc_photos/num_extension.dart';
 
 class PhotoDateTimeEditDialog extends StatefulWidget {
   PhotoDateTimeEditDialog({
-    Key key,
-    @required this.initialDateTime,
+    Key? key,
+    required this.initialDateTime,
   }) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
   @override
   build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).updateDateTimeDialogTitle),
+      title: Text(AppLocalizations.of(context)!.updateDateTimeDialogTitle),
       content: Form(
         key: _formKey,
         child: Container(
@@ -29,7 +29,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppLocalizations.of(context).dateSubtitle,
+                AppLocalizations.of(context)!.dateSubtitle,
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Row(
@@ -38,20 +38,20 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText:
-                            AppLocalizations.of(context).dateYearInputHint,
+                            AppLocalizations.of(context)!.dateYearInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         try {
-                          int.parse(value);
+                          int.parse(value!);
                           return null;
                         } catch (_) {
-                          return AppLocalizations.of(context)
+                          return AppLocalizations.of(context)!
                               .dateTimeInputInvalid;
                         }
                       },
                       onSaved: (value) {
-                        _formValue.year = int.parse(value);
+                        _formValue.year = int.parse(value!);
                       },
                       initialValue: "${widget.initialDateTime.year}",
                     ),
@@ -62,18 +62,18 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText:
-                            AppLocalizations.of(context).dateMonthInputHint,
+                            AppLocalizations.of(context)!.dateMonthInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (int.tryParse(value)?.inRange(1, 12) == true) {
+                        if (int.tryParse(value!)?.inRange(1, 12) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)
+                        return AppLocalizations.of(context)!
                             .dateTimeInputInvalid;
                       },
                       onSaved: (value) {
-                        _formValue.month = int.parse(value);
+                        _formValue.month = int.parse(value!);
                       },
                       initialValue: widget.initialDateTime.month
                           .toString()
@@ -85,18 +85,19 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context).dateDayInputHint,
+                        hintText:
+                            AppLocalizations.of(context)!.dateDayInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (int.tryParse(value)?.inRange(1, 31) == true) {
+                        if (int.tryParse(value!)?.inRange(1, 31) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)
+                        return AppLocalizations.of(context)!
                             .dateTimeInputInvalid;
                       },
                       onSaved: (value) {
-                        _formValue.day = int.parse(value);
+                        _formValue.day = int.parse(value!);
                       },
                       initialValue:
                           widget.initialDateTime.day.toString().padLeft(2, "0"),
@@ -107,7 +108,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
               ),
               const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context).timeSubtitle,
+                AppLocalizations.of(context)!.timeSubtitle,
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Row(
@@ -116,18 +117,18 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText:
-                            AppLocalizations.of(context).timeHourInputHint,
+                            AppLocalizations.of(context)!.timeHourInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (int.tryParse(value)?.inRange(0, 23) == true) {
+                        if (int.tryParse(value!)?.inRange(0, 23) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)
+                        return AppLocalizations.of(context)!
                             .dateTimeInputInvalid;
                       },
                       onSaved: (value) {
-                        _formValue.hour = int.parse(value);
+                        _formValue.hour = int.parse(value!);
                       },
                       initialValue: widget.initialDateTime.hour
                           .toString()
@@ -140,18 +141,18 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText:
-                            AppLocalizations.of(context).timeMinuteInputHint,
+                            AppLocalizations.of(context)!.timeMinuteInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (int.tryParse(value)?.inRange(0, 59) == true) {
+                        if (int.tryParse(value!)?.inRange(0, 59) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)
+                        return AppLocalizations.of(context)!
                             .dateTimeInputInvalid;
                       },
                       onSaved: (value) {
-                        _formValue.minute = int.parse(value);
+                        _formValue.minute = int.parse(value!);
                       },
                       initialValue: widget.initialDateTime.minute
                           .toString()
@@ -180,8 +181,8 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
   }
 
   void _onSavePressed(BuildContext context) {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState?.validate() == true) {
+      _formKey.currentState!.save();
       final d = DateTime(_formValue.year, _formValue.month, _formValue.day,
           _formValue.hour, _formValue.minute);
       _log.info("[_onSavePressed] Set date time: $d");
@@ -197,9 +198,9 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
 }
 
 class _FormValue {
-  int year;
-  int month;
-  int day;
-  int hour;
-  int minute;
+  late int year;
+  late int month;
+  late int day;
+  late int hour;
+  late int minute;
 }

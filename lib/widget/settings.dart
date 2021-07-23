@@ -23,12 +23,16 @@ class SettingsArguments {
 class Settings extends StatefulWidget {
   static const routeName = "/settings";
 
+  static Route buildRoute(SettingsArguments args) => MaterialPageRoute(
+        builder: (context) => Settings.fromArgs(args),
+      );
+
   Settings({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  Settings.fromArgs(SettingsArguments args, {Key key})
+  Settings.fromArgs(SettingsArguments args, {Key? key})
       : this(
           account: args.account,
         );
@@ -43,7 +47,7 @@ class _SettingsState extends State<Settings> {
   @override
   initState() {
     super.initState();
-    _isEnableExif = Pref.inst().isEnableExif();
+    _isEnableExif = Pref.inst().isEnableExifOr();
   }
 
   @override
@@ -58,40 +62,41 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget _buildContent(BuildContext context) {
-    final translator = AppLocalizations.of(context).translator;
+    final translator = AppLocalizations.of(context)!.translator;
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(AppLocalizations.of(context).settingsWidgetTitle),
+          title: Text(AppLocalizations.of(context)!.settingsWidgetTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                title: Text(AppLocalizations.of(context).settingsLanguageTitle),
+                title:
+                    Text(AppLocalizations.of(context)!.settingsLanguageTitle),
                 subtitle: Text(language_util.getSelectedLanguageName(context)),
                 onTap: () => _onLanguageTap(context),
               ),
               SwitchListTile(
-                title:
-                    Text(AppLocalizations.of(context).settingsExifSupportTitle),
+                title: Text(
+                    AppLocalizations.of(context)!.settingsExifSupportTitle),
                 subtitle: _isEnableExif
-                    ? Text(AppLocalizations.of(context)
+                    ? Text(AppLocalizations.of(context)!
                         .settingsExifSupportTrueSubtitle)
                     : null,
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
               _buildCaption(context,
-                  AppLocalizations.of(context).settingsAboutSectionTitle),
+                  AppLocalizations.of(context)!.settingsAboutSectionTitle),
               ListTile(
-                title: Text(AppLocalizations.of(context).settingsVersionTitle),
+                title: Text(AppLocalizations.of(context)!.settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
               ),
               ListTile(
                 title:
-                    Text(AppLocalizations.of(context).settingsSourceCodeTitle),
+                    Text(AppLocalizations.of(context)!.settingsSourceCodeTitle),
                 subtitle: Text(_sourceRepo),
                 onTap: () async {
                   await launch(_sourceRepo);
@@ -99,7 +104,7 @@ class _SettingsState extends State<Settings> {
               ),
               ListTile(
                 title:
-                    Text(AppLocalizations.of(context).settingsBugReportTitle),
+                    Text(AppLocalizations.of(context)!.settingsBugReportTitle),
                 onTap: () {
                   launch(_bugReportUrl);
                 },
@@ -107,7 +112,7 @@ class _SettingsState extends State<Settings> {
               if (translator.isNotEmpty)
                 ListTile(
                   title: Text(
-                      AppLocalizations.of(context).settingsTranslatorTitle),
+                      AppLocalizations.of(context)!.settingsTranslatorTitle),
                   subtitle: Text(translator),
                   onTap: () {
                     launch(_translationUrl);
@@ -172,8 +177,8 @@ class _SettingsState extends State<Settings> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text(
-              AppLocalizations.of(context).exifSupportConfirmationDialogTitle),
-          content: Text(AppLocalizations.of(context).exifSupportDetails),
+              AppLocalizations.of(context)!.exifSupportConfirmationDialogTitle),
+          content: Text(AppLocalizations.of(context)!.exifSupportDetails),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -185,7 +190,7 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(AppLocalizations.of(context).enableButtonLabel),
+              child: Text(AppLocalizations.of(context)!.enableButtonLabel),
             ),
           ],
         ),
@@ -215,7 +220,7 @@ class _SettingsState extends State<Settings> {
         _log.severe("[_setExifSupport] Failed writing pref");
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(
-              AppLocalizations.of(context).writePreferenceFailureNotification),
+              AppLocalizations.of(context)!.writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
         setState(() {
@@ -231,7 +236,7 @@ class _SettingsState extends State<Settings> {
   static const String _translationUrl =
       "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
 
-  bool _isEnableExif;
+  late bool _isEnableExif;
 
   static final _log = Logger("widget.settings._SettingsState");
 }

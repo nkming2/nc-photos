@@ -40,7 +40,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
   @override
   toString();
 
-  File getCover(Album album);
+  File? getCover(Album album);
 
   Map<String, dynamic> _toContentJson();
 
@@ -68,7 +68,8 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
         "}";
   }
 
-  File getCover(Album album) {
+  @override
+  getCover(Album album) {
     if (coverFile == null) {
       try {
         // use the latest file as cover
@@ -77,7 +78,8 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
             .whereType<AlbumFileItem>()
             .map((e) => e.file)
             .where((element) =>
-                file_util.isSupportedFormat(element) && element.hasPreview)
+                file_util.isSupportedFormat(element) &&
+                (element.hasPreview ?? false))
             .sorted(compareFileDateTimeDescending)
             .first;
       } catch (_) {
@@ -96,11 +98,11 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   @override
   _toContentJson() {
     return {
-      if (coverFile != null) "coverFile": coverFile.toJson(),
+      if (coverFile != null) "coverFile": coverFile!.toJson(),
     };
   }
 
-  final File coverFile;
+  final File? coverFile;
 
   static const _type = "auto";
 }

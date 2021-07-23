@@ -9,7 +9,7 @@ import 'package:nc_photos/widget/sign_in.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 
 bool isNeedSetup() =>
-    Pref.inst().getSetupProgress() & _PageId.all != _PageId.all;
+    Pref.inst().getSetupProgressOr() & _PageId.all != _PageId.all;
 
 class Setup extends StatefulWidget {
   static const routeName = "/setup";
@@ -29,15 +29,15 @@ class _SetupState extends State<Setup> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text(AppLocalizations.of(context).setupWidgetTitle),
+      title: Text(AppLocalizations.of(context)!.setupWidgetTitle),
       elevation: 0,
     );
   }
 
   Widget _buildContent(BuildContext context) {
-    final page = _pageController.hasClients ? _pageController.page.round() : 0;
+    final page = _pageController.hasClients ? _pageController.page!.round() : 0;
     final pages = <Widget>[
       if (_initialProgress & _PageId.exif == 0) _Exif(),
       if (_initialProgress & _PageId.hiddenPrefDirNotice == 0)
@@ -70,16 +70,21 @@ class _SetupState extends State<Setup> {
                         ElevatedButton(
                           onPressed: _onDonePressed,
                           child: Text(
-                              AppLocalizations.of(context).doneButtonLabel),
+                              AppLocalizations.of(context)!.doneButtonLabel),
                         ),
                       ]
                     : [
                         ElevatedButton(
-                          onPressed: () => _onNextPressed(
-                              (pages[_pageController.page.round()] as _Page)
-                                  .getPageId()),
+                          onPressed: () {
+                            if (_pageController.hasClients) {
+                              _onNextPressed(
+                                  (pages[_pageController.page!.round()]
+                                          as _Page)
+                                      .getPageId());
+                            }
+                          },
                           child: Text(
-                              AppLocalizations.of(context).nextButtonLabel),
+                              AppLocalizations.of(context)!.nextButtonLabel),
                         ),
                       ],
               ),
@@ -107,12 +112,12 @@ class _SetupState extends State<Setup> {
   }
 
   void _onNextPressed(int pageId) {
-    Pref.inst().setSetupProgress(Pref.inst().getSetupProgress() | pageId);
+    Pref.inst().setSetupProgress(Pref.inst().getSetupProgressOr() | pageId);
     _pageController.nextPage(
         duration: k.animationDurationNormal, curve: Curves.easeInOut);
   }
 
-  final _initialProgress = Pref.inst().getSetupProgress();
+  final _initialProgress = Pref.inst().getSetupProgressOr();
   final _pageController = PageController();
   var _currentPageNotifier = ValueNotifier<int>(0);
 }
@@ -143,23 +148,23 @@ class _ExifState extends State<_Exif> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SwitchListTile(
-            title: Text(AppLocalizations.of(context).settingsExifSupportTitle),
+            title: Text(AppLocalizations.of(context)!.settingsExifSupportTitle),
             value: _isEnableExif,
             onChanged: _onValueChanged,
           ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(AppLocalizations.of(context).exifSupportDetails),
+            child: Text(AppLocalizations.of(context)!.exifSupportDetails),
           ),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-                AppLocalizations.of(context).setupSettingsModifyLaterHint,
+                AppLocalizations.of(context)!.setupSettingsModifyLaterHint,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText2
+                    .bodyText2!
                     .copyWith(fontStyle: FontStyle.italic)),
           ),
           const SizedBox(height: 8),
@@ -175,7 +180,7 @@ class _ExifState extends State<_Exif> {
     });
   }
 
-  bool _isEnableExif = Pref.inst().isEnableExif();
+  bool _isEnableExif = Pref.inst().isEnableExifOr();
 }
 
 class _HiddenPrefDirNotice extends StatefulWidget implements _Page {
@@ -196,7 +201,7 @@ class _HiddenPrefDirNoticeState extends State<_HiddenPrefDirNotice> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-                AppLocalizations.of(context).setupHiddenPrefDirNoticeDetail),
+                AppLocalizations.of(context)!.setupHiddenPrefDirNoticeDetail),
           ),
           const SizedBox(height: 24),
           Align(

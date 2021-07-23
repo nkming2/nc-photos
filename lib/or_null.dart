@@ -2,7 +2,9 @@
 class OrNull<T> {
   OrNull(this.obj);
 
-  static bool isNull(OrNull x) => x != null && x.obj == null;
+  /// Return iff the value of [x] is set to null, which means if [x] itself is
+  /// null, false will still be returned
+  static bool isSetNull(OrNull? x) => x != null && x.obj == null;
 
-  final T obj;
+  final T? obj;
 }

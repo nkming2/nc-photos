@@ -5,9 +5,9 @@ import 'package:nc_photos/widget/selectable.dart';
 
 class AlbumGridItem extends StatelessWidget {
   AlbumGridItem({
-    Key key,
-    @required this.cover,
-    @required this.title,
+    Key? key,
+    required this.cover,
+    required this.title,
     this.subtitle,
     this.subtitle2,
     this.icon,
@@ -50,8 +50,8 @@ class AlbumGridItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              title ?? "",
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              title,
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     color: AppTheme.getPrimaryTextColor(context),
                   ),
               textAlign: TextAlign.start,
@@ -64,7 +64,7 @@ class AlbumGridItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     subtitle ?? "",
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
                           fontSize: 10,
                           color: AppTheme.getSecondaryTextColor(context),
                         ),
@@ -75,8 +75,8 @@ class AlbumGridItem extends StatelessWidget {
                 ),
                 if (subtitle2?.isNotEmpty == true)
                   Text(
-                    subtitle2,
-                    style: Theme.of(context).textTheme.bodyText2.copyWith(
+                    subtitle2!,
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(
                           fontSize: 10,
                           color: AppTheme.getSecondaryTextColor(context),
                         ),
@@ -93,12 +93,12 @@ class AlbumGridItem extends StatelessWidget {
 
   final Widget cover;
   final String title;
-  final String subtitle;
+  final String? subtitle;
 
   /// Appears after [subtitle], aligned to the end side of parent
-  final String subtitle2;
-  final IconData icon;
+  final String? subtitle2;
+  final IconData? icon;
   final bool isSelected;
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 }

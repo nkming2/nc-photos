@@ -34,12 +34,16 @@ class AlbumImporterArguments {
 class AlbumImporter extends StatefulWidget {
   static const routeName = "/album-importer";
 
+  static Route buildRoute(AlbumImporterArguments args) => MaterialPageRoute(
+        builder: (context) => AlbumImporter.fromArgs(args),
+      );
+
   AlbumImporter({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  AlbumImporter.fromArgs(AlbumImporterArguments args, {Key key})
+  AlbumImporter.fromArgs(AlbumImporterArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -98,7 +102,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context).albumImporterHeaderText,
+                  AppLocalizations.of(context)!.albumImporterHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -106,7 +110,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context).albumImporterSubHeaderText,
+                    AppLocalizations.of(context)!.albumImporterSubHeaderText,
                   ),
                 ),
               ],
@@ -141,7 +145,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 ),
                 ElevatedButton(
                   onPressed: () => _onImportPressed(context),
-                  child: Text(AppLocalizations.of(context).importButtonLabel),
+                  child: Text(AppLocalizations.of(context)!.importButtonLabel),
                 ),
               ],
             ),
@@ -214,7 +218,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
       barrierDismissible: false,
       context: context,
       builder: (context) => ProcessingDialog(
-          text: AppLocalizations.of(context).albumImporterProgressText),
+          text: AppLocalizations.of(context)!.albumImporterProgressText),
     );
     try {
       await _createAllAlbums(context);
@@ -269,7 +273,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
         .toList();
   }
 
-  ListImportableAlbumBloc _bloc;
+  late ListImportableAlbumBloc _bloc;
 
   var _backingFiles = <File>[];
   final _picks = <File>[];

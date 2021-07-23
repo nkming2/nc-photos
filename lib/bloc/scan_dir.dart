@@ -58,10 +58,7 @@ class _ScanDirBlocExternalEvent extends ScanDirBlocEvent {
 }
 
 abstract class ScanDirBlocState {
-  const ScanDirBlocState(this._account, this._files);
-
-  Account get account => _account;
-  List<File> get files => _files;
+  const ScanDirBlocState(this.account, this.files);
 
   @override
   toString() {
@@ -71,8 +68,8 @@ abstract class ScanDirBlocState {
         "}";
   }
 
-  final Account _account;
-  final List<File> _files;
+  final Account? account;
+  final List<File> files;
 }
 
 class ScanDirBlocInit extends ScanDirBlocState {
@@ -80,17 +77,17 @@ class ScanDirBlocInit extends ScanDirBlocState {
 }
 
 class ScanDirBlocLoading extends ScanDirBlocState {
-  const ScanDirBlocLoading(Account account, List<File> files)
+  const ScanDirBlocLoading(Account? account, List<File> files)
       : super(account, files);
 }
 
 class ScanDirBlocSuccess extends ScanDirBlocState {
-  const ScanDirBlocSuccess(Account account, List<File> files)
+  const ScanDirBlocSuccess(Account? account, List<File> files)
       : super(account, files);
 }
 
 class ScanDirBlocFailure extends ScanDirBlocState {
-  const ScanDirBlocFailure(Account account, List<File> files, this.exception)
+  const ScanDirBlocFailure(Account? account, List<File> files, this.exception)
       : super(account, files);
 
   @override
@@ -107,7 +104,7 @@ class ScanDirBlocFailure extends ScanDirBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class ScanDirBlocInconsistent extends ScanDirBlocState {
-  const ScanDirBlocInconsistent(Account account, List<File> files)
+  const ScanDirBlocInconsistent(Account? account, List<File> files)
       : super(account, files);
 }
 
@@ -285,11 +282,12 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     }
   }
 
-  AppEventListener<FileRemovedEvent> _fileRemovedEventListener;
-  AppEventListener<FilePropertyUpdatedEvent> _filePropertyUpdatedEventListener;
+  late AppEventListener<FileRemovedEvent> _fileRemovedEventListener;
+  late AppEventListener<FilePropertyUpdatedEvent>
+      _filePropertyUpdatedEventListener;
 
   int _successivePropertyUpdatedCount = 0;
-  StreamSubscription<void> _propertyUpdatedSubscription;
+  StreamSubscription<void>? _propertyUpdatedSubscription;
 
   bool _shouldCheckCache = true;
 

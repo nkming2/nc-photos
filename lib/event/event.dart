@@ -23,13 +23,13 @@ class AppEventListener<T> {
       _log.warning("[endListenEvent] Already not listening");
       return;
     }
-    _subscription.cancel();
+    _subscription?.cancel();
     _subscription = null;
   }
 
   final void Function(T) _listener;
   final _stream = KiwiContainer().resolve<EventBus>().on<T>();
-  StreamSubscription<T> _subscription;
+  StreamSubscription<T>? _subscription;
 
   final _log = Logger("event.event.AppEventListener<${T.runtimeType}>");
 }

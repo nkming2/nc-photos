@@ -72,8 +72,8 @@ void _initLog() {
 
 Future<void> _initPref() async {
   await Pref.init();
-  if (Pref.inst().getLastVersion(null) == null) {
-    if (Pref.inst().getSetupProgress(null) == null) {
+  if (Pref.inst().getLastVersion() == null) {
+    if (Pref.inst().getSetupProgress() == null) {
       // new install
       await Pref.inst().setLastVersion(k.version);
     } else {

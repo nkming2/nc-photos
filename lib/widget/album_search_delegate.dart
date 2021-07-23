@@ -18,7 +18,7 @@ class AlbumSearchDelegate extends SearchDelegate {
   AlbumSearchDelegate(BuildContext context, this.account)
       : super(
           searchFieldLabel:
-              AppLocalizations.of(context).albumSearchTextFieldHint,
+              AppLocalizations.of(context)!.albumSearchTextFieldHint,
         ) {
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -38,7 +38,7 @@ class AlbumSearchDelegate extends SearchDelegate {
     return [
       IconButton(
         icon: Icon(Icons.clear),
-        tooltip: AppLocalizations.of(context).clearTooltip,
+        tooltip: AppLocalizations.of(context)!.clearTooltip,
         onPressed: () {
           query = "";
         },
@@ -88,7 +88,7 @@ class AlbumSearchDelegate extends SearchDelegate {
             ),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).listNoResultsText,
+              AppLocalizations.of(context)!.listNoResultsText,
               style: const TextStyle(fontSize: 24),
             ),
           ],

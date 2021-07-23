@@ -5,7 +5,7 @@ mixin PageVisibilityMixin<T extends StatefulWidget> on State<T>, RouteAware {
   @override
   didChangeDependencies() {
     super.didChangeDependencies();
-    MyApp.routeObserver.subscribe(this, ModalRoute.of(context));
+    MyApp.routeObserver.subscribe(this, ModalRoute.of(context)!);
   }
 
   @override

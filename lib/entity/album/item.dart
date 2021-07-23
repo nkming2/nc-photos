@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/list_extension.dart';
@@ -60,18 +59,16 @@ abstract class AlbumItem {
 
 class AlbumFileItem extends AlbumItem with EquatableMixin {
   AlbumFileItem({
-    @required this.file,
+    required this.file,
   });
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object other) => equals(other, isDeep: true);
+  bool operator ==(Object? other) => equals(other, isDeep: true);
 
-  bool equals(Object other, {bool isDeep = false}) {
+  bool equals(Object? other, {bool isDeep = false}) {
     if (other is AlbumFileItem) {
-      return super == other &&
-          (file == null) == (other.file == null) &&
-          (file?.equals(other.file, isDeep: isDeep) ?? true);
+      return super == other && (file.equals(other.file, isDeep: isDeep));
     } else {
       return false;
     }
@@ -109,7 +106,7 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
 
 class AlbumLabelItem extends AlbumItem with EquatableMixin {
   AlbumLabelItem({
-    @required this.text,
+    required this.text,
   });
 
   factory AlbumLabelItem.fromJson(Map<String, dynamic> json) {

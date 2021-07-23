@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -27,7 +26,7 @@ class FileWebdavDataSource implements FileDataSource {
   list(
     Account account,
     File f, {
-    int depth,
+    int? depth,
   }) async {
     _log.fine("[list] ${f.path}");
     final response = await Api(account).files().propfind(
@@ -61,7 +60,7 @@ class FileWebdavDataSource implements FileDataSource {
     final files = WebdavFileParser()(xml);
     // _log.fine("[list] Parsed files: [$files]");
     return files.where((element) => _validateFile(element)).map((e) {
-      if (e.metadata == null || e.metadata.fileEtag == e.etag) {
+      if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
         return e;
       } else {
         _log.info("[list] Ignore outdated metadata for ${e.path}");
@@ -112,27 +111,27 @@ class FileWebdavDataSource implements FileDataSource {
   updateProperty(
     Account account,
     File f, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) async {
     _log.info("[updateProperty] ${f.path}");
-    if (metadata?.obj != null && metadata.obj.fileEtag != f.etag) {
+    if (metadata?.obj != null && metadata!.obj!.fileEtag != f.etag) {
       _log.warning(
-          "[updateProperty] Metadata etag mismatch (metadata: ${metadata.obj.fileEtag}, file: ${f.etag})");
+          "[updateProperty] Metadata etag mismatch (metadata: ${metadata.obj!.fileEtag}, file: ${f.etag})");
     }
     final setProps = {
       if (metadata?.obj != null)
-        "app:metadata": jsonEncode(metadata.obj.toJson()),
-      if (isArchived?.obj != null) "app:is-archived": isArchived.obj,
+        "app:metadata": jsonEncode(metadata!.obj!.toJson()),
+      if (isArchived?.obj != null) "app:is-archived": isArchived!.obj,
       if (overrideDateTime?.obj != null)
         "app:override-date-time":
-            overrideDateTime.obj.toUtc().toIso8601String(),
+            overrideDateTime!.obj!.toUtc().toIso8601String(),
     };
     final removeProps = [
-      if (OrNull.isNull(metadata)) "app:metadata",
-      if (OrNull.isNull(isArchived)) "app:is-archived",
-      if (OrNull.isNull(overrideDateTime)) "app:override-date-time",
+      if (OrNull.isSetNull(metadata)) "app:metadata",
+      if (OrNull.isSetNull(isArchived)) "app:is-archived",
+      if (OrNull.isSetNull(overrideDateTime)) "app:override-date-time",
     ];
     final response = await Api(account).files().proppatch(
           path: f.path,
@@ -155,7 +154,7 @@ class FileWebdavDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     _log.info("[copy] ${f.path} to $destination");
     final response = await Api(account).files().copy(
@@ -176,7 +175,7 @@ class FileWebdavDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     _log.info("[move] ${f.path} to $destination");
     final response = await Api(account).files().move(
@@ -256,9 +255,9 @@ class FileAppDbDataSource implements FileDataSource {
   updateProperty(
     Account account,
     File f, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) {
     _log.info("[updateProperty] ${f.path}");
     return AppDb.use((db) async {
@@ -300,7 +299,7 @@ class FileAppDbDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     // do nothing
   }
@@ -310,7 +309,7 @@ class FileAppDbDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     // do nothing
   }
@@ -325,7 +324,7 @@ class FileAppDbDataSource implements FileDataSource {
     final path = AppDbFileEntry.toPath(account, f);
     final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
     final List results = await index.getAll(range);
-    if (results?.isNotEmpty == true) {
+    if (results.isNotEmpty == true) {
       final entries = results
           .map((e) => AppDbFileEntry.fromJson(e.cast<String, dynamic>()));
       return entries
@@ -358,7 +357,7 @@ class FileCachedDataSource implements FileDataSource {
     );
     final cache = await cacheManager.list(account, f);
     if (cacheManager.isGood) {
-      return cache;
+      return cache!;
     }
 
     // no cache or outdated
@@ -426,9 +425,9 @@ class FileCachedDataSource implements FileDataSource {
   updateProperty(
     Account account,
     File f, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) async {
     await _remoteSrc
         .updateProperty(
@@ -462,7 +461,7 @@ class FileCachedDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     await _remoteSrc.copy(account, f, destination,
         shouldOverwrite: shouldOverwrite);
@@ -473,7 +472,7 @@ class FileCachedDataSource implements FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) async {
     await _remoteSrc.move(account, f, destination,
         shouldOverwrite: shouldOverwrite);
@@ -599,17 +598,17 @@ class FileCachedDataSource implements FileDataSource {
 
 class _CacheManager {
   _CacheManager({
-    @required this.appDbSrc,
-    @required this.remoteSrc,
+    required this.appDbSrc,
+    required this.remoteSrc,
     this.shouldCheckCache = false,
   });
 
   /// Return the cached results of listing a directory [f]
   ///
   /// Should check [isGood] before using the cache returning by this method
-  Future<List<File>> list(Account account, File f) async {
+  Future<List<File>?> list(Account account, File f) async {
     final trimmedRootPath = f.path.trimAny("/");
-    List<File> cache;
+    List<File>? cache;
     try {
       cache = await appDbSrc.list(account, f);
       // compare the cached root
@@ -645,7 +644,7 @@ class _CacheManager {
   }
 
   bool get isGood => _isGood;
-  String get remoteTouchToken => _remoteToken;
+  String? get remoteTouchToken => _remoteToken;
 
   Future<void> _checkTouchToken(
       Account account, File f, List<File> cache) async {
@@ -653,7 +652,7 @@ class _CacheManager {
         "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
     final fileRepo = FileRepo(FileCachedDataSource());
     final tokenManager = TouchTokenManager();
-    String remoteToken;
+    String? remoteToken;
     try {
       remoteToken = await tokenManager.getRemoteToken(fileRepo, account, f);
     } catch (e, stacktrace) {
@@ -664,7 +663,7 @@ class _CacheManager {
     }
     _remoteToken = remoteToken;
 
-    String localToken;
+    String? localToken;
     try {
       localToken = await tokenManager.getLocalToken(account, f);
     } catch (e, stacktrace) {
@@ -687,7 +686,7 @@ class _CacheManager {
   final bool shouldCheckCache;
 
   var _isGood = false;
-  String _remoteToken;
+  String? _remoteToken;
 
   static final _log = Logger("entity.file.data_source._CacheManager");
 }

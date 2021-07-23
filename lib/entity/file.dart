@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
@@ -21,7 +20,7 @@ int compareFileDateTimeDescending(File x, File y) {
 /// Immutable object that hold metadata of a [File]
 class Metadata with EquatableMixin {
   Metadata({
-    DateTime lastUpdated,
+    DateTime? lastUpdated,
     this.fileEtag,
     this.imageWidth,
     this.imageHeight,
@@ -30,9 +29,9 @@ class Metadata with EquatableMixin {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object other) => equals(other, isDeep: true);
+  bool operator ==(Object? other) => equals(other, isDeep: true);
 
-  bool equals(Object other, {bool isDeep = false}) {
+  bool equals(Object? other, {bool isDeep = false}) {
     if (other is Metadata) {
       return super == other &&
           (exif == null) == (other.exif == null) &&
@@ -48,36 +47,37 @@ class Metadata with EquatableMixin {
   /// corresponding upgrader will be called one by one to upgrade the json,
   /// version by version until it reached the active version. If any upgrader
   /// in the chain is null, the upgrade process will fail
-  factory Metadata.fromJson(
+  static Metadata? fromJson(
     Map<String, dynamic> json, {
-    MetadataUpgraderV1 upgraderV1,
-    MetadataUpgraderV2 upgraderV2,
+    required MetadataUpgraderV1? upgraderV1,
+    required MetadataUpgraderV2? upgraderV2,
   }) {
     final jsonVersion = json["version"];
+    Map<String, dynamic>? result = json;
     if (jsonVersion < 2) {
-      json = upgraderV1?.call(json);
-      if (json == null) {
+      result = upgraderV1?.call(result);
+      if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 3) {
-      json = upgraderV2?.call(json);
-      if (json == null) {
+      result = upgraderV2?.call(result);
+      if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     return Metadata(
-      lastUpdated: json["lastUpdated"] == null
+      lastUpdated: result["lastUpdated"] == null
           ? null
-          : DateTime.parse(json["lastUpdated"]),
-      fileEtag: json["fileEtag"],
-      imageWidth: json["imageWidth"],
-      imageHeight: json["imageHeight"],
-      exif: json["exif"] == null
+          : DateTime.parse(result["lastUpdated"]),
+      fileEtag: result["fileEtag"],
+      imageWidth: result["imageWidth"],
+      imageHeight: result["imageHeight"],
+      exif: result["exif"] == null
           ? null
-          : Exif.fromJson(json["exif"].cast<String, dynamic>()),
+          : Exif.fromJson(result["exif"].cast<String, dynamic>()),
     );
   }
 
@@ -88,7 +88,7 @@ class Metadata with EquatableMixin {
       if (fileEtag != null) "fileEtag": fileEtag,
       if (imageWidth != null) "imageWidth": imageWidth,
       if (imageHeight != null) "imageHeight": imageHeight,
-      if (exif != null) "exif": exif.toJson(),
+      if (exif != null) "exif": exif!.toJson(),
     };
   }
 
@@ -123,10 +123,10 @@ class Metadata with EquatableMixin {
   final DateTime lastUpdated;
 
   /// Etag of the parent file when the metadata is saved
-  final String fileEtag;
-  final int imageWidth;
-  final int imageHeight;
-  final Exif exif;
+  final String? fileEtag;
+  final int? imageWidth;
+  final int? imageHeight;
+  final Exif? exif;
 
   /// versioning of this class, use to upgrade old persisted metadata
   static const version = 3;
@@ -135,17 +135,17 @@ class Metadata with EquatableMixin {
 }
 
 abstract class MetadataUpgrader {
-  Map<String, dynamic> call(Map<String, dynamic> json);
+  Map<String, dynamic>? call(Map<String, dynamic> json);
 }
 
 /// Upgrade v1 Metadata to v2
 class MetadataUpgraderV1 implements MetadataUpgrader {
   MetadataUpgraderV1({
-    @required this.fileContentType,
+    required this.fileContentType,
     this.logFilePath,
   });
 
-  Map<String, dynamic> call(Map<String, dynamic> json) {
+  Map<String, dynamic>? call(Map<String, dynamic> json) {
     if (fileContentType == "image/webp") {
       // Version 1 metadata for webp is bugged, drop it
       _log.fine("[call] Upgrade v1 metadata for file: $logFilePath");
@@ -155,10 +155,10 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
     }
   }
 
-  final String fileContentType;
+  final String? fileContentType;
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
   static final _log = Logger("entity.file.MetadataUpgraderV1");
 }
@@ -166,11 +166,11 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
 /// Upgrade v2 Metadata to v3
 class MetadataUpgraderV2 implements MetadataUpgrader {
   MetadataUpgraderV2({
-    @required this.fileContentType,
+    required this.fileContentType,
     this.logFilePath,
   });
 
-  Map<String, dynamic> call(Map<String, dynamic> json) {
+  Map<String, dynamic>? call(Map<String, dynamic> json) {
     if (fileContentType == "image/jpeg") {
       // Version 2 metadata for jpeg doesn't consider orientation
       if (json["exif"] != null && json["exif"].containsKey("Orientation")) {
@@ -187,17 +187,17 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
     return json;
   }
 
-  final String fileContentType;
+  final String? fileContentType;
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
   static final _log = Logger("entity.file.MetadataUpgraderV2");
 }
 
 class File with EquatableMixin {
   File({
-    @required String path,
+    required String path,
     this.contentLength,
     this.contentType,
     this.etag,
@@ -214,9 +214,9 @@ class File with EquatableMixin {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object other) => equals(other, isDeep: true);
+  bool operator ==(Object? other) => equals(other, isDeep: true);
 
-  bool equals(Object other, {bool isDeep = false}) {
+  bool equals(Object? other, {bool isDeep = false}) {
     if (other is File) {
       return super == other &&
           (metadata == null) == (other.metadata == null) &&
@@ -310,33 +310,33 @@ class File with EquatableMixin {
       if (contentType != null) "contentType": contentType,
       if (etag != null) "etag": etag,
       if (lastModified != null)
-        "lastModified": lastModified.toUtc().toIso8601String(),
+        "lastModified": lastModified!.toUtc().toIso8601String(),
       if (isCollection != null) "isCollection": isCollection,
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
       if (ownerId != null) "ownerId": ownerId,
-      if (metadata != null) "metadata": metadata.toJson(),
+      if (metadata != null) "metadata": metadata!.toJson(),
       if (isArchived != null) "isArchived": isArchived,
       if (overrideDateTime != null)
-        "overrideDateTime": overrideDateTime.toUtc().toIso8601String(),
+        "overrideDateTime": overrideDateTime!.toUtc().toIso8601String(),
     };
   }
 
   File copyWith({
-    String path,
-    int contentLength,
-    String contentType,
-    String etag,
-    DateTime lastModified,
-    bool isCollection,
-    int usedBytes,
-    bool hasPreview,
-    int fileId,
-    String ownerId,
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    String? path,
+    int? contentLength,
+    String? contentType,
+    String? etag,
+    DateTime? lastModified,
+    bool? isCollection,
+    int? usedBytes,
+    bool? hasPreview,
+    int? fileId,
+    String? ownerId,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) {
     return File(
       path: path ?? this.path,
@@ -392,20 +392,20 @@ class File with EquatableMixin {
       ];
 
   final String path;
-  final int contentLength;
-  final String contentType;
-  final String etag;
-  final DateTime lastModified;
-  final bool isCollection;
-  final int usedBytes;
-  final bool hasPreview;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final bool? isCollection;
+  final int? usedBytes;
+  final bool? hasPreview;
   // maybe null when loaded from old cache
-  final int fileId;
-  final String ownerId;
+  final int? fileId;
+  final String? ownerId;
   // metadata
-  final Metadata metadata;
-  final bool isArchived;
-  final DateTime overrideDateTime;
+  final Metadata? metadata;
+  final bool? isArchived;
+  final DateTime? overrideDateTime;
 }
 
 extension FileExtension on File {
@@ -442,9 +442,9 @@ class FileRepo {
   Future<void> updateProperty(
     Account account,
     File file, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) =>
       this.dataSrc.updateProperty(
             account,
@@ -459,7 +459,7 @@ class FileRepo {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) =>
       this.dataSrc.copy(
             account,
@@ -473,7 +473,7 @@ class FileRepo {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   }) =>
       this.dataSrc.move(
             account,
@@ -506,9 +506,9 @@ abstract class FileDataSource {
   Future<void> updateProperty(
     Account account,
     File f, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   });
 
   /// Copy [f] to [destination]
@@ -519,7 +519,7 @@ abstract class FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   });
 
   /// Move [f] to [destination]
@@ -530,7 +530,7 @@ abstract class FileDataSource {
     Account account,
     File f,
     String destination, {
-    bool shouldOverwrite,
+    bool? shouldOverwrite,
   });
 
   /// Create a directory at [path]

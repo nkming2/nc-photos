@@ -32,9 +32,9 @@ import 'package:tuple/tuple.dart';
 
 class ViewerDetailPane extends StatefulWidget {
   const ViewerDetailPane({
-    Key key,
-    @required this.account,
-    @required this.file,
+    Key? key,
+    required this.account,
+    required this.file,
   }) : super(key: key);
 
   @override
@@ -54,7 +54,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.info("[initState] Metadata missing in File");
     } else {
       _log.info("[initState] Metadata exists in File");
-      if (widget.file.metadata.exif != null) {
+      if (widget.file.metadata!.exif != null) {
         _initMetadata();
       }
     }
@@ -73,29 +73,29 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     const space = "    ";
     if (widget.file.metadata?.imageWidth != null &&
         widget.file.metadata?.imageHeight != null) {
-      final pixelCount =
-          widget.file.metadata.imageWidth * widget.file.metadata.imageHeight;
+      final pixelCount = widget.file.metadata!.imageWidth! *
+          widget.file.metadata!.imageHeight!;
       if (pixelCount >= 500000) {
         final mpCount = pixelCount / 1000000.0;
-        sizeSubStr += AppLocalizations.of(context)
+        sizeSubStr += AppLocalizations.of(context)!
             .megapixelCount(mpCount.toStringAsFixed(1));
         sizeSubStr += space;
       }
-      sizeSubStr += _byteSizeToString(widget.file.contentLength);
+      sizeSubStr += _byteSizeToString(widget.file.contentLength ?? 0);
     }
 
     String cameraSubStr = "";
     if (_fNumber != null) {
-      cameraSubStr += "f/${_fNumber.toStringAsFixed(1)}$space";
+      cameraSubStr += "f/${_fNumber!.toStringAsFixed(1)}$space";
     }
     if (_exposureTime != null) {
       cameraSubStr +=
-          AppLocalizations.of(context).secondCountSymbol(_exposureTime);
+          AppLocalizations.of(context)!.secondCountSymbol(_exposureTime!);
       cameraSubStr += space;
     }
     if (_focalLength != null) {
-      cameraSubStr += AppLocalizations.of(context)
-          .millimeterCountSymbol(_focalLength.toStringAsFixedTruncated(2));
+      cameraSubStr += AppLocalizations.of(context)!
+          .millimeterCountSymbol(_focalLength!.toStringAsFixedTruncated(2));
       cameraSubStr += space;
     }
     if (_isoSpeedRatings != null) {
@@ -112,12 +112,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             children: [
               _DetailPaneButton(
                 icon: Icons.playlist_add_outlined,
-                label: AppLocalizations.of(context).addToAlbumTooltip,
+                label: AppLocalizations.of(context)!.addToAlbumTooltip,
                 onPressed: () => _onAddToAlbumPressed(context),
               ),
               _DetailPaneButton(
                 icon: Icons.delete_outline,
-                label: AppLocalizations.of(context).deleteTooltip,
+                label: AppLocalizations.of(context)!.deleteTooltip,
                 onPressed: () => _onDeletePressed(context),
               ),
             ],
@@ -154,7 +154,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 color: AppTheme.getSecondaryTextColor(context),
               ),
               title: Text(
-                  "${widget.file.metadata.imageWidth} x ${widget.file.metadata.imageHeight}"),
+                  "${widget.file.metadata!.imageWidth} x ${widget.file.metadata!.imageHeight}"),
               subtitle: Text(sizeSubStr),
             )
           else
@@ -163,7 +163,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 Icons.aspect_ratio,
                 color: AppTheme.getSecondaryTextColor(context),
               ),
-              title: Text(_byteSizeToString(widget.file.contentLength)),
+              title: Text(_byteSizeToString(widget.file.contentLength ?? 0)),
             ),
           if (_model != null)
             ListTile(
@@ -171,14 +171,14 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 Icons.camera_outlined,
                 color: AppTheme.getSecondaryTextColor(context),
               ),
-              title: Text(_model),
+              title: Text(_model!),
               subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
             ),
           if (features.isSupportMapView && _gps != null)
             SizedBox(
               height: 256,
               child: platform.Map(
-                center: _gps,
+                center: _gps!,
                 zoom: 16,
                 onTap: _onMapTap,
               ),
@@ -190,35 +190,35 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   /// Convert EXIF data to readable format
   void _initMetadata() {
-    final exif = widget.file.metadata.exif;
+    final exif = widget.file.metadata!.exif!;
     _log.info("[_initMetadata] $exif");
 
     if (exif.make != null && exif.model != null) {
       _model = "${exif.make} ${exif.model}";
     }
     if (exif.fNumber != null) {
-      _fNumber = exif.fNumber.toDouble();
+      _fNumber = exif.fNumber!.toDouble();
     }
     if (exif.exposureTime != null) {
-      if (exif.exposureTime.denominator == 1) {
-        _exposureTime = exif.exposureTime.numerator.toString();
+      if (exif.exposureTime!.denominator == 1) {
+        _exposureTime = exif.exposureTime!.numerator.toString();
       } else {
         _exposureTime = exif.exposureTime.toString();
       }
     }
     if (exif.focalLength != null) {
-      _focalLength = exif.focalLength.toDouble();
+      _focalLength = exif.focalLength!.toDouble();
     }
     if (exif.isoSpeedRatings != null) {
-      _isoSpeedRatings = exif.isoSpeedRatings;
+      _isoSpeedRatings = exif.isoSpeedRatings!;
     }
     if (exif.gpsLatitudeRef != null &&
         exif.gpsLatitude != null &&
         exif.gpsLongitudeRef != null &&
         exif.gpsLongitude != null) {
-      final lat = _gpsDmsToDouble(exif.gpsLatitude) *
+      final lat = _gpsDmsToDouble(exif.gpsLatitude!) *
           (exif.gpsLatitudeRef == "S" ? -1 : 1);
-      final lng = _gpsDmsToDouble(exif.gpsLongitude) *
+      final lng = _gpsDmsToDouble(exif.gpsLongitude!) *
           (exif.gpsLongitudeRef == "W" ? -1 : 1);
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
@@ -238,7 +238,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
         _addToAlbum(context, value).then((_) {
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)
+            content: Text(AppLocalizations.of(context)!
                 .addToAlbumSuccessNotification(value.name)),
             duration: k.snackBarDurationNormal,
           ));
@@ -246,7 +246,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       } else {
         SnackBarManager().showSnackBar(SnackBar(
           content:
-              Text(AppLocalizations.of(context).addToAlbumFailureNotification),
+              Text(AppLocalizations.of(context)!.addToAlbumFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -255,7 +255,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           "[_onAddToAlbumPressed] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context).addToAlbumFailureNotification}: "
+            "${AppLocalizations.of(context)!.addToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -265,10 +265,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   void _onDeletePressed(BuildContext context) async {
     _log.info("[_onDeletePressed] Removing file: ${widget.file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context).deleteProcessingNotification),
+      content: Text(AppLocalizations.of(context)!.deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
-    controller?.closed?.whenComplete(() {
+    controller?.closed.whenComplete(() {
       controller = null;
     });
     try {
@@ -276,7 +276,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           AlbumRepo(AlbumCachedDataSource()))(widget.account, widget.file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).deleteSuccessNotification),
+        content: Text(AppLocalizations.of(context)!.deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -289,7 +289,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text("${AppLocalizations.of(context).deleteFailureNotification}: "
+            Text("${AppLocalizations.of(context)!.deleteFailureNotification}: "
                 "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -300,7 +300,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (platform_k.isAndroid) {
       final intent = AndroidIntent(
         action: "action_view",
-        data: Uri.encodeFull("geo:${_gps.item1},${_gps.item2}?z=16"),
+        data: Uri.encodeFull("geo:${_gps!.item1},${_gps!.item2}?z=16"),
       );
       intent.launch();
     }
@@ -329,7 +329,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(
-              AppLocalizations.of(context).updateDateTimeFailureNotification),
+              AppLocalizations.of(context)!.updateDateTimeFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -362,7 +362,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(
-              "${AppLocalizations.of(context).addToAlbumAlreadyAddedNotification}"),
+              "${AppLocalizations.of(context)!.addToAlbumAlreadyAddedNotification}"),
           duration: k.snackBarDurationNormal,
         ));
         return Future.error(ArgumentError("File already in album"));
@@ -381,7 +381,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context).addToAlbumFailureNotification}: "
+            "${AppLocalizations.of(context)!.addToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -389,22 +389,26 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
-  DateTime _dateTime;
+  late DateTime _dateTime;
   // EXIF data
-  String _model;
-  double _fNumber;
-  String _exposureTime;
-  double _focalLength;
-  int _isoSpeedRatings;
-  Tuple2<double, double> _gps;
+  String? _model;
+  double? _fNumber;
+  String? _exposureTime;
+  double? _focalLength;
+  int? _isoSpeedRatings;
+  Tuple2<double, double>? _gps;
 
   static final _log =
       Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
 }
 
 class _DetailPaneButton extends StatelessWidget {
-  const _DetailPaneButton({Key key, this.icon, this.label, this.onPressed})
-      : super(key: key);
+  const _DetailPaneButton({
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   build(BuildContext context) {
@@ -439,7 +443,7 @@ class _DetailPaneButton extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 }
 
 String _byteSizeToString(int byteSize) {

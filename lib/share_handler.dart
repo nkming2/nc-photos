@@ -23,7 +23,7 @@ class ShareHandler {
     showDialog(
       context: context,
       builder: (context) => ProcessingDialog(
-          text: AppLocalizations.of(context).shareDownloadingDialogContent),
+          text: AppLocalizations.of(context)!.shareDownloadingDialogContent),
     );
     final results = <Tuple2<File, dynamic>>[];
     for (final f in files) {
@@ -33,7 +33,7 @@ class ShareHandler {
       } on PermissionException catch (_) {
         _log.warning("[shareFiles] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)!
               .downloadFailureNoPermissionNotification),
           duration: k.snackBarDurationNormal,
         ));

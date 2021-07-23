@@ -32,8 +32,8 @@ import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
   HomeAlbums({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -83,7 +83,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       _reqQuery();
     } else {
       // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           _onStateChange(context, _bloc.state);
         });
@@ -149,12 +149,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)
+        title: Text(AppLocalizations.of(context)!
             .selectionAppBarTitle(_selectedItems.length)),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            tooltip: AppLocalizations.of(context).deleteSelectedTooltip,
+            tooltip: AppLocalizations.of(context)!.deleteSelectedTooltip,
             onPressed: () {
               _onSelectionAppBarDeletePressed();
             },
@@ -171,13 +171,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
         IconButton(
           onPressed: () => _onSearchPressed(context),
           icon: const Icon(Icons.search),
-          tooltip: AppLocalizations.of(context).searchTooltip,
+          tooltip: AppLocalizations.of(context)!.searchTooltip,
         ),
       ],
       menuActions: [
         PopupMenuItem(
           value: _menuValueImport,
-          child: Text(AppLocalizations.of(context).importFoldersTooltip),
+          child: Text(AppLocalizations.of(context)!.importFoldersTooltip),
         ),
       ],
       onSelectedMenuActions: (option) {
@@ -225,7 +225,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           ),
         ),
       ),
-      title: AppLocalizations.of(context).albumArchiveLabel,
+      title: AppLocalizations.of(context)!.albumArchiveLabel,
       onTap: () {
         Navigator.of(context).pushNamed(ArchiveViewer.routeName,
             arguments: ArchiveViewerArguments(widget.account));
@@ -247,7 +247,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           ),
         ),
       ),
-      title: AppLocalizations.of(context).createAlbumTooltip,
+      title: AppLocalizations.of(context)!.createAlbumTooltip,
       onTap: () => _onNewAlbumItemTap(context),
     );
   }
@@ -324,7 +324,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           "[_onNewAlbumItemTap] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text(AppLocalizations.of(context).createAlbumFailureNotification),
+            Text(AppLocalizations.of(context)!.createAlbumFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -337,11 +337,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   Future<void> _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
+      content: Text(AppLocalizations.of(context)!
           .deleteSelectedProcessingNotification(_selectedItems.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles = _selectedItems.map((e) => e.album.albumFile).toList();
+    final selectedFiles =
+        _selectedItems.map((e) => e.album.albumFile!).toList();
     setState(() {
       _selectedItems.clear();
     });
@@ -363,12 +364,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).deleteSelectedSuccessNotification),
+            AppLocalizations.of(context)!.deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -411,12 +412,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
         .map((from) {
           try {
             return _items.whereType<_GridItem>().firstWhere(
-                (to) => from.album.albumFile.path == to.album.albumFile.path);
+                (to) => from.album.albumFile!.path == to.album.albumFile!.path);
           } catch (_) {
             return null;
           }
         })
-        .where((element) => element != null)
+        .whereType<_GridItem>()
         .toList();
     _selectedItems
       ..clear()
@@ -439,7 +440,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   bool get _isSelectionMode => _selectedItems.isNotEmpty;
 
-  ListAlbumBloc _bloc;
+  late ListAlbumBloc _bloc;
 
   final _items = <_GridItem>[];
   final _selectedItems = <_GridItem>[];

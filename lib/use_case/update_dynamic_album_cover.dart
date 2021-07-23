@@ -40,8 +40,9 @@ class UpdateDynamicAlbumCover {
   }
 
   Album _updateWithSortedFiles(Album album, List<File> sortedFiles) {
-    final coverFile = sortedFiles.firstWhere((element) => element.hasPreview);
-    if (coverFile != null) {
+    try {
+      final coverFile =
+          sortedFiles.firstWhere((element) => element.hasPreview ?? false);
       // cache the result for later use
       if (coverFile.path !=
           (album.coverProvider as AlbumAutoCoverProvider).coverFile?.path) {
@@ -51,6 +52,8 @@ class UpdateDynamicAlbumCover {
           ),
         );
       }
+    } on StateError catch (_) {
+      // no files
     }
     return album;
   }

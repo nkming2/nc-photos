@@ -7,9 +7,9 @@ import 'package:nc_photos/theme.dart';
 
 class PhotoListImage extends StatelessWidget {
   const PhotoListImage({
-    Key key,
-    @required this.account,
-    @required this.previewUrl,
+    Key? key,
+    required this.account,
+    required this.previewUrl,
     this.isGif = false,
   }) : super(key: key);
 
@@ -72,9 +72,9 @@ class PhotoListImage extends StatelessWidget {
 
 class PhotoListVideo extends StatelessWidget {
   const PhotoListVideo({
-    Key key,
-    @required this.account,
-    @required this.previewUrl,
+    Key? key,
+    required this.account,
+    required this.previewUrl,
   }) : super(key: key);
 
   @override

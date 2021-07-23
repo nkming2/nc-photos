@@ -109,7 +109,7 @@ void main() {
           "version": Metadata.version,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
         };
-        expect(Metadata.fromJson(json),
+        expect(Metadata.fromJson(json, upgraderV1: null, upgraderV2: null),
             Metadata(lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901)));
       });
 
@@ -120,7 +120,7 @@ void main() {
           "fileEtag": "8a3e0799b6f0711c23cc2d93950eceb5",
         };
         expect(
-            Metadata.fromJson(json),
+            Metadata.fromJson(json, upgraderV1: null, upgraderV2: null),
             Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
@@ -134,7 +134,7 @@ void main() {
           "imageWidth": 1024,
         };
         expect(
-            Metadata.fromJson(json),
+            Metadata.fromJson(json, upgraderV1: null, upgraderV2: null),
             Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               imageWidth: 1024,
@@ -148,7 +148,7 @@ void main() {
           "imageHeight": 768,
         };
         expect(
-            Metadata.fromJson(json),
+            Metadata.fromJson(json, upgraderV1: null, upgraderV2: null),
             Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               imageHeight: 768,
@@ -164,7 +164,7 @@ void main() {
           },
         };
         expect(
-            Metadata.fromJson(json),
+            Metadata.fromJson(json, upgraderV1: null, upgraderV2: null),
             Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               exif: Exif({

@@ -15,8 +15,8 @@ import 'package:nc_photos/widget/sign_in.dart';
 /// A dialog that allows the user to switch between accounts
 class AccountPickerDialog extends StatefulWidget {
   AccountPickerDialog({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   @override
   initState() {
     super.initState();
-    _accounts = Pref.inst().getAccounts([]);
+    _accounts = Pref.inst().getAccountsOr([]);
   }
 
   @override
@@ -48,7 +48,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                     Icons.close,
                     color: AppTheme.getSecondaryTextColor(context),
                   ),
-                  tooltip: AppLocalizations.of(context).deleteTooltip,
+                  tooltip: AppLocalizations.of(context)!.deleteTooltip,
                   onPressed: () => _onRemoveItemPressed(a),
                 ),
               ),
@@ -63,7 +63,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             ..pushNamed(SignIn.routeName);
         },
         child: Tooltip(
-          message: AppLocalizations.of(context).addServerTooltip,
+          message: AppLocalizations.of(context)!.addServerTooltip,
           child: Center(
             child: Icon(
               Icons.add,
@@ -89,7 +89,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             Icons.edit,
             color: AppTheme.getSecondaryTextColor(context),
           ),
-          tooltip: AppLocalizations.of(context).editTooltip,
+          tooltip: AppLocalizations.of(context)!.editTooltip,
           onPressed: () => _onEditPressed(),
         ),
       ),
@@ -106,20 +106,28 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   }
 
   void _onRemoveItemPressed(Account account) {
-    _removeAccount(account);
-    setState(() {
-      _accounts = Pref.inst().getAccounts([]);
-    });
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
-          .removeServerSuccessNotification(account.url)),
-      duration: k.snackBarDurationNormal,
-    ));
+    try {
+      _removeAccount(account);
+      setState(() {
+        _accounts = Pref.inst().getAccounts()!;
+      });
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!
+            .removeServerSuccessNotification(account.url)),
+        duration: k.snackBarDurationNormal,
+      ));
+    } catch (e) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e, context)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   void _onEditPressed() async {
     try {
-      final result = await Navigator.of(context).pushNamed(RootPicker.routeName,
+      final result = await Navigator.of(context).pushNamed<Account>(
+          RootPicker.routeName,
           arguments: RootPickerArguments(widget.account));
       if (result != null) {
         // we've got a good account
@@ -129,19 +137,19 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           Navigator.of(context).pop();
           return;
         }
-        final accounts = Pref.inst().getAccounts([]);
+        final accounts = Pref.inst().getAccounts()!;
         if (accounts.contains(result)) {
           // conflict with another account. This normally won't happen because
           // the app passwords are unique to each entry, but just in case
           Navigator.of(context).pop();
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)
+            content: Text(AppLocalizations.of(context)!
                 .editAccountConflictFailureNotification),
             duration: k.snackBarDurationNormal,
           ));
           return;
         }
-        accounts[Pref.inst().getCurrentAccountIndex()] = result;
+        accounts[Pref.inst().getCurrentAccountIndex()!] = result;
         Pref.inst()..setAccounts(accounts);
         Navigator.pushNamedAndRemoveUntil(
             context, Home.routeName, (route) => false,
@@ -158,9 +166,9 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   }
 
   void _removeAccount(Account account) {
-    final currentAccounts = Pref.inst().getAccounts([]);
+    final currentAccounts = Pref.inst().getAccounts()!;
     final currentAccount =
-        currentAccounts[Pref.inst().getCurrentAccountIndex()];
+        currentAccounts[Pref.inst().getCurrentAccountIndex()!];
     final newAccounts =
         currentAccounts.where((element) => element != account).toList();
     final newAccountIndex = newAccounts.indexOf(currentAccount);
@@ -172,7 +180,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
       ..setCurrentAccountIndex(newAccountIndex);
   }
 
-  List<Account> _accounts;
+  late List<Account> _accounts;
 
   static final _log =
       Logger("widget.account_picker_dialog._AccountPickerDialogState");

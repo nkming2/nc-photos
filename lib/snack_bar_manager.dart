@@ -22,7 +22,7 @@ class SnackBarManager {
   /// Show a snack bar if possible
   ///
   /// If the snack bar can't be shown at this time, return null
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
       SnackBar snackBar) {
     for (final h in _handlers.reversed) {
       final result = h.showSnackBar(snackBar);
@@ -42,6 +42,6 @@ class SnackBarManager {
 }
 
 abstract class SnackBarHandler {
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
       SnackBar snackBar);
 }

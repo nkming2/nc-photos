@@ -37,7 +37,7 @@ class UpdateDynamicAlbumTime {
   }
 
   Album _updateWithSortedFiles(Album album, List<File> sortedFiles) {
-    DateTime latestItemTime;
+    DateTime? latestItemTime;
     try {
       latestItemTime = sortedFiles.first.bestDateTime;
     } catch (_) {

@@ -42,13 +42,17 @@ class AlbumViewerArguments {
 class AlbumViewer extends StatefulWidget {
   static const routeName = "/album-viewer";
 
+  static Route buildRoute(AlbumViewerArguments args) => MaterialPageRoute(
+        builder: (context) => AlbumViewer.fromArgs(args),
+      );
+
   AlbumViewer({
-    Key key,
-    @required this.account,
-    @required this.album,
+    Key? key,
+    required this.account,
+    required this.album,
   }) : super(key: key);
 
-  AlbumViewer.fromArgs(AlbumViewerArguments args, {Key key})
+  AlbumViewer.fromArgs(AlbumViewerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -96,7 +100,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   @override
   enterEditMode() {
     super.enterEditMode();
-    _editAlbum = _album.copyWith();
+    _editAlbum = _album!.copyWith();
     setState(() {
       _transformItems();
     });
@@ -104,7 +108,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     if (!SessionStorage().hasShowDragRearrangeNotification) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).albumEditDragRearrangeNotification),
+            AppLocalizations.of(context)!.albumEditDragRearrangeNotification),
         duration: k.snackBarDurationNormal,
       ));
       SessionStorage().hasShowDragRearrangeNotification = true;
@@ -112,15 +116,15 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   @override
-  validateEditMode() => _editFormKey?.currentState?.validate() == true;
+  validateEditMode() => _editFormKey.currentState?.validate() == true;
 
   @override
   doneEditMode() {
     try {
       // persist the changes
-      _editFormKey.currentState.save();
-      final newAlbum = makeEdited(_editAlbum);
-      if (newAlbum.copyWith(lastUpdated: OrNull(_album.lastUpdated)) !=
+      _editFormKey.currentState!.save();
+      final newAlbum = makeEdited(_editAlbum!);
+      if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -217,7 +221,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     } else if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
-      return buildNormalAppBar(context, widget.account, _album);
+      return buildNormalAppBar(context, widget.account, _album!);
     }
   }
 
@@ -226,14 +230,14 @@ class _AlbumViewerState extends State<AlbumViewer>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: AppLocalizations.of(context).shareSelectedTooltip,
+          tooltip: AppLocalizations.of(context)!.shareSelectedTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
         ),
       IconButton(
         icon: const Icon(Icons.remove),
-        tooltip: AppLocalizations.of(context).removeSelectedFromAlbumTooltip,
+        tooltip: AppLocalizations.of(context)!.removeSelectedFromAlbumTooltip,
         onPressed: () {
           _onSelectionAppBarRemovePressed();
         },
@@ -245,12 +249,12 @@ class _AlbumViewerState extends State<AlbumViewer>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.text_fields),
-        tooltip: AppLocalizations.of(context).albumAddTextTooltip,
+        tooltip: AppLocalizations.of(context)!.albumAddTextTooltip,
         onPressed: _onEditAppBarAddTextPressed,
       ),
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: AppLocalizations.of(context).sortTooltip,
+        tooltip: AppLocalizations.of(context)!.sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -279,7 +283,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     if (selected.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text(AppLocalizations.of(context).shareSelectedEmptyNotification),
+            Text(AppLocalizations.of(context)!.shareSelectedEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -301,14 +305,14 @@ class _AlbumViewerState extends State<AlbumViewer>
         .toList();
 
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final newAlbum = _album.copyWith(
+    final newAlbum = _album!.copyWith(
       provider: AlbumStaticProvider(
         items: newItems,
       ),
     );
     UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .removeSelectedFromAlbumSuccessNotification(
                 selectedIndexes.length)),
         duration: k.snackBarDurationNormal,
@@ -323,7 +327,7 @@ class _AlbumViewerState extends State<AlbumViewer>
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context).removeSelectedFromAlbumFailureNotification}: "
+            "${AppLocalizations.of(context)!.removeSelectedFromAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -334,14 +338,14 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onEditAppBarSortPressed() {
-    final sortProvider = _editAlbum.sortProvider;
+    final sortProvider = _editAlbum!.sortProvider;
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: AppLocalizations.of(context).sortOptionDialogTitle,
+        title: AppLocalizations.of(context)!.sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context).sortOptionTimeAscendingLabel,
+            label: AppLocalizations.of(context)!.sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -350,7 +354,7 @@ class _AlbumViewerState extends State<AlbumViewer>
             },
           ),
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context).sortOptionTimeDescendingLabel,
+            label: AppLocalizations.of(context)!.sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {
@@ -364,7 +368,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onSortOldestPressed() {
-    _editAlbum = _editAlbum.copyWith(
+    _editAlbum = _editAlbum!.copyWith(
       sortProvider: AlbumTimeSortProvider(isAscending: true),
     );
     setState(() {
@@ -373,7 +377,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onSortNewestPressed() {
-    _editAlbum = _editAlbum.copyWith(
+    _editAlbum = _editAlbum!.copyWith(
       sortProvider: AlbumTimeSortProvider(isAscending: false),
     );
     setState(() {
@@ -431,7 +435,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     final newIndex =
         toIndex + (isBefore ? 0 : 1) + (fromIndex < toIndex ? -1 : 0);
     _sortedItems.insert(newIndex, item);
-    _editAlbum = _editAlbum.copyWith(
+    _editAlbum = _editAlbum!.copyWith(
       sortProvider: AlbumNullSortProvider(),
       // save the current order
       provider: AlbumStaticProvider(
@@ -444,14 +448,14 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onEditAppBarAddTextPressed() {
-    showDialog(
+    showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(),
     ).then((value) {
       if (value == null) {
         return;
       }
-      _editAlbum = _editAlbum.copyWith(
+      _editAlbum = _editAlbum!.copyWith(
         provider: AlbumStaticProvider(
           items: [
             AlbumLabelItem(text: value),
@@ -466,7 +470,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   }
 
   void _onLabelItemEditPressed(AlbumLabelItem item, int index) {
-    showDialog(
+    showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(
         initialText: item.text,
@@ -476,7 +480,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         return;
       }
       _sortedItems[index] = AlbumLabelItem(text: value);
-      _editAlbum = _editAlbum.copyWith(
+      _editAlbum = _editAlbum!.copyWith(
         provider: AlbumStaticProvider(
           items: _sortedItems,
         ),
@@ -490,9 +494,10 @@ class _AlbumViewerState extends State<AlbumViewer>
   void _transformItems() {
     if (_editAlbum != null) {
       // edit mode
-      _sortedItems = _editAlbum.sortProvider.sort(_getAlbumItemsOf(_editAlbum));
+      _sortedItems =
+          _editAlbum!.sortProvider.sort(_getAlbumItemsOf(_editAlbum!));
     } else {
-      _sortedItems = _album.sortProvider.sort(_getAlbumItemsOf(_album));
+      _sortedItems = _album!.sortProvider.sort(_getAlbumItemsOf(_album!));
     }
     _backingFiles = _sortedItems
         .whereType<AlbumFileItem>()
@@ -644,29 +649,29 @@ class _AlbumViewerState extends State<AlbumViewer>
   static List<AlbumItem> _getAlbumItemsOf(Album a) =>
       AlbumStaticProvider.of(a).items;
 
-  Album _album;
+  Album? _album;
   var _sortedItems = <AlbumItem>[];
   var _backingFiles = <File>[];
 
   final _scrollController = ScrollController();
-  double _itemListMaxExtent;
+  double? _itemListMaxExtent;
   bool _isDragging = false;
   // == null if not drag scrolling
-  bool _isDragScrollingDown;
+  bool? _isDragScrollingDown;
   final _editFormKey = GlobalKey<FormState>();
-  Album _editAlbum;
+  Album? _editAlbum;
 
   static final _log = Logger("widget.album_viewer._AlbumViewerState");
 }
 
 abstract class _ListItem implements SelectableItem, DraggableItem {
   _ListItem({
-    @required this.index,
-    VoidCallback onTap,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required this.index,
+    VoidCallback? onTap,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   })  : _onTap = onTap,
         _onDropBefore = onDropBefore,
         _onDropAfter = onDropAfter,
@@ -709,22 +714,22 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
 
   final int index;
 
-  final VoidCallback _onTap;
-  final DragTargetAccept<DraggableItem> _onDropBefore;
-  final DragTargetAccept<DraggableItem> _onDropAfter;
-  final VoidCallback _onDragStarted;
-  final VoidCallback _onDragEndedAny;
+  final VoidCallback? _onTap;
+  final DragTargetAccept<DraggableItem>? _onDropBefore;
+  final DragTargetAccept<DraggableItem>? _onDropAfter;
+  final VoidCallback? _onDragStarted;
+  final VoidCallback? _onDragEndedAny;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
-    @required int index,
-    @required this.file,
-    VoidCallback onTap,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required int index,
+    required this.file,
+    VoidCallback? onTap,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   }) : super(
           index: index,
           onTap: onTap,
@@ -739,15 +744,15 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    @required int index,
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required int index,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   }) : super(
           index: index,
           file: file,
@@ -773,15 +778,15 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    @required int index,
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required int index,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   }) : super(
           index: index,
           file: file,
@@ -806,12 +811,12 @@ class _VideoListItem extends _FileListItem {
 
 class _LabelListItem extends _ListItem {
   _LabelListItem({
-    @required int index,
-    @required this.text,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required int index,
+    required this.text,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   }) : super(
           index: index,
           onDropBefore: onDropBefore,
@@ -842,13 +847,13 @@ class _LabelListItem extends _ListItem {
 
 class _EditLabelListItem extends _LabelListItem {
   _EditLabelListItem({
-    @required int index,
-    @required String text,
-    @required this.onEditPressed,
-    DragTargetAccept<DraggableItem> onDropBefore,
-    DragTargetAccept<DraggableItem> onDropAfter,
-    VoidCallback onDragStarted,
-    VoidCallback onDragEndedAny,
+    required int index,
+    required String text,
+    required this.onEditPressed,
+    DragTargetAccept<DraggableItem>? onDropBefore,
+    DragTargetAccept<DraggableItem>? onDropAfter,
+    VoidCallback? onDragStarted,
+    VoidCallback? onDragEndedAny,
   }) : super(
           index: index,
           text: text,
@@ -873,7 +878,7 @@ class _EditLabelListItem extends _LabelListItem {
           end: 0,
           child: IconButton(
             icon: Icon(Icons.edit),
-            tooltip: AppLocalizations.of(context).editTooltip,
+            tooltip: AppLocalizations.of(context)!.editTooltip,
             onPressed: onEditPressed,
           ),
         ),
@@ -886,5 +891,5 @@ class _EditLabelListItem extends _LabelListItem {
     return super.buildWidget(context);
   }
 
-  final VoidCallback onEditPressed;
+  final VoidCallback? onEditPressed;
 }

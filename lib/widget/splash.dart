@@ -13,7 +13,7 @@ import 'package:nc_photos/widget/sign_in.dart';
 class Splash extends StatefulWidget {
   static const routeName = "/splash";
 
-  Splash({Key key}) : super(key: key);
+  Splash({Key? key}) : super(key: key);
 
   @override
   createState() => _SplashState();
@@ -23,7 +23,7 @@ class _SplashState extends State<Splash> {
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       if (_shouldUpgrade()) {
         _handleUpgrade();
       } else {
@@ -56,7 +56,7 @@ class _SplashState extends State<Splash> {
             ),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).appTitle,
+              AppLocalizations.of(context)!.appTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline4,
             )
@@ -81,12 +81,12 @@ class _SplashState extends State<Splash> {
   }
 
   bool _shouldUpgrade() {
-    final lastVersion = Pref.inst().getLastVersion(k.version);
+    final lastVersion = Pref.inst().getLastVersionOr(k.version);
     return lastVersion < k.version;
   }
 
   void _handleUpgrade() {
-    final lastVersion = Pref.inst().getLastVersion(k.version);
+    final lastVersion = Pref.inst().getLastVersionOr(k.version);
     // ...
 
     final change = _gatherChangelog(lastVersion);
@@ -94,7 +94,7 @@ class _SplashState extends State<Splash> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context).changelogTitle),
+          title: Text(AppLocalizations.of(context)!.changelogTitle),
           content: SingleChildScrollView(
             child: Text(change),
           ),

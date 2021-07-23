@@ -9,14 +9,14 @@ class Exif with EquatableMixin {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object other) => equals(other, isDeep: true);
+  bool operator ==(Object? other) => equals(other, isDeep: true);
 
   /// Compare two Exif objects
   ///
   /// If [isDeep] is false, two Exif objects are considered identical if they
   /// contain the same number of fields. This hack is to save time comparing a
   /// large amount of data that are mostly immutable
-  bool equals(Object other, {bool isDeep = false}) {
+  bool equals(Object? other, {bool isDeep = false}) {
     if (isDeep) {
       return super == other;
     } else {
@@ -87,33 +87,33 @@ class Exif with EquatableMixin {
   }
 
   /// 0x010f Make
-  String get make => data["Make"];
+  String? get make => data["Make"];
 
   /// 0x0110 Model
-  String get model => data["Model"];
+  String? get model => data["Model"];
 
   /// 0x9003 DateTimeOriginal
-  DateTime get dateTimeOriginal => data.containsKey("DateTimeOriginal")
+  DateTime? get dateTimeOriginal => data.containsKey("DateTimeOriginal")
       ? dateTimeFormat.parse(data["DateTimeOriginal"]).toUtc()
       : null;
 
   /// 0x829a ExposureTime
-  Rational get exposureTime => data["ExposureTime"];
+  Rational? get exposureTime => data["ExposureTime"];
 
   /// 0x829d FNumber
-  Rational get fNumber => data["FNumber"];
+  Rational? get fNumber => data["FNumber"];
 
   /// 0x8827 ISO/ISOSpeedRatings/PhotographicSensitivity
-  int get isoSpeedRatings => data["ISOSpeedRatings"];
+  int? get isoSpeedRatings => data["ISOSpeedRatings"];
 
   /// 0x920a FocalLength
-  Rational get focalLength => data["FocalLength"];
+  Rational? get focalLength => data["FocalLength"];
 
   /// 0x8825 GPS tags
-  String get gpsLatitudeRef => data["GPSLatitudeRef"];
-  List<Rational> get gpsLatitude => data["GPSLatitude"].cast<Rational>();
-  String get gpsLongitudeRef => data["GPSLongitudeRef"];
-  List<Rational> get gpsLongitude => data["GPSLongitude"].cast<Rational>();
+  String? get gpsLatitudeRef => data["GPSLatitudeRef"];
+  List<Rational>? get gpsLatitude => data["GPSLatitude"].cast<Rational>();
+  String? get gpsLongitudeRef => data["GPSLongitudeRef"];
+  List<Rational>? get gpsLongitude => data["GPSLongitude"].cast<Rational>();
 
   @override
   get props => [

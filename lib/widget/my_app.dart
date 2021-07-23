@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
@@ -44,10 +45,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   @override
   build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: _getLightTheme(),
       darkTheme: _getDarkTheme(),
-      themeMode: Pref.inst().isDarkTheme() ? ThemeMode.dark : ThemeMode.light,
+      themeMode:
+          Pref.inst().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
@@ -87,9 +89,9 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         Splash.routeName: (context) => Splash(),
       };
 
-  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
+  Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
     _log.info("[_onGenerateRoute] Route: ${settings.name}");
-    Route<dynamic> route;
+    Route<dynamic>? route;
     route ??= _handleBasicRoute(settings);
     route ??= _handleViewerRoute(settings);
     route ??= _handleConnectRoute(settings);
@@ -112,7 +114,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     setState(() {});
   }
 
-  Route<dynamic> _handleBasicRoute(RouteSettings settings) {
+  Route<dynamic>? _handleBasicRoute(RouteSettings settings) {
     for (final e in _getRouter().entries) {
       if (e.key == settings.name) {
         return MaterialPageRoute(
@@ -123,13 +125,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleViewerRoute(RouteSettings settings) {
     try {
       if (settings.name == Viewer.routeName && settings.arguments != null) {
-        final ViewerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => Viewer.fromArgs(args),
-        );
+        final args = settings.arguments as ViewerArguments;
+        return Viewer.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleViewerRoute] Failed while handling route", e);
@@ -137,13 +137,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleConnectRoute(RouteSettings settings) {
+  Route<dynamic>? _handleConnectRoute(RouteSettings settings) {
     try {
       if (settings.name == Connect.routeName && settings.arguments != null) {
-        final ConnectArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => Connect.fromArgs(args),
-        );
+        final args = settings.arguments as ConnectArguments;
+        return Connect.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleConnectRoute] Failed while handling route", e);
@@ -151,13 +149,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleHomeRoute(RouteSettings settings) {
+  Route<dynamic>? _handleHomeRoute(RouteSettings settings) {
     try {
       if (settings.name == Home.routeName && settings.arguments != null) {
-        final HomeArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => Home.fromArgs(args),
-        );
+        final args = settings.arguments as HomeArguments;
+        return Home.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleHomeRoute] Failed while handling route", e);
@@ -165,13 +161,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleRootPickerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleRootPickerRoute(RouteSettings settings) {
     try {
       if (settings.name == RootPicker.routeName && settings.arguments != null) {
-        final RootPickerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => RootPicker.fromArgs(args),
-        );
+        final args = settings.arguments as RootPickerArguments;
+        return RootPicker.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleRootPickerRoute] Failed while handling route", e);
@@ -179,14 +173,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleAlbumViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleAlbumViewerRoute(RouteSettings settings) {
     try {
       if (settings.name == AlbumViewer.routeName &&
           settings.arguments != null) {
-        final AlbumViewerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => AlbumViewer.fromArgs(args),
-        );
+        final args = settings.arguments as AlbumViewerArguments;
+        return AlbumViewer.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleAlbumViewerRoute] Failed while handling route", e);
@@ -194,13 +186,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleSettingsRoute(RouteSettings settings) {
+  Route<dynamic>? _handleSettingsRoute(RouteSettings settings) {
     try {
       if (settings.name == Settings.routeName && settings.arguments != null) {
-        final SettingsArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => Settings.fromArgs(args),
-        );
+        final args = settings.arguments as SettingsArguments;
+        return Settings.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleSettingsRoute] Failed while handling route", e);
@@ -208,14 +198,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleArchiveViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleArchiveViewerRoute(RouteSettings settings) {
     try {
       if (settings.name == ArchiveViewer.routeName &&
           settings.arguments != null) {
-        final ArchiveViewerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => ArchiveViewer.fromArgs(args),
-        );
+        final args = settings.arguments as ArchiveViewerArguments;
+        return ArchiveViewer.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleArchiveViewerRoute] Failed while handling route", e);
@@ -223,14 +211,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleDynamicAlbumViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleDynamicAlbumViewerRoute(RouteSettings settings) {
     try {
       if (settings.name == DynamicAlbumViewer.routeName &&
           settings.arguments != null) {
-        final DynamicAlbumViewerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => DynamicAlbumViewer.fromArgs(args),
-        );
+        final args = settings.arguments as DynamicAlbumViewerArguments;
+        return DynamicAlbumViewer.buildRoute(args);
       }
     } catch (e) {
       _log.severe(
@@ -239,14 +225,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleAlbumDirPickerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleAlbumDirPickerRoute(RouteSettings settings) {
     try {
       if (settings.name == AlbumDirPicker.routeName &&
           settings.arguments != null) {
-        final AlbumDirPickerArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => AlbumDirPicker.fromArgs(args),
-        );
+        final args = settings.arguments as AlbumDirPickerArguments;
+        return AlbumDirPicker.buildRoute(args);
       }
     } catch (e) {
       _log.severe(
@@ -255,14 +239,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic> _handleAlbumImporterRoute(RouteSettings settings) {
+  Route<dynamic>? _handleAlbumImporterRoute(RouteSettings settings) {
     try {
       if (settings.name == AlbumImporter.routeName &&
           settings.arguments != null) {
-        final AlbumImporterArguments args = settings.arguments;
-        return MaterialPageRoute(
-          builder: (context) => AlbumImporter.fromArgs(args),
-        );
+        final args = settings.arguments as AlbumImporterArguments;
+        return AlbumImporter.buildRoute(args);
       }
     } catch (e) {
       _log.severe("[_handleAlbumImporterRoute] Failed while handling route", e);
@@ -272,8 +254,8 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
 
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
-  AppEventListener<ThemeChangedEvent> _themeChangedListener;
-  AppEventListener<LanguageChangedEvent> _langChangedListener;
+  late AppEventListener<ThemeChangedEvent> _themeChangedListener;
+  late AppEventListener<LanguageChangedEvent> _langChangedListener;
 
   static final _log = Logger("widget.my_app.MyAppState");
 }

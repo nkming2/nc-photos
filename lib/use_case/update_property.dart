@@ -12,9 +12,9 @@ class UpdateProperty {
   Future<void> call(
     Account account,
     File file, {
-    OrNull<Metadata> metadata,
-    OrNull<bool> isArchived,
-    OrNull<DateTime> overrideDateTime,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
   }) async {
     if (metadata == null && isArchived == null && overrideDateTime == null) {
       // ?
@@ -22,9 +22,9 @@ class UpdateProperty {
       return;
     }
 
-    if (metadata?.obj != null && metadata.obj.fileEtag != file.etag) {
+    if (metadata?.obj != null && metadata!.obj!.fileEtag != file.etag) {
       _log.warning(
-          "[call] Metadata fileEtag mismatch with actual file's (metadata: ${metadata.obj.fileEtag}, file: ${file.etag})");
+          "[call] Metadata fileEtag mismatch with actual file's (metadata: ${metadata.obj!.fileEtag}, file: ${file.etag})");
     }
     await fileRepo.updateProperty(
       account,

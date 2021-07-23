@@ -8,9 +8,9 @@ import 'package:tuple/tuple.dart';
 
 class Map extends StatefulWidget {
   const Map({
-    Key key,
-    this.center,
-    this.zoom,
+    Key? key,
+    required this.center,
+    required this.zoom,
     this.onTap,
   }) : super(key: key);
 
@@ -20,7 +20,7 @@ class Map extends StatefulWidget {
   /// A pair of latitude and longitude coordinates, stored as degrees
   final Tuple2<double, double> center;
   final double zoom;
-  final void Function() onTap;
+  final void Function()? onTap;
 }
 
 class _MapState extends State<Map> {

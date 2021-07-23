@@ -38,14 +38,18 @@ class ViewerArguments {
 class Viewer extends StatefulWidget {
   static const routeName = "/viewer";
 
+  static Route buildRoute(ViewerArguments args) => MaterialPageRoute(
+        builder: (context) => Viewer.fromArgs(args),
+      );
+
   Viewer({
-    Key key,
-    @required this.account,
-    @required this.streamFiles,
-    @required this.startIndex,
+    Key? key,
+    required this.account,
+    required this.streamFiles,
+    required this.startIndex,
   }) : super(key: key);
 
-  Viewer.fromArgs(ViewerArguments args, {Key key})
+  Viewer.fromArgs(ViewerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -124,7 +128,7 @@ class _ViewerState extends State<Viewer> {
         children: [
           Container(color: Colors.black),
           if (!_pageController.hasClients ||
-              !_pageStates[_pageController.page.round()].hasLoaded)
+              !_pageStates[_pageController.page!.round()]!.hasLoaded)
             Align(
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
@@ -260,7 +264,7 @@ class _ViewerState extends State<Viewer> {
                   if (!_isDetailPaneActive && _canOpenDetailPane())
                     IconButton(
                       icon: const Icon(Icons.more_vert),
-                      tooltip: AppLocalizations.of(context).detailsTooltip,
+                      tooltip: AppLocalizations.of(context)!.detailsTooltip,
                       onPressed: _onDetailsPressed,
                     ),
                 ],
@@ -307,7 +311,7 @@ class _ViewerState extends State<Viewer> {
                         Icons.share_outlined,
                         color: Colors.white.withOpacity(.87),
                       ),
-                      tooltip: AppLocalizations.of(context).shareTooltip,
+                      tooltip: AppLocalizations.of(context)!.shareTooltip,
                       onPressed: () => _onSharePressed(context),
                     ),
                   ),
@@ -318,7 +322,7 @@ class _ViewerState extends State<Viewer> {
                       Icons.download_outlined,
                       color: Colors.white.withOpacity(.87),
                     ),
-                    tooltip: AppLocalizations.of(context).downloadTooltip,
+                    tooltip: AppLocalizations.of(context)!.downloadTooltip,
                     onPressed: () => _onDownloadPressed(context),
                   ),
                 ),
@@ -329,7 +333,7 @@ class _ViewerState extends State<Viewer> {
                       Icons.delete_outlined,
                       color: Colors.white.withOpacity(.87),
                     ),
-                    tooltip: AppLocalizations.of(context).deleteTooltip,
+                    tooltip: AppLocalizations.of(context)!.deleteTooltip,
                     onPressed: () => _onDeletePressed(context),
                   ),
                 ),
@@ -344,7 +348,7 @@ class _ViewerState extends State<Viewer> {
   Widget _buildPage(BuildContext context, int index) {
     if (_pageStates[index] == null) {
       _onCreateNewPage(context, index);
-    } else if (!_pageStates[index].scrollController.hasClients) {
+    } else if (!_pageStates[index]!.scrollController.hasClients) {
       // the page has been moved out of view and is now coming back
       _log.fine("[_buildPage] Recreating page#$index");
       _onRecreatePageAfterMovedOut(context, index);
@@ -359,7 +363,7 @@ class _ViewerState extends State<Viewer> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (notif) => _onPageContentScrolled(notif, index),
         child: SingleChildScrollView(
-          controller: _pageStates[index].scrollController,
+          controller: _pageStates[index]!.scrollController,
           physics:
               _isDetailPaneActive ? null : const NeverScrollableScrollPhysics(),
           child: Stack(
@@ -409,7 +413,7 @@ class _ViewerState extends State<Viewer> {
       return _buildVideoView(context, index);
     } else {
       _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
-      _pageStates[index].itemHeight = 0;
+      _pageStates[index]!.itemHeight = 0;
       return Container();
     }
   }
@@ -452,7 +456,7 @@ class _ViewerState extends State<Viewer> {
       return false;
     }
     if (notification is ScrollEndNotification) {
-      final scrollPos = _pageStates[index].scrollController.position;
+      final scrollPos = _pageStates[index]!.scrollController.position;
       if (scrollPos.pixels == 0) {
         setState(() {
           _onDetailPaneClosed();
@@ -463,14 +467,15 @@ class _ViewerState extends State<Viewer> {
           // upward, open the pane to its minimal size
           Future.delayed(Duration.zero, () {
             setState(() {
-              _openDetailPane(_pageController.page.toInt(),
+              _openDetailPane(_pageController.page!.toInt(),
                   shouldAnimate: true);
             });
           });
         } else if (scrollPos.userScrollDirection == ScrollDirection.forward) {
           // downward, close the pane
           Future.delayed(Duration.zero, () {
-            _closeDetailPane(_pageController.page.toInt(), shouldAnimate: true);
+            _closeDetailPane(_pageController.page!.toInt(),
+                shouldAnimate: true);
           });
         }
       }
@@ -481,8 +486,8 @@ class _ViewerState extends State<Viewer> {
   void _onImageLoaded(int index) {
     // currently pageview doesn't pre-load pages, we do it manually
     // don't pre-load if user already navigated away
-    if (_pageController.page.round() == index &&
-        !_pageStates[index].hasLoaded) {
+    if (_pageController.page!.round() == index &&
+        !_pageStates[index]!.hasLoaded) {
       _log.info("[_onImageLoaded] Pre-loading nearby images");
       if (index > 0) {
         final prevFile = widget.streamFiles[index - 1];
@@ -497,16 +502,16 @@ class _ViewerState extends State<Viewer> {
         }
       }
       setState(() {
-        _pageStates[index].hasLoaded = true;
+        _pageStates[index]!.hasLoaded = true;
       });
     }
   }
 
   void _onVideoLoaded(int index) {
-    if (_pageController.page.round() == index &&
-        !_pageStates[index].hasLoaded) {
+    if (_pageController.page!.round() == index &&
+        !_pageStates[index]!.hasLoaded) {
       setState(() {
-        _pageStates[index].hasLoaded = true;
+        _pageStates[index]!.hasLoaded = true;
       });
     }
   }
@@ -534,16 +539,16 @@ class _ViewerState extends State<Viewer> {
   /// Called when the page is being built after previously moved out of view
   void _onRecreatePageAfterMovedOut(BuildContext context, int index) {
     if (_isShowDetailPane && !_isClosingDetailPane) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageStates[index].itemHeight != null) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        if (_pageStates[index]!.itemHeight != null) {
           setState(() {
             _openDetailPane(index);
           });
         }
       });
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _pageStates[index].scrollController.jumpTo(0);
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        _pageStates[index]!.scrollController.jumpTo(0);
       });
     }
   }
@@ -551,26 +556,26 @@ class _ViewerState extends State<Viewer> {
   void _onDetailsPressed() {
     if (!_isDetailPaneActive) {
       setState(() {
-        _openDetailPane(_pageController.page.toInt(), shouldAnimate: true);
+        _openDetailPane(_pageController.page!.toInt(), shouldAnimate: true);
       });
     }
   }
 
   void _onSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
-    final file = widget.streamFiles[_pageController.page.round()];
+    final file = widget.streamFiles[_pageController.page!.round()];
     ShareHandler().shareFiles(context, widget.account, [file]);
   }
 
   void _onDownloadPressed(BuildContext context) async {
-    final file = widget.streamFiles[_pageController.page.round()];
+    final file = widget.streamFiles[_pageController.page!.round()];
     _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
       content:
-          Text(AppLocalizations.of(context).downloadProcessingNotification),
+          Text(AppLocalizations.of(context)!.downloadProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
-    controller?.closed?.whenComplete(() {
+    controller?.closed.whenComplete(() {
       controller = null;
     });
     dynamic result;
@@ -581,7 +586,7 @@ class _ViewerState extends State<Viewer> {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .downloadFailureNoPermissionNotification),
         duration: k.snackBarDurationNormal,
       ));
@@ -591,9 +596,9 @@ class _ViewerState extends State<Viewer> {
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text("${AppLocalizations.of(context).downloadFailureNotification}: "
-                "${exception_util.toUserString(e, context)}"),
+        content: Text(
+            "${AppLocalizations.of(context)!.downloadFailureNotification}: "
+            "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -622,19 +627,19 @@ class _ViewerState extends State<Viewer> {
 
     // fallback
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context).downloadSuccessNotification),
+      content: Text(AppLocalizations.of(context)!.downloadSuccessNotification),
       duration: k.snackBarDurationShort,
     ));
   }
 
   void _onDeletePressed(BuildContext context) async {
-    final file = widget.streamFiles[_pageController.page.round()];
+    final file = widget.streamFiles[_pageController.page!.round()];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context).deleteProcessingNotification),
+      content: Text(AppLocalizations.of(context)!.deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
-    controller?.closed?.whenComplete(() {
+    controller?.closed.whenComplete(() {
       controller = null;
     });
     try {
@@ -642,7 +647,7 @@ class _ViewerState extends State<Viewer> {
           AlbumRepo(AlbumCachedDataSource()))(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).deleteSuccessNotification),
+        content: Text(AppLocalizations.of(context)!.deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -655,7 +660,7 @@ class _ViewerState extends State<Viewer> {
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text("${AppLocalizations.of(context).deleteFailureNotification}: "
+            Text("${AppLocalizations.of(context)!.deleteFailureNotification}: "
                 "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -666,8 +671,9 @@ class _ViewerState extends State<Viewer> {
     if (_pageStates[index]?.itemHeight == null) {
       return MediaQuery.of(context).size.height;
     } else {
-      return _pageStates[index].itemHeight +
-          (MediaQuery.of(context).size.height - _pageStates[index].itemHeight) /
+      return _pageStates[index]!.itemHeight! +
+          (MediaQuery.of(context).size.height -
+                  _pageStates[index]!.itemHeight!) /
               2 -
           4;
     }
@@ -680,10 +686,10 @@ class _ViewerState extends State<Viewer> {
   }
 
   void _updateItemHeight(int index, double height) {
-    if (_pageStates[index].itemHeight != height) {
+    if (_pageStates[index]!.itemHeight != height) {
       _log.fine("[_updateItemHeight] New height of item#$index: $height");
       setState(() {
-        _pageStates[index].itemHeight = height;
+        _pageStates[index]!.itemHeight = height;
         if (_isDetailPaneActive) {
           _openDetailPane(index);
         }
@@ -709,12 +715,12 @@ class _ViewerState extends State<Viewer> {
     _isShowDetailPane = true;
     _isDetailPaneActive = true;
     if (shouldAnimate) {
-      _pageStates[index].scrollController.animateTo(
+      _pageStates[index]!.scrollController.animateTo(
           _calcDetailPaneOpenedScrollPosition(index),
           duration: k.animationDurationNormal,
           curve: Curves.easeOut);
     } else {
-      _pageStates[index]
+      _pageStates[index]!
           .scrollController
           .jumpTo(_calcDetailPaneOpenedScrollPosition(index));
     }
@@ -723,7 +729,7 @@ class _ViewerState extends State<Viewer> {
   void _closeDetailPane(int index, {bool shouldAnimate = false}) {
     _isClosingDetailPane = true;
     if (shouldAnimate) {
-      _pageStates[index].scrollController.animateTo(0,
+      _pageStates[index]!.scrollController.animateTo(0,
           duration: k.animationDurationNormal, curve: Curves.easeOut);
     }
   }
@@ -739,7 +745,7 @@ class _ViewerState extends State<Viewer> {
         .previousPage(
             duration: k.animationDurationNormal, curve: Curves.easeInOut)
         .whenComplete(
-            () => _updateNavigationState(_pageController.page.round()));
+            () => _updateNavigationState(_pageController.page!.round()));
   }
 
   /// Switch to the next image in the stream
@@ -747,7 +753,7 @@ class _ViewerState extends State<Viewer> {
     _pageController
         .nextPage(duration: k.animationDurationNormal, curve: Curves.easeInOut)
         .whenComplete(
-            () => _updateNavigationState(_pageController.page.round()));
+            () => _updateNavigationState(_pageController.page!.round()));
   }
 
   /// Switch to the image on the "left", what that means depend on the current
@@ -819,7 +825,7 @@ class _ViewerState extends State<Viewer> {
 
   var _isZoomed = false;
 
-  PageController _pageController;
+  late PageController _pageController;
   final _pageStates = <int, _PageState>{};
 
   /// used to gain focus on web for keyboard support
@@ -832,6 +838,6 @@ class _PageState {
   _PageState(this.scrollController);
 
   ScrollController scrollController;
-  double itemHeight;
+  double? itemHeight;
   bool hasLoaded = false;
 }

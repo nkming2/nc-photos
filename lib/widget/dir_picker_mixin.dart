@@ -100,7 +100,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
                 dense: true,
                 leading: const SizedBox(width: 24),
                 title: Text(
-                    AppLocalizations.of(context).rootPickerNavigateUpItemText),
+                    AppLocalizations.of(context)!.rootPickerNavigateUpItemText),
                 onTap: () {
                   try {
                     _navigateInto(File(path: path.dirname(_currentPath)));
@@ -128,7 +128,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
     final canPick = canPickDir(item.file);
     final pickState = _isItemPicked(item);
 
-    IconData iconData;
+    IconData? iconData;
     if (canPick) {
       switch (pickState) {
         case _PickState.picked:
@@ -170,9 +170,10 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
               onPressed: null,
             ),
       title: Text(path.basename(item.file.path)),
-      trailing:
-          item.children.isNotEmpty ? const Icon(Icons.arrow_forward_ios) : null,
-      onTap: item.children.isNotEmpty
+      trailing: item.children?.isNotEmpty == true
+          ? const Icon(Icons.arrow_forward_ios)
+          : null,
+      onTap: item.children?.isNotEmpty == true
           ? () {
               try {
                 _navigateInto(item.file);
@@ -238,12 +239,12 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
       // this dir is explicitly picked, nothing more to do
       return [item.file];
     }
-    if (item.children == null || item.children.isEmpty) {
+    if (item.children == null || item.children!.isEmpty) {
       return [];
     }
 
     final products = <File>[];
-    for (final i in item.children) {
+    for (final i in item.children!) {
       products.addAll(_optimizePicks(i));
     }
     // // see if all children are being picked
@@ -282,7 +283,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
           _picks.removeWhere((element) => identical(element, parent));
         } catch (_) {
           SnackBarManager().showSnackBar(SnackBar(
-              content: Text(AppLocalizations.of(context)
+              content: Text(AppLocalizations.of(context)!
                   .rootPickerUnpickFailureNotification)));
         }
       }
@@ -296,12 +297,13 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   /// Either [path] or [item] must be set, If both are set, [item] takes
   /// priority
   List<LsDirBlocItem> _pickedAllExclude({
-    String path,
-    LsDirBlocItem item,
-    @required LsDirBlocItem exclude,
+    String? path,
+    LsDirBlocItem? item,
+    required LsDirBlocItem exclude,
   }) {
+    assert(path != null || item != null);
     if (item == null) {
-      final item = _findChildItemByPath(_root, path);
+      final item = _findChildItemByPath(_root, path!);
       return _pickedAllExclude(item: item, exclude: exclude);
     }
 
@@ -311,7 +313,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
     _log.fine(
         "[_pickedAllExclude] Unpicking '${item.file.path}' and picking children");
     final products = <LsDirBlocItem>[];
-    for (final i in item.children) {
+    for (final i in item.children ?? []) {
       if (exclude.file.path.startsWith(i.file.path)) {
         // [i] is a parent of exclude
         products.addAll(_pickedAllExclude(item: i, exclude: exclude));
@@ -327,7 +329,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
     if (path == parent.file.path) {
       return parent;
     }
-    for (final c in parent.children) {
+    for (final c in parent.children ?? []) {
       if (path == c.file.path || path.startsWith("${c.file.path}/")) {
         return _findChildItemByPath(c, path);
       }
@@ -364,11 +366,11 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
     _bloc.add(LsDirBlocQuery(getAccount(), file, depth: 2));
   }
 
-  LsDirBloc _bloc;
-  LsDirBlocItem _root;
+  late LsDirBloc _bloc;
+  late LsDirBlocItem _root;
 
   /// Track where the user is navigating in [_backingFiles]
-  String _currentPath;
+  late String _currentPath;
   var _picks = <File>[];
 
   static final _log = Logger("widget.dir_picker_mixin.DirPickerMixin");

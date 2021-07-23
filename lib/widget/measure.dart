@@ -8,9 +8,9 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChanged onChange;
 
   const MeasureSize({
-    Key key,
-    @required this.onChange,
-    @required Widget child,
+    Key? key,
+    required this.onChange,
+    required Widget child,
   }) : super(key: key, child: child);
 
   @override
@@ -20,7 +20,7 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 }
 
 class _MeasureSizeRenderObject extends RenderProxyBox {
-  Size oldSize;
+  Size? oldSize;
   final OnWidgetSizeChanged onChange;
 
   _MeasureSizeRenderObject(this.onChange);
@@ -29,11 +29,11 @@ class _MeasureSizeRenderObject extends RenderProxyBox {
   void performLayout() {
     super.performLayout();
 
-    Size newSize = child.size;
-    if (oldSize == newSize) return;
+    var newSize = child?.size;
+    if (newSize == null || oldSize == newSize) return;
 
     oldSize = newSize;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       onChange(newSize);
     });
   }
@@ -41,9 +41,9 @@ class _MeasureSizeRenderObject extends RenderProxyBox {
 
 class SliverMeasureExtent extends SingleChildRenderObjectWidget {
   const SliverMeasureExtent({
-    Key key,
-    @required this.onChange,
-    @required Widget child,
+    Key? key,
+    required this.onChange,
+    required Widget child,
   }) : super(key: key, child: child);
 
   @override
@@ -61,16 +61,16 @@ class _SliverMeasureExtentRenderObject extends RenderProxySliver {
   void performLayout() {
     super.performLayout();
 
-    double newExent = child.geometry.scrollExtent;
-    if (_oldExtent == newExent) {
+    var newExent = child?.geometry?.scrollExtent;
+    if (newExent == null || _oldExtent == newExent) {
       return;
     }
 
     _oldExtent = newExent;
-    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newExent));
+    WidgetsBinding.instance!.addPostFrameCallback((_) => onChange(newExent));
   }
 
   final void Function(double) onChange;
 
-  double _oldExtent;
+  double? _oldExtent;
 }

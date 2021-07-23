@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 /// The point is to disable non-visible buttons
 class AnimatedVisibility extends StatefulWidget {
   const AnimatedVisibility({
-    Key key,
-    this.child,
-    @required this.opacity,
+    Key? key,
+    required this.child,
+    required this.opacity,
     this.curve = Curves.linear,
-    @required this.duration,
+    required this.duration,
     this.onEnd,
     this.alwaysIncludeSemantics = false,
-  })  : assert(opacity != null && opacity >= 0.0 && opacity <= 1.0),
+  })  : assert(opacity >= 0.0 && opacity <= 1.0),
         super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class AnimatedVisibility extends StatefulWidget {
   final double opacity;
   final Curve curve;
   final Duration duration;
-  final VoidCallback onEnd;
+  final VoidCallback? onEnd;
   final bool alwaysIncludeSemantics;
 }
 

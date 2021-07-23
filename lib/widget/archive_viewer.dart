@@ -32,12 +32,16 @@ class ArchiveViewerArguments {
 class ArchiveViewer extends StatefulWidget {
   static const routeName = "/archive-viewer";
 
+  static Route buildRoute(ArchiveViewerArguments args) => MaterialPageRoute(
+        builder: (context) => ArchiveViewer.fromArgs(args),
+      );
+
   ArchiveViewer({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  ArchiveViewer.fromArgs(ArchiveViewerArguments args, {Key key})
+  ArchiveViewer.fromArgs(ArchiveViewerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -55,7 +59,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
   initState() {
     super.initState();
     _initBloc();
-    _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevel(0);
+    _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevelOr(0);
   }
 
   @override
@@ -81,7 +85,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
       _reqQuery();
     } else {
       // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           _onStateChange(context, _bloc.state);
         });
@@ -144,12 +148,12 @@ class _ArchiveViewerState extends State<ArchiveViewer>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)
+        title: Text(AppLocalizations.of(context)!
             .selectionAppBarTitle(selectedListItems.length)),
         actions: [
           IconButton(
             icon: const Icon(Icons.unarchive),
-            tooltip: AppLocalizations.of(context).unarchiveSelectedTooltip,
+            tooltip: AppLocalizations.of(context)!.unarchiveSelectedTooltip,
             onPressed: () {
               _onSelectionAppBarUnarchivePressed();
             },
@@ -161,12 +165,12 @@ class _ArchiveViewerState extends State<ArchiveViewer>
 
   Widget _buildNormalAppBar(BuildContext context) {
     return SliverAppBar(
-      title: Text(AppLocalizations.of(context).albumArchiveLabel),
+      title: Text(AppLocalizations.of(context)!.albumArchiveLabel),
       floating: true,
       actions: [
         PopupMenuButton(
           icon: const Icon(Icons.photo_size_select_large),
-          tooltip: AppLocalizations.of(context).zoomTooltip,
+          tooltip: AppLocalizations.of(context)!.zoomTooltip,
           itemBuilder: (context) => [
             PopupMenuZoom(
               initialValue: _thumbZoomLevel,
@@ -208,7 +212,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
 
   Future<void> _onSelectionAppBarUnarchivePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
+      content: Text(AppLocalizations.of(context)!
           .unarchiveSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -237,12 +241,12 @@ class _ArchiveViewerState extends State<ArchiveViewer>
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).unarchiveSelectedSuccessNotification),
+            AppLocalizations.of(context)!.unarchiveSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .unarchiveSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -308,7 +312,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
     }
   }
 
-  ScanDirBloc _bloc;
+  late ScanDirBloc _bloc;
 
   var _backingFiles = <File>[];
 
@@ -319,7 +323,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
 
 abstract class _ListItem implements SelectableItem {
   _ListItem({
-    VoidCallback onTap,
+    VoidCallback? onTap,
   }) : _onTap = onTap;
 
   @override
@@ -331,13 +335,13 @@ abstract class _ListItem implements SelectableItem {
   @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
-  final VoidCallback _onTap;
+  final VoidCallback? _onTap;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
-    @required this.file,
-    VoidCallback onTap,
+    required this.file,
+    VoidCallback? onTap,
   }) : super(onTap: onTap);
 
   @override
@@ -353,10 +357,10 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(file: file, onTap: onTap);
 
   @override
@@ -374,10 +378,10 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(file: file, onTap: onTap);
 
   @override

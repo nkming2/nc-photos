@@ -21,12 +21,17 @@ class AlbumDirPickerArguments {
 class AlbumDirPicker extends StatefulWidget {
   static const routeName = "/album-dir-picker";
 
+  static Route buildRoute(AlbumDirPickerArguments args) =>
+      MaterialPageRoute<List<File>>(
+        builder: (context) => AlbumDirPicker.fromArgs(args),
+      );
+
   AlbumDirPicker({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  AlbumDirPicker.fromArgs(AlbumDirPickerArguments args, {Key key})
+  AlbumDirPicker.fromArgs(AlbumDirPickerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -81,7 +86,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context).albumDirPickerHeaderText,
+                  AppLocalizations.of(context)!.albumDirPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -89,7 +94,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context).albumDirPickerSubHeaderText,
+                    AppLocalizations.of(context)!.albumDirPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -112,7 +117,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(AppLocalizations.of(context).confirmButtonLabel),
+                  child: Text(AppLocalizations.of(context)!.confirmButtonLabel),
                 ),
               ],
             ),
@@ -127,7 +132,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
     if (picked.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).albumDirPickerListEmptyNotification),
+            AppLocalizations.of(context)!.albumDirPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {

@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 
@@ -16,8 +17,8 @@ import 'package:nc_photos/widget/album_dir_picker.dart';
 /// cancelled
 class NewAlbumDialog extends StatefulWidget {
   NewAlbumDialog({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
     this.isAllowDynamic = true,
   }) : super(key: key);
 
@@ -39,7 +40,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
     return Visibility(
       visible: _isVisible,
       child: AlertDialog(
-        title: Text(AppLocalizations.of(context).createAlbumTooltip),
+        title: Text(AppLocalizations.of(context)!.createAlbumTooltip),
         content: Form(
           key: _formKey,
           child: Container(
@@ -50,17 +51,17 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context).nameInputHint,
+                    hintText: AppLocalizations.of(context)!.nameInputHint,
                   ),
                   validator: (value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context)
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!
                           .albumNameInputInvalidEmpty;
                     }
                     return null;
                   },
                   onSaved: (value) {
-                    _formValue.name = value;
+                    _formValue.name = value!;
                   },
                 ),
                 if (widget.isAllowDynamic) ...[
@@ -75,7 +76,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
                           .toList(),
                       onChanged: (newValue) {
                         setState(() {
-                          _provider = newValue;
+                          _provider = newValue!;
                         });
                       },
                       onSaved: (value) {
@@ -104,8 +105,8 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
   }
 
   void _onOkPressed(BuildContext context) {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey.currentState?.validate() == true) {
+      _formKey.currentState!.save();
       if (_formValue.provider == _Provider.static ||
           _formValue.provider == null) {
         _onConfirmStaticAlbum();
@@ -136,7 +137,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
       _isVisible = false;
     });
     Navigator.of(context)
-        .pushNamed(AlbumDirPicker.routeName,
+        .pushNamed<List<File>>(AlbumDirPicker.routeName,
             arguments: AlbumDirPickerArguments(widget.account))
         .then((value) {
       if (value == null) {
@@ -174,8 +175,8 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
 }
 
 class _FormValue {
-  String name;
-  _Provider provider;
+  late String name;
+  _Provider? provider;
 }
 
 enum _Provider {
@@ -187,10 +188,10 @@ extension on _Provider {
   String toValueString(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return AppLocalizations.of(context).createAlbumDialogBasicLabel;
+        return AppLocalizations.of(context)!.createAlbumDialogBasicLabel;
 
       case _Provider.dir:
-        return AppLocalizations.of(context).createAlbumDialogFolderBasedLabel;
+        return AppLocalizations.of(context)!.createAlbumDialogFolderBasedLabel;
 
       default:
         throw StateError("Unknown value: $this");
@@ -200,10 +201,10 @@ extension on _Provider {
   String toDescription(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return AppLocalizations.of(context).createAlbumDialogBasicDescription;
+        return AppLocalizations.of(context)!.createAlbumDialogBasicDescription;
 
       case _Provider.dir:
-        return AppLocalizations.of(context)
+        return AppLocalizations.of(context)!
             .createAlbumDialogFolderBasedDescription;
 
       default:

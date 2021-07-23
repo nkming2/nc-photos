@@ -18,11 +18,11 @@ class Account with EquatableMixin {
   }
 
   Account copyWith({
-    String scheme,
-    String address,
-    String username,
-    String password,
-    List<String> roots,
+    String? scheme,
+    String? address,
+    String? username,
+    String? password,
+    List<String>? roots,
   }) {
     return Account(
       scheme ?? this.scheme,
@@ -39,7 +39,7 @@ class Account with EquatableMixin {
         "scheme: '$scheme', "
         "address: '$address', "
         "username: '$username', "
-        "password: '${password?.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
+        "password: '${password.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
         "roots: List {'${roots.join('\', \'')}'}, "
         "}";
   }

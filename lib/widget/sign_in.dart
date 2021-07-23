@@ -16,7 +16,7 @@ import 'package:nc_photos/widget/root_picker.dart';
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in";
 
-  SignIn({Key key}) : super(key: key);
+  SignIn({Key? key}) : super(key: key);
 
   @override
   createState() => _SignInState();
@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
                       Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          AppLocalizations.of(context).signInHeaderText,
+                          AppLocalizations.of(context)!.signInHeaderText,
                           style: Theme.of(context).textTheme.headline5,
                           textAlign: TextAlign.center,
                         ),
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         child: Text(
-                          AppLocalizations.of(context).signIn2faHintText,
+                          AppLocalizations.of(context)!.signIn2faHintText,
                           style: TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ),
@@ -82,7 +82,7 @@ class _SignInState extends State<SignIn> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            if (!ModalRoute.of(context).isFirst)
+                            if (!ModalRoute.of(context)!.isFirst)
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -94,11 +94,11 @@ class _SignInState extends State<SignIn> {
                               Container(),
                             ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState.validate()) {
+                                if (_formKey.currentState?.validate() == true) {
                                   _connect();
                                 }
                               },
-                              child: Text(AppLocalizations.of(context)
+                              child: Text(AppLocalizations.of(context)!
                                   .connectButtonLabel),
                             ),
                           ],
@@ -143,11 +143,11 @@ class _SignInState extends State<SignIn> {
                       .toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      _scheme = newValue;
+                      _scheme = newValue!;
                     });
                   },
                   onSaved: (value) {
-                    _formValue.scheme = value.toValueString();
+                    _formValue.scheme = value!.toValueString();
                   },
                 ),
               ),
@@ -159,18 +159,19 @@ class _SignInState extends State<SignIn> {
             Expanded(
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).serverAddressInputHint,
+                  hintText:
+                      AppLocalizations.of(context)!.serverAddressInputHint,
                 ),
                 keyboardType: TextInputType.url,
                 validator: (value) {
-                  if (value.trim().trimRightAny("/").isEmpty) {
-                    return AppLocalizations.of(context)
+                  if (value!.trim().trimRightAny("/").isEmpty) {
+                    return AppLocalizations.of(context)!
                         .serverAddressInputInvalidEmpty;
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  _formValue.address = value.trim().trimRightAny("/");
+                  _formValue.address = value!.trim().trimRightAny("/");
                 },
               ),
             ),
@@ -179,32 +180,32 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context).usernameInputHint,
+            hintText: AppLocalizations.of(context)!.usernameInputHint,
           ),
           validator: (value) {
-            if (value.trim().isEmpty) {
-              return AppLocalizations.of(context).usernameInputInvalidEmpty;
+            if (value!.trim().isEmpty) {
+              return AppLocalizations.of(context)!.usernameInputInvalidEmpty;
             }
             return null;
           },
           onSaved: (value) {
-            _formValue.username = value;
+            _formValue.username = value!;
           },
         ),
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context).passwordInputHint,
+            hintText: AppLocalizations.of(context)!.passwordInputHint,
           ),
           obscureText: true,
           validator: (value) {
-            if (value.trim().isEmpty) {
-              return AppLocalizations.of(context).passwordInputInvalidEmpty;
+            if (value!.trim().isEmpty) {
+              return AppLocalizations.of(context)!.passwordInputInvalidEmpty;
             }
             return null;
           },
           onSaved: (value) {
-            _formValue.password = value;
+            _formValue.password = value!;
           },
         ),
       ],
@@ -212,22 +213,23 @@ class _SignInState extends State<SignIn> {
   }
 
   void _connect() {
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     final account = Account(_formValue.scheme, _formValue.address,
         _formValue.username, _formValue.password, [""]);
     _log.info("[_connect] Try connecting with account: $account");
-    Navigator.pushNamed(context, Connect.routeName,
+    Navigator.pushNamed<Account>(context, Connect.routeName,
             arguments: ConnectArguments(account))
-        .then((result) {
+        .then<Account?>((result) {
       return result != null
           ? Navigator.pushNamed(context, RootPicker.routeName,
               arguments: RootPickerArguments(result))
-          : null;
+          : Future.value(null);
     }).then((result) {
       if (result != null) {
         // we've got a good account
         // only signing in with app password would trigger distinct
-        final accounts = (Pref.inst().getAccounts([])..add(result)).distinct();
+        final accounts =
+            (Pref.inst().getAccountsOr([])..add(result)).distinct();
         Pref.inst()
           ..setAccounts(accounts)
           ..setCurrentAccountIndex(accounts.indexOf(result));
@@ -267,8 +269,8 @@ extension on _Scheme {
 }
 
 class _FormValue {
-  String scheme;
-  String address;
-  String username;
-  String password;
+  late String scheme;
+  late String address;
+  late String username;
+  late String password;
 }

@@ -24,6 +24,7 @@ class Remove {
   }
 
   Future<void> _cleanUpAlbums(Account account, File file) async {
+    final albumRepo = this.albumRepo!;
     final albums = (await ListAlbum(fileRepo, albumRepo)(account)
         .where((event) => event is Album)
         .toList()).cast<Album>();
@@ -58,7 +59,7 @@ class Remove {
   }
 
   final FileRepo fileRepo;
-  final AlbumRepo albumRepo;
+  final AlbumRepo? albumRepo;
 
   static final _log = Logger("use_case.remove.Remove");
 }

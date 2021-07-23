@@ -13,8 +13,8 @@ import 'package:nc_photos/widget/settings.dart';
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {
   HomeSliverAppBar({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
     this.actions,
     this.menuActions,
     this.onSelectedMenuActions,
@@ -90,7 +90,7 @@ class HomeSliverAppBar extends StatelessWidget {
               inactiveThumbImage:
                   const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
             ),
-            PopupMenuButton(
+            PopupMenuButton<int>(
               tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
               itemBuilder: (context) =>
                   (menuActions ?? []) +
@@ -98,7 +98,7 @@ class HomeSliverAppBar extends StatelessWidget {
                     PopupMenuItem(
                       value: _menuValueAbout,
                       child:
-                          Text(AppLocalizations.of(context).settingsMenuLabel),
+                          Text(AppLocalizations.of(context)!.settingsMenuLabel),
                     ),
                   ],
               onSelected: (option) {
@@ -125,12 +125,12 @@ class HomeSliverAppBar extends StatelessWidget {
   final Account account;
 
   /// Screen specific action buttons
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   /// Screen specific actions under the overflow menu. The value of each item
   /// much >= 0
-  final List<PopupMenuEntry<int>> menuActions;
-  final void Function(int) onSelectedMenuActions;
+  final List<PopupMenuEntry<int>>? menuActions;
+  final void Function(int)? onSelectedMenuActions;
 
   static const _menuValueAbout = -1;
 }

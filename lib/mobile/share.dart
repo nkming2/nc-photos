@@ -10,5 +10,5 @@ class AndroidShare extends itf.Share {
   }
 
   final List<String> fileUris;
-  final List<String> mimeTypes;
+  final List<String?> mimeTypes;
 }

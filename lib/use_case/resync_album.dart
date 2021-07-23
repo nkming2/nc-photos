@@ -44,18 +44,22 @@ class ResyncAlbum {
 
   Future<AlbumFileItem> _syncOne(Account account, AlbumFileItem item,
       ObjectStore objStore, Index index) async {
-    Map dbItem;
+    Map? dbItem;
     if (item.file.fileId != null) {
       final List dbItems = await index
           .getAll(AppDbFileDbEntry.toNamespacedFileId(account, item.file));
       // find the one owned by us
-      dbItem = dbItems.firstWhere((element) {
-        final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-        return file_util.getUserDirName(e.file) == account.username;
-      }, orElse: () => null);
+      try {
+        dbItem = dbItems.firstWhere((element) {
+          final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
+          return file_util.getUserDirName(e.file) == account.username;
+        });
+      } on StateError catch (_) {
+        // not found
+      }
     } else {
       dbItem = await objStore
-          .getObject(AppDbFileDbEntry.toPrimaryKey(account, item.file));
+          .getObject(AppDbFileDbEntry.toPrimaryKey(account, item.file)) as Map;
     }
     if (dbItem == null) {
       _log.warning(

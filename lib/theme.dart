@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme extends StatelessWidget {
-  const AppTheme({@required this.child});
+  const AppTheme({
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,24 +48,24 @@ class AppTheme extends StatelessWidget {
 
   static Color getSelectionOverlayColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
-        ? primarySwatchLight[100].withOpacity(0.7)
-        : primarySwatchDark[700].withOpacity(0.7);
+        ? primarySwatchLight[100]!.withOpacity(0.7)
+        : primarySwatchDark[700]!.withOpacity(0.7);
   }
 
   static Color getSelectionCheckColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
-        ? Colors.grey[800]
-        : Colors.grey[350];
+        ? Colors.grey[800]!
+        : Colors.grey[350]!;
   }
 
   static Color getOverscrollIndicatorColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
-        ? Colors.grey[800]
-        : Colors.grey[200];
+        ? Colors.grey[800]!
+        : Colors.grey[200]!;
   }
 
   static Color getRootPickerContentBoxColor(BuildContext context) {
-    return Colors.blue[200];
+    return Colors.blue[200]!;
   }
 
   static Color getPrimaryTextColor(BuildContext context) {

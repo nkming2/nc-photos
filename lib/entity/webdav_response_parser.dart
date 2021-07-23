@@ -31,7 +31,7 @@ class WebdavFileParser {
             return null;
           }
         })
-        .where((element) => element != null)
+        .whereType<File>()
         .toList();
   }
 
@@ -55,19 +55,19 @@ class WebdavFileParser {
 
   /// Map <DAV:response> contents to File
   File _toFile(XmlElement element) {
-    String path;
-    int contentLength;
-    String contentType;
-    String etag;
-    DateTime lastModified;
-    bool isCollection;
-    int usedBytes;
-    bool hasPreview;
-    int fileId;
-    String ownerId;
-    Metadata metadata;
-    bool isArchived;
-    DateTime overrideDateTime;
+    String? path;
+    int? contentLength;
+    String? contentType;
+    String? etag;
+    DateTime? lastModified;
+    bool? isCollection;
+    int? usedBytes;
+    bool? hasPreview;
+    int? fileId;
+    String? ownerId;
+    Metadata? metadata;
+    bool? isArchived;
+    DateTime? overrideDateTime;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -105,7 +105,7 @@ class WebdavFileParser {
     }
 
     return File(
-      path: path,
+      path: path!,
       contentLength: contentLength,
       contentType: contentType,
       etag: etag,
@@ -140,7 +140,10 @@ class WebdavFileParser {
 }
 
 class _PropParser {
-  _PropParser({this.namespaces = const {}, this.logFilePath});
+  _PropParser({
+    this.namespaces = const {},
+    this.logFilePath,
+  });
 
   /// Parse <DAV:prop> element contents
   void parse(XmlElement element) {
@@ -201,43 +204,43 @@ class _PropParser {
     }
   }
 
-  DateTime get lastModified => _lastModified;
-  int get contentLength => _contentLength;
-  String get contentType => _contentType;
-  String get etag => _etag;
-  int get usedBytes => _usedBytes;
-  bool get isCollection => _isCollection;
-  bool get hasPreview => _hasPreview;
-  int get fileId => _fileId;
-  String get ownerId => _ownerId;
-  Metadata get metadata => _metadata;
-  bool get isArchived => _isArchived;
-  DateTime get overrideDateTime => _overrideDateTime;
+  DateTime? get lastModified => _lastModified;
+  int? get contentLength => _contentLength;
+  String? get contentType => _contentType;
+  String? get etag => _etag;
+  int? get usedBytes => _usedBytes;
+  bool? get isCollection => _isCollection;
+  bool? get hasPreview => _hasPreview;
+  int? get fileId => _fileId;
+  String? get ownerId => _ownerId;
+  Metadata? get metadata => _metadata;
+  bool? get isArchived => _isArchived;
+  DateTime? get overrideDateTime => _overrideDateTime;
 
   final Map<String, String> namespaces;
 
   /// File path for logging only
-  final String logFilePath;
+  final String? logFilePath;
 
-  DateTime _lastModified;
-  int _contentLength;
-  String _contentType;
-  String _etag;
-  int _usedBytes;
-  bool _isCollection;
-  bool _hasPreview;
-  int _fileId;
-  String _ownerId;
-  Metadata _metadata;
-  bool _isArchived;
-  DateTime _overrideDateTime;
+  DateTime? _lastModified;
+  int? _contentLength;
+  String? _contentType;
+  String? _etag;
+  int? _usedBytes;
+  bool? _isCollection;
+  bool? _hasPreview;
+  int? _fileId;
+  String? _ownerId;
+  Metadata? _metadata;
+  bool? _isArchived;
+  DateTime? _overrideDateTime;
 }
 
 extension on XmlElement {
   bool matchQualifiedName(
     String local, {
-    String prefix,
-    Map<String, String> namespaces,
+    required String prefix,
+    required Map<String, String> namespaces,
   }) {
     final localNamespaces = <String, String>{};
     for (final a in attributes) {

@@ -43,13 +43,18 @@ class DynamicAlbumViewerArguments {
 class DynamicAlbumViewer extends StatefulWidget {
   static const routeName = "/dynamic-album-viewer";
 
+  static Route buildRoute(DynamicAlbumViewerArguments args) =>
+      MaterialPageRoute(
+        builder: (context) => DynamicAlbumViewer.fromArgs(args),
+      );
+
   DynamicAlbumViewer({
-    Key key,
-    @required this.account,
-    @required this.album,
+    Key? key,
+    required this.account,
+    required this.album,
   }) : super(key: key);
 
-  DynamicAlbumViewer.fromArgs(DynamicAlbumViewerArguments args, {Key key})
+  DynamicAlbumViewer.fromArgs(DynamicAlbumViewerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -96,19 +101,19 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   @override
   enterEditMode() {
     super.enterEditMode();
-    _editAlbum = _album.copyWith();
+    _editAlbum = _album!.copyWith();
   }
 
   @override
-  validateEditMode() => _editFormKey?.currentState?.validate() == true;
+  validateEditMode() => _editFormKey.currentState?.validate() == true;
 
   @override
   doneEditMode() {
     try {
       // persist the changes
-      _editFormKey.currentState.save();
-      final newAlbum = makeEdited(_editAlbum);
-      if (newAlbum.copyWith(lastUpdated: OrNull(_album.lastUpdated)) !=
+      _editFormKey.currentState!.save();
+      final newAlbum = makeEdited(_editAlbum!);
+      if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -142,14 +147,14 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         setState(() {
           _album = widget.album;
           _transformItems(items);
-          final coverFile = initCover(widget.account, _backingFiles);
-          _updateAlbumPostPopulate(coverFile, items);
+          initCover(widget.account, _backingFiles);
+          _updateAlbumPostPopulate(items);
         });
       }
     });
   }
 
-  void _updateAlbumPostPopulate(File coverFile, List<AlbumItem> items) {
+  void _updateAlbumPostPopulate(List<AlbumItem> items) {
     List<File> timeDescSortedFiles;
     if (widget.album.sortProvider is AlbumTimeSortProvider) {
       if ((widget.album.sortProvider as AlbumTimeSortProvider).isAscending) {
@@ -168,7 +173,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
     bool shouldUpdate = false;
     final albumUpdatedCover = UpdateDynamicAlbumCover()
-        .updateWithSortedFiles(_album, timeDescSortedFiles);
+        .updateWithSortedFiles(_album!, timeDescSortedFiles);
     if (!identical(albumUpdatedCover, _album)) {
       _log.info("[_updateAlbumPostPopulate] Update album cover");
       shouldUpdate = true;
@@ -176,7 +181,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     _album = albumUpdatedCover;
 
     final albumUpdatedTime = UpdateDynamicAlbumTime()
-        .updateWithSortedFiles(_album, timeDescSortedFiles);
+        .updateWithSortedFiles(_album!, timeDescSortedFiles);
     if (!identical(albumUpdatedTime, _album)) {
       _log.info(
           "[_updateAlbumPostPopulate] Update album time: ${albumUpdatedTime.provider.latestItemTime}");
@@ -185,7 +190,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     _album = albumUpdatedTime;
 
     if (shouldUpdate) {
-      UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, _album);
+      UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, _album!);
     }
   }
 
@@ -241,11 +246,11 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     return buildNormalAppBar(
       context,
       widget.account,
-      _album,
+      _album!,
       menuItemBuilder: (context) => [
         PopupMenuItem(
           value: _menuValueConvertBasic,
-          child: Text(AppLocalizations.of(context).convertBasicAlbumMenuLabel),
+          child: Text(AppLocalizations.of(context)!.convertBasicAlbumMenuLabel),
         ),
       ],
       onSelectedMenuItem: (option) {
@@ -267,7 +272,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: AppLocalizations.of(context).shareSelectedTooltip,
+          tooltip: AppLocalizations.of(context)!.shareSelectedTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
@@ -277,7 +282,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         itemBuilder: (context) => [
           PopupMenuItem(
             value: _SelectionAppBarOption.delete,
-            child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
+            child: Text(AppLocalizations.of(context)!.deleteSelectedTooltip),
           ),
         ],
         onSelected: (option) {
@@ -293,7 +298,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: AppLocalizations.of(context).sortTooltip,
+        tooltip: AppLocalizations.of(context)!.sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -317,9 +322,9 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)
+        title: Text(AppLocalizations.of(context)!
             .convertBasicAlbumConfirmationDialogTitle),
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .convertBasicAlbumConfirmationDialogContent),
         actions: <Widget>[
           TextButton(
@@ -341,17 +346,17 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         return;
       }
       _log.info(
-          "[_onAppBarConvertBasicPressed] Converting album '${_album.name}' to static");
+          "[_onAppBarConvertBasicPressed] Converting album '${_album!.name}' to static");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
       UpdateAlbum(albumRepo)(
         widget.account,
-        _album.copyWith(
+        _album!.copyWith(
           provider: AlbumStaticProvider(items: _sortedItems),
           coverProvider: AlbumAutoCoverProvider(),
         ),
       ).then((value) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)!
               .convertBasicAlbumSuccessNotification),
           duration: k.snackBarDurationNormal,
         ));
@@ -386,7 +391,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
   void _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
+      content: Text(AppLocalizations.of(context)!
           .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -417,12 +422,12 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).deleteSelectedSuccessNotification),
+            AppLocalizations.of(context)!.deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -439,14 +444,14 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   void _onEditAppBarSortPressed() {
-    final sortProvider = _editAlbum.sortProvider;
+    final sortProvider = _editAlbum!.sortProvider;
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: AppLocalizations.of(context).sortOptionDialogTitle,
+        title: AppLocalizations.of(context)!.sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context).sortOptionTimeAscendingLabel,
+            label: AppLocalizations.of(context)!.sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -455,7 +460,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
             },
           ),
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context).sortOptionTimeDescendingLabel,
+            label: AppLocalizations.of(context)!.sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {
@@ -469,7 +474,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   void _onSortOldestPressed() {
-    _editAlbum = _editAlbum.copyWith(
+    _editAlbum = _editAlbum!.copyWith(
       sortProvider: AlbumTimeSortProvider(isAscending: true),
     );
     setState(() {
@@ -478,7 +483,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   }
 
   void _onSortNewestPressed() {
-    _editAlbum = _editAlbum.copyWith(
+    _editAlbum = _editAlbum!.copyWith(
       sortProvider: AlbumTimeSortProvider(isAscending: false),
     );
     setState(() {
@@ -489,9 +494,9 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   void _transformItems(List<AlbumItem> items) {
     if (_editAlbum != null) {
       // edit mode
-      _sortedItems = _editAlbum.sortProvider.sort(items);
+      _sortedItems = _editAlbum!.sortProvider.sort(items);
     } else {
-      _sortedItems = _album.sortProvider.sort(items);
+      _sortedItems = _album!.sortProvider.sort(items);
     }
     _onSortedItemsUpdated();
   }
@@ -535,12 +540,12 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         .toList();
   }
 
-  Album _album;
+  Album? _album;
   var _sortedItems = <AlbumItem>[];
   var _backingFiles = <File>[];
 
   final _editFormKey = GlobalKey<FormState>();
-  Album _editAlbum;
+  Album? _editAlbum;
 
   static final _log =
       Logger("widget.dynamic_album_viewer._DynamicAlbumViewerState");
@@ -549,8 +554,8 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
 abstract class _ListItem implements SelectableItem {
   _ListItem({
-    @required this.index,
-    VoidCallback onTap,
+    required this.index,
+    VoidCallback? onTap,
   }) : _onTap = onTap;
 
   @override
@@ -571,14 +576,14 @@ abstract class _ListItem implements SelectableItem {
 
   final int index;
 
-  final VoidCallback _onTap;
+  final VoidCallback? _onTap;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
-    @required int index,
-    @required this.file,
-    VoidCallback onTap,
+    required int index,
+    required this.file,
+    VoidCallback? onTap,
   }) : super(
           index: index,
           onTap: onTap,
@@ -589,11 +594,11 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    @required int index,
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required int index,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(
           index: index,
           file: file,
@@ -615,11 +620,11 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    @required int index,
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required int index,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(
           index: index,
           file: file,

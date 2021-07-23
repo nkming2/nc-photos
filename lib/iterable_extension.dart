@@ -3,10 +3,10 @@ import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
   /// Return a new sorted list
-  List<T> sorted([int compare(T a, T b)]) => this.toList()..sort(compare);
+  List<T> sorted([int compare(T a, T b)?]) => this.toList()..sort(compare);
 
   /// Return a new stable sorted list
-  List<T> stableSorted([int compare(T a, T b)]) {
+  List<T> stableSorted([int compare(T a, T b)?]) {
     final tmp = this.toList();
     mergeSort(tmp, compare: compare);
     return tmp;

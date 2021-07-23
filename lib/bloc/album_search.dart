@@ -91,12 +91,12 @@ class AlbumSearchBloc extends Bloc<AlbumSearchBlocEvent, AlbumSearchBlocState> {
     _albums = ev.albums;
     if (_lastSearch != null) {
       // search again
-      yield* _onEventSearch(_lastSearch);
+      yield* _onEventSearch(_lastSearch!);
     }
   }
 
   var _albums = <Album>[];
-  AlbumSearchBlocSearchEvent _lastSearch;
+  AlbumSearchBlocSearchEvent? _lastSearch;
 
   static final _log = Logger("bloc.album_search.AlbumSearchBloc");
 }

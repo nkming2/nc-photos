@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -31,57 +30,57 @@ bool isAlbumFile(Account account, File file) =>
 /// Immutable object that represents an album
 class Album with EquatableMixin {
   Album({
-    DateTime lastUpdated,
-    @required String name,
-    @required this.provider,
-    @required this.coverProvider,
-    @required this.sortProvider,
+    DateTime? lastUpdated,
+    required this.name,
+    required this.provider,
+    required this.coverProvider,
+    required this.sortProvider,
     this.albumFile,
-  })  : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
-        this.name = name ?? "";
+  }) : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
-  factory Album.fromJson(
+  static Album? fromJson(
     Map<String, dynamic> json, {
-    AlbumUpgraderV1 upgraderV1,
-    AlbumUpgraderV2 upgraderV2,
-    AlbumUpgraderV3 upgraderV3,
+    required AlbumUpgraderV1? upgraderV1,
+    required AlbumUpgraderV2? upgraderV2,
+    required AlbumUpgraderV3? upgraderV3,
   }) {
     final jsonVersion = json["version"];
+    Map<String, dynamic>? result = json;
     if (jsonVersion < 2) {
-      json = upgraderV1?.call(json);
-      if (json == null) {
+      result = upgraderV1?.call(result);
+      if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 3) {
-      json = upgraderV2?.call(json);
-      if (json == null) {
+      result = upgraderV2?.call(result);
+      if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 4) {
-      json = upgraderV3?.call(json);
-      if (json == null) {
+      result = upgraderV3?.call(result);
+      if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     return Album(
-      lastUpdated: json["lastUpdated"] == null
+      lastUpdated: result["lastUpdated"] == null
           ? null
-          : DateTime.parse(json["lastUpdated"]),
-      name: json["name"],
+          : DateTime.parse(result["lastUpdated"]),
+      name: result["name"],
       provider:
-          AlbumProvider.fromJson(json["provider"].cast<String, dynamic>()),
+          AlbumProvider.fromJson(result["provider"].cast<String, dynamic>()),
       coverProvider: AlbumCoverProvider.fromJson(
-          json["coverProvider"].cast<String, dynamic>()),
+          result["coverProvider"].cast<String, dynamic>()),
       sortProvider: AlbumSortProvider.fromJson(
-          json["sortProvider"].cast<String, dynamic>()),
-      albumFile: json["albumFile"] == null
+          result["sortProvider"].cast<String, dynamic>()),
+      albumFile: result["albumFile"] == null
           ? null
-          : File.fromJson(json["albumFile"].cast<String, dynamic>()),
+          : File.fromJson(result["albumFile"].cast<String, dynamic>()),
     );
   }
 
@@ -103,12 +102,12 @@ class Album with EquatableMixin {
   /// will be used. In order to keep [lastUpdated], you must explicitly assign
   /// it with value from this or a null value
   Album copyWith({
-    OrNull<DateTime> lastUpdated,
-    String name,
-    AlbumProvider provider,
-    AlbumCoverProvider coverProvider,
-    AlbumSortProvider sortProvider,
-    File albumFile,
+    OrNull<DateTime>? lastUpdated,
+    String? name,
+    AlbumProvider? provider,
+    AlbumCoverProvider? coverProvider,
+    AlbumSortProvider? sortProvider,
+    File? albumFile,
   }) {
     return Album(
       lastUpdated:
@@ -141,7 +140,7 @@ class Album with EquatableMixin {
       "provider": provider.toJson(),
       "coverProvider": coverProvider.toJson(),
       "sortProvider": sortProvider.toJson(),
-      if (albumFile != null) "albumFile": albumFile.toJson(),
+      if (albumFile != null) "albumFile": albumFile!.toJson(),
     };
   }
 
@@ -165,7 +164,7 @@ class Album with EquatableMixin {
   /// How is this album stored on server
   ///
   /// This field is typically only meaningful when returned by [AlbumRepo.get]
-  final File albumFile;
+  final File? albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
   static const version = 4;
@@ -224,7 +223,8 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
         upgraderV3: AlbumUpgraderV3(),
-      ).copyWith(
+      )!
+          .copyWith(
         lastUpdated: OrNull(null),
         albumFile: albumFile,
       );
@@ -245,8 +245,8 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final filePath =
         "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
     final fileRepo = FileRepo(FileWebdavDataSource());
-    await PutFileBinary(fileRepo)(
-        account, filePath, utf8.encode(jsonEncode(album.toRemoteJson())),
+    await PutFileBinary(fileRepo)(account, filePath,
+        Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
         shouldCreateMissingDir: true);
     // query album file
     final list = await Ls(fileRepo)(account, File(path: filePath),
@@ -256,10 +256,10 @@ class AlbumRemoteDataSource implements AlbumDataSource {
 
   @override
   update(Account account, Album album) async {
-    _log.info("[update] ${album.albumFile.path}");
+    _log.info("[update] ${album.albumFile!.path}");
     final fileRepo = FileRepo(FileWebdavDataSource());
-    await PutFileBinary(fileRepo)(account, album.albumFile.path,
-        utf8.encode(jsonEncode(album.toRemoteJson())));
+    await PutFileBinary(fileRepo)(account, album.albumFile!.path,
+        Utf8Encoder().convert(jsonEncode(album.toRemoteJson())));
   }
 
   @override
@@ -286,7 +286,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
       final path = AppDbAlbumEntry.toPathFromFile(account, albumFile);
       final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
       final List results = await index.getAll(range);
-      if (results?.isNotEmpty == true) {
+      if (results.isNotEmpty == true) {
         final entries = results
             .map((e) => AppDbAlbumEntry.fromJson(e.cast<String, dynamic>()));
         if (entries.length > 1) {
@@ -317,7 +317,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
 
   @override
   update(Account account, Album album) {
-    _log.info("[update] ${album.albumFile.path}");
+    _log.info("[update] ${album.albumFile!.path}");
     return AppDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
@@ -337,8 +337,8 @@ class AlbumCachedDataSource implements AlbumDataSource {
   get(Account account, File albumFile) async {
     try {
       final cache = await _appDbSrc.get(account, albumFile);
-      if (cache.albumFile.etag?.isNotEmpty == true &&
-          cache.albumFile.etag == albumFile.etag) {
+      if (cache.albumFile!.etag?.isNotEmpty == true &&
+          cache.albumFile!.etag == albumFile.etag) {
         // cache is good
         _log.fine(
             "[get] etag matched for ${AppDbAlbumEntry.toPathFromFile(account, albumFile)}");
@@ -412,7 +412,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
 Future<void> _cacheAlbum(
     ObjectStore store, Account account, Album album) async {
   final index = store.index(AppDbAlbumEntry.indexName);
-  final path = AppDbAlbumEntry.toPathFromFile(account, album.albumFile);
+  final path = AppDbAlbumEntry.toPathFromFile(account, album.albumFile!);
   final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
   // count number of entries for this album
   final count = await index.count(range);
@@ -441,7 +441,7 @@ Future<void> _cacheAlbum(
   for (final e in entries) {
     _log.info("[_cacheAlbum] Caching ${e.path}[${e.index}]");
     await store.put(e.toJson(),
-        AppDbAlbumEntry.toPrimaryKey(account, e.album.albumFile, e.index));
+        AppDbAlbumEntry.toPrimaryKey(account, e.album.albumFile!, e.index));
   }
 
   if (count > entries.length) {

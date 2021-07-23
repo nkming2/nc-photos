@@ -112,12 +112,12 @@ class AlbumSearchSuggestionBloc extends Bloc<AlbumSearchSuggestionBlocEvent,
     }
     if (_lastSearch != null) {
       // search again
-      yield* _onEventSearch(_lastSearch);
+      yield* _onEventSearch(_lastSearch!);
     }
   }
 
   final _search = Woozy(limit: 5);
-  AlbumSearchSuggestionBlocSearchEvent _lastSearch;
+  AlbumSearchSuggestionBlocSearchEvent? _lastSearch;
 
   static final _log =
       Logger("bloc.album_search_suggestion.AlbumSearchSuggestionBloc");

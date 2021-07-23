@@ -3,28 +3,28 @@ import 'package:flutter/widgets.dart';
 
 class FancyOptionPickerItem {
   FancyOptionPickerItem({
-    @required this.label,
+    required this.label,
     this.isSelected = false,
     this.onSelect,
   });
 
   String label;
   bool isSelected;
-  VoidCallback onSelect;
+  VoidCallback? onSelect;
 }
 
 /// A fancy looking dialog to pick an option
 class FancyOptionPicker extends StatelessWidget {
   FancyOptionPicker({
-    Key key,
+    Key? key,
     this.title,
-    @required this.items,
+    required this.items,
   }) : super(key: key);
 
   @override
   build(BuildContext context) {
     return SimpleDialog(
-      title: title != null ? Text(title) : null,
+      title: title != null ? Text(title!) : null,
       children: items
           .map((e) => SimpleDialogOption(
                 child: ListTile(
@@ -47,6 +47,6 @@ class FancyOptionPicker extends StatelessWidget {
     );
   }
 
-  final String title;
+  final String? title;
   final List<FancyOptionPickerItem> items;
 }

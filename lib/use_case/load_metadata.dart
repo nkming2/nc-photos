@@ -22,9 +22,9 @@ class LoadMetadata {
   }
 
   Future<Map<String, dynamic>> _loadMetadata({
-    @required File file,
-    exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
-    AsyncImageInput Function() imageSizeGetterInputBuilder,
+    required File file,
+    required exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
+    required AsyncImageInput Function() imageSizeGetterInputBuilder,
   }) async {
     var metadata = exifdart.Metadata();
     if (file_util.isMetadataSupportedFormat(file)) {
@@ -47,8 +47,8 @@ class LoadMetadata {
             await AsyncImageSizeGetter.getSize(imageSizeGetterInputBuilder());
         // image size getter doesn't handle exif orientation
         if (metadata.exif?.containsKey("Orientation") == true &&
-            metadata.exif["Orientation"] >= 5 &&
-            metadata.exif["Orientation"] <= 8) {
+            metadata.exif!["Orientation"] >= 5 &&
+            metadata.exif!["Orientation"] <= 8) {
           // 90 deg CW/CCW
           imageWidth = resolution.height;
           imageHeight = resolution.width;
@@ -66,12 +66,12 @@ class LoadMetadata {
       }
     } else {
       if (metadata.rotateAngleCcw != null &&
-          metadata.rotateAngleCcw % 180 != 0) {
-        imageWidth = metadata.imageHeight;
-        imageHeight = metadata.imageWidth;
+          metadata.rotateAngleCcw! % 180 != 0) {
+        imageWidth = metadata.imageHeight!;
+        imageHeight = metadata.imageWidth!;
       } else {
-        imageWidth = metadata.imageWidth;
-        imageHeight = metadata.imageHeight;
+        imageWidth = metadata.imageWidth!;
+        imageHeight = metadata.imageHeight!;
       }
     }
 

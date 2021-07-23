@@ -5,11 +5,11 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // ignore: must_be_immutable
 class MeasurableSliverStaggeredGrid extends SliverStaggeredGrid {
   MeasurableSliverStaggeredGrid.extentBuilder({
-    Key key,
-    @required double maxCrossAxisExtent,
-    @required IndexedStaggeredTileBuilder staggeredTileBuilder,
-    @required IndexedWidgetBuilder itemBuilder,
-    @required int itemCount,
+    Key? key,
+    required double maxCrossAxisExtent,
+    required IndexedStaggeredTileBuilder staggeredTileBuilder,
+    required IndexedWidgetBuilder itemBuilder,
+    required int itemCount,
     double mainAxisSpacing = 0,
     double crossAxisSpacing = 0,
   }) : super(
@@ -32,19 +32,19 @@ class MeasurableSliverStaggeredGrid extends SliverStaggeredGrid {
     final element = context as SliverVariableSizeBoxAdaptorElement;
     _renderObject = RenderMeasurableSliverStaggeredGrid(
         childManager: element, gridDelegate: gridDelegate);
-    return _renderObject;
+    return _renderObject!;
   }
 
-  RenderMeasurableSliverStaggeredGrid get renderObject => _renderObject;
+  RenderMeasurableSliverStaggeredGrid? get renderObject => _renderObject;
 
-  RenderMeasurableSliverStaggeredGrid _renderObject;
+  RenderMeasurableSliverStaggeredGrid? _renderObject;
 }
 
 class RenderMeasurableSliverStaggeredGrid extends RenderSliverStaggeredGrid
     with WidgetsBindingObserver {
   RenderMeasurableSliverStaggeredGrid({
-    @required RenderSliverVariableSizeBoxChildManager childManager,
-    @required SliverStaggeredGridDelegate gridDelegate,
+    required RenderSliverVariableSizeBoxChildManager childManager,
+    required SliverStaggeredGridDelegate gridDelegate,
   }) : super(childManager: childManager, gridDelegate: gridDelegate);
 
   /// Calculate the height of this staggered grid view
@@ -69,13 +69,13 @@ class RenderMeasurableSliverStaggeredGrid extends RenderSliverStaggeredGrid
       }
 
       final bool hasTrailingScrollOffset = geometry.hasTrailingScrollOffset;
-      RenderBox child;
+      RenderBox? child;
       if (!hasTrailingScrollOffset) {
         // Layout the child to compute its tailingScrollOffset.
         final constraints =
             BoxConstraints.tightFor(width: geometry.crossAxisExtent);
         child = addAndLayoutChild(index, constraints, parentUsesSize: true);
-        geometry = geometry.copyWith(mainAxisExtent: paintExtentOf(child));
+        geometry = geometry.copyWith(mainAxisExtent: paintExtentOf(child!));
       }
 
       if (child != null) {

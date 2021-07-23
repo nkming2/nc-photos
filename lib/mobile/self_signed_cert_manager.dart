@@ -103,7 +103,7 @@ class SelfSignedCertManager {
     }
   }
 
-  _BadCertInfo _latestBadCert;
+  late _BadCertInfo _latestBadCert;
   var _whitelist = <_CertInfo>[];
 
   static SelfSignedCertManager _inst = SelfSignedCertManager._();
@@ -168,7 +168,7 @@ class _BadCertInfo {
 
 class _CustomHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (cert, host, port) {
         try {

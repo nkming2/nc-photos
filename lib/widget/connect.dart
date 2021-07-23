@@ -25,12 +25,16 @@ class ConnectArguments {
 class Connect extends StatefulWidget {
   static const routeName = "/connect";
 
+  static Route buildRoute(ConnectArguments args) => MaterialPageRoute<Account>(
+        builder: (context) => Connect.fromArgs(args),
+      );
+
   Connect({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  Connect.fromArgs(ConnectArguments args, {Key key})
+  Connect.fromArgs(ConnectArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -82,7 +86,7 @@ class _ConnectState extends State<Connect> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              AppLocalizations.of(context)
+              AppLocalizations.of(context)!
                   .connectingToServer(widget.account.url),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
@@ -106,7 +110,7 @@ class _ConnectState extends State<Connect> {
       } else if (state.exception is ApiException &&
           (state.exception as ApiException).response.statusCode == 401) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context).errorWrongPassword),
+          content: Text(AppLocalizations.of(context)!.errorWrongPassword),
           duration: k.snackBarDurationNormal,
         ));
         Navigator.of(context).pop(null);
@@ -124,9 +128,9 @@ class _ConnectState extends State<Connect> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context).serverCertErrorDialogTitle),
+        title: Text(AppLocalizations.of(context)!.serverCertErrorDialogTitle),
         content:
-            Text(AppLocalizations.of(context).serverCertErrorDialogContent),
+            Text(AppLocalizations.of(context)!.serverCertErrorDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -138,7 +142,7 @@ class _ConnectState extends State<Connect> {
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: Text(AppLocalizations.of(context).advancedButtonLabel),
+            child: Text(AppLocalizations.of(context)!.advancedButtonLabel),
           ),
         ],
       ),
@@ -150,10 +154,11 @@ class _ConnectState extends State<Connect> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context).whitelistCertDialogTitle),
-          content: Text(AppLocalizations.of(context).whitelistCertDialogContent(
-              SelfSignedCertManager().getLastBadCertHost(),
-              SelfSignedCertManager().getLastBadCertFingerprint())),
+          title: Text(AppLocalizations.of(context)!.whitelistCertDialogTitle),
+          content: Text(AppLocalizations.of(context)!
+              .whitelistCertDialogContent(
+                  SelfSignedCertManager().getLastBadCertHost(),
+                  SelfSignedCertManager().getLastBadCertFingerprint())),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -166,7 +171,7 @@ class _ConnectState extends State<Connect> {
                 Navigator.of(context).pop(true);
               },
               child:
-                  Text(AppLocalizations.of(context).whitelistCertButtonLabel),
+                  Text(AppLocalizations.of(context)!.whitelistCertButtonLabel),
             ),
           ],
         ),

@@ -25,12 +25,17 @@ class RootPickerArguments {
 class RootPicker extends StatefulWidget {
   static const routeName = "/root-picker";
 
+  static Route buildRoute(RootPickerArguments args) =>
+      MaterialPageRoute<Account>(
+        builder: (context) => RootPicker.fromArgs(args),
+      );
+
   RootPicker({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
-  RootPicker.fromArgs(RootPickerArguments args, {Key key})
+  RootPicker.fromArgs(RootPickerArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -100,7 +105,7 @@ class _RootPickerState extends State<RootPicker>
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context).rootPickerHeaderText,
+                  AppLocalizations.of(context)!.rootPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -108,7 +113,7 @@ class _RootPickerState extends State<RootPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context).rootPickerSubHeaderText,
+                    AppLocalizations.of(context)!.rootPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -127,11 +132,11 @@ class _RootPickerState extends State<RootPicker>
               children: [
                 TextButton(
                   onPressed: () => _onSkipPressed(context),
-                  child: Text(AppLocalizations.of(context).skipButtonLabel),
+                  child: Text(AppLocalizations.of(context)!.skipButtonLabel),
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(AppLocalizations.of(context).confirmButtonLabel),
+                  child: Text(AppLocalizations.of(context)!.confirmButtonLabel),
                 ),
               ],
             ),
@@ -145,7 +150,7 @@ class _RootPickerState extends State<RootPicker>
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              content: Text(AppLocalizations.of(context)
+              content: Text(AppLocalizations.of(context)!
                   .rootPickerSkipConfirmationDialogContent),
               actions: <Widget>[
                 TextButton(
@@ -174,7 +179,7 @@ class _RootPickerState extends State<RootPicker>
     if (roots.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text(AppLocalizations.of(context).rootPickerListEmptyNotification),
+            Text(AppLocalizations.of(context)!.rootPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -189,12 +194,12 @@ class _RootPickerState extends State<RootPicker>
       return;
     }
     _isInitDialogShown = true;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) => ProcessingDialog(
-            text: AppLocalizations.of(context).genericProcessingDialogContent),
+            text: AppLocalizations.of(context)!.genericProcessingDialogContent),
       );
     });
   }

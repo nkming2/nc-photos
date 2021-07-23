@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -80,7 +79,7 @@ class AlbumNullSortProvider extends AlbumSortProvider {
 
 abstract class AlbumReversibleSortProvider extends AlbumSortProvider {
   const AlbumReversibleSortProvider({
-    @required this.isAscending,
+    required this.isAscending,
   });
 
   @override
@@ -108,7 +107,7 @@ abstract class AlbumReversibleSortProvider extends AlbumSortProvider {
 /// Sort based on the time of the files
 class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   const AlbumTimeSortProvider({
-    bool isAscending,
+    required bool isAscending,
   }) : super(isAscending: isAscending);
 
   factory AlbumTimeSortProvider.fromJson(Map<String, dynamic> json) {
@@ -126,7 +125,7 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
 
   @override
   sort(List<AlbumItem> items) {
-    DateTime prevFileTime;
+    DateTime? prevFileTime;
     return items
         .map((e) {
           if (e is AlbumFileItem) {
@@ -139,16 +138,16 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
         .stableSorted((x, y) {
           if (x.item1 == null && y.item1 == null) {
             return 0;
-          }
-          else if (x.item1 == null) {
+          } else if (x.item1 == null) {
             return -1;
           } else if (y.item1 == null) {
             return 1;
-          }
-          if (isAscending) {
-            return x.item1.compareTo(y.item1);
           } else {
-            return y.item1.compareTo(x.item1);
+            if (isAscending) {
+              return x.item1!.compareTo(y.item1!);
+            } else {
+              return y.item1!.compareTo(x.item1!);
+            }
           }
         })
         .map((e) => e.item2)

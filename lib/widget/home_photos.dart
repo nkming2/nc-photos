@@ -41,8 +41,8 @@ import 'package:nc_photos/widget/viewer.dart';
 
 class HomePhotos extends StatefulWidget {
   HomePhotos({
-    Key key,
-    @required this.account,
+    Key? key,
+    required this.account,
   }) : super(key: key);
 
   @override
@@ -59,7 +59,7 @@ class _HomePhotosState extends State<HomePhotos>
   @override
   initState() {
     super.initState();
-    _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevel(0);
+    _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevelOr(0);
     _initBloc();
   }
 
@@ -82,7 +82,7 @@ class _HomePhotosState extends State<HomePhotos>
       _reqQuery();
     } else {
       // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           _onStateChange(context, _bloc.state);
         });
@@ -162,35 +162,36 @@ class _HomePhotosState extends State<HomePhotos>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)
+        title: Text(AppLocalizations.of(context)!
             .selectionAppBarTitle(selectedListItems.length)),
         actions: [
           if (platform_k.isAndroid)
             IconButton(
               icon: const Icon(Icons.share),
-              tooltip: AppLocalizations.of(context).shareSelectedTooltip,
+              tooltip: AppLocalizations.of(context)!.shareSelectedTooltip,
               onPressed: () {
                 _onSelectionAppBarSharePressed(context);
               },
             ),
           IconButton(
             icon: const Icon(Icons.playlist_add),
-            tooltip: AppLocalizations.of(context).addSelectedToAlbumTooltip,
+            tooltip: AppLocalizations.of(context)!.addSelectedToAlbumTooltip,
             onPressed: () {
               _onSelectionAppBarAddToAlbumPressed(context);
             },
           ),
-          PopupMenuButton(
+          PopupMenuButton<_SelectionAppBarMenuOption>(
             tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: _SelectionAppBarMenuOption.archive,
-                child:
-                    Text(AppLocalizations.of(context).archiveSelectedMenuLabel),
+                child: Text(
+                    AppLocalizations.of(context)!.archiveSelectedMenuLabel),
               ),
               PopupMenuItem(
                 value: _SelectionAppBarMenuOption.delete,
-                child: Text(AppLocalizations.of(context).deleteSelectedTooltip),
+                child:
+                    Text(AppLocalizations.of(context)!.deleteSelectedTooltip),
               ),
             ],
             onSelected: (option) {
@@ -212,7 +213,7 @@ class _HomePhotosState extends State<HomePhotos>
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.photo_size_select_large),
-            tooltip: AppLocalizations.of(context).zoomTooltip,
+            tooltip: AppLocalizations.of(context)!.zoomTooltip,
             itemBuilder: (context) => [
               PopupMenuZoom(
                 initialValue: _thumbZoomLevel,
@@ -231,7 +232,7 @@ class _HomePhotosState extends State<HomePhotos>
         menuActions: [
           PopupMenuItem(
             value: _menuValueRefresh,
-            child: Text(AppLocalizations.of(context).refreshMenuLabel),
+            child: Text(AppLocalizations.of(context)!.refreshMenuLabel),
           ),
         ],
         onSelectedMenuActions: (option) {
@@ -251,7 +252,7 @@ class _HomePhotosState extends State<HomePhotos>
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanDirBlocSuccess) {
-        if (Pref.inst().isEnableExif() && !_hasFiredMetadataTask.value) {
+        if (Pref.inst().isEnableExifOr() && !_hasFiredMetadataTask.value) {
           KiwiContainer()
               .resolve<MetadataTaskManager>()
               .addTask(MetadataTask(widget.account));
@@ -306,14 +307,14 @@ class _HomePhotosState extends State<HomePhotos>
             clearSelectedItems();
           });
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)
+            content: Text(AppLocalizations.of(context)!
                 .addSelectedToAlbumSuccessNotification(value.name)),
             duration: k.snackBarDurationNormal,
           ));
         }).catchError((_) {});
       } else {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)!
               .addSelectedToAlbumFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
@@ -325,7 +326,7 @@ class _HomePhotosState extends State<HomePhotos>
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context).addSelectedToAlbumFailureNotification}: "
+            "${AppLocalizations.of(context)!.addSelectedToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -355,7 +356,7 @@ class _HomePhotosState extends State<HomePhotos>
           "[_addSelectedToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context).addSelectedToAlbumFailureNotification}: "
+            "${AppLocalizations.of(context)!.addSelectedToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -365,7 +366,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   Future<void> _onSelectionAppBarDeletePressed(BuildContext context) async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
+      content: Text(AppLocalizations.of(context)!
           .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -394,12 +395,12 @@ class _HomePhotosState extends State<HomePhotos>
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).deleteSelectedSuccessNotification),
+            AppLocalizations.of(context)!.deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -425,7 +426,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   Future<void> _onSelectionAppBarArchivePressed(BuildContext context) async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)
+      content: Text(AppLocalizations.of(context)!
           .archiveSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -454,12 +455,12 @@ class _HomePhotosState extends State<HomePhotos>
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            AppLocalizations.of(context).archiveSelectedSuccessNotification),
+            AppLocalizations.of(context)!.archiveSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
+        content: Text(AppLocalizations.of(context)!
             .archiveSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -478,16 +479,16 @@ class _HomePhotosState extends State<HomePhotos>
             file_util.isSupportedFormat(element) && element.isArchived != true)
         .sorted(compareFileDateTimeDescending);
 
-    DateTime currentDate;
+    DateTime? currentDate;
     final isMonthOnly = _thumbZoomLevel < 0;
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
 
-        final newDate = f.bestDateTime?.toLocal();
-        if (newDate?.year != currentDate?.year ||
-            newDate?.month != currentDate?.month ||
-            (!isMonthOnly && newDate?.day != currentDate?.day)) {
+        final newDate = f.bestDateTime.toLocal();
+        if (newDate.year != currentDate?.year ||
+            newDate.month != currentDate?.month ||
+            (!isMonthOnly && newDate.day != currentDate?.day)) {
           yield _DateListItem(date: newDate, isMonthOnly: isMonthOnly);
           currentDate = newDate;
         }
@@ -546,13 +547,13 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   /// Return the estimated scroll extent of the custom scroll view, or null
-  double _getScrollViewExtent(BoxConstraints constraints) {
+  double? _getScrollViewExtent(BoxConstraints constraints) {
     if (_itemListMaxExtent != null &&
         constraints.hasBoundedHeight &&
         _appBarExtent != null) {
       // scroll extent = list height - widget viewport height + sliver app bar height + list padding
       final scrollExtent =
-          _itemListMaxExtent - constraints.maxHeight + _appBarExtent + 16;
+          _itemListMaxExtent! - constraints.maxHeight + _appBarExtent! + 16;
       _log.info(
           "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + 16 = $scrollExtent");
       return scrollExtent;
@@ -595,7 +596,7 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  ScanDirBloc _bloc;
+  late ScanDirBloc _bloc;
 
   var _backingFiles = <File>[];
 
@@ -603,8 +604,8 @@ class _HomePhotosState extends State<HomePhotos>
 
   final ScrollController _scrollController = ScrollController();
 
-  double _appBarExtent;
-  double _itemListMaxExtent;
+  double? _appBarExtent;
+  double? _itemListMaxExtent;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
@@ -612,7 +613,7 @@ class _HomePhotosState extends State<HomePhotos>
 
 abstract class _ListItem implements SelectableItem {
   _ListItem({
-    VoidCallback onTap,
+    VoidCallback? onTap,
   }) : _onTap = onTap;
 
   @override
@@ -624,12 +625,12 @@ abstract class _ListItem implements SelectableItem {
   @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
-  final VoidCallback _onTap;
+  final VoidCallback? _onTap;
 }
 
 class _DateListItem extends _ListItem {
   _DateListItem({
-    @required this.date,
+    required this.date,
     this.isMonthOnly = false,
   });
 
@@ -647,7 +648,7 @@ class _DateListItem extends _ListItem {
           isMonthOnly ? DateFormat.YEAR_MONTH : DateFormat.YEAR_MONTH_DAY;
       subtitle =
           DateFormat(pattern, Localizations.localeOf(context).languageCode)
-              .format(date.toLocal());
+              .format(date!.toLocal());
     }
     return Align(
       alignment: AlignmentDirectional.centerStart,
@@ -655,7 +656,7 @@ class _DateListItem extends _ListItem {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(
           subtitle,
-          style: Theme.of(context).textTheme.caption.copyWith(
+          style: Theme.of(context).textTheme.caption!.copyWith(
                 color: AppTheme.getPrimaryTextColor(context),
                 fontWeight: FontWeight.bold,
               ),
@@ -664,14 +665,14 @@ class _DateListItem extends _ListItem {
     );
   }
 
-  final DateTime date;
+  final DateTime? date;
   final bool isMonthOnly;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
-    @required this.file,
-    VoidCallback onTap,
+    required this.file,
+    VoidCallback? onTap,
   }) : super(onTap: onTap);
 
   @override
@@ -687,10 +688,10 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(file: file, onTap: onTap);
 
   @override
@@ -708,10 +709,10 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    @required File file,
-    @required this.account,
-    @required this.previewUrl,
-    VoidCallback onTap,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
   }) : super(file: file, onTap: onTap);
 
   @override

@@ -11,9 +11,9 @@ import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
 
 class ImageViewer extends StatefulWidget {
   ImageViewer({
-    @required this.account,
-    @required this.file,
-    this.canZoom,
+    required this.account,
+    required this.file,
+    required this.canZoom,
     this.onLoaded,
     this.onHeightChanged,
     this.onZoomStarted,
@@ -35,10 +35,10 @@ class ImageViewer extends StatefulWidget {
   final Account account;
   final File file;
   final bool canZoom;
-  final VoidCallback onLoaded;
-  final void Function(double height) onHeightChanged;
-  final VoidCallback onZoomStarted;
-  final VoidCallback onZoomEnded;
+  final VoidCallback? onLoaded;
+  final ValueChanged<double>? onHeightChanged;
+  final VoidCallback? onZoomStarted;
+  final VoidCallback? onZoomEnded;
 }
 
 class _ImageViewerState extends State<ImageViewer>
@@ -58,9 +58,9 @@ class _ImageViewerState extends State<ImageViewer>
         alignment: Alignment.center,
         child: NotificationListener<SizeChangedLayoutNotification>(
           onNotification: (_) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
               if (_key.currentContext != null) {
-                widget.onHeightChanged?.call(_key.currentContext.size.height);
+                widget.onHeightChanged?.call(_key.currentContext!.size!.height);
               }
             });
             return false;
@@ -78,7 +78,7 @@ class _ImageViewerState extends State<ImageViewer>
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               imageBuilder: (context, child, imageProvider) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
+                WidgetsBinding.instance!.addPostFrameCallback((_) {
                   _onItemLoaded();
                 });
                 SizeChangedLayoutNotification().dispatch(context);

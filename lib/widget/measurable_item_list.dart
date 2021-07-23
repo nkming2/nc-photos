@@ -10,11 +10,11 @@ abstract class MeasurableItemListState {
 
 class MeasurableItemList extends StatefulWidget {
   MeasurableItemList({
-    Key key,
-    @required this.maxCrossAxisExtent,
-    @required this.itemCount,
-    @required this.itemBuilder,
-    @required this.staggeredTileBuilder,
+    Key? key,
+    required this.maxCrossAxisExtent,
+    required this.itemCount,
+    required this.itemBuilder,
+    required this.staggeredTileBuilder,
     this.onMaxExtentChanged,
   }) : super(key: key);
 
@@ -25,7 +25,7 @@ class MeasurableItemList extends StatefulWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final IndexedStaggeredTileBuilder staggeredTileBuilder;
-  final ValueChanged<double> onMaxExtentChanged;
+  final ValueChanged<double?>? onMaxExtentChanged;
 }
 
 class _MeasurableItemListState extends State<MeasurableItemList>
@@ -35,21 +35,21 @@ class _MeasurableItemListState extends State<MeasurableItemList>
   initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       _prevOrientation = MediaQuery.of(context).orientation;
-      WidgetsBinding.instance.addObserver(this);
+      WidgetsBinding.instance!.addObserver(this);
     });
   }
 
   @override
   dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   @override
   didChangeMetrics() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       final orientation = MediaQuery.of(context).orientation;
       if (orientation != _prevOrientation) {
         _log.info(
@@ -70,7 +70,8 @@ class _MeasurableItemListState extends State<MeasurableItemList>
       }
       if (constraints.crossAxisExtent != _prevListWidth) {
         _log.info("[build] updateListHeight: list viewport width changed");
-        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
+        WidgetsBinding.instance!
+            .addPostFrameCallback((_) => updateListHeight());
         _prevListWidth = constraints.crossAxisExtent;
       }
 
@@ -78,7 +79,8 @@ class _MeasurableItemListState extends State<MeasurableItemList>
       final cellSize = widget.maxCrossAxisExtent;
       if (cellSize != _prevCellSize) {
         _log.info("[build] updateListHeight: cell size changed");
-        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
+        WidgetsBinding.instance!
+            .addPostFrameCallback((_) => updateListHeight());
         _prevCellSize = cellSize;
       }
       _gridKey = _GridKey("$_uniqueToken $cellSize");
@@ -94,9 +96,9 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
   @override
   updateListHeight() {
-    double newMaxExtent;
+    double? newMaxExtent;
     try {
-      final renderObj = _gridKey.currentContext.findRenderObject()
+      final renderObj = _gridKey.currentContext!.findRenderObject()
           as RenderMeasurableSliverStaggeredGrid;
       final maxExtent = renderObj.calculateExtent();
       _log.info("[updateListHeight] Max extent: $maxExtent");
@@ -118,14 +120,14 @@ class _MeasurableItemListState extends State<MeasurableItemList>
     }
   }
 
-  double _prevListWidth;
-  double _prevCellSize;
-  double _maxExtent;
-  Orientation _prevOrientation;
+  double? _prevListWidth;
+  double? _prevCellSize;
+  double? _maxExtent;
+  Orientation? _prevOrientation;
 
   // this unique token is there to keep the global key unique
   final _uniqueToken = Uuid().v4();
-  GlobalObjectKey _gridKey;
+  late GlobalObjectKey _gridKey;
 
   static final _log =
       Logger("widget.measurable_item_list._MeasurableItemListState");

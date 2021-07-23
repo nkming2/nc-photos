@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
-class Draggable<T> extends StatelessWidget {
+class Draggable<T extends Object> extends StatelessWidget {
   Draggable({
-    Key key,
-    @required this.data,
-    @required this.child,
+    Key? key,
+    required this.data,
+    required this.child,
     this.feedback,
     this.onDropBefore,
     this.onDropAfter,
@@ -79,7 +79,7 @@ class Draggable<T> extends StatelessWidget {
                       },
                       onAccept: (item) {
                         _log.fine("[build] Dropping $item before $data");
-                        onDropBefore(item);
+                        onDropBefore!(item);
                       },
                     ),
                   ),
@@ -92,7 +92,7 @@ class Draggable<T> extends StatelessWidget {
                       },
                       onAccept: (item) {
                         _log.fine("[build] Dropping $item after $data");
-                        onDropAfter(item);
+                        onDropAfter!(item);
                       },
                     ),
                   ),
@@ -105,26 +105,26 @@ class Draggable<T> extends StatelessWidget {
 
   final T data;
   final Widget child;
-  final Widget feedback;
+  final Widget? feedback;
 
   /// Called when some item dropped before this item
-  final DragTargetAccept<T> onDropBefore;
+  final DragTargetAccept<T>? onDropBefore;
 
   /// Called when some item dropped after this item
-  final DragTargetAccept<T> onDropAfter;
+  final DragTargetAccept<T>? onDropAfter;
 
-  final VoidCallback onDragStarted;
+  final VoidCallback? onDragStarted;
 
   /// Called when either one of onDragEnd, onDragCompleted or
   /// onDraggableCanceled is called.
   ///
   /// The callback might be called multiple times per each drag event
-  final VoidCallback onDragEndedAny;
+  final VoidCallback? onDragEndedAny;
 
   /// Size of the feedback widget that appears under the pointer.
   ///
   /// Right now a translucent version of [child] is being shown
-  final Size feedbackSize;
+  final Size? feedbackSize;
 
   static final _log = Logger("widget.draggable.Draggable");
 }
