@@ -314,7 +314,8 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
         "[_pickedAllExclude] Unpicking '${item.file.path}' and picking children");
     final products = <LsDirBlocItem>[];
     for (final i in item.children ?? []) {
-      if (exclude.file.path.startsWith(i.file.path)) {
+      if (exclude.file.path == i.file.path ||
+          exclude.file.path.startsWith("${i.file.path}/")) {
         // [i] is a parent of exclude
         products.addAll(_pickedAllExclude(item: i, exclude: exclude));
       } else {
