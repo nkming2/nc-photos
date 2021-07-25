@@ -67,4 +67,8 @@ This version includes changes that are not compatible with older versions. Pleas
   null,
   // v22
   null,
+  // v23
+  """23.0
+- Paid version is now published on Play Store. Head to Settings to learn more if you are interested
+""",
 ];
