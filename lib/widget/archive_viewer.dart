@@ -19,9 +19,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
-import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 class ArchiveViewerArguments {
   ArchiveViewerArguments(this.account);
@@ -168,22 +168,16 @@ class _ArchiveViewerState extends State<ArchiveViewer>
       title: Text(L10n.of(context).albumArchiveLabel),
       floating: true,
       actions: [
-        PopupMenuButton(
-          icon: const Icon(Icons.photo_size_select_large),
-          tooltip: L10n.of(context).zoomTooltip,
-          itemBuilder: (context) => [
-            PopupMenuZoom(
-              initialValue: _thumbZoomLevel,
-              minValue: 0,
-              maxValue: 2,
-              onChanged: (value) {
-                setState(() {
-                  _thumbZoomLevel = value.round();
-                });
-                Pref.inst().setAlbumViewerZoomLevel(_thumbZoomLevel);
-              },
-            ),
-          ],
+        ZoomMenuButton(
+          initialZoom: _thumbZoomLevel,
+          minZoom: 0,
+          maxZoom: 2,
+          onZoomChanged: (value) {
+            setState(() {
+              _thumbZoomLevel = value.round();
+            });
+            Pref.inst().setAlbumViewerZoomLevel(_thumbZoomLevel);
+          },
         ),
       ],
     );

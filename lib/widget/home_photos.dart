@@ -35,9 +35,9 @@ import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
-import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 class HomePhotos extends StatefulWidget {
   HomePhotos({
@@ -209,22 +209,16 @@ class _HomePhotosState extends State<HomePhotos>
       child: HomeSliverAppBar(
         account: widget.account,
         actions: [
-          PopupMenuButton(
-            icon: const Icon(Icons.photo_size_select_large),
-            tooltip: L10n.of(context).zoomTooltip,
-            itemBuilder: (context) => [
-              PopupMenuZoom(
-                initialValue: _thumbZoomLevel,
-                minValue: -1,
-                maxValue: 2,
-                onChanged: (value) {
-                  setState(() {
-                    _setThumbZoomLevel(value.round());
-                  });
-                  Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
-                },
-              ),
-            ],
+          ZoomMenuButton(
+            initialZoom: _thumbZoomLevel,
+            minZoom: -1,
+            maxZoom: 2,
+            onZoomChanged: (value) {
+              setState(() {
+                _setThumbZoomLevel(value.round());
+              });
+              Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
+            },
           ),
         ],
         menuActions: [

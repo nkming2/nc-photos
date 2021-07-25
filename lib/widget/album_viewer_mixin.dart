@@ -9,8 +9,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_viewer_app_bar.dart';
-import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 mixin AlbumViewerMixin<T extends StatefulWidget>
     on SelectableItemStreamListMixin<T> {
@@ -44,22 +44,16 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       album: album,
       coverPreviewUrl: _coverPreviewUrl,
       actions: [
-        PopupMenuButton(
-          icon: const Icon(Icons.photo_size_select_large),
-          tooltip: L10n.of(context).zoomTooltip,
-          itemBuilder: (context) => [
-            PopupMenuZoom(
-              initialValue: _thumbZoomLevel,
-              minValue: 0,
-              maxValue: 2,
-              onChanged: (value) {
-                setState(() {
-                  _thumbZoomLevel = value.round();
-                });
-                Pref.inst().setAlbumViewerZoomLevel(_thumbZoomLevel);
-              },
-            ),
-          ],
+        ZoomMenuButton(
+          initialZoom: _thumbZoomLevel,
+          minZoom: 0,
+          maxZoom: 2,
+          onZoomChanged: (value) {
+            setState(() {
+              _thumbZoomLevel = value.round();
+            });
+            Pref.inst().setAlbumViewerZoomLevel(_thumbZoomLevel);
+          },
         ),
         ...(actions ?? []),
         PopupMenuButton<int>(
