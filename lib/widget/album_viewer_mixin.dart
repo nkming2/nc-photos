@@ -125,7 +125,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   }
 
   @protected
-  get isEditMode => _isEditMode;
+  bool get isEditMode => _isEditMode;
 
   @protected
   @mustCallSuper
