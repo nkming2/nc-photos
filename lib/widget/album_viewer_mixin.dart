@@ -7,9 +7,9 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_viewer_app_bar.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 mixin AlbumViewerMixin<T extends StatefulWidget>
@@ -87,25 +87,14 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
 
   @protected
   Widget buildSelectionAppBar(BuildContext context, List<Widget> actions) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        appBarTheme: AppTheme.getContextualAppBarTheme(context),
-      ),
-      child: SliverAppBar(
-        pinned: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-          onPressed: () {
-            setState(() {
-              clearSelectedItems();
-            });
-          },
-        ),
-        title: Text(
-            L10n.of(context).selectionAppBarTitle(selectedListItems.length)),
-        actions: actions,
-      ),
+    return SelectionAppBar(
+      count: selectedListItems.length,
+      onClosePressed: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+      actions: actions,
     );
   }
 

@@ -36,6 +36,7 @@ import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
@@ -147,57 +148,46 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildSelectionAppBar(BuildContext conetxt) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        appBarTheme: AppTheme.getContextualAppBarTheme(context),
-      ),
-      child: SliverAppBar(
-        pinned: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+    return SelectionAppBar(
+      count: selectedListItems.length,
+      onClosePressed: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+      actions: [
+        if (platform_k.isAndroid)
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: L10n.of(context).shareSelectedTooltip,
+            onPressed: () {
+              _onSelectionAppBarSharePressed(context);
+            },
+          ),
+        IconButton(
+          icon: const Icon(Icons.playlist_add),
+          tooltip: L10n.of(context).addSelectedToAlbumTooltip,
           onPressed: () {
-            setState(() {
-              clearSelectedItems();
-            });
+            _onSelectionAppBarAddToAlbumPressed(context);
           },
         ),
-        title: Text(
-            L10n.of(context).selectionAppBarTitle(selectedListItems.length)),
-        actions: [
-          if (platform_k.isAndroid)
-            IconButton(
-              icon: const Icon(Icons.share),
-              tooltip: L10n.of(context).shareSelectedTooltip,
-              onPressed: () {
-                _onSelectionAppBarSharePressed(context);
-              },
+        PopupMenuButton<_SelectionAppBarMenuOption>(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: _SelectionAppBarMenuOption.archive,
+              child: Text(L10n.of(context).archiveSelectedMenuLabel),
             ),
-          IconButton(
-            icon: const Icon(Icons.playlist_add),
-            tooltip: L10n.of(context).addSelectedToAlbumTooltip,
-            onPressed: () {
-              _onSelectionAppBarAddToAlbumPressed(context);
-            },
-          ),
-          PopupMenuButton<_SelectionAppBarMenuOption>(
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: _SelectionAppBarMenuOption.archive,
-                child: Text(L10n.of(context).archiveSelectedMenuLabel),
-              ),
-              PopupMenuItem(
-                value: _SelectionAppBarMenuOption.delete,
-                child: Text(L10n.of(context).deleteSelectedTooltip),
-              ),
-            ],
-            onSelected: (option) {
-              _onSelectionAppBarMenuSelected(context, option);
-            },
-          ),
-        ],
-      ),
+            PopupMenuItem(
+              value: _SelectionAppBarMenuOption.delete,
+              child: Text(L10n.of(context).deleteSelectedTooltip),
+            ),
+          ],
+          onSelected: (option) {
+            _onSelectionAppBarMenuSelected(context, option);
+          },
+        ),
+      ],
     );
   }
 

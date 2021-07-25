@@ -20,6 +20,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
@@ -133,33 +134,22 @@ class _ArchiveViewerState extends State<ArchiveViewer>
   }
 
   Widget _buildSelectionAppBar(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        appBarTheme: AppTheme.getContextualAppBarTheme(context),
-      ),
-      child: SliverAppBar(
-        pinned: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+    return SelectionAppBar(
+      count: selectedListItems.length,
+      onClosePressed: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.unarchive),
+          tooltip: L10n.of(context).unarchiveSelectedTooltip,
           onPressed: () {
-            setState(() {
-              clearSelectedItems();
-            });
+            _onSelectionAppBarUnarchivePressed();
           },
         ),
-        title: Text(
-            L10n.of(context).selectionAppBarTitle(selectedListItems.length)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.unarchive),
-            tooltip: L10n.of(context).unarchiveSelectedTooltip,
-            onPressed: () {
-              _onSelectionAppBarUnarchivePressed();
-            },
-          )
-        ],
-      ),
+      ],
     );
   }
 

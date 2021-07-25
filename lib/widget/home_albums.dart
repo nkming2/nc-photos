@@ -28,6 +28,7 @@ import 'package:nc_photos/widget/dynamic_album_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
@@ -134,33 +135,22 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Widget _buildSelectionAppBar(BuildContext conetxt) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        appBarTheme: AppTheme.getContextualAppBarTheme(context),
-      ),
-      child: SliverAppBar(
-        pinned: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+    return SelectionAppBar(
+      count: _selectedItems.length,
+      onClosePressed: () {
+        setState(() {
+          _selectedItems.clear();
+        });
+      },
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.delete),
+          tooltip: L10n.of(context).deleteSelectedTooltip,
           onPressed: () {
-            setState(() {
-              _selectedItems.clear();
-            });
+            _onSelectionAppBarDeletePressed();
           },
         ),
-        title:
-            Text(L10n.of(context).selectionAppBarTitle(_selectedItems.length)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: L10n.of(context).deleteSelectedTooltip,
-            onPressed: () {
-              _onSelectionAppBarDeletePressed();
-            },
-          ),
-        ],
-      ),
+      ],
     );
   }
 
