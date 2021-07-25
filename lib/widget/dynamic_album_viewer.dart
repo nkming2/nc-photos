@@ -98,6 +98,9 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     );
   }
 
+  @protected
+  get canEdit => _album != null;
+
   @override
   enterEditMode() {
     super.enterEditMode();

@@ -97,6 +97,9 @@ class _AlbumViewerState extends State<AlbumViewer>
     );
   }
 
+  @protected
+  get canEdit => _album != null;
+
   @override
   enterEditMode() {
     super.enterEditMode();

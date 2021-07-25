@@ -56,31 +56,33 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
           },
         ),
         ...(actions ?? []),
-        PopupMenuButton<int>(
-          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: -1,
-              child: Text(L10n.of(context).editAlbumMenuLabel),
-            ),
-            ...(menuItemBuilder?.call(context) ?? []),
-          ],
-          onSelected: (option) {
-            if (option >= 0) {
-              onSelectedMenuItem?.call(option);
-            } else {
-              switch (option) {
-                case _menuValueEdit:
-                  _onAppBarEditPressed(context, album);
-                  break;
+        if (menuItemBuilder != null || canEdit)
+          PopupMenuButton<int>(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            itemBuilder: (context) => [
+              if (canEdit)
+                PopupMenuItem(
+                  value: -1,
+                  child: Text(L10n.of(context).editAlbumMenuLabel),
+                ),
+              ...(menuItemBuilder?.call(context) ?? []),
+            ],
+            onSelected: (option) {
+              if (option >= 0) {
+                onSelectedMenuItem?.call(option);
+              } else {
+                switch (option) {
+                  case _menuValueEdit:
+                    _onAppBarEditPressed(context, album);
+                    break;
 
-                default:
-                  _log.shout("[buildNormalAppBar] Unknown value: $option");
-                  break;
+                  default:
+                    _log.shout("[buildNormalAppBar] Unknown value: $option");
+                    break;
+                }
               }
-            }
-          },
-        ),
+            },
+          ),
       ],
     );
   }
@@ -126,6 +128,9 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
 
   @protected
   bool get isEditMode => _isEditMode;
+
+  @protected
+  bool get canEdit => true;
 
   @protected
   @mustCallSuper
