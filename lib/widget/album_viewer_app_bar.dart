@@ -66,7 +66,7 @@ class _AlbumViewerEditAppBarState extends State<AlbumViewerEditAppBar> {
   @override
   initState() {
     super.initState();
-    _editNameValue = widget.album.name;
+    _controller = TextEditingController(text: widget.album.name);
   }
 
   @override
@@ -78,28 +78,25 @@ class _AlbumViewerEditAppBarState extends State<AlbumViewerEditAppBar> {
         background:
             _getAppBarCover(context, widget.account, widget.coverPreviewUrl),
         title: TextFormField(
+          controller: _controller,
           decoration: InputDecoration(
             hintText: L10n.of(context).nameInputHint,
           ),
-          validator: (value) {
-            if (value?.isNotEmpty == true) {
+          validator: (_) {
+            // use _controller.text here because the value might be wrong if
+            // user scrolled the app bar off screen
+            if (_controller.text.isNotEmpty == true) {
               return null;
             } else {
               return L10n.of(context).albumNameInputInvalidEmpty;
             }
           },
-          onSaved: (value) {
-            widget.onAlbumNameSaved?.call(value!);
-          },
-          onChanged: (value) {
-            // need to save the value otherwise it'll return to the initial
-            // after scrolling out of the view
-            _editNameValue = value;
+          onSaved: (_) {
+            widget.onAlbumNameSaved?.call(_controller.text);
           },
           style: TextStyle(
             color: AppTheme.getPrimaryTextColor(context),
           ),
-          initialValue: _editNameValue,
         ),
       ),
       leading: IconButton(
@@ -112,7 +109,7 @@ class _AlbumViewerEditAppBarState extends State<AlbumViewerEditAppBar> {
     );
   }
 
-  late String _editNameValue;
+  late TextEditingController _controller;
 }
 
 Widget? _getAppBarCover(
