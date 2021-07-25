@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -81,7 +81,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
       SimpleDialogOption(
         onPressed: () => _onNewAlbumPressed(context),
         child: Tooltip(
-          message: AppLocalizations.of(context)!.createAlbumTooltip,
+          message: L10n.of(context).createAlbumTooltip,
           child: Center(
             child: Icon(
               Icons.add,

@@ -1,10 +1,10 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -62,57 +62,51 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget _buildContent(BuildContext context) {
-    final translator = AppLocalizations.of(context)!.translator;
+    final translator = L10n.of(context).translator;
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(AppLocalizations.of(context)!.settingsWidgetTitle),
+          title: Text(L10n.of(context).settingsWidgetTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                title:
-                    Text(AppLocalizations.of(context)!.settingsLanguageTitle),
+                title: Text(L10n.of(context).settingsLanguageTitle),
                 subtitle: Text(language_util.getSelectedLanguageName(context)),
                 onTap: () => _onLanguageTap(context),
               ),
               SwitchListTile(
-                title: Text(
-                    AppLocalizations.of(context)!.settingsExifSupportTitle),
+                title: Text(L10n.of(context).settingsExifSupportTitle),
                 subtitle: _isEnableExif
-                    ? Text(AppLocalizations.of(context)!
-                        .settingsExifSupportTrueSubtitle)
+                    ? Text(L10n.of(context).settingsExifSupportTrueSubtitle)
                     : null,
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
-              _buildCaption(context,
-                  AppLocalizations.of(context)!.settingsAboutSectionTitle),
+              _buildCaption(
+                  context, L10n.of(context).settingsAboutSectionTitle),
               ListTile(
-                title: Text(AppLocalizations.of(context)!.settingsVersionTitle),
+                title: Text(L10n.of(context).settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
               ),
               ListTile(
-                title:
-                    Text(AppLocalizations.of(context)!.settingsSourceCodeTitle),
+                title: Text(L10n.of(context).settingsSourceCodeTitle),
                 subtitle: Text(_sourceRepo),
                 onTap: () async {
                   await launch(_sourceRepo);
                 },
               ),
               ListTile(
-                title:
-                    Text(AppLocalizations.of(context)!.settingsBugReportTitle),
+                title: Text(L10n.of(context).settingsBugReportTitle),
                 onTap: () {
                   launch(_bugReportUrl);
                 },
               ),
               if (translator.isNotEmpty)
                 ListTile(
-                  title: Text(
-                      AppLocalizations.of(context)!.settingsTranslatorTitle),
+                  title: Text(L10n.of(context).settingsTranslatorTitle),
                   subtitle: Text(translator),
                   onTap: () {
                     launch(_translationUrl);
@@ -176,9 +170,8 @@ class _SettingsState extends State<Settings> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(
-              AppLocalizations.of(context)!.exifSupportConfirmationDialogTitle),
-          content: Text(AppLocalizations.of(context)!.exifSupportDetails),
+          title: Text(L10n.of(context).exifSupportConfirmationDialogTitle),
+          content: Text(L10n.of(context).exifSupportDetails),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -190,7 +183,7 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(AppLocalizations.of(context)!.enableButtonLabel),
+              child: Text(L10n.of(context).enableButtonLabel),
             ),
           ],
         ),
@@ -219,8 +212,7 @@ class _SettingsState extends State<Settings> {
       } else {
         _log.severe("[_setExifSupport] Failed writing pref");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(
-              AppLocalizations.of(context)!.writePreferenceFailureNotification),
+          content: Text(L10n.of(context).writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
         setState(() {

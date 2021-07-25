@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/pref.dart';
@@ -55,7 +55,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       actions: [
         PopupMenuButton(
           icon: const Icon(Icons.photo_size_select_large),
-          tooltip: AppLocalizations.of(context)!.zoomTooltip,
+          tooltip: L10n.of(context).zoomTooltip,
           itemBuilder: (context) => [
             PopupMenuZoom(
               initialValue: _thumbZoomLevel,
@@ -76,7 +76,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
           itemBuilder: (context) => [
             PopupMenuItem(
               value: -1,
-              child: Text(AppLocalizations.of(context)!.editAlbumMenuLabel),
+              child: Text(L10n.of(context).editAlbumMenuLabel),
             ),
             ...(menuItemBuilder?.call(context) ?? []),
           ],
@@ -117,8 +117,8 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)!
-            .selectionAppBarTitle(selectedListItems.length)),
+        title: Text(
+            L10n.of(context).selectionAppBarTitle(selectedListItems.length)),
         actions: actions,
       ),
     );
@@ -138,13 +138,13 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
         background: _getAppBarCover(context, account),
         title: TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.nameInputHint,
+            hintText: L10n.of(context).nameInputHint,
           ),
           validator: (value) {
             if (value?.isNotEmpty == true) {
               return null;
             } else {
-              return AppLocalizations.of(context)!.albumNameInputInvalidEmpty;
+              return L10n.of(context).albumNameInputInvalidEmpty;
             }
           },
           onSaved: (value) {
@@ -164,7 +164,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
       leading: IconButton(
         icon: const Icon(Icons.check),
         color: Theme.of(context).colorScheme.primary,
-        tooltip: AppLocalizations.of(context)!.doneButtonTooltip,
+        tooltip: L10n.of(context).doneButtonTooltip,
         onPressed: () {
           if (validateEditMode()) {
             setState(() {

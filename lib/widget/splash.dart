@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/changelog.dart' as changelog;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
@@ -56,7 +56,7 @@ class _SplashState extends State<Splash> {
             ),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)!.appTitle,
+              L10n.of(context).appTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline4,
             )
@@ -94,7 +94,7 @@ class _SplashState extends State<Splash> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.changelogTitle),
+          title: Text(L10n.of(context).changelogTitle),
           content: SingleChildScrollView(
             child: Text(change),
           ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -23,7 +23,7 @@ class ShareHandler {
     showDialog(
       context: context,
       builder: (context) => ProcessingDialog(
-          text: AppLocalizations.of(context)!.shareDownloadingDialogContent),
+          text: L10n.of(context).shareDownloadingDialogContent),
     );
     final results = <Tuple2<File, dynamic>>[];
     for (final f in files) {
@@ -33,8 +33,8 @@ class ShareHandler {
       } on PermissionException catch (_) {
         _log.warning("[shareFiles] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!
-              .downloadFailureNoPermissionNotification),
+          content:
+              Text(L10n.of(context).downloadFailureNoPermissionNotification),
           duration: k.snackBarDurationNormal,
         ));
         // dismiss the dialog

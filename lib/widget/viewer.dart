@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -264,7 +264,7 @@ class _ViewerState extends State<Viewer> {
                   if (!_isDetailPaneActive && _canOpenDetailPane())
                     IconButton(
                       icon: const Icon(Icons.more_vert),
-                      tooltip: AppLocalizations.of(context)!.detailsTooltip,
+                      tooltip: L10n.of(context).detailsTooltip,
                       onPressed: _onDetailsPressed,
                     ),
                 ],
@@ -311,7 +311,7 @@ class _ViewerState extends State<Viewer> {
                         Icons.share_outlined,
                         color: Colors.white.withOpacity(.87),
                       ),
-                      tooltip: AppLocalizations.of(context)!.shareTooltip,
+                      tooltip: L10n.of(context).shareTooltip,
                       onPressed: () => _onSharePressed(context),
                     ),
                   ),
@@ -322,7 +322,7 @@ class _ViewerState extends State<Viewer> {
                       Icons.download_outlined,
                       color: Colors.white.withOpacity(.87),
                     ),
-                    tooltip: AppLocalizations.of(context)!.downloadTooltip,
+                    tooltip: L10n.of(context).downloadTooltip,
                     onPressed: () => _onDownloadPressed(context),
                   ),
                 ),
@@ -333,7 +333,7 @@ class _ViewerState extends State<Viewer> {
                       Icons.delete_outlined,
                       color: Colors.white.withOpacity(.87),
                     ),
-                    tooltip: AppLocalizations.of(context)!.deleteTooltip,
+                    tooltip: L10n.of(context).deleteTooltip,
                     onPressed: () => _onDeletePressed(context),
                   ),
                 ),
@@ -571,8 +571,7 @@ class _ViewerState extends State<Viewer> {
     final file = widget.streamFiles[_pageController.page!.round()];
     _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content:
-          Text(AppLocalizations.of(context)!.downloadProcessingNotification),
+      content: Text(L10n.of(context).downloadProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -586,8 +585,7 @@ class _ViewerState extends State<Viewer> {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!
-            .downloadFailureNoPermissionNotification),
+        content: Text(L10n.of(context).downloadFailureNoPermissionNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -596,8 +594,7 @@ class _ViewerState extends State<Viewer> {
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            "${AppLocalizations.of(context)!.downloadFailureNotification}: "
+        content: Text("${L10n.of(context).downloadFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -627,7 +624,7 @@ class _ViewerState extends State<Viewer> {
 
     // fallback
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!.downloadSuccessNotification),
+      content: Text(L10n.of(context).downloadSuccessNotification),
       duration: k.snackBarDurationShort,
     ));
   }
@@ -636,7 +633,7 @@ class _ViewerState extends State<Viewer> {
     final file = widget.streamFiles[_pageController.page!.round()];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!.deleteProcessingNotification),
+      content: Text(L10n.of(context).deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -647,7 +644,7 @@ class _ViewerState extends State<Viewer> {
           AlbumRepo(AlbumCachedDataSource()))(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.deleteSuccessNotification),
+        content: Text(L10n.of(context).deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -659,9 +656,8 @@ class _ViewerState extends State<Viewer> {
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text("${AppLocalizations.of(context)!.deleteFailureNotification}: "
-                "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.of(context).deleteFailureNotification}: "
+            "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
     }

@@ -1,9 +1,9 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
@@ -97,8 +97,7 @@ class HomeSliverAppBar extends StatelessWidget {
                   [
                     PopupMenuItem(
                       value: _menuValueAbout,
-                      child:
-                          Text(AppLocalizations.of(context)!.settingsMenuLabel),
+                      child: Text(L10n.of(context).settingsMenuLabel),
                     ),
                   ],
               onSelected: (option) {

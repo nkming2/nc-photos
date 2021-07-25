@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -105,7 +105,7 @@ class _RootPickerState extends State<RootPicker>
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context)!.rootPickerHeaderText,
+                  L10n.of(context).rootPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -113,7 +113,7 @@ class _RootPickerState extends State<RootPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context)!.rootPickerSubHeaderText,
+                    L10n.of(context).rootPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -132,11 +132,11 @@ class _RootPickerState extends State<RootPicker>
               children: [
                 TextButton(
                   onPressed: () => _onSkipPressed(context),
-                  child: Text(AppLocalizations.of(context)!.skipButtonLabel),
+                  child: Text(L10n.of(context).skipButtonLabel),
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(AppLocalizations.of(context)!.confirmButtonLabel),
+                  child: Text(L10n.of(context).confirmButtonLabel),
                 ),
               ],
             ),
@@ -150,8 +150,8 @@ class _RootPickerState extends State<RootPicker>
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              content: Text(AppLocalizations.of(context)!
-                  .rootPickerSkipConfirmationDialogContent),
+              content: Text(
+                  L10n.of(context).rootPickerSkipConfirmationDialogContent),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -178,8 +178,7 @@ class _RootPickerState extends State<RootPicker>
     final roots = getPickedDirs().map((e) => e.strippedPath).toList();
     if (roots.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text(AppLocalizations.of(context)!.rootPickerListEmptyNotification),
+        content: Text(L10n.of(context).rootPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -199,7 +198,7 @@ class _RootPickerState extends State<RootPicker>
         barrierDismissible: false,
         context: context,
         builder: (context) => ProcessingDialog(
-            text: AppLocalizations.of(context)!.genericProcessingDialogContent),
+            text: L10n.of(context).genericProcessingDialogContent),
       );
     });
   }

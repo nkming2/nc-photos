@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -250,7 +250,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       menuItemBuilder: (context) => [
         PopupMenuItem(
           value: _menuValueConvertBasic,
-          child: Text(AppLocalizations.of(context)!.convertBasicAlbumMenuLabel),
+          child: Text(L10n.of(context).convertBasicAlbumMenuLabel),
         ),
       ],
       onSelectedMenuItem: (option) {
@@ -272,7 +272,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: AppLocalizations.of(context)!.shareSelectedTooltip,
+          tooltip: L10n.of(context).shareSelectedTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
@@ -282,7 +282,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         itemBuilder: (context) => [
           PopupMenuItem(
             value: _SelectionAppBarOption.delete,
-            child: Text(AppLocalizations.of(context)!.deleteSelectedTooltip),
+            child: Text(L10n.of(context).deleteSelectedTooltip),
           ),
         ],
         onSelected: (option) {
@@ -298,7 +298,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: AppLocalizations.of(context)!.sortTooltip,
+        tooltip: L10n.of(context).sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -322,10 +322,9 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!
-            .convertBasicAlbumConfirmationDialogTitle),
-        content: Text(AppLocalizations.of(context)!
-            .convertBasicAlbumConfirmationDialogContent),
+        title: Text(L10n.of(context).convertBasicAlbumConfirmationDialogTitle),
+        content:
+            Text(L10n.of(context).convertBasicAlbumConfirmationDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -356,8 +355,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
         ),
       ).then((value) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!
-              .convertBasicAlbumSuccessNotification),
+          content: Text(L10n.of(context).convertBasicAlbumSuccessNotification),
           duration: k.snackBarDurationNormal,
         ));
         if (mounted) {
@@ -391,7 +389,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
   void _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!
+      content: Text(L10n.of(context)
           .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -421,13 +419,12 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
 
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            AppLocalizations.of(context)!.deleteSelectedSuccessNotification),
+        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!
+        content: Text(L10n.of(context)
             .deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
@@ -448,10 +445,10 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: AppLocalizations.of(context)!.sortOptionDialogTitle,
+        title: L10n.of(context).sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context)!.sortOptionTimeAscendingLabel,
+            label: L10n.of(context).sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -460,7 +457,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
             },
           ),
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context)!.sortOptionTimeDescendingLabel,
+            label: L10n.of(context).sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {

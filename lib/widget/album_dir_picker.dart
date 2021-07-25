@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -86,7 +86,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context)!.albumDirPickerHeaderText,
+                  L10n.of(context).albumDirPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -94,7 +94,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context)!.albumDirPickerSubHeaderText,
+                    L10n.of(context).albumDirPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -117,7 +117,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(AppLocalizations.of(context)!.confirmButtonLabel),
+                  child: Text(L10n.of(context).confirmButtonLabel),
                 ),
               ],
             ),
@@ -131,8 +131,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
     final picked = getPickedDirs();
     if (picked.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            AppLocalizations.of(context)!.albumDirPickerListEmptyNotification),
+        content: Text(L10n.of(context).albumDirPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {

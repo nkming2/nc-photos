@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -40,7 +40,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
     return Visibility(
       visible: _isVisible,
       child: AlertDialog(
-        title: Text(AppLocalizations.of(context)!.createAlbumTooltip),
+        title: Text(L10n.of(context).createAlbumTooltip),
         content: Form(
           key: _formKey,
           child: Container(
@@ -51,12 +51,11 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.nameInputHint,
+                    hintText: L10n.of(context).nameInputHint,
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .albumNameInputInvalidEmpty;
+                      return L10n.of(context).albumNameInputInvalidEmpty;
                     }
                     return null;
                   },
@@ -188,10 +187,10 @@ extension on _Provider {
   String toValueString(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return AppLocalizations.of(context)!.createAlbumDialogBasicLabel;
+        return L10n.of(context).createAlbumDialogBasicLabel;
 
       case _Provider.dir:
-        return AppLocalizations.of(context)!.createAlbumDialogFolderBasedLabel;
+        return L10n.of(context).createAlbumDialogFolderBasedLabel;
 
       default:
         throw StateError("Unknown value: $this");
@@ -201,11 +200,10 @@ extension on _Provider {
   String toDescription(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return AppLocalizations.of(context)!.createAlbumDialogBasicDescription;
+        return L10n.of(context).createAlbumDialogBasicDescription;
 
       case _Provider.dir:
-        return AppLocalizations.of(context)!
-            .createAlbumDialogFolderBasedDescription;
+        return L10n.of(context).createAlbumDialogFolderBasedDescription;
 
       default:
         throw StateError("Unknown value: $this");

@@ -2,11 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -149,12 +149,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
             });
           },
         ),
-        title: Text(AppLocalizations.of(context)!
-            .selectionAppBarTitle(_selectedItems.length)),
+        title:
+            Text(L10n.of(context).selectionAppBarTitle(_selectedItems.length)),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            tooltip: AppLocalizations.of(context)!.deleteSelectedTooltip,
+            tooltip: L10n.of(context).deleteSelectedTooltip,
             onPressed: () {
               _onSelectionAppBarDeletePressed();
             },
@@ -171,13 +171,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
         IconButton(
           onPressed: () => _onSearchPressed(context),
           icon: const Icon(Icons.search),
-          tooltip: AppLocalizations.of(context)!.searchTooltip,
+          tooltip: L10n.of(context).searchTooltip,
         ),
       ],
       menuActions: [
         PopupMenuItem(
           value: _menuValueImport,
-          child: Text(AppLocalizations.of(context)!.importFoldersTooltip),
+          child: Text(L10n.of(context).importFoldersTooltip),
         ),
       ],
       onSelectedMenuActions: (option) {
@@ -225,7 +225,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           ),
         ),
       ),
-      title: AppLocalizations.of(context)!.albumArchiveLabel,
+      title: L10n.of(context).albumArchiveLabel,
       onTap: () {
         Navigator.of(context).pushNamed(ArchiveViewer.routeName,
             arguments: ArchiveViewerArguments(widget.account));
@@ -247,7 +247,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           ),
         ),
       ),
-      title: AppLocalizations.of(context)!.createAlbumTooltip,
+      title: L10n.of(context).createAlbumTooltip,
       onTap: () => _onNewAlbumItemTap(context),
     );
   }
@@ -323,8 +323,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       _log.severe(
           "[_onNewAlbumItemTap] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text(AppLocalizations.of(context)!.createAlbumFailureNotification),
+        content: Text(L10n.of(context).createAlbumFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -337,7 +336,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   Future<void> _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!
+      content: Text(L10n.of(context)
           .deleteSelectedProcessingNotification(_selectedItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -363,13 +362,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            AppLocalizations.of(context)!.deleteSelectedSuccessNotification),
+        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!
+        content: Text(L10n.of(context)
             .deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));

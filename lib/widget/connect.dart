@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/app_password_exchange.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -86,8 +86,7 @@ class _ConnectState extends State<Connect> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              AppLocalizations.of(context)!
-                  .connectingToServer(widget.account.url),
+              L10n.of(context).connectingToServer(widget.account.url),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
             )
@@ -110,7 +109,7 @@ class _ConnectState extends State<Connect> {
       } else if (state.exception is ApiException &&
           (state.exception as ApiException).response.statusCode == 401) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.errorWrongPassword),
+          content: Text(L10n.of(context).errorWrongPassword),
           duration: k.snackBarDurationNormal,
         ));
         Navigator.of(context).pop(null);
@@ -128,9 +127,8 @@ class _ConnectState extends State<Connect> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.serverCertErrorDialogTitle),
-        content:
-            Text(AppLocalizations.of(context)!.serverCertErrorDialogContent),
+        title: Text(L10n.of(context).serverCertErrorDialogTitle),
+        content: Text(L10n.of(context).serverCertErrorDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -142,7 +140,7 @@ class _ConnectState extends State<Connect> {
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: Text(AppLocalizations.of(context)!.advancedButtonLabel),
+            child: Text(L10n.of(context).advancedButtonLabel),
           ),
         ],
       ),
@@ -154,11 +152,10 @@ class _ConnectState extends State<Connect> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(AppLocalizations.of(context)!.whitelistCertDialogTitle),
-          content: Text(AppLocalizations.of(context)!
-              .whitelistCertDialogContent(
-                  SelfSignedCertManager().getLastBadCertHost(),
-                  SelfSignedCertManager().getLastBadCertFingerprint())),
+          title: Text(L10n.of(context).whitelistCertDialogTitle),
+          content: Text(L10n.of(context).whitelistCertDialogContent(
+              SelfSignedCertManager().getLastBadCertHost(),
+              SelfSignedCertManager().getLastBadCertFingerprint())),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -170,8 +167,7 @@ class _ConnectState extends State<Connect> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child:
-                  Text(AppLocalizations.of(context)!.whitelistCertButtonLabel),
+              child: Text(L10n.of(context).whitelistCertButtonLabel),
             ),
           ],
         ),

@@ -3,10 +3,10 @@ import 'package:exifdart/exifdart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -77,8 +77,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           widget.file.metadata!.imageHeight!;
       if (pixelCount >= 500000) {
         final mpCount = pixelCount / 1000000.0;
-        sizeSubStr += AppLocalizations.of(context)!
-            .megapixelCount(mpCount.toStringAsFixed(1));
+        sizeSubStr +=
+            L10n.of(context).megapixelCount(mpCount.toStringAsFixed(1));
         sizeSubStr += space;
       }
       sizeSubStr += _byteSizeToString(widget.file.contentLength ?? 0);
@@ -89,12 +89,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       cameraSubStr += "f/${_fNumber!.toStringAsFixed(1)}$space";
     }
     if (_exposureTime != null) {
-      cameraSubStr +=
-          AppLocalizations.of(context)!.secondCountSymbol(_exposureTime!);
+      cameraSubStr += L10n.of(context).secondCountSymbol(_exposureTime!);
       cameraSubStr += space;
     }
     if (_focalLength != null) {
-      cameraSubStr += AppLocalizations.of(context)!
+      cameraSubStr += L10n.of(context)
           .millimeterCountSymbol(_focalLength!.toStringAsFixedTruncated(2));
       cameraSubStr += space;
     }
@@ -112,12 +111,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             children: [
               _DetailPaneButton(
                 icon: Icons.playlist_add_outlined,
-                label: AppLocalizations.of(context)!.addToAlbumTooltip,
+                label: L10n.of(context).addToAlbumTooltip,
                 onPressed: () => _onAddToAlbumPressed(context),
               ),
               _DetailPaneButton(
                 icon: Icons.delete_outline,
-                label: AppLocalizations.of(context)!.deleteTooltip,
+                label: L10n.of(context).deleteTooltip,
                 onPressed: () => _onDeletePressed(context),
               ),
             ],
@@ -238,15 +237,14 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
         _addToAlbum(context, value).then((_) {
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)!
-                .addToAlbumSuccessNotification(value.name)),
+            content: Text(
+                L10n.of(context).addToAlbumSuccessNotification(value.name)),
             duration: k.snackBarDurationNormal,
           ));
         }).catchError((_) {});
       } else {
         SnackBarManager().showSnackBar(SnackBar(
-          content:
-              Text(AppLocalizations.of(context)!.addToAlbumFailureNotification),
+          content: Text(L10n.of(context).addToAlbumFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -254,8 +252,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.severe(
           "[_onAddToAlbumPressed] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            "${AppLocalizations.of(context)!.addToAlbumFailureNotification}: "
+        content: Text("${L10n.of(context).addToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -265,7 +262,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   void _onDeletePressed(BuildContext context) async {
     _log.info("[_onDeletePressed] Removing file: ${widget.file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(AppLocalizations.of(context)!.deleteProcessingNotification),
+      content: Text(L10n.of(context).deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -276,7 +273,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           AlbumRepo(AlbumCachedDataSource()))(widget.account, widget.file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.deleteSuccessNotification),
+        content: Text(L10n.of(context).deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -288,9 +285,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text("${AppLocalizations.of(context)!.deleteFailureNotification}: "
-                "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.of(context).deleteFailureNotification}: "
+            "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -328,8 +324,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             e,
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(
-              AppLocalizations.of(context)!.updateDateTimeFailureNotification),
+          content: Text(L10n.of(context).updateDateTimeFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -361,8 +356,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         // already added, do nothing
         _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(
-              "${AppLocalizations.of(context)!.addToAlbumAlreadyAddedNotification}"),
+          content:
+              Text("${L10n.of(context).addToAlbumAlreadyAddedNotification}"),
           duration: k.snackBarDurationNormal,
         ));
         return Future.error(ArgumentError("File already in album"));
@@ -380,8 +375,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            "${AppLocalizations.of(context)!.addToAlbumFailureNotification}: "
+        content: Text("${L10n.of(context).addToAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));

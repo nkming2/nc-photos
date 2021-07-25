@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
@@ -48,7 +48,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                     Icons.close,
                     color: AppTheme.getSecondaryTextColor(context),
                   ),
-                  tooltip: AppLocalizations.of(context)!.deleteTooltip,
+                  tooltip: L10n.of(context).deleteTooltip,
                   onPressed: () => _onRemoveItemPressed(a),
                 ),
               ),
@@ -63,7 +63,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             ..pushNamed(SignIn.routeName);
         },
         child: Tooltip(
-          message: AppLocalizations.of(context)!.addServerTooltip,
+          message: L10n.of(context).addServerTooltip,
           child: Center(
             child: Icon(
               Icons.add,
@@ -89,7 +89,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             Icons.edit,
             color: AppTheme.getSecondaryTextColor(context),
           ),
-          tooltip: AppLocalizations.of(context)!.editTooltip,
+          tooltip: L10n.of(context).editTooltip,
           onPressed: () => _onEditPressed(),
         ),
       ),
@@ -112,8 +112,8 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         _accounts = Pref.inst().getAccounts()!;
       });
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!
-            .removeServerSuccessNotification(account.url)),
+        content:
+            Text(L10n.of(context).removeServerSuccessNotification(account.url)),
         duration: k.snackBarDurationNormal,
       ));
     } catch (e) {
@@ -143,8 +143,8 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           // the app passwords are unique to each entry, but just in case
           Navigator.of(context).pop();
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(AppLocalizations.of(context)!
-                .editAccountConflictFailureNotification),
+            content:
+                Text(L10n.of(context).editAccountConflictFailureNotification),
             duration: k.snackBarDurationNormal,
           ));
           return;

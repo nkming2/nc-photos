@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   @override
   build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (context) => L10n.of(context).appTitle,
       theme: _getLightTheme(),
       darkTheme: _getDarkTheme(),
       themeMode:

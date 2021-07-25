@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -107,8 +107,7 @@ class _AlbumViewerState extends State<AlbumViewer>
 
     if (!SessionStorage().hasShowDragRearrangeNotification) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            AppLocalizations.of(context)!.albumEditDragRearrangeNotification),
+        content: Text(L10n.of(context).albumEditDragRearrangeNotification),
         duration: k.snackBarDurationNormal,
       ));
       SessionStorage().hasShowDragRearrangeNotification = true;
@@ -230,14 +229,14 @@ class _AlbumViewerState extends State<AlbumViewer>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: AppLocalizations.of(context)!.shareSelectedTooltip,
+          tooltip: L10n.of(context).shareSelectedTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
         ),
       IconButton(
         icon: const Icon(Icons.remove),
-        tooltip: AppLocalizations.of(context)!.removeSelectedFromAlbumTooltip,
+        tooltip: L10n.of(context).removeSelectedFromAlbumTooltip,
         onPressed: () {
           _onSelectionAppBarRemovePressed();
         },
@@ -249,12 +248,12 @@ class _AlbumViewerState extends State<AlbumViewer>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.text_fields),
-        tooltip: AppLocalizations.of(context)!.albumAddTextTooltip,
+        tooltip: L10n.of(context).albumAddTextTooltip,
         onPressed: _onEditAppBarAddTextPressed,
       ),
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: AppLocalizations.of(context)!.sortTooltip,
+        tooltip: L10n.of(context).sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -282,8 +281,7 @@ class _AlbumViewerState extends State<AlbumViewer>
         .toList();
     if (selected.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text(AppLocalizations.of(context)!.shareSelectedEmptyNotification),
+        content: Text(L10n.of(context).shareSelectedEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -312,7 +310,7 @@ class _AlbumViewerState extends State<AlbumViewer>
     );
     UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!
+        content: Text(L10n.of(context)
             .removeSelectedFromAlbumSuccessNotification(
                 selectedIndexes.length)),
         duration: k.snackBarDurationNormal,
@@ -327,7 +325,7 @@ class _AlbumViewerState extends State<AlbumViewer>
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
-            "${AppLocalizations.of(context)!.removeSelectedFromAlbumFailureNotification}: "
+            "${L10n.of(context).removeSelectedFromAlbumFailureNotification}: "
             "${exception_util.toUserString(e, context)}"),
         duration: k.snackBarDurationNormal,
       ));
@@ -342,10 +340,10 @@ class _AlbumViewerState extends State<AlbumViewer>
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: AppLocalizations.of(context)!.sortOptionDialogTitle,
+        title: L10n.of(context).sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context)!.sortOptionTimeAscendingLabel,
+            label: L10n.of(context).sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -354,7 +352,7 @@ class _AlbumViewerState extends State<AlbumViewer>
             },
           ),
           FancyOptionPickerItem(
-            label: AppLocalizations.of(context)!.sortOptionTimeDescendingLabel,
+            label: L10n.of(context).sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {
@@ -878,7 +876,7 @@ class _EditLabelListItem extends _LabelListItem {
           end: 0,
           child: IconButton(
             icon: Icon(Icons.edit),
-            tooltip: AppLocalizations.of(context)!.editTooltip,
+            tooltip: L10n.of(context).editTooltip,
             onPressed: onEditPressed,
           ),
         ),

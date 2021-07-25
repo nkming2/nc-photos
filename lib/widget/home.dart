@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home_albums.dart';
@@ -52,11 +52,11 @@ class _HomeState extends State<Home> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_outlined),
-          label: AppLocalizations.of(context)!.photosTabLabel,
+          label: L10n.of(context).photosTabLabel,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_album_outlined),
-          label: AppLocalizations.of(context)!.albumsTabLabel,
+          label: L10n.of(context).albumsTabLabel,
         ),
       ],
       currentIndex: _nextPage,

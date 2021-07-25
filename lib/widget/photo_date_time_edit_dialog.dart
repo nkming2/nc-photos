@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/num_extension.dart';
 
 class PhotoDateTimeEditDialog extends StatefulWidget {
@@ -20,7 +20,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
   @override
   build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context)!.updateDateTimeDialogTitle),
+      title: Text(L10n.of(context).updateDateTimeDialogTitle),
       content: Form(
         key: _formKey,
         child: Container(
@@ -29,7 +29,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppLocalizations.of(context)!.dateSubtitle,
+                L10n.of(context).dateSubtitle,
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Row(
@@ -37,8 +37,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.dateYearInputHint,
+                        hintText: L10n.of(context).dateYearInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
@@ -46,8 +45,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                           int.parse(value!);
                           return null;
                         } catch (_) {
-                          return AppLocalizations.of(context)!
-                              .dateTimeInputInvalid;
+                          return L10n.of(context).dateTimeInputInvalid;
                         }
                       },
                       onSaved: (value) {
@@ -61,16 +59,14 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.dateMonthInputHint,
+                        hintText: L10n.of(context).dateMonthInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (int.tryParse(value!)?.inRange(1, 12) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)!
-                            .dateTimeInputInvalid;
+                        return L10n.of(context).dateTimeInputInvalid;
                       },
                       onSaved: (value) {
                         _formValue.month = int.parse(value!);
@@ -85,16 +81,14 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.dateDayInputHint,
+                        hintText: L10n.of(context).dateDayInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (int.tryParse(value!)?.inRange(1, 31) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)!
-                            .dateTimeInputInvalid;
+                        return L10n.of(context).dateTimeInputInvalid;
                       },
                       onSaved: (value) {
                         _formValue.day = int.parse(value!);
@@ -108,7 +102,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
               ),
               const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context)!.timeSubtitle,
+                L10n.of(context).timeSubtitle,
                 style: Theme.of(context).textTheme.subtitle2,
               ),
               Row(
@@ -116,16 +110,14 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.timeHourInputHint,
+                        hintText: L10n.of(context).timeHourInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (int.tryParse(value!)?.inRange(0, 23) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)!
-                            .dateTimeInputInvalid;
+                        return L10n.of(context).dateTimeInputInvalid;
                       },
                       onSaved: (value) {
                         _formValue.hour = int.parse(value!);
@@ -140,16 +132,14 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                   Flexible(
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.timeMinuteInputHint,
+                        hintText: L10n.of(context).timeMinuteInputHint,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (int.tryParse(value!)?.inRange(0, 59) == true) {
                           return null;
                         }
-                        return AppLocalizations.of(context)!
-                            .dateTimeInputInvalid;
+                        return L10n.of(context).dateTimeInputInvalid;
                       },
                       onSaved: (value) {
                         _formValue.minute = int.parse(value!);

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
                       Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          AppLocalizations.of(context)!.signInHeaderText,
+                          L10n.of(context).signInHeaderText,
                           style: Theme.of(context).textTheme.headline5,
                           textAlign: TextAlign.center,
                         ),
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         child: Text(
-                          AppLocalizations.of(context)!.signIn2faHintText,
+                          L10n.of(context).signIn2faHintText,
                           style: TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ),
@@ -98,8 +98,7 @@ class _SignInState extends State<SignIn> {
                                   _connect();
                                 }
                               },
-                              child: Text(AppLocalizations.of(context)!
-                                  .connectButtonLabel),
+                              child: Text(L10n.of(context).connectButtonLabel),
                             ),
                           ],
                         ),
@@ -159,14 +158,12 @@ class _SignInState extends State<SignIn> {
             Expanded(
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText:
-                      AppLocalizations.of(context)!.serverAddressInputHint,
+                  hintText: L10n.of(context).serverAddressInputHint,
                 ),
                 keyboardType: TextInputType.url,
                 validator: (value) {
                   if (value!.trim().trimRightAny("/").isEmpty) {
-                    return AppLocalizations.of(context)!
-                        .serverAddressInputInvalidEmpty;
+                    return L10n.of(context).serverAddressInputInvalidEmpty;
                   }
                   return null;
                 },
@@ -180,11 +177,11 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.usernameInputHint,
+            hintText: L10n.of(context).usernameInputHint,
           ),
           validator: (value) {
             if (value!.trim().isEmpty) {
-              return AppLocalizations.of(context)!.usernameInputInvalidEmpty;
+              return L10n.of(context).usernameInputInvalidEmpty;
             }
             return null;
           },
@@ -195,12 +192,12 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.passwordInputHint,
+            hintText: L10n.of(context).passwordInputHint,
           ),
           obscureText: true,
           validator: (value) {
             if (value!.trim().isEmpty) {
-              return AppLocalizations.of(context)!.passwordInputInvalidEmpty;
+              return L10n.of(context).passwordInputInvalidEmpty;
             }
             return null;
           },

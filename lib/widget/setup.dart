@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
@@ -31,7 +31,7 @@ class _SetupState extends State<Setup> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text(AppLocalizations.of(context)!.setupWidgetTitle),
+      title: Text(L10n.of(context).setupWidgetTitle),
       elevation: 0,
     );
   }
@@ -69,8 +69,7 @@ class _SetupState extends State<Setup> {
                     ? [
                         ElevatedButton(
                           onPressed: _onDonePressed,
-                          child: Text(
-                              AppLocalizations.of(context)!.doneButtonLabel),
+                          child: Text(L10n.of(context).doneButtonLabel),
                         ),
                       ]
                     : [
@@ -83,8 +82,7 @@ class _SetupState extends State<Setup> {
                                       .getPageId());
                             }
                           },
-                          child: Text(
-                              AppLocalizations.of(context)!.nextButtonLabel),
+                          child: Text(L10n.of(context).nextButtonLabel),
                         ),
                       ],
               ),
@@ -148,20 +146,19 @@ class _ExifState extends State<_Exif> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SwitchListTile(
-            title: Text(AppLocalizations.of(context)!.settingsExifSupportTitle),
+            title: Text(L10n.of(context).settingsExifSupportTitle),
             value: _isEnableExif,
             onChanged: _onValueChanged,
           ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(AppLocalizations.of(context)!.exifSupportDetails),
+            child: Text(L10n.of(context).exifSupportDetails),
           ),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-                AppLocalizations.of(context)!.setupSettingsModifyLaterHint,
+            child: Text(L10n.of(context).setupSettingsModifyLaterHint,
                 style: Theme.of(context)
                     .textTheme
                     .bodyText2!
@@ -200,8 +197,7 @@ class _HiddenPrefDirNoticeState extends State<_HiddenPrefDirNotice> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-                AppLocalizations.of(context)!.setupHiddenPrefDirNoticeDetail),
+            child: Text(L10n.of(context).setupHiddenPrefDirNoticeDetail),
           ),
           const SizedBox(height: 24),
           Align(

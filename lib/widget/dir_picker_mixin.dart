@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -99,8 +99,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
               return ListTile(
                 dense: true,
                 leading: const SizedBox(width: 24),
-                title: Text(
-                    AppLocalizations.of(context)!.rootPickerNavigateUpItemText),
+                title: Text(L10n.of(context).rootPickerNavigateUpItemText),
                 onTap: () {
                   try {
                     _navigateInto(File(path: path.dirname(_currentPath)));
@@ -283,8 +282,8 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
           _picks.removeWhere((element) => identical(element, parent));
         } catch (_) {
           SnackBarManager().showSnackBar(SnackBar(
-              content: Text(AppLocalizations.of(context)!
-                  .rootPickerUnpickFailureNotification)));
+              content:
+                  Text(L10n.of(context).rootPickerUnpickFailureNotification)));
         }
       }
     });

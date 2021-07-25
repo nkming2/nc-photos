@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -24,7 +24,7 @@ class AlbumGridItemBuilder {
     var subtitle = "";
     String? subtitle2;
     if (album.provider is AlbumStaticProvider) {
-      subtitle = AppLocalizations.of(context)!
+      subtitle = L10n.of(context)
           .albumSize(AlbumStaticProvider.of(album).items.length);
     } else if (album.provider is AlbumDirProvider) {
       final provider = album.provider as AlbumDirProvider;

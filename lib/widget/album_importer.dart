@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -102,7 +102,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context)!.albumImporterHeaderText,
+                  L10n.of(context).albumImporterHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -110,7 +110,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    AppLocalizations.of(context)!.albumImporterSubHeaderText,
+                    L10n.of(context).albumImporterSubHeaderText,
                   ),
                 ),
               ],
@@ -145,7 +145,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 ),
                 ElevatedButton(
                   onPressed: () => _onImportPressed(context),
-                  child: Text(AppLocalizations.of(context)!.importButtonLabel),
+                  child: Text(L10n.of(context).importButtonLabel),
                 ),
               ],
             ),
@@ -217,8 +217,8 @@ class _AlbumImporterState extends State<AlbumImporter> {
     showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) => ProcessingDialog(
-          text: AppLocalizations.of(context)!.albumImporterProgressText),
+      builder: (context) =>
+          ProcessingDialog(text: L10n.of(context).albumImporterProgressText),
     );
     try {
       await _createAllAlbums(context);

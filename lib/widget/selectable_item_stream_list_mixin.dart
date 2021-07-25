@@ -4,9 +4,9 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -184,8 +184,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(platform_k.isWeb
-              ? AppLocalizations.of(context)!.webSelectRangeNotification
-              : AppLocalizations.of(context)!.mobileSelectRangeNotification),
+              ? L10n.of(context).webSelectRangeNotification
+              : L10n.of(context).mobileSelectRangeNotification),
           duration: k.snackBarDurationNormal,
         ));
         SessionStorage().hasShowRangeSelectNotification = true;
