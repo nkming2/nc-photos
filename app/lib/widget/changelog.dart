@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_ui/np_ui.dart';
 
@@ -68,6 +69,28 @@ class Changelog extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     return Column(
       children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.blue[100]
+              : Colors.blueGrey[800],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const Expanded(
+                child: Text("Like the app?"),
+              ),
+              TextButton(
+                onPressed: () {
+                  launch(
+                      "https://play.google.com/store/apps/details?id=com.nkming.nc_photos.paid&referrer=utm_source%3Dfreeapp");
+                },
+                child: const Text("SUPPORT"),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: _changelogs.length,
