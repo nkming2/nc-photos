@@ -1,15 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/album_viewer_app_bar.dart';
 import 'package:nc_photos/widget/popup_menu_zoom.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 
@@ -40,18 +39,10 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     List<PopupMenuEntry<int>> Function(BuildContext)? menuItemBuilder,
     void Function(int)? onSelectedMenuItem,
   }) {
-    return SliverAppBar(
-      floating: true,
-      expandedHeight: 160,
-      flexibleSpace: FlexibleSpaceBar(
-        background: _getAppBarCover(context, account),
-        title: Text(
-          album.name,
-          style: TextStyle(
-            color: AppTheme.getPrimaryTextColor(context),
-          ),
-        ),
-      ),
+    return AlbumViewerAppBar(
+      account: account,
+      album: album,
+      coverPreviewUrl: _coverPreviewUrl,
       actions: [
         PopupMenuButton(
           icon: const Icon(Icons.photo_size_select_large),
@@ -131,50 +122,22 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     Album album, {
     List<Widget>? actions,
   }) {
-    return SliverAppBar(
-      floating: true,
-      expandedHeight: 160,
-      flexibleSpace: FlexibleSpaceBar(
-        background: _getAppBarCover(context, account),
-        title: TextFormField(
-          decoration: InputDecoration(
-            hintText: L10n.of(context).nameInputHint,
-          ),
-          validator: (value) {
-            if (value?.isNotEmpty == true) {
-              return null;
-            } else {
-              return L10n.of(context).albumNameInputInvalidEmpty;
-            }
-          },
-          onSaved: (value) {
-            _editFormValue.name = value!;
-          },
-          onChanged: (value) {
-            // need to save the value otherwise it'll return to the initial
-            // after scrolling out of the view
-            _editNameValue = value;
-          },
-          style: TextStyle(
-            color: AppTheme.getPrimaryTextColor(context),
-          ),
-          initialValue: _editNameValue,
-        ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.check),
-        color: Theme.of(context).colorScheme.primary,
-        tooltip: L10n.of(context).doneButtonTooltip,
-        onPressed: () {
-          if (validateEditMode()) {
-            setState(() {
-              _isEditMode = false;
-            });
-            doneEditMode();
-          }
-        },
-      ),
+    return AlbumViewerEditAppBar(
+      account: account,
+      album: album,
+      coverPreviewUrl: _coverPreviewUrl,
       actions: actions,
+      onDonePressed: () {
+        if (validateEditMode()) {
+          setState(() {
+            _isEditMode = false;
+          });
+          doneEditMode();
+        }
+      },
+      onAlbumNameSaved: (value) {
+        _editFormValue.name = value;
+      },
     );
   }
 
@@ -219,44 +182,14 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     setState(() {
       _isEditMode = true;
       enterEditMode();
-      _editNameValue = album.name;
       _editFormValue = _EditFormValue();
     });
-  }
-
-  Widget? _getAppBarCover(BuildContext context, Account account) {
-    try {
-      if (_coverPreviewUrl != null) {
-        return Opacity(
-          opacity:
-              Theme.of(context).brightness == Brightness.light ? 0.25 : 0.35,
-          child: FittedBox(
-            clipBehavior: Clip.hardEdge,
-            fit: BoxFit.cover,
-            child: CachedNetworkImage(
-              imageUrl: _coverPreviewUrl!,
-              httpHeaders: {
-                "Authorization": Api.getAuthorizationHeaderValue(account),
-              },
-              filterQuality: FilterQuality.high,
-              errorWidget: (context, url, error) {
-                // just leave it empty
-                return Container();
-              },
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-            ),
-          ),
-        );
-      }
-    } catch (_) {}
-    return null;
   }
 
   String? _coverPreviewUrl;
   var _thumbZoomLevel = 0;
 
   var _isEditMode = false;
-  String? _editNameValue;
   var _editFormValue = _EditFormValue();
 
   static final _log = Logger("widget.album_viewer_mixin.AlbumViewerMixin");
