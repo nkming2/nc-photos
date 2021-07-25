@@ -35,7 +35,7 @@ class SelfSignedCertManager {
 	fun readAllCerts(context: Context): List<Pair<CertInfo, Certificate>> {
 		val products = ArrayList<Pair<CertInfo, Certificate>>()
 		val certDir = openCertsDir(context)
-		val certFiles = certDir.listFiles()
+		val certFiles = certDir.listFiles()!!
 		val factory = CertificateFactory.getInstance("X.509")
 		for (f in certFiles) {
 			if (f.name.endsWith(".json")) {
