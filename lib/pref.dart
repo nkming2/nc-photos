@@ -33,9 +33,9 @@ class Pref {
   Future<bool> setHomePhotosZoomLevel(int value) =>
       _pref.setInt("homePhotosZoomLevel", value);
 
-  int? getAlbumViewerZoomLevel() => _pref.getInt("albumViewerZoomLevel");
-  int getAlbumViewerZoomLevelOr(int def) => getAlbumViewerZoomLevel() ?? def;
-  Future<bool> setAlbumViewerZoomLevel(int value) =>
+  int? getAlbumBrowserZoomLevel() => _pref.getInt("albumViewerZoomLevel");
+  int getAlbumBrowserZoomLevelOr(int def) => getAlbumBrowserZoomLevel() ?? def;
+  Future<bool> setAlbumBrowserZoomLevel(int value) =>
       _pref.setInt("albumViewerZoomLevel", value);
 
   bool? isEnableExif() => _pref.getBool("isEnableExif");

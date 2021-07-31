@@ -23,7 +23,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
-import 'package:nc_photos/widget/album_viewer_mixin.dart';
+import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -32,27 +32,27 @@ import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:quiver/iterables.dart';
 
-class AlbumViewerArguments {
-  AlbumViewerArguments(this.account, this.album);
+class AlbumBrowserArguments {
+  AlbumBrowserArguments(this.account, this.album);
 
   final Account account;
   final Album album;
 }
 
-class AlbumViewer extends StatefulWidget {
-  static const routeName = "/album-viewer";
+class AlbumBrowser extends StatefulWidget {
+  static const routeName = "/album-browser";
 
-  static Route buildRoute(AlbumViewerArguments args) => MaterialPageRoute(
-        builder: (context) => AlbumViewer.fromArgs(args),
+  static Route buildRoute(AlbumBrowserArguments args) => MaterialPageRoute(
+        builder: (context) => AlbumBrowser.fromArgs(args),
       );
 
-  AlbumViewer({
+  AlbumBrowser({
     Key? key,
     required this.account,
     required this.album,
   }) : super(key: key);
 
-  AlbumViewer.fromArgs(AlbumViewerArguments args, {Key? key})
+  AlbumBrowser.fromArgs(AlbumBrowserArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -60,17 +60,17 @@ class AlbumViewer extends StatefulWidget {
         );
 
   @override
-  createState() => _AlbumViewerState();
+  createState() => _AlbumBrowserState();
 
   final Account account;
   final Album album;
 }
 
-class _AlbumViewerState extends State<AlbumViewer>
+class _AlbumBrowserState extends State<AlbumBrowser>
     with
-        SelectableItemStreamListMixin<AlbumViewer>,
-        DraggableItemListMixin<AlbumViewer>,
-        AlbumViewerMixin<AlbumViewer> {
+        SelectableItemStreamListMixin<AlbumBrowser>,
+        DraggableItemListMixin<AlbumBrowser>,
+        AlbumBrowserMixin<AlbumBrowser> {
   @override
   initState() {
     super.initState();
@@ -662,7 +662,7 @@ class _AlbumViewerState extends State<AlbumViewer>
   final _editFormKey = GlobalKey<FormState>();
   Album? _editAlbum;
 
-  static final _log = Logger("widget.album_viewer._AlbumViewerState");
+  static final _log = Logger("widget.album_browser._AlbumBrowserState");
 }
 
 abstract class _ListItem implements SelectableItem, DraggableItem {

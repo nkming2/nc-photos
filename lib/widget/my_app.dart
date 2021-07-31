@@ -8,12 +8,12 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/album_browser.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
-import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/connect.dart';
-import 'package:nc_photos/widget/dynamic_album_viewer.dart';
+import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -97,10 +97,10 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleConnectRoute(settings);
     route ??= _handleHomeRoute(settings);
     route ??= _handleRootPickerRoute(settings);
-    route ??= _handleAlbumViewerRoute(settings);
+    route ??= _handleAlbumBrowserRoute(settings);
     route ??= _handleSettingsRoute(settings);
     route ??= _handleArchiveBrowserRoute(settings);
-    route ??= _handleDynamicAlbumViewerRoute(settings);
+    route ??= _handleDynamicAlbumBrowserRoute(settings);
     route ??= _handleAlbumDirPickerRoute(settings);
     route ??= _handleAlbumImporterRoute(settings);
     return route;
@@ -173,15 +173,15 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic>? _handleAlbumViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleAlbumBrowserRoute(RouteSettings settings) {
     try {
-      if (settings.name == AlbumViewer.routeName &&
+      if (settings.name == AlbumBrowser.routeName &&
           settings.arguments != null) {
-        final args = settings.arguments as AlbumViewerArguments;
-        return AlbumViewer.buildRoute(args);
+        final args = settings.arguments as AlbumBrowserArguments;
+        return AlbumBrowser.buildRoute(args);
       }
     } catch (e) {
-      _log.severe("[_handleAlbumViewerRoute] Failed while handling route", e);
+      _log.severe("[_handleAlbumBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -212,16 +212,16 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     return null;
   }
 
-  Route<dynamic>? _handleDynamicAlbumViewerRoute(RouteSettings settings) {
+  Route<dynamic>? _handleDynamicAlbumBrowserRoute(RouteSettings settings) {
     try {
-      if (settings.name == DynamicAlbumViewer.routeName &&
+      if (settings.name == DynamicAlbumBrowser.routeName &&
           settings.arguments != null) {
-        final args = settings.arguments as DynamicAlbumViewerArguments;
-        return DynamicAlbumViewer.buildRoute(args);
+        final args = settings.arguments as DynamicAlbumBrowserArguments;
+        return DynamicAlbumBrowser.buildRoute(args);
       }
     } catch (e) {
       _log.severe(
-          "[_handleDynamicAlbumViewerRoute] Failed while handling route", e);
+          "[_handleDynamicAlbumBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

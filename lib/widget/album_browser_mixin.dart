@@ -7,17 +7,17 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/widget/album_viewer_app_bar.dart';
+import 'package:nc_photos/widget/album_browser_app_bar.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
-mixin AlbumViewerMixin<T extends StatefulWidget>
+mixin AlbumBrowserMixin<T extends StatefulWidget>
     on SelectableItemStreamListMixin<T> {
   @override
   initState() {
     super.initState();
-    _thumbZoomLevel = Pref.inst().getAlbumViewerZoomLevelOr(0);
+    _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
   }
 
   @protected
@@ -39,7 +39,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     List<PopupMenuEntry<int>> Function(BuildContext)? menuItemBuilder,
     void Function(int)? onSelectedMenuItem,
   }) {
-    return AlbumViewerAppBar(
+    return AlbumBrowserAppBar(
       account: account,
       album: album,
       coverPreviewUrl: _coverPreviewUrl,
@@ -52,7 +52,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
             setState(() {
               _thumbZoomLevel = value.round();
             });
-            Pref.inst().setAlbumViewerZoomLevel(_thumbZoomLevel);
+            Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
         ...(actions ?? []),
@@ -107,7 +107,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
     Album album, {
     List<Widget>? actions,
   }) {
-    return AlbumViewerEditAppBar(
+    return AlbumBrowserEditAppBar(
       account: account,
       album: album,
       coverPreviewUrl: _coverPreviewUrl,
@@ -180,7 +180,7 @@ mixin AlbumViewerMixin<T extends StatefulWidget>
   var _isEditMode = false;
   var _editFormValue = _EditFormValue();
 
-  static final _log = Logger("widget.album_viewer_mixin.AlbumViewerMixin");
+  static final _log = Logger("widget.album_browser_mixin.AlbumBrowserMixin");
   static const _menuValueEdit = -1;
 }
 

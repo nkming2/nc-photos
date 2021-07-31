@@ -18,13 +18,13 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/widget/album_browser.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
-import 'package:nc_photos/widget/album_viewer.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
-import 'package:nc_photos/widget/dynamic_album_viewer.dart';
+import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -306,8 +306,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
       if (album.provider is AlbumDynamicProvider) {
         // open the album automatically to refresh its content, otherwise it'll
         // be empty
-        Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
-            arguments: DynamicAlbumViewerArguments(widget.account, album));
+        Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
+            arguments: DynamicAlbumBrowserArguments(widget.account, album));
       }
     }).catchError((e, stacktrace) {
       _log.severe(
@@ -414,11 +414,11 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   void _openAlbum(Album album) {
     if (album.provider is AlbumStaticProvider) {
-      Navigator.of(context).pushNamed(AlbumViewer.routeName,
-          arguments: AlbumViewerArguments(widget.account, album));
+      Navigator.of(context).pushNamed(AlbumBrowser.routeName,
+          arguments: AlbumBrowserArguments(widget.account, album));
     } else {
-      Navigator.of(context).pushNamed(DynamicAlbumViewer.routeName,
-          arguments: DynamicAlbumViewerArguments(widget.account, album));
+      Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
+          arguments: DynamicAlbumBrowserArguments(widget.account, album));
     }
   }
 

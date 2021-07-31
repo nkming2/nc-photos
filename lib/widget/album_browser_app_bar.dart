@@ -7,8 +7,8 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/theme.dart';
 
-class AlbumViewerAppBar extends StatelessWidget {
-  AlbumViewerAppBar({
+class AlbumBrowserAppBar extends StatelessWidget {
+  AlbumBrowserAppBar({
     Key? key,
     required this.account,
     required this.album,
@@ -40,8 +40,8 @@ class AlbumViewerAppBar extends StatelessWidget {
   final List<Widget>? actions;
 }
 
-class AlbumViewerEditAppBar extends StatefulWidget {
-  AlbumViewerEditAppBar({
+class AlbumBrowserEditAppBar extends StatefulWidget {
+  AlbumBrowserEditAppBar({
     Key? key,
     required this.account,
     required this.album,
@@ -52,7 +52,7 @@ class AlbumViewerEditAppBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  createState() => _AlbumViewerEditAppBarState();
+  createState() => _AlbumBrowserEditAppBarState();
 
   final Account account;
   final Album album;
@@ -62,7 +62,7 @@ class AlbumViewerEditAppBar extends StatefulWidget {
   final ValueChanged<String>? onAlbumNameSaved;
 }
 
-class _AlbumViewerEditAppBarState extends State<AlbumViewerEditAppBar> {
+class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
   @override
   initState() {
     super.initState();

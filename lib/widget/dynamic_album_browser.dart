@@ -27,34 +27,34 @@ import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
 import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
-import 'package:nc_photos/widget/album_viewer_mixin.dart';
+import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
-class DynamicAlbumViewerArguments {
-  DynamicAlbumViewerArguments(this.account, this.album);
+class DynamicAlbumBrowserArguments {
+  DynamicAlbumBrowserArguments(this.account, this.album);
 
   final Account account;
   final Album album;
 }
 
-class DynamicAlbumViewer extends StatefulWidget {
-  static const routeName = "/dynamic-album-viewer";
+class DynamicAlbumBrowser extends StatefulWidget {
+  static const routeName = "/dynamic-album-browser";
 
-  static Route buildRoute(DynamicAlbumViewerArguments args) =>
+  static Route buildRoute(DynamicAlbumBrowserArguments args) =>
       MaterialPageRoute(
-        builder: (context) => DynamicAlbumViewer.fromArgs(args),
+        builder: (context) => DynamicAlbumBrowser.fromArgs(args),
       );
 
-  DynamicAlbumViewer({
+  DynamicAlbumBrowser({
     Key? key,
     required this.account,
     required this.album,
   }) : super(key: key);
 
-  DynamicAlbumViewer.fromArgs(DynamicAlbumViewerArguments args, {Key? key})
+  DynamicAlbumBrowser.fromArgs(DynamicAlbumBrowserArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
@@ -62,16 +62,16 @@ class DynamicAlbumViewer extends StatefulWidget {
         );
 
   @override
-  createState() => _DynamicAlbumViewerState();
+  createState() => _DynamicAlbumBrowserState();
 
   final Account account;
   final Album album;
 }
 
-class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
+class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     with
-        SelectableItemStreamListMixin<DynamicAlbumViewer>,
-        AlbumViewerMixin<DynamicAlbumViewer> {
+        SelectableItemStreamListMixin<DynamicAlbumBrowser>,
+        AlbumBrowserMixin<DynamicAlbumBrowser> {
   @override
   initState() {
     super.initState();
@@ -548,7 +548,7 @@ class _DynamicAlbumViewerState extends State<DynamicAlbumViewer>
   Album? _editAlbum;
 
   static final _log =
-      Logger("widget.dynamic_album_viewer._DynamicAlbumViewerState");
+      Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
   static const _menuValueConvertBasic = 0;
 }
 
