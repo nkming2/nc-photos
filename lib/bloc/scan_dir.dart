@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
 abstract class ScanDirBlocEvent {
@@ -119,6 +120,13 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
         AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
     _fileRemovedEventListener.begin();
     _filePropertyUpdatedEventListener.begin();
+
+    _refreshThrottler = Throttler(
+      onTriggered: (_) {
+        add(_ScanDirBlocExternalEvent());
+      },
+      logTag: "ScanDirBloc.refresh",
+    );
   }
 
   static ScanDirBloc of(Account account) {
@@ -163,7 +171,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   close() {
     _fileRemovedEventListener.end();
     _filePropertyUpdatedEventListener.end();
-    _propertyUpdatedSubscription?.cancel();
+    _refreshThrottler.clear();
     return super.close();
   }
 
@@ -209,7 +217,10 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    add(_ScanDirBlocExternalEvent());
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
   }
 
   void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
@@ -226,28 +237,19 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       return;
     }
 
-    _successivePropertyUpdatedCount += 1;
-    _propertyUpdatedSubscription?.cancel();
-    // only trigger the event on the 10th update or 10s after the last update
-    if (_successivePropertyUpdatedCount % 10 == 0) {
-      add(_ScanDirBlocExternalEvent());
+    if (ev.hasAnyProperties([
+      FilePropertyUpdatedEvent.propIsArchived,
+      FilePropertyUpdatedEvent.propOverrideDateTime,
+    ])) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
     } else {
-      if (ev.hasAnyProperties([
-        FilePropertyUpdatedEvent.propIsArchived,
-        FilePropertyUpdatedEvent.propOverrideDateTime,
-      ])) {
-        _propertyUpdatedSubscription =
-            Future.delayed(const Duration(seconds: 2)).asStream().listen((_) {
-          add(_ScanDirBlocExternalEvent());
-          _successivePropertyUpdatedCount = 0;
-        });
-      } else {
-        _propertyUpdatedSubscription =
-            Future.delayed(const Duration(seconds: 10)).asStream().listen((_) {
-          add(_ScanDirBlocExternalEvent());
-          _successivePropertyUpdatedCount = 0;
-        });
-      }
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 10),
+        maxPendingCount: 10,
+      );
     }
   }
 
@@ -286,8 +288,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   late AppEventListener<FilePropertyUpdatedEvent>
       _filePropertyUpdatedEventListener;
 
-  int _successivePropertyUpdatedCount = 0;
-  StreamSubscription<void>? _propertyUpdatedSubscription;
+  late Throttler _refreshThrottler;
 
   bool _shouldCheckCache = true;
 
