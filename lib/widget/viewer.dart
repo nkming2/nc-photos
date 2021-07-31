@@ -25,6 +25,7 @@ import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
+import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 
 class ViewerArguments {
@@ -286,59 +287,10 @@ class _ViewerState extends State<Viewer> {
           duration: !_isDetailPaneActive
               ? k.animationDurationNormal
               : const Duration(milliseconds: 1),
-          child: Container(
-            height: kToolbarHeight,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: const Alignment(0, -1),
-                end: const Alignment(0, 1),
-                colors: [
-                  Color.fromARGB(0, 0, 0, 0),
-                  Color.fromARGB(192, 0, 0, 0),
-                ],
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                if (platform_k.isAndroid)
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.share_outlined,
-                        color: Colors.white.withOpacity(.87),
-                      ),
-                      tooltip: L10n.of(context).shareTooltip,
-                      onPressed: () => _onSharePressed(context),
-                    ),
-                  ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.download_outlined,
-                      color: Colors.white.withOpacity(.87),
-                    ),
-                    tooltip: L10n.of(context).downloadTooltip,
-                    onPressed: () => _onDownloadPressed(context),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.delete_outlined,
-                      color: Colors.white.withOpacity(.87),
-                    ),
-                    tooltip: L10n.of(context).deleteTooltip,
-                    onPressed: () => _onDeletePressed(context),
-                  ),
-                ),
-              ],
-            ),
+          child: ViewerBottomAppBar(
+            onSharePressed: () => _onSharePressed(context),
+            onDownloadPressed: () => _onDownloadPressed(context),
+            onDeletePressed: () => _onDeletePressed(context),
           ),
         ),
       ),
