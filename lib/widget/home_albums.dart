@@ -22,7 +22,7 @@ import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/album_viewer.dart';
-import 'package:nc_photos/widget/archive_viewer.dart';
+import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_viewer.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
@@ -217,8 +217,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
       ),
       title: L10n.of(context).albumArchiveLabel,
       onTap: () {
-        Navigator.of(context).pushNamed(ArchiveViewer.routeName,
-            arguments: ArchiveViewerArguments(widget.account));
+        Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
+            arguments: ArchiveBrowserArguments(widget.account));
       },
     );
   }

@@ -24,38 +24,38 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
-class ArchiveViewerArguments {
-  ArchiveViewerArguments(this.account);
+class ArchiveBrowserArguments {
+  ArchiveBrowserArguments(this.account);
 
   final Account account;
 }
 
-class ArchiveViewer extends StatefulWidget {
-  static const routeName = "/archive-viewer";
+class ArchiveBrowser extends StatefulWidget {
+  static const routeName = "/archive-browser";
 
-  static Route buildRoute(ArchiveViewerArguments args) => MaterialPageRoute(
-        builder: (context) => ArchiveViewer.fromArgs(args),
+  static Route buildRoute(ArchiveBrowserArguments args) => MaterialPageRoute(
+        builder: (context) => ArchiveBrowser.fromArgs(args),
       );
 
-  ArchiveViewer({
+  ArchiveBrowser({
     Key? key,
     required this.account,
   }) : super(key: key);
 
-  ArchiveViewer.fromArgs(ArchiveViewerArguments args, {Key? key})
+  ArchiveBrowser.fromArgs(ArchiveBrowserArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
         );
 
   @override
-  createState() => _ArchiveViewerState();
+  createState() => _ArchiveBrowserState();
 
   final Account account;
 }
 
-class _ArchiveViewerState extends State<ArchiveViewer>
-    with SelectableItemStreamListMixin<ArchiveViewer> {
+class _ArchiveBrowserState extends State<ArchiveBrowser>
+    with SelectableItemStreamListMixin<ArchiveBrowser> {
   @override
   initState() {
     super.initState();
@@ -301,7 +301,7 @@ class _ArchiveViewerState extends State<ArchiveViewer>
 
   var _thumbZoomLevel = 0;
 
-  static final _log = Logger("widget.archive_viewer._ArchiveViewerState");
+  static final _log = Logger("widget.archive_browser._ArchiveBrowserState");
 }
 
 abstract class _ListItem implements SelectableItem {
