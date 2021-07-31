@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:tuple/tuple.dart';
 
@@ -99,6 +100,13 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _albumUpdatedListener.begin();
     _fileRemovedListener.begin();
     _albumCreatedListener.begin();
+
+    _refreshThrottler = Throttler(
+      onTriggered: (_) {
+        add(_ListAlbumBlocExternalEvent());
+      },
+      logTag: "ListAlbumBloc.refresh",
+    );
   }
 
   @override
@@ -116,6 +124,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _albumUpdatedListener.end();
     _fileRemovedListener.end();
     _albumCreatedListener.end();
+    _refreshThrottler.clear();
     return super.close();
   }
 
@@ -151,7 +160,10 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    add(_ListAlbumBlocExternalEvent());
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
   }
 
   void _onFileRemovedEvent(FileRemovedEvent ev) {
@@ -160,7 +172,10 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       return;
     }
     if (isAlbumFile(ev.account, ev.file)) {
-      add(_ListAlbumBlocExternalEvent());
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
     }
   }
 
@@ -209,6 +224,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   late AppEventListener<FileRemovedEvent> _fileRemovedListener;
   late AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
+
+  late Throttler _refreshThrottler;
 
   static final _log = Logger("bloc.list_album.ListAlbumBloc");
 }
