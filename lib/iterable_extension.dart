@@ -33,4 +33,12 @@ extension IterableExtension<T> on Iterable<T> {
   /// Same as [contains] but uses [identical] to compare the objects
   bool containsIdentical(T element) =>
       containsIf(element, (a, b) => identical(a, b));
+
+  Iterable<Tuple2<U, List<T>>> groupBy<U>({required U Function(T e) key}) {
+    final map = fold<Map<U, List<T>>>(
+        {},
+        (previousValue, element) =>
+            previousValue..putIfAbsent(key(element), () => []).add(element));
+    return map.entries.map((e) => Tuple2(e.key, e.value));
+  }
 }
