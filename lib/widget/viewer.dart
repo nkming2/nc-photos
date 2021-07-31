@@ -23,6 +23,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
+import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
@@ -68,27 +69,12 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> {
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(
-        initialPage: widget.startIndex,
-        viewportFraction: 1.05,
-        keepPage: false);
-    _pageFocus.requestFocus();
-  }
-
-  @override
   build(BuildContext context) {
-    if (!_hasInit) {
-      _updateNavigationState(widget.startIndex);
-      _hasInit = true;
-    }
     return AppTheme(
       child: Scaffold(
         body: Builder(
-            builder: (context) => platform_k.isWeb
-                ? _buildWebContent(context)
-                : _buildContent(context)),
+          builder: _buildContent,
+        ),
       ),
     );
   }
@@ -97,25 +83,6 @@ class _ViewerState extends State<Viewer> {
   dispose() {
     super.dispose();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  }
-
-  Widget _buildWebContent(BuildContext context) {
-    assert(platform_k.isWeb);
-    // support switching pages with keyboard on web
-    return RawKeyboardListener(
-      onKey: (ev) {
-        if (!_canSwitchPage()) {
-          return;
-        }
-        if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-          _switchToLeftImage();
-        } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-          _switchToRightImage();
-        }
-      },
-      focusNode: _pageFocus,
-      child: _buildContent(context),
-    );
   }
 
   Widget _buildContent(BuildContext context) {
@@ -128,105 +95,25 @@ class _ViewerState extends State<Viewer> {
       child: Stack(
         children: [
           Container(color: Colors.black),
-          if (!_pageController.hasClients ||
-              !_pageStates[_pageController.page!.round()]!.hasLoaded)
+          if (!_isViewerLoaded ||
+              !_pageStates[_viewerController.currentPage]!.hasLoaded)
             Align(
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             ),
-          PageView.builder(
-            controller: _pageController,
-            itemCount: widget.streamFiles.length,
-            itemBuilder: _buildPage,
-            physics: !platform_k.isWeb && _canSwitchPage()
-                ? null
-                : const NeverScrollableScrollPhysics(),
+          HorizontalPageViewer(
+            pageCount: widget.streamFiles.length,
+            pageBuilder: _buildPage,
+            initialPage: widget.startIndex,
+            controller: _viewerController,
+            viewportFraction: _viewportFraction,
+            canSwitchPage: _canSwitchPage(),
           ),
-          if (platform_k.isWeb) ..._buildNavigationButtons(context),
           _buildBottomAppBar(context),
           _buildAppBar(context),
         ],
       ),
     );
-  }
-
-  List<Widget> _buildNavigationButtons(BuildContext context) {
-    return [
-      if (_canSwitchRight)
-        Align(
-          alignment: Alignment.centerRight,
-          child: Material(
-            type: MaterialType.transparency,
-            child: Visibility(
-              visible: _canSwitchPage(),
-              child: AnimatedOpacity(
-                opacity: _isShowRight ? 1.0 : 0.0,
-                duration: k.animationDurationShort,
-                child: MouseRegion(
-                  onEnter: (details) {
-                    setState(() {
-                      _isShowRight = true;
-                    });
-                  },
-                  onExit: (details) {
-                    setState(() {
-                      _isShowRight = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 36),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        color: Colors.white,
-                      ),
-                      onPressed: _switchToRightImage,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      if (_canSwitchLeft)
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Material(
-            type: MaterialType.transparency,
-            child: Visibility(
-              visible: _canSwitchPage(),
-              child: AnimatedOpacity(
-                opacity: _isShowLeft ? 1.0 : 0.0,
-                duration: k.animationDurationShort,
-                child: MouseRegion(
-                  onEnter: (details) {
-                    setState(() {
-                      _isShowLeft = true;
-                    });
-                  },
-                  onExit: (details) {
-                    setState(() {
-                      _isShowLeft = false;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 36),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios_outlined,
-                        color: Colors.white,
-                      ),
-                      onPressed: _switchToLeftImage,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-    ];
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -311,7 +198,7 @@ class _ViewerState extends State<Viewer> {
     }
 
     return FractionallySizedBox(
-      widthFactor: 1 / _pageController.viewportFraction,
+      widthFactor: 1 / _viewportFraction,
       child: NotificationListener<ScrollNotification>(
         onNotification: (notif) => _onPageContentScrolled(notif, index),
         child: SingleChildScrollView(
@@ -419,14 +306,14 @@ class _ViewerState extends State<Viewer> {
           // upward, open the pane to its minimal size
           Future.delayed(Duration.zero, () {
             setState(() {
-              _openDetailPane(_pageController.page!.toInt(),
+              _openDetailPane(_viewerController.currentPage,
                   shouldAnimate: true);
             });
           });
         } else if (scrollPos.userScrollDirection == ScrollDirection.forward) {
           // downward, close the pane
           Future.delayed(Duration.zero, () {
-            _closeDetailPane(_pageController.page!.toInt(),
+            _closeDetailPane(_viewerController.currentPage,
                 shouldAnimate: true);
           });
         }
@@ -438,7 +325,7 @@ class _ViewerState extends State<Viewer> {
   void _onImageLoaded(int index) {
     // currently pageview doesn't pre-load pages, we do it manually
     // don't pre-load if user already navigated away
-    if (_pageController.page!.round() == index &&
+    if (_viewerController.currentPage == index &&
         !_pageStates[index]!.hasLoaded) {
       _log.info("[_onImageLoaded] Pre-loading nearby images");
       if (index > 0) {
@@ -455,15 +342,17 @@ class _ViewerState extends State<Viewer> {
       }
       setState(() {
         _pageStates[index]!.hasLoaded = true;
+        _isViewerLoaded = true;
       });
     }
   }
 
   void _onVideoLoaded(int index) {
-    if (_pageController.page!.round() == index &&
+    if (_viewerController.currentPage == index &&
         !_pageStates[index]!.hasLoaded) {
       setState(() {
         _pageStates[index]!.hasLoaded = true;
+        _isViewerLoaded = true;
       });
     }
   }
@@ -508,19 +397,19 @@ class _ViewerState extends State<Viewer> {
   void _onDetailsPressed() {
     if (!_isDetailPaneActive) {
       setState(() {
-        _openDetailPane(_pageController.page!.toInt(), shouldAnimate: true);
+        _openDetailPane(_viewerController.currentPage, shouldAnimate: true);
       });
     }
   }
 
   void _onSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
-    final file = widget.streamFiles[_pageController.page!.round()];
+    final file = widget.streamFiles[_viewerController.currentPage];
     ShareHandler().shareFiles(context, widget.account, [file]);
   }
 
   void _onDownloadPressed(BuildContext context) async {
-    final file = widget.streamFiles[_pageController.page!.round()];
+    final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.of(context).downloadProcessingNotification),
@@ -582,7 +471,7 @@ class _ViewerState extends State<Viewer> {
   }
 
   void _onDeletePressed(BuildContext context) async {
-    final file = widget.streamFiles[_pageController.page!.round()];
+    final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.of(context).deleteProcessingNotification),
@@ -687,78 +576,9 @@ class _ViewerState extends State<Viewer> {
     _isClosingDetailPane = false;
   }
 
-  /// Switch to the previous image in the stream
-  void _switchToPrevImage() {
-    _pageController
-        .previousPage(
-            duration: k.animationDurationNormal, curve: Curves.easeInOut)
-        .whenComplete(
-            () => _updateNavigationState(_pageController.page!.round()));
-  }
-
-  /// Switch to the next image in the stream
-  void _switchToNextImage() {
-    _pageController
-        .nextPage(duration: k.animationDurationNormal, curve: Curves.easeInOut)
-        .whenComplete(
-            () => _updateNavigationState(_pageController.page!.round()));
-  }
-
-  /// Switch to the image on the "left", what that means depend on the current
-  /// text direction
-  void _switchToLeftImage() {
-    if (Directionality.of(context) == TextDirection.ltr) {
-      _switchToPrevImage();
-    } else {
-      _switchToNextImage();
-    }
-  }
-
-  /// Switch to the image on the "right", what that means depend on the current
-  /// text direction
-  void _switchToRightImage() {
-    if (Directionality.of(context) == TextDirection.ltr) {
-      _switchToNextImage();
-    } else {
-      _switchToPrevImage();
-    }
-  }
-
-  /// Update the navigation state for [page]
-  void _updateNavigationState(int page) {
-    // currently useless to run on non-web platform
-    if (!platform_k.isWeb) {
-      return;
-    }
-    final hasNext = page < widget.streamFiles.length - 1;
-    final hasPrev = page > 0;
-    final hasLeft =
-        Directionality.of(context) == TextDirection.ltr ? hasPrev : hasNext;
-    if (_canSwitchLeft != hasLeft) {
-      setState(() {
-        _canSwitchLeft = hasLeft;
-        if (!_canSwitchLeft) {
-          _isShowLeft = false;
-        }
-      });
-    }
-    final hasRight =
-        Directionality.of(context) == TextDirection.ltr ? hasNext : hasPrev;
-    if (_canSwitchRight != hasRight) {
-      setState(() {
-        _canSwitchRight = hasRight;
-        if (!_canSwitchRight) {
-          _isShowRight = false;
-        }
-      });
-    }
-  }
-
   bool _canSwitchPage() => !_isZoomed;
   bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
-
-  var _hasInit = false;
 
   var _isShowAppBar = true;
 
@@ -766,20 +586,15 @@ class _ViewerState extends State<Viewer> {
   var _isDetailPaneActive = false;
   var _isClosingDetailPane = false;
 
-  var _canSwitchRight = true;
-  var _canSwitchLeft = true;
-  var _isShowRight = false;
-  var _isShowLeft = false;
-
   var _isZoomed = false;
 
-  late PageController _pageController;
+  final _viewerController = HorizontalPageViewerController();
+  bool _isViewerLoaded = false;
   final _pageStates = <int, _PageState>{};
 
-  /// used to gain focus on web for keyboard support
-  final _pageFocus = FocusNode();
-
   static final _log = Logger("widget.viewer._ViewerState");
+
+  static const _viewportFraction = 1.05;
 }
 
 class _PageState {

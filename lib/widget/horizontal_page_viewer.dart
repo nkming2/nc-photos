@@ -1,0 +1,253 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/k.dart' as platform_k;
+
+class HorizontalPageViewer extends StatefulWidget {
+  HorizontalPageViewer({
+    Key? key,
+    required this.pageCount,
+    required this.pageBuilder,
+    this.initialPage = 0,
+    HorizontalPageViewerController? controller,
+    this.viewportFraction = 1,
+    this.canSwitchPage = true,
+  })  : controller = controller ?? HorizontalPageViewerController(),
+        super(key: key) {
+    this.controller._pageController = PageController(
+      initialPage: initialPage,
+      viewportFraction: viewportFraction,
+      keepPage: false,
+    );
+  }
+
+  @override
+  createState() => _HorizontalPageViewerState();
+
+  final int initialPage;
+  final int pageCount;
+  final Widget Function(BuildContext context, int index) pageBuilder;
+  final HorizontalPageViewerController controller;
+  final double viewportFraction;
+  final bool canSwitchPage;
+}
+
+class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
+  @override
+  void initState() {
+    super.initState();
+    _pageFocus.requestFocus();
+  }
+
+  @override
+  build(BuildContext context) {
+    if (!_hasInit) {
+      _updateNavigationState(widget.initialPage);
+      _hasInit = true;
+    }
+    return platform_k.isWeb
+        ? _buildWebContent(context)
+        : _buildContent(context);
+  }
+
+  Widget _buildWebContent(BuildContext context) {
+    assert(platform_k.isWeb);
+    // support switching pages with keyboard on web
+    return RawKeyboardListener(
+      onKey: (ev) {
+        if (!widget.canSwitchPage) {
+          return;
+        }
+        if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+          _switchToLeft();
+        } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+          _switchToRight();
+        }
+      },
+      focusNode: _pageFocus,
+      child: _buildContent(context),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: widget.controller._pageController,
+          itemCount: widget.pageCount,
+          itemBuilder: widget.pageBuilder,
+          physics: !platform_k.isWeb && widget.canSwitchPage
+              ? null
+              : const NeverScrollableScrollPhysics(),
+        ),
+        if (platform_k.isWeb) ..._buildNavigationButtons(context),
+      ],
+    );
+  }
+
+  List<Widget> _buildNavigationButtons(BuildContext context) {
+    return [
+      if (_canSwitchRight)
+        Align(
+          alignment: Alignment.centerRight,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Visibility(
+              visible: widget.canSwitchPage,
+              child: AnimatedOpacity(
+                opacity: _isShowRight ? 1.0 : 0.0,
+                duration: k.animationDurationShort,
+                child: MouseRegion(
+                  onEnter: (details) {
+                    setState(() {
+                      _isShowRight = true;
+                    });
+                  },
+                  onExit: (details) {
+                    setState(() {
+                      _isShowRight = false;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 36),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: _switchToRight,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      if (_canSwitchLeft)
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Visibility(
+              visible: widget.canSwitchPage,
+              child: AnimatedOpacity(
+                opacity: _isShowLeft ? 1.0 : 0.0,
+                duration: k.animationDurationShort,
+                child: MouseRegion(
+                  onEnter: (details) {
+                    setState(() {
+                      _isShowLeft = true;
+                    });
+                  },
+                  onExit: (details) {
+                    setState(() {
+                      _isShowLeft = false;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 36),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_outlined,
+                        color: Colors.white,
+                      ),
+                      onPressed: _switchToLeft,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+    ];
+  }
+
+  /// Switch to the previous image in the stream
+  void _switchToPrev() {
+    widget.controller._pageController
+        .previousPage(
+            duration: k.animationDurationNormal, curve: Curves.easeInOut)
+        .whenComplete(() => _updateNavigationState(
+            widget.controller._pageController.page!.round()));
+  }
+
+  /// Switch to the next image in the stream
+  void _switchToNext() {
+    widget.controller._pageController
+        .nextPage(duration: k.animationDurationNormal, curve: Curves.easeInOut)
+        .whenComplete(() => _updateNavigationState(
+            widget.controller._pageController.page!.round()));
+  }
+
+  /// Switch to the image on the "left", what that means depend on the current
+  /// text direction
+  void _switchToLeft() {
+    if (Directionality.of(context) == TextDirection.ltr) {
+      _switchToPrev();
+    } else {
+      _switchToNext();
+    }
+  }
+
+  /// Switch to the image on the "right", what that means depend on the current
+  /// text direction
+  void _switchToRight() {
+    if (Directionality.of(context) == TextDirection.ltr) {
+      _switchToNext();
+    } else {
+      _switchToPrev();
+    }
+  }
+
+  /// Update the navigation state for [page]
+  void _updateNavigationState(int page) {
+    // currently useless to run on non-web platform
+    if (!platform_k.isWeb) {
+      return;
+    }
+    final hasNext = page < widget.pageCount - 1;
+    final hasPrev = page > 0;
+    final hasLeft =
+        Directionality.of(context) == TextDirection.ltr ? hasPrev : hasNext;
+    if (_canSwitchLeft != hasLeft) {
+      setState(() {
+        _canSwitchLeft = hasLeft;
+        if (!_canSwitchLeft) {
+          _isShowLeft = false;
+        }
+      });
+    }
+    final hasRight =
+        Directionality.of(context) == TextDirection.ltr ? hasNext : hasPrev;
+    if (_canSwitchRight != hasRight) {
+      setState(() {
+        _canSwitchRight = hasRight;
+        if (!_canSwitchRight) {
+          _isShowRight = false;
+        }
+      });
+    }
+  }
+
+  var _hasInit = false;
+
+  var _canSwitchRight = true;
+  var _canSwitchLeft = true;
+  var _isShowRight = false;
+  var _isShowLeft = false;
+
+  /// used to gain focus on web for keyboard support
+  final _pageFocus = FocusNode();
+}
+
+class HorizontalPageViewerController {
+  int get currentPage => _pageController.hasClients
+      ? _pageController.page!.round()
+      : _pageController.initialPage;
+
+  late PageController _pageController;
+}
