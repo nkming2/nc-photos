@@ -68,6 +68,13 @@ class FileRemovedEvent {
   final File file;
 }
 
+class FileTrashbinRestoredEvent {
+  FileTrashbinRestoredEvent(this.account, this.file);
+
+  final Account account;
+  final File file;
+}
+
 class ThemeChangedEvent {}
 
 class LanguageChangedEvent {}

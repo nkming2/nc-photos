@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/throttler.dart';
@@ -118,8 +119,12 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
         AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
     _filePropertyUpdatedEventListener =
         AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
+    _fileTrashbinRestoredEventListener =
+        AppEventListener<FileTrashbinRestoredEvent>(
+            _onFileTrashbinRestoredEvent);
     _fileRemovedEventListener.begin();
     _filePropertyUpdatedEventListener.begin();
+    _fileTrashbinRestoredEventListener.begin();
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
@@ -171,6 +176,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   close() {
     _fileRemovedEventListener.end();
     _filePropertyUpdatedEventListener.end();
+    _fileTrashbinRestoredEventListener.end();
     _refreshThrottler.clear();
     return super.close();
   }
@@ -217,10 +223,12 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    _refreshThrottler.trigger(
-      maxResponceTime: const Duration(seconds: 3),
-      maxPendingCount: 10,
-    );
+    if (!file_util.isTrash(ev.account, ev.file)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
   }
 
   void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
@@ -251,6 +259,17 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
         maxPendingCount: 10,
       );
     }
+  }
+
+  void _onFileTrashbinRestoredEvent(FileTrashbinRestoredEvent ev) {
+    if (state is ScanDirBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
   }
 
   Stream<ScanDirBlocState> _queryOffline(
@@ -287,6 +306,8 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
   late AppEventListener<FileRemovedEvent> _fileRemovedEventListener;
   late AppEventListener<FilePropertyUpdatedEvent>
       _filePropertyUpdatedEventListener;
+  late final AppEventListener<FileTrashbinRestoredEvent>
+      _fileTrashbinRestoredEventListener;
 
   late Throttler _refreshThrottler;
 

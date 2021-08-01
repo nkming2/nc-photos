@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 
 /// Return the preview image URL for [file]. See [getFilePreviewUrlRelative]
@@ -15,13 +16,14 @@ String getFilePreviewUrl(
   bool? a,
 }) {
   return "${account.url}/"
-      "${getFilePreviewUrlRelative(file, width: width, height: height, mode: mode, a: a)}";
+      "${getFilePreviewUrlRelative(account, file, width: width, height: height, mode: mode, a: a)}";
 }
 
 /// Return the relative preview image URL for [file]. If [a] == true, the
 /// preview will maintain the original aspect ratio, otherwise it will be
 /// cropped
 String getFilePreviewUrlRelative(
+  Account account,
   File file, {
   required int width,
   required int height,
@@ -29,12 +31,18 @@ String getFilePreviewUrlRelative(
   bool? a,
 }) {
   String url;
-  if (file.fileId != null) {
-    url = "index.php/core/preview?fileId=${file.fileId}";
+  if (file_util.isTrash(account, file)) {
+    // trashbin does not support preview.png endpoint
+    url = "index.php/apps/files_trashbin/preview?fileId=${file.fileId}";
   } else {
-    final filePath = Uri.encodeQueryComponent(file.strippedPath);
-    url = "index.php/core/preview.png?file=$filePath";
+    if (file.fileId != null) {
+      url = "index.php/core/preview?fileId=${file.fileId}";
+    } else {
+      final filePath = Uri.encodeQueryComponent(file.strippedPath);
+      url = "index.php/core/preview.png?file=$filePath";
+    }
   }
+
   url = "$url&x=$width&y=$height";
   if (mode != null) {
     url = "$url&mode=$mode";
@@ -55,6 +63,9 @@ String getFileUrlRelative(File file) {
 
 String getWebdavRootUrlRelative(Account account) =>
     "remote.php/dav/files/${account.username}";
+
+String getTrashbinPath(Account account) =>
+    "remote.php/dav/trashbin/${account.username}/trash";
 
 /// Query the app password for [account]
 Future<String> exchangePassword(Account account) async {

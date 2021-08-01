@@ -20,6 +20,8 @@ import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/splash.dart';
+import 'package:nc_photos/widget/trashbin_browser.dart';
+import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
 class MyApp extends StatefulWidget {
@@ -103,6 +105,8 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleDynamicAlbumBrowserRoute(settings);
     route ??= _handleAlbumDirPickerRoute(settings);
     route ??= _handleAlbumImporterRoute(settings);
+    route ??= _handleTrashbinBrowserRoute(settings);
+    route ??= _handleTrashbinViewerRoute(settings);
     return route;
   }
 
@@ -249,6 +253,34 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       }
     } catch (e) {
       _log.severe("[_handleAlbumImporterRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleTrashbinBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == TrashbinBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as TrashbinBrowserArguments;
+        return TrashbinBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleTrashbinBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleTrashbinViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == TrashbinViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as TrashbinViewerArguments;
+        return TrashbinViewer.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleTrashbinViewerRoute] Failed while handling route", e);
     }
     return null;
   }

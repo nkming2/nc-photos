@@ -29,6 +29,7 @@ import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
+import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
@@ -107,7 +108,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
                 sliver: SliverStaggeredGrid.extentBuilder(
                   maxCrossAxisExtent: 256,
                   mainAxisSpacing: 8,
-                  itemCount: _items.length + (_isSelectionMode ? 0 : 2),
+                  itemCount: _items.length + (_isSelectionMode ? 0 : 3),
                   itemBuilder: _buildItem,
                   staggeredTileBuilder: (index) {
                     return const StaggeredTile.count(1, 1);
@@ -185,6 +186,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
       return _buildAlbumItem(context, index);
     } else if (index == _items.length) {
       return _buildArchiveItem(context);
+    } else if (index == _items.length + 1) {
+      return _buildTrashbinItem(context);
     } else {
       return _buildNewAlbumItem(context);
     }
@@ -219,6 +222,28 @@ class _HomeAlbumsState extends State<HomeAlbums>
       onTap: () {
         Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
             arguments: ArchiveBrowserArguments(widget.account));
+      },
+    );
+  }
+
+  Widget _buildTrashbinItem(BuildContext context) {
+    return AlbumGridItem(
+      cover: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          color: AppTheme.getListItemBackgroundColor(context),
+          constraints: const BoxConstraints.expand(),
+          child: Icon(
+            Icons.delete,
+            color: Colors.white.withOpacity(.8),
+            size: 88,
+          ),
+        ),
+      ),
+      title: L10n.of(context).albumTrashLabel,
+      onTap: () {
+        Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
+            arguments: TrashbinBrowserArguments(widget.account));
       },
     );
   }
