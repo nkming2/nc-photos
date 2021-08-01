@@ -210,6 +210,9 @@ class File with EquatableMixin {
     this.metadata,
     this.isArchived,
     this.overrideDateTime,
+    this.trashbinFilename,
+    this.trashbinOriginalLocation,
+    this.trashbinDeletionTime,
   }) : this.path = path.trimAny("/");
 
   @override
@@ -240,6 +243,11 @@ class File with EquatableMixin {
       hasPreview: json["hasPreview"],
       fileId: json["fileId"],
       ownerId: json["ownerId"],
+      trashbinFilename: json["trashbinFilename"],
+      trashbinOriginalLocation: json["trashbinOriginalLocation"],
+      trashbinDeletionTime: json["trashbinDeletionTime"] == null
+          ? null
+          : DateTime.parse(json["trashbinDeletionTime"]),
       metadata: json["metadata"] == null
           ? null
           : Metadata.fromJson(
@@ -291,6 +299,15 @@ class File with EquatableMixin {
     if (ownerId != null) {
       product += "ownerId: '$ownerId', ";
     }
+    if (trashbinFilename != null) {
+      product += "trashbinFilename: '$trashbinFilename', ";
+    }
+    if (trashbinOriginalLocation != null) {
+      product += "trashbinOriginalLocation: '$trashbinOriginalLocation', ";
+    }
+    if (trashbinDeletionTime != null) {
+      product += "trashbinDeletionTime: $trashbinDeletionTime, ";
+    }
     if (metadata != null) {
       product += "metadata: $metadata, ";
     }
@@ -316,6 +333,11 @@ class File with EquatableMixin {
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
       if (ownerId != null) "ownerId": ownerId,
+      if (trashbinFilename != null) "trashbinFilename": trashbinFilename,
+      if (trashbinOriginalLocation != null)
+        "trashbinOriginalLocation": trashbinOriginalLocation,
+      if (trashbinDeletionTime != null)
+        "trashbinDeletionTime": trashbinDeletionTime!.toUtc().toIso8601String(),
       if (metadata != null) "metadata": metadata!.toJson(),
       if (isArchived != null) "isArchived": isArchived,
       if (overrideDateTime != null)
@@ -334,6 +356,9 @@ class File with EquatableMixin {
     bool? hasPreview,
     int? fileId,
     String? ownerId,
+    String? trashbinFilename,
+    String? trashbinOriginalLocation,
+    DateTime? trashbinDeletionTime,
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
@@ -349,6 +374,10 @@ class File with EquatableMixin {
       hasPreview: hasPreview ?? this.hasPreview,
       fileId: fileId ?? this.fileId,
       ownerId: ownerId ?? this.ownerId,
+      trashbinFilename: trashbinFilename ?? this.trashbinFilename,
+      trashbinOriginalLocation:
+          trashbinOriginalLocation ?? this.trashbinOriginalLocation,
+      trashbinDeletionTime: trashbinDeletionTime ?? this.trashbinDeletionTime,
       metadata: metadata == null ? this.metadata : metadata.obj,
       isArchived: isArchived == null ? this.isArchived : isArchived.obj,
       overrideDateTime: overrideDateTime == null
@@ -386,6 +415,9 @@ class File with EquatableMixin {
         hasPreview,
         fileId,
         ownerId,
+        trashbinFilename,
+        trashbinOriginalLocation,
+        trashbinDeletionTime,
         // metadata is handled separately, see [equals]
         isArchived,
         overrideDateTime,
@@ -402,6 +434,9 @@ class File with EquatableMixin {
   // maybe null when loaded from old cache
   final int? fileId;
   final String? ownerId;
+  final String? trashbinFilename;
+  final String? trashbinOriginalLocation;
+  final DateTime? trashbinDeletionTime;
   // metadata
   final Metadata? metadata;
   final bool? isArchived;

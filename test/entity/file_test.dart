@@ -434,6 +434,38 @@ void main() {
         expect(file, File(path: "", ownerId: "admin"));
       });
 
+      test("trashbinFilename", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "trashbinFilename": "test.jpg",
+        };
+        final file = File.fromJson(json);
+        expect(file, File(path: "", trashbinFilename: "test.jpg"));
+      });
+
+      test("trashbinOriginalLocation", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "trashbinOriginalLocation": "Photos/test.jpg",
+        };
+        final file = File.fromJson(json);
+        expect(
+            file, File(path: "", trashbinOriginalLocation: "Photos/test.jpg"));
+      });
+
+      test("trashbinDeletionTime", () {
+        final json = <String, dynamic>{
+          "path": "",
+          "trashbinDeletionTime": "2022-01-02T03:04:05.000Z",
+        };
+        final file = File.fromJson(json);
+        expect(
+            file,
+            File(
+                path: "",
+                trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5)));
+      });
+
       test("metadata", () {
         final json = <String, dynamic>{
           "path": "",
@@ -567,6 +599,32 @@ void main() {
         });
       });
 
+      test("trashbinFilename", () {
+        final file = File(path: "", trashbinFilename: "test.jpg");
+        expect(file.toJson(), <String, dynamic>{
+          "path": "",
+          "trashbinFilename": "test.jpg",
+        });
+      });
+
+      test("trashbinOriginalLocation", () {
+        final file =
+            File(path: "", trashbinOriginalLocation: "Photos/test.jpg");
+        expect(file.toJson(), <String, dynamic>{
+          "path": "",
+          "trashbinOriginalLocation": "Photos/test.jpg",
+        });
+      });
+
+      test("trashbinDeletionTime", () {
+        final file = File(
+            path: "", trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5));
+        expect(file.toJson(), <String, dynamic>{
+          "path": "",
+          "trashbinDeletionTime": "2022-01-02T03:04:05.000Z",
+        });
+      });
+
       test("metadata", () {
         final file = File(
             path: "remote.php/dav/files/admin/test.jpg",
@@ -614,6 +672,9 @@ void main() {
         hasPreview: true,
         fileId: 123,
         ownerId: "admin",
+        trashbinFilename: "test.jpg",
+        trashbinOriginalLocation: "Photos/test.jpg",
+        trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
         metadata: null,
         isArchived: true,
         overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
@@ -634,6 +695,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -654,6 +718,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -674,6 +741,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -694,6 +764,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -715,6 +788,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -735,6 +811,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -755,6 +834,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -775,6 +857,9 @@ void main() {
               hasPreview: false,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -795,6 +880,9 @@ void main() {
               hasPreview: true,
               fileId: 321,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -815,6 +903,79 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "user",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
+              isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+            ));
+      });
+
+      test("trashbinFilename", () {
+        final file = src.copyWith(trashbinFilename: "test2.jpg");
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "admin",
+              trashbinFilename: "test2.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
+              isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+            ));
+      });
+
+      test("trashbinOriginalLocation", () {
+        final file = src.copyWith(trashbinOriginalLocation: "Photos2/test.jpg");
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos2/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
+              isArchived: true,
+              overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+            ));
+      });
+
+      test("trashbinDeletionTime", () {
+        final now = DateTime.now();
+        final file = src.copyWith(trashbinDeletionTime: now);
+        expect(
+            file,
+            File(
+              path: "remote.php/dav/files/admin/test.jpg",
+              contentLength: 123,
+              contentType: "image/jpeg",
+              etag: "8a3e0799b6f0711c23cc2d93950eceb5",
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              isCollection: true,
+              usedBytes: 123456,
+              hasPreview: true,
+              fileId: 123,
+              ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: now,
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -836,6 +997,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               metadata: metadata,
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
@@ -854,6 +1018,9 @@ void main() {
           hasPreview: true,
           fileId: 123,
           ownerId: "admin",
+          trashbinFilename: "test.jpg",
+          trashbinOriginalLocation: "Photos/test.jpg",
+          trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
           metadata: Metadata(),
           isArchived: true,
           overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
@@ -872,6 +1039,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -892,6 +1062,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: false,
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
@@ -912,6 +1085,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
             ));
       });
@@ -932,6 +1108,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
               overrideDateTime: DateTime.utc(2022, 3, 4, 5, 6, 7),
             ));
@@ -952,6 +1131,9 @@ void main() {
               hasPreview: true,
               fileId: 123,
               ownerId: "admin",
+              trashbinFilename: "test.jpg",
+              trashbinOriginalLocation: "Photos/test.jpg",
+              trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
               isArchived: true,
             ));
       });

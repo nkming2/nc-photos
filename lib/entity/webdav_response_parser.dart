@@ -68,6 +68,9 @@ class WebdavFileParser {
     Metadata? metadata;
     bool? isArchived;
     DateTime? overrideDateTime;
+    String? trashbinFilename;
+    String? trashbinOriginalLocation;
+    DateTime? trashbinDeletionTime;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -101,6 +104,9 @@ class WebdavFileParser {
         metadata = propParser.metadata;
         isArchived = propParser.isArchived;
         overrideDateTime = propParser.overrideDateTime;
+        trashbinFilename = propParser.trashbinFilename;
+        trashbinOriginalLocation = propParser.trashbinOriginalLocation;
+        trashbinDeletionTime = propParser.trashbinDeletionTime;
       }
     }
 
@@ -118,6 +124,9 @@ class WebdavFileParser {
       metadata: metadata,
       isArchived: isArchived,
       overrideDateTime: overrideDateTime,
+      trashbinFilename: trashbinFilename,
+      trashbinOriginalLocation: trashbinOriginalLocation,
+      trashbinDeletionTime: trashbinDeletionTime,
     );
   }
 
@@ -177,6 +186,16 @@ class _PropParser {
       } else if (child.matchQualifiedName("owner-id",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _ownerId = child.innerText;
+      } else if (child.matchQualifiedName("trashbin-filename",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        _trashbinFilename = child.innerText;
+      } else if (child.matchQualifiedName("trashbin-original-location",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        _trashbinOriginalLocation = child.innerText;
+      } else if (child.matchQualifiedName("trashbin-deletion-time",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        _trashbinDeletionTime = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(child.innerText) * 1000);
       } else if (child.matchQualifiedName("is-archived",
           prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
         _isArchived = child.innerText == "true";
@@ -216,6 +235,9 @@ class _PropParser {
   Metadata? get metadata => _metadata;
   bool? get isArchived => _isArchived;
   DateTime? get overrideDateTime => _overrideDateTime;
+  String? get trashbinFilename => _trashbinFilename;
+  String? get trashbinOriginalLocation => _trashbinOriginalLocation;
+  DateTime? get trashbinDeletionTime => _trashbinDeletionTime;
 
   final Map<String, String> namespaces;
 
@@ -234,6 +256,9 @@ class _PropParser {
   Metadata? _metadata;
   bool? _isArchived;
   DateTime? _overrideDateTime;
+  String? _trashbinFilename;
+  String? _trashbinOriginalLocation;
+  DateTime? _trashbinDeletionTime;
 }
 
 extension on XmlElement {

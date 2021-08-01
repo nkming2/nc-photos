@@ -175,6 +175,9 @@ class _Files {
     hasPreview,
     size,
     richWorkspace,
+    trashbinFilename,
+    trashbinOriginalLocation,
+    trashbinDeletionTime,
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
@@ -195,7 +198,11 @@ class _Files {
           shareTypes != null ||
           checksums != null ||
           size != null);
-      final bool hasNcNs = (hasPreview != null || richWorkspace != null);
+      final bool hasNcNs = (hasPreview != null ||
+          richWorkspace != null ||
+          trashbinFilename != null ||
+          trashbinOriginalLocation != null ||
+          trashbinDeletionTime != null);
       if (!hasDavNs && !hasOcNs && !hasNcNs) {
         // no body
         return await _api.request("PROPFIND", path);
@@ -264,6 +271,15 @@ class _Files {
             }
             if (richWorkspace != null) {
               builder.element("nc:rich-workspace");
+            }
+            if (trashbinFilename != null) {
+              builder.element("nc:trashbin-filename");
+            }
+            if (trashbinOriginalLocation != null) {
+              builder.element("nc:trashbin-original-location");
+            }
+            if (trashbinDeletionTime != null) {
+              builder.element("nc:trashbin-deletion-time");
             }
             for (final p in customProperties ?? []) {
               builder.element(p);

@@ -40,6 +40,9 @@ class FileWebdavDataSource implements FileDataSource {
       hasPreview: 1,
       fileid: 1,
       ownerId: 1,
+      trashbinFilename: 1,
+      trashbinOriginalLocation: 1,
+      trashbinDeletionTime: 1,
       customNamespaces: {
         "com.nkming.nc_photos": "app",
       },
