@@ -18,6 +18,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -95,34 +96,51 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   }
 
   Widget _buildContent(BuildContext context, ScanDirBlocState state) {
-    return Stack(
-      children: [
-        buildItemStreamListOuter(
-          context,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              accentColor: AppTheme.getOverscrollIndicatorColor(context),
+    if (state is ScanDirBlocSuccess && itemStreamListItems.isEmpty) {
+      return Column(
+        children: [
+          AppBar(
+            title: Text(L10n.of(context).albumArchiveLabel),
+            elevation: 0,
+          ),
+          Expanded(
+            child: EmptyListIndicator(
+              icon: Icons.archive_outlined,
+              text: L10n.of(context).listEmptyText,
             ),
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverPadding(
-                  padding: const EdgeInsets.only(top: 8),
-                  sliver: buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
+      );
+    } else {
+      return Stack(
+        children: [
+          buildItemStreamListOuter(
+            context,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                accentColor: AppTheme.getOverscrollIndicatorColor(context),
+              ),
+              child: CustomScrollView(
+                slivers: [
+                  _buildAppBar(context),
+                  SliverPadding(
+                    padding: const EdgeInsets.only(top: 8),
+                    sliver: buildItemStreamList(
+                      maxCrossAxisExtent: _thumbSize.toDouble(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        if (state is ScanDirBlocLoading)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: const LinearProgressIndicator(),
-          ),
-      ],
-    );
+          if (state is ScanDirBlocLoading)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: const LinearProgressIndicator(),
+            ),
+        ],
+      );
+    }
   }
 
   Widget _buildAppBar(BuildContext context) {

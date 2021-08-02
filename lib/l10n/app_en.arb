@@ -581,6 +581,10 @@
 	"@listNoResultsText": {
 		"description": "When there's nothing in a list"
 	},
+	"listEmptyText": "Empty",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
 	"albumTrashLabel": "Trash",
 	"@albumTrashLabel": {
 		"description": "Deleted photos"

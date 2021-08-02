@@ -19,6 +19,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
+import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -97,34 +98,51 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   Widget _buildContent(BuildContext context, LsTrashbinBlocState state) {
-    return Stack(
-      children: [
-        buildItemStreamListOuter(
-          context,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              accentColor: AppTheme.getOverscrollIndicatorColor(context),
+    if (state is LsTrashbinBlocSuccess && itemStreamListItems.isEmpty) {
+      return Column(
+        children: [
+          AppBar(
+            title: Text(L10n.of(context).albumTrashLabel),
+            elevation: 0,
+          ),
+          Expanded(
+            child: EmptyListIndicator(
+              icon: Icons.delete_outline,
+              text: L10n.of(context).listEmptyText,
             ),
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverPadding(
-                  padding: const EdgeInsets.only(top: 8),
-                  sliver: buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
+      );
+    } else {
+      return Stack(
+        children: [
+          buildItemStreamListOuter(
+            context,
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                accentColor: AppTheme.getOverscrollIndicatorColor(context),
+              ),
+              child: CustomScrollView(
+                slivers: [
+                  _buildAppBar(context),
+                  SliverPadding(
+                    padding: const EdgeInsets.only(top: 8),
+                    sliver: buildItemStreamList(
+                      maxCrossAxisExtent: _thumbSize.toDouble(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        if (state is LsTrashbinBlocLoading)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: const LinearProgressIndicator(),
-          ),
-      ],
-    );
+          if (state is LsTrashbinBlocLoading)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: const LinearProgressIndicator(),
+            ),
+        ],
+      );
+    }
   }
 
   Widget _buildAppBar(BuildContext context) {

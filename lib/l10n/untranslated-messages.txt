@@ -1,5 +1,6 @@
 {
   "el": [
+    "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
     "restoreSelectedProcessingNotification",
@@ -18,6 +19,7 @@
     "albumSearchTextFieldHint",
     "clearTooltip",
     "listNoResultsText",
+    "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
     "restoreSelectedProcessingNotification",
