@@ -11,6 +11,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
+import 'package:nc_photos/widget/empty_list_indicator.dart';
 
 /// Search and filter albums (to be replaced by a more universal search in the
 /// future)
@@ -75,23 +76,9 @@ class AlbumSearchDelegate extends SearchDelegate {
 
   Widget _buildResultContent(BuildContext context, AlbumSearchBlocState state) {
     if (state.results.isEmpty) {
-      return Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.mood_bad,
-              size: 72,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              L10n.of(context).listNoResultsText,
-              style: const TextStyle(fontSize: 24),
-            ),
-          ],
-        ),
+      return EmptyListIndicator(
+        icon: Icons.mood_bad,
+        text: L10n.of(context).listNoResultsText,
       );
     } else {
       return StaggeredGridView.extentBuilder(
