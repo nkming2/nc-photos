@@ -77,6 +77,9 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
       // need to rebuild grid after cell size changed
       final cellSize = widget.maxCrossAxisExtent;
+      if (_prevCellSize == null) {
+        _prevCellSize = cellSize;
+      }
       if (cellSize != _prevCellSize) {
         _log.info("[build] updateListHeight: cell size changed");
         WidgetsBinding.instance!
