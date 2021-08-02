@@ -17,8 +17,11 @@ Locale? getSelectedLocale(BuildContext context) =>
 final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index:
       AppLanguage(_AppLanguageEnum.systemDefault.index, "System default", null),
+  // sorted by alphabetic order of their ISO language names
   _AppLanguageEnum.english.index: AppLanguage(
       _AppLanguageEnum.english.index, "English", const Locale("en")),
+  _AppLanguageEnum.greek.index:
+      AppLanguage(_AppLanguageEnum.greek.index, "ελληνικά", const Locale("el")),
   _AppLanguageEnum.spanish.index: AppLanguage(
       _AppLanguageEnum.spanish.index, "Español", const Locale("es")),
 };
@@ -28,6 +31,7 @@ enum _AppLanguageEnum {
   systemDefault,
   english,
   spanish,
+  greek,
 }
 
 AppLanguage _getSelectedLanguage(BuildContext context) {

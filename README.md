@@ -14,7 +14,8 @@ Features:
 - Sign-in to multiple servers
 - and more to come!
 
-Translations:
+Translations (sorted by ISO name):
+- ελληνικά (contributed by Chris Karasoulis)
 - Español (contributed by luckkmaxx)
 
 This app does not require any server-side plugins.
