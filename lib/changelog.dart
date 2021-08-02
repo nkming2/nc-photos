@@ -71,4 +71,8 @@ This version includes changes that are not compatible with older versions. Pleas
   """23.0
 - Paid version is now published on Play Store. Head to Settings to learn more if you are interested
 """,
+  // v24
+  """24.0
+- Show and manage deleted files in trash bin
+""",
 ];
