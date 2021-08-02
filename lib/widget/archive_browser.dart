@@ -162,7 +162,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       actions: [
         IconButton(
           icon: const Icon(Icons.unarchive),
-          tooltip: L10n.of(context).unarchiveSelectedTooltip,
+          tooltip: L10n.of(context).unarchiveTooltip,
           onPressed: () {
             _onSelectionAppBarUnarchivePressed();
           },

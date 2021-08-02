@@ -159,14 +159,14 @@ class _HomePhotosState extends State<HomePhotos>
         if (platform_k.isAndroid)
           IconButton(
             icon: const Icon(Icons.share),
-            tooltip: L10n.of(context).shareSelectedTooltip,
+            tooltip: L10n.of(context).shareTooltip,
             onPressed: () {
               _onSelectionAppBarSharePressed(context);
             },
           ),
         IconButton(
           icon: const Icon(Icons.playlist_add),
-          tooltip: L10n.of(context).addSelectedToAlbumTooltip,
+          tooltip: L10n.of(context).addToAlbumTooltip,
           onPressed: () {
             _onSelectionAppBarAddToAlbumPressed(context);
           },
@@ -176,11 +176,11 @@ class _HomePhotosState extends State<HomePhotos>
           itemBuilder: (context) => [
             PopupMenuItem(
               value: _SelectionAppBarMenuOption.archive,
-              child: Text(L10n.of(context).archiveSelectedMenuLabel),
+              child: Text(L10n.of(context).archiveTooltip),
             ),
             PopupMenuItem(
               value: _SelectionAppBarMenuOption.delete,
-              child: Text(L10n.of(context).deleteSelectedTooltip),
+              child: Text(L10n.of(context).deleteTooltip),
             ),
           ],
           onSelected: (option) {

@@ -232,7 +232,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: L10n.of(context).shareSelectedTooltip,
+          tooltip: L10n.of(context).shareTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },

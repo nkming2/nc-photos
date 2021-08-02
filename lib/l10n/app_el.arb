@@ -33,10 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumTooltip": "Προσθήκη επιλεγμένων σε συλλογή",
-	"@addSelectedToAlbumTooltip": {
-		"description": "Tooltip of the button that adds selected items to an album"
-	},
 	"addSelectedToAlbumSuccessNotification": "Επιτυχής προσθήκη όλων των αντικειμένων στη συλλογή {album}",
 	"@addSelectedToAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are added to an album successfully",
@@ -52,7 +48,7 @@
 	},
 	"addToAlbumTooltip": "Προσθήκη σε συλλογή",
 	"@addToAlbumTooltip": {
-		"description": "Tooltip for the add to album button"
+		"description": "Add selected items to an album"
 	},
 	"addToAlbumSuccessNotification": "Επιτυχής προσθήκη στη συλλογή {album}",
 	"@addToAlbumSuccessNotification": {
@@ -70,10 +66,6 @@
 	"addToAlbumAlreadyAddedNotification": "Το αντικείμενο βρίσκεται ήδη στη συλλογή",
 	"@addToAlbumAlreadyAddedNotification": {
 		"description": "Inform user that the item is already in the album"
-	},
-	"deleteSelectedTooltip": "Διαγραφή επιλεγμένων",
-	"@deleteSelectedTooltip": {
-		"description": "Tooltip of the button that deletes selected items"
 	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Διαγραφή 1 αντικειμένου} other{Διαγραφή {count} αντικειμένων}}",
 	"@deleteSelectedProcessingNotification": {
@@ -97,8 +89,8 @@
 			}
 		}
 	},
-	"archiveSelectedMenuLabel": "Αρχειοθέτηση επιλεγμένων",
-	"@archiveSelectedMenuLabel": {
+	"archiveTooltip": "Αρχειοθέτηση επιλεγμένων",
+	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
 	"archiveSelectedProcessingNotification": "{count, plural, =1{Αρχειοθέτηση 1 αντικειμένου} other{Αρχειοθέτηση {count} αντικειμένων}}",
@@ -123,8 +115,8 @@
 			}
 		}
 	},
-	"unarchiveSelectedTooltip": "Αποαρχειοθέτηση επιλεγμένων",
-	"@unarchiveSelectedTooltip": {
+	"unarchiveTooltip": "Αποαρχειοθέτηση επιλεγμένων",
+	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
 	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Αποαρχειοθέτηση 1 αντικειμένου} other{Αποαρχειοθέτηση {count} αντικειμένων}}",
@@ -151,7 +143,7 @@
 	},
 	"deleteTooltip": "Διαγραφή",
 	"@deleteTooltip": {
-		"description": "Tooltip for the delete button"
+		"description": "Delete selected items"
 	},
 	"deleteProcessingNotification": "Διαγραφή αντικειμένου",
 	"@deleteProcessingNotification": {
@@ -557,10 +549,6 @@
 	},
 	"shareTooltip": "Κοινοποίηση",
 	"@shareTooltip": {
-		"description": "Share the current item to other apps"
-	},
-	"shareSelectedTooltip": "Κοινοποίηση επιλεγμένων",
-	"@shareSelectedTooltip": {
 		"description": "Share selected items to other apps"
 	},
 	"shareSelectedEmptyNotification": "Επιλέξτε μερικές φωτογραφίες για κοινοποίηση",

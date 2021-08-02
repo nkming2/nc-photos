@@ -152,7 +152,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       actions: [
         IconButton(
           icon: const Icon(Icons.delete),
-          tooltip: L10n.of(context).deleteSelectedTooltip,
+          tooltip: L10n.of(context).deleteTooltip,
           onPressed: () {
             _onSelectionAppBarDeletePressed();
           },

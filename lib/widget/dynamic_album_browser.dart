@@ -275,7 +275,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: L10n.of(context).shareSelectedTooltip,
+          tooltip: L10n.of(context).shareTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
@@ -285,7 +285,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         itemBuilder: (context) => [
           PopupMenuItem(
             value: _SelectionAppBarOption.delete,
-            child: Text(L10n.of(context).deleteSelectedTooltip),
+            child: Text(L10n.of(context).deleteTooltip),
           ),
         ],
         onSelected: (option) {
