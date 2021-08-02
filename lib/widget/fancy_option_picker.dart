@@ -6,11 +6,13 @@ class FancyOptionPickerItem {
     required this.label,
     this.isSelected = false,
     this.onSelect,
+    this.dense = false,
   });
 
   String label;
   bool isSelected;
   VoidCallback? onSelect;
+  bool dense;
 }
 
 /// A fancy looking dialog to pick an option
@@ -41,6 +43,7 @@ class FancyOptionPicker extends StatelessWidget {
                         : null,
                   ),
                   onTap: e.isSelected ? null : e.onSelect,
+                  dense: e.dense,
                 ),
               ))
           .toList(),

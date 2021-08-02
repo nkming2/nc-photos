@@ -12,6 +12,7 @@ import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsArguments {
@@ -140,19 +141,21 @@ class _SettingsState extends State<Settings> {
   }
 
   void _onLanguageTap(BuildContext context) {
+    final selected =
+        Pref.inst().getLanguageOr(language_util.supportedLanguages[0]!.langId);
     showDialog(
       context: context,
-      builder: (context) => SimpleDialog(
-        children: language_util.supportedLanguages.values
-            .map<Widget>((lang) => SimpleDialogOption(
-                  onPressed: () {
+      builder: (context) => FancyOptionPicker(
+        items: language_util.supportedLanguages.values
+            .map((lang) => FancyOptionPickerItem(
+                  label: lang.nativeName,
+                  isSelected: lang.langId == selected,
+                  onSelect: () {
                     _log.info(
                         "[_onLanguageTap] Set language: ${lang.nativeName}");
                     Navigator.of(context).pop(lang.langId);
                   },
-                  child: ListTile(
-                    title: Text(lang.nativeName),
-                  ),
+                  dense: true,
                 ))
             .toList(),
       ),
