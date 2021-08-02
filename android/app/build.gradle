@@ -57,6 +57,10 @@ android {
         free {
             dimension "version"
         }
+        paid {
+            dimension "version"
+            applicationIdSuffix ".paid"
+        }
     }
 
     splits {
