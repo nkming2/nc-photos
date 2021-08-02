@@ -126,7 +126,8 @@ class _SplashState extends State<Splash> {
       return changelog.contents
           .sublist(fromMajor)
           .reversed
-          .where((element) => element != null)
+          .whereType<String>()
+          .map((e) => e.trim())
           .join("\n\n");
     } catch (e, stacktrace) {
       _log.severe("[_gatherChangelog] Failed", e, stacktrace);
