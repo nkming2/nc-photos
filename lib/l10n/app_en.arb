@@ -195,7 +195,7 @@
 			}
 		}
 	},
-	"createAlbumTooltip": "Create new album",
+	"createAlbumTooltip": "New album",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},

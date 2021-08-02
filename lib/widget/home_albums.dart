@@ -19,7 +19,6 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_browser.dart';
-import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
@@ -108,10 +107,17 @@ class _HomeAlbumsState extends State<HomeAlbums>
                 sliver: SliverStaggeredGrid.extentBuilder(
                   maxCrossAxisExtent: 256,
                   mainAxisSpacing: 8,
-                  itemCount: _items.length + (_isSelectionMode ? 0 : 3),
+                  itemCount: _items.length + _extraGridItemCount + 1,
                   itemBuilder: _buildItem,
                   staggeredTileBuilder: (index) {
-                    return const StaggeredTile.count(1, 1);
+                    if (index < _extraGridItemCount) {
+                      return const StaggeredTile.fit(1);
+                    } else if (index == _extraGridItemCount) {
+                      // separation
+                      return const StaggeredTile.extent(99, 1);
+                    } else {
+                      return const StaggeredTile.count(1, 1);
+                    }
                   },
                 ),
               ),
@@ -182,14 +188,16 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    if (index < _items.length) {
-      return _buildAlbumItem(context, index);
-    } else if (index == _items.length) {
+    if (index == 0) {
       return _buildArchiveItem(context);
-    } else if (index == _items.length + 1) {
+    } else if (index == 1) {
       return _buildTrashbinItem(context);
-    } else {
+    } else if (index == 2) {
       return _buildNewAlbumItem(context);
+    } else if (index == _extraGridItemCount) {
+      return Container();
+    } else {
+      return _buildAlbumItem(context, index - _extraGridItemCount - 1);
     }
   }
 
@@ -205,65 +213,36 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Widget _buildArchiveItem(BuildContext context) {
-    return AlbumGridItem(
-      cover: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          color: AppTheme.getListItemBackgroundColor(context),
-          constraints: const BoxConstraints.expand(),
-          child: Icon(
-            Icons.archive,
-            color: Colors.white.withOpacity(.8),
-            size: 88,
-          ),
-        ),
-      ),
-      title: L10n.of(context).albumArchiveLabel,
-      onTap: () {
-        Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
-            arguments: ArchiveBrowserArguments(widget.account));
-      },
+    return _NonAlbumGridItem(
+      icon: Icons.archive_outlined,
+      label: L10n.of(context).albumArchiveLabel,
+      onTap: _isSelectionMode
+          ? null
+          : () {
+              Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
+                  arguments: ArchiveBrowserArguments(widget.account));
+            },
     );
   }
 
   Widget _buildTrashbinItem(BuildContext context) {
-    return AlbumGridItem(
-      cover: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          color: AppTheme.getListItemBackgroundColor(context),
-          constraints: const BoxConstraints.expand(),
-          child: Icon(
-            Icons.delete,
-            color: Colors.white.withOpacity(.8),
-            size: 88,
-          ),
-        ),
-      ),
-      title: L10n.of(context).albumTrashLabel,
-      onTap: () {
-        Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
-            arguments: TrashbinBrowserArguments(widget.account));
-      },
+    return _NonAlbumGridItem(
+      icon: Icons.delete_outlined,
+      label: L10n.of(context).albumTrashLabel,
+      onTap: _isSelectionMode
+          ? null
+          : () {
+              Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
+                  arguments: TrashbinBrowserArguments(widget.account));
+            },
     );
   }
 
   Widget _buildNewAlbumItem(BuildContext context) {
-    return AlbumGridItem(
-      cover: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          color: AppTheme.getListItemBackgroundColor(context),
-          constraints: const BoxConstraints.expand(),
-          child: Icon(
-            Icons.add,
-            color: Colors.white.withOpacity(.8),
-            size: 88,
-          ),
-        ),
-      ),
-      title: L10n.of(context).createAlbumTooltip,
-      onTap: () => _onNewAlbumItemTap(context),
+    return _NonAlbumGridItem(
+      icon: Icons.add,
+      label: L10n.of(context).createAlbumTooltip,
+      onTap: _isSelectionMode ? null : () => _onNewAlbumItemTap(context),
     );
   }
 
@@ -460,10 +439,64 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;
+
+  static const _extraGridItemCount = 3;
 }
 
 class _GridItem {
   _GridItem(this.album);
 
   Album album;
+}
+
+class _NonAlbumGridItem extends StatelessWidget {
+  _NonAlbumGridItem({
+    Key? key,
+    required this.icon,
+    required this.label,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppTheme.getListItemBackgroundColor(context),
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: AppTheme.getPrimaryTextColor(context),
+                    size: 24,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(label),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
 }
