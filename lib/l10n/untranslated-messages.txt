@@ -1,0 +1,33 @@
+{
+  "el": [
+    "albumTrashLabel",
+    "restoreTooltip",
+    "restoreSelectedProcessingNotification",
+    "restoreSelectedSuccessNotification",
+    "restoreSelectedFailureNotification",
+    "restoreProcessingNotification",
+    "restoreSuccessNotification",
+    "restoreFailureNotification",
+    "deletePermanentlyTooltip",
+    "deletePermanentlyConfirmationDialogTitle",
+    "deletePermanentlyConfirmationDialogContent"
+  ],
+
+  "es": [
+    "searchTooltip",
+    "albumSearchTextFieldHint",
+    "clearTooltip",
+    "listNoResultsText",
+    "albumTrashLabel",
+    "restoreTooltip",
+    "restoreSelectedProcessingNotification",
+    "restoreSelectedSuccessNotification",
+    "restoreSelectedFailureNotification",
+    "restoreProcessingNotification",
+    "restoreSuccessNotification",
+    "restoreFailureNotification",
+    "deletePermanentlyTooltip",
+    "deletePermanentlyConfirmationDialogTitle",
+    "deletePermanentlyConfirmationDialogContent"
+  ]
+}
