@@ -43,3 +43,4 @@ app.*.map.json
 
 # Android Studio will place build artifacts here
 /android/app/free*
+/android/app/paid*
