@@ -15,6 +15,7 @@ Features:
 - and more to come!
 
 Translations (sorted by ISO name):
+- français (contributed by mgreil)
 - ελληνικά (contributed by Chris Karasoulis)
 - Español (contributed by luckkmaxx)
 
