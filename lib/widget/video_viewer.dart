@@ -5,7 +5,11 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
@@ -39,23 +43,17 @@ class _VideoViewerState extends State<VideoViewer> {
   @override
   initState() {
     super.initState();
-    _controller = VideoPlayerController.network(
-      api_util.getFileUrl(widget.account, widget.file),
-      httpHeaders: {
-        "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-      },
-    )..initialize().then((_) {
-        widget.onLoaded?.call();
-        setState(() {});
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          if (_key.currentContext != null) {
-            widget.onHeightChanged?.call(_key.currentContext!.size!.height);
-          }
-        });
-      }).catchError((e, stacktrace) {
-        _log.shout("[initState] Filed while initialize", e, stacktrace);
+    _getVideoUrl().then((url) {
+      setState(() {
+        _initController(url);
       });
-    _controller.addListener(_onControllerChanged);
+    }).onError((e, stacktrace) {
+      _log.shout("[initState] Failed while _getVideoUrl", e, stacktrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e, context)),
+        duration: k.snackBarDurationNormal,
+      ));
+    });
 
     Wakelock.enable();
   }
@@ -63,7 +61,7 @@ class _VideoViewerState extends State<VideoViewer> {
   @override
   build(BuildContext context) {
     Widget content;
-    if (_controller.value.isInitialized) {
+    if (_isControllerInitialized && _controller.value.isInitialized) {
       content = _buildPlayer(context);
     } else {
       content = Container();
@@ -84,6 +82,27 @@ class _VideoViewerState extends State<VideoViewer> {
     Wakelock.disable();
   }
 
+  void _initController(String url) {
+    _controller = VideoPlayerController.network(
+      url,
+      httpHeaders: {
+        "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+      },
+    )..initialize().then((_) {
+        widget.onLoaded?.call();
+        setState(() {});
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          if (_key.currentContext != null) {
+            widget.onHeightChanged?.call(_key.currentContext!.size!.height);
+          }
+        });
+      }).catchError((e, stacktrace) {
+        _log.shout("[initState] Filed while initialize", e, stacktrace);
+      });
+    _controller.addListener(_onControllerChanged);
+    _isControllerInitialized = true;
+  }
+
   Widget _buildPlayer(BuildContext context) {
     if (_controller.value.isPlaying && !widget.canPlay) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -98,7 +117,9 @@ class _VideoViewerState extends State<VideoViewer> {
           child: AspectRatio(
             key: _key,
             aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
+            child: IgnorePointer(
+              child: VideoPlayer(_controller),
+            ),
           ),
         ),
         Positioned.fill(
@@ -196,7 +217,16 @@ class _VideoViewerState extends State<VideoViewer> {
     widget.onPause?.call();
   }
 
+  Future<String> _getVideoUrl() async {
+    if (platform_k.isWeb) {
+      return RequestPublicLink()(widget.account, widget.file);
+    } else {
+      return api_util.getFileUrl(widget.account, widget.file);
+    }
+  }
+
   final _key = GlobalKey();
+  bool _isControllerInitialized = false;
   late VideoPlayerController _controller;
   var _isFinished = false;
 

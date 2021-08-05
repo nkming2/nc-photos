@@ -36,9 +36,8 @@ final _supportedFormatMimes = [
   "image/webp",
   "image/heic",
   "image/gif",
-  // video player currently doesn't work on web
-  if (!platform_k.isWeb) "video/mp4",
-  if (platform_k.isAndroid) "video/webm",
+  "video/mp4",
+  if (platform_k.isAndroid || platform_k.isWeb) "video/webm",
 ];
 
 const _metadataSupportedFormatMimes = [
