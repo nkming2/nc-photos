@@ -8,7 +8,7 @@ Or the [free ad-supported version](https://play.google.com/store/apps/details?id
 
 Features:
 - Support JPEG, PNG, WebP, HEIC, GIF images
-- Support MP4, WebM videos (Android only)
+- Support MP4, WebM videos (codec support may vary between devices/browsers)
 - EXIF support (JPEG and HEIC only)
 - Organize photos with albums that are independent of your file hierarchy
 - Sign-in to multiple servers
