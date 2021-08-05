@@ -33,10 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumTooltip": "Ajouter la sélection à l'album",
-	"@addSelectedToAlbumTooltip": {
-		"description": "Tooltip of the button that adds selected items to an album"
-	},
 	"addSelectedToAlbumSuccessNotification": "Tous les éléments ont été ajoutés à {album} avec succès",
 	"@addSelectedToAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are added to an album successfully",
@@ -52,7 +48,7 @@
 	},
 	"addToAlbumTooltip": "Ajouter à l'album",
 	"@addToAlbumTooltip": {
-		"description": "Tooltip for the add to album button"
+		"description": "Add selected items to an album"
 	},
 	"addToAlbumSuccessNotification": "Ajouté à {album} avec succès",
 	"@addToAlbumSuccessNotification": {
@@ -70,10 +66,6 @@
 	"addToAlbumAlreadyAddedNotification": "Élément déjà dans l'album",
 	"@addToAlbumAlreadyAddedNotification": {
 		"description": "Inform user that the item is already in the album"
-	},
-	"deleteSelectedTooltip": "Supprimer la selection",
-	"@deleteSelectedTooltip": {
-		"description": "Tooltip of the button that deletes selected items"
 	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Suppression de 1 élément} other{Suppression de {count} éléments}}",
 	"@deleteSelectedProcessingNotification": {
@@ -97,8 +89,8 @@
 			}
 		}
 	},
-	"archiveSelectedMenuLabel": "Archiver la selection",
-	"@archiveSelectedMenuLabel": {
+	"archiveTooltip": "Archiver la selection",
+	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
 	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivage 1 élément} other{Archivage de {count} éléments}}",
@@ -123,8 +115,8 @@
 			}
 		}
 	},
-	"unarchiveSelectedTooltip": "Désarchiver la sélection",
-	"@unarchiveSelectedTooltip": {
+	"unarchiveTooltip": "Désarchiver la sélection",
+	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
 	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Désarchivage de 1 élément} other{Désarchivage de {count} éléments}}",
@@ -151,7 +143,7 @@
 	},
 	"deleteTooltip": "Supprimer",
 	"@deleteTooltip": {
-		"description": "Tooltip for the delete button"
+		"description": "Delete selected items"
 	},
 	"deleteProcessingNotification": "Suppression de l'élément",
 	"@deleteProcessingNotification": {
@@ -557,10 +549,6 @@
 	},
 	"shareTooltip": "Partager",
 	"@shareTooltip": {
-		"description": "Share the current item to other apps"
-	},
-	"shareSelectedTooltip": "Partager la sélection",
-	"@shareSelectedTooltip": {
 		"description": "Share selected items to other apps"
 	},
 	"shareSelectedEmptyNotification": "Sélectionnez quelques photos à partager",
