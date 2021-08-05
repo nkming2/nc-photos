@@ -108,6 +108,9 @@ class _ViewerState extends State<Viewer> {
             controller: _viewerController,
             viewportFraction: _viewportFraction,
             canSwitchPage: _canSwitchPage(),
+            onPageChanged: (_) {
+              setState(() {});
+            },
           ),
           _buildBottomAppBar(context),
           _buildAppBar(context),
@@ -340,21 +343,18 @@ class _ViewerState extends State<Viewer> {
           ImageViewer.preloadImage(widget.account, nextFile);
         }
       }
-      setState(() {
-        _pageStates[index]!.hasLoaded = true;
-        _isViewerLoaded = true;
-      });
     }
+    setState(() {
+      _pageStates[index]!.hasLoaded = true;
+      _isViewerLoaded = true;
+    });
   }
 
   void _onVideoLoaded(int index) {
-    if (_viewerController.currentPage == index &&
-        !_pageStates[index]!.hasLoaded) {
-      setState(() {
-        _pageStates[index]!.hasLoaded = true;
-        _isViewerLoaded = true;
-      });
-    }
+    setState(() {
+      _pageStates[index]!.hasLoaded = true;
+      _isViewerLoaded = true;
+    });
   }
 
   void _onVideoPlay() {

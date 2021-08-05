@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/widget/page_changed_listener.dart';
 
 class HorizontalPageViewer extends StatefulWidget {
   HorizontalPageViewer({
@@ -14,14 +15,9 @@ class HorizontalPageViewer extends StatefulWidget {
     HorizontalPageViewerController? controller,
     this.viewportFraction = 1,
     this.canSwitchPage = true,
+    this.onPageChanged,
   })  : controller = controller ?? HorizontalPageViewerController(),
-        super(key: key) {
-    this.controller._pageController = PageController(
-      initialPage: initialPage,
-      viewportFraction: viewportFraction,
-      keepPage: false,
-    );
-  }
+        super(key: key);
 
   @override
   createState() => _HorizontalPageViewerState();
@@ -32,13 +28,26 @@ class HorizontalPageViewer extends StatefulWidget {
   final HorizontalPageViewerController controller;
   final double viewportFraction;
   final bool canSwitchPage;
+  final ValueChanged<int>? onPageChanged;
 }
 
 class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
   @override
-  void initState() {
+  initState() {
     super.initState();
     _pageFocus.requestFocus();
+
+    widget.controller._pageController = PageController(
+      initialPage: widget.initialPage,
+      viewportFraction: widget.viewportFraction,
+      keepPage: false,
+    );
+    if (widget.onPageChanged != null) {
+      widget.controller._pageController.addListener(PageChangedListener(
+        widget.controller._pageController,
+        onPageChanged: widget.onPageChanged,
+      ).call);
+    }
   }
 
   @override
@@ -50,6 +59,12 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
     return platform_k.isWeb
         ? _buildWebContent(context)
         : _buildContent(context);
+  }
+
+  @override
+  dispose() {
+    widget.controller._pageController.dispose();
+    super.dispose();
   }
 
   Widget _buildWebContent(BuildContext context) {
