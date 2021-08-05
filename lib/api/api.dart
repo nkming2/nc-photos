@@ -32,6 +32,7 @@ class Api {
   Api(this._account);
 
   _Files files() => _Files(this);
+  _Ocs ocs() => _Ocs(this);
 
   static String getAuthorizationHeaderValue(Account account) {
     final auth =
@@ -397,4 +398,50 @@ class _Files {
   }
 
   static final _log = Logger("api.api._Files");
+}
+
+class _Ocs {
+  _Ocs(this._api);
+
+  _OcsDav dav() => _OcsDav(this);
+
+  Api _api;
+}
+
+class _OcsDav {
+  _OcsDav(this._ocs);
+
+  _OcsDavDirect direct() => _OcsDavDirect(this);
+
+  _Ocs _ocs;
+}
+
+class _OcsDavDirect {
+  _OcsDavDirect(this._dav);
+
+  Future<Response> post({
+    required int fileId,
+  }) async {
+    try {
+      return await _dav._ocs._api.request(
+        "POST",
+        "ocs/v2.php/apps/dav/api/v1/direct",
+        header: {
+          "OCS-APIRequest": "true",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        queryParameters: {
+          "format": "json",
+        },
+        body: "fileId=$fileId",
+      );
+    } catch (e) {
+      _log.severe("[post] Failed while post", e);
+      rethrow;
+    }
+  }
+
+  _OcsDav _dav;
+
+  static final _log = Logger("api.api._OcsDavDirect");
 }
