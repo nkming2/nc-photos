@@ -20,6 +20,8 @@ final supportedLanguages = {
   // sorted by alphabetic order of their ISO language names
   _AppLanguageEnum.english.index: AppLanguage(
       _AppLanguageEnum.english.index, "English", const Locale("en")),
+  _AppLanguageEnum.french.index: AppLanguage(
+      _AppLanguageEnum.french.index, "français", const Locale("fr")),
   _AppLanguageEnum.greek.index:
       AppLanguage(_AppLanguageEnum.greek.index, "ελληνικά", const Locale("el")),
   _AppLanguageEnum.spanish.index: AppLanguage(
@@ -32,6 +34,7 @@ enum _AppLanguageEnum {
   english,
   spanish,
   greek,
+  french,
 }
 
 AppLanguage _getSelectedLanguage(BuildContext context) {
