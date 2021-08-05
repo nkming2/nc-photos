@@ -43,11 +43,12 @@ class Api {
     String method,
     String endpoint, {
     Map<String, String>? header,
+    Map<String, String>? queryParameters,
     String? body,
     Uint8List? bodyBytes,
     bool isResponseString = true,
   }) async {
-    final url = _makeUri(endpoint);
+    final url = _makeUri(endpoint, queryParameters: queryParameters);
     final req = http.Request(method, url)
       ..headers.addAll({
         "authorization": getAuthorizationHeaderValue(_account),
@@ -87,16 +88,19 @@ class Api {
         isResponseString ? response.body : response.bodyBytes);
   }
 
-  Uri _makeUri(String endpoint) {
+  Uri _makeUri(
+    String endpoint, {
+    Map<String, String>? queryParameters,
+  }) {
     final splits = _account.address.split("/");
     final authority = splits[0];
     final path = splits.length > 1
         ? splits.sublist(1).join("/") + "/$endpoint"
         : endpoint;
     if (_account.scheme == "http") {
-      return Uri.http(authority, path);
+      return Uri.http(authority, path, queryParameters);
     } else {
-      return Uri.https(authority, path);
+      return Uri.https(authority, path, queryParameters);
     }
   }
 
