@@ -305,7 +305,7 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
-	"settingsExifSupportTitle": "soporte EXIF",
+	"settingsExifSupportTitle": "Soporte EXIF",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
 	},
@@ -558,6 +558,74 @@
 	"shareDownloadingDialogContent": "Descargando",
 	"@shareDownloadingDialogContent": {
 		"description": "Downloading photos to be shared"
+	},
+	"searchTooltip": "Buscar",
+	"albumSearchTextFieldHint": "Search albums",
+	"clearTooltip": "Limpiar",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "Sin resultados",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"listEmptyText": "Vacío",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Papelera",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Restaurar",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, =1{Restaurando 1 elemento} other{Restaurando {count} elementos}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Restaurado todo con éxito",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, =1{Fallo al restaurar 1 elemento} other{Fallo al restaurar {count} elementos}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Restaurando éste elemento",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "Elemento restaurado con éxito",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "Fallo al restaurar éste elemento",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Eliminar permanentemente",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "Eliminar PERMANENTEMENTE",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "Los elementos seleccionados se eliminarán permanentemente del servidor.\n\nÉsta acción es irreversible",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
 	},
 
 	"changelogTitle": "Registro de cambios",
