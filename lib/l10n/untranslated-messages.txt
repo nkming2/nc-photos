@@ -14,11 +14,7 @@
     "deletePermanentlyConfirmationDialogContent"
   ],
 
-  "es": [
-    "searchTooltip",
-    "albumSearchTextFieldHint",
-    "clearTooltip",
-    "listNoResultsText",
+  "fr": [
     "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
