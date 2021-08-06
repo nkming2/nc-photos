@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:tuple/tuple.dart';
@@ -203,8 +204,13 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       await for (final result in ListAlbum(
           FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account)) {
         if (result is Tuple2) {
-          _log.severe("[_queryWithAlbumDataSource] Exception while ListAlbum",
-              result.item1, result.item2);
+          if (result.item1 is CacheNotFoundException) {
+            _log.info(
+                "[_queryWithAlbumDataSource] Cache not found", result.item1);
+          } else {
+            _log.shout("[_queryWithAlbumDataSource] Exception while ListAlbum",
+                result.item1, result.item2);
+          }
           errors.add(result.item1);
         } else if (result is Album) {
           albums.add(result);
