@@ -61,14 +61,8 @@ class Api {
           header.entries.map((e) => MapEntry(e.key.toLowerCase(), e.value)));
     }
     if (body != null) {
-      if (!req.headers.containsKey("content-type")) {
-        req.headers["content-type"] = "application/xml";
-      }
       req.body = body;
     } else if (bodyBytes != null) {
-      if (!req.headers.containsKey("content-type")) {
-        req.headers["content-type"] = "application/octet-stream";
-      }
       req.bodyBytes = bodyBytes;
     }
     final response =
@@ -149,7 +143,7 @@ class _Files {
         "PUT",
         path,
         header: {
-          "content-type": mime,
+          "Content-Type": mime,
         },
         bodyBytes: content,
       );
@@ -293,6 +287,7 @@ class _Files {
         });
       return await _api.request("PROPFIND", path,
           header: {
+            "Content-Type": "application/xml",
             if (depth != null) "Depth": depth.toString(),
           },
           body: builder.buildDocument().toXmlString());
@@ -341,8 +336,14 @@ class _Files {
             });
           }
         });
-      return await _api.request("PROPPATCH", path,
-          body: builder.buildDocument().toXmlString());
+      return await _api.request(
+        "PROPPATCH",
+        path,
+        header: {
+          "Content-Type": "application/xml",
+        },
+        body: builder.buildDocument().toXmlString(),
+      );
     } catch (e) {
       _log.severe("[proppatch] Failed while proppatch", e);
       rethrow;
