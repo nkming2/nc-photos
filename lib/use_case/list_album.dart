@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/compat/v15.dart';
+import 'package:nc_photos/use_case/compat/v25.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:tuple/tuple.dart';
 
@@ -47,8 +48,13 @@ class ListAlbum {
     }
     final albumFiles =
         ls.where((element) => element.isCollection != true).toList();
-    for (final f in albumFiles) {
+    for (var i = 0; i < albumFiles.length; ++i) {
+      var f = albumFiles[i];
       try {
+        if (CompatV25.isAlbumFileNeedMigration(f)) {
+          f = await CompatV25.migrateAlbumFile(fileRepo, account, f);
+        }
+        albumFiles[i] = f;
         yield await albumRepo.get(account, f);
       } catch (e, stacktrace) {
         yield Tuple2(e, stacktrace);

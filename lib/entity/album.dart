@@ -270,7 +270,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     // just make up something
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final random = Random().nextInt(0xFFFFFF);
-    return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.json";
+    return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.nc_album.json";
   }
 
   static final _log = Logger("entity.album.AlbumRemoteDataSource");
