@@ -1,7 +1,8 @@
 import 'package:logging/logging.dart';
+import 'package:nc_photos/type.dart';
 
 abstract class AlbumUpgrader {
-  Map<String, dynamic>? call(Map<String, dynamic> json);
+  JsonObj? call(JsonObj json);
 }
 
 /// Upgrade v1 Album to v2
@@ -11,10 +12,10 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
   });
 
   @override
-  call(Map<String, dynamic> json) {
+  call(JsonObj json) {
     // v1 album items are corrupted in one of the updates, drop it
     _log.fine("[call] Upgrade v1 Album for file: $logFilePath");
-    final result = Map<String, dynamic>.from(json);
+    final result = JsonObj.from(json);
     result["items"] = [];
     return result;
   }
@@ -32,10 +33,10 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
   });
 
   @override
-  call(Map<String, dynamic> json) {
+  call(JsonObj json) {
     // move v2 items to v3 provider
     _log.fine("[call] Upgrade v2 Album for file: $logFilePath");
-    final result = Map<String, dynamic>.from(json);
+    final result = JsonObj.from(json);
     result["provider"] = <String, dynamic>{
       "type": "static",
       "content": <String, dynamic>{
@@ -65,10 +66,10 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
   });
 
   @override
-  call(Map<String, dynamic> json) {
+  call(JsonObj json) {
     // move v3 items to v4 provider
     _log.fine("[call] Upgrade v3 Album for file: $logFilePath");
-    final result = Map<String, dynamic>.from(json);
+    final result = JsonObj.from(json);
     // add the descending time sort provider
     result["sortProvider"] = <String, dynamic>{
       "type": "time",

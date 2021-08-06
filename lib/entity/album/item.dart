@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/type.dart';
 
 List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
     items.distinctIf(
@@ -21,7 +22,7 @@ List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
 abstract class AlbumItem {
   AlbumItem();
 
-  factory AlbumItem.fromJson(Map<String, dynamic> json) {
+  factory AlbumItem.fromJson(JsonObj json) {
     final type = json["type"];
     final content = json["content"];
     switch (type) {
@@ -35,7 +36,7 @@ abstract class AlbumItem {
     }
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     String getType() {
       if (this is AlbumFileItem) {
         return AlbumFileItem._type;
@@ -52,7 +53,7 @@ abstract class AlbumItem {
     };
   }
 
-  Map<String, dynamic> toContentJson();
+  JsonObj toContentJson();
 
   static final _log = Logger("entity.album.AlbumItem");
 }
@@ -74,7 +75,7 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
     }
   }
 
-  factory AlbumFileItem.fromJson(Map<String, dynamic> json) {
+  factory AlbumFileItem.fromJson(JsonObj json) {
     return AlbumFileItem(
       file: File.fromJson(json["file"].cast<String, dynamic>()),
     );
@@ -109,7 +110,7 @@ class AlbumLabelItem extends AlbumItem with EquatableMixin {
     required this.text,
   });
 
-  factory AlbumLabelItem.fromJson(Map<String, dynamic> json) {
+  factory AlbumLabelItem.fromJson(JsonObj json) {
     return AlbumLabelItem(
       text: json["text"],
     );

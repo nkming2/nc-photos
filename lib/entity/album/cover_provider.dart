@@ -6,11 +6,12 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart' as iterable_extension;
+import 'package:nc_photos/type.dart';
 
 abstract class AlbumCoverProvider with EquatableMixin {
   const AlbumCoverProvider();
 
-  factory AlbumCoverProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumCoverProvider.fromJson(JsonObj json) {
     final type = json["type"];
     final content = json["content"];
     switch (type) {
@@ -22,7 +23,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
     }
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     String getType() {
       if (this is AlbumAutoCoverProvider) {
         return AlbumAutoCoverProvider._type;
@@ -42,7 +43,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 
   File? getCover(Album album);
 
-  Map<String, dynamic> _toContentJson();
+  JsonObj _toContentJson();
 
   static final _log = Logger("entity.album.cover_provider.AlbumCoverProvider");
 }
@@ -53,7 +54,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
     this.coverFile,
   });
 
-  factory AlbumAutoCoverProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumAutoCoverProvider.fromJson(JsonObj json) {
     return AlbumAutoCoverProvider(
       coverFile: json["coverFile"] == null
           ? null

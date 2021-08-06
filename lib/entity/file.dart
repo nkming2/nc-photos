@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
+import 'package:nc_photos/type.dart';
 
 int compareFileDateTimeDescending(File x, File y) {
   final tmp = y.bestDateTime.compareTo(x.bestDateTime);
@@ -48,12 +49,12 @@ class Metadata with EquatableMixin {
   /// version by version until it reached the active version. If any upgrader
   /// in the chain is null, the upgrade process will fail
   static Metadata? fromJson(
-    Map<String, dynamic> json, {
+    JsonObj json, {
     required MetadataUpgraderV1? upgraderV1,
     required MetadataUpgraderV2? upgraderV2,
   }) {
     final jsonVersion = json["version"];
-    Map<String, dynamic>? result = json;
+    JsonObj? result = json;
     if (jsonVersion < 2) {
       result = upgraderV1?.call(result);
       if (result == null) {
@@ -81,7 +82,7 @@ class Metadata with EquatableMixin {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
@@ -135,7 +136,7 @@ class Metadata with EquatableMixin {
 }
 
 abstract class MetadataUpgrader {
-  Map<String, dynamic>? call(Map<String, dynamic> json);
+  JsonObj? call(JsonObj json);
 }
 
 /// Upgrade v1 Metadata to v2
@@ -145,7 +146,7 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
     this.logFilePath,
   });
 
-  Map<String, dynamic>? call(Map<String, dynamic> json) {
+  JsonObj? call(JsonObj json) {
     if (fileContentType == "image/webp") {
       // Version 1 metadata for webp is bugged, drop it
       _log.fine("[call] Upgrade v1 metadata for file: $logFilePath");
@@ -170,7 +171,7 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
     this.logFilePath,
   });
 
-  Map<String, dynamic>? call(Map<String, dynamic> json) {
+  JsonObj? call(JsonObj json) {
     if (fileContentType == "image/jpeg") {
       // Version 2 metadata for jpeg doesn't consider orientation
       if (json["exif"] != null && json["exif"].containsKey("Orientation")) {
@@ -229,7 +230,7 @@ class File with EquatableMixin {
     }
   }
 
-  factory File.fromJson(Map<String, dynamic> json) {
+  factory File.fromJson(JsonObj json) {
     return File(
       path: json["path"],
       contentLength: json["contentLength"],
@@ -320,7 +321,7 @@ class File with EquatableMixin {
     return product + "}";
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "path": path,
       if (contentLength != null) "contentLength": contentLength,

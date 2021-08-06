@@ -3,12 +3,13 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/type.dart';
 import 'package:tuple/tuple.dart';
 
 abstract class AlbumSortProvider with EquatableMixin {
   const AlbumSortProvider();
 
-  factory AlbumSortProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumSortProvider.fromJson(JsonObj json) {
     final type = json["type"];
     final content = json["content"];
     switch (type) {
@@ -22,7 +23,7 @@ abstract class AlbumSortProvider with EquatableMixin {
     }
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     String getType() {
       if (this is AlbumNullSortProvider) {
         return AlbumNullSortProvider._type;
@@ -42,7 +43,7 @@ abstract class AlbumSortProvider with EquatableMixin {
   /// Return a sorted copy of [items]
   List<AlbumItem> sort(List<AlbumItem> items);
 
-  Map<String, dynamic> _toContentJson();
+  JsonObj _toContentJson();
 
   static final _log = Logger("entity.album.sort_provider.AlbumSortProvider");
 }
@@ -51,7 +52,7 @@ abstract class AlbumSortProvider with EquatableMixin {
 class AlbumNullSortProvider extends AlbumSortProvider {
   const AlbumNullSortProvider();
 
-  factory AlbumNullSortProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumNullSortProvider.fromJson(JsonObj json) {
     return AlbumNullSortProvider();
   }
 
@@ -110,7 +111,7 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
     required bool isAscending,
   }) : super(isAscending: isAscending);
 
-  factory AlbumTimeSortProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumTimeSortProvider.fromJson(JsonObj json) {
     return AlbumTimeSortProvider(
       isAscending: json["isAscending"] ?? true,
     );

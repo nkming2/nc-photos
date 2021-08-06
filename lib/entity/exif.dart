@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:intl/intl.dart';
+import 'package:nc_photos/type.dart';
 
 class Exif with EquatableMixin {
   Exif(this.data);
@@ -27,7 +28,7 @@ class Exif with EquatableMixin {
 
   bool containsKey(String key) => data.containsKey(key);
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return Map.fromIterable(
       data.entries.where((e) => e.key != "MakerNote").map((e) {
         var jsonValue;
@@ -51,7 +52,7 @@ class Exif with EquatableMixin {
     );
   }
 
-  factory Exif.fromJson(Map<String, dynamic> json) {
+  factory Exif.fromJson(JsonObj json) {
     return Exif(Map.fromIterable(
       // we are filtering out MakerNote here because it's generally very large
       // and could exceed the 1MB cursor size limit on Android. Second, the

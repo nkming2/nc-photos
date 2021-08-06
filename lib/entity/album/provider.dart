@@ -8,11 +8,12 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/type.dart';
 
 abstract class AlbumProvider with EquatableMixin {
   const AlbumProvider();
 
-  factory AlbumProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumProvider.fromJson(JsonObj json) {
     final type = json["type"];
     final content = json["content"];
     switch (type) {
@@ -26,7 +27,7 @@ abstract class AlbumProvider with EquatableMixin {
     }
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     String getType() {
       if (this is AlbumStaticProvider) {
         return AlbumStaticProvider._type;
@@ -44,7 +45,7 @@ abstract class AlbumProvider with EquatableMixin {
   }
 
   @protected
-  Map<String, dynamic> toContentJson();
+  JsonObj toContentJson();
 
   @override
   toString({bool isDeep = false});
@@ -62,7 +63,7 @@ class AlbumStaticProvider extends AlbumProvider {
     required List<AlbumItem> items,
   }) : this.items = UnmodifiableListView(items);
 
-  factory AlbumStaticProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumStaticProvider.fromJson(JsonObj json) {
     return AlbumStaticProvider(
       items: (json["items"] as List)
           .map((e) => AlbumItem.fromJson(e.cast<String, dynamic>()))
@@ -165,7 +166,7 @@ class AlbumDirProvider extends AlbumDynamicProvider {
     DateTime? latestItemTime,
   }) : super(latestItemTime: latestItemTime);
 
-  factory AlbumDirProvider.fromJson(Map<String, dynamic> json) {
+  factory AlbumDirProvider.fromJson(JsonObj json) {
     return AlbumDirProvider(
       dirs: (json["dirs"] as List)
           .map((e) => File.fromJson(e.cast<String, dynamic>()))

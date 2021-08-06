@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/type.dart';
 import 'package:synchronized/synchronized.dart';
 
 class AppDb {
@@ -85,7 +86,7 @@ class AppDbFileEntry {
 
   AppDbFileEntry(this.path, this.index, this.data);
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "path": path,
       "index": index,
@@ -93,7 +94,7 @@ class AppDbFileEntry {
     };
   }
 
-  factory AppDbFileEntry.fromJson(Map<String, dynamic> json) {
+  factory AppDbFileEntry.fromJson(JsonObj json) {
     return AppDbFileEntry(
       json["path"],
       json["index"],
@@ -122,7 +123,7 @@ class AppDbAlbumEntry {
 
   AppDbAlbumEntry(this.path, this.index, this.album);
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "path": path,
       "index": index,
@@ -130,7 +131,7 @@ class AppDbAlbumEntry {
     };
   }
 
-  factory AppDbAlbumEntry.fromJson(Map<String, dynamic> json) {
+  factory AppDbAlbumEntry.fromJson(JsonObj json) {
     return AppDbAlbumEntry(
       json["path"],
       json["index"],
@@ -166,14 +167,14 @@ class AppDbFileDbEntry {
     return AppDbFileDbEntry(toNamespacedFileId(account, file), file);
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "namespacedFileId": namespacedFileId,
       "file": file.toJson(),
     };
   }
 
-  factory AppDbFileDbEntry.fromJson(Map<String, dynamic> json) {
+  factory AppDbFileDbEntry.fromJson(JsonObj json) {
     return AppDbFileDbEntry(
       json["namespacedFileId"],
       File.fromJson(json["file"].cast<String, dynamic>()),

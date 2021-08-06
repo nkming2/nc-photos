@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/type.dart';
 
 class RequestPublicLink {
   /// Request a temporary unique public link to [file]
@@ -17,7 +18,7 @@ class RequestPublicLink {
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
     }
-    final Map<String, dynamic> json = jsonDecode(response.body)["ocs"];
+    final JsonObj json = jsonDecode(response.body)["ocs"];
     if (json["meta"]["statuscode"] != 200) {
       _log.shout(
           "[call] Failed requesting server: ${jsonEncode(json["meta"])}");

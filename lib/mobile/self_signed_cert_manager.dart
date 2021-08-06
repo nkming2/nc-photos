@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/android/self_signed_cert.dart';
+import 'package:nc_photos/type.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -128,7 +129,7 @@ class _CertInfo {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  JsonObj toJson() {
     return {
       "host": host,
       "sha1": sha1,
@@ -139,7 +140,7 @@ class _CertInfo {
     };
   }
 
-  factory _CertInfo.fromJson(Map<String, dynamic> json) {
+  factory _CertInfo.fromJson(JsonObj json) {
     return _CertInfo(
       json["host"],
       json["sha1"],

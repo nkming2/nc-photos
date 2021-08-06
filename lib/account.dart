@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/string_extension.dart';
+import 'package:nc_photos/type.dart';
 
 /// Details of a remote Nextcloud server account
 class Account with EquatableMixin {
@@ -44,14 +45,14 @@ class Account with EquatableMixin {
         "}";
   }
 
-  Account.fromJson(Map<String, dynamic> json)
+  Account.fromJson(JsonObj json)
       : scheme = json["scheme"],
         address = json["address"],
         username = json["username"],
         password = json["password"],
         _roots = json["roots"].cast<String>();
 
-  Map<String, dynamic> toJson() => {
+  JsonObj toJson() => {
         "scheme": scheme,
         "address": address,
         "username": username,

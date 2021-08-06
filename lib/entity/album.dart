@@ -18,6 +18,7 @@ import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -39,13 +40,13 @@ class Album with EquatableMixin {
   }) : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
   static Album? fromJson(
-    Map<String, dynamic> json, {
+    JsonObj json, {
     required AlbumUpgraderV1? upgraderV1,
     required AlbumUpgraderV2? upgraderV2,
     required AlbumUpgraderV3? upgraderV3,
   }) {
     final jsonVersion = json["version"];
-    Map<String, dynamic>? result = json;
+    JsonObj? result = json;
     if (jsonVersion < 2) {
       result = upgraderV1?.call(result);
       if (result == null) {
@@ -120,7 +121,7 @@ class Album with EquatableMixin {
     );
   }
 
-  Map<String, dynamic> toRemoteJson() {
+  JsonObj toRemoteJson() {
     return {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
@@ -132,7 +133,7 @@ class Album with EquatableMixin {
     };
   }
 
-  Map<String, dynamic> toAppDbJson() {
+  JsonObj toAppDbJson() {
     return {
       "version": version,
       "lastUpdated": lastUpdated.toIso8601String(),
