@@ -6,10 +6,12 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/widget/album_browser_app_bar.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
+import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 mixin AlbumBrowserMixin<T extends StatefulWidget>
@@ -55,6 +57,13 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
             Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
+        if (album.albumFile!.isOwned(account.username) &&
+            Lab().enableSharedAlbum)
+          IconButton(
+            onPressed: () => _onSharePressed(context, account, album),
+            icon: const Icon(Icons.share),
+            tooltip: L10n.of(context).shareTooltip,
+          ),
         ...(actions ?? []),
         if (menuItemBuilder != null || canEdit)
           PopupMenuButton<int>(
@@ -172,6 +181,16 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
       enterEditMode();
       _editFormValue = _EditFormValue();
     });
+  }
+
+  void _onSharePressed(BuildContext context, Account account, Album album) {
+    showDialog(
+      context: context,
+      builder: (_) => ShareAlbumDialog(
+        account: account,
+        file: album.albumFile!,
+      ),
+    );
   }
 
   String? _coverPreviewUrl;

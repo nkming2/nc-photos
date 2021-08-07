@@ -41,4 +41,12 @@ extension IterableExtension<T> on Iterable<T> {
             previousValue..putIfAbsent(key(element), () => []).add(element));
     return map.entries.map((e) => Tuple2(e.key, e.value));
   }
+
+  T? get firstOrNull {
+    try {
+      return first;
+    } on StateError catch (_) {
+      return null;
+    }
+  }
 }

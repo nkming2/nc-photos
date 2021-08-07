@@ -405,6 +405,7 @@ class _Ocs {
   _Ocs(this._api);
 
   _OcsDav dav() => _OcsDav(this);
+  _OcsFilesSharing filesSharing() => _OcsFilesSharing(this);
 
   Api _api;
 }
@@ -445,4 +446,156 @@ class _OcsDavDirect {
   _OcsDav _dav;
 
   static final _log = Logger("api.api._OcsDavDirect");
+}
+
+class _OcsFilesSharing {
+  _OcsFilesSharing(this._ocs);
+
+  _OcsFilesSharingShares shares() => _OcsFilesSharingShares(this);
+  _OcsFilesSharingShare share(String shareId) =>
+      _OcsFilesSharingShare(this, shareId);
+  _OcsFilesSharingSharees sharees() => _OcsFilesSharingSharees(this);
+
+  final _Ocs _ocs;
+}
+
+class _OcsFilesSharingShares {
+  _OcsFilesSharingShares(this._filesSharing);
+
+  /// Get Shares from a specific file or folder
+  ///
+  /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#get-shares-from-a-specific-file-or-folder
+  Future<Response> get({
+    String? path,
+    bool? reshares,
+    bool? subfiles,
+  }) async {
+    try {
+      return await _filesSharing._ocs._api.request(
+        "GET",
+        "ocs/v2.php/apps/files_sharing/api/v1/shares",
+        header: {
+          "OCS-APIRequest": "true",
+        },
+        queryParameters: {
+          "format": "json",
+          if (path != null) "path": path,
+          if (reshares != null) "reshares": reshares.toString(),
+          if (subfiles != null) "subfiles": subfiles.toString(),
+        },
+      );
+    } catch (e) {
+      _log.severe("[get] Failed while get", e);
+      rethrow;
+    }
+  }
+
+  /// Create a new Share
+  ///
+  /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#create-a-new-share
+  Future<Response> post({
+    required String path,
+    required int shareType,
+    String? shareWith,
+    String? publicUpload,
+    String? password,
+    int? permissions,
+    String? expireDate,
+  }) async {
+    try {
+      return await _filesSharing._ocs._api.request(
+        "POST",
+        "ocs/v2.php/apps/files_sharing/api/v1/shares",
+        header: {
+          "OCS-APIRequest": "true",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        queryParameters: {
+          "format": "json",
+          "path": path,
+          "shareType": shareType.toString(),
+          if (shareWith != null) "shareWith": shareWith,
+          if (publicUpload != null) "publicUpload": publicUpload,
+          if (password != null) "password": password,
+          if (password != null) "password": password,
+          if (expireDate != null) "expireDate": expireDate.toString(),
+        },
+      );
+    } catch (e) {
+      _log.severe("[post] Failed while post", e);
+      rethrow;
+    }
+  }
+
+  final _OcsFilesSharing _filesSharing;
+
+  static final _log = Logger("api.api._OcsFilesSharingShares");
+}
+
+class _OcsFilesSharingShare {
+  _OcsFilesSharingShare(this._filesSharing, this._shareId);
+
+  /// Remove the given share
+  ///
+  /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#delete-share
+  /// * The type of share ID is listed as int in the document, however, the
+  /// share ID returned in [_OcsFilesSharingShares.get] is actually a string. To
+  /// keep it consistent, we'll use string instead
+  Future<Response> delete() async {
+    try {
+      return await _filesSharing._ocs._api.request(
+        "DELETE",
+        "ocs/v2.php/apps/files_sharing/api/v1/shares/$_shareId",
+        header: {
+          "OCS-APIRequest": "true",
+        },
+      );
+    } catch (e) {
+      _log.severe("[delete] Failed while delete", e);
+      rethrow;
+    }
+  }
+
+  final _OcsFilesSharing _filesSharing;
+  final String _shareId;
+
+  static final _log = Logger("api.api._OcsFilesSharingShare");
+}
+
+class _OcsFilesSharingSharees {
+  _OcsFilesSharingSharees(this._filesSharing);
+
+  /// Get all sharees matching a search term
+  ///
+  /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-sharee-api.html#search-sharees
+  Future<Response> get({
+    String? search,
+    bool? lookup,
+    int? perPage,
+    String? itemType,
+  }) async {
+    try {
+      return await _filesSharing._ocs._api.request(
+        "GET",
+        "ocs/v1.php/apps/files_sharing/api/v1/sharees",
+        header: {
+          "OCS-APIRequest": "true",
+        },
+        queryParameters: {
+          "format": "json",
+          if (search != null) "search": search,
+          if (lookup != null) "lookup": lookup.toString(),
+          if (perPage != null) "perPage": perPage.toString(),
+          if (itemType != null) "itemType": itemType,
+        },
+      );
+    } catch (e) {
+      _log.severe("[get] Failed while get", e);
+      rethrow;
+    }
+  }
+
+  final _OcsFilesSharing _filesSharing;
+
+  static final _log = Logger("api.api._OcsFilesSharingSharees");
 }
