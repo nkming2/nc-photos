@@ -75,4 +75,6 @@ This version includes changes that are not compatible with older versions. Pleas
   """24.0
 - Show and manage deleted files in trash bin
 """,
+  // v25
+  null,
 ];

@@ -1,6 +1,6 @@
 /// Version string shown in settings page
-const versionStr = "24.0-674814";
-const version = 240;
+const versionStr = "25.0-74b056";
+const version = 250;
 
 /// Show a snack bar for a short amount of time
 const snackBarDurationShort = const Duration(seconds: 4);
