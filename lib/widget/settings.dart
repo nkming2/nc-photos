@@ -13,6 +13,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/lab_settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsArguments {
@@ -91,6 +92,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 title: Text(L10n.of(context).settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
+                onTap: () => _onVersionTap(context),
               ),
               ListTile(
                 title: Text(L10n.of(context).settingsSourceCodeTitle),
@@ -200,6 +202,13 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  void _onVersionTap(BuildContext context) {
+    if (++_labUnlockCount >= 10) {
+      Navigator.of(context).pushNamed(LabSettings.routeName);
+      _labUnlockCount = 0;
+    }
+  }
+
   void _setExifSupport(bool value) {
     final oldValue = _isEnableExif;
     setState(() {
@@ -232,6 +241,7 @@ class _SettingsState extends State<Settings> {
       "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
 
   late bool _isEnableExif;
+  int _labUnlockCount = 0;
 
   static final _log = Logger("widget.settings._SettingsState");
 }

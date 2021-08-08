@@ -66,6 +66,11 @@ class Pref {
   Future<bool> setNewSharedAlbum(bool value) =>
       _pref.setBool("hasNewSharedAlbum", value);
 
+  bool? isLabEnableSharedAlbum() => _pref.getBool("isLabEnableSharedAlbum");
+  bool isLabEnableSharedAlbumOr(bool def) => isLabEnableSharedAlbum() ?? def;
+  Future<bool> setLabEnableSharedAlbum(bool value) =>
+      _pref.setBool("isLabEnableSharedAlbum", value);
+
   Pref._();
 
   static final _inst = Pref._();

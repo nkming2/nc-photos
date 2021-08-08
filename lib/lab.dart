@@ -1,3 +1,5 @@
+import 'package:nc_photos/pref.dart';
+
 /// Experimental feature flags
 class Lab {
   factory Lab() {
@@ -7,7 +9,7 @@ class Lab {
     return _inst!;
   }
 
-  bool get enableSharedAlbum => false;
+  bool get enableSharedAlbum => Pref.inst().isLabEnableSharedAlbumOr(false);
 
   Lab._();
 
