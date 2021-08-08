@@ -4,6 +4,9 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 String getRemoteAlbumsDir(Account account) =>
     "${getRemoteStorageDir(account)}/albums";
 
+String getRemotePendingSharedAlbumsDir(Account account) =>
+    "${getRemoteStorageDir(account)}/shared_albums";
+
 String getRemoteTouchDir(Account account) =>
     "${getRemoteStorageDir(account)}/touch";
 

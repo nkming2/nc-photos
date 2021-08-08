@@ -61,6 +61,11 @@ class Pref {
   int getLanguageOr(int def) => getLanguage() ?? def;
   Future<bool> setLanguage(int value) => _pref.setInt("language", value);
 
+  bool? hasNewSharedAlbum() => _pref.getBool("hasNewSharedAlbum");
+  bool hasNewSharedAlbumOr(bool def) => hasNewSharedAlbum() ?? def;
+  Future<bool> setNewSharedAlbum(bool value) =>
+      _pref.setBool("hasNewSharedAlbum", value);
+
   Pref._();
 
   static final _inst = Pref._();
