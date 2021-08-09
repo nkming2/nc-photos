@@ -67,7 +67,7 @@
 	"@addToAlbumAlreadyAddedNotification": {
 		"description": "Inform user that the item is already in the album"
 	},
-	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 elemento} other{Borrando {count} archivos}}",
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 elemento} other{Borrando {count} elementos}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
 		"placeholders": {
@@ -560,7 +560,7 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Buscar",
-	"albumSearchTextFieldHint": "Search albums",
+	"albumSearchTextFieldHint": "Buscar álbumes",
 	"clearTooltip": "Limpiar",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -623,7 +623,7 @@
 	"@deletePermanentlyConfirmationDialogTitle": {
 		"description": "Make sure the user wants to delete the items"
 	},
-	"deletePermanentlyConfirmationDialogContent": "Los elementos seleccionados se eliminarán permanentemente del servidor.\n\nÉsta acción es irreversible",
+	"deletePermanentlyConfirmationDialogContent": "Los elementos seleccionados se eliminarán permanentemente del servidor.\n\nÉsta acción es irreversible!",
 	"@deletePermanentlyConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items"
 	},
