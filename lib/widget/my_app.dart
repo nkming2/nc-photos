@@ -59,7 +59,12 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       scaffoldMessengerKey: _scaffoldMessengerKey,
       locale: language_util.getSelectedLocale(context),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: <Locale>[
+        Locale("en"),
+        Locale("el"),
+        Locale("es"),
+        Locale("fr"),
+      ],
       debugShowCheckedModeBanner: false,
     );
   }
