@@ -106,6 +106,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
     return [
       if (_canSwitchRight)
         Align(
+          key: ValueKey(0),
           alignment: Alignment.centerRight,
           child: Material(
             type: MaterialType.transparency,
@@ -143,6 +144,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
         ),
       if (_canSwitchLeft)
         Align(
+          key: ValueKey(1),
           alignment: Alignment.centerLeft,
           child: Material(
             type: MaterialType.transparency,
