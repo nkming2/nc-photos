@@ -147,10 +147,10 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
 
   /// Validates the pending modifications
   @protected
-  bool validateEditMode();
+  bool validateEditMode() => true;
 
   @protected
-  void doneEditMode();
+  void doneEditMode() {}
 
   /// Return a new album with the edits
   @protected
