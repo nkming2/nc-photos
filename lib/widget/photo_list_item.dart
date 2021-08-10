@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/theme.dart';
 
 class PhotoListImage extends StatelessWidget {
@@ -129,4 +130,60 @@ class PhotoListVideo extends StatelessWidget {
 
   final Account account;
   final String previewUrl;
+}
+
+class PhotoListLabel extends StatelessWidget {
+  const PhotoListLabel({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return Container(
+      alignment: AlignmentDirectional.centerStart,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.subtitle1,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  final String text;
+}
+
+class PhotoListLabelEdit extends PhotoListLabel {
+  const PhotoListLabelEdit({
+    Key? key,
+    required String text,
+    required this.onEditPressed,
+  }) : super(key: key, text: text);
+
+  @override
+  build(BuildContext context) {
+    return Stack(
+      children: [
+        // needed to expand the touch sensitive area to the whole row
+        Container(
+          color: Colors.transparent,
+        ),
+        super.build(context),
+        PositionedDirectional(
+          top: 0,
+          bottom: 0,
+          end: 0,
+          child: IconButton(
+            icon: Icon(Icons.edit),
+            tooltip: L10n.of(context).editTooltip,
+            onPressed: onEditPressed,
+          ),
+        ),
+      ],
+    );
+  }
+
+  final VoidCallback? onEditPressed;
 }

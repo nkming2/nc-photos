@@ -831,15 +831,8 @@ class _LabelListItem extends _ListItem {
 
   @override
   buildWidget(BuildContext context) {
-    return Container(
-      alignment: AlignmentDirectional.centerStart,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.subtitle1,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
+    return PhotoListLabel(
+      text: text,
     );
   }
 
@@ -866,24 +859,9 @@ class _EditLabelListItem extends _LabelListItem {
 
   @override
   buildWidget(BuildContext context) {
-    return Stack(
-      children: [
-        // needed to expand the touch sensitive area to the whole row
-        Container(
-          color: Colors.transparent,
-        ),
-        super.buildWidget(context),
-        PositionedDirectional(
-          top: 0,
-          bottom: 0,
-          end: 0,
-          child: IconButton(
-            icon: Icon(Icons.edit),
-            tooltip: L10n.of(context).editTooltip,
-            onPressed: onEditPressed,
-          ),
-        ),
-      ],
+    return PhotoListLabelEdit(
+      text: text,
+      onEditPressed: onEditPressed,
     );
   }
 
