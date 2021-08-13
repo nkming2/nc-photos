@@ -24,7 +24,6 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
@@ -128,11 +127,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   label: L10n.of(context).archiveTooltip,
                   onPressed: () => _onArchivePressed(context),
                 ),
-              _DetailPaneButton(
-                icon: Icons.delete_outline,
-                label: L10n.of(context).deleteTooltip,
-                onPressed: () => _onDeletePressed(context),
-              ),
             ],
           ),
           Padding(
@@ -320,30 +314,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         }
       },
       failureText: L10n.of(context).unarchiveSelectedFailureNotification(1),
-    );
-  }
-
-  void _onDeletePressed(BuildContext context) async {
-    _log.info("[_onDeletePressed] Delete file: ${widget.file.path}");
-    await _onAction(
-      context,
-      L10n.of(context).deleteProcessingNotification,
-      L10n.of(context).deleteSuccessNotification,
-      () async {
-        final fileRepo = FileRepo(FileCachedDataSource());
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
-        try {
-          await Remove(fileRepo, albumRepo)(widget.account, widget.file);
-          Navigator.of(context).pop();
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[_onUnarchivePressed] Failed while archiving file" +
-                  (kDebugMode ? ": ${widget.file.path}" : ""),
-              e,
-              stackTrace);
-          rethrow;
-        }
-      },
     );
   }
 
