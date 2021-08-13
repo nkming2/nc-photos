@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/file.dart';
 class Share with EquatableMixin {
   Share({
     required this.id,
+    required this.path,
     required this.shareType,
     required this.shareWith,
     required this.shareWithDisplayName,
@@ -14,6 +15,7 @@ class Share with EquatableMixin {
   toString() {
     return "$runtimeType {"
         "id: $id, "
+        "path: $path, "
         "shareType: $shareType, "
         "shareWith: $shareWith, "
         "shareWithDisplayName: $shareWithDisplayName, "
@@ -23,12 +25,14 @@ class Share with EquatableMixin {
   @override
   get props => [
         id,
+        path,
         shareType,
         shareWith,
         shareWithDisplayName,
       ];
 
   final String id;
+  final String path;
   final int shareType;
   final String shareWith;
   final String shareWithDisplayName;
@@ -40,6 +44,10 @@ class ShareRepo {
   /// See [ShareDataSource.list]
   Future<List<Share>> list(Account account, File file) =>
       this.dataSrc.list(account, file);
+
+  /// See [ShareDataSource.listDir]
+  Future<List<Share>> listDir(Account account, File dir) =>
+      this.dataSrc.listDir(account, dir);
 
   /// See [ShareDataSource.create]
   Future<Share> create(Account account, File file, String shareWith) =>
@@ -55,6 +63,9 @@ class ShareRepo {
 abstract class ShareDataSource {
   /// List all shares from a given file
   Future<List<Share>> list(Account account, File file);
+
+  /// List all shares from a given directory
+  Future<List<Share>> listDir(Account account, File dir);
 
   /// Share a file/folder with a user
   Future<Share> create(Account account, File file, String shareWith);

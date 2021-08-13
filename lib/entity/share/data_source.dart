@@ -15,16 +15,17 @@ class ShareRemoteDataSource implements ShareDataSource {
     final response = await Api(account).ocs().filesSharing().shares().get(
           path: file.strippedPath,
         );
-    if (!response.isGood) {
-      _log.severe("[list] Failed requesting server: $response");
-      throw ApiException(
-          response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
-    }
+    return _onListResult(response);
+  }
 
-    final json = jsonDecode(response.body);
-    final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
-    return _ShareParser().parseList(dataJson);
+  @override
+  listDir(Account account, File dir) async {
+    _log.info("[listDir] ${dir.path}");
+    final response = await Api(account).ocs().filesSharing().shares().get(
+          path: dir.strippedPath,
+          subfiles: true,
+        );
+    return _onListResult(response);
   }
 
   @override
@@ -60,6 +61,19 @@ class ShareRemoteDataSource implements ShareDataSource {
     }
   }
 
+  List<Share> _onListResult(Response response) {
+    if (!response.isGood) {
+      _log.severe("[_onListResult] Failed requesting server: $response");
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
+    }
+
+    final json = jsonDecode(response.body);
+    final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
+    return _ShareParser().parseList(dataJson);
+  }
+
   static final _log = Logger("entity.share.data_source.ShareRemoteDataSource");
 }
 
@@ -79,6 +93,7 @@ class _ShareParser {
   Share parseSingle(JsonObj json) {
     return Share(
       id: json["id"],
+      path: json["path"],
       shareType: json["share_type"],
       shareWith: json["share_with"],
       shareWithDisplayName: json["share_with_displayname"],
