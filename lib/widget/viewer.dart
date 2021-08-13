@@ -178,9 +178,33 @@ class _ViewerState extends State<Viewer> {
               ? k.animationDurationNormal
               : const Duration(milliseconds: 1),
           child: ViewerBottomAppBar(
-            onSharePressed: () => _onSharePressed(context),
-            onDownloadPressed: () => _onDownloadPressed(context),
-            onDeletePressed: () => _onDeletePressed(context),
+            children: [
+              if (platform_k.isAndroid)
+                IconButton(
+                  icon: Icon(
+                    Icons.share_outlined,
+                    color: Colors.white.withOpacity(.87),
+                  ),
+                  tooltip: L10n.of(context).shareTooltip,
+                  onPressed: () => _onSharePressed(context),
+                ),
+              IconButton(
+                icon: Icon(
+                  Icons.download_outlined,
+                  color: Colors.white.withOpacity(.87),
+                ),
+                tooltip: L10n.of(context).downloadTooltip,
+                onPressed: () => _onDownloadPressed(context),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outlined,
+                  color: Colors.white.withOpacity(.87),
+                ),
+                tooltip: L10n.of(context).deleteTooltip,
+                onPressed: () => _onDeletePressed(context),
+              ),
+            ],
           ),
         ),
       ),
