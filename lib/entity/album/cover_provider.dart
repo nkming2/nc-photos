@@ -17,6 +17,9 @@ abstract class AlbumCoverProvider with EquatableMixin {
     switch (type) {
       case AlbumAutoCoverProvider._type:
         return AlbumAutoCoverProvider.fromJson(content.cast<String, dynamic>());
+      case AlbumManualCoverProvider._type:
+        return AlbumManualCoverProvider.fromJson(
+            content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -27,6 +30,8 @@ abstract class AlbumCoverProvider with EquatableMixin {
     String getType() {
       if (this is AlbumAutoCoverProvider) {
         return AlbumAutoCoverProvider._type;
+      } else if (this is AlbumManualCoverProvider) {
+        return AlbumManualCoverProvider._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -106,4 +111,43 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   final File? coverFile;
 
   static const _type = "auto";
+}
+
+/// Cover picked by user
+class AlbumManualCoverProvider extends AlbumCoverProvider {
+  AlbumManualCoverProvider({
+    required this.coverFile,
+  });
+
+  factory AlbumManualCoverProvider.fromJson(JsonObj json) {
+    return AlbumManualCoverProvider(
+      coverFile: File.fromJson(json["coverFile"].cast<String, dynamic>()),
+    );
+  }
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "coverFile: '${coverFile.path}', "
+        "}";
+  }
+
+  @override
+  getCover(Album album) => coverFile;
+
+  @override
+  get props => [
+        coverFile,
+      ];
+
+  @override
+  _toContentJson() {
+    return {
+      "coverFile": coverFile.toJson(),
+    };
+  }
+
+  final File coverFile;
+
+  static const _type = "manual";
 }

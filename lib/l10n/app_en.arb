@@ -631,6 +631,18 @@
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
 	},
+	"setAlbumCoverProcessingNotification": "Setting photo as album cover",
+	"@setAlbumCoverProcessingNotification": {
+		"description": "Setting the opened item as the album cover"
+	},
+	"setAlbumCoverSuccessNotification": "Set album cover successfully",
+	"@setAlbumCoverSuccessNotification": {
+		"description": "Set the opened item as the album cover successfully"
+	},
+	"setAlbumCoverFailureNotification": "Failed setting album cover",
+	"@setAlbumCoverFailureNotification": {
+		"description": "Cannot set the opened item as the album cover"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

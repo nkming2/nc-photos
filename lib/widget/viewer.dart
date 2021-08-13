@@ -30,11 +30,17 @@ import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 
 class ViewerArguments {
-  ViewerArguments(this.account, this.streamFiles, this.startIndex);
+  ViewerArguments(
+    this.account,
+    this.streamFiles,
+    this.startIndex, {
+    this.album,
+  });
 
   final Account account;
   final List<File> streamFiles;
   final int startIndex;
+  final Album? album;
 }
 
 class Viewer extends StatefulWidget {
@@ -49,6 +55,7 @@ class Viewer extends StatefulWidget {
     required this.account,
     required this.streamFiles,
     required this.startIndex,
+    this.album,
   }) : super(key: key);
 
   Viewer.fromArgs(ViewerArguments args, {Key? key})
@@ -57,6 +64,7 @@ class Viewer extends StatefulWidget {
           account: args.account,
           streamFiles: args.streamFiles,
           startIndex: args.startIndex,
+          album: args.album,
         );
 
   @override
@@ -65,6 +73,9 @@ class Viewer extends StatefulWidget {
   final Account account;
   final List<File> streamFiles;
   final int startIndex;
+
+  /// The album these files belongs to, or null
+  final Album? album;
 }
 
 class _ViewerState extends State<Viewer> {
@@ -260,6 +271,7 @@ class _ViewerState extends State<Viewer> {
                     child: ViewerDetailPane(
                       account: widget.account,
                       file: widget.streamFiles[index],
+                      album: widget.album,
                     ),
                   ),
                 ),

@@ -12,11 +12,17 @@
     "deletePermanentlyTooltip",
     "deletePermanentlyConfirmationDialogTitle",
     "deletePermanentlyConfirmationDialogContent",
-    "albumSharedLabel"
+    "albumSharedLabel",
+    "setAlbumCoverProcessingNotification",
+    "setAlbumCoverSuccessNotification",
+    "setAlbumCoverFailureNotification"
   ],
 
   "es": [
-    "albumSharedLabel"
+    "albumSharedLabel",
+    "setAlbumCoverProcessingNotification",
+    "setAlbumCoverSuccessNotification",
+    "setAlbumCoverFailureNotification"
   ],
 
   "fr": [
@@ -32,6 +38,9 @@
     "deletePermanentlyTooltip",
     "deletePermanentlyConfirmationDialogTitle",
     "deletePermanentlyConfirmationDialogContent",
-    "albumSharedLabel"
+    "albumSharedLabel",
+    "setAlbumCoverProcessingNotification",
+    "setAlbumCoverSuccessNotification",
+    "setAlbumCoverFailureNotification"
   ]
 }

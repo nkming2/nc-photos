@@ -11,6 +11,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -36,6 +37,7 @@ class ViewerDetailPane extends StatefulWidget {
     Key? key,
     required this.account,
     required this.file,
+    this.album,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,9 @@ class ViewerDetailPane extends StatefulWidget {
 
   final Account account;
   final File file;
+
+  /// The album this file belongs to, or null
+  final Album? album;
 }
 
 class _ViewerDetailPaneState extends State<ViewerDetailPane> {
@@ -110,6 +115,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         children: [
           Row(
             children: [
+              if (widget.album != null)
+                _DetailPaneButton(
+                  icon: Icons.photo_album_outlined,
+                  label: "Use as album cover",
+                  onPressed: () => _onSetAlbumCoverPressed(context),
+                ),
               _DetailPaneButton(
                 icon: Icons.playlist_add_outlined,
                 label: L10n.of(context).addToAlbumTooltip,
@@ -230,6 +241,34 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
     }
+  }
+
+  Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
+    assert(widget.album != null);
+    _log.info(
+        "[_onSetAlbumCoverPressed] Set '${widget.file.path}' as album cover for '${widget.album!.name}'");
+    await _onAction(
+      context,
+      L10n.of(context).setAlbumCoverProcessingNotification,
+      L10n.of(context).setAlbumCoverSuccessNotification,
+      () async {
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        try {
+          await UpdateAlbum(albumRepo).call(
+              widget.account,
+              widget.album!.copyWith(
+                coverProvider: AlbumManualCoverProvider(
+                  coverFile: widget.file,
+                ),
+              ));
+        } catch (e, stackTrace) {
+          _log.shout("[_onSetAlbumCoverPressed] Failed while updating album", e,
+              stackTrace);
+          rethrow;
+        }
+      },
+      failureText: L10n.of(context).setAlbumCoverFailureNotification,
+    );
   }
 
   void _onAddToAlbumPressed(BuildContext context) {

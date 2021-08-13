@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -75,6 +76,16 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   initState() {
     super.initState();
     _initAlbum();
+
+    _albumUpdatedListener =
+        AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
+    _albumUpdatedListener.begin();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _albumUpdatedListener.end();
   }
 
   @override
@@ -273,7 +284,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       }
     }
     Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
+        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
+            album: widget.album));
   }
 
   void _onSelectionAppBarSharePressed(BuildContext context) {
@@ -492,6 +504,15 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
+  void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {
+    if (ev.album.albumFile!.path == _album?.albumFile?.path) {
+      setState(() {
+        _album = ev.album;
+        initCover(widget.account, ev.album);
+      });
+    }
+  }
+
   void _transformItems() {
     if (_editAlbum != null) {
       // edit mode
@@ -661,6 +682,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   bool? _isDragScrollingDown;
   final _editFormKey = GlobalKey<FormState>();
   Album? _editAlbum;
+
+  late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
 
   static final _log = Logger("widget.album_browser._AlbumBrowserState");
 }
