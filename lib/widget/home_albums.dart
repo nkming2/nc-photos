@@ -207,6 +207,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       account: widget.account,
       album: item.album,
       isSelected: _selectedItems.contains(item),
+      isShared: item.isSharedByMe || item.isSharedToMe,
       onTap: () => _onItemTap(item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
     ).build(context);
@@ -382,19 +383,20 @@ class _HomeAlbumsState extends State<HomeAlbums>
   /// Transform an Album list to grid items
   void _transformItems(List<ListAlbumBlocItem> items) {
     final sortedAlbums = items
-        .map((e) => e.album)
-        .map((e) => Tuple2(e.provider.latestItemTime ?? e.lastUpdated, e))
+        .map((e) =>
+            Tuple2(e.album.provider.latestItemTime ?? e.album.lastUpdated, e))
         .sorted((a, b) {
       // then sort in descending order
       final tmp = b.item1.compareTo(a.item1);
       if (tmp != 0) {
         return tmp;
       } else {
-        return a.item2.name.compareTo(b.item2.name);
+        return a.item2.album.name.compareTo(b.item2.album.name);
       }
     }).map((e) => e.item2);
     _items.clear();
-    _items.addAll(sortedAlbums.map((e) => _GridItem(e)));
+    _items.addAll(sortedAlbums
+        .map((e) => _GridItem(e.album, e.isSharedByMe, e.isSharedToMe)));
 
     _transformSelectedItems();
   }
@@ -445,9 +447,11 @@ class _HomeAlbumsState extends State<HomeAlbums>
 }
 
 class _GridItem {
-  _GridItem(this.album);
+  _GridItem(this.album, this.isSharedByMe, this.isSharedToMe);
 
-  Album album;
+  final Album album;
+  final bool isSharedByMe;
+  final bool isSharedToMe;
 }
 
 class _NonAlbumGridItem extends StatelessWidget {

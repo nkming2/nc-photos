@@ -4,16 +4,22 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:tuple/tuple.dart';
 
 class ListAlbumBlocItem {
-  ListAlbumBlocItem(this.album);
+  ListAlbumBlocItem(this.album, this.isSharedByMe, this.isSharedToMe);
 
   final Album album;
+  final bool isSharedByMe;
+  final bool isSharedToMe;
 }
 
 abstract class ListAlbumBlocEvent {
@@ -224,8 +230,14 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
         }
       }
 
+      final shareRepo = ShareRepo(ShareRemoteDataSource());
+      final shares = await shareRepo.listDir(ev.account,
+          File(path: remote_storage_util.getRemoteAlbumsDir(ev.account)));
       final items = albums.map((e) {
-        return ListAlbumBlocItem(e);
+        final isSharedByMe = shares.any((element) =>
+            element.path.trimAny("/") == e.albumFile!.strippedPath);
+        final isSharedToMe = e.albumFile!.ownerId != ev.account.username;
+        return ListAlbumBlocItem(e, isSharedByMe, isSharedToMe);
       }).toList();
 
       if (errors.isEmpty) {

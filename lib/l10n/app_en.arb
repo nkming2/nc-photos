@@ -627,6 +627,10 @@
 	"@deletePermanentlyConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items"
 	},
+	"albumSharedLabel": "Shared",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

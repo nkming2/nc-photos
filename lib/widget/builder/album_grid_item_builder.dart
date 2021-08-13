@@ -16,6 +16,7 @@ class AlbumGridItemBuilder {
     required this.account,
     required this.album,
     this.isSelected = false,
+    this.isShared = false,
     this.onTap,
     this.onLongPress,
   });
@@ -32,6 +33,9 @@ class AlbumGridItemBuilder {
       if (provider.dirs.length > 1) {
         subtitle2 = "+${provider.dirs.length - 1}";
       }
+    }
+    if (isShared) {
+      subtitle = "${L10n.of(context).albumSharedLabel} | $subtitle";
     }
     return AlbumGridItem(
       cover: _buildAlbumCover(context, album),
@@ -89,6 +93,7 @@ class AlbumGridItemBuilder {
   final Account account;
   final Album album;
   final bool isSelected;
+  final bool isShared;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 }
