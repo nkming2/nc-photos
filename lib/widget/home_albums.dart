@@ -250,9 +250,9 @@ class _HomeAlbumsState extends State<HomeAlbums>
     if (state is ListAlbumBlocInit) {
       _items.clear();
     } else if (state is ListAlbumBlocSuccess || state is ListAlbumBlocLoading) {
-      _transformItems(state.albums);
+      _transformItems(state.items);
     } else if (state is ListAlbumBlocFailure) {
-      _transformItems(state.albums);
+      _transformItems(state.items);
       if (isPageVisible()) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(exception_util.toUserString(state.exception, context)),
@@ -380,8 +380,9 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   /// Transform an Album list to grid items
-  void _transformItems(List<Album> albums) {
-    final sortedAlbums = albums
+  void _transformItems(List<ListAlbumBlocItem> items) {
+    final sortedAlbums = items
+        .map((e) => e.album)
         .map((e) => Tuple2(e.provider.latestItemTime ?? e.lastUpdated, e))
         .sorted((a, b) {
       // then sort in descending order

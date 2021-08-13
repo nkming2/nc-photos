@@ -10,6 +10,12 @@ import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:tuple/tuple.dart';
 
+class ListAlbumBlocItem {
+  ListAlbumBlocItem(this.album);
+
+  final Album album;
+}
+
 abstract class ListAlbumBlocEvent {
   const ListAlbumBlocEvent();
 }
@@ -39,18 +45,18 @@ class _ListAlbumBlocExternalEvent extends ListAlbumBlocEvent {
 }
 
 abstract class ListAlbumBlocState {
-  const ListAlbumBlocState(this.account, this.albums);
+  const ListAlbumBlocState(this.account, this.items);
 
   @override
   toString() {
     return "$runtimeType {"
         "account: $account, "
-        "albums: List {length: ${albums.length}}, "
+        "items: List {length: ${items.length}}, "
         "}";
   }
 
   final Account? account;
-  final List<Album> albums;
+  final List<ListAlbumBlocItem> items;
 }
 
 class ListAlbumBlocInit extends ListAlbumBlocState {
@@ -58,19 +64,19 @@ class ListAlbumBlocInit extends ListAlbumBlocState {
 }
 
 class ListAlbumBlocLoading extends ListAlbumBlocState {
-  const ListAlbumBlocLoading(Account? account, List<Album> albums)
-      : super(account, albums);
+  const ListAlbumBlocLoading(Account? account, List<ListAlbumBlocItem> items)
+      : super(account, items);
 }
 
 class ListAlbumBlocSuccess extends ListAlbumBlocState {
-  const ListAlbumBlocSuccess(Account? account, List<Album> albums)
-      : super(account, albums);
+  const ListAlbumBlocSuccess(Account? account, List<ListAlbumBlocItem> items)
+      : super(account, items);
 }
 
 class ListAlbumBlocFailure extends ListAlbumBlocState {
   const ListAlbumBlocFailure(
-      Account? account, List<Album> albums, this.exception)
-      : super(account, albums);
+      Account? account, List<ListAlbumBlocItem> items, this.exception)
+      : super(account, items);
 
   @override
   toString() {
@@ -86,8 +92,9 @@ class ListAlbumBlocFailure extends ListAlbumBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class ListAlbumBlocInconsistent extends ListAlbumBlocState {
-  const ListAlbumBlocInconsistent(Account? account, List<Album> albums)
-      : super(account, albums);
+  const ListAlbumBlocInconsistent(
+      Account? account, List<ListAlbumBlocItem> items)
+      : super(account, items);
 }
 
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
@@ -130,21 +137,21 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   }
 
   Stream<ListAlbumBlocState> _onEventQuery(ListAlbumBlocQuery ev) async* {
-    yield ListAlbumBlocLoading(ev.account, state.albums);
-    bool hasContent = state.albums.isNotEmpty;
+    yield ListAlbumBlocLoading(ev.account, state.items);
+    bool hasContent = state.items.isNotEmpty;
 
     if (!hasContent) {
       // show something instantly on first load
       final cacheState = await _queryOffline(ev);
-      yield ListAlbumBlocLoading(ev.account, cacheState.albums);
-      hasContent = cacheState.albums.isNotEmpty;
+      yield ListAlbumBlocLoading(ev.account, cacheState.items);
+      hasContent = cacheState.items.isNotEmpty;
     }
 
     final newState = await _queryOnline(ev);
     if (newState is ListAlbumBlocFailure) {
       yield ListAlbumBlocFailure(
           ev.account,
-          newState.albums.isNotEmpty ? newState.albums : state.albums,
+          newState.items.isNotEmpty ? newState.items : state.items,
           newState.exception);
     } else {
       yield newState;
@@ -153,7 +160,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   Stream<ListAlbumBlocState> _onExternalEvent(
       _ListAlbumBlocExternalEvent ev) async* {
-    yield ListAlbumBlocInconsistent(state.account, state.albums);
+    yield ListAlbumBlocInconsistent(state.account, state.items);
   }
 
   void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {
@@ -216,10 +223,15 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
           albums.add(result);
         }
       }
+
+      final items = albums.map((e) {
+        return ListAlbumBlocItem(e);
+      }).toList();
+
       if (errors.isEmpty) {
-        return ListAlbumBlocSuccess(ev.account, albums);
+        return ListAlbumBlocSuccess(ev.account, items);
       } else {
-        return ListAlbumBlocFailure(ev.account, albums, errors.first);
+        return ListAlbumBlocFailure(ev.account, items, errors.first);
       }
     } catch (e, stacktrace) {
       _log.severe("[_queryWithAlbumDataSource] Exception", e, stacktrace);
