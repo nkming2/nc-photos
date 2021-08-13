@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:flutter/foundation.dart';
@@ -114,6 +116,18 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 label: L10n.of(context).addToAlbumTooltip,
                 onPressed: () => _onAddToAlbumPressed(context),
               ),
+              if (widget.file.isArchived == true)
+                _DetailPaneButton(
+                  icon: Icons.unarchive_outlined,
+                  label: L10n.of(context).unarchiveTooltip,
+                  onPressed: () => _onUnarchivePressed(context),
+                )
+              else
+                _DetailPaneButton(
+                  icon: Icons.archive_outlined,
+                  label: L10n.of(context).archiveTooltip,
+                  onPressed: () => _onArchivePressed(context),
+                ),
               _DetailPaneButton(
                 icon: Icons.delete_outline,
                 label: L10n.of(context).deleteTooltip,
@@ -259,37 +273,78 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     });
   }
 
+  Future<void> _onArchivePressed(BuildContext context) async {
+    _log.info("[_onArchivePressed] Archive file: ${widget.file.path}");
+    await _onAction(
+      context,
+      L10n.of(context).archiveSelectedProcessingNotification(1),
+      L10n.of(context).archiveSelectedSuccessNotification,
+      () async {
+        final fileRepo = FileRepo(FileCachedDataSource());
+        try {
+          await UpdateProperty(fileRepo)
+              .updateIsArchived(widget.account, widget.file, true);
+          Navigator.of(context).pop();
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[_onArchivePressed] Failed while archiving file" +
+                  (kDebugMode ? ": ${widget.file.path}" : ""),
+              e,
+              stackTrace);
+          rethrow;
+        }
+      },
+      failureText: L10n.of(context).archiveSelectedFailureNotification(1),
+    );
+  }
+
+  void _onUnarchivePressed(BuildContext context) async {
+    _log.info("[_onUnarchivePressed] Unarchive file: ${widget.file.path}");
+    await _onAction(
+      context,
+      L10n.of(context).unarchiveSelectedProcessingNotification(1),
+      L10n.of(context).unarchiveSelectedSuccessNotification,
+      () async {
+        final fileRepo = FileRepo(FileCachedDataSource());
+        try {
+          await UpdateProperty(fileRepo)
+              .updateIsArchived(widget.account, widget.file, false);
+          Navigator.of(context).pop();
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[_onUnarchivePressed] Failed while archiving file" +
+                  (kDebugMode ? ": ${widget.file.path}" : ""),
+              e,
+              stackTrace);
+          rethrow;
+        }
+      },
+      failureText: L10n.of(context).unarchiveSelectedFailureNotification(1),
+    );
+  }
+
   void _onDeletePressed(BuildContext context) async {
-    _log.info("[_onDeletePressed] Removing file: ${widget.file.path}");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).deleteProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    try {
-      await Remove(FileRepo(FileCachedDataSource()),
-          AlbumRepo(AlbumCachedDataSource()))(widget.account, widget.file);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      Navigator.of(context).pop();
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_onDeletePressed] Failed while remove" +
-              (kDebugMode ? ": ${widget.file.path}" : ""),
-          e,
-          stacktrace);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).deleteFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
+    _log.info("[_onDeletePressed] Delete file: ${widget.file.path}");
+    await _onAction(
+      context,
+      L10n.of(context).deleteProcessingNotification,
+      L10n.of(context).deleteSuccessNotification,
+      () async {
+        final fileRepo = FileRepo(FileCachedDataSource());
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        try {
+          await Remove(fileRepo, albumRepo)(widget.account, widget.file);
+          Navigator.of(context).pop();
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[_onUnarchivePressed] Failed while archiving file" +
+                  (kDebugMode ? ": ${widget.file.path}" : ""),
+              e,
+              stackTrace);
+          rethrow;
+        }
+      },
+    );
   }
 
   void _onMapTap() {
@@ -331,6 +386,37 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }).catchError((e, stacktrace) {
       _log.shout("[_onDateTimeTap] Failed while showDialog", e, stacktrace);
     });
+  }
+
+  Future<void> _onAction(
+    BuildContext context,
+    String processingText,
+    String successText,
+    FutureOr<void> Function() action, {
+    String? failureText,
+  }) async {
+    var controller = SnackBarManager().showSnackBar(SnackBar(
+      content: Text(processingText),
+      duration: k.snackBarDurationShort,
+    ));
+    controller?.closed.whenComplete(() {
+      controller = null;
+    });
+    try {
+      await action();
+      controller?.close();
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(successText),
+        duration: k.snackBarDurationNormal,
+      ));
+    } catch (e) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(
+            (failureText?.isNotEmpty == true ? "$failureText: " : "") +
+                exception_util.toUserString(e, context)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   static double _gpsDmsToDouble(List<Rational> dms) {
