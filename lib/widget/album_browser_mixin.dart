@@ -28,9 +28,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
       final coverFile = album.coverProvider.getCover(album);
       _coverPreviewUrl = api_util.getFilePreviewUrl(account, coverFile!,
           width: 1024, height: 600);
-    } catch (_) {
-      return null;
-    }
+    } catch (_) {}
   }
 
   @protected
