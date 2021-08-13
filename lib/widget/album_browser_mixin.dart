@@ -23,13 +23,14 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
   }
 
   @protected
-  void initCover(Account account, List<File> backingFiles) {
+  void initCover(Account account, Album album) {
     try {
-      final coverFile =
-          backingFiles.firstWhere((element) => element.hasPreview ?? false);
-      _coverPreviewUrl = api_util.getFilePreviewUrl(account, coverFile,
+      final coverFile = album.coverProvider.getCover(album);
+      _coverPreviewUrl = api_util.getFilePreviewUrl(account, coverFile!,
           width: 1024, height: 600);
-    } catch (_) {}
+    } catch (_) {
+      return null;
+    }
   }
 
   @protected

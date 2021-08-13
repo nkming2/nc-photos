@@ -150,7 +150,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         setState(() {
           _album = widget.album;
           _transformItems(items);
-          initCover(widget.account, _backingFiles);
+          initCover(widget.account, widget.album);
           _updateAlbumPostPopulate(items);
         });
       }

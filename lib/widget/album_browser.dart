@@ -163,7 +163,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         setState(() {
           _album = album;
           _transformItems();
-          initCover(widget.account, _backingFiles);
+          initCover(widget.account, album);
         });
       }
     });
@@ -321,7 +321,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       setState(() {
         _album = newAlbum;
         _transformItems();
-        initCover(widget.account, _backingFiles);
+        initCover(widget.account, newAlbum);
       });
     }).catchError((e, stacktrace) {
       _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
