@@ -75,6 +75,14 @@ class FileTrashbinRestoredEvent {
   final File file;
 }
 
+class FileMovedEvent {
+  FileMovedEvent(this.account, this.file, this.destination);
+
+  final Account account;
+  final File file;
+  final String destination;
+}
+
 class ThemeChangedEvent {}
 
 class LanguageChangedEvent {}

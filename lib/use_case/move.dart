@@ -1,6 +1,9 @@
+import 'package:event_bus/event_bus.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:path/path.dart' as path;
@@ -29,6 +32,9 @@ class Move {
         rethrow;
       }
     }
+    KiwiContainer()
+        .resolve<EventBus>()
+        .fire(FileMovedEvent(account, file, destination));
   }
 
   final FileRepo fileRepo;
