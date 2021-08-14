@@ -512,7 +512,7 @@ class _DetailPaneButton extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: AppTheme.getPrimaryTextColor(context),
+                color: AppTheme.getSecondaryTextColor(context),
               ),
               const SizedBox(height: 4),
               Text(
