@@ -58,7 +58,7 @@ void _initLog() {
         color = 33;
       } else if (record.level >= Level.INFO) {
         color = 34;
-      }else if (record.level >= Level.FINER) {
+      } else if (record.level >= Level.FINER) {
         color = 32;
       } else {
         color = 90;
