@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/metadata_task_manager.dart';
 
 class AppEventListener<T> {
   AppEventListener(this._listener);
@@ -86,6 +87,12 @@ class FileMovedEvent {
 class ThemeChangedEvent {}
 
 class LanguageChangedEvent {}
+
+class MetadataTaskStateChangedEvent {
+  const MetadataTaskStateChangedEvent(this.state);
+
+  final MetadataTaskState state;
+}
 
 extension FilePropertyUpdatedEventExtension on FilePropertyUpdatedEvent {
   bool hasAnyProperties(List<int> properties) =>

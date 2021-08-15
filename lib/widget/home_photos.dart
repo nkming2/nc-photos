@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -37,6 +40,7 @@ import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
+import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
@@ -56,12 +60,21 @@ class _HomePhotosState extends State<HomePhotos>
     with
         SelectableItemStreamListMixin<HomePhotos>,
         RouteAware,
-        PageVisibilityMixin {
+        PageVisibilityMixin,
+        TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
     _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevelOr(0);
     _initBloc();
+    _metadataTaskStateChangedListener.begin();
+  }
+
+  @override
+  dispose() {
+    _metadataTaskIconController.stop();
+    _metadataTaskStateChangedListener.end();
+    super.dispose();
   }
 
   @override
@@ -112,6 +125,8 @@ class _HomePhotosState extends State<HomePhotos>
                     controller: _scrollController,
                     slivers: [
                       _buildAppBar(context),
+                      if (_metadataTaskState != MetadataTaskState.idle)
+                        _buildMetadataTaskHeader(context),
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         sliver: buildItemStreamList(
@@ -228,6 +243,80 @@ class _HomePhotosState extends State<HomePhotos>
     );
   }
 
+  Widget _buildMetadataTaskHeader(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      floating: false,
+      delegate: _MetadataTaskHeaderDelegate(
+        extent: _metadataTaskHeaderHeight,
+        builder: (context) => Container(
+          height: double.infinity,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          alignment: AlignmentDirectional.centerStart,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                if (_metadataTaskState == MetadataTaskState.prcoessing)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _MetadataTaskLoadingIcon(
+                        controller: _metadataTaskIconController,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        L10n.of(context).metadataTaskProcessingNotification,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  )
+                else if (_metadataTaskState == MetadataTaskState.waitingForWifi)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.sync_problem,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        L10n.of(context).metadataTaskPauseNoWiFiNotification,
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                Expanded(
+                  child: Container(),
+                ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Text(
+                        L10n.of(context).configButtonLabel,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Settings.routeName,
+                          arguments: SettingsArguments(widget.account));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _onStateChange(BuildContext context, ScanDirBlocState state) {
     if (state is ScanDirBlocInit) {
       itemStreamListItems = [];
@@ -235,9 +324,7 @@ class _HomePhotosState extends State<HomePhotos>
       _transformItems(state.files);
       if (state is ScanDirBlocSuccess) {
         if (Pref.inst().isEnableExifOr() && !_hasFiredMetadataTask.value) {
-          KiwiContainer()
-              .resolve<MetadataTaskManager>()
-              .addTask(MetadataTask(widget.account));
+          MetadataTaskManager().addTask(MetadataTask(widget.account));
           _hasFiredMetadataTask.value = true;
         }
       }
@@ -451,6 +538,14 @@ class _HomePhotosState extends State<HomePhotos>
     _reqRefresh();
   }
 
+  void _onMetadataTaskStateChanged(MetadataTaskStateChangedEvent ev) {
+    if (ev.state != _metadataTaskState) {
+      setState(() {
+        _metadataTaskState = ev.state;
+      });
+    }
+  }
+
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
@@ -530,11 +625,18 @@ class _HomePhotosState extends State<HomePhotos>
     if (_itemListMaxExtent != null &&
         constraints.hasBoundedHeight &&
         _appBarExtent != null) {
-      // scroll extent = list height - widget viewport height + sliver app bar height + list padding
-      final scrollExtent =
-          _itemListMaxExtent! - constraints.maxHeight + _appBarExtent! + 16;
+      final metadataTaskHeaderExtent =
+          _metadataTaskState == MetadataTaskState.idle
+              ? 0
+              : _metadataTaskHeaderHeight;
+      // scroll extent = list height - widget viewport height + sliver app bar height + metadata task header height + list padding
+      final scrollExtent = _itemListMaxExtent! -
+          constraints.maxHeight +
+          _appBarExtent! +
+          metadataTaskHeaderExtent +
+          16;
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + 16 = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + 16 = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
@@ -586,8 +688,20 @@ class _HomePhotosState extends State<HomePhotos>
   double? _appBarExtent;
   double? _itemListMaxExtent;
 
+  late final _metadataTaskStateChangedListener =
+      AppEventListener<MetadataTaskStateChangedEvent>(
+          _onMetadataTaskStateChanged);
+  var _metadataTaskState = MetadataTaskManager().state;
+  late final _metadataTaskIconController = AnimationController(
+    upperBound: 2 * math.pi,
+    duration: const Duration(seconds: 10),
+    vsync: this,
+  )..repeat();
+
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
+
+  static const _metadataTaskHeaderHeight = 32.0;
 }
 
 abstract class _ListItem implements SelectableItem {
@@ -704,6 +818,50 @@ class _VideoListItem extends _FileListItem {
 
   final Account account;
   final String previewUrl;
+}
+
+class _MetadataTaskHeaderDelegate extends SliverPersistentHeaderDelegate {
+  const _MetadataTaskHeaderDelegate({
+    required this.extent,
+    required this.builder,
+  });
+
+  @override
+  build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return builder(context);
+  }
+
+  @override
+  get maxExtent => extent;
+
+  @override
+  get minExtent => maxExtent;
+
+  @override
+  shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
+
+  final double extent;
+  final Widget Function(BuildContext context) builder;
+}
+
+class _MetadataTaskLoadingIcon extends AnimatedWidget {
+  const _MetadataTaskLoadingIcon({
+    Key? key,
+    required AnimationController controller,
+  }) : super(key: key, listenable: controller);
+
+  @override
+  build(BuildContext context) {
+    return Transform.rotate(
+      angle: -_progress.value,
+      child: const Icon(
+        Icons.sync,
+        size: 16,
+      ),
+    );
+  }
+
+  Animation<double> get _progress => listenable as Animation<double>;
 }
 
 enum _SelectionAppBarMenuOption {

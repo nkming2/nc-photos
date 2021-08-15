@@ -643,6 +643,15 @@
 	"@setAlbumCoverFailureNotification": {
 		"description": "Cannot set the opened item as the album cover"
 	},
+	"metadataTaskProcessingNotification": "Processing image metadata in background",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "Waiting for WiFi",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "CONFIG",
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

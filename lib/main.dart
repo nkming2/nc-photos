@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
@@ -90,7 +89,6 @@ void _initBloc() {
 void _initKiwi() {
   final kiwi = KiwiContainer();
   kiwi.registerInstance<EventBus>(EventBus());
-  kiwi.registerInstance<MetadataTaskManager>(MetadataTaskManager());
 }
 
 void _initEquatable() {

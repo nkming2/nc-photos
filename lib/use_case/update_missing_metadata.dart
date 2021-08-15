@@ -1,9 +1,13 @@
+import 'package:event_bus/event_bus.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
@@ -33,7 +37,13 @@ class UpdateMissingMetadata {
       try {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
-        await connectivity_util.waitUntilWifi();
+        await connectivity_util.waitUntilWifi(onNoWifi: () {
+          KiwiContainer().resolve<EventBus>().fire(
+              MetadataTaskStateChangedEvent(MetadataTaskState.waitingForWifi));
+        });
+        KiwiContainer()
+            .resolve<EventBus>()
+            .fire(MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
         if (!shouldRun) {
           return;
         }

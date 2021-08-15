@@ -15,14 +15,20 @@
     "albumSharedLabel",
     "setAlbumCoverProcessingNotification",
     "setAlbumCoverSuccessNotification",
-    "setAlbumCoverFailureNotification"
+    "setAlbumCoverFailureNotification",
+    "metadataTaskProcessingNotification",
+    "metadataTaskPauseNoWiFiNotification",
+    "configButtonLabel"
   ],
 
   "es": [
     "albumSharedLabel",
     "setAlbumCoverProcessingNotification",
     "setAlbumCoverSuccessNotification",
-    "setAlbumCoverFailureNotification"
+    "setAlbumCoverFailureNotification",
+    "metadataTaskProcessingNotification",
+    "metadataTaskPauseNoWiFiNotification",
+    "configButtonLabel"
   ],
 
   "fr": [
@@ -41,6 +47,9 @@
     "albumSharedLabel",
     "setAlbumCoverProcessingNotification",
     "setAlbumCoverSuccessNotification",
-    "setAlbumCoverFailureNotification"
+    "setAlbumCoverFailureNotification",
+    "metadataTaskProcessingNotification",
+    "metadataTaskPauseNoWiFiNotification",
+    "configButtonLabel"
   ]
 }

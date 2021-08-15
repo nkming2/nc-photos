@@ -217,9 +217,7 @@ class _SettingsState extends State<Settings> {
     Pref.inst().setEnableExif(value).then((result) {
       if (result) {
         if (value) {
-          KiwiContainer()
-              .resolve<MetadataTaskManager>()
-              .addTask(MetadataTask(widget.account));
+          MetadataTaskManager().addTask(MetadataTask(widget.account));
         }
       } else {
         _log.severe("[_setExifSupport] Failed writing pref");
