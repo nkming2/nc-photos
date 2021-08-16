@@ -22,6 +22,8 @@ import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
 class FileWebdavDataSource implements FileDataSource {
+  const FileWebdavDataSource();
+
   @override
   list(
     Account account,

@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
-class LsDirBlocItem {
+class LsDirBlocItem with EquatableMixin {
   LsDirBlocItem(this.file, this.children);
 
   @override
@@ -31,6 +32,12 @@ class LsDirBlocItem {
     }
     return product;
   }
+
+  @override
+  get props => [
+        file,
+        children,
+      ];
 
   final File file;
 
@@ -77,17 +84,24 @@ class LsDirBlocQuery extends LsDirBlocEvent {
   final int depth;
 }
 
-abstract class LsDirBlocState {
+abstract class LsDirBlocState with EquatableMixin {
   const LsDirBlocState(this.account, this.root, this.items);
 
   @override
   toString() {
     return "$runtimeType {"
         "account: $account, "
-        "root: ${root.path}"
+        "root: ${root.path}, "
         "items: List {length: ${items.length}}, "
         "}";
   }
+
+  @override
+  get props => [
+        account,
+        root,
+        items,
+      ];
 
   final Account? account;
   final File root;
@@ -121,12 +135,20 @@ class LsDirBlocFailure extends LsDirBlocState {
         "}";
   }
 
+  @override
+  get props => [
+        ...super.props,
+        exception,
+      ];
+
   final dynamic exception;
 }
 
 /// A bloc that return all directories under a dir recursively
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
-  LsDirBloc() : super(LsDirBlocInit());
+  LsDirBloc({
+    this.fileRepo = const FileRepo(const FileWebdavDataSource()),
+  }) : super(LsDirBlocInit());
 
   @override
   mapEventToState(LsDirBlocEvent event) async* {
@@ -150,7 +172,7 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
     final product = <LsDirBlocItem>[];
     var files = _cache[ev.root.path];
     if (files == null) {
-      files = (await Ls(FileRepo(FileWebdavDataSource()))(ev.account, ev.root))
+      files = (await Ls(fileRepo)(ev.account, ev.root))
           .where((f) => f.isCollection ?? false)
           .toList();
       _cache[ev.root.path] = files;
@@ -164,6 +186,8 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
     }
     return product;
   }
+
+  final FileRepo fileRepo;
 
   final _cache = <String, List<File>>{};
 

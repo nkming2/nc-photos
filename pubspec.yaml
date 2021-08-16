@@ -79,6 +79,7 @@ dependencies:
 
 dev_dependencies:
   test: any
+  bloc_test: any
   # flutter_test:
   #   sdk: flutter
   # integration_test:

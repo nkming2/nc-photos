@@ -456,7 +456,7 @@ extension FileExtension on File {
 }
 
 class FileRepo {
-  FileRepo(this.dataSrc);
+  const FileRepo(this.dataSrc);
 
   /// See [FileDataSource.list]
   Future<List<File>> list(Account account, File root) =>
