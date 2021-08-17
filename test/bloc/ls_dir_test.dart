@@ -1,12 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
+
+import '../mock_type.dart';
 
 void main() {
   final _buildBloc = () => LsDirBloc(fileRepo: _MockFileRepo());
@@ -130,29 +129,9 @@ void main() {
   });
 }
 
-class _MockFileRepo implements FileRepo {
+class _MockFileRepo extends MockFileRepo {
   @override
-  Future<void> copy(Object account, File f, String destination,
-      {bool? shouldOverwrite}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> createDir(Account account, String path) {
-    throw UnimplementedError();
-  }
-
-  @override
-  FileDataSource get dataSrc => throw UnimplementedError();
-
-  @override
-  Future<Uint8List> getBinary(Account account, File file) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<File>> list(Account account, File root) async {
-    await Future.delayed(const Duration(seconds: 1));
+  list(Account account, File root) async {
     return [
       File(
         path: "remote.php/dav/files/admin/test1.jpg",
@@ -177,29 +156,5 @@ class _MockFileRepo implements FileRepo {
         isCollection: true,
       ),
     ].where((element) => path.dirname(element.path) == root.path).toList();
-  }
-
-  @override
-  Future<void> move(Account account, File f, String destination,
-      {bool? shouldOverwrite}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> putBinary(Account account, String path, Uint8List content) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> remove(Account account, File file) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> updateProperty(Account account, File file,
-      {OrNull<Metadata>? metadata,
-      OrNull<bool>? isArchived,
-      OrNull<DateTime>? overrideDateTime}) {
-    throw UnimplementedError();
   }
 }
