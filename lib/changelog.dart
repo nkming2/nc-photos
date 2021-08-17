@@ -77,4 +77,8 @@ This version includes changes that are not compatible with older versions. Pleas
 """,
   // v25
   null,
+  // v26
+  """26.0
+- Pick album cover (open a photo in an album -> details -> use as cover)
+""",
 ];
