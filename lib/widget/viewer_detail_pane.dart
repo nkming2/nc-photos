@@ -118,7 +118,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               if (widget.album != null)
                 _DetailPaneButton(
                   icon: Icons.photo_album_outlined,
-                  label: "Use as album cover",
+                  label: L10n.of(context).useAsAlbumCoverTooltip,
                   onPressed: () => _onSetAlbumCoverPressed(context),
                 ),
               _DetailPaneButton(

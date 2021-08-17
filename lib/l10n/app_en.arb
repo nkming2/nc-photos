@@ -652,6 +652,7 @@
 		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "CONFIG",
+	"useAsAlbumCoverTooltip": "Use as album cover",
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

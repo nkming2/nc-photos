@@ -18,7 +18,12 @@
     "setAlbumCoverFailureNotification",
     "metadataTaskProcessingNotification",
     "metadataTaskPauseNoWiFiNotification",
-    "configButtonLabel"
+    "configButtonLabel",
+    "useAsAlbumCoverTooltip"
+  ],
+
+  "es": [
+    "useAsAlbumCoverTooltip"
   ],
 
   "fr": [
@@ -40,6 +45,7 @@
     "setAlbumCoverFailureNotification",
     "metadataTaskProcessingNotification",
     "metadataTaskPauseNoWiFiNotification",
-    "configButtonLabel"
+    "configButtonLabel",
+    "useAsAlbumCoverTooltip"
   ]
 }
