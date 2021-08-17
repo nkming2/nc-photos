@@ -21,16 +21,6 @@
     "configButtonLabel"
   ],
 
-  "es": [
-    "albumSharedLabel",
-    "setAlbumCoverProcessingNotification",
-    "setAlbumCoverSuccessNotification",
-    "setAlbumCoverFailureNotification",
-    "metadataTaskProcessingNotification",
-    "metadataTaskPauseNoWiFiNotification",
-    "configButtonLabel"
-  ],
-
   "fr": [
     "listEmptyText",
     "albumTrashLabel",
