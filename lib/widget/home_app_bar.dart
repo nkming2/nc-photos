@@ -9,6 +9,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {
@@ -99,6 +100,10 @@ class HomeSliverAppBar extends StatelessWidget {
                       value: _menuValueAbout,
                       child: Text(L10n.of(context).settingsMenuLabel),
                     ),
+                    PopupMenuItem(
+                      value: _menuValueHelp,
+                      child: Text(L10n.of(context).helpTooltip),
+                    ),
                   ],
               onSelected: (option) {
                 if (option >= 0) {
@@ -107,6 +112,8 @@ class HomeSliverAppBar extends StatelessWidget {
                   if (option == _menuValueAbout) {
                     Navigator.of(context).pushNamed(Settings.routeName,
                         arguments: SettingsArguments(account));
+                  } else if (option == _menuValueHelp) {
+                    launch("https://gitlab.com/nkming2/nc-photos/-/wikis/home");
                   }
                 }
               },
@@ -132,4 +139,5 @@ class HomeSliverAppBar extends StatelessWidget {
   final void Function(int)? onSelectedMenuActions;
 
   static const _menuValueAbout = -1;
+  static const _menuValueHelp = -2;
 }

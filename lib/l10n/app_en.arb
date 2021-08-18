@@ -653,6 +653,7 @@
 	},
 	"configButtonLabel": "CONFIG",
 	"useAsAlbumCoverTooltip": "Use as album cover",
+	"helpTooltip": "Help",
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
