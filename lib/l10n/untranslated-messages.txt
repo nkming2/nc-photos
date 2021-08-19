@@ -27,25 +27,5 @@
   ],
 
   "fr": [
-    "listEmptyText",
-    "albumTrashLabel",
-    "restoreTooltip",
-    "restoreSelectedProcessingNotification",
-    "restoreSelectedSuccessNotification",
-    "restoreSelectedFailureNotification",
-    "restoreProcessingNotification",
-    "restoreSuccessNotification",
-    "restoreFailureNotification",
-    "deletePermanentlyTooltip",
-    "deletePermanentlyConfirmationDialogTitle",
-    "deletePermanentlyConfirmationDialogContent",
-    "albumSharedLabel",
-    "setAlbumCoverProcessingNotification",
-    "setAlbumCoverSuccessNotification",
-    "setAlbumCoverFailureNotification",
-    "metadataTaskProcessingNotification",
-    "metadataTaskPauseNoWiFiNotification",
-    "configButtonLabel",
-    "useAsAlbumCoverTooltip"
   ]
 }

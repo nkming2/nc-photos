@@ -569,7 +569,90 @@
 	"@listNoResultsText": {
 		"description": "When there's nothing in a list"
 	},
-
+	"listEmptyText": "Vide",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Corbeille",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Restaurer",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, =1{Restauration d'1 élément} other{Restauration de {count} éléments}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Tous les éléments ont été restaurés avec succès",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, =1{Échec de la restauration de 1 élément} other{Échec de la restauration de {count} éléments}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Restauration de l'élément",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "Élément restauré avec succès",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "Échec de la restauration de l'élément",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Supprimer définitivement",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "Supprimer définitivement",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "Les éléments sélectionnés seront supprimés définitivement du serveur.\n\nCette action est irréversible",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"albumSharedLabel": "Partagé",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
+	"setAlbumCoverProcessingNotification": "Définir une photo comme couverture d'album",
+	"@setAlbumCoverProcessingNotification": {
+		"description": "Setting the opened item as the album cover"
+	},
+	"setAlbumCoverSuccessNotification": "Couverture changé avec succès",
+	"@setAlbumCoverSuccessNotification": {
+		"description": "Set the opened item as the album cover successfully"
+	},
+	"setAlbumCoverFailureNotification": "Échec du changement de couverture",
+	"@setAlbumCoverFailureNotification": {
+		"description": "Cannot set the opened item as the album cover"
+	},
+	"metadataTaskProcessingNotification": "Traitement des métadonnées de l'image en arrière-plan",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "En attente du Wi-Fi",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "CONFIGURER",
+	"useAsAlbumCoverTooltip": "Utiliser comme couverture d'album",
 	"changelogTitle": "Journal des modifications",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
