@@ -15,6 +15,8 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/lab.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -27,6 +29,7 @@ import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/pending_albums.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:tuple/tuple.dart';
@@ -192,7 +195,9 @@ class _HomeAlbumsState extends State<HomeAlbums>
       return _buildArchiveItem(context);
     } else if (index == 1) {
       return _buildTrashbinItem(context);
-    } else if (index == 2) {
+    } else if (index == 2 && Lab().enableSharedAlbum) {
+      return _buildShareItem(context);
+    } else if (index == 2 + (Lab().enableSharedAlbum ? 1 : 0)) {
       return _buildNewAlbumItem(context);
     } else if (index == _extraGridItemCount) {
       return Container();
@@ -235,6 +240,20 @@ class _HomeAlbumsState extends State<HomeAlbums>
           : () {
               Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
                   arguments: TrashbinBrowserArguments(widget.account));
+            },
+    );
+  }
+
+  Widget _buildShareItem(BuildContext context) {
+    return _NonAlbumGridItem(
+      icon: Icons.share_outlined,
+      label: "Sharing",
+      isShowIndicator: Pref.inst().hasNewSharedAlbumOr(false),
+      onTap: _isSelectionMode
+          ? null
+          : () {
+              Navigator.of(context).pushNamed(PendingAlbums.routeName,
+                  arguments: PendingAlbumsArguments(widget.account));
             },
     );
   }
@@ -437,7 +456,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;
 
-  static const _extraGridItemCount = 3;
+  static final _extraGridItemCount = 3 + (Lab().enableSharedAlbum ? 1 : 0);
 }
 
 class _GridItem {
@@ -454,6 +473,7 @@ class _NonAlbumGridItem extends StatelessWidget {
     required this.icon,
     required this.label,
     this.onTap,
+    this.isShowIndicator = false,
   }) : super(key: key);
 
   @override
@@ -486,6 +506,12 @@ class _NonAlbumGridItem extends StatelessWidget {
                   Expanded(
                     child: Text(label),
                   ),
+                  if (isShowIndicator)
+                    Icon(
+                      Icons.circle,
+                      color: Colors.red,
+                      size: 8,
+                    ),
                 ],
               ),
             ),
@@ -498,4 +524,5 @@ class _NonAlbumGridItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
+  final bool isShowIndicator;
 }

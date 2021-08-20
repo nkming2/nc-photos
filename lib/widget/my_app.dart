@@ -16,6 +16,7 @@ import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/lab_settings.dart';
+import 'package:nc_photos/widget/pending_albums.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -115,6 +116,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleAlbumImporterRoute(settings);
     route ??= _handleTrashbinBrowserRoute(settings);
     route ??= _handleTrashbinViewerRoute(settings);
+    route ??= _handlePendingAlbumsRoute(settings);
     return route;
   }
 
@@ -289,6 +291,19 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleTrashbinViewerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePendingAlbumsRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PendingAlbums.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as PendingAlbumsArguments;
+        return PendingAlbums.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handlePendingAlbumsRoute] Failed while handling route", e);
     }
     return null;
   }

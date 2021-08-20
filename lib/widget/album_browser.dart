@@ -109,7 +109,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   @protected
-  get canEdit => _album != null;
+  get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
 
   @override
   enterEditMode() {

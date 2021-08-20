@@ -110,7 +110,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   @protected
-  get canEdit => _album != null;
+  get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
 
   @override
   enterEditMode() {
@@ -261,12 +261,14 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       context,
       widget.account,
       _album!,
-      menuItemBuilder: (context) => [
-        PopupMenuItem(
-          value: _menuValueConvertBasic,
-          child: Text(L10n.of(context).convertBasicAlbumMenuLabel),
-        ),
-      ],
+      menuItemBuilder: canEdit
+          ? (context) => [
+                PopupMenuItem(
+                  value: _menuValueConvertBasic,
+                  child: Text(L10n.of(context).convertBasicAlbumMenuLabel),
+                ),
+              ]
+          : null,
       onSelectedMenuItem: (option) {
         switch (option) {
           case _menuValueConvertBasic:
