@@ -18,7 +18,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
-import 'package:nc_photos/widget/album_browser.dart';
+import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
@@ -208,7 +208,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       album: item.album,
       isSelected: _selectedItems.contains(item),
       isShared: item.isSharedByMe || item.isSharedToMe,
-      onTap: () => _onItemTap(item),
+      onTap: () => _onItemTap(context, item),
       onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
     ).build(context);
   }
@@ -265,7 +265,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
-  void _onItemTap(_GridItem item) {
+  void _onItemTap(BuildContext context, _GridItem item) {
     if (_isSelectionMode) {
       if (!_items.contains(item)) {
         _log.warning("[_onItemTap] Item not found in backing list, ignoring");
@@ -283,7 +283,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
         });
       }
     } else {
-      _openAlbum(item.album);
+      _openAlbum(context, item.album);
     }
   }
 
@@ -375,7 +375,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       delegate: AlbumSearchDelegate(context, widget.account),
     ).then((value) {
       if (value is Album) {
-        _openAlbum(value);
+        _openAlbum(context, value);
       }
     });
   }
@@ -419,14 +419,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
       ..addAll(newSelectedItems);
   }
 
-  void _openAlbum(Album album) {
-    if (album.provider is AlbumStaticProvider) {
-      Navigator.of(context).pushNamed(AlbumBrowser.routeName,
-          arguments: AlbumBrowserArguments(widget.account, album));
-    } else {
-      Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
-          arguments: DynamicAlbumBrowserArguments(widget.account, album));
-    }
+  void _openAlbum(BuildContext context, Album album) {
+    album_browser_util.open(context, widget.account, album);
   }
 
   void _reqQuery() {
