@@ -39,13 +39,18 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   @override
   build(BuildContext context) {
-    return BlocBuilder<ListShareeBloc, ListShareeBlocState>(
+    return BlocListener<ListShareeBloc, ListShareeBlocState>(
       bloc: _shareeBloc,
-      builder: (_, shareeState) =>
-          BlocBuilder<ListShareBloc, ListShareBlocState>(
-        bloc: _shareBloc,
-        builder: (context, shareState) =>
-            _buildContent(context, shareeState, shareState),
+      listener: (context, shareeState) =>
+          _onListShareeBlocStateChanged(context, shareeState),
+      child: BlocBuilder<ListShareeBloc, ListShareeBlocState>(
+        bloc: _shareeBloc,
+        builder: (_, shareeState) =>
+            BlocBuilder<ListShareBloc, ListShareBlocState>(
+          bloc: _shareBloc,
+          builder: (context, shareState) =>
+              _buildContent(context, shareeState, shareState),
+        ),
       ),
     );
   }
@@ -120,6 +125,16 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       ),
       onPressed: () => _onShareePressed(context, sharee, share),
     );
+  }
+
+  void _onListShareeBlocStateChanged(
+      BuildContext context, ListShareeBlocState state) {
+    if (state is ListShareeBlocFailure) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(state.exception, context)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   void _onShareePressed(
