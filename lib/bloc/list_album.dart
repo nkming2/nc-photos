@@ -114,6 +114,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _albumUpdatedListener.begin();
     _fileRemovedListener.begin();
     _albumCreatedListener.begin();
+    _fileMovedListener.begin();
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
@@ -138,6 +139,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _albumUpdatedListener.end();
     _fileRemovedListener.end();
     _albumCreatedListener.end();
+    _fileMovedListener.end();
     _refreshThrottler.clear();
     return super.close();
   }
@@ -186,6 +188,20 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       return;
     }
     if (isAlbumFile(ev.account, ev.file)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
+  void _onFileMovedEvent(FileMovedEvent ev) {
+    if (state is ListAlbumBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if (ev.destination
+        .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -254,6 +270,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   late AppEventListener<FileRemovedEvent> _fileRemovedListener;
   late AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
+  late final _fileMovedListener =
+      AppEventListener<FileMovedEvent>(_onFileMovedEvent);
 
   late Throttler _refreshThrottler;
 
