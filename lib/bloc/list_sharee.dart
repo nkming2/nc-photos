@@ -83,7 +83,7 @@ class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
       yield ListShareeBlocLoading(ev.account, state.items);
       yield ListShareeBlocSuccess(ev.account, await _query(ev));
     } catch (e, stackTrace) {
-      _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
+      _log.shout("[_onEventQuery] Exception while request", e, stackTrace);
       yield ListShareeBlocFailure(ev.account, state.items, e);
     }
   }
