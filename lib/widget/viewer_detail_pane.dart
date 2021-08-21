@@ -115,7 +115,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         children: [
           Row(
             children: [
-              if (widget.album != null)
+              if (widget.album != null &&
+                  widget.album!.albumFile?.isOwned(widget.account.username) ==
+                      true)
                 _DetailPaneButton(
                   icon: Icons.photo_album_outlined,
                   label: L10n.of(context).useAsAlbumCoverTooltip,
