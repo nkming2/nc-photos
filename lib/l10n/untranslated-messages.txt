@@ -20,18 +20,22 @@
     "metadataTaskPauseNoWiFiNotification",
     "configButtonLabel",
     "useAsAlbumCoverTooltip",
-    "helpTooltip"
+    "helpTooltip",
+    "removeFromAlbumTooltip"
   ],
 
   "es": [
-    "helpTooltip"
+    "helpTooltip",
+    "removeFromAlbumTooltip"
   ],
 
   "fr": [
-    "helpTooltip"
+    "helpTooltip",
+    "removeFromAlbumTooltip"
   ],
 
   "ru": [
-    "helpTooltip"
+    "helpTooltip",
+    "removeFromAlbumTooltip"
   ]
 }

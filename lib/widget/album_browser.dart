@@ -285,7 +285,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     }
     Navigator.pushNamed(context, Viewer.routeName,
         arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
-            album: widget.album));
+            album: _album));
   }
 
   void _onSelectionAppBarSharePressed(BuildContext context) {
@@ -508,6 +508,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     if (ev.album.albumFile!.path == _album?.albumFile?.path) {
       setState(() {
         _album = ev.album;
+        _transformItems();
         initCover(widget.account, ev.album);
       });
     }

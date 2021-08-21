@@ -654,6 +654,10 @@
 	"configButtonLabel": "CONFIG",
 	"useAsAlbumCoverTooltip": "Use as album cover",
 	"helpTooltip": "Help",
+	"removeFromAlbumTooltip": "Remove from album",
+	"@removeFromAlbumTooltip": {
+		"description": "Remove the opened photo from an album"
+	},
 
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {

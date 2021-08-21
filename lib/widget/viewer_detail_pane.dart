@@ -117,6 +117,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             children: [
               if (widget.album != null &&
                   widget.album!.albumFile?.isOwned(widget.account.username) ==
+                      true &&
+                  widget.album!.provider is AlbumStaticProvider)
+                _DetailPaneButton(
+                  icon: Icons.remove_outlined,
+                  label: L10n.of(context).removeFromAlbumTooltip,
+                  onPressed: () => _onRemoveFromAlbumPressed(context),
+                ),
+              if (widget.album != null &&
+                  widget.album!.albumFile?.isOwned(widget.account.username) ==
                       true)
                 _DetailPaneButton(
                   icon: Icons.photo_album_outlined,
@@ -243,6 +252,43 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
     }
+  }
+
+  Future<void> _onRemoveFromAlbumPressed(BuildContext context) async {
+    assert(widget.album!.provider is AlbumStaticProvider);
+    await _onAction(
+      context,
+      null,
+      L10n.of(context).removeSelectedFromAlbumSuccessNotification(1),
+      () async {
+        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        try {
+          final newItems =
+              AlbumStaticProvider.of(widget.album!).items.where((element) {
+            if (element is AlbumFileItem) {
+              return element.file.path != widget.file.path;
+            } else {
+              return true;
+            }
+          }).toList();
+          await UpdateAlbum(albumRepo)(
+              widget.account,
+              widget.album!.copyWith(
+                provider: AlbumStaticProvider(
+                  items: newItems,
+                ),
+              ));
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        } catch (e, stackTrace) {
+          _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album",
+              e, stackTrace);
+          rethrow;
+        }
+      },
+      failureText: L10n.of(context).removeSelectedFromAlbumFailureNotification,
+    );
   }
 
   Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
@@ -401,15 +447,18 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onAction(
     BuildContext context,
-    String processingText,
+    String? processingText,
     String successText,
     FutureOr<void> Function() action, {
     String? failureText,
   }) async {
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(processingText),
-      duration: k.snackBarDurationShort,
-    ));
+    ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
+    if (processingText != null) {
+      controller = SnackBarManager().showSnackBar(SnackBar(
+        content: Text(processingText),
+        duration: k.snackBarDurationShort,
+      ));
+    }
     controller?.closed.whenComplete(() {
       controller = null;
     });
