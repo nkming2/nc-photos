@@ -330,11 +330,6 @@ class _AlbumBrowserState extends State<AlbumBrowser>
                 selectedIndexes.length)),
         duration: k.snackBarDurationNormal,
       ));
-      setState(() {
-        _album = newAlbum;
-        _transformItems();
-        initCover(widget.account, newAlbum);
-      });
     }).catchError((e, stacktrace) {
       _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
           stacktrace);
