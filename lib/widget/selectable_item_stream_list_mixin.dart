@@ -55,8 +55,9 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     double mainAxisSpacing = 0,
     ValueChanged<double?>? onMaxExtentChanged,
   }) {
+    final Widget content;
     if (onMaxExtentChanged != null) {
-      return MeasurableItemList(
+      content = MeasurableItemList(
         key: _listKey,
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
@@ -66,13 +67,21 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         onMaxExtentChanged: onMaxExtentChanged,
       );
     } else {
-      return SliverStaggeredGrid.extentBuilder(
+      content = SliverStaggeredGrid.extentBuilder(
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
         itemBuilder: _buildItem,
         staggeredTileBuilder: (index) => _items[index].staggeredTile,
         mainAxisSpacing: mainAxisSpacing,
       );
+    }
+    if (platform_k.isAndroid) {
+      return WillPopScope(
+        onWillPop: _onBackButton,
+        child: content,
+      );
+    } else {
+      return content;
     }
   }
 
@@ -199,6 +208,17 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         ));
         SessionStorage().hasShowRangeSelectNotification = true;
       }
+    }
+  }
+
+  Future<bool> _onBackButton() async {
+    if (!isSelectionMode) {
+      return true;
+    } else {
+      setState(() {
+        clearSelectedItems();
+      });
+      return false;
     }
   }
 
