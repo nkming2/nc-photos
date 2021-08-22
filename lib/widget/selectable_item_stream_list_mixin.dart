@@ -104,10 +104,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _items[index];
-    final content = Padding(
-      padding: const EdgeInsets.all(2),
-      child: item.buildWidget(context),
-    );
+    final content = item.buildWidget(context);
     if (item.isSelectable) {
       return Selectable(
         isSelected: _selectedItems.contains(item),

@@ -16,52 +16,55 @@ class PhotoListImage extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return FittedBox(
-      clipBehavior: Clip.hardEdge,
-      fit: BoxFit.cover,
-      child: Stack(
-        children: [
-          Container(
-            // arbitrary size here
-            constraints: BoxConstraints.tight(const Size(128, 128)),
-            color: AppTheme.getListItemBackgroundColor(context),
-            child: CachedNetworkImage(
-              imageUrl: previewUrl,
-              httpHeaders: {
-                "Authorization": Api.getAuthorizationHeaderValue(account),
-              },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              errorWidget: (context, url, error) {
-                // won't work on web because the image is downloaded by the cache
-                // manager instead
-                // where's the preview???
-                return Container(
-                  child: Center(
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 64,
-                      color: Colors.white.withOpacity(.8),
-                    ),
-                  ),
-                );
-              },
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-            ),
-          ),
-          if (isGif)
+    return Padding(
+      padding: const EdgeInsets.all(2),
+      child: FittedBox(
+        clipBehavior: Clip.hardEdge,
+        fit: BoxFit.cover,
+        child: Stack(
+          children: [
             Container(
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
-              alignment: AlignmentDirectional.topEnd,
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: const Icon(
-                Icons.gif,
-                size: 36,
-                color: Colors.white,
+              color: AppTheme.getListItemBackgroundColor(context),
+              child: CachedNetworkImage(
+                imageUrl: previewUrl,
+                httpHeaders: {
+                  "Authorization": Api.getAuthorizationHeaderValue(account),
+                },
+                fadeInDuration: const Duration(),
+                filterQuality: FilterQuality.high,
+                errorWidget: (context, url, error) {
+                  // won't work on web because the image is downloaded by the cache
+                  // manager instead
+                  // where's the preview???
+                  return Container(
+                    child: Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 64,
+                        color: Colors.white.withOpacity(.8),
+                      ),
+                    ),
+                  );
+                },
+                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               ),
             ),
-        ],
+            if (isGif)
+              Container(
+                // arbitrary size here
+                constraints: BoxConstraints.tight(const Size(128, 128)),
+                alignment: AlignmentDirectional.topEnd,
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: const Icon(
+                  Icons.gif,
+                  size: 36,
+                  color: Colors.white,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -80,50 +83,53 @@ class PhotoListVideo extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return FittedBox(
-      clipBehavior: Clip.hardEdge,
-      fit: BoxFit.cover,
-      child: Stack(
-        children: [
-          Container(
-            // arbitrary size here
-            constraints: BoxConstraints.tight(const Size(128, 128)),
-            color: AppTheme.getListItemBackgroundColor(context),
-            child: CachedNetworkImage(
-              imageUrl: previewUrl,
-              httpHeaders: {
-                "Authorization": Api.getAuthorizationHeaderValue(account),
-              },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              errorWidget: (context, url, error) {
-                // no preview for this video. Normal since video preview is disabled
-                // by default
-                return Container(
-                  child: Center(
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 64,
-                      color: Colors.white.withOpacity(.8),
+    return Padding(
+      padding: const EdgeInsets.all(2),
+      child: FittedBox(
+        clipBehavior: Clip.hardEdge,
+        fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            Container(
+              // arbitrary size here
+              constraints: BoxConstraints.tight(const Size(128, 128)),
+              color: AppTheme.getListItemBackgroundColor(context),
+              child: CachedNetworkImage(
+                imageUrl: previewUrl,
+                httpHeaders: {
+                  "Authorization": Api.getAuthorizationHeaderValue(account),
+                },
+                fadeInDuration: const Duration(),
+                filterQuality: FilterQuality.high,
+                errorWidget: (context, url, error) {
+                  // no preview for this video. Normal since video preview is disabled
+                  // by default
+                  return Container(
+                    child: Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 64,
+                        color: Colors.white.withOpacity(.8),
+                      ),
                     ),
-                  ),
-                );
-              },
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+                  );
+                },
+                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              ),
             ),
-          ),
-          Container(
-            // arbitrary size here
-            constraints: BoxConstraints.tight(const Size(128, 128)),
-            alignment: AlignmentDirectional.topEnd,
-            padding: const EdgeInsets.all(8),
-            child: const Icon(
-              Icons.play_circle_outlined,
-              size: 24,
-              color: Colors.white,
+            Container(
+              // arbitrary size here
+              constraints: BoxConstraints.tight(const Size(128, 128)),
+              alignment: AlignmentDirectional.topEnd,
+              padding: const EdgeInsets.all(8),
+              child: const Icon(
+                Icons.play_circle_outlined,
+                size: 24,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
