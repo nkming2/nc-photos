@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         Locale("el"),
         Locale("es"),
         Locale("fr"),
+        Locale("ru"),
       ],
       debugShowCheckedModeBanner: false,
     );
