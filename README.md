@@ -17,6 +17,7 @@ Features:
 Translations (sorted by ISO name):
 - français (contributed by mgreil)
 - ελληνικά (contributed by Chris Karasoulis)
+- русский (contributed by meixnt & eriane)
 - Español (contributed by luckkmaxx)
 
 This app does not require any server-side plugins.
