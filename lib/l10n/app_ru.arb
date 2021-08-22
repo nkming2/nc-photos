@@ -1,0 +1,717 @@
+{
+	"appTitle": "Фото",
+	"translator": "meixnt & eriane",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "Фото",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"albumsTabLabel": "Альбомы",
+	"@albumsTabLabel": {
+		"description": "Label of the tab that lists user albums"
+	},
+	"zoomTooltip": "Размер миниатюр",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "Обновить",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "Настройки",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "Выбрано {count} фото",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"addSelectedToAlbumSuccessNotification": "Выбранные фото добавлены в альбом {album}",
+	"@addSelectedToAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Воскресная прогулка"
+			}
+		}
+	},
+	"addSelectedToAlbumFailureNotification": "Не удалось добавить фото в альбом",
+	"@addSelectedToAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be added to an album"
+	},
+	"addToAlbumTooltip": "Добавить в альбом",
+	"@addToAlbumTooltip": {
+		"description": "Add selected items to an album"
+	},
+	"addToAlbumSuccessNotification": "Добавлено в альбом {album}",
+	"@addToAlbumSuccessNotification": {
+		"description": "Inform user that the item is added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Воскресная прогулка"
+			}
+		}
+	},
+	"addToAlbumFailureNotification": "Не удалось добавить в альбом",
+	"@addToAlbumFailureNotification": {
+		"description": "Inform user that the item cannot be added to an album"
+	},
+	"addToAlbumAlreadyAddedNotification": "Уже в альбоме",
+	"@addToAlbumAlreadyAddedNotification": {
+		"description": "Inform user that the item is already in the album"
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Удаление фото} other{Удаление {count} фото}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "Выбранные фото перемещены в корзину",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotification": "{count, plural, =1{Не удалось удалить фото} other{Не удалось удалить {count} фото}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveTooltip": "Отправить в архив",
+	"@archiveTooltip": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Добавление фото в архив} other{Добавление {count} фото в архив}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "Выбранные фото отправлены в архив",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, =1{Не удалось отправить фото в архив} other{Не удалось отправить {count} фото в архив}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveTooltip": "Вернуть из архива",
+	"@unarchiveTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Возвращение фото из архива} other{Возвращение {count} фото из архива}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "Выбранные фото возвращены из архива",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Не удалось вернуть фото из архива} other{Не удалось вернуть {count} фото из архива}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "Удалить",
+	"@deleteTooltip": {
+		"description": "Delete selected items"
+	},
+	"deleteProcessingNotification": "Удаление файла",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "Файл удалён",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "Не удалось удалить файл",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumTooltip": "Убрать выбранное из альбома",
+	"@removeSelectedFromAlbumTooltip": {
+		"description": "Tooltip of the button that remove selected items from an album"
+	},
+	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 фото убрано из альбома} other{{count} фото убрано из альбома}}",
+	"@removeSelectedFromAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are removed from an album successfully",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"removeSelectedFromAlbumFailureNotification": "Не удалось убрать фото из альбома",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "Добавить сервер",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "Сервер {server} удалён",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "Новый альбом",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"createAlbumFailureNotification": "Не удалось создать альбом",
+	"@createAlbumFailureNotification": {
+		"description": "Inform user that an album cannot be created"
+	},
+	"albumSize": "{count, plural, =0{Пустой} =1{1 фото} other{{count} фото}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "Архив",
+	"@albumArchiveLabel": {
+		"description": "Archive"
+	},
+	"connectingToServer": "Подключение к серверу\n{server}",
+	"@connectingToServer": {
+		"description": "Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"nameInputHint": "Название альбома",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"albumNameInputInvalidEmpty": "Пожалуйста, укажите название альбома",
+	"@albumNameInputInvalidEmpty": {
+		"description": "Inform user that the album name input field cannot be empty"
+	},
+	"skipButtonLabel": "ПРОПУСТИТЬ",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "ПОДТВЕРДИТЬ",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "Войти на сервер Nextcloud",
+	"@signInHeaderText": {
+		"description": "Inform user what to do in sign in widget"
+	},
+	"signIn2faHintText": "*Воспользуйтесь паролем приложения, если на сервере действует двухфакторная аутентификация",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
+	"serverAddressInputHint": "Адрес сервера",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "Укажите адрес сервера",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "Логин",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "Введите логин",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "Пароль",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "Введите пароль",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "Выберите папки с фотографиями",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "Будут отображаться фото, содержащиеся только в указанных папках. Нажмите Пропустить, чтобы выбрать все",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(назад)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "Не удалось исключить папку",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "Выберите хотя бы одну папку или нажмите Пропустить, чтобы выбрать все",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "Начнём!",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "Вы можете изменить это позже в настройках",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "Это приложение создаёт папку для хранения настроек на сервере Nextcloud. Не удаляйте и не изменяйте её содержимое, пока используете приложение",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "Настройки",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "Язык",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
+	"settingsExifSupportTitle": "Поддержка EXIF",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsExifSupportTrueSubtitle": "Повышенный расход трафика",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsAboutSectionTitle": "О программе",
+	"@settingsAboutSectionTitle": {
+		"description": "Title of the about section in settings widget"
+	},
+	"settingsVersionTitle": "Версия",
+	"@settingsVersionTitle": {
+		"description": "Title of the version data item"
+	},
+	"settingsSourceCodeTitle": "Исходный код",
+	"@settingsSourceCodeTitle": {
+		"description": "Title of the source code item"
+	},
+	"settingsBugReportTitle": "Сообщить о проблеме",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
+	"settingsTranslatorTitle": "Переводчик",
+	"@settingsTranslatorTitle": {
+		"description": "Title of the translator item"
+	},
+	"writePreferenceFailureNotification": "Не удалось сохранить настройки",
+	"@writePreferenceFailureNotification": {
+		"description": "Inform user that the preference file cannot be modified"
+	},
+	"enableButtonLabel": "ВКЛЮЧИТЬ",
+	"@enableButtonLabel": {
+		"description": "Label of the enable button"
+	},
+	"exifSupportDetails": "Включение поддержки EXIF даёт возможность видеть дополнительные метаданные, такие как дата снимка, модель камеры и т.д. В свою очередь, для получения этих метаданных необходимо получить оригинальное, несжатое изображение, что влечёт расход большого объёма трафика. Приложение начинает скачивание только при подключении к сети Wi-Fi",
+	"@exifSupportDetails": {
+		"description": "Detailed description of the exif support feature"
+	},
+	"exifSupportConfirmationDialogTitle": "Включить поддержку EXIF?",
+	"@exifSupportConfirmationDialogTitle": {
+		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"doneButtonLabel": "ЗАВЕРШИТЬ",
+	"@doneButtonLabel": {
+		"description": "Label of the done button"
+	},
+	"nextButtonLabel": "ДАЛЕЕ",
+	"@nextButtonLabel": {
+		"description": "Label of the next button"
+	},
+	"connectButtonLabel": "ПОДКЛЮЧИТЬСЯ",
+	"@connectButtonLabel": {
+		"description": "Label of the connect button"
+	},
+	"rootPickerSkipConfirmationDialogContent": "Будут выбраны все файлы",
+	"@rootPickerSkipConfirmationDialogContent": {
+		"description": "Inform user what happens after skipping root picker"
+	},
+	"megapixelCount": "{count} Мп",
+	"@megapixelCount": {
+		"description": "Resolution of an image in megapixel",
+		"placeholders": {
+			"count": {
+				"example": "1.3"
+			}
+		}
+	},
+	"secondCountSymbol": "{count} с",
+	"@secondCountSymbol": {
+		"description": "Number of seconds",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"millimeterCountSymbol": "{count} мм",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "Подробности",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "Скачать",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "Скачивание файла",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "Файл скачан",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "Не удалось скачать файл",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"downloadFailureNoPermissionNotification": "Необходимо разрешение на доступ к хранилищу",
+	"@downloadFailureNoPermissionNotification": {
+		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
+	},
+	"nextTooltip": "Далее",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "Назад",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "Кликните мышью, зажав Shift, чтобы выбрать несколько объектов",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "Длительным нажатием на второй объект можно выбрать все остальные между ним и первым",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "Изменить время и дату",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Дата",
+	"timeSubtitle": "Время",
+	"dateYearInputHint": "Год",
+	"dateMonthInputHint": "Месяц",
+	"dateDayInputHint": "День",
+	"timeHourInputHint": "Час",
+	"timeMinuteInputHint": "Минута",
+	"dateTimeInputInvalid": "Некорректное значение",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "Не удалось изменить время и дату",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
+	},
+	"albumDirPickerHeaderText": "Выберите папки, которые нужно связать с альбомом",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "Будут отображаться фото, содержащиеся только в указанных папках",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "Выберите хотя бы одну папку",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"createAlbumDialogBasicLabel": "Обычный",
+	"@createAlbumDialogBasicLabel": {
+		"description": "Simple album"
+	},
+	"createAlbumDialogBasicDescription": "Обычный альбом позволяет организовать фотографии независимо от структуры папок на сервере",
+	"@createAlbumDialogBasicDescription": {
+		"description": "Describe what a simple album is"
+	},
+	"createAlbumDialogFolderBasedLabel": "Основанный на папках",
+	"@createAlbumDialogFolderBasedLabel": {
+		"description": "Folder based album"
+	},
+	"createAlbumDialogFolderBasedDescription": "Основанный на папках альбом показывает содержимое добавленных в него папок",
+	"@createAlbumDialogFolderBasedDescription": {
+		"description": "Describe what a folder based album is"
+	},
+	"convertBasicAlbumMenuLabel": "Преобразовать в обычный альбом",
+	"@convertBasicAlbumMenuLabel": {
+		"description": "Convert a non-simple album to a simple one"
+	},
+	"convertBasicAlbumConfirmationDialogTitle": "Преобразование в обычный альбом",
+	"@convertBasicAlbumConfirmationDialogTitle": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumConfirmationDialogContent": "Приложение больше не будет управлять содержимым этого альбома. Вы сможете свободно добавлять и удалять фотографии.\n\nЭто преобразование необратимо",
+	"@convertBasicAlbumConfirmationDialogContent": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumSuccessNotification": "Альбом преобразован",
+	"@convertBasicAlbumSuccessNotification": {
+		"description": "Successfully converted the album"
+	},
+	"importFoldersTooltip": "Импорт папки",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "Импорт папок в виде альбомов",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "Доступные для импорта папки перечислены ниже. В зависимости от количества файлов, процесс может занять продолжительное время",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "ИМПОРТ",
+	"albumImporterProgressText": "Importing folders",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
+	"editAlbumMenuLabel": "Редактировать альбом",
+	"@editAlbumMenuLabel": {
+		"description": "Edit the opened album"
+	},
+	"doneButtonTooltip": "Завершить",
+	"editTooltip": "Редактирование",
+	"editAccountConflictFailureNotification": "Запись с такими настройками уже существует",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"genericProcessingDialogContent": "Пожалуйста, подождите",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
+	"sortTooltip": "Сортировка",
+	"sortOptionDialogTitle": "Сортировка",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "Сначала старые",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "Сначала новые",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
+	"albumEditDragRearrangeNotification": "Удерживайте, а затем перетаскивайте фото, чтобы упорядочить их вручную",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "Добавить текст",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "Поделиться",
+	"@shareTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "Выберите фотографии, чтобы поделиться",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Загрузка",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
+	"searchTooltip": "Поиск",
+	"albumSearchTextFieldHint": "Поиск альбомов",
+	"clearTooltip": "Очистить",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "Ничего не найдено",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"listEmptyText": "Ничего нет",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Корзина",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Восстановить",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, =1{Восстановление 1 фото} other{Восстановление {count} фото}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Выбранные фото восстановлены",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, =1{Не удалось восстановить 1 фото} other{Не удалось восстановить {count} фото}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Восстановить",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "Файл восстановлен",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "Не удалось восстановить файл",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Удалить окончательно",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "Окончательное удаление",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "Выбранные файлы будут навсегда удалены с сервера.\n\nЭто необратимое действие",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"albumSharedLabel": "Общий доступ",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
+	"setAlbumCoverProcessingNotification": "Изменение обложки альбома",
+	"@setAlbumCoverProcessingNotification": {
+		"description": "Setting the opened item as the album cover"
+	},
+	"setAlbumCoverSuccessNotification": "Обложка альбома изменена",
+	"@setAlbumCoverSuccessNotification": {
+		"description": "Set the opened item as the album cover successfully"
+	},
+	"setAlbumCoverFailureNotification": "Не удалось изменить обложку альбома",
+	"@setAlbumCoverFailureNotification": {
+		"description": "Cannot set the opened item as the album cover"
+	},
+	"metadataTaskProcessingNotification": "Обрабатываются метаданные изображений",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "Ожидание Wi-Fi",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "НАСТРОЙКИ",
+	"useAsAlbumCoverTooltip": "Использовать как обложку альбома",
+
+	"changelogTitle": "Список изменений",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
+	"serverCertErrorDialogTitle": "Недоверенный сертификат сервера",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "Возможно, сервер взломан или злоумышленники пытаются похитить ваши данные.",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"advancedButtonLabel": "ДОПОЛНИТЕЛЬНО",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "Всё равно доверять этому сертификату?",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "Вы можете добавить этот сертификат в список исключений. ВНИМАНИЕ: Это значительное изменение в системе безопасности. Убедитесь, что это сертификат, подписанный вами или доверенной стороной\n\nСервер: {host}\nОтпечаток сертификата: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "ДОВЕРЯТЬ ЭТОМУ СЕРТИФИКАТУ",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
+	"errorUnauthenticated": "Неавторизованный доступ. Если ошибка возникает снова, попробуйте перелогиниться",
+	"@errorUnauthenticated": {
+		"description": "Error message when server responds with HTTP401"
+	},
+	"errorDisconnected": "Не удаётся подключиться. Сервер может быть недоступен либо ваше устройство не подключено к сети",
+	"@errorDisconnected": {
+		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "Файл заблокирован на сервере. Попробуйте повторить позже",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "Не удаётся подключиться. Проверьте, что адрес вашего Nextcloud указан верно",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "Не удаётся войти на сервер. Проверьте, правильно ли указаны логин и пароль",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "Ошибка сервера. Проверьте, правильно ли настроен ваш сервер",
+	"@errorServerError": {
+		"description": "HTTP 500"
+	}
+}
