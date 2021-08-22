@@ -30,8 +30,7 @@ class PendingAlbumsArguments {
 class PendingAlbums extends StatefulWidget {
   static const routeName = "/pending-albums";
 
-  static Route buildRoute(PendingAlbumsArguments args) =>
-      MaterialPageRoute(
+  static Route buildRoute(PendingAlbumsArguments args) => MaterialPageRoute(
         builder: (context) => PendingAlbums.fromArgs(args),
       );
 
@@ -198,8 +197,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
 
   var _items = <_GridItem>[];
 
-  static final _log =
-      Logger("widget.pending_albums._PendingAlbumsState");
+  static final _log = Logger("widget.pending_albums._PendingAlbumsState");
 }
 
 class _GridItem {

@@ -251,9 +251,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       IconButton(
         icon: const Icon(Icons.remove),
         tooltip: L10n.of(context).removeSelectedFromAlbumTooltip,
-        onPressed: () {
-          _onSelectionAppBarRemovePressed();
-        },
+        onPressed: _onSelectionAppBarRemovePressed,
       )
     ]);
   }
