@@ -652,6 +652,7 @@
 		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "CONFIGURAR",
+	"useAsAlbumCoverTooltip": "Usar como portada del álbum",
 	
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
