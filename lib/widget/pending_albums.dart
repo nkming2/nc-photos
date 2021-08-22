@@ -134,11 +134,22 @@ class _PendingAlbumsState extends State<PendingAlbums> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _items[index];
-    return AlbumGridItemBuilder(
-      account: widget.account,
-      album: item.album,
-      onTap: () => _onItemTap(context, item),
-    ).build(context);
+    return Stack(
+      children: [
+        AlbumGridItemBuilder(
+          account: widget.account,
+          album: item.album,
+        ).build(context),
+        Positioned.fill(
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: () => _onItemTap(context, item),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   void _onStateChange(

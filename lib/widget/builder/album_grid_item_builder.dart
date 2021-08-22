@@ -15,10 +15,7 @@ class AlbumGridItemBuilder {
   AlbumGridItemBuilder({
     required this.account,
     required this.album,
-    this.isSelected = false,
     this.isShared = false,
-    this.onTap,
-    this.onLongPress,
   });
 
   AlbumGridItem build(BuildContext context) {
@@ -43,9 +40,6 @@ class AlbumGridItemBuilder {
       subtitle: subtitle,
       subtitle2: subtitle2,
       icon: album.provider is AlbumDirProvider ? Icons.folder : null,
-      isSelected: isSelected,
-      onTap: onTap,
-      onLongPress: onLongPress,
     );
   }
 
@@ -92,8 +86,5 @@ class AlbumGridItemBuilder {
 
   final Account account;
   final Album album;
-  final bool isSelected;
   final bool isShared;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
 }

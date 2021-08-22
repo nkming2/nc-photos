@@ -94,13 +94,24 @@ class AlbumSearchDelegate extends SearchDelegate {
   }
 
   Widget _buildResultItem(BuildContext context, Album album) {
-    return AlbumGridItemBuilder(
-      account: account,
-      album: album,
-      onTap: () {
-        close(context, album);
-      },
-    ).build(context);
+    return Stack(
+      children: [
+        AlbumGridItemBuilder(
+          account: account,
+          album: album,
+        ).build(context),
+        Positioned.fill(
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: () {
+                close(context, album);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildSuggestionContent(
