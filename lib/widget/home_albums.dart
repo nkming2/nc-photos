@@ -30,6 +30,7 @@ import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/pending_albums.dart';
+import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:tuple/tuple.dart';
@@ -47,7 +48,10 @@ class HomeAlbums extends StatefulWidget {
 }
 
 class _HomeAlbumsState extends State<HomeAlbums>
-    with RouteAware, PageVisibilityMixin<HomeAlbums> {
+    with
+        SelectableItemStreamListMixin,
+        RouteAware,
+        PageVisibilityMixin<HomeAlbums> {
   @override
   initState() {
     super.initState();
@@ -98,33 +102,24 @@ class _HomeAlbumsState extends State<HomeAlbums>
   Widget _buildContent(BuildContext context, ListAlbumBlocState state) {
     return Stack(
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            accentColor: AppTheme.getOverscrollIndicatorColor(context),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              SliverPadding(
-                padding: const EdgeInsets.all(8),
-                sliver: SliverStaggeredGrid.extentBuilder(
-                  maxCrossAxisExtent: 256,
-                  mainAxisSpacing: 8,
-                  itemCount: _items.length + _extraGridItemCount + 1,
-                  itemBuilder: _buildItem,
-                  staggeredTileBuilder: (index) {
-                    if (index < _extraGridItemCount) {
-                      return const StaggeredTile.fit(1);
-                    } else if (index == _extraGridItemCount) {
-                      // separation
-                      return const StaggeredTile.extent(99, 1);
-                    } else {
-                      return const StaggeredTile.count(1, 1);
-                    }
-                  },
+        buildItemStreamListOuter(
+          context,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              accentColor: AppTheme.getOverscrollIndicatorColor(context),
+            ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                SliverPadding(
+                  padding: const EdgeInsets.all(8),
+                  sliver: buildItemStreamList(
+                    maxCrossAxisExtent: 256,
+                    mainAxisSpacing: 8,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         if (state is ListAlbumBlocLoading)
@@ -137,7 +132,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Widget _buildAppBar(BuildContext context) {
-    if (_isSelectionMode) {
+    if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
       return _buildNormalAppBar(context);
@@ -146,10 +141,10 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   Widget _buildSelectionAppBar(BuildContext conetxt) {
     return SelectionAppBar(
-      count: _selectedItems.length,
+      count: selectedListItems.length,
       onClosePressed: () {
         setState(() {
-          _selectedItems.clear();
+          clearSelectedItems();
         });
       },
       actions: [
@@ -190,85 +185,61 @@ class _HomeAlbumsState extends State<HomeAlbums>
     );
   }
 
-  Widget _buildItem(BuildContext context, int index) {
-    if (index == 0) {
-      return _buildArchiveItem(context);
-    } else if (index == 1) {
-      return _buildTrashbinItem(context);
-    } else if (index == 2 && Lab().enableSharedAlbum) {
-      return _buildShareItem(context);
-    } else if (index == 2 + (Lab().enableSharedAlbum ? 1 : 0)) {
-      return _buildNewAlbumItem(context);
-    } else if (index == _extraGridItemCount) {
-      return Container();
-    } else {
-      return _buildAlbumItem(context, index - _extraGridItemCount - 1);
-    }
-  }
-
-  Widget _buildAlbumItem(BuildContext context, int index) {
-    final item = _items[index];
-    return AlbumGridItemBuilder(
-      account: widget.account,
-      album: item.album,
-      isSelected: _selectedItems.contains(item),
-      isShared: item.isSharedByMe || item.isSharedToMe,
-      onTap: () => _onItemTap(context, item),
-      onLongPress: _isSelectionMode ? null : () => _onItemLongPress(item),
-    ).build(context);
-  }
-
-  Widget _buildArchiveItem(BuildContext context) {
-    return _NonAlbumGridItem(
+  SelectableItem _buildArchiveItem(BuildContext context) {
+    return _ButtonListItem(
       icon: Icons.archive_outlined,
       label: L10n.of(context).albumArchiveLabel,
-      onTap: _isSelectionMode
-          ? null
-          : () {
-              Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
-                  arguments: ArchiveBrowserArguments(widget.account));
-            },
+      onTap: () {
+        if (!isSelectionMode) {
+          Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
+              arguments: ArchiveBrowserArguments(widget.account));
+        }
+      },
     );
   }
 
-  Widget _buildTrashbinItem(BuildContext context) {
-    return _NonAlbumGridItem(
+  SelectableItem _buildTrashbinItem(BuildContext context) {
+    return _ButtonListItem(
       icon: Icons.delete_outlined,
       label: L10n.of(context).albumTrashLabel,
-      onTap: _isSelectionMode
-          ? null
-          : () {
-              Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
-                  arguments: TrashbinBrowserArguments(widget.account));
-            },
+      onTap: () {
+        if (!isSelectionMode) {
+          Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
+              arguments: TrashbinBrowserArguments(widget.account));
+        }
+      },
     );
   }
 
-  Widget _buildShareItem(BuildContext context) {
-    return _NonAlbumGridItem(
+  SelectableItem _buildShareItem(BuildContext context) {
+    return _ButtonListItem(
       icon: Icons.share_outlined,
       label: "Sharing",
       isShowIndicator: Pref.inst().hasNewSharedAlbumOr(false),
-      onTap: _isSelectionMode
-          ? null
-          : () {
-              Navigator.of(context).pushNamed(PendingAlbums.routeName,
-                  arguments: PendingAlbumsArguments(widget.account));
-            },
+      onTap: () {
+        if (!isSelectionMode) {
+          Navigator.of(context).pushNamed(PendingAlbums.routeName,
+              arguments: PendingAlbumsArguments(widget.account));
+        }
+      },
     );
   }
 
-  Widget _buildNewAlbumItem(BuildContext context) {
-    return _NonAlbumGridItem(
+  SelectableItem _buildNewAlbumItem(BuildContext context) {
+    return _ButtonListItem(
       icon: Icons.add,
       label: L10n.of(context).createAlbumTooltip,
-      onTap: _isSelectionMode ? null : () => _onNewAlbumItemTap(context),
+      onTap: () {
+        if (!isSelectionMode) {
+          _onNewAlbumItemTap(context);
+        }
+      },
     );
   }
 
   void _onStateChange(BuildContext context, ListAlbumBlocState state) {
     if (state is ListAlbumBlocInit) {
-      _items.clear();
+      itemStreamListItems = [];
     } else if (state is ListAlbumBlocSuccess || state is ListAlbumBlocLoading) {
       _transformItems(state.items);
     } else if (state is ListAlbumBlocFailure) {
@@ -282,39 +253,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
     } else if (state is ListAlbumBlocInconsistent) {
       _reqQuery();
     }
-  }
-
-  void _onItemTap(BuildContext context, _GridItem item) {
-    if (_isSelectionMode) {
-      if (!_items.contains(item)) {
-        _log.warning("[_onItemTap] Item not found in backing list, ignoring");
-        return;
-      }
-      if (_selectedItems.contains(item)) {
-        // unselect
-        setState(() {
-          _selectedItems.remove(item);
-        });
-      } else {
-        // select
-        setState(() {
-          _selectedItems.add(item);
-        });
-      }
-    } else {
-      _openAlbum(context, item.album);
-    }
-  }
-
-  void _onItemLongPress(_GridItem item) {
-    if (!_items.contains(item)) {
-      _log.warning(
-          "[_onItemLongPress] Item not found in backing list, ignoring");
-      return;
-    }
-    setState(() {
-      _selectedItems.add(item);
-    });
   }
 
   void _onNewAlbumItemTap(BuildContext context) {
@@ -349,15 +287,18 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Future<void> _onSelectionAppBarDeletePressed() async {
+    final selected = selectedListItems
+        .whereType<_AlbumListItem>()
+        .map((e) => e.album)
+        .toList();
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.of(context)
-          .deleteSelectedProcessingNotification(_selectedItems.length)),
+          .deleteSelectedProcessingNotification(selected.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles =
-        _selectedItems.map((e) => e.album.albumFile!).toList();
+    final selectedFiles = selected.map((e) => e.albumFile!).toList();
     setState(() {
-      _selectedItems.clear();
+      clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -413,29 +354,22 @@ class _HomeAlbumsState extends State<HomeAlbums>
         return a.item2.album.name.compareTo(b.item2.album.name);
       }
     }).map((e) => e.item2);
-    _items.clear();
-    _items.addAll(sortedAlbums
-        .map((e) => _GridItem(e.album, e.isSharedByMe, e.isSharedToMe)));
-
-    _transformSelectedItems();
-  }
-
-  /// Map selected items to the new item list
-  void _transformSelectedItems() {
-    final newSelectedItems = _selectedItems
-        .map((from) {
-          try {
-            return _items.whereType<_GridItem>().firstWhere(
-                (to) => from.album.albumFile!.path == to.album.albumFile!.path);
-          } catch (_) {
-            return null;
-          }
-        })
-        .whereType<_GridItem>()
-        .toList();
-    _selectedItems
-      ..clear()
-      ..addAll(newSelectedItems);
+    itemStreamListItems = [
+      _buildArchiveItem(context),
+      _buildTrashbinItem(context),
+      if (Lab().enableSharedAlbum) _buildShareItem(context),
+      _buildNewAlbumItem(context),
+      _SeparatorListItem(),
+      ...sortedAlbums.map((e) => _AlbumListItem(
+            account: widget.account,
+            album: e.album,
+            isSharedByMe: e.isSharedByMe,
+            isSharedToMe: e.isSharedToMe,
+            onTap: () {
+              _openAlbum(context, e.album);
+            },
+          )),
+    ];
   }
 
   void _openAlbum(BuildContext context, Album album) {
@@ -446,38 +380,45 @@ class _HomeAlbumsState extends State<HomeAlbums>
     _bloc.add(ListAlbumBlocQuery(widget.account));
   }
 
-  bool get _isSelectionMode => _selectedItems.isNotEmpty;
-
   late ListAlbumBloc _bloc;
-
-  final _items = <_GridItem>[];
-  final _selectedItems = <_GridItem>[];
 
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;
-
-  static final _extraGridItemCount = 3 + (Lab().enableSharedAlbum ? 1 : 0);
 }
 
-class _GridItem {
-  _GridItem(this.album, this.isSharedByMe, this.isSharedToMe);
-
-  final Album album;
-  final bool isSharedByMe;
-  final bool isSharedToMe;
-}
-
-class _NonAlbumGridItem extends StatelessWidget {
-  _NonAlbumGridItem({
-    Key? key,
-    required this.icon,
-    required this.label,
-    this.onTap,
-    this.isShowIndicator = false,
-  }) : super(key: key);
+abstract class _ListItem implements SelectableItem {
+  _ListItem({
+    VoidCallback? onTap,
+  }) : _onTap = onTap;
 
   @override
-  build(BuildContext context) {
+  get onTap => _onTap;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  get staggeredTile => const StaggeredTile.count(1, 1);
+
+  final VoidCallback? _onTap;
+}
+
+class _ButtonListItem extends _ListItem {
+  _ButtonListItem({
+    required this.icon,
+    required this.label,
+    VoidCallback? onTap,
+    this.isShowIndicator = false,
+  }) : _onTap = onTap;
+
+  @override
+  get isSelectable => false;
+
+  @override
+  get staggeredTile => const StaggeredTile.fit(1);
+
+  @override
+  buildWidget(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ClipRRect(
@@ -485,7 +426,7 @@ class _NonAlbumGridItem extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            onTap: onTap,
+            onTap: _onTap,
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -523,6 +464,51 @@ class _NonAlbumGridItem extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final VoidCallback? onTap;
   final bool isShowIndicator;
+
+  final VoidCallback? _onTap;
+}
+
+class _SeparatorListItem extends _ListItem {
+  @override
+  get isSelectable => false;
+
+  @override
+  get staggeredTile => const StaggeredTile.extent(99, 1);
+
+  @override
+  buildWidget(BuildContext context) => Container();
+}
+
+class _AlbumListItem extends _ListItem {
+  _AlbumListItem({
+    required this.account,
+    required this.album,
+    required this.isSharedByMe,
+    required this.isSharedToMe,
+    VoidCallback? onTap,
+  }) : super(onTap: onTap);
+
+  @override
+  operator ==(Object other) {
+    return other is _AlbumListItem &&
+        album.albumFile!.path == other.album.albumFile!.path;
+  }
+
+  @override
+  get hashCode => album.albumFile!.path.hashCode;
+
+  @override
+  buildWidget(BuildContext context) {
+    return AlbumGridItemBuilder(
+      account: account,
+      album: album,
+      isShared: isSharedByMe || isSharedToMe,
+    ).build(context);
+  }
+
+  final Account account;
+  final Album album;
+  final bool isSharedByMe;
+  final bool isSharedToMe;
 }

@@ -52,16 +52,28 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @protected
   Widget buildItemStreamList({
     required double maxCrossAxisExtent,
+    double mainAxisSpacing = 0,
     ValueChanged<double?>? onMaxExtentChanged,
   }) {
-    return MeasurableItemList(
-      key: _listKey,
-      maxCrossAxisExtent: maxCrossAxisExtent,
-      itemCount: _items.length,
-      itemBuilder: _buildItem,
-      staggeredTileBuilder: (index) => _items[index].staggeredTile,
-      onMaxExtentChanged: onMaxExtentChanged,
-    );
+    if (onMaxExtentChanged != null) {
+      return MeasurableItemList(
+        key: _listKey,
+        maxCrossAxisExtent: maxCrossAxisExtent,
+        itemCount: _items.length,
+        itemBuilder: _buildItem,
+        staggeredTileBuilder: (index) => _items[index].staggeredTile,
+        mainAxisSpacing: mainAxisSpacing,
+        onMaxExtentChanged: onMaxExtentChanged,
+      );
+    } else {
+      return SliverStaggeredGrid.extentBuilder(
+        maxCrossAxisExtent: maxCrossAxisExtent,
+        itemCount: _items.length,
+        itemBuilder: _buildItem,
+        staggeredTileBuilder: (index) => _items[index].staggeredTile,
+        mainAxisSpacing: mainAxisSpacing,
+      );
+    }
   }
 
   @protected

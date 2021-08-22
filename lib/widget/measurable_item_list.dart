@@ -15,6 +15,7 @@ class MeasurableItemList extends StatefulWidget {
     required this.itemCount,
     required this.itemBuilder,
     required this.staggeredTileBuilder,
+    this.mainAxisSpacing = 0,
     this.onMaxExtentChanged,
   }) : super(key: key);
 
@@ -25,6 +26,7 @@ class MeasurableItemList extends StatefulWidget {
   final int itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final IndexedStaggeredTileBuilder staggeredTileBuilder;
+  final double mainAxisSpacing;
   final ValueChanged<double?>? onMaxExtentChanged;
 }
 
@@ -93,6 +95,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
         itemCount: widget.itemCount,
         itemBuilder: widget.itemBuilder,
         staggeredTileBuilder: widget.staggeredTileBuilder,
+        mainAxisSpacing: widget.mainAxisSpacing,
       );
     });
   }
