@@ -18,6 +18,7 @@ import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -28,6 +29,7 @@ import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 class ViewerArguments {
   ViewerArguments(
@@ -80,6 +82,15 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> {
   @override
+  void initState() {
+    super.initState();
+    final brightness = Pref.inst().getViewerScreenBrightness();
+    if (brightness != null) {
+      ScreenBrightness.setScreenBrightness(brightness / 100.0);
+    }
+  }
+
+  @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
@@ -92,6 +103,7 @@ class _ViewerState extends State<Viewer> {
 
   @override
   dispose() {
+    ScreenBrightness.resetScreenBrightness();
     super.dispose();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }

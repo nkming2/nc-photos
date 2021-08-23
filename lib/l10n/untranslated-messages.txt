@@ -1,5 +1,7 @@
 {
   "el": [
+    "settingsScreenBrightnessTitle",
+    "settingsScreenBrightnessDescription",
     "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
@@ -25,16 +27,22 @@
   ],
 
   "es": [
+    "settingsScreenBrightnessTitle",
+    "settingsScreenBrightnessDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ],
 
   "fr": [
+    "settingsScreenBrightnessTitle",
+    "settingsScreenBrightnessDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ],
 
   "ru": [
+    "settingsScreenBrightnessTitle",
+    "settingsScreenBrightnessDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ]

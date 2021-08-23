@@ -9,11 +9,14 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/lab_settings.dart';
+import 'package:nc_photos/widget/stateful_slider.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsArguments {
@@ -50,6 +53,7 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     _isEnableExif = Pref.inst().isEnableExifOr();
+    _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
   }
 
   @override
@@ -87,6 +91,15 @@ class _SettingsState extends State<Settings> {
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
+              if (platform_k.isMobile)
+                SwitchListTile(
+                  title: Text(L10n.of(context).settingsScreenBrightnessTitle),
+                  subtitle: Text(
+                      L10n.of(context).settingsScreenBrightnessDescription),
+                  value: _screenBrightness >= 0,
+                  onChanged: (value) =>
+                      _onScreenBrightnessChanged(context, value),
+                ),
               _buildCaption(
                   context, L10n.of(context).settingsAboutSectionTitle),
               ListTile(
@@ -202,6 +215,68 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  void _onScreenBrightnessChanged(BuildContext context, bool value) async {
+    if (value) {
+      var brightness = 0.5;
+      try {
+        await ScreenBrightness.setScreenBrightness(brightness);
+        final value = await showDialog<int>(
+          context: context,
+          builder: (_) => AppTheme(
+            child: AlertDialog(
+              title: Text(L10n.of(context).settingsScreenBrightnessTitle),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(L10n.of(context).settingsScreenBrightnessDescription),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Icon(Icons.brightness_low),
+                      Expanded(
+                        child: StatefulSlider(
+                          initialValue: brightness,
+                          min: 0.01,
+                          onChangeEnd: (value) async {
+                            brightness = value;
+                            try {
+                              await ScreenBrightness.setScreenBrightness(value);
+                            } catch (e, stackTrace) {
+                              _log.severe("Failed while setScreenBrightness", e,
+                                  stackTrace);
+                            }
+                          },
+                        ),
+                      ),
+                      Icon(Icons.brightness_high),
+                    ],
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop((brightness * 100).round());
+                  },
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                ),
+              ],
+            ),
+          ),
+        );
+
+        if (value != null) {
+          _setScreenBrightness(value);
+        }
+      } finally {
+        ScreenBrightness.resetScreenBrightness();
+      }
+    } else {
+      _setScreenBrightness(-1);
+    }
+  }
+
   void _onVersionTap(BuildContext context) {
     if (++_labUnlockCount >= 10) {
       Navigator.of(context).pushNamed(LabSettings.routeName);
@@ -232,6 +307,25 @@ class _SettingsState extends State<Settings> {
     });
   }
 
+  void _setScreenBrightness(int value) {
+    final oldValue = _screenBrightness;
+    setState(() {
+      _screenBrightness = value;
+    });
+    Pref.inst().setViewerScreenBrightness(value).then((result) {
+      if (!result) {
+        _log.severe("[_setScreenBrightness] Failed writing pref");
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.of(context).writePreferenceFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        setState(() {
+          _screenBrightness = oldValue;
+        });
+      }
+    });
+  }
+
   static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
   static const String _bugReportUrl =
       "https://gitlab.com/nkming2/nc-photos/-/issues";
@@ -239,6 +333,7 @@ class _SettingsState extends State<Settings> {
       "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
 
   late bool _isEnableExif;
+  late int _screenBrightness;
   int _labUnlockCount = 0;
 
   static final _log = Logger("widget.settings._SettingsState");

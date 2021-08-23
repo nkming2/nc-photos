@@ -43,6 +43,12 @@ class Pref {
   Future<bool> setEnableExif(bool value) =>
       _pref.setBool("isEnableExif", value);
 
+  int? getViewerScreenBrightness() => _pref.getInt("viewerScreenBrightness");
+  int getViewerScreenBrightnessOr([int def = -1]) =>
+      getViewerScreenBrightness() ?? def;
+  Future<bool> setViewerScreenBrightness(int value) =>
+      _pref.setInt("viewerScreenBrightness", value);
+
   int? getSetupProgress() => _pref.getInt("setupProgress");
   int getSetupProgressOr([int def = 0]) => getSetupProgress() ?? def;
   Future<bool> setSetupProgress(int value) =>

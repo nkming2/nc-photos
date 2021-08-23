@@ -573,6 +573,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.26.0"
+  screen_brightness:
+    dependency: "direct main"
+    description:
+      name: screen_brightness
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   sembast:
     dependency: transitive
     description:

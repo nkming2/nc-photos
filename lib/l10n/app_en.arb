@@ -313,6 +313,11 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsScreenBrightnessTitle": "Screen brightness",
+	"settingsScreenBrightnessDescription": "Adjust screen brightness when viewing a photo",
+	"@settingsScreenBrightnessDescription": {
+		"description": "Describe what this setting does -- automatically set the screen brightness when a photo is opened"
+	},
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -658,7 +663,6 @@
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
 	},
-
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
@@ -695,6 +699,7 @@
 	"@whitelistCertButtonLabel": {
 		"description": "Label of the whitelist certificate button"
 	},
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
