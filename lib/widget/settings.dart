@@ -233,7 +233,10 @@ class _SettingsState extends State<Settings> {
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Icon(Icons.brightness_low),
+                      Icon(
+                        Icons.brightness_low,
+                        color: AppTheme.getSecondaryTextColor(context),
+                      ),
                       Expanded(
                         child: StatefulSlider(
                           initialValue: brightness,
@@ -249,7 +252,10 @@ class _SettingsState extends State<Settings> {
                           },
                         ),
                       ),
-                      Icon(Icons.brightness_high),
+                      Icon(
+                        Icons.brightness_high,
+                        color: AppTheme.getSecondaryTextColor(context),
+                      ),
                     ],
                   ),
                 ],
