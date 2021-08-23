@@ -24,6 +24,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
+import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
@@ -80,16 +81,7 @@ class Viewer extends StatefulWidget {
   final Album? album;
 }
 
-class _ViewerState extends State<Viewer> {
-  @override
-  void initState() {
-    super.initState();
-    final brightness = Pref.inst().getViewerScreenBrightness();
-    if (brightness != null) {
-      ScreenBrightness.setScreenBrightness(brightness / 100.0);
-    }
-  }
-
+class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
   @override
   build(BuildContext context) {
     return AppTheme(
@@ -99,13 +91,6 @@ class _ViewerState extends State<Viewer> {
         ),
       ),
     );
-  }
-
-  @override
-  dispose() {
-    ScreenBrightness.resetScreenBrightness();
-    super.dispose();
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -628,6 +613,11 @@ class _ViewerState extends State<Viewer> {
   bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
 
+  final disposables = [
+    _ViewerBrightnessController(),
+    _ViewerSystemUiResetter(),
+  ];
+
   var _isShowAppBar = true;
 
   var _isShowDetailPane = false;
@@ -651,4 +641,31 @@ class _PageState {
   ScrollController scrollController;
   double? itemHeight;
   bool hasLoaded = false;
+}
+
+/// Control the screen brightness according to the settings
+class _ViewerBrightnessController implements Disposable {
+  @override
+  init(State state) {
+    final brightness = Pref.inst().getViewerScreenBrightness();
+    if (brightness != null) {
+      ScreenBrightness.setScreenBrightness(brightness / 100.0);
+    }
+  }
+
+  @override
+  dispose(State state) {
+    ScreenBrightness.resetScreenBrightness();
+  }
+}
+
+/// Make sure the system UI overlay is reset on dispose
+class _ViewerSystemUiResetter implements Disposable {
+  @override
+  init(State state) {}
+
+  @override
+  dispose(State state) {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
 }
