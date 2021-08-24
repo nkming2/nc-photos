@@ -313,6 +313,10 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsViewerSectionTitle": "Photo viewer",
+	"@settingsViewerSectionTitle": {
+		"description": "Settings for the photo viewer"
+	},
 	"settingsScreenBrightnessTitle": "Screen brightness",
 	"settingsScreenBrightnessDescription": "Adjust screen brightness when viewing a photo",
 	"@settingsScreenBrightnessDescription": {

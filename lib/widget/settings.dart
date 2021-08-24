@@ -91,7 +91,9 @@ class _SettingsState extends State<Settings> {
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
-              if (platform_k.isMobile)
+              if (platform_k.isMobile) ...[
+                _buildCaption(
+                    context, L10n.of(context).settingsViewerSectionTitle),
                 SwitchListTile(
                   title: Text(L10n.of(context).settingsScreenBrightnessTitle),
                   subtitle: Text(
@@ -100,6 +102,7 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) =>
                       _onScreenBrightnessChanged(context, value),
                 ),
+              ],
               _buildCaption(
                   context, L10n.of(context).settingsAboutSectionTitle),
               ListTile(

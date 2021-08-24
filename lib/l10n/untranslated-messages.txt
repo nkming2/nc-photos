@@ -1,5 +1,6 @@
 {
   "el": [
+    "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
     "listEmptyText",
@@ -27,6 +28,7 @@
   ],
 
   "es": [
+    "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
     "helpTooltip",
@@ -34,6 +36,7 @@
   ],
 
   "fr": [
+    "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
     "helpTooltip",
@@ -41,6 +44,7 @@
   ],
 
   "ru": [
+    "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
     "helpTooltip",
