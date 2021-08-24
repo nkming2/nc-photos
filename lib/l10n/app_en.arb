@@ -318,10 +318,7 @@
 		"description": "Settings for the photo viewer"
 	},
 	"settingsScreenBrightnessTitle": "Screen brightness",
-	"settingsScreenBrightnessDescription": "Adjust screen brightness when viewing a photo",
-	"@settingsScreenBrightnessDescription": {
-		"description": "Describe what this setting does -- automatically set the screen brightness when a photo is opened"
-	},
+	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
