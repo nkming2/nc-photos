@@ -54,6 +54,7 @@ class _SettingsState extends State<Settings> {
     super.initState();
     _isEnableExif = Pref.inst().isEnableExifOr();
     _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
+    _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
   }
 
   @override
@@ -101,6 +102,13 @@ class _SettingsState extends State<Settings> {
                   value: _screenBrightness >= 0,
                   onChanged: (value) =>
                       _onScreenBrightnessChanged(context, value),
+                ),
+                SwitchListTile(
+                  title: Text(L10n.of(context).settingsForceRotationTitle),
+                  subtitle:
+                      Text(L10n.of(context).settingsForceRotationDescription),
+                  value: _isForceRotation,
+                  onChanged: (value) => _onForceRotationChanged(value),
                 ),
               ],
               _buildCaption(
@@ -286,6 +294,8 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  void _onForceRotationChanged(bool value) => _setForceRotation(value);
+
   void _onVersionTap(BuildContext context) {
     if (++_labUnlockCount >= 10) {
       Navigator.of(context).pushNamed(LabSettings.routeName);
@@ -335,6 +345,25 @@ class _SettingsState extends State<Settings> {
     });
   }
 
+  void _setForceRotation(bool value) {
+    final oldValue = _isForceRotation;
+    setState(() {
+      _isForceRotation = value;
+    });
+    Pref.inst().setViewerForceRotation(value).then((result) {
+      if (!result) {
+        _log.severe("[_setForceRotation] Failed writing pref");
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.of(context).writePreferenceFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        setState(() {
+          _isForceRotation = oldValue;
+        });
+      }
+    });
+  }
+
   static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
   static const String _bugReportUrl =
       "https://gitlab.com/nkming2/nc-photos/-/issues";
@@ -343,6 +372,7 @@ class _SettingsState extends State<Settings> {
 
   late bool _isEnableExif;
   late int _screenBrightness;
+  late bool _isForceRotation;
   int _labUnlockCount = 0;
 
   static final _log = Logger("widget.settings._SettingsState");

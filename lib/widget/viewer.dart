@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -537,6 +539,32 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     }
   }
 
+  void _onOrientationChanged(NativeDeviceOrientation orientation) {
+    _log.info("[_onOrientationChanged] $orientation");
+    if (!mounted) {
+      return;
+    }
+    final List<DeviceOrientation> prefer;
+    switch (orientation) {
+      case NativeDeviceOrientation.portraitDown:
+        prefer = [DeviceOrientation.portraitDown];
+        break;
+      case NativeDeviceOrientation.landscapeLeft:
+        prefer = [DeviceOrientation.landscapeLeft];
+        break;
+
+      case NativeDeviceOrientation.landscapeRight:
+        prefer = [DeviceOrientation.landscapeRight];
+        break;
+
+      case NativeDeviceOrientation.portraitUp:
+      default:
+        prefer = [DeviceOrientation.portraitUp];
+        break;
+    }
+    SystemChrome.setPreferredOrientations(prefer);
+  }
+
   double _calcDetailPaneOffset(int index) {
     if (_pageStates[index]?.itemHeight == null) {
       return MediaQuery.of(context).size.height;
@@ -613,9 +641,13 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
   bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
 
-  final disposables = [
+  late final disposables = [
     _ViewerBrightnessController(),
     _ViewerSystemUiResetter(),
+    if (Pref.inst().isViewerForceRotationOr(false))
+      _ViewerOrientationController(
+        onChanged: _onOrientationChanged,
+      ),
   ];
 
   var _isShowAppBar = true;
@@ -668,4 +700,28 @@ class _ViewerSystemUiResetter implements Disposable {
   dispose(State state) {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
+}
+
+class _ViewerOrientationController implements Disposable {
+  _ViewerOrientationController({
+    this.onChanged,
+  });
+
+  @override
+  init(State state) {
+    _subscription = NativeDeviceOrientationCommunicator()
+        .onOrientationChanged(useSensor: true)
+        .listen((orientation) {
+      onChanged?.call(orientation);
+    });
+  }
+
+  @override
+  dispose(State state) {
+    _subscription.cancel();
+    SystemChrome.setPreferredOrientations([]);
+  }
+
+  ValueChanged<NativeDeviceOrientation>? onChanged;
+  late final StreamSubscription<NativeDeviceOrientation> _subscription;
 }

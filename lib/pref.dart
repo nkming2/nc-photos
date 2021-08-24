@@ -49,6 +49,12 @@ class Pref {
   Future<bool> setViewerScreenBrightness(int value) =>
       _pref.setInt("viewerScreenBrightness", value);
 
+  bool? isViewerForceRotation() => _pref.getBool("viewerForceRotation");
+  bool isViewerForceRotationOr([bool def = false]) =>
+      isViewerForceRotation() ?? def;
+  Future<bool> setViewerForceRotation(bool value) =>
+      _pref.setBool("viewerForceRotation", value);
+
   int? getSetupProgress() => _pref.getInt("setupProgress");
   int getSetupProgressOr([int def = 0]) => getSetupProgress() ?? def;
   Future<bool> setSetupProgress(int value) =>

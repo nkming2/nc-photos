@@ -319,6 +319,8 @@
 	},
 	"settingsScreenBrightnessTitle": "Screen brightness",
 	"settingsScreenBrightnessDescription": "Override system brightness level",
+	"settingsForceRotationTitle": "Ignore rotation lock",
+	"settingsForceRotationDescription": "Rotate the screen even if auto rotation is disabled",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"

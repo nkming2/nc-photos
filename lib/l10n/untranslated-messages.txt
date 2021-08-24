@@ -3,6 +3,8 @@
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
+    "settingsForceRotationTitle",
+    "settingsForceRotationDescription",
     "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
@@ -31,6 +33,8 @@
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
+    "settingsForceRotationTitle",
+    "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ],
@@ -39,6 +43,8 @@
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
+    "settingsForceRotationTitle",
+    "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ],
@@ -47,6 +53,8 @@
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
+    "settingsForceRotationTitle",
+    "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip"
   ]
