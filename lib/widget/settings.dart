@@ -237,6 +237,7 @@ class _SettingsState extends State<Settings> {
             child: AlertDialog(
               title: Text(L10n.of(context).settingsScreenBrightnessTitle),
               content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(L10n.of(context).settingsScreenBrightnessDescription),
