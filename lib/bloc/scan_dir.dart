@@ -125,6 +125,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     _fileRemovedEventListener.begin();
     _filePropertyUpdatedEventListener.begin();
     _fileTrashbinRestoredEventListener.begin();
+    _fileMovedEventListener.begin();
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
@@ -272,6 +273,19 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
     );
   }
 
+  void _onFileMovedEvent(FileMovedEvent ev) {
+    if (state is ScanDirBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if (file_util.isSupportedFormat(ev.file)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
   Stream<ScanDirBlocState> _queryOffline(
           ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) =>
       _queryWithFileDataSource(ev, getState, FileAppDbDataSource());
@@ -308,6 +322,8 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       _filePropertyUpdatedEventListener;
   late final AppEventListener<FileTrashbinRestoredEvent>
       _fileTrashbinRestoredEventListener;
+  late final _fileMovedEventListener =
+      AppEventListener<FileMovedEvent>(_onFileMovedEvent);
 
   late Throttler _refreshThrottler;
 
