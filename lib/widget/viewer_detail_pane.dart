@@ -156,9 +156,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             child: const Divider(),
           ),
           ListTile(
-            leading: Icon(
-              Icons.image_outlined,
-              color: AppTheme.getSecondaryTextColor(context),
+            leading: Container(
+              height: double.infinity,
+              child: Icon(
+                Icons.image_outlined,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
             ),
             title: Text(basenameWithoutExtension(widget.file.path)),
             subtitle: Text(widget.file.strippedPath),
