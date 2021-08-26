@@ -26,7 +26,8 @@
     "configButtonLabel",
     "useAsAlbumCoverTooltip",
     "helpTooltip",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "fileSharedByDescription"
   ],
 
   "es": [
@@ -36,7 +37,8 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "helpTooltip",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "fileSharedByDescription"
   ],
 
   "fr": [
@@ -46,7 +48,8 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "helpTooltip",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "fileSharedByDescription"
   ],
 
   "ru": [
@@ -56,6 +59,7 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "helpTooltip",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "fileSharedByDescription"
   ]
 }

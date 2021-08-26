@@ -163,6 +163,18 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             title: Text(basenameWithoutExtension(widget.file.path)),
             subtitle: Text(widget.file.strippedPath),
           ),
+          if (!widget.file.isOwned(widget.account.username))
+            ListTile(
+              leading: Container(
+                height: double.infinity,
+                child: Icon(
+                  Icons.share_outlined,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
+              ),
+              title: Text(widget.file.ownerId!),
+              subtitle: Text(L10n.of(context).fileSharedByDescription),
+            ),
           ListTile(
             leading: Icon(
               Icons.calendar_today_outlined,

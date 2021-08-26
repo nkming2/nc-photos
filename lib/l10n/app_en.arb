@@ -702,6 +702,10 @@
 	"@whitelistCertButtonLabel": {
 		"description": "Label of the whitelist certificate button"
 	},
+	"fileSharedByDescription": "Shared with you by this user",
+	"@fileSharedByDescription": {
+		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
