@@ -10,8 +10,12 @@ class RestoreTrashbin {
   RestoreTrashbin(this.fileRepo);
 
   Future<void> call(Account account, File file) async {
-    await Move(fileRepo).call(account, file,
-        "remote.php/dav/trashbin/${account.username}/restore/${path.basename(file.path)}");
+    await Move(fileRepo)(
+      account,
+      file,
+      "remote.php/dav/trashbin/${account.username}/restore/${path.basename(file.path)}",
+      shouldOverwrite: true,
+    );
     KiwiContainer()
         .resolve<EventBus>()
         .fire(FileTrashbinRestoredEvent(account, file));
