@@ -169,17 +169,17 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
             _onSelectionAppBarRestorePressed();
           },
         ),
-        PopupMenuButton<_AppBarMenuOption>(
+        PopupMenuButton<_SelectionAppBarMenuOption>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
             PopupMenuItem(
-              value: _AppBarMenuOption.delete,
+              value: _SelectionAppBarMenuOption.delete,
               child: Text(L10n.of(context).deletePermanentlyTooltip),
             ),
           ],
           onSelected: (option) {
             switch (option) {
-              case _AppBarMenuOption.delete:
+              case _SelectionAppBarMenuOption.delete:
                 _onSelectionAppBarDeletePressed(context);
                 break;
 
@@ -209,6 +209,26 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
             Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
+        PopupMenuButton<_AppBarMenuOption>(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: _AppBarMenuOption.empty,
+              child: Text(L10n.of(context).emptyTrashbinTooltip),
+            ),
+          ],
+          onSelected: (option) {
+            switch (option) {
+              case _AppBarMenuOption.empty:
+                _onEmptyTrashPressed(context);
+                break;
+
+              default:
+                _log.shout("[_buildNormalAppBar] Unknown option: $option");
+                break;
+            }
+          },
+        ),
       ],
     );
   }
@@ -234,6 +254,25 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     Navigator.pushNamed(context, TrashbinViewer.routeName,
         arguments:
             TrashbinViewerArguments(widget.account, _backingFiles, index));
+  }
+
+  void _onEmptyTrashPressed(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(L10n.of(context).emptyTrashbinConfirmationDialogTitle),
+        content: Text(L10n.of(context).emptyTrashbinConfirmationDialogContent),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _deleteFiles(context, _backingFiles);
+            },
+            child: Text(L10n.of(context).confirmButtonLabel),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _onSelectionAppBarRestorePressed() async {
@@ -343,11 +382,6 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   Future<void> _deleteSelected(BuildContext context) async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
-          .deleteSelectedProcessingNotification(selectedListItems.length)),
-      duration: k.snackBarDurationShort,
-    ));
     final selectedFiles = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
@@ -355,14 +389,23 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     setState(() {
       clearSelectedItems();
     });
+    return _deleteFiles(context, selectedFiles);
+  }
+
+  Future<void> _deleteFiles(BuildContext context, List<File> files) async {
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(
+          L10n.of(context).deleteSelectedProcessingNotification(files.length)),
+      duration: k.snackBarDurationShort,
+    ));
     final fileRepo = FileRepo(FileCachedDataSource());
     final failures = <File>[];
-    for (final f in selectedFiles) {
+    for (final f in files) {
       try {
         await Remove(fileRepo, null)(widget.account, f);
       } catch (e, stacktrace) {
         _log.shout(
-            "[_deleteSelected] Failed while removing file" +
+            "[_deleteFiles] Failed while removing file" +
                 (kDebugMode ? ": ${f.path}" : ""),
             e,
             stacktrace);
@@ -486,5 +529,9 @@ class _VideoListItem extends _FileListItem {
 }
 
 enum _AppBarMenuOption {
+  empty,
+}
+
+enum _SelectionAppBarMenuOption {
   delete,
 }

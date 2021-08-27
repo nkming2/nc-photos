@@ -706,6 +706,18 @@
 	"@fileSharedByDescription": {
 		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
 	},
+	"emptyTrashbinTooltip": "Empty trash",
+	"@emptyTrashbinTooltip": {
+		"description": "Permanently delete all items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogTitle": "Empty trash",
+	"@emptyTrashbinConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"emptyTrashbinConfirmationDialogContent": "All items will be deleted permanently from the server.\n\nThis action is nonreversible",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

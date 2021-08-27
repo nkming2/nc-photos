@@ -27,7 +27,10 @@
     "useAsAlbumCoverTooltip",
     "helpTooltip",
     "removeFromAlbumTooltip",
-    "fileSharedByDescription"
+    "fileSharedByDescription",
+    "emptyTrashbinTooltip",
+    "emptyTrashbinConfirmationDialogTitle",
+    "emptyTrashbinConfirmationDialogContent"
   ],
 
   "es": [
@@ -38,7 +41,10 @@
     "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip",
-    "fileSharedByDescription"
+    "fileSharedByDescription",
+    "emptyTrashbinTooltip",
+    "emptyTrashbinConfirmationDialogTitle",
+    "emptyTrashbinConfirmationDialogContent"
   ],
 
   "fr": [
@@ -49,7 +55,10 @@
     "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip",
-    "fileSharedByDescription"
+    "fileSharedByDescription",
+    "emptyTrashbinTooltip",
+    "emptyTrashbinConfirmationDialogTitle",
+    "emptyTrashbinConfirmationDialogContent"
   ],
 
   "ru": [
@@ -60,6 +69,9 @@
     "settingsForceRotationDescription",
     "helpTooltip",
     "removeFromAlbumTooltip",
-    "fileSharedByDescription"
+    "fileSharedByDescription",
+    "emptyTrashbinTooltip",
+    "emptyTrashbinConfirmationDialogTitle",
+    "emptyTrashbinConfirmationDialogContent"
   ]
 }
