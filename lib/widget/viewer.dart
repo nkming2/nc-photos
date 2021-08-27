@@ -642,9 +642,9 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
   bool _canZoom() => !_isDetailPaneActive;
 
   late final disposables = [
-    _ViewerBrightnessController(),
+    if (platform_k.isMobile) _ViewerBrightnessController(),
     _ViewerSystemUiResetter(),
-    if (Pref.inst().isViewerForceRotationOr(false))
+    if (platform_k.isMobile && Pref.inst().isViewerForceRotationOr(false))
       _ViewerOrientationController(
         onChanged: _onOrientationChanged,
       ),
