@@ -113,43 +113,46 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              if (widget.album != null &&
-                  widget.album!.albumFile?.isOwned(widget.account.username) ==
-                      true &&
-                  widget.album!.provider is AlbumStaticProvider)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                if (widget.album != null &&
+                    widget.album!.albumFile?.isOwned(widget.account.username) ==
+                        true &&
+                    widget.album!.provider is AlbumStaticProvider)
+                  _DetailPaneButton(
+                    icon: Icons.remove_outlined,
+                    label: L10n.of(context).removeFromAlbumTooltip,
+                    onPressed: () => _onRemoveFromAlbumPressed(context),
+                  ),
+                if (widget.album != null &&
+                    widget.album!.albumFile?.isOwned(widget.account.username) ==
+                        true)
+                  _DetailPaneButton(
+                    icon: Icons.photo_album_outlined,
+                    label: L10n.of(context).useAsAlbumCoverTooltip,
+                    onPressed: () => _onSetAlbumCoverPressed(context),
+                  ),
                 _DetailPaneButton(
-                  icon: Icons.remove_outlined,
-                  label: L10n.of(context).removeFromAlbumTooltip,
-                  onPressed: () => _onRemoveFromAlbumPressed(context),
+                  icon: Icons.playlist_add_outlined,
+                  label: L10n.of(context).addToAlbumTooltip,
+                  onPressed: () => _onAddToAlbumPressed(context),
                 ),
-              if (widget.album != null &&
-                  widget.album!.albumFile?.isOwned(widget.account.username) ==
-                      true)
-                _DetailPaneButton(
-                  icon: Icons.photo_album_outlined,
-                  label: L10n.of(context).useAsAlbumCoverTooltip,
-                  onPressed: () => _onSetAlbumCoverPressed(context),
-                ),
-              _DetailPaneButton(
-                icon: Icons.playlist_add_outlined,
-                label: L10n.of(context).addToAlbumTooltip,
-                onPressed: () => _onAddToAlbumPressed(context),
-              ),
-              if (widget.file.isArchived == true)
-                _DetailPaneButton(
-                  icon: Icons.unarchive_outlined,
-                  label: L10n.of(context).unarchiveTooltip,
-                  onPressed: () => _onUnarchivePressed(context),
-                )
-              else
-                _DetailPaneButton(
-                  icon: Icons.archive_outlined,
-                  label: L10n.of(context).archiveTooltip,
-                  onPressed: () => _onArchivePressed(context),
-                ),
-            ],
+                if (widget.file.isArchived == true)
+                  _DetailPaneButton(
+                    icon: Icons.unarchive_outlined,
+                    label: L10n.of(context).unarchiveTooltip,
+                    onPressed: () => _onUnarchivePressed(context),
+                  )
+                else
+                  _DetailPaneButton(
+                    icon: Icons.archive_outlined,
+                    label: L10n.of(context).archiveTooltip,
+                    onPressed: () => _onArchivePressed(context),
+                  ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
