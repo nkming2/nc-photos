@@ -196,9 +196,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (widget.file.metadata?.imageWidth != null &&
               widget.file.metadata?.imageHeight != null)
             ListTile(
-              leading: Icon(
-                Icons.aspect_ratio,
-                color: AppTheme.getSecondaryTextColor(context),
+              leading: Container(
+                height: double.infinity,
+                child: Icon(
+                  Icons.aspect_ratio,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
               ),
               title: Text(
                   "${widget.file.metadata!.imageWidth} x ${widget.file.metadata!.imageHeight}"),
@@ -206,17 +209,23 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             )
           else
             ListTile(
-              leading: Icon(
-                Icons.aspect_ratio,
-                color: AppTheme.getSecondaryTextColor(context),
+              leading: Container(
+                height: double.infinity,
+                child: Icon(
+                  Icons.aspect_ratio,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
               ),
               title: Text(_byteSizeToString(widget.file.contentLength ?? 0)),
             ),
           if (_model != null)
             ListTile(
-              leading: Icon(
-                Icons.camera_outlined,
-                color: AppTheme.getSecondaryTextColor(context),
+              leading: Container(
+                height: double.infinity,
+                child: Icon(
+                  Icons.camera_outlined,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
               ),
               title: Text(_model!),
               subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
