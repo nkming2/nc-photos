@@ -33,20 +33,6 @@
     "emptyTrashbinConfirmationDialogContent"
   ],
 
-  "es": [
-    "settingsViewerSectionTitle",
-    "settingsScreenBrightnessTitle",
-    "settingsScreenBrightnessDescription",
-    "settingsForceRotationTitle",
-    "settingsForceRotationDescription",
-    "helpTooltip",
-    "removeFromAlbumTooltip",
-    "fileSharedByDescription",
-    "emptyTrashbinTooltip",
-    "emptyTrashbinConfirmationDialogTitle",
-    "emptyTrashbinConfirmationDialogContent"
-  ],
-
   "fr": [
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
