@@ -81,4 +81,8 @@ This version includes changes that are not compatible with older versions. Pleas
   """26.0
 - Pick album cover (open a photo in an album -> details -> use as cover)
 """,
+  // v27
+  """27.0
+- New settings to customize photo viewer
+""",
 ];
