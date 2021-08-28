@@ -4,12 +4,14 @@ import 'package:flutter/widgets.dart';
 class FancyOptionPickerItem {
   FancyOptionPickerItem({
     required this.label,
+    this.description,
     this.isSelected = false,
     this.onSelect,
     this.dense = false,
   });
 
   String label;
+  String? description;
   bool isSelected;
   VoidCallback? onSelect;
   bool dense;
@@ -42,6 +44,7 @@ class FancyOptionPicker extends StatelessWidget {
                           )
                         : null,
                   ),
+                  subtitle: e.description == null ? null : Text(e.description!),
                   onTap: e.isSelected ? null : e.onSelect,
                   dense: e.dense,
                 ),

@@ -175,6 +175,7 @@ class _SettingsState extends State<Settings> {
         items: language_util.supportedLanguages.values
             .map((lang) => FancyOptionPickerItem(
                   label: lang.nativeName,
+                  description: lang.isoName,
                   isSelected: lang.langId == selected,
                   onSelect: () {
                     _log.info(
