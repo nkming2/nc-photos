@@ -1,5 +1,6 @@
 {
   "el": [
+    "collectionsTooltip",
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
@@ -33,7 +34,12 @@
     "emptyTrashbinConfirmationDialogContent"
   ],
 
+  "es": [
+    "collectionsTooltip"
+  ],
+
   "fr": [
+    "collectionsTooltip",
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",
@@ -48,6 +54,7 @@
   ],
 
   "ru": [
+    "collectionsTooltip",
     "settingsViewerSectionTitle",
     "settingsScreenBrightnessTitle",
     "settingsScreenBrightnessDescription",

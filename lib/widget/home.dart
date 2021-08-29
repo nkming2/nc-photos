@@ -74,8 +74,8 @@ class _HomeState extends State<Home> {
           label: L10n.global().photosTabLabel,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Icons.photo_album_outlined),
-          label: L10n.global().albumsTabLabel,
+          icon: const Icon(Icons.grid_view_outlined),
+          label: L10n.global().collectionsTooltip,
         ),
       ],
       currentIndex: _nextPage,

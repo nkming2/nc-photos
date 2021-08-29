@@ -8,9 +8,9 @@
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
-	"albumsTabLabel": "Albums",
-	"@albumsTabLabel": {
-		"description": "Label of the tab that lists user albums"
+	"collectionsTooltip": "Collections",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
 	},
 	"zoomTooltip": "Zoom",
 	"@zoomTooltip": {
