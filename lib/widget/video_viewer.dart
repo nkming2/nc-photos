@@ -158,6 +158,18 @@ class _VideoViewerState extends State<VideoViewer> {
                   type: MaterialType.transparency,
                   child: Row(
                     children: [
+                      ValueListenableBuilder(
+                        valueListenable: _controller,
+                        builder: (context, VideoPlayerValue value, child) =>
+                            Text(
+                          _durationToString(value.position),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.getSecondaryTextColor(context),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: VideoProgressIndicator(
                           _controller,
@@ -171,6 +183,15 @@ class _VideoViewerState extends State<VideoViewer> {
                         ),
                       ),
                       const SizedBox(width: 8),
+                      if (_controller.value.duration != Duration.zero)
+                        Text(
+                          _durationToString(_controller.value.duration),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.getSecondaryTextColor(context),
+                          ),
+                        ),
+                      const SizedBox(width: 4),
                       InkWell(
                         borderRadius: BorderRadius.all(Radius.circular(32)),
                         onTap: _onVolumnPressed,
@@ -265,4 +286,15 @@ class _VideoViewerState extends State<VideoViewer> {
   var _isFinished = false;
 
   static final _log = Logger("widget.video_viewer._VideoViewerState");
+}
+
+String _durationToString(Duration duration) {
+  String product = "";
+  if (duration.inHours > 0) {
+    product += "${duration.inHours}:";
+  }
+  final minStr = (duration.inMinutes % 60).toString().padLeft(2, "0");
+  final secStr = (duration.inSeconds % 60).toString().padLeft(2, "0");
+  product += "$minStr:$secStr";
+  return product;
 }
