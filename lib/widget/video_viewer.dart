@@ -93,7 +93,6 @@ class _VideoViewerState extends State<VideoViewer> {
       );
       await _controller.initialize();
       widget.onLoaded?.call();
-      setState(() {});
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (_key.currentContext != null) {
           widget.onHeightChanged?.call(_key.currentContext!.size!.height);
@@ -101,6 +100,9 @@ class _VideoViewerState extends State<VideoViewer> {
       });
       _controller.addListener(_onControllerChanged);
       _isControllerInitialized = true;
+      setState(() {
+        _play();
+      });
     } catch (e, stackTrace) {
       _log.shout("[_initController] Failed while initialize", e, stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
