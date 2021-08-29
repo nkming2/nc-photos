@@ -83,25 +83,31 @@ class _VideoViewerState extends State<VideoViewer> {
     Wakelock.disable();
   }
 
-  void _initController(String url) {
-    _controller = VideoPlayerController.network(
-      url,
-      httpHeaders: {
-        "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-      },
-    )..initialize().then((_) {
-        widget.onLoaded?.call();
-        setState(() {});
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          if (_key.currentContext != null) {
-            widget.onHeightChanged?.call(_key.currentContext!.size!.height);
-          }
-        });
-      }).catchError((e, stacktrace) {
-        _log.shout("[initState] Filed while initialize", e, stacktrace);
+  void _initController(String url) async {
+    try {
+      _controller = VideoPlayerController.network(
+        url,
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+        },
+      );
+      await _controller.initialize();
+      widget.onLoaded?.call();
+      setState(() {});
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        if (_key.currentContext != null) {
+          widget.onHeightChanged?.call(_key.currentContext!.size!.height);
+        }
       });
-    _controller.addListener(_onControllerChanged);
-    _isControllerInitialized = true;
+      _controller.addListener(_onControllerChanged);
+      _isControllerInitialized = true;
+    } catch (e, stackTrace) {
+      _log.shout("[_initController] Failed while initialize", e, stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   Widget _buildPlayer(BuildContext context) {
