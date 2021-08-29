@@ -22,8 +22,8 @@ class AlbumGridItemBuilder {
     var subtitle = "";
     String? subtitle2;
     if (album.provider is AlbumStaticProvider) {
-      subtitle = L10n.of(context)
-          .albumSize(AlbumStaticProvider.of(album).items.length);
+      subtitle =
+          L10n.global().albumSize(AlbumStaticProvider.of(album).items.length);
     } else if (album.provider is AlbumDirProvider) {
       final provider = album.provider as AlbumDirProvider;
       subtitle = provider.dirs.first.strippedPath;
@@ -32,7 +32,7 @@ class AlbumGridItemBuilder {
       }
     }
     if (isShared) {
-      subtitle = "${L10n.of(context).albumSharedLabel} | $subtitle";
+      subtitle = "${L10n.global().albumSharedLabel} | $subtitle";
     }
     return AlbumGridItem(
       cover: _buildAlbumCover(context, album),

@@ -137,7 +137,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         UpdateAlbum(albumRepo)(widget.account, newAlbum)
             .catchError((e, stacktrace) {
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e, context)),
+            content: Text(exception_util.toUserString(e)),
             duration: k.snackBarDurationNormal,
           ));
         });
@@ -265,7 +265,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
           ? (context) => [
                 PopupMenuItem(
                   value: _menuValueConvertBasic,
-                  child: Text(L10n.of(context).convertBasicAlbumMenuLabel),
+                  child: Text(L10n.global().convertBasicAlbumMenuLabel),
                 ),
               ]
           : null,
@@ -288,7 +288,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: L10n.of(context).shareTooltip,
+          tooltip: L10n.global().shareTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
@@ -298,7 +298,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         itemBuilder: (context) => [
           PopupMenuItem(
             value: _SelectionAppBarOption.delete,
-            child: Text(L10n.of(context).deleteTooltip),
+            child: Text(L10n.global().deleteTooltip),
           ),
         ],
         onSelected: (option) {
@@ -314,7 +314,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: L10n.of(context).sortTooltip,
+        tooltip: L10n.global().sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -339,9 +339,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(L10n.of(context).convertBasicAlbumConfirmationDialogTitle),
-        content:
-            Text(L10n.of(context).convertBasicAlbumConfirmationDialogContent),
+        title: Text(L10n.global().convertBasicAlbumConfirmationDialogTitle),
+        content: Text(L10n.global().convertBasicAlbumConfirmationDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -372,7 +371,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         ),
       ).then((value) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).convertBasicAlbumSuccessNotification),
+          content: Text(L10n.global().convertBasicAlbumSuccessNotification),
           duration: k.snackBarDurationNormal,
         ));
         if (mounted) {
@@ -384,7 +383,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             e,
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
+          content: Text(exception_util.toUserString(e)),
           duration: k.snackBarDurationNormal,
         ));
       });
@@ -406,7 +405,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   void _onSelectionAppBarDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
+      content: Text(L10n.global()
           .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -436,13 +435,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
+        content: Text(L10n.global().deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .deleteSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -462,10 +461,10 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: L10n.of(context).sortOptionDialogTitle,
+        title: L10n.global().sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: L10n.of(context).sortOptionTimeAscendingLabel,
+            label: L10n.global().sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -474,7 +473,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             },
           ),
           FancyOptionPickerItem(
-            label: L10n.of(context).sortOptionTimeDescendingLabel,
+            label: L10n.global().sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {

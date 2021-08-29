@@ -121,7 +121,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
     if (!SessionStorage().hasShowDragRearrangeNotification) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).albumEditDragRearrangeNotification),
+        content: Text(L10n.global().albumEditDragRearrangeNotification),
         duration: k.snackBarDurationNormal,
       ));
       SessionStorage().hasShowDragRearrangeNotification = true;
@@ -147,7 +147,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         UpdateAlbum(albumRepo)(widget.account, newAlbum)
             .catchError((e, stacktrace) {
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e, context)),
+            content: Text(exception_util.toUserString(e)),
             duration: k.snackBarDurationNormal,
           ));
         });
@@ -243,14 +243,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (platform_k.isAndroid)
         IconButton(
           icon: const Icon(Icons.share),
-          tooltip: L10n.of(context).shareTooltip,
+          tooltip: L10n.global().shareTooltip,
           onPressed: () {
             _onSelectionAppBarSharePressed(context);
           },
         ),
       IconButton(
         icon: const Icon(Icons.remove),
-        tooltip: L10n.of(context).removeSelectedFromAlbumTooltip,
+        tooltip: L10n.global().removeSelectedFromAlbumTooltip,
         onPressed: _onSelectionAppBarRemovePressed,
       )
     ]);
@@ -260,12 +260,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
         icon: Icon(Icons.text_fields),
-        tooltip: L10n.of(context).albumAddTextTooltip,
+        tooltip: L10n.global().albumAddTextTooltip,
         onPressed: _onEditAppBarAddTextPressed,
       ),
       IconButton(
         icon: Icon(Icons.sort_by_alpha),
-        tooltip: L10n.of(context).sortTooltip,
+        tooltip: L10n.global().sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
     ]);
@@ -294,7 +294,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         .toList();
     if (selected.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).shareSelectedEmptyNotification),
+        content: Text(L10n.global().shareSelectedEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -323,18 +323,17 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     );
     UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .removeSelectedFromAlbumSuccessNotification(
-                selectedIndexes.length)),
+        content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
+            selectedIndexes.length)),
         duration: k.snackBarDurationNormal,
       ));
     }).catchError((e, stacktrace) {
       _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            "${L10n.of(context).removeSelectedFromAlbumFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content:
+            Text("${L10n.global().removeSelectedFromAlbumFailureNotification}: "
+                "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -348,10 +347,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: L10n.of(context).sortOptionDialogTitle,
+        title: L10n.global().sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: L10n.of(context).sortOptionTimeAscendingLabel,
+            label: L10n.global().sortOptionTimeAscendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
@@ -360,7 +359,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             },
           ),
           FancyOptionPickerItem(
-            label: L10n.of(context).sortOptionTimeDescendingLabel,
+            label: L10n.global().sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {

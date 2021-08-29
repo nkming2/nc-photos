@@ -86,7 +86,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
             child: Column(
               children: [
                 Text(
-                  L10n.of(context).albumDirPickerHeaderText,
+                  L10n.global().albumDirPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -94,7 +94,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    L10n.of(context).albumDirPickerSubHeaderText,
+                    L10n.global().albumDirPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -117,7 +117,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(L10n.of(context).confirmButtonLabel),
+                  child: Text(L10n.global().confirmButtonLabel),
                 ),
               ],
             ),
@@ -131,7 +131,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
     final picked = getPickedDirs();
     if (picked.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).albumDirPickerListEmptyNotification),
+        content: Text(L10n.global().albumDirPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {

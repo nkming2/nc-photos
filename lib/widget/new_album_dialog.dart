@@ -40,7 +40,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
     return Visibility(
       visible: _isVisible,
       child: AlertDialog(
-        title: Text(L10n.of(context).createAlbumTooltip),
+        title: Text(L10n.global().createAlbumTooltip),
         content: Form(
           key: _formKey,
           child: Container(
@@ -51,11 +51,11 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: L10n.of(context).nameInputHint,
+                    hintText: L10n.global().nameInputHint,
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return L10n.of(context).albumNameInputInvalidEmpty;
+                      return L10n.global().albumNameInputInvalidEmpty;
                     }
                     return null;
                   },
@@ -187,10 +187,10 @@ extension on _Provider {
   String toValueString(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return L10n.of(context).createAlbumDialogBasicLabel;
+        return L10n.global().createAlbumDialogBasicLabel;
 
       case _Provider.dir:
-        return L10n.of(context).createAlbumDialogFolderBasedLabel;
+        return L10n.global().createAlbumDialogFolderBasedLabel;
 
       default:
         throw StateError("Unknown value: $this");
@@ -200,10 +200,10 @@ extension on _Provider {
   String toDescription(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return L10n.of(context).createAlbumDialogBasicDescription;
+        return L10n.global().createAlbumDialogBasicDescription;
 
       case _Provider.dir:
-        return L10n.of(context).createAlbumDialogFolderBasedDescription;
+        return L10n.global().createAlbumDialogFolderBasedDescription;
 
       default:
         throw StateError("Unknown value: $this");

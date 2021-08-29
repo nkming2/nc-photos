@@ -165,7 +165,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
                   if (!_isDetailPaneActive && _canOpenDetailPane())
                     IconButton(
                       icon: const Icon(Icons.more_vert),
-                      tooltip: L10n.of(context).detailsTooltip,
+                      tooltip: L10n.global().detailsTooltip,
                       onPressed: _onDetailsPressed,
                     ),
                 ],
@@ -195,7 +195,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
                     Icons.share_outlined,
                     color: Colors.white.withOpacity(.87),
                   ),
-                  tooltip: L10n.of(context).shareTooltip,
+                  tooltip: L10n.global().shareTooltip,
                   onPressed: () => _onSharePressed(context),
                 ),
               IconButton(
@@ -203,15 +203,15 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
                   Icons.download_outlined,
                   color: Colors.white.withOpacity(.87),
                 ),
-                tooltip: L10n.of(context).downloadTooltip,
-                onPressed: () => _onDownloadPressed(context),
+                tooltip: L10n.global().downloadTooltip,
+                onPressed: _onDownloadPressed,
               ),
               IconButton(
                 icon: Icon(
                   Icons.delete_outlined,
                   color: Colors.white.withOpacity(.87),
                 ),
-                tooltip: L10n.of(context).deleteTooltip,
+                tooltip: L10n.global().deleteTooltip,
                 onPressed: () => _onDeletePressed(context),
               ),
             ],
@@ -443,11 +443,11 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     ShareHandler().shareFiles(context, widget.account, [file]);
   }
 
-  void _onDownloadPressed(BuildContext context) async {
+  void _onDownloadPressed() async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).downloadProcessingNotification),
+      content: Text(L10n.global().downloadProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -461,7 +461,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).downloadFailureNoPermissionNotification),
+        content: Text(L10n.global().downloadFailureNoPermissionNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -470,8 +470,8 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).downloadFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().downloadFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -500,7 +500,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
 
     // fallback
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).downloadSuccessNotification),
+      content: Text(L10n.global().downloadSuccessNotification),
       duration: k.snackBarDurationShort,
     ));
   }
@@ -509,7 +509,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).deleteProcessingNotification),
+      content: Text(L10n.global().deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -520,7 +520,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
           AlbumRepo(AlbumCachedDataSource()))(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSuccessNotification),
+        content: Text(L10n.global().deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -532,8 +532,8 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).deleteFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().deleteFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     }

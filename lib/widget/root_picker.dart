@@ -73,7 +73,7 @@ class _RootPickerState extends State<RootPicker>
       });
     } catch (e) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e, context)),
+        content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
     } finally {
@@ -105,7 +105,7 @@ class _RootPickerState extends State<RootPicker>
             child: Column(
               children: [
                 Text(
-                  L10n.of(context).rootPickerHeaderText,
+                  L10n.global().rootPickerHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -113,7 +113,7 @@ class _RootPickerState extends State<RootPicker>
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    L10n.of(context).rootPickerSubHeaderText,
+                    L10n.global().rootPickerSubHeaderText,
                   ),
                 ),
               ],
@@ -132,11 +132,11 @@ class _RootPickerState extends State<RootPicker>
               children: [
                 TextButton(
                   onPressed: () => _onSkipPressed(context),
-                  child: Text(L10n.of(context).skipButtonLabel),
+                  child: Text(L10n.global().skipButtonLabel),
                 ),
                 ElevatedButton(
                   onPressed: () => _onConfirmPressed(context),
-                  child: Text(L10n.of(context).confirmButtonLabel),
+                  child: Text(L10n.global().confirmButtonLabel),
                 ),
               ],
             ),
@@ -150,8 +150,8 @@ class _RootPickerState extends State<RootPicker>
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              content: Text(
-                  L10n.of(context).rootPickerSkipConfirmationDialogContent),
+              content:
+                  Text(L10n.global().rootPickerSkipConfirmationDialogContent),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -178,7 +178,7 @@ class _RootPickerState extends State<RootPicker>
     final roots = getPickedDirs().map((e) => e.strippedPath).toList();
     if (roots.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).rootPickerListEmptyNotification),
+        content: Text(L10n.global().rootPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
       return;
@@ -198,7 +198,7 @@ class _RootPickerState extends State<RootPicker>
         barrierDismissible: false,
         context: context,
         builder: (context) => ProcessingDialog(
-            text: L10n.of(context).genericProcessingDialogContent),
+            text: L10n.global().genericProcessingDialogContent),
       );
     });
   }

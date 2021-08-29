@@ -202,8 +202,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(platform_k.isWeb
-              ? L10n.of(context).webSelectRangeNotification
-              : L10n.of(context).mobileSelectRangeNotification),
+              ? L10n.global().webSelectRangeNotification
+              : L10n.global().mobileSelectRangeNotification),
           duration: k.snackBarDurationNormal,
         ));
         SessionStorage().hasShowRangeSelectNotification = true;

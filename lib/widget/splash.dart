@@ -56,7 +56,7 @@ class _SplashState extends State<Splash> {
             ),
             const SizedBox(height: 8),
             Text(
-              L10n.of(context).appTitle,
+              L10n.global().appTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline4,
             )
@@ -94,7 +94,7 @@ class _SplashState extends State<Splash> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(L10n.of(context).changelogTitle),
+          title: Text(L10n.global().changelogTitle),
           content: SingleChildScrollView(
             child: Text(change),
           ),

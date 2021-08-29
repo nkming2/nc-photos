@@ -102,13 +102,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       return Column(
         children: [
           AppBar(
-            title: Text(L10n.of(context).albumTrashLabel),
+            title: Text(L10n.global().albumTrashLabel),
             elevation: 0,
           ),
           Expanded(
             child: EmptyListIndicator(
               icon: Icons.delete_outline,
-              text: L10n.of(context).listEmptyText,
+              text: L10n.global().listEmptyText,
             ),
           ),
         ],
@@ -164,7 +164,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       actions: [
         IconButton(
           icon: const Icon(Icons.restore_outlined),
-          tooltip: L10n.of(context).restoreTooltip,
+          tooltip: L10n.global().restoreTooltip,
           onPressed: () {
             _onSelectionAppBarRestorePressed();
           },
@@ -174,7 +174,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
           itemBuilder: (context) => [
             PopupMenuItem(
               value: _SelectionAppBarMenuOption.delete,
-              child: Text(L10n.of(context).deletePermanentlyTooltip),
+              child: Text(L10n.global().deletePermanentlyTooltip),
             ),
           ],
           onSelected: (option) {
@@ -195,7 +195,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   Widget _buildNormalAppBar(BuildContext context) {
     return SliverAppBar(
-      title: Text(L10n.of(context).albumTrashLabel),
+      title: Text(L10n.global().albumTrashLabel),
       floating: true,
       actions: [
         ZoomMenuButton(
@@ -214,7 +214,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
           itemBuilder: (context) => [
             PopupMenuItem(
               value: _AppBarMenuOption.empty,
-              child: Text(L10n.of(context).emptyTrashbinTooltip),
+              child: Text(L10n.global().emptyTrashbinTooltip),
             ),
           ],
           onSelected: (option) {
@@ -242,7 +242,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     } else if (state is LsTrashbinBlocFailure) {
       _transformItems(state.items);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     } else if (state is LsTrashbinBlocInconsistent) {
@@ -260,15 +260,15 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(L10n.of(context).emptyTrashbinConfirmationDialogTitle),
-        content: Text(L10n.of(context).emptyTrashbinConfirmationDialogContent),
+        title: Text(L10n.global().emptyTrashbinConfirmationDialogTitle),
+        content: Text(L10n.global().emptyTrashbinConfirmationDialogContent),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              _deleteFiles(context, _backingFiles);
+              _deleteFiles(_backingFiles);
             },
-            child: Text(L10n.of(context).confirmButtonLabel),
+            child: Text(L10n.global().confirmButtonLabel),
           ),
         ],
       ),
@@ -277,7 +277,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   Future<void> _onSelectionAppBarRestorePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
+      content: Text(L10n.global()
           .restoreSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -304,13 +304,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).restoreSelectedSuccessNotification),
+        content: Text(L10n.global().restoreSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .restoreSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().restoreSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -320,16 +320,15 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(L10n.of(context).deletePermanentlyConfirmationDialogTitle),
-        content:
-            Text(L10n.of(context).deletePermanentlyConfirmationDialogContent),
+        title: Text(L10n.global().deletePermanentlyConfirmationDialogTitle),
+        content: Text(L10n.global().deletePermanentlyConfirmationDialogContent),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              _deleteSelected(context);
+              _deleteSelected();
             },
-            child: Text(L10n.of(context).confirmButtonLabel),
+            child: Text(L10n.global().confirmButtonLabel),
           ),
         ],
       ),
@@ -381,7 +380,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
         .toList();
   }
 
-  Future<void> _deleteSelected(BuildContext context) async {
+  Future<void> _deleteSelected() async {
     final selectedFiles = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
@@ -389,13 +388,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     setState(() {
       clearSelectedItems();
     });
-    return _deleteFiles(context, selectedFiles);
+    return _deleteFiles(selectedFiles);
   }
 
-  Future<void> _deleteFiles(BuildContext context, List<File> files) async {
+  Future<void> _deleteFiles(List<File> files) async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(
-          L10n.of(context).deleteSelectedProcessingNotification(files.length)),
+          L10n.global().deleteSelectedProcessingNotification(files.length)),
       duration: k.snackBarDurationShort,
     ));
     final fileRepo = FileRepo(FileCachedDataSource());
@@ -414,13 +413,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
+        content: Text(L10n.global().deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .deleteSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }

@@ -102,7 +102,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
             child: Column(
               children: [
                 Text(
-                  L10n.of(context).albumImporterHeaderText,
+                  L10n.global().albumImporterHeaderText,
                   style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
@@ -110,7 +110,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
-                    L10n.of(context).albumImporterSubHeaderText,
+                    L10n.global().albumImporterSubHeaderText,
                   ),
                 ),
               ],
@@ -145,7 +145,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
                 ),
                 ElevatedButton(
                   onPressed: () => _onImportPressed(context),
-                  child: Text(L10n.of(context).importButtonLabel),
+                  child: Text(L10n.global().importButtonLabel),
                 ),
               ],
             ),
@@ -207,7 +207,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
       _transformItems(state.items);
     } else if (state is ListImportableAlbumBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -218,7 +218,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
       barrierDismissible: false,
       context: context,
       builder: (context) =>
-          ProcessingDialog(text: L10n.of(context).albumImporterProgressText),
+          ProcessingDialog(text: L10n.global().albumImporterProgressText),
     );
     try {
       await _createAllAlbums(context);
@@ -259,7 +259,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
         _log.shout(
             "[_createAllAlbums] Failed creating dir album", e, stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
+          content: Text(exception_util.toUserString(e)),
           duration: k.snackBarDurationNormal,
         ));
       }

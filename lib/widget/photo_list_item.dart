@@ -183,7 +183,7 @@ class PhotoListLabelEdit extends PhotoListLabel {
           end: 0,
           child: IconButton(
             icon: Icon(Icons.edit),
-            tooltip: L10n.of(context).editTooltip,
+            tooltip: L10n.global().editTooltip,
             onPressed: onEditPressed,
           ),
         ),

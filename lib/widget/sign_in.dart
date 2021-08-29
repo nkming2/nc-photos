@@ -49,7 +49,7 @@ class _SignInState extends State<SignIn> {
                       Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
-                          L10n.of(context).signInHeaderText,
+                          L10n.global().signInHeaderText,
                           style: Theme.of(context).textTheme.headline5,
                           textAlign: TextAlign.center,
                         ),
@@ -70,7 +70,7 @@ class _SignInState extends State<SignIn> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         child: Text(
-                          L10n.of(context).signIn2faHintText,
+                          L10n.global().signIn2faHintText,
                           style: TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ),
@@ -98,7 +98,7 @@ class _SignInState extends State<SignIn> {
                                   _connect();
                                 }
                               },
-                              child: Text(L10n.of(context).connectButtonLabel),
+                              child: Text(L10n.global().connectButtonLabel),
                             ),
                           ],
                         ),
@@ -158,12 +158,12 @@ class _SignInState extends State<SignIn> {
             Expanded(
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText: L10n.of(context).serverAddressInputHint,
+                  hintText: L10n.global().serverAddressInputHint,
                 ),
                 keyboardType: TextInputType.url,
                 validator: (value) {
                   if (value!.trim().trimRightAny("/").isEmpty) {
-                    return L10n.of(context).serverAddressInputInvalidEmpty;
+                    return L10n.global().serverAddressInputInvalidEmpty;
                   }
                   return null;
                 },
@@ -177,11 +177,11 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: L10n.of(context).usernameInputHint,
+            hintText: L10n.global().usernameInputHint,
           ),
           validator: (value) {
             if (value!.trim().isEmpty) {
-              return L10n.of(context).usernameInputInvalidEmpty;
+              return L10n.global().usernameInputInvalidEmpty;
             }
             return null;
           },
@@ -192,12 +192,12 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         TextFormField(
           decoration: InputDecoration(
-            hintText: L10n.of(context).passwordInputHint,
+            hintText: L10n.global().passwordInputHint,
           ),
           obscureText: true,
           validator: (value) {
             if (value!.trim().isEmpty) {
-              return L10n.of(context).passwordInputInvalidEmpty;
+              return L10n.global().passwordInputInvalidEmpty;
             }
             return null;
           },

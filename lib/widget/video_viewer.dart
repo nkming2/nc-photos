@@ -50,7 +50,7 @@ class _VideoViewerState extends State<VideoViewer> {
     }).onError((e, stacktrace) {
       _log.shout("[initState] Failed while _getVideoUrl", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e, context)),
+        content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
     });

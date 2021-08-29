@@ -99,13 +99,13 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
               return ListTile(
                 dense: true,
                 leading: const SizedBox(width: 24),
-                title: Text(L10n.of(context).rootPickerNavigateUpItemText),
+                title: Text(L10n.global().rootPickerNavigateUpItemText),
                 onTap: () {
                   try {
                     _navigateInto(File(path: path.dirname(_currentPath)));
                   } catch (e) {
                     SnackBarManager().showSnackBar(SnackBar(
-                      content: Text(exception_util.toUserString(e, context)),
+                      content: Text(exception_util.toUserString(e)),
                       duration: k.snackBarDurationNormal,
                     ));
                   }
@@ -178,7 +178,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
                 _navigateInto(item.file);
               } catch (e) {
                 SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(exception_util.toUserString(e, context)),
+                  content: Text(exception_util.toUserString(e)),
                   duration: k.snackBarDurationNormal,
                 ));
               }
@@ -197,7 +197,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
       }
     } else if (state is LsDirBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -283,7 +283,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
         } catch (_) {
           SnackBarManager().showSnackBar(SnackBar(
               content:
-                  Text(L10n.of(context).rootPickerUnpickFailureNotification)));
+                  Text(L10n.global().rootPickerUnpickFailureNotification)));
         }
       }
     });

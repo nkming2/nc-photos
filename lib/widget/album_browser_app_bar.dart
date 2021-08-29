@@ -80,7 +80,7 @@ class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
         title: TextFormField(
           controller: _controller,
           decoration: InputDecoration(
-            hintText: L10n.of(context).nameInputHint,
+            hintText: L10n.global().nameInputHint,
           ),
           validator: (_) {
             // use _controller.text here because the value might be wrong if
@@ -88,7 +88,7 @@ class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
             if (_controller.text.isNotEmpty == true) {
               return null;
             } else {
-              return L10n.of(context).albumNameInputInvalidEmpty;
+              return L10n.global().albumNameInputInvalidEmpty;
             }
           },
           onSaved: (_) {
@@ -102,7 +102,7 @@ class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
       leading: IconButton(
         icon: const Icon(Icons.check),
         color: Theme.of(context).colorScheme.primary,
-        tooltip: L10n.of(context).doneButtonTooltip,
+        tooltip: L10n.global().doneButtonTooltip,
         onPressed: widget.onDonePressed,
       ),
       actions: widget.actions,

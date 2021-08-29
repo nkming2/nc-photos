@@ -100,13 +100,13 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       return Column(
         children: [
           AppBar(
-            title: Text(L10n.of(context).albumArchiveLabel),
+            title: Text(L10n.global().albumArchiveLabel),
             elevation: 0,
           ),
           Expanded(
             child: EmptyListIndicator(
               icon: Icons.archive_outlined,
-              text: L10n.of(context).listEmptyText,
+              text: L10n.global().listEmptyText,
             ),
           ),
         ],
@@ -162,7 +162,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       actions: [
         IconButton(
           icon: const Icon(Icons.unarchive),
-          tooltip: L10n.of(context).unarchiveTooltip,
+          tooltip: L10n.global().unarchiveTooltip,
           onPressed: () {
             _onSelectionAppBarUnarchivePressed();
           },
@@ -173,7 +173,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   Widget _buildNormalAppBar(BuildContext context) {
     return SliverAppBar(
-      title: Text(L10n.of(context).albumArchiveLabel),
+      title: Text(L10n.global().albumArchiveLabel),
       floating: true,
       actions: [
         ZoomMenuButton(
@@ -199,7 +199,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     } else if (state is ScanDirBlocFailure) {
       _transformItems(state.files);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     } else if (state is ScanDirBlocInconsistent) {
@@ -214,7 +214,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   Future<void> _onSelectionAppBarUnarchivePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
+      content: Text(L10n.global()
           .unarchiveSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -242,12 +242,12 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).unarchiveSelectedSuccessNotification),
+        content: Text(L10n.global().unarchiveSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
+        content: Text(L10n.global()
             .unarchiveSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));

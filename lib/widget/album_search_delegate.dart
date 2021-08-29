@@ -18,7 +18,7 @@ import 'package:nc_photos/widget/empty_list_indicator.dart';
 class AlbumSearchDelegate extends SearchDelegate {
   AlbumSearchDelegate(BuildContext context, this.account)
       : super(
-          searchFieldLabel: L10n.of(context).albumSearchTextFieldHint,
+          searchFieldLabel: L10n.global().albumSearchTextFieldHint,
         ) {
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -38,7 +38,7 @@ class AlbumSearchDelegate extends SearchDelegate {
     return [
       IconButton(
         icon: Icon(Icons.clear),
-        tooltip: L10n.of(context).clearTooltip,
+        tooltip: L10n.global().clearTooltip,
         onPressed: () {
           query = "";
         },
@@ -78,7 +78,7 @@ class AlbumSearchDelegate extends SearchDelegate {
     if (state.results.isEmpty) {
       return EmptyListIndicator(
         icon: Icons.mood_bad,
-        text: L10n.of(context).listNoResultsText,
+        text: L10n.global().listNoResultsText,
       );
     } else {
       return StaggeredGridView.extentBuilder(

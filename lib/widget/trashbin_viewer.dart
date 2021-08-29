@@ -129,7 +129,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.restore_outlined),
-                  tooltip: L10n.of(context).restoreTooltip,
+                  tooltip: L10n.global().restoreTooltip,
                   onPressed: _onRestorePressed,
                 ),
                 PopupMenuButton<_AppBarMenuOption>(
@@ -137,7 +137,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: _AppBarMenuOption.delete,
-                      child: Text(L10n.of(context).deletePermanentlyTooltip),
+                      child: Text(L10n.global().deletePermanentlyTooltip),
                     ),
                   ],
                   onSelected: (option) {
@@ -164,7 +164,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onRestorePressed] Restoring file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).restoreProcessingNotification),
+      content: Text(L10n.global().restoreProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -175,7 +175,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       await RestoreTrashbin(fileRepo)(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).restoreSuccessNotification),
+        content: Text(L10n.global().restoreSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -187,8 +187,8 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).restoreFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().restoreFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -200,16 +200,15 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(L10n.of(context).deletePermanentlyConfirmationDialogTitle),
-        content:
-            Text(L10n.of(context).deletePermanentlyConfirmationDialogContent),
+        title: Text(L10n.global().deletePermanentlyConfirmationDialogTitle),
+        content: Text(L10n.global().deletePermanentlyConfirmationDialogContent),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               _delete(context);
             },
-            child: Text(L10n.of(context).confirmButtonLabel),
+            child: Text(L10n.global().confirmButtonLabel),
           ),
         ],
       ),
@@ -319,7 +318,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_delete] Removing file: ${file.path}");
     var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context).deleteProcessingNotification),
+      content: Text(L10n.global().deleteProcessingNotification),
       duration: k.snackBarDurationShort,
     ));
     controller?.closed.whenComplete(() {
@@ -330,7 +329,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       await Remove(fileRepo, null)(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSuccessNotification),
+        content: Text(L10n.global().deleteSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();
@@ -342,8 +341,8 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).deleteFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().deleteFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     }

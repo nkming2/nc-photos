@@ -91,7 +91,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
           Expanded(
             child: EmptyListIndicator(
               icon: Icons.share_outlined,
-              text: L10n.of(context).listEmptyText,
+              text: L10n.global().listEmptyText,
             ),
           ),
         ],
@@ -159,7 +159,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
       _transformItems(state.items);
     } else if (state is ListPendingSharedAlbumBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     } else if (state is ListPendingSharedAlbumBlocInconsistent) {

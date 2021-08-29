@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
@@ -32,7 +31,10 @@ class MyApp extends StatefulWidget {
 
   static RouteObserver get routeObserver => _routeObserver;
 
+  static BuildContext get globalContext => _globalContext;
+
   static final _routeObserver = RouteObserver<PageRoute>();
+  static late BuildContext _globalContext;
 }
 
 class _MyAppState extends State<MyApp> implements SnackBarHandler {
@@ -49,7 +51,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   @override
   build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => L10n.of(context).appTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: _getLightTheme(),
       darkTheme: _getDarkTheme(),
       themeMode:
@@ -67,6 +69,10 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         Locale("fr"),
         Locale("ru"),
       ],
+      builder: (context, child) {
+        MyApp._globalContext = context;
+        return child!;
+      },
       debugShowCheckedModeBanner: false,
     );
   }

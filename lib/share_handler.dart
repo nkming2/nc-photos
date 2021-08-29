@@ -22,8 +22,8 @@ class ShareHandler {
     assert(platform_k.isAndroid);
     showDialog(
       context: context,
-      builder: (context) => ProcessingDialog(
-          text: L10n.of(context).shareDownloadingDialogContent),
+      builder: (context) =>
+          ProcessingDialog(text: L10n.global().shareDownloadingDialogContent),
     );
     final results = <Tuple2<File, dynamic>>[];
     for (final f in files) {
@@ -33,8 +33,7 @@ class ShareHandler {
       } on PermissionException catch (_) {
         _log.warning("[shareFiles] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(
-          content:
-              Text(L10n.of(context).downloadFailureNoPermissionNotification),
+          content: Text(L10n.global().downloadFailureNoPermissionNotification),
           duration: k.snackBarDurationNormal,
         ));
         // dismiss the dialog
@@ -43,7 +42,7 @@ class ShareHandler {
       } catch (e, stacktrace) {
         _log.shout("[shareFiles] Failed while downloadFile", e, stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
+          content: Text(exception_util.toUserString(e)),
           duration: k.snackBarDurationNormal,
         ));
       }

@@ -68,7 +68,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           IconButton(
             onPressed: () => _onSharePressed(context, account, album),
             icon: const Icon(Icons.share),
-            tooltip: L10n.of(context).shareTooltip,
+            tooltip: L10n.global().shareTooltip,
           ),
         if (album.albumFile?.path.startsWith(
                 remote_storage_util.getRemotePendingSharedAlbumsDir(account)) ==
@@ -86,7 +86,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
               if (canEdit)
                 PopupMenuItem(
                   value: -1,
-                  child: Text(L10n.of(context).editAlbumMenuLabel),
+                  child: Text(L10n.global().editAlbumMenuLabel),
                 ),
               ...(menuItemBuilder?.call(context) ?? []),
             ],
@@ -233,7 +233,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           stackTrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e, context)),
+        content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
     }

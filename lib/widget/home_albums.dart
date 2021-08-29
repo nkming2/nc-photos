@@ -150,7 +150,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       actions: [
         IconButton(
           icon: const Icon(Icons.delete),
-          tooltip: L10n.of(context).deleteTooltip,
+          tooltip: L10n.global().deleteTooltip,
           onPressed: () {
             _onSelectionAppBarDeletePressed();
           },
@@ -166,13 +166,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
         IconButton(
           onPressed: () => _onSearchPressed(context),
           icon: const Icon(Icons.search),
-          tooltip: L10n.of(context).searchTooltip,
+          tooltip: L10n.global().searchTooltip,
         ),
       ],
       menuActions: [
         PopupMenuItem(
           value: _menuValueImport,
-          child: Text(L10n.of(context).importFoldersTooltip),
+          child: Text(L10n.global().importFoldersTooltip),
         ),
       ],
       onSelectedMenuActions: (option) {
@@ -188,7 +188,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildArchiveItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.archive_outlined,
-      label: L10n.of(context).albumArchiveLabel,
+      label: L10n.global().albumArchiveLabel,
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
@@ -201,7 +201,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildTrashbinItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.delete_outlined,
-      label: L10n.of(context).albumTrashLabel,
+      label: L10n.global().albumTrashLabel,
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
@@ -228,7 +228,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildNewAlbumItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.add,
-      label: L10n.of(context).createAlbumTooltip,
+      label: L10n.global().createAlbumTooltip,
       onTap: () {
         if (!isSelectionMode) {
           _onNewAlbumItemTap(context);
@@ -246,7 +246,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       _transformItems(state.items);
       if (isPageVisible()) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception, context)),
+          content: Text(exception_util.toUserString(state.exception)),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -275,7 +275,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       _log.severe(
           "[_onNewAlbumItemTap] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).createAlbumFailureNotification),
+        content: Text(L10n.global().createAlbumFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -292,8 +292,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
         .map((e) => e.album)
         .toList();
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
-          .deleteSelectedProcessingNotification(selected.length)),
+      content: Text(
+          L10n.global().deleteSelectedProcessingNotification(selected.length)),
       duration: k.snackBarDurationShort,
     ));
     final selectedFiles = selected.map((e) => e.albumFile!).toList();
@@ -317,13 +317,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
+        content: Text(L10n.global().deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .deleteSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }

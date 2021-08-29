@@ -15,7 +15,7 @@ class ZoomMenuButton extends StatelessWidget {
   build(BuildContext context) {
     return PopupMenuButton(
       icon: const Icon(Icons.photo_size_select_large),
-      tooltip: L10n.of(context).zoomTooltip,
+      tooltip: L10n.global().zoomTooltip,
       itemBuilder: (context) => [
         _PopupMenuZoom(
           initialValue: initialZoom,

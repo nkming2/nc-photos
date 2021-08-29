@@ -69,71 +69,70 @@ class _SettingsState extends State<Settings> {
   }
 
   Widget _buildContent(BuildContext context) {
-    final translator = L10n.of(context).translator;
+    final translator = L10n.global().translator;
     return CustomScrollView(
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.of(context).settingsWidgetTitle),
+          title: Text(L10n.global().settingsWidgetTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                title: Text(L10n.of(context).settingsLanguageTitle),
+                title: Text(L10n.global().settingsLanguageTitle),
                 subtitle: Text(language_util.getSelectedLanguageName()),
                 onTap: () => _onLanguageTap(context),
               ),
               SwitchListTile(
-                title: Text(L10n.of(context).settingsExifSupportTitle),
+                title: Text(L10n.global().settingsExifSupportTitle),
                 subtitle: _isEnableExif
-                    ? Text(L10n.of(context).settingsExifSupportTrueSubtitle)
+                    ? Text(L10n.global().settingsExifSupportTrueSubtitle)
                     : null,
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
               if (platform_k.isMobile) ...[
                 _buildCaption(
-                    context, L10n.of(context).settingsViewerSectionTitle),
+                    context, L10n.global().settingsViewerSectionTitle),
                 SwitchListTile(
-                  title: Text(L10n.of(context).settingsScreenBrightnessTitle),
-                  subtitle: Text(
-                      L10n.of(context).settingsScreenBrightnessDescription),
+                  title: Text(L10n.global().settingsScreenBrightnessTitle),
+                  subtitle:
+                      Text(L10n.global().settingsScreenBrightnessDescription),
                   value: _screenBrightness >= 0,
                   onChanged: (value) =>
                       _onScreenBrightnessChanged(context, value),
                 ),
                 SwitchListTile(
-                  title: Text(L10n.of(context).settingsForceRotationTitle),
+                  title: Text(L10n.global().settingsForceRotationTitle),
                   subtitle:
-                      Text(L10n.of(context).settingsForceRotationDescription),
+                      Text(L10n.global().settingsForceRotationDescription),
                   value: _isForceRotation,
                   onChanged: (value) => _onForceRotationChanged(value),
                 ),
               ],
-              _buildCaption(
-                  context, L10n.of(context).settingsAboutSectionTitle),
+              _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
-                title: Text(L10n.of(context).settingsVersionTitle),
+                title: Text(L10n.global().settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
                 onTap: () => _onVersionTap(context),
               ),
               ListTile(
-                title: Text(L10n.of(context).settingsSourceCodeTitle),
+                title: Text(L10n.global().settingsSourceCodeTitle),
                 subtitle: Text(_sourceRepo),
                 onTap: () async {
                   await launch(_sourceRepo);
                 },
               ),
               ListTile(
-                title: Text(L10n.of(context).settingsBugReportTitle),
+                title: Text(L10n.global().settingsBugReportTitle),
                 onTap: () {
                   launch(_bugReportUrl);
                 },
               ),
               if (translator.isNotEmpty)
                 ListTile(
-                  title: Text(L10n.of(context).settingsTranslatorTitle),
+                  title: Text(L10n.global().settingsTranslatorTitle),
                   subtitle: Text(translator),
                   onTap: () {
                     launch(_translationUrl);
@@ -200,8 +199,8 @@ class _SettingsState extends State<Settings> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(L10n.of(context).exifSupportConfirmationDialogTitle),
-          content: Text(L10n.of(context).exifSupportDetails),
+          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
+          content: Text(L10n.global().exifSupportDetails),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -213,7 +212,7 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(L10n.of(context).enableButtonLabel),
+              child: Text(L10n.global().enableButtonLabel),
             ),
           ],
         ),
@@ -236,12 +235,12 @@ class _SettingsState extends State<Settings> {
           context: context,
           builder: (_) => AppTheme(
             child: AlertDialog(
-              title: Text(L10n.of(context).settingsScreenBrightnessTitle),
+              title: Text(L10n.global().settingsScreenBrightnessTitle),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(L10n.of(context).settingsScreenBrightnessDescription),
+                  Text(L10n.global().settingsScreenBrightnessDescription),
                   const SizedBox(height: 8),
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -318,7 +317,7 @@ class _SettingsState extends State<Settings> {
       } else {
         _log.severe("[_setExifSupport] Failed writing pref");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).writePreferenceFailureNotification),
+          content: Text(L10n.global().writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
         setState(() {
@@ -337,7 +336,7 @@ class _SettingsState extends State<Settings> {
       if (!result) {
         _log.severe("[_setScreenBrightness] Failed writing pref");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).writePreferenceFailureNotification),
+          content: Text(L10n.global().writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
         setState(() {
@@ -356,7 +355,7 @@ class _SettingsState extends State<Settings> {
       if (!result) {
         _log.severe("[_setForceRotation] Failed writing pref");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).writePreferenceFailureNotification),
+          content: Text(L10n.global().writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
         setState(() {

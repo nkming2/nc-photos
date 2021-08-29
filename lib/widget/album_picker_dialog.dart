@@ -81,7 +81,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
       SimpleDialogOption(
         onPressed: () => _onNewAlbumPressed(context),
         child: Tooltip(
-          message: L10n.of(context).createAlbumTooltip,
+          message: L10n.global().createAlbumTooltip,
           child: Center(
             child: Icon(
               Icons.add,
@@ -118,7 +118,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
     } else if (state is ListAlbumBlocFailure) {
       _transformItems(state.items);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     } else if (state is ListAlbumBlocInconsistent) {

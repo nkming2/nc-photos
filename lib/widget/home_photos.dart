@@ -174,14 +174,14 @@ class _HomePhotosState extends State<HomePhotos>
         if (platform_k.isAndroid)
           IconButton(
             icon: const Icon(Icons.share),
-            tooltip: L10n.of(context).shareTooltip,
+            tooltip: L10n.global().shareTooltip,
             onPressed: () {
               _onSelectionAppBarSharePressed(context);
             },
           ),
         IconButton(
           icon: const Icon(Icons.playlist_add),
-          tooltip: L10n.of(context).addToAlbumTooltip,
+          tooltip: L10n.global().addToAlbumTooltip,
           onPressed: () {
             _onSelectionAppBarAddToAlbumPressed(context);
           },
@@ -191,11 +191,11 @@ class _HomePhotosState extends State<HomePhotos>
           itemBuilder: (context) => [
             PopupMenuItem(
               value: _SelectionAppBarMenuOption.archive,
-              child: Text(L10n.of(context).archiveTooltip),
+              child: Text(L10n.global().archiveTooltip),
             ),
             PopupMenuItem(
               value: _SelectionAppBarMenuOption.delete,
-              child: Text(L10n.of(context).deleteTooltip),
+              child: Text(L10n.global().deleteTooltip),
             ),
           ],
           onSelected: (option) {
@@ -229,7 +229,7 @@ class _HomePhotosState extends State<HomePhotos>
         menuActions: [
           PopupMenuItem(
             value: _menuValueRefresh,
-            child: Text(L10n.of(context).refreshMenuLabel),
+            child: Text(L10n.global().refreshMenuLabel),
           ),
         ],
         onSelectedMenuActions: (option) {
@@ -266,7 +266,7 @@ class _HomePhotosState extends State<HomePhotos>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        L10n.of(context).metadataTaskProcessingNotification,
+                        L10n.global().metadataTaskProcessingNotification,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -281,7 +281,7 @@ class _HomePhotosState extends State<HomePhotos>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        L10n.of(context).metadataTaskPauseNoWiFiNotification,
+                        L10n.global().metadataTaskPauseNoWiFiNotification,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -296,7 +296,7 @@ class _HomePhotosState extends State<HomePhotos>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       child: Text(
-                        L10n.of(context).configButtonLabel,
+                        L10n.global().configButtonLabel,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 12,
@@ -332,7 +332,7 @@ class _HomePhotosState extends State<HomePhotos>
       _transformItems(state.files);
       if (isPageVisible()) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception, context)),
+          content: Text(exception_util.toUserString(state.exception)),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -376,14 +376,14 @@ class _HomePhotosState extends State<HomePhotos>
             clearSelectedItems();
           });
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(L10n.of(context)
+            content: Text(L10n.global()
                 .addSelectedToAlbumSuccessNotification(value.name)),
             duration: k.snackBarDurationNormal,
           ));
         }).catchError((_) {});
       } else {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).addSelectedToAlbumFailureNotification),
+          content: Text(L10n.global().addSelectedToAlbumFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -393,9 +393,8 @@ class _HomePhotosState extends State<HomePhotos>
           e,
           stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text("${L10n.of(context).addSelectedToAlbumFailureNotification}: "
-                "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().addSelectedToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -423,9 +422,8 @@ class _HomePhotosState extends State<HomePhotos>
       _log.shout(
           "[_addSelectedToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text("${L10n.of(context).addSelectedToAlbumFailureNotification}: "
-                "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().addSelectedToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
       rethrow;
@@ -434,7 +432,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   Future<void> _onSelectionAppBarDeletePressed(BuildContext context) async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
+      content: Text(L10n.global()
           .deleteSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -462,13 +460,13 @@ class _HomePhotosState extends State<HomePhotos>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).deleteSelectedSuccessNotification),
+        content: Text(L10n.global().deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .deleteSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().deleteSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -493,7 +491,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   Future<void> _onSelectionAppBarArchivePressed(BuildContext context) async {
     SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.of(context)
+      content: Text(L10n.global()
           .archiveSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
@@ -521,13 +519,13 @@ class _HomePhotosState extends State<HomePhotos>
     }
     if (failures.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context).archiveSelectedSuccessNotification),
+        content: Text(L10n.global().archiveSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.of(context)
-            .archiveSelectedFailureNotification(failures.length)),
+        content: Text(
+            L10n.global().archiveSelectedFailureNotification(failures.length)),
         duration: k.snackBarDurationNormal,
       ));
     }

@@ -68,7 +68,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
             children: [
               CircularProgressIndicator(),
               const SizedBox(width: 24),
-              Text(L10n.of(context).genericProcessingDialogContent),
+              Text(L10n.global().genericProcessingDialogContent),
             ],
           ),
         ),
@@ -123,7 +123,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           child: trailing,
         ),
       ),
-      onPressed: () => _onShareePressed(context, sharee, share),
+      onPressed: () => _onShareePressed(sharee, share),
     );
   }
 
@@ -131,14 +131,13 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       BuildContext context, ListShareeBlocState state) {
     if (state is ListShareeBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception, context)),
+        content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     }
   }
 
-  void _onShareePressed(
-      BuildContext context, Sharee sharee, Share? share) async {
+  void _onShareePressed(Sharee sharee, Share? share) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     setState(() {
       _processingSharee.add(sharee.shareWith);
@@ -152,7 +151,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       } catch (e, stackTrace) {
         _log.shout("[_onShareePressed] Failed while create", e, stackTrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
+          content: Text(exception_util.toUserString(e)),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -164,7 +163,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       } catch (e, stackTrace) {
         _log.shout("[_onShareePressed] Failed while delete", e, stackTrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e, context)),
+          content: Text(exception_util.toUserString(e)),
           duration: k.snackBarDurationNormal,
         ));
       }

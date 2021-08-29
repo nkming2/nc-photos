@@ -31,7 +31,7 @@ class _SetupState extends State<Setup> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      title: Text(L10n.of(context).setupWidgetTitle),
+      title: Text(L10n.global().setupWidgetTitle),
       elevation: 0,
     );
   }
@@ -69,7 +69,7 @@ class _SetupState extends State<Setup> {
                     ? [
                         ElevatedButton(
                           onPressed: _onDonePressed,
-                          child: Text(L10n.of(context).doneButtonLabel),
+                          child: Text(L10n.global().doneButtonLabel),
                         ),
                       ]
                     : [
@@ -82,7 +82,7 @@ class _SetupState extends State<Setup> {
                                       .getPageId());
                             }
                           },
-                          child: Text(L10n.of(context).nextButtonLabel),
+                          child: Text(L10n.global().nextButtonLabel),
                         ),
                       ],
               ),
@@ -146,19 +146,19 @@ class _ExifState extends State<_Exif> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SwitchListTile(
-            title: Text(L10n.of(context).settingsExifSupportTitle),
+            title: Text(L10n.global().settingsExifSupportTitle),
             value: _isEnableExif,
             onChanged: _onValueChanged,
           ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(L10n.of(context).exifSupportDetails),
+            child: Text(L10n.global().exifSupportDetails),
           ),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(L10n.of(context).setupSettingsModifyLaterHint,
+            child: Text(L10n.global().setupSettingsModifyLaterHint,
                 style: Theme.of(context)
                     .textTheme
                     .bodyText2!
@@ -197,7 +197,7 @@ class _HiddenPrefDirNoticeState extends State<_HiddenPrefDirNotice> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(L10n.of(context).setupHiddenPrefDirNoticeDetail),
+            child: Text(L10n.global().setupHiddenPrefDirNoticeDetail),
           ),
           const SizedBox(height: 24),
           Align(

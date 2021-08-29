@@ -71,11 +71,11 @@ class _HomeState extends State<Home> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_outlined),
-          label: L10n.of(context).photosTabLabel,
+          label: L10n.global().photosTabLabel,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.photo_album_outlined),
-          label: L10n.of(context).albumsTabLabel,
+          label: L10n.global().albumsTabLabel,
         ),
       ],
       currentIndex: _nextPage,

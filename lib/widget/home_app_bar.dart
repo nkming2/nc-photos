@@ -98,11 +98,11 @@ class HomeSliverAppBar extends StatelessWidget {
                   [
                     PopupMenuItem(
                       value: _menuValueAbout,
-                      child: Text(L10n.of(context).settingsMenuLabel),
+                      child: Text(L10n.global().settingsMenuLabel),
                     ),
                     PopupMenuItem(
                       value: _menuValueHelp,
-                      child: Text(L10n.of(context).helpTooltip),
+                      child: Text(L10n.global().helpTooltip),
                     ),
                   ],
               onSelected: (option) {

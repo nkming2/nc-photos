@@ -86,7 +86,7 @@ class _ConnectState extends State<Connect> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              L10n.of(context).connectingToServer(widget.account.url),
+              L10n.global().connectingToServer(widget.account.url),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
             )
@@ -109,13 +109,13 @@ class _ConnectState extends State<Connect> {
       } else if (state.exception is ApiException &&
           (state.exception as ApiException).response.statusCode == 401) {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).errorWrongPassword),
+          content: Text(L10n.global().errorWrongPassword),
           duration: k.snackBarDurationNormal,
         ));
         Navigator.of(context).pop(null);
       } else {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception, context)),
+          content: Text(exception_util.toUserString(state.exception)),
           duration: k.snackBarDurationNormal,
         ));
         Navigator.of(context).pop(null);
@@ -127,8 +127,8 @@ class _ConnectState extends State<Connect> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(L10n.of(context).serverCertErrorDialogTitle),
-        content: Text(L10n.of(context).serverCertErrorDialogContent),
+        title: Text(L10n.global().serverCertErrorDialogTitle),
+        content: Text(L10n.global().serverCertErrorDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -140,7 +140,7 @@ class _ConnectState extends State<Connect> {
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: Text(L10n.of(context).advancedButtonLabel),
+            child: Text(L10n.global().advancedButtonLabel),
           ),
         ],
       ),
@@ -152,8 +152,8 @@ class _ConnectState extends State<Connect> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(L10n.of(context).whitelistCertDialogTitle),
-          content: Text(L10n.of(context).whitelistCertDialogContent(
+          title: Text(L10n.global().whitelistCertDialogTitle),
+          content: Text(L10n.global().whitelistCertDialogContent(
               SelfSignedCertManager().getLastBadCertHost(),
               SelfSignedCertManager().getLastBadCertFingerprint())),
           actions: <Widget>[
@@ -167,7 +167,7 @@ class _ConnectState extends State<Connect> {
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text(L10n.of(context).whitelistCertButtonLabel),
+              child: Text(L10n.global().whitelistCertButtonLabel),
             ),
           ],
         ),

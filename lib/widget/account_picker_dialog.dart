@@ -48,7 +48,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                     Icons.close,
                     color: AppTheme.getSecondaryTextColor(context),
                   ),
-                  tooltip: L10n.of(context).deleteTooltip,
+                  tooltip: L10n.global().deleteTooltip,
                   onPressed: () => _onRemoveItemPressed(a),
                 ),
               ),
@@ -63,7 +63,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             ..pushNamed(SignIn.routeName);
         },
         child: Tooltip(
-          message: L10n.of(context).addServerTooltip,
+          message: L10n.global().addServerTooltip,
           child: Center(
             child: Icon(
               Icons.add,
@@ -89,7 +89,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             Icons.edit,
             color: AppTheme.getSecondaryTextColor(context),
           ),
-          tooltip: L10n.of(context).editTooltip,
+          tooltip: L10n.global().editTooltip,
           onPressed: () => _onEditPressed(),
         ),
       ),
@@ -113,12 +113,12 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
       });
       SnackBarManager().showSnackBar(SnackBar(
         content:
-            Text(L10n.of(context).removeServerSuccessNotification(account.url)),
+            Text(L10n.global().removeServerSuccessNotification(account.url)),
         duration: k.snackBarDurationNormal,
       ));
     } catch (e) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e, context)),
+        content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -144,7 +144,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           Navigator.of(context).pop();
           SnackBarManager().showSnackBar(SnackBar(
             content:
-                Text(L10n.of(context).editAccountConflictFailureNotification),
+                Text(L10n.global().editAccountConflictFailureNotification),
             duration: k.snackBarDurationNormal,
           ));
           return;
@@ -158,7 +158,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     } catch (e, stacktrace) {
       _log.shout("[_onEditPressed] Exception", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e, context)),
+        content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context).pop();

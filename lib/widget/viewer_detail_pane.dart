@@ -83,8 +83,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           widget.file.metadata!.imageHeight!;
       if (pixelCount >= 500000) {
         final mpCount = pixelCount / 1000000.0;
-        sizeSubStr +=
-            L10n.of(context).megapixelCount(mpCount.toStringAsFixed(1));
+        sizeSubStr += L10n.global().megapixelCount(mpCount.toStringAsFixed(1));
         sizeSubStr += space;
       }
       sizeSubStr += _byteSizeToString(widget.file.contentLength ?? 0);
@@ -95,11 +94,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       cameraSubStr += "f/${_fNumber!.toStringAsFixed(1)}$space";
     }
     if (_exposureTime != null) {
-      cameraSubStr += L10n.of(context).secondCountSymbol(_exposureTime!);
+      cameraSubStr += L10n.global().secondCountSymbol(_exposureTime!);
       cameraSubStr += space;
     }
     if (_focalLength != null) {
-      cameraSubStr += L10n.of(context)
+      cameraSubStr += L10n.global()
           .millimeterCountSymbol(_focalLength!.toStringAsFixedTruncated(2));
       cameraSubStr += space;
     }
@@ -123,7 +122,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     widget.album!.provider is AlbumStaticProvider)
                   _DetailPaneButton(
                     icon: Icons.remove_outlined,
-                    label: L10n.of(context).removeFromAlbumTooltip,
+                    label: L10n.global().removeFromAlbumTooltip,
                     onPressed: () => _onRemoveFromAlbumPressed(context),
                   ),
                 if (widget.album != null &&
@@ -131,24 +130,24 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                         true)
                   _DetailPaneButton(
                     icon: Icons.photo_album_outlined,
-                    label: L10n.of(context).useAsAlbumCoverTooltip,
+                    label: L10n.global().useAsAlbumCoverTooltip,
                     onPressed: () => _onSetAlbumCoverPressed(context),
                   ),
                 _DetailPaneButton(
                   icon: Icons.playlist_add_outlined,
-                  label: L10n.of(context).addToAlbumTooltip,
+                  label: L10n.global().addToAlbumTooltip,
                   onPressed: () => _onAddToAlbumPressed(context),
                 ),
                 if (widget.file.isArchived == true)
                   _DetailPaneButton(
                     icon: Icons.unarchive_outlined,
-                    label: L10n.of(context).unarchiveTooltip,
+                    label: L10n.global().unarchiveTooltip,
                     onPressed: () => _onUnarchivePressed(context),
                   )
                 else
                   _DetailPaneButton(
                     icon: Icons.archive_outlined,
-                    label: L10n.of(context).archiveTooltip,
+                    label: L10n.global().archiveTooltip,
                     onPressed: () => _onArchivePressed(context),
                   ),
               ],
@@ -179,7 +178,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 ),
               ),
               title: Text(widget.file.ownerId!),
-              subtitle: Text(L10n.of(context).fileSharedByDescription),
+              subtitle: Text(L10n.global().fileSharedByDescription),
             ),
           ListTile(
             leading: Icon(
@@ -284,9 +283,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   Future<void> _onRemoveFromAlbumPressed(BuildContext context) async {
     assert(widget.album!.provider is AlbumStaticProvider);
     await _onAction(
-      context,
       null,
-      L10n.of(context).removeSelectedFromAlbumSuccessNotification(1),
+      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
       () async {
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         try {
@@ -314,7 +312,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
-      failureText: L10n.of(context).removeSelectedFromAlbumFailureNotification,
+      failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
     );
   }
 
@@ -323,9 +321,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     _log.info(
         "[_onSetAlbumCoverPressed] Set '${widget.file.path}' as album cover for '${widget.album!.name}'");
     await _onAction(
-      context,
-      L10n.of(context).setAlbumCoverProcessingNotification,
-      L10n.of(context).setAlbumCoverSuccessNotification,
+      L10n.global().setAlbumCoverProcessingNotification,
+      L10n.global().setAlbumCoverSuccessNotification,
       () async {
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         try {
@@ -342,7 +339,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
-      failureText: L10n.of(context).setAlbumCoverFailureNotification,
+      failureText: L10n.global().setAlbumCoverFailureNotification,
     );
   }
 
@@ -357,16 +354,16 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         // user cancelled the dialog
       } else if (value is Album) {
         _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
-        _addToAlbum(context, value).then((_) {
+        _addToAlbum(value).then((_) {
           SnackBarManager().showSnackBar(SnackBar(
-            content: Text(
-                L10n.of(context).addToAlbumSuccessNotification(value.name)),
+            content:
+                Text(L10n.global().addToAlbumSuccessNotification(value.name)),
             duration: k.snackBarDurationNormal,
           ));
         }).catchError((_) {});
       } else {
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).addToAlbumFailureNotification),
+          content: Text(L10n.global().addToAlbumFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -374,8 +371,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.severe(
           "[_onAddToAlbumPressed] Failed while showDialog", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).addToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().addToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
     });
@@ -384,9 +381,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   Future<void> _onArchivePressed(BuildContext context) async {
     _log.info("[_onArchivePressed] Archive file: ${widget.file.path}");
     await _onAction(
-      context,
-      L10n.of(context).archiveSelectedProcessingNotification(1),
-      L10n.of(context).archiveSelectedSuccessNotification,
+      L10n.global().archiveSelectedProcessingNotification(1),
+      L10n.global().archiveSelectedSuccessNotification,
       () async {
         final fileRepo = FileRepo(FileCachedDataSource());
         try {
@@ -402,16 +398,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
-      failureText: L10n.of(context).archiveSelectedFailureNotification(1),
+      failureText: L10n.global().archiveSelectedFailureNotification(1),
     );
   }
 
   void _onUnarchivePressed(BuildContext context) async {
     _log.info("[_onUnarchivePressed] Unarchive file: ${widget.file.path}");
     await _onAction(
-      context,
-      L10n.of(context).unarchiveSelectedProcessingNotification(1),
-      L10n.of(context).unarchiveSelectedSuccessNotification,
+      L10n.global().unarchiveSelectedProcessingNotification(1),
+      L10n.global().unarchiveSelectedSuccessNotification,
       () async {
         final fileRepo = FileRepo(FileCachedDataSource());
         try {
@@ -427,7 +422,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
-      failureText: L10n.of(context).unarchiveSelectedFailureNotification(1),
+      failureText: L10n.global().unarchiveSelectedFailureNotification(1),
     );
   }
 
@@ -463,7 +458,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             e,
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.of(context).updateDateTimeFailureNotification),
+          content: Text(L10n.global().updateDateTimeFailureNotification),
           duration: k.snackBarDurationNormal,
         ));
       }
@@ -473,7 +468,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   }
 
   Future<void> _onAction(
-    BuildContext context,
     String? processingText,
     String successText,
     FutureOr<void> Function() action, {
@@ -500,7 +494,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
             (failureText?.isNotEmpty == true ? "$failureText: " : "") +
-                exception_util.toUserString(e, context)),
+                exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
     }
@@ -517,7 +511,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     return product;
   }
 
-  Future<void> _addToAlbum(BuildContext context, Album album) async {
+  Future<void> _addToAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -529,8 +523,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         // already added, do nothing
         _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
         SnackBarManager().showSnackBar(SnackBar(
-          content:
-              Text("${L10n.of(context).addToAlbumAlreadyAddedNotification}"),
+          content: Text("${L10n.global().addToAlbumAlreadyAddedNotification}"),
           duration: k.snackBarDurationNormal,
         ));
         return Future.error(ArgumentError("File already in album"));
@@ -548,8 +541,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.of(context).addToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e, context)}"),
+        content: Text("${L10n.global().addToAlbumFailureNotification}: "
+            "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
       rethrow;

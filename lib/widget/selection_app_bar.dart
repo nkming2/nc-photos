@@ -24,7 +24,7 @@ class SelectionAppBar extends StatelessWidget {
           tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
           onPressed: onClosePressed,
         ),
-        title: Text(L10n.of(context).selectionAppBarTitle(count)),
+        title: Text(L10n.global().selectionAppBarTitle(count)),
         actions: actions,
       ),
     );
