@@ -9,6 +9,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:video_player/video_player.dart';
@@ -149,18 +150,41 @@ class _VideoViewerState extends State<VideoViewer> {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: EdgeInsets.only(
-                  bottom: kToolbarHeight + 8, left: 16, right: 16),
+                  bottom: kToolbarHeight + 8, left: 8, right: 8),
               child: AnimatedVisibility(
                 opacity: widget.isControlVisible ? 1.0 : 0.0,
                 duration: k.animationDurationNormal,
-                child: VideoProgressIndicator(
-                  _controller,
-                  allowScrubbing: true,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  colors: VideoProgressColors(
-                    backgroundColor: Colors.white24,
-                    bufferedColor: Colors.white38,
-                    playedColor: Colors.white,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: VideoProgressIndicator(
+                          _controller,
+                          allowScrubbing: true,
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          colors: VideoProgressColors(
+                            backgroundColor: Colors.white24,
+                            bufferedColor: Colors.white38,
+                            playedColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        borderRadius: BorderRadius.all(Radius.circular(32)),
+                        onTap: _onVolumnPressed,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Icon(
+                            _controller.value.volume == 0
+                                ? Icons.volume_mute_outlined
+                                : Icons.volume_up_outlined,
+                            color: AppTheme.getSecondaryTextColor(context),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -202,6 +226,16 @@ class _VideoViewerState extends State<VideoViewer> {
         _pause();
       });
     }
+  }
+
+  void _onVolumnPressed() {
+    setState(() {
+      if (_controller.value.volume == 0) {
+        _controller.setVolume(1);
+      } else {
+        _controller.setVolume(0);
+      }
+    });
   }
 
   void _play() {
