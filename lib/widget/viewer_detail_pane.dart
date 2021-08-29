@@ -388,7 +388,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         try {
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, true);
-          Navigator.of(context).pop();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         } catch (e, stackTrace) {
           _log.shout(
               "[_onArchivePressed] Failed while archiving file" +
@@ -412,7 +414,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         try {
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, false);
-          Navigator.of(context).pop();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         } catch (e, stackTrace) {
           _log.shout(
               "[_onUnarchivePressed] Failed while archiving file" +
@@ -448,9 +452,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       try {
         await UpdateProperty(fileRepo)
             .updateOverrideDateTime(widget.account, widget.file, value);
-        setState(() {
-          _dateTime = value;
-        });
+        if (mounted) {
+          setState(() {
+            _dateTime = value;
+          });
+        }
       } catch (e, stacktrace) {
         _log.shout(
             "[_onDateTimeTap] Failed while updateOverrideDateTime" +
