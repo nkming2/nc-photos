@@ -10,10 +10,8 @@ class AppLanguage {
   final Locale? locale;
 }
 
-String getSelectedLanguageName(BuildContext context) =>
-    _getSelectedLanguage(context).nativeName;
-Locale? getSelectedLocale(BuildContext context) =>
-    _getSelectedLanguage(context).locale;
+String getSelectedLanguageName() => _getSelectedLanguage().nativeName;
+Locale? getSelectedLocale() => _getSelectedLanguage().locale;
 
 final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index: AppLanguage(
@@ -41,7 +39,7 @@ enum _AppLanguageEnum {
   russian,
 }
 
-AppLanguage _getSelectedLanguage(BuildContext context) {
+AppLanguage _getSelectedLanguage() {
   try {
     final lang = Pref.inst().getLanguageOr(0);
     return supportedLanguages[lang]!;

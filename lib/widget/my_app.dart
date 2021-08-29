@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
       scaffoldMessengerKey: _scaffoldMessengerKey,
-      locale: language_util.getSelectedLocale(context),
+      locale: language_util.getSelectedLocale(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: <Locale>[
         Locale("en"),
