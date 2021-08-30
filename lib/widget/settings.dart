@@ -198,23 +198,26 @@ class _SettingsState extends State<Settings> {
     if (value) {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
-          content: Text(L10n.global().exifSupportDetails),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(L10n.global().enableButtonLabel),
-            ),
-          ],
+        builder: (context) => AppTheme(
+          child: AlertDialog(
+            title: Text(L10n.global().exifSupportConfirmationDialogTitle),
+            content: Text(L10n.global().exifSupportDetails),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child:
+                    Text(MaterialLocalizations.of(context).cancelButtonLabel),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(L10n.global().enableButtonLabel),
+              ),
+            ],
+          ),
         ),
       ).then((value) {
         if (value == true) {

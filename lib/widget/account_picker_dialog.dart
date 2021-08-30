@@ -73,29 +73,31 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         ),
       ),
     ];
-    return SimpleDialog(
-      title: ListTile(
-        dense: true,
-        title: Text(
-          widget.account.url,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(
-          widget.account.username,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.edit,
-            color: AppTheme.getSecondaryTextColor(context),
+    return AppTheme(
+      child: SimpleDialog(
+        title: ListTile(
+          dense: true,
+          title: Text(
+            widget.account.url,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          tooltip: L10n.global().editTooltip,
-          onPressed: () => _onEditPressed(),
+          subtitle: Text(
+            widget.account.username,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          trailing: IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: AppTheme.getSecondaryTextColor(context),
+            ),
+            tooltip: L10n.global().editTooltip,
+            onPressed: () => _onEditPressed(),
+          ),
         ),
+        titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
+        children: otherAccountOptions + addAccountOptions,
       ),
-      titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
-      contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
-      children: otherAccountOptions + addAccountOptions,
     );
   }
 
@@ -143,8 +145,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           // the app passwords are unique to each entry, but just in case
           Navigator.of(context).pop();
           SnackBarManager().showSnackBar(SnackBar(
-            content:
-                Text(L10n.global().editAccountConflictFailureNotification),
+            content: Text(L10n.global().editAccountConflictFailureNotification),
             duration: k.snackBarDurationNormal,
           ));
           return;
