@@ -69,6 +69,11 @@ class Pref {
   bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
   Future<bool> setDarkTheme(bool value) => _pref.setBool("isDarkTheme", value);
 
+  bool? isUseBlackInDarkTheme() => _pref.getBool("isUseBlackInDarkTheme");
+  bool isUseBlackInDarkThemeOr(bool def) => isUseBlackInDarkTheme() ?? def;
+  Future<bool> setUseBlackInDarkTheme(bool value) =>
+      _pref.setBool("isUseBlackInDarkTheme", value);
+
   int? getLanguage() => _pref.getInt("language");
   int getLanguageOr(int def) => getLanguage() ?? def;
   Future<bool> setLanguage(int value) => _pref.setInt("language", value);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nc_photos/pref.dart';
 
 class AppTheme extends StatelessWidget {
   const AppTheme({
@@ -106,9 +107,21 @@ class AppTheme extends StatelessWidget {
   }
 
   static ThemeData _buildDarkThemeData(BuildContext context, ThemeData theme) {
+    final Color background;
+    final Color popup;
+    if (Pref.inst().isUseBlackInDarkThemeOr(false)) {
+      background = Colors.black;
+      popup = Colors.grey[900]!;
+    } else {
+      // in the material spec, black is suggested to be 0x121212, but the one
+      // used in flutter by default is 0x303030, why?
+      background = Colors.grey[850]!;
+      popup = Colors.grey[800]!;
+    }
+
     final appBarTheme = theme.appBarTheme.copyWith(
       brightness: Brightness.dark,
-      color: theme.scaffoldBackgroundColor,
+      color: background,
       actionsIconTheme:
           theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
       iconTheme:
@@ -116,7 +129,19 @@ class AppTheme extends StatelessWidget {
       textTheme: theme.primaryTextTheme
           .apply(bodyColor: Colors.white.withOpacity(.87)),
     );
-    return theme.copyWith(appBarTheme: appBarTheme);
+    final bottomNavigationBarTheme = theme.bottomNavigationBarTheme.copyWith(
+      backgroundColor: background,
+    );
+    final popupMenuTheme = theme.popupMenuTheme.copyWith(
+      color: popup,
+    );
+    return theme.copyWith(
+      scaffoldBackgroundColor: background,
+      appBarTheme: appBarTheme,
+      bottomNavigationBarTheme: bottomNavigationBarTheme,
+      popupMenuTheme: popupMenuTheme,
+      dialogBackgroundColor: popup,
+    );
   }
 
   static const primarySwatchLight = Colors.blue;

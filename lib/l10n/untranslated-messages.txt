@@ -6,6 +6,10 @@
     "settingsScreenBrightnessDescription",
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
+    "settingsThemeSectionTitle",
+    "settingsUseBlackInDarkThemeTitle",
+    "settingsUseBlackInDarkThemeTrueDescription",
+    "settingsUseBlackInDarkThemeFalseDescription",
     "listEmptyText",
     "albumTrashLabel",
     "restoreTooltip",
@@ -35,7 +39,11 @@
   ],
 
   "es": [
-    "collectionsTooltip"
+    "collectionsTooltip",
+    "settingsThemeSectionTitle",
+    "settingsUseBlackInDarkThemeTitle",
+    "settingsUseBlackInDarkThemeTrueDescription",
+    "settingsUseBlackInDarkThemeFalseDescription"
   ],
 
   "fr": [
@@ -45,6 +53,10 @@
     "settingsScreenBrightnessDescription",
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
+    "settingsThemeSectionTitle",
+    "settingsUseBlackInDarkThemeTitle",
+    "settingsUseBlackInDarkThemeTrueDescription",
+    "settingsUseBlackInDarkThemeFalseDescription",
     "helpTooltip",
     "removeFromAlbumTooltip",
     "fileSharedByDescription",
@@ -60,6 +72,10 @@
     "settingsScreenBrightnessDescription",
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
+    "settingsThemeSectionTitle",
+    "settingsUseBlackInDarkThemeTitle",
+    "settingsUseBlackInDarkThemeTrueDescription",
+    "settingsUseBlackInDarkThemeFalseDescription",
     "helpTooltip",
     "removeFromAlbumTooltip",
     "fileSharedByDescription",

@@ -55,6 +55,7 @@ class _SettingsState extends State<Settings> {
     _isEnableExif = Pref.inst().isEnableExifOr();
     _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
     _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
+    _isUseBlackInDarkTheme = Pref.inst().isUseBlackInDarkThemeOr(false);
   }
 
   @override
@@ -111,6 +112,16 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) => _onForceRotationChanged(value),
                 ),
               ],
+              _buildCaption(context, L10n.global().settingsThemeSectionTitle),
+              SwitchListTile(
+                title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
+                subtitle: Text(_isUseBlackInDarkTheme
+                    ? L10n.global().settingsUseBlackInDarkThemeTrueDescription
+                    : L10n.global()
+                        .settingsUseBlackInDarkThemeFalseDescription),
+                value: _isUseBlackInDarkTheme,
+                onChanged: (value) => _onUseBlackInDarkThemeChanged(value),
+              ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
                 title: Text(L10n.global().settingsVersionTitle),
@@ -300,6 +311,27 @@ class _SettingsState extends State<Settings> {
 
   void _onForceRotationChanged(bool value) => _setForceRotation(value);
 
+  void _onUseBlackInDarkThemeChanged(bool value) async {
+    final oldValue = _isUseBlackInDarkTheme;
+    setState(() {
+      _isUseBlackInDarkTheme = value;
+    });
+    if (await Pref.inst().setUseBlackInDarkTheme(value)) {
+      if (Pref.inst().isDarkThemeOr(false)) {
+        KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
+      }
+    } else {
+      _log.severe("[_onUseBlackInDarkThemeChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isUseBlackInDarkTheme = oldValue;
+      });
+    }
+  }
+
   void _onVersionTap(BuildContext context) {
     if (++_labUnlockCount >= 10) {
       Navigator.of(context).pushNamed(LabSettings.routeName);
@@ -377,6 +409,7 @@ class _SettingsState extends State<Settings> {
   late bool _isEnableExif;
   late int _screenBrightness;
   late bool _isForceRotation;
+  late bool _isUseBlackInDarkTheme;
   int _labUnlockCount = 0;
 
   static final _log = Logger("widget.settings._SettingsState");

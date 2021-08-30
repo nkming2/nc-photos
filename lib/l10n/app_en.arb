@@ -321,6 +321,19 @@
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ignore rotation lock",
 	"settingsForceRotationDescription": "Rotate the screen even if auto rotation is disabled",
+	"settingsThemeSectionTitle": "Theme",
+	"settingsUseBlackInDarkThemeTitle": "Darker theme",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Use black in dark theme",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Use dark grey in dark theme",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
