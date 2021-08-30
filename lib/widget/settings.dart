@@ -9,6 +9,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -55,6 +56,7 @@ class _SettingsState extends State<Settings> {
     _isEnableExif = Pref.inst().isEnableExifOr();
     _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
     _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
+    _isFollowSystemTheme = Pref.inst().isFollowSystemThemeOr(false);
     _isUseBlackInDarkTheme = Pref.inst().isUseBlackInDarkThemeOr(false);
   }
 
@@ -113,6 +115,12 @@ class _SettingsState extends State<Settings> {
                 ),
               ],
               _buildCaption(context, L10n.global().settingsThemeSectionTitle),
+              if (platform_k.isAndroid && AndroidInfo().sdkInt >= 29)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsFollowSystemThemeTitle),
+                  value: _isFollowSystemTheme,
+                  onChanged: (value) => _onFollowSystemThemeChanged(value),
+                ),
               SwitchListTile(
                 title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
                 subtitle: Text(_isUseBlackInDarkTheme
@@ -120,7 +128,8 @@ class _SettingsState extends State<Settings> {
                     : L10n.global()
                         .settingsUseBlackInDarkThemeFalseDescription),
                 value: _isUseBlackInDarkTheme,
-                onChanged: (value) => _onUseBlackInDarkThemeChanged(value),
+                onChanged: (value) =>
+                    _onUseBlackInDarkThemeChanged(context, value),
               ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
@@ -311,13 +320,32 @@ class _SettingsState extends State<Settings> {
 
   void _onForceRotationChanged(bool value) => _setForceRotation(value);
 
-  void _onUseBlackInDarkThemeChanged(bool value) async {
+  void _onFollowSystemThemeChanged(bool value) async {
+    final oldValue = _isFollowSystemTheme;
+    setState(() {
+      _isFollowSystemTheme = value;
+    });
+    if (await Pref.inst().setFollowSystemTheme(value)) {
+      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
+    } else {
+      _log.severe("[_onFollowSystemThemeChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isFollowSystemTheme = oldValue;
+      });
+    }
+  }
+
+  void _onUseBlackInDarkThemeChanged(BuildContext context, bool value) async {
     final oldValue = _isUseBlackInDarkTheme;
     setState(() {
       _isUseBlackInDarkTheme = value;
     });
     if (await Pref.inst().setUseBlackInDarkTheme(value)) {
-      if (Pref.inst().isDarkThemeOr(false)) {
+      if (Theme.of(context).brightness == Brightness.dark) {
         KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
       }
     } else {
@@ -409,6 +437,7 @@ class _SettingsState extends State<Settings> {
   late bool _isEnableExif;
   late int _screenBrightness;
   late bool _isForceRotation;
+  late bool _isFollowSystemTheme;
   late bool _isUseBlackInDarkTheme;
   int _labUnlockCount = 0;
 

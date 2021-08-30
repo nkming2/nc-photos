@@ -31,6 +31,7 @@ dependencies:
   bloc: ^7.0.0
   cached_network_image: ^3.0.0
   connectivity_plus: 1.0.3
+  device_info_plus: ^2.1.0
   draggable_scrollbar:
     git:
       url: https://gitlab.com/nkming2/flutter-draggable-scrollbar

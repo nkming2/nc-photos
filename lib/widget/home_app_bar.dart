@@ -78,19 +78,20 @@ class HomeSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       actions: (actions ?? []) +
           [
-            Switch(
-              value: Theme.of(context).brightness == Brightness.dark,
-              onChanged: _onDarkModeChanged,
-              activeColor: AppTheme.getAppBarDarkModeSwitchColor(context),
-              inactiveThumbColor:
-                  AppTheme.getAppBarDarkModeSwitchColor(context),
-              activeTrackColor:
-                  AppTheme.getAppBarDarkModeSwitchTrackColor(context),
-              activeThumbImage:
-                  const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
-              inactiveThumbImage:
-                  const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
-            ),
+            if (!Pref.inst().isFollowSystemThemeOr(false))
+              Switch(
+                value: Theme.of(context).brightness == Brightness.dark,
+                onChanged: _onDarkModeChanged,
+                activeColor: AppTheme.getAppBarDarkModeSwitchColor(context),
+                inactiveThumbColor:
+                    AppTheme.getAppBarDarkModeSwitchColor(context),
+                activeTrackColor:
+                    AppTheme.getAppBarDarkModeSwitchTrackColor(context),
+                activeThumbImage:
+                    const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+                inactiveThumbImage:
+                    const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+              ),
             PopupMenuButton<int>(
               tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
               itemBuilder: (context) =>

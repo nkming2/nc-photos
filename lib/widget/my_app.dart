@@ -50,12 +50,18 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
 
   @override
   build(BuildContext context) {
+    final ThemeMode themeMode;
+    if (Pref.inst().isFollowSystemThemeOr(false)) {
+      themeMode = ThemeMode.system;
+    } else {
+      themeMode =
+          Pref.inst().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light;
+    }
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       theme: _getLightTheme(),
       darkTheme: _getDarkTheme(),
-      themeMode:
-          Pref.inst().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light,
+      themeMode: themeMode,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],

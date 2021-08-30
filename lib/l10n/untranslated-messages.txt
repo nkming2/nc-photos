@@ -7,6 +7,7 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsThemeSectionTitle",
+    "settingsFollowSystemThemeTitle",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription",
@@ -41,6 +42,7 @@
   "es": [
     "collectionsTooltip",
     "settingsThemeSectionTitle",
+    "settingsFollowSystemThemeTitle",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription"
@@ -54,6 +56,7 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsThemeSectionTitle",
+    "settingsFollowSystemThemeTitle",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription",
@@ -73,6 +76,7 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsThemeSectionTitle",
+    "settingsFollowSystemThemeTitle",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription",

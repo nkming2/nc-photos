@@ -322,6 +322,10 @@
 	"settingsForceRotationTitle": "Ignore rotation lock",
 	"settingsForceRotationDescription": "Rotate the screen even if auto rotation is disabled",
 	"settingsThemeSectionTitle": "Theme",
+	"settingsFollowSystemThemeTitle": "Follow system theme",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
 	"settingsUseBlackInDarkThemeTitle": "Darker theme",
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"

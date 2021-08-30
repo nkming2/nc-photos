@@ -69,6 +69,11 @@ class Pref {
   bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
   Future<bool> setDarkTheme(bool value) => _pref.setBool("isDarkTheme", value);
 
+  bool? isFollowSystemTheme() => _pref.getBool("isFollowSystemTheme");
+  bool isFollowSystemThemeOr(bool def) => isFollowSystemTheme() ?? def;
+  Future<bool> setFollowSystemTheme(bool value) =>
+      _pref.setBool("isFollowSystemTheme", value);
+
   bool? isUseBlackInDarkTheme() => _pref.getBool("isUseBlackInDarkTheme");
   bool isUseBlackInDarkThemeOr(bool def) => isUseBlackInDarkTheme() ?? def;
   Future<bool> setUseBlackInDarkTheme(bool value) =>

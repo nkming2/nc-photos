@@ -7,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/widget/my_app.dart';
 
@@ -17,6 +19,7 @@ void main() async {
 
   _initLog();
   await _initPref();
+  await _initDeviceInfo();
   _initBloc();
   _initKiwi();
   _initEquatable();
@@ -79,6 +82,12 @@ Future<void> _initPref() async {
       // v6 is the last version without saving the version number in pref
       await Pref.inst().setLastVersion(6);
     }
+  }
+}
+
+Future<void> _initDeviceInfo() async {
+  if (platform_k.isAndroid) {
+    await AndroidInfo.init();
   }
 }
 
