@@ -21,6 +21,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -282,9 +283,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onRemoveFromAlbumPressed(BuildContext context) async {
     assert(widget.album!.provider is AlbumStaticProvider);
-    await _onAction(
-      null,
-      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
+    await NotifiedAction(
       () async {
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         try {
@@ -312,17 +311,17 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
+      null,
+      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
       failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
-    );
+    )();
   }
 
   Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
     assert(widget.album != null);
     _log.info(
         "[_onSetAlbumCoverPressed] Set '${widget.file.path}' as album cover for '${widget.album!.name}'");
-    await _onAction(
-      L10n.global().setAlbumCoverProcessingNotification,
-      L10n.global().setAlbumCoverSuccessNotification,
+    await NotifiedAction(
       () async {
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         try {
@@ -339,8 +338,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
+      L10n.global().setAlbumCoverProcessingNotification,
+      L10n.global().setAlbumCoverSuccessNotification,
       failureText: L10n.global().setAlbumCoverFailureNotification,
-    );
+    )();
   }
 
   void _onAddToAlbumPressed(BuildContext context) {
@@ -380,9 +381,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onArchivePressed(BuildContext context) async {
     _log.info("[_onArchivePressed] Archive file: ${widget.file.path}");
-    await _onAction(
-      L10n.global().archiveSelectedProcessingNotification(1),
-      L10n.global().archiveSelectedSuccessNotification,
+    await NotifiedAction(
       () async {
         final fileRepo = FileRepo(FileCachedDataSource());
         try {
@@ -400,15 +399,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
+      L10n.global().archiveSelectedProcessingNotification(1),
+      L10n.global().archiveSelectedSuccessNotification,
       failureText: L10n.global().archiveSelectedFailureNotification(1),
-    );
+    )();
   }
 
   void _onUnarchivePressed(BuildContext context) async {
     _log.info("[_onUnarchivePressed] Unarchive file: ${widget.file.path}");
-    await _onAction(
-      L10n.global().unarchiveSelectedProcessingNotification(1),
-      L10n.global().unarchiveSelectedSuccessNotification,
+    await NotifiedAction(
       () async {
         final fileRepo = FileRepo(FileCachedDataSource());
         try {
@@ -426,8 +425,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           rethrow;
         }
       },
+      L10n.global().unarchiveSelectedProcessingNotification(1),
+      L10n.global().unarchiveSelectedSuccessNotification,
       failureText: L10n.global().unarchiveSelectedFailureNotification(1),
-    );
+    )();
   }
 
   void _onMapTap() {
@@ -471,39 +472,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }).catchError((e, stacktrace) {
       _log.shout("[_onDateTimeTap] Failed while showDialog", e, stacktrace);
     });
-  }
-
-  Future<void> _onAction(
-    String? processingText,
-    String successText,
-    FutureOr<void> Function() action, {
-    String? failureText,
-  }) async {
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
-    if (processingText != null) {
-      controller = SnackBarManager().showSnackBar(SnackBar(
-        content: Text(processingText),
-        duration: k.snackBarDurationShort,
-      ));
-    }
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    try {
-      await action();
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(successText),
-        duration: k.snackBarDurationNormal,
-      ));
-    } catch (e) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            (failureText?.isNotEmpty == true ? "$failureText: " : "") +
-                exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
   }
 
   static double _gpsDmsToDouble(List<Rational> dms) {
