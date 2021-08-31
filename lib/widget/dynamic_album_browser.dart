@@ -168,8 +168,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     });
   }
 
-  void _updateAlbumPostPopulate(List<AlbumItem> items) {
-    List<File> timeDescSortedFiles;
+  Future<void> _updateAlbumPostPopulate(List<AlbumItem> items) async {
+    final List<File> timeDescSortedFiles;
     if (widget.album.sortProvider is AlbumTimeSortProvider) {
       if ((widget.album.sortProvider as AlbumTimeSortProvider).isAscending) {
         timeDescSortedFiles = _backingFiles.reversed.toList();
@@ -204,7 +204,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     _album = albumUpdatedTime;
 
     if (shouldUpdate) {
-      UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(widget.account, _album!);
+      await UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
+          widget.account, _album!);
     }
   }
 
@@ -509,6 +510,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       setState(() {
         _album = ev.album;
         initCover(widget.account, ev.album);
+        _updateAlbumPostPopulate(_sortedItems);
       });
     }
   }

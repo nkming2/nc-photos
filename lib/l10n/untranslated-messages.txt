@@ -36,7 +36,11 @@
     "fileSharedByDescription",
     "emptyTrashbinTooltip",
     "emptyTrashbinConfirmationDialogTitle",
-    "emptyTrashbinConfirmationDialogContent"
+    "emptyTrashbinConfirmationDialogContent",
+    "unsetAlbumCoverTooltip",
+    "unsetAlbumCoverProcessingNotification",
+    "unsetAlbumCoverSuccessNotification",
+    "unsetAlbumCoverFailureNotification"
   ],
 
   "es": [
@@ -45,7 +49,11 @@
     "settingsFollowSystemThemeTitle",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
-    "settingsUseBlackInDarkThemeFalseDescription"
+    "settingsUseBlackInDarkThemeFalseDescription",
+    "unsetAlbumCoverTooltip",
+    "unsetAlbumCoverProcessingNotification",
+    "unsetAlbumCoverSuccessNotification",
+    "unsetAlbumCoverFailureNotification"
   ],
 
   "fr": [
@@ -65,7 +73,11 @@
     "fileSharedByDescription",
     "emptyTrashbinTooltip",
     "emptyTrashbinConfirmationDialogTitle",
-    "emptyTrashbinConfirmationDialogContent"
+    "emptyTrashbinConfirmationDialogContent",
+    "unsetAlbumCoverTooltip",
+    "unsetAlbumCoverProcessingNotification",
+    "unsetAlbumCoverSuccessNotification",
+    "unsetAlbumCoverFailureNotification"
   ],
 
   "ru": [
@@ -85,6 +97,10 @@
     "fileSharedByDescription",
     "emptyTrashbinTooltip",
     "emptyTrashbinConfirmationDialogTitle",
-    "emptyTrashbinConfirmationDialogContent"
+    "emptyTrashbinConfirmationDialogContent",
+    "unsetAlbumCoverTooltip",
+    "unsetAlbumCoverProcessingNotification",
+    "unsetAlbumCoverSuccessNotification",
+    "unsetAlbumCoverFailureNotification"
   ]
 }
