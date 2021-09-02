@@ -1,5 +1,5 @@
 # Photos (for Nextcloud)
-Photos (for Nextcloud) is a new gallery app for viewing your photos hosted on Nextcloud servers
+Browse your photos on Nextcloud servers
 
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Play" width="160" />](https://play.google.com/store/apps/details?id=com.nkming.nc_photos.paid&referrer=utm_source%3Drepo)  
 Or the [free ad-supported version](https://play.google.com/store/apps/details?id=com.nkming.nc_photos&referrer=utm_source%3Drepo)
