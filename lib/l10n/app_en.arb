@@ -758,6 +758,8 @@
 	"@unsetAlbumCoverFailureNotification": {
 		"description": "Cannot unset the cover of the opened album"
 	},
+	"muteTooltip": "Mute",
+	"unmuteTooltip": "Unmute",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

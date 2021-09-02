@@ -44,7 +44,9 @@
     "unsetAlbumCoverTooltip",
     "unsetAlbumCoverProcessingNotification",
     "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification"
+    "unsetAlbumCoverFailureNotification",
+    "muteTooltip",
+    "unmuteTooltip"
   ],
 
   "es": [
@@ -62,7 +64,9 @@
     "unsetAlbumCoverTooltip",
     "unsetAlbumCoverProcessingNotification",
     "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification"
+    "unsetAlbumCoverFailureNotification",
+    "muteTooltip",
+    "unmuteTooltip"
   ],
 
   "fr": [
@@ -90,7 +94,9 @@
     "unsetAlbumCoverTooltip",
     "unsetAlbumCoverProcessingNotification",
     "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification"
+    "unsetAlbumCoverFailureNotification",
+    "muteTooltip",
+    "unmuteTooltip"
   ],
 
   "ru": [
@@ -118,6 +124,8 @@
     "unsetAlbumCoverTooltip",
     "unsetAlbumCoverProcessingNotification",
     "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification"
+    "unsetAlbumCoverFailureNotification",
+    "muteTooltip",
+    "unmuteTooltip"
   ]
 }

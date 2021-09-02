@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -200,16 +201,21 @@ class _VideoViewerState extends State<VideoViewer> {
                           ),
                         ),
                       const SizedBox(width: 4),
-                      InkWell(
-                        borderRadius: BorderRadius.all(Radius.circular(32)),
-                        onTap: _onVolumnPressed,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Icon(
-                            _controller.value.volume == 0
-                                ? Icons.volume_mute_outlined
-                                : Icons.volume_up_outlined,
-                            color: AppTheme.getSecondaryTextColor(context),
+                      Tooltip(
+                        message: _controller.value.volume == 0
+                            ? L10n.global().unmuteTooltip
+                            : L10n.global().muteTooltip,
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(Radius.circular(32)),
+                          onTap: _onVolumnPressed,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Icon(
+                              _controller.value.volume == 0
+                                  ? Icons.volume_mute_outlined
+                                  : Icons.volume_up_outlined,
+                              color: AppTheme.getSecondaryTextColor(context),
+                            ),
                           ),
                         ),
                       ),
