@@ -313,15 +313,22 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsViewerSectionTitle": "Photo viewer",
-	"@settingsViewerSectionTitle": {
-		"description": "Settings for the photo viewer"
+	"settingsViewerTitle": "Viewer",
+	"settingsViewerDescription": "Customize the image/video viewer",
+	"settingsViewerPageTitle": "Viewer settings",
+	"@settingsViewerPageTitle": {
+		"description": "Dedicated page for viewer settings"
 	},
 	"settingsScreenBrightnessTitle": "Screen brightness",
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ignore rotation lock",
-	"settingsForceRotationDescription": "Rotate the screen even if auto rotation is disabled",
-	"settingsThemeSectionTitle": "Theme",
+	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
+	"settingsThemeTitle": "Theme",
+	"settingsThemeDescription": "Customize the appearance of the app",
+	"settingsThemePageTitle": "Theme settings",
+	"@settingsThemePageTitle": {
+		"description": "Dedicated page for theme settings"
+	},
 	"settingsFollowSystemThemeTitle": "Follow system theme",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"

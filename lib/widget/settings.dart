@@ -1,5 +1,4 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -54,14 +53,10 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     _isEnableExif = Pref.inst().isEnableExifOr();
-    _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
-    _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
-    _isFollowSystemTheme = Pref.inst().isFollowSystemThemeOr(false);
-    _isUseBlackInDarkTheme = Pref.inst().isUseBlackInDarkThemeOr(false);
   }
 
   @override
-  build(context) {
+  build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
         body: Builder(
@@ -95,41 +90,18 @@ class _SettingsState extends State<Settings> {
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
-              if (platform_k.isMobile) ...[
-                _buildCaption(
-                    context, L10n.global().settingsViewerSectionTitle),
-                SwitchListTile(
-                  title: Text(L10n.global().settingsScreenBrightnessTitle),
-                  subtitle:
-                      Text(L10n.global().settingsScreenBrightnessDescription),
-                  value: _screenBrightness >= 0,
-                  onChanged: (value) =>
-                      _onScreenBrightnessChanged(context, value),
+              if (platform_k.isMobile)
+                _buildSubSettings(
+                  context,
+                  label: L10n.global().settingsViewerTitle,
+                  description: L10n.global().settingsViewerDescription,
+                  builder: () => _ViewerSettings(),
                 ),
-                SwitchListTile(
-                  title: Text(L10n.global().settingsForceRotationTitle),
-                  subtitle:
-                      Text(L10n.global().settingsForceRotationDescription),
-                  value: _isForceRotation,
-                  onChanged: (value) => _onForceRotationChanged(value),
-                ),
-              ],
-              _buildCaption(context, L10n.global().settingsThemeSectionTitle),
-              if (platform_k.isAndroid && AndroidInfo().sdkInt >= 29)
-                SwitchListTile(
-                  title: Text(L10n.global().settingsFollowSystemThemeTitle),
-                  value: _isFollowSystemTheme,
-                  onChanged: (value) => _onFollowSystemThemeChanged(value),
-                ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
-                subtitle: Text(_isUseBlackInDarkTheme
-                    ? L10n.global().settingsUseBlackInDarkThemeTrueDescription
-                    : L10n.global()
-                        .settingsUseBlackInDarkThemeFalseDescription),
-                value: _isUseBlackInDarkTheme,
-                onChanged: (value) =>
-                    _onUseBlackInDarkThemeChanged(context, value),
+              _buildSubSettings(
+                context,
+                label: L10n.global().settingsThemeTitle,
+                description: L10n.global().settingsThemeDescription,
+                builder: () => _ThemeSettings(),
               ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
@@ -139,9 +111,9 @@ class _SettingsState extends State<Settings> {
               ),
               ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
-                subtitle: Text(_sourceRepo),
-                onTap: () async {
-                  await launch(_sourceRepo);
+                subtitle: const Text(_sourceRepo),
+                onTap: () {
+                  launch(_sourceRepo);
                 },
               ),
               ListTile(
@@ -160,8 +132,8 @@ class _SettingsState extends State<Settings> {
                 )
               else
                 ListTile(
-                  title: Text("Improve translation"),
-                  subtitle: Text("Help translating to your language"),
+                  title: const Text("Improve translation"),
+                  subtitle: const Text("Help translating to your language"),
                   onTap: () {
                     launch(_translationUrl);
                   },
@@ -170,6 +142,29 @@ class _SettingsState extends State<Settings> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSubSettings(
+    BuildContext context, {
+    required String label,
+    String? description,
+    required Widget Function() builder,
+  }) {
+    return ListTile(
+      title: Text(label),
+      subtitle: description == null ? null : Text(description),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        color: AppTheme.getSecondaryTextColor(context),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => builder(),
+          ),
+        );
+      },
     );
   }
 
@@ -249,6 +244,101 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  void _onVersionTap(BuildContext context) {
+    if (++_labUnlockCount >= 10) {
+      Navigator.of(context).pushNamed(LabSettings.routeName);
+      _labUnlockCount = 0;
+    }
+  }
+
+  Future<void> _setExifSupport(bool value) async {
+    final oldValue = _isEnableExif;
+    setState(() {
+      _isEnableExif = value;
+    });
+    if (await Pref.inst().setEnableExif(value)) {
+      if (value) {
+        MetadataTaskManager().addTask(MetadataTask(widget.account));
+      }
+    } else {
+      _log.severe("[_setExifSupport] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableExif = oldValue;
+      });
+    }
+  }
+
+  late bool _isEnableExif;
+  int _labUnlockCount = 0;
+
+  static final _log = Logger("widget.settings._SettingsState");
+
+  static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
+  static const String _bugReportUrl =
+      "https://gitlab.com/nkming2/nc-photos/-/issues";
+  static const String _translationUrl =
+      "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
+}
+
+class _ViewerSettings extends StatefulWidget {
+  @override
+  createState() => _ViewerSettingsState();
+}
+
+class _ViewerSettingsState extends State<_ViewerSettings> {
+  @override
+  initState() {
+    super.initState();
+    _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
+    _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsViewerPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SwitchListTile(
+                title: Text(L10n.global().settingsScreenBrightnessTitle),
+                subtitle:
+                    Text(L10n.global().settingsScreenBrightnessDescription),
+                value: _screenBrightness >= 0,
+                onChanged: (value) =>
+                    _onScreenBrightnessChanged(context, value),
+              ),
+              SwitchListTile(
+                title: Text(L10n.global().settingsForceRotationTitle),
+                subtitle: Text(L10n.global().settingsForceRotationDescription),
+                value: _isForceRotation,
+                onChanged: (value) => _onForceRotationChanged(value),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   void _onScreenBrightnessChanged(BuildContext context, bool value) async {
     if (value) {
       var brightness = 0.5;
@@ -320,6 +410,103 @@ class _SettingsState extends State<Settings> {
 
   void _onForceRotationChanged(bool value) => _setForceRotation(value);
 
+  Future<void> _setScreenBrightness(int value) async {
+    final oldValue = _screenBrightness;
+    setState(() {
+      _screenBrightness = value;
+    });
+    if (!await Pref.inst().setViewerScreenBrightness(value)) {
+      _log.severe("[_setScreenBrightness] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _screenBrightness = oldValue;
+      });
+    }
+  }
+
+  Future<void> _setForceRotation(bool value) async {
+    final oldValue = _isForceRotation;
+    setState(() {
+      _isForceRotation = value;
+    });
+    if (!await Pref.inst().setViewerForceRotation(value)) {
+      _log.severe("[_setForceRotation] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isForceRotation = oldValue;
+      });
+    }
+  }
+
+  late int _screenBrightness;
+  late bool _isForceRotation;
+
+  static final _log = Logger("widget.settings._ViewerSettingsState");
+}
+
+class _ThemeSettings extends StatefulWidget {
+  @override
+  createState() => _ThemeSettingsState();
+}
+
+class _ThemeSettingsState extends State<_ThemeSettings> {
+  @override
+  initState() {
+    super.initState();
+    _isFollowSystemTheme = Pref.inst().isFollowSystemThemeOr(false);
+    _isUseBlackInDarkTheme = Pref.inst().isUseBlackInDarkThemeOr(false);
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsThemePageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              if (platform_k.isAndroid && AndroidInfo().sdkInt >= 29)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsFollowSystemThemeTitle),
+                  value: _isFollowSystemTheme,
+                  onChanged: (value) => _onFollowSystemThemeChanged(value),
+                ),
+              SwitchListTile(
+                title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
+                subtitle: Text(_isUseBlackInDarkTheme
+                    ? L10n.global().settingsUseBlackInDarkThemeTrueDescription
+                    : L10n.global()
+                        .settingsUseBlackInDarkThemeFalseDescription),
+                value: _isUseBlackInDarkTheme,
+                onChanged: (value) =>
+                    _onUseBlackInDarkThemeChanged(context, value),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   void _onFollowSystemThemeChanged(bool value) async {
     final oldValue = _isFollowSystemTheme;
     setState(() {
@@ -360,86 +547,8 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _onVersionTap(BuildContext context) {
-    if (++_labUnlockCount >= 10) {
-      Navigator.of(context).pushNamed(LabSettings.routeName);
-      _labUnlockCount = 0;
-    }
-  }
-
-  void _setExifSupport(bool value) {
-    final oldValue = _isEnableExif;
-    setState(() {
-      _isEnableExif = value;
-    });
-    Pref.inst().setEnableExif(value).then((result) {
-      if (result) {
-        if (value) {
-          MetadataTaskManager().addTask(MetadataTask(widget.account));
-        }
-      } else {
-        _log.severe("[_setExifSupport] Failed writing pref");
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().writePreferenceFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        setState(() {
-          _isEnableExif = oldValue;
-        });
-      }
-    });
-  }
-
-  void _setScreenBrightness(int value) {
-    final oldValue = _screenBrightness;
-    setState(() {
-      _screenBrightness = value;
-    });
-    Pref.inst().setViewerScreenBrightness(value).then((result) {
-      if (!result) {
-        _log.severe("[_setScreenBrightness] Failed writing pref");
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().writePreferenceFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        setState(() {
-          _screenBrightness = oldValue;
-        });
-      }
-    });
-  }
-
-  void _setForceRotation(bool value) {
-    final oldValue = _isForceRotation;
-    setState(() {
-      _isForceRotation = value;
-    });
-    Pref.inst().setViewerForceRotation(value).then((result) {
-      if (!result) {
-        _log.severe("[_setForceRotation] Failed writing pref");
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().writePreferenceFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        setState(() {
-          _isForceRotation = oldValue;
-        });
-      }
-    });
-  }
-
-  static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
-  static const String _bugReportUrl =
-      "https://gitlab.com/nkming2/nc-photos/-/issues";
-  static const String _translationUrl =
-      "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
-
-  late bool _isEnableExif;
-  late int _screenBrightness;
-  late bool _isForceRotation;
   late bool _isFollowSystemTheme;
   late bool _isUseBlackInDarkTheme;
-  int _labUnlockCount = 0;
 
-  static final _log = Logger("widget.settings._SettingsState");
+  static final _log = Logger("widget.settings._ThemeSettingsState");
 }
