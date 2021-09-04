@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
@@ -446,13 +447,23 @@ class File with EquatableMixin {
 
 extension FileExtension on File {
   DateTime get bestDateTime {
-    return overrideDateTime ??
-        metadata?.exif?.dateTimeOriginal ??
-        lastModified ??
-        DateTime.now().toUtc();
+    try {
+      return overrideDateTime ??
+          metadata?.exif?.dateTimeOriginal ??
+          lastModified ??
+          DateTime.now().toUtc();
+    } catch (e) {
+      _log.severe(
+          "[bestDateTime] Non standard EXIF DateTimeOriginal '${metadata?.exif?.data["DateTimeOriginal"]}'" +
+              (shouldLogFileName ? " for file: '$path'" : ""),
+          e);
+      return lastModified ?? DateTime.now().toUtc();
+    }
   }
 
   bool isOwned(String username) => ownerId == null || ownerId == username;
+
+  static final _log = Logger("entity.file.FileExtension");
 }
 
 class FileRepo {

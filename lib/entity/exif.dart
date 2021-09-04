@@ -94,7 +94,8 @@ class Exif with EquatableMixin {
   String? get model => data["Model"];
 
   /// 0x9003 DateTimeOriginal
-  DateTime? get dateTimeOriginal => data.containsKey("DateTimeOriginal")
+  DateTime? get dateTimeOriginal => data.containsKey("DateTimeOriginal") &&
+          (data["DateTimeOriginal"] as String).isNotEmpty
       ? dateTimeFormat.parse(data["DateTimeOriginal"]).toUtc()
       : null;
 
