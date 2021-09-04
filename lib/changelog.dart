@@ -85,4 +85,9 @@ This version includes changes that are not compatible with older versions. Pleas
   """27.0
 - New settings to customize photo viewer
 """,
+  // v28
+  """28.0
+- New settings:
+  - Follow system dark theme settings (Android 10+)
+""",
 ];
