@@ -8,6 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_dir.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -234,7 +235,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarUnarchivePressed] Failed while unarchiving file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);

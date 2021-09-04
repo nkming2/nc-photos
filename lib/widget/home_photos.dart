@@ -13,6 +13,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_dir.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -452,7 +453,7 @@ class _HomePhotosState extends State<HomePhotos>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarDeletePressed] Failed while removing file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);
@@ -511,7 +512,7 @@ class _HomePhotosState extends State<HomePhotos>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarArchivePressed] Failed while archiving file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);

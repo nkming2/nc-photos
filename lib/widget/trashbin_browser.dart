@@ -8,6 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -296,7 +297,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarRestorePressed] Failed while restoring file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);
@@ -405,7 +406,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       } catch (e, stacktrace) {
         _log.shout(
             "[_deleteFiles] Failed while removing file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);

@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -33,7 +33,7 @@ class ScanDir {
     } catch (e, stacktrace) {
       _log.shout(
           "[call] Failed while listing dir" +
-              (kDebugMode ? ": ${root.path}" : ""),
+              (shouldLogFileName ? ": ${root.path}" : ""),
           e,
           stacktrace);
       // for some reason exception thrown here can't be caught outside

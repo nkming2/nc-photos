@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -159,7 +159,7 @@ class ListImportableAlbumBloc
     } catch (e, stacktrace) {
       _log.shout(
           "[_queryDir] Failed while listing dir" +
-              (kDebugMode ? ": ${dir.path}" : ""),
+              (shouldLogFileName ? ": ${dir.path}" : ""),
           e,
           stacktrace);
       yield e;

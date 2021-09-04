@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:exifdart/exifdart.dart' as exifdart;
 import 'package:exifdart/exifdart_memory.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/image_size_getter_util.dart';
@@ -33,7 +33,7 @@ class LoadMetadata {
       } catch (e, stacktrace) {
         _log.shout(
             "[_loadMetadata] Failed while readMetadata for ${file.contentType} file" +
-                (kDebugMode ? ": ${file.path}" : ""),
+                (shouldLogFileName ? ": ${file.path}" : ""),
             e,
             stacktrace);
         // ignore exif
@@ -60,7 +60,7 @@ class LoadMetadata {
         // is this even an image file?
         _log.shout(
             "[_loadMetadata] Failed while getSize for ${file.contentType} file" +
-                (kDebugMode ? ": ${file.path}" : ""),
+                (shouldLogFileName ? ": ${file.path}" : ""),
             e,
             stacktrace);
       }

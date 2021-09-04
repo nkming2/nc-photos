@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -34,7 +34,7 @@ class PopulateAlbum {
         if (result is Exception || result is Error) {
           _log.shout(
               "[_populateDirAlbum] Failed while scanning dir" +
-                  (kDebugMode ? ": $d" : ""),
+                  (shouldLogFileName ? ": $d" : ""),
               result);
           continue;
         }

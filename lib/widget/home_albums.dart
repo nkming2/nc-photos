@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -309,7 +310,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarDeletePressed] Failed while removing file" +
-                (kDebugMode ? ": ${f.path}" : ""),
+                (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
         failures.add(f);

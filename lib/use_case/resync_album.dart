@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -29,7 +29,7 @@ class ResyncAlbum {
           } catch (e, stacktrace) {
             _log.shout(
                 "[call] Failed syncing file in album" +
-                    (kDebugMode ? ": '${item.file.path}'" : ""),
+                    (shouldLogFileName ? ": '${item.file.path}'" : ""),
                 e,
                 stacktrace);
             newItems.add(item);

@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -527,7 +528,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     } catch (e, stacktrace) {
       _log.shout(
           "[_onDeletePressed] Failed while remove" +
-              (kDebugMode ? ": ${file.path}" : ""),
+              (shouldLogFileName ? ": ${file.path}" : ""),
           e,
           stacktrace);
       controller?.close();

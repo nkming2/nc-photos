@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -393,7 +394,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         } catch (e, stackTrace) {
           _log.shout(
               "[_onArchivePressed] Failed while archiving file" +
-                  (kDebugMode ? ": ${widget.file.path}" : ""),
+                  (shouldLogFileName ? ": ${widget.file.path}" : ""),
               e,
               stackTrace);
           rethrow;
@@ -419,7 +420,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         } catch (e, stackTrace) {
           _log.shout(
               "[_onUnarchivePressed] Failed while archiving file" +
-                  (kDebugMode ? ": ${widget.file.path}" : ""),
+                  (shouldLogFileName ? ": ${widget.file.path}" : ""),
               e,
               stackTrace);
           rethrow;
@@ -461,7 +462,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       } catch (e, stacktrace) {
         _log.shout(
             "[_onDateTimeTap] Failed while updateOverrideDateTime" +
-                (kDebugMode ? ": ${widget.file.path}" : ""),
+                (shouldLogFileName ? ": ${widget.file.path}" : ""),
             e,
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(

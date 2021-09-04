@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -427,7 +428,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarDeletePressed] Failed while removing file" +
-                (kDebugMode ? ": ${item.file.path}" : ""),
+                (shouldLogFileName ? ": ${item.file.path}" : ""),
             e,
             stacktrace);
         failures.add(item);

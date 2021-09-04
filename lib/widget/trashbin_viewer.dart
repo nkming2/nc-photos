@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -182,7 +183,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     } catch (e, stacktrace) {
       _log.shout(
           "Failed while restore trashbin" +
-              (kDebugMode ? ": ${file.path}" : ""),
+              (shouldLogFileName ? ": ${file.path}" : ""),
           e,
           stacktrace);
       controller?.close();
@@ -336,7 +337,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     } catch (e, stacktrace) {
       _log.shout(
           "[_delete] Failed while remove" +
-              (kDebugMode ? ": ${file.path}" : ""),
+              (shouldLogFileName ? ": ${file.path}" : ""),
           e,
           stacktrace);
       controller?.close();

@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -270,7 +271,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     } catch (e, stackTrace) {
       _log.shout(
           "[_onAddToCollectionPressed] Failed while import pending shared album" +
-              (kDebugMode ? ": ${album.albumFile?.path}" : ""),
+              (shouldLogFileName ? ": ${album.albumFile?.path}" : ""),
           e,
           stackTrace);
       controller?.close();
