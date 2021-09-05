@@ -8,9 +8,9 @@
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
-	"albumsTabLabel": "Álbumes",
-	"@albumsTabLabel": {
-		"description": "Label of the tab that lists user albums"
+	"collectionsTooltip": "Colecciones",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
 	},
 	"zoomTooltip": "Zoom",
 	"@zoomTooltip": {
@@ -313,14 +313,38 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsViewerSectionTitle": "Visualiador de fotos",
-	"@settingsViewerSectionTitle": {
-		"description": "Settings for the photo viewer"
+	"settingsViewerTitle": "Visualizador",
+	"settingsViewerDescription": "Personalizar el visualizador de imágenes/vídeos",
+	"settingsViewerPageTitle": "Ajustes de visualizador",
+	"@settingsViewerPageTitle": {
+		"description": "Dedicated page for viewer settings"
 	},
 	"settingsScreenBrightnessTitle": "Brillo de pantalla",
 	"settingsScreenBrightnessDescription": "Invalidar nivel de brillo del sistema",
 	"settingsForceRotationTitle": "Ignorar autorotación desactivada",
 	"settingsForceRotationDescription": "Rotar la pantalla incluso si la autorotación está desactivada",
+	"settingsThemeTitle": "Tema",
+	"settingsThemeDescription": "Personaliza la apariencia de la aplicación",
+	"settingsThemePageTitle": "Ajustes de tema",
+	"@settingsThemePageTitle": {
+		"description": "Dedicated page for theme settings"
+	},
+	"settingsFollowSystemThemeTitle": "Usar el mismo tema que android",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Tema más oscuro",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Usar negro con el tema oscuro",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris oscuro con el tema oscuro",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
 	"settingsAboutSectionTitle": "Acerca de",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -718,6 +742,24 @@
 	"@emptyTrashbinConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete all items"
 	},
+	"unsetAlbumCoverTooltip": "Quitar portada",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"unsetAlbumCoverProcessingNotification": "Quitando portada",
+	"@unsetAlbumCoverProcessingNotification": {
+		"description": "Unsetting the cover of the opened album"
+	},
+	"unsetAlbumCoverSuccessNotification": "Portada quitada con éxito",
+	"@unsetAlbumCoverSuccessNotification": {
+		"description": "Unset the cover of the opened album successfully"
+	},
+	"unsetAlbumCoverFailureNotification": "Error al quitar portada",
+	"@unsetAlbumCoverFailureNotification": {
+		"description": "Cannot unset the cover of the opened album"
+	},
+	"muteTooltip": "Silenciar",
+	"unmuteTooltip": "No silenciar",
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
