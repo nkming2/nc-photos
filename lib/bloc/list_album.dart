@@ -261,7 +261,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       final items = albums.map((e) {
         final isSharedByMe = shares.any((element) =>
             element.path.trimAny("/") == e.albumFile!.strippedPath);
-        final isSharedToMe = e.albumFile!.ownerId != ev.account.username;
+        final isSharedToMe = !e.albumFile!.isOwned(ev.account.username);
         return ListAlbumBlocItem(e, isSharedByMe, isSharedToMe);
       }).toList();
 

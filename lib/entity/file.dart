@@ -461,7 +461,8 @@ extension FileExtension on File {
     }
   }
 
-  bool isOwned(String username) => ownerId == null || ownerId == username;
+  bool isOwned(String username) =>
+      ownerId == null || ownerId?.toLowerCase() == username.toLowerCase();
 
   static final _log = Logger("entity.file.FileExtension");
 }
