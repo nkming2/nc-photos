@@ -57,7 +57,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           value: _menuValueEdit,
           child: Text(L10n.global().editAlbumMenuLabel),
         ),
-      if (album.coverProvider is AlbumManualCoverProvider)
+      if (canEdit && album.coverProvider is AlbumManualCoverProvider)
         PopupMenuItem(
           value: _menuValueUnsetCover,
           child: Text(L10n.global().unsetAlbumCoverTooltip),
