@@ -99,33 +99,5 @@
     "unmuteTooltip"
   ],
 
-  "ru": [
-    "collectionsTooltip",
-    "settingsViewerTitle",
-    "settingsViewerDescription",
-    "settingsViewerPageTitle",
-    "settingsScreenBrightnessTitle",
-    "settingsScreenBrightnessDescription",
-    "settingsForceRotationTitle",
-    "settingsForceRotationDescription",
-    "settingsThemeTitle",
-    "settingsThemeDescription",
-    "settingsThemePageTitle",
-    "settingsFollowSystemThemeTitle",
-    "settingsUseBlackInDarkThemeTitle",
-    "settingsUseBlackInDarkThemeTrueDescription",
-    "settingsUseBlackInDarkThemeFalseDescription",
-    "helpTooltip",
-    "removeFromAlbumTooltip",
-    "fileSharedByDescription",
-    "emptyTrashbinTooltip",
-    "emptyTrashbinConfirmationDialogTitle",
-    "emptyTrashbinConfirmationDialogContent",
-    "unsetAlbumCoverTooltip",
-    "unsetAlbumCoverProcessingNotification",
-    "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification",
-    "muteTooltip",
-    "unmuteTooltip"
-  ]
+  "ru": []
 }
