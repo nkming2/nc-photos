@@ -247,8 +247,17 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       }
 
       final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final shares = await shareRepo.listDir(ev.account,
-          File(path: remote_storage_util.getRemoteAlbumsDir(ev.account)));
+      var shares = <Share>[];
+      try {
+        shares = await shareRepo.listDir(ev.account,
+            File(path: remote_storage_util.getRemoteAlbumsDir(ev.account)));
+      } on ApiException catch(e) {
+        if (e.response.statusCode == 404) {
+          // Normal when album dir is not created yet
+        } else {
+          rethrow;
+        }
+      }
       final items = albums.map((e) {
         final isSharedByMe = shares.any((element) =>
             element.path.trimAny("/") == e.albumFile!.strippedPath);
