@@ -8,9 +8,9 @@
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
-	"albumsTabLabel": "Альбомы",
-	"@albumsTabLabel": {
-		"description": "Label of the tab that lists user albums"
+	"collectionsTooltip": "Альбомы",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
 	},
 	"zoomTooltip": "Размер миниатюр",
 	"@zoomTooltip": {
@@ -312,6 +312,38 @@
 	"settingsExifSupportTrueSubtitle": "Повышенный расход трафика",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+    "settingsViewerTitle": "Просмотр",
+	"settingsViewerDescription": "Настройки просмотра фото/видео",
+	"settingsViewerPageTitle": "Настройки просмотра",
+	"@settingsViewerPageTitle": {
+		"description": "Dedicated page for viewer settings"
+	},
+	"settingsScreenBrightnessTitle": "Яркость экрана",
+	"settingsScreenBrightnessDescription": "Настройка яркости экрана независимо от системных настроек",
+	"settingsForceRotationTitle": "Игнорировать блокировку поворота экрана",
+	"settingsForceRotationDescription": "Поворачивать экран даже если выключен автоповорот",
+	"settingsThemeTitle": "Оформление",
+	"settingsThemeDescription": "Настройки внешнего вида приложения",
+	"settingsThemePageTitle": "Настройки оформления",
+	"@settingsThemePageTitle": {
+		"description": "Dedicated page for theme settings"
+	},
+	"settingsFollowSystemThemeTitle": "Использовать системные настройки",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Тёмная тема",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Чёрный",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Тёмно-серый",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
 	},
 	"settingsAboutSectionTitle": "О программе",
 	"@settingsAboutSectionTitle": {
@@ -653,7 +685,11 @@
 	},
 	"configButtonLabel": "НАСТРОЙКИ",
 	"useAsAlbumCoverTooltip": "Использовать как обложку альбома",
-
+	"helpTooltip": "Справка",
+    "removeFromAlbumTooltip": "Убрать из альбома",
+	"@removeFromAlbumTooltip": {
+		"description": "Remove the opened photo from an album"
+	},
 	"changelogTitle": "Список изменений",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"
@@ -690,6 +726,41 @@
 	"@whitelistCertButtonLabel": {
 		"description": "Label of the whitelist certificate button"
 	},
+    "fileSharedByDescription": "Поделился пользователь",
+	"@fileSharedByDescription": {
+		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+	},
+	"emptyTrashbinTooltip": "Очистить корзину",
+	"@emptyTrashbinTooltip": {
+		"description": "Permanently delete all items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogTitle": "Очистить корзину?",
+	"@emptyTrashbinConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"emptyTrashbinConfirmationDialogContent": "Выбранные файлы будут навсегда удалены с сервера.\n\nЭто действие необратимо",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"unsetAlbumCoverTooltip": "Сбросить обложку альбома",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"unsetAlbumCoverProcessingNotification": "Сброс обложки альбома",
+	"@unsetAlbumCoverProcessingNotification": {
+		"description": "Unsetting the cover of the opened album"
+	},
+	"unsetAlbumCoverSuccessNotification": "Обложка альбома сброшена",
+	"@unsetAlbumCoverSuccessNotification": {
+		"description": "Unset the cover of the opened album successfully"
+	},
+	"unsetAlbumCoverFailureNotification": "Не удалось сбросить обложку альбома",
+	"@unsetAlbumCoverFailureNotification": {
+		"description": "Cannot unset the cover of the opened album"
+	},
+	"muteTooltip": "Убрать звук",
+	"unmuteTooltip": "Включить звук",
+
 	"errorUnauthenticated": "Неавторизованный доступ. Если ошибка возникает снова, попробуйте перелогиниться",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
