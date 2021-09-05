@@ -97,7 +97,5 @@
     "unsetAlbumCoverFailureNotification",
     "muteTooltip",
     "unmuteTooltip"
-  ],
-
-  "ru": []
+  ]
 }
