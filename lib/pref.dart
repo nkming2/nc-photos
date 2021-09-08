@@ -38,6 +38,11 @@ class Pref {
   Future<bool> setAlbumBrowserZoomLevel(int value) =>
       _pref.setInt("albumViewerZoomLevel", value);
 
+  int? getHomeAlbumsSort() => _pref.getInt("homeAlbumsSort");
+  int getHomeAlbumsSortOr(int def) => getHomeAlbumsSort() ?? def;
+  Future<bool> setHomeAlbumsSort(int value) =>
+      _pref.setInt("homeAlbumsSort", value);
+
   bool? isEnableExif() => _pref.getBool("isEnableExif");
   bool isEnableExifOr([bool def = true]) => isEnableExif() ?? def;
   Future<bool> setEnableExif(bool value) =>

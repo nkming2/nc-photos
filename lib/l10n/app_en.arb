@@ -571,6 +571,14 @@
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
 	},
+	"sortOptionAlbumNameLabel": "Album name",
+	"@sortOptionAlbumNameLabel": {
+		"description": "Sort by album name, in ascending order"
+	},
+	"sortOptionAlbumNameDescendingLabel": "Album name (descending)",
+	"@sortOptionAlbumNameDescendingLabel": {
+		"description": "Sort by album name, in descending order"
+	},
 	"albumEditDragRearrangeNotification": "Long press and drag an item to rearrange it manually",
 	"@albumEditDragRearrangeNotification": {
 		"description": "Instructions on how to rearrange photos"

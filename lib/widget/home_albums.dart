@@ -27,6 +27,7 @@ import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
+import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -173,12 +174,20 @@ class _HomeAlbumsState extends State<HomeAlbums>
       ],
       menuActions: [
         PopupMenuItem(
+          value: _menuValueSort,
+          child: Text(L10n.global().sortTooltip),
+        ),
+        PopupMenuItem(
           value: _menuValueImport,
           child: Text(L10n.global().importFoldersTooltip),
         ),
       ],
       onSelectedMenuActions: (option) {
         switch (option) {
+          case _menuValueSort:
+            _onSortPressed(context);
+            break;
+
           case _menuValueImport:
             _onAppBarImportPressed(context);
             break;
@@ -296,6 +305,56 @@ class _HomeAlbumsState extends State<HomeAlbums>
     });
   }
 
+  void _onSortPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => FancyOptionPicker(
+        title: L10n.global().sortOptionDialogTitle,
+        items: [
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionTimeDescendingLabel,
+            isSelected: _getSortFromPref() == _Sort.dateDescending,
+            onSelect: () {
+              _onSortSelected(_Sort.dateDescending);
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionTimeAscendingLabel,
+            isSelected: _getSortFromPref() == _Sort.dateAscending,
+            onSelect: () {
+              _onSortSelected(_Sort.dateAscending);
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionAlbumNameLabel,
+            isSelected: _getSortFromPref() == _Sort.nameAscending,
+            onSelect: () {
+              _onSortSelected(_Sort.nameAscending);
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionAlbumNameDescendingLabel,
+            isSelected: _getSortFromPref() == _Sort.nameDescending,
+            onSelect: () {
+              _onSortSelected(_Sort.nameDescending);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onSortSelected(_Sort sort) async {
+    await Pref.inst().setHomeAlbumsSort(sort.index);
+    setState(() {
+      _transformItems(_bloc.state.items);
+    });
+  }
+
   void _onAppBarImportPressed(BuildContext context) {
     Navigator.of(context).pushNamed(AlbumImporter.routeName,
         arguments: AlbumImporterArguments(widget.account));
@@ -357,16 +416,28 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   /// Transform an Album list to grid items
   void _transformItems(List<ListAlbumBlocItem> items) {
-    final sortedAlbums = items
-        .map((e) =>
-            Tuple2(e.album.provider.latestItemTime ?? e.album.lastUpdated, e))
-        .sorted((a, b) {
-      // then sort in descending order
-      final tmp = b.item1.compareTo(a.item1);
+    final sort = _getSortFromPref();
+    final isAscending = _isSortAscending(sort);
+    final sortedAlbums = items.map<Tuple2<dynamic, ListAlbumBlocItem>>((e) {
+      switch (sort) {
+        case _Sort.nameAscending:
+        case _Sort.nameDescending:
+          return Tuple2(e.album.name, e);
+
+        case _Sort.dateAscending:
+        case _Sort.dateDescending:
+        default:
+          return Tuple2(
+              e.album.provider.latestItemTime ?? e.album.lastUpdated, e);
+      }
+    }).sorted((a, b) {
+      final x = isAscending ? a : b;
+      final y = isAscending ? b : a;
+      final tmp = x.item1.compareTo(y.item1);
       if (tmp != 0) {
         return tmp;
       } else {
-        return a.item2.album.name.compareTo(b.item2.album.name);
+        return x.item2.album.name.compareTo(y.item2.album.name);
       }
     }).map((e) => e.item2);
     itemStreamListItems = [
@@ -400,6 +471,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;
+  static const _menuValueSort = 1;
 }
 
 abstract class _ListItem implements SelectableItem {
@@ -528,3 +600,22 @@ class _AlbumListItem extends _ListItem {
   final bool isSharedByMe;
   final bool isSharedToMe;
 }
+
+enum _Sort {
+  dateDescending,
+  dateAscending,
+  nameAscending,
+  nameDescending,
+}
+
+_Sort _getSortFromPref() {
+  try {
+    return _Sort.values[Pref.inst().getHomeAlbumsSort()!];
+  } catch (_) {
+    // default
+    return _Sort.dateDescending;
+  }
+}
+
+bool _isSortAscending(_Sort sort) =>
+    sort == _Sort.dateAscending || sort == _Sort.nameAscending;
