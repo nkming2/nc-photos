@@ -219,25 +219,24 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
 
   Future<void> _onUnsetCoverPressed(Account account, Album album) async {
     _log.info("[_onUnsetCoverPressed] Unset album cover for '${album.name}'");
-    await NotifiedAction(
-      () async {
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
-        try {
+    try {
+      await NotifiedAction(
+        () async {
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
           await UpdateAlbum(albumRepo).call(
               account,
               album.copyWith(
                 coverProvider: AlbumAutoCoverProvider(),
               ));
-        } catch (e, stackTrace) {
-          _log.shout("[_onUnsetCoverPressed] Failed while updating album", e,
-              stackTrace);
-          rethrow;
-        }
-      },
-      L10n.global().unsetAlbumCoverProcessingNotification,
-      L10n.global().unsetAlbumCoverSuccessNotification,
-      failureText: L10n.global().unsetAlbumCoverFailureNotification,
-    )();
+        },
+        L10n.global().unsetAlbumCoverProcessingNotification,
+        L10n.global().unsetAlbumCoverSuccessNotification,
+        failureText: L10n.global().unsetAlbumCoverFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onUnsetCoverPressed] Failed while updating album", e, stackTrace);
+    }
   }
 
   void _onSharePressed(BuildContext context, Account account, Album album) {

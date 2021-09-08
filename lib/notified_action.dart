@@ -38,6 +38,7 @@ class NotifiedAction {
                 exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
+      rethrow;
     }
   }
 

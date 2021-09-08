@@ -285,10 +285,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onRemoveFromAlbumPressed(BuildContext context) async {
     assert(widget.album!.provider is AlbumStaticProvider);
-    await NotifiedAction(
-      () async {
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
-        try {
+    try {
+      await NotifiedAction(
+        () async {
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
           final newItems =
               AlbumStaticProvider.of(widget.album!).items.where((element) {
             if (element is AlbumFileItem) {
@@ -307,26 +307,25 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (mounted) {
             Navigator.of(context).pop();
           }
-        } catch (e, stackTrace) {
-          _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album",
-              e, stackTrace);
-          rethrow;
-        }
-      },
-      null,
-      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
-      failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
-    )();
+        },
+        null,
+        L10n.global().removeSelectedFromAlbumSuccessNotification(1),
+        failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album", e,
+          stackTrace);
+    }
   }
 
   Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
     assert(widget.album != null);
     _log.info(
         "[_onSetAlbumCoverPressed] Set '${widget.file.path}' as album cover for '${widget.album!.name}'");
-    await NotifiedAction(
-      () async {
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
-        try {
+    try {
+      await NotifiedAction(
+        () async {
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
           await UpdateAlbum(albumRepo).call(
               widget.account,
               widget.album!.copyWith(
@@ -334,16 +333,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   coverFile: widget.file,
                 ),
               ));
-        } catch (e, stackTrace) {
-          _log.shout("[_onSetAlbumCoverPressed] Failed while updating album", e,
-              stackTrace);
-          rethrow;
-        }
-      },
-      L10n.global().setAlbumCoverProcessingNotification,
-      L10n.global().setAlbumCoverSuccessNotification,
-      failureText: L10n.global().setAlbumCoverFailureNotification,
-    )();
+        },
+        L10n.global().setAlbumCoverProcessingNotification,
+        L10n.global().setAlbumCoverSuccessNotification,
+        failureText: L10n.global().setAlbumCoverFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout("[_onSetAlbumCoverPressed] Failed while updating album", e,
+          stackTrace);
+    }
   }
 
   void _onAddToAlbumPressed(BuildContext context) {
@@ -383,54 +381,52 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onArchivePressed(BuildContext context) async {
     _log.info("[_onArchivePressed] Archive file: ${widget.file.path}");
-    await NotifiedAction(
-      () async {
-        final fileRepo = FileRepo(FileCachedDataSource());
-        try {
+    try {
+      await NotifiedAction(
+        () async {
+          final fileRepo = FileRepo(FileCachedDataSource());
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, true);
           if (mounted) {
             Navigator.of(context).pop();
           }
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[_onArchivePressed] Failed while archiving file" +
-                  (shouldLogFileName ? ": ${widget.file.path}" : ""),
-              e,
-              stackTrace);
-          rethrow;
-        }
-      },
-      L10n.global().archiveSelectedProcessingNotification(1),
-      L10n.global().archiveSelectedSuccessNotification,
-      failureText: L10n.global().archiveSelectedFailureNotification(1),
-    )();
+        },
+        L10n.global().archiveSelectedProcessingNotification(1),
+        L10n.global().archiveSelectedSuccessNotification,
+        failureText: L10n.global().archiveSelectedFailureNotification(1),
+      )();
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onArchivePressed] Failed while archiving file" +
+              (shouldLogFileName ? ": ${widget.file.path}" : ""),
+          e,
+          stackTrace);
+    }
   }
 
   void _onUnarchivePressed(BuildContext context) async {
     _log.info("[_onUnarchivePressed] Unarchive file: ${widget.file.path}");
-    await NotifiedAction(
-      () async {
-        final fileRepo = FileRepo(FileCachedDataSource());
-        try {
+    try {
+      await NotifiedAction(
+        () async {
+          final fileRepo = FileRepo(FileCachedDataSource());
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, false);
           if (mounted) {
             Navigator.of(context).pop();
           }
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[_onUnarchivePressed] Failed while archiving file" +
-                  (shouldLogFileName ? ": ${widget.file.path}" : ""),
-              e,
-              stackTrace);
-          rethrow;
-        }
-      },
-      L10n.global().unarchiveSelectedProcessingNotification(1),
-      L10n.global().unarchiveSelectedSuccessNotification,
-      failureText: L10n.global().unarchiveSelectedFailureNotification(1),
-    )();
+        },
+        L10n.global().unarchiveSelectedProcessingNotification(1),
+        L10n.global().unarchiveSelectedSuccessNotification,
+        failureText: L10n.global().unarchiveSelectedFailureNotification(1),
+      )();
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onUnarchivePressed] Failed while archiving file" +
+              (shouldLogFileName ? ": ${widget.file.path}" : ""),
+          e,
+          stackTrace);
+    }
   }
 
   void _onMapTap() {
