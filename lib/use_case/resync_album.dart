@@ -18,7 +18,7 @@ class ResyncAlbum {
     }
     return await AppDb.use((db) async {
       final transaction =
-          db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+          db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
       final index = store.index(AppDbFileDbEntry.indexName);
       final newItems = <AlbumItem>[];
