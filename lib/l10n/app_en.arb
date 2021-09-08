@@ -759,7 +759,13 @@
 		"description": "Cannot unset the cover of the opened album"
 	},
 	"muteTooltip": "Mute",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
 	"unmuteTooltip": "Unmute",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
