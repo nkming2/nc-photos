@@ -164,7 +164,7 @@ class AppDbFileDbEntry {
   AppDbFileDbEntry(this.namespacedFileId, this.file);
 
   factory AppDbFileDbEntry.fromFile(Account account, File file) {
-    return AppDbFileDbEntry(toNamespacedFileId(account, file), file);
+    return AppDbFileDbEntry(toNamespacedFileId(account, file.fileId!), file);
   }
 
   JsonObj toJson() {
@@ -188,6 +188,6 @@ class AppDbFileDbEntry {
   static String toPrimaryKey(Account account, File file) =>
       "${account.url}/${file.path}";
 
-  static String toNamespacedFileId(Account account, File file) =>
-      "${account.url}/${file.fileId}";
+  static String toNamespacedFileId(Account account, int fileId) =>
+      "${account.url}/$fileId";
 }

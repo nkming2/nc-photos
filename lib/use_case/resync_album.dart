@@ -46,8 +46,8 @@ class ResyncAlbum {
       ObjectStore objStore, Index index) async {
     Map? dbItem;
     if (item.file.fileId != null) {
-      final List dbItems = await index
-          .getAll(AppDbFileDbEntry.toNamespacedFileId(account, item.file));
+      final List dbItems = await index.getAll(
+          AppDbFileDbEntry.toNamespacedFileId(account, item.file.fileId!));
       // find the one owned by us
       try {
         dbItem = dbItems.firstWhere((element) {

@@ -405,6 +405,7 @@ class _Ocs {
   _Ocs(this._api);
 
   _OcsDav dav() => _OcsDav(this);
+  _OcsFacerecognition facerecognition() => _OcsFacerecognition(this);
   _OcsFilesSharing filesSharing() => _OcsFilesSharing(this);
 
   Api _api;
@@ -446,6 +447,40 @@ class _OcsDavDirect {
   _OcsDav _dav;
 
   static final _log = Logger("api.api._OcsDavDirect");
+}
+
+class _OcsFacerecognition {
+  _OcsFacerecognition(this._ocs);
+
+  _OcsFacerecognitionPersons persons() => _OcsFacerecognitionPersons(this);
+
+  final _Ocs _ocs;
+}
+
+class _OcsFacerecognitionPersons {
+  _OcsFacerecognitionPersons(this._facerecognition);
+
+  Future<Response> get() async {
+    try {
+      return await _facerecognition._ocs._api.request(
+        "GET",
+        "ocs/v2.php/apps/facerecognition/api/v1/persons",
+        header: {
+          "OCS-APIRequest": "true",
+        },
+        queryParameters: {
+          "format": "json",
+        },
+      );
+    } catch (e) {
+      _log.severe("[get] Failed while get", e);
+      rethrow;
+    }
+  }
+
+  final _OcsFacerecognition _facerecognition;
+
+  static final _log = Logger("api.api._OcsFacerecognitionPersons");
 }
 
 class _OcsFilesSharing {

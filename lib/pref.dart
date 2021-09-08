@@ -93,6 +93,11 @@ class Pref {
   Future<bool> setLabEnableSharedAlbum(bool value) =>
       _pref.setBool("isLabEnableSharedAlbum", value);
 
+  bool? isLabEnablePeople() => _pref.getBool("isLabEnablePeople");
+  bool isLabEnablePeopleOr(bool def) => isLabEnablePeople() ?? def;
+  Future<bool> setLabEnablePeople(bool value) =>
+      _pref.setBool("isLabEnablePeople", value);
+
   Pref._();
 
   static final _inst = Pref._();

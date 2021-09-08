@@ -1,0 +1,528 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/item.dart';
+import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/notified_action.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/share_handler.dart';
+import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/use_case/add_to_album.dart';
+import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/selection_app_bar.dart';
+import 'package:nc_photos/widget/viewer.dart';
+import 'package:nc_photos/widget/zoom_menu_button.dart';
+
+class PersonBrowserArguments {
+  PersonBrowserArguments(this.account, this.person);
+
+  final Account account;
+  final Person person;
+}
+
+/// Show a list of all faces associated with this person
+class PersonBrowser extends StatefulWidget {
+  static const routeName = "/person-browser";
+
+  static Route buildRoute(PersonBrowserArguments args) => MaterialPageRoute(
+        builder: (context) => PersonBrowser.fromArgs(args),
+      );
+
+  PersonBrowser({
+    Key? key,
+    required this.account,
+    required this.person,
+  }) : super(key: key);
+
+  PersonBrowser.fromArgs(PersonBrowserArguments args, {Key? key})
+      : this(
+          key: key,
+          account: args.account,
+          person: args.person,
+        );
+
+  @override
+  createState() => _PersonBrowserState();
+
+  final Account account;
+  final Person person;
+}
+
+class _PersonBrowserState extends State<PersonBrowser>
+    with SelectableItemStreamListMixin<PersonBrowser> {
+  @override
+  initState() {
+    super.initState();
+    _initPerson();
+    _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
+
+    _filePropertyUpdatedListener.begin();
+  }
+
+  @override
+  dispose() {
+    _filePropertyUpdatedListener.end();
+    super.dispose();
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  void _initPerson() async {
+    final items = await PopulatePerson()(widget.account, widget.person);
+    if (mounted) {
+      setState(() {
+        _transformItems(items);
+      });
+    }
+  }
+
+  Widget _buildContent(BuildContext context) {
+    if (_backingFiles == null) {
+      return CustomScrollView(
+        slivers: [
+          _buildNormalAppBar(context),
+          const SliverToBoxAdapter(
+            child: const LinearProgressIndicator(),
+          ),
+        ],
+      );
+    } else {
+      return buildItemStreamListOuter(
+        context,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            accentColor: AppTheme.getOverscrollIndicatorColor(context),
+          ),
+          child: CustomScrollView(
+            slivers: [
+              _buildAppBar(context),
+              buildItemStreamList(
+                maxCrossAxisExtent: _thumbSize.toDouble(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    if (isSelectionMode) {
+      return _buildSelectionAppBar(context);
+    } else {
+      return _buildNormalAppBar(context);
+    }
+  }
+
+  Widget _buildNormalAppBar(BuildContext context) {
+    return SliverAppBar(
+      floating: true,
+      titleSpacing: 0,
+      title: Row(
+        children: [
+          SizedBox(
+            height: 40,
+            width: 40,
+            child: _buildFaceImage(context),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.person.name!,
+                  style: TextStyle(
+                    color: AppTheme.getPrimaryTextColor(context),
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.clip,
+                ),
+                if (_backingFiles != null)
+                  Text(
+                    "${_backingFiles!.length} photos",
+                    style: TextStyle(
+                      color: AppTheme.getSecondaryTextColor(context),
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      // ),
+      actions: [
+        ZoomMenuButton(
+          initialZoom: _thumbZoomLevel,
+          minZoom: 0,
+          maxZoom: 2,
+          onZoomChanged: (value) {
+            setState(() {
+              _thumbZoomLevel = value.round();
+            });
+            Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFaceImage(BuildContext context) {
+    Widget cover;
+    try {
+      cover = FittedBox(
+        clipBehavior: Clip.hardEdge,
+        fit: BoxFit.cover,
+        child: CachedNetworkImage(
+          imageUrl: api_util.getFacePreviewUrl(
+              widget.account, widget.person.faces.first,
+              size: 64),
+          httpHeaders: {
+            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+          },
+          fadeInDuration: const Duration(),
+          filterQuality: FilterQuality.high,
+          errorWidget: (context, url, error) {
+            // just leave it empty
+            return Container();
+          },
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        ),
+      );
+    } catch (_) {
+      cover = Icon(
+        Icons.person,
+        color: Colors.white.withOpacity(.8),
+        size: 24,
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(64),
+      child: Container(
+        color: AppTheme.getListItemBackgroundColor(context),
+        constraints: const BoxConstraints.expand(),
+        child: cover,
+      ),
+    );
+  }
+
+  Widget _buildSelectionAppBar(BuildContext context) {
+    return SelectionAppBar(
+      count: selectedListItems.length,
+      onClosePressed: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+      actions: [
+        if (platform_k.isAndroid)
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: L10n.global().shareTooltip,
+            onPressed: () {
+              _onSharePressed(context);
+            },
+          ),
+        IconButton(
+          icon: const Icon(Icons.playlist_add),
+          tooltip: L10n.global().addToAlbumTooltip,
+          onPressed: () {
+            _onAddToAlbumPressed(context);
+          },
+        ),
+        PopupMenuButton<_SelectionMenuOption>(
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: _SelectionMenuOption.archive,
+              child: Text(L10n.global().archiveTooltip),
+            ),
+            PopupMenuItem(
+              value: _SelectionMenuOption.delete,
+              child: Text(L10n.global().deleteTooltip),
+            ),
+          ],
+          onSelected: (option) {
+            _onOptionMenuSelected(context, option);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _onItemTap(int index) {
+    Navigator.pushNamed(context, Viewer.routeName,
+        arguments: ViewerArguments(widget.account, _backingFiles!, index));
+  }
+
+  void _onSharePressed(BuildContext context) {
+    assert(platform_k.isAndroid);
+    final selected =
+        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
+      setState(() {
+        clearSelectedItems();
+      });
+    });
+  }
+
+  Future<void> _onAddToAlbumPressed(BuildContext context) async {
+    try {
+      final value = await showDialog<Album>(
+        context: context,
+        builder: (_) => AlbumPickerDialog(
+          account: widget.account,
+        ),
+      );
+      if (value == null) {
+        // user cancelled the dialog
+        return;
+      }
+
+      _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
+      await NotifiedAction(
+        () async {
+          assert(value.provider is AlbumStaticProvider);
+          final selected = selectedListItems
+              .whereType<_ListItem>()
+              .map((e) => AlbumFileItem(file: e.file))
+              .toList();
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          await AddToAlbum(albumRepo)(widget.account, value, selected);
+          setState(() {
+            clearSelectedItems();
+          });
+        },
+        null,
+        L10n.global().addSelectedToAlbumSuccessNotification(value.name),
+        failureText: L10n.global().addSelectedToAlbumFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout("[_onAddToAlbumPressed] Exception", e, stackTrace);
+    }
+  }
+
+  Future<void> _onArchivePressed(BuildContext context) async {
+    final selectedFiles =
+        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    setState(() {
+      clearSelectedItems();
+    });
+    final fileRepo = FileRepo(FileCachedDataSource());
+    await NotifiedListAction<File>(
+      list: selectedFiles,
+      action: (file) async {
+        await UpdateProperty(fileRepo)
+            .updateIsArchived(widget.account, file, true);
+      },
+      processingText: L10n.global()
+          .archiveSelectedProcessingNotification(selectedFiles.length),
+      successText: L10n.global().archiveSelectedSuccessNotification,
+      getFailureText: (failures) =>
+          L10n.global().archiveSelectedFailureNotification(failures.length),
+      onActionError: (file, e, stackTrace) {
+        _log.shout(
+            "[_onArchivePressed] Failed while archiving file" +
+                (shouldLogFileName ? ": ${file.path}" : ""),
+            e,
+            stackTrace);
+      },
+    )();
+  }
+
+  Future<void> _onDeletePressed(BuildContext context) async {
+    final selectedFiles =
+        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    setState(() {
+      clearSelectedItems();
+    });
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    await NotifiedListAction<File>(
+      list: selectedFiles,
+      action: (file) async {
+        await Remove(fileRepo, albumRepo)(widget.account, file);
+      },
+      processingText: L10n.global()
+          .deleteSelectedProcessingNotification(selectedFiles.length),
+      successText: L10n.global().deleteSelectedSuccessNotification,
+      getFailureText: (failures) =>
+          L10n.global().deleteSelectedFailureNotification(failures.length),
+      onActionError: (file, e, stackTrace) {
+        _log.shout(
+            "[_onDeletePressed] Failed while removing file" +
+                (shouldLogFileName ? ": ${file.path}" : ""),
+            e,
+            stackTrace);
+      },
+    )();
+  }
+
+  void _onOptionMenuSelected(
+      BuildContext context, _SelectionMenuOption option) {
+    switch (option) {
+      case _SelectionMenuOption.archive:
+        _onArchivePressed(context);
+        break;
+
+      case _SelectionMenuOption.delete:
+        _onDeletePressed(context);
+        break;
+
+      default:
+        _log.shout("[_onOptionMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
+    if (_backingFiles?.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
+        true) {
+      return;
+    }
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
+  }
+
+  void _transformItems(List<File> items) {
+    _backingFiles = items
+        .sorted(compareFileDateTimeDescending)
+        .where((element) =>
+            file_util.isSupportedFormat(element) && element.isArchived != true)
+        .toList();
+    itemStreamListItems = _backingFiles!
+        .mapWithIndex((i, f) => _ListItem(
+              index: i,
+              file: f,
+              account: widget.account,
+              previewUrl: api_util.getFilePreviewUrl(
+                widget.account,
+                f,
+                width: _thumbSize,
+                height: _thumbSize,
+              ),
+              onTap: () => _onItemTap(i),
+            ))
+        .toList();
+  }
+
+  int get _thumbSize {
+    switch (_thumbZoomLevel) {
+      case 1:
+        return 176;
+
+      case 2:
+        return 256;
+
+      case 0:
+      default:
+        return 112;
+    }
+  }
+
+  List<File>? _backingFiles;
+
+  var _thumbZoomLevel = 0;
+
+  late final Throttler _refreshThrottler = Throttler(
+    onTriggered: (_) {
+      _initPerson();
+    },
+    logTag: "_PersonBrowserState.refresh",
+  );
+
+  late final _filePropertyUpdatedListener =
+      AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
+
+  static final _log = Logger("widget.person_browser._PersonBrowserState");
+}
+
+class _ListItem implements SelectableItem {
+  _ListItem({
+    required this.index,
+    required this.file,
+    required this.account,
+    required this.previewUrl,
+    VoidCallback? onTap,
+  }) : _onTap = onTap;
+
+  @override
+  get onTap => _onTap;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  get staggeredTile => const StaggeredTile.count(1, 1);
+
+  @override
+  operator ==(Object other) {
+    return other is _ListItem && file.path == other.file.path;
+  }
+
+  @override
+  get hashCode => file.path.hashCode;
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "index: $index, "
+        "}";
+  }
+
+  @override
+  buildWidget(BuildContext context) {
+    return PhotoListImage(
+      account: account,
+      previewUrl: previewUrl,
+      isGif: file.contentType == "image/gif",
+    );
+  }
+
+  final int index;
+  final File file;
+  final Account account;
+  final String previewUrl;
+  final VoidCallback? _onTap;
+}
+
+enum _SelectionMenuOption {
+  archive,
+  delete,
+}

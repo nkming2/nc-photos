@@ -63,6 +63,13 @@ class _LabSettingsState extends State<LabSettings> {
             Pref.inst().setLabEnableSharedAlbum(value);
           },
         ),
+        _LabBoolItem(
+          title: Text("enablePeople"),
+          isSelected: Pref.inst().isLabEnablePeopleOr(false),
+          onChanged: (value) {
+            Pref.inst().setLabEnablePeople(value);
+          },
+        ),
       ],
     );
   }

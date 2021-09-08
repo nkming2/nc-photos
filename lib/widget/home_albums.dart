@@ -31,6 +31,7 @@ import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/pending_albums.dart';
+import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
@@ -181,6 +182,19 @@ class _HomeAlbumsState extends State<HomeAlbums>
           case _menuValueImport:
             _onAppBarImportPressed(context);
             break;
+        }
+      },
+    );
+  }
+
+  SelectableItem _buildPersonItem(BuildContext context) {
+    return _ButtonListItem(
+      icon: Icons.person_outlined,
+      label: "People",
+      onTap: () {
+        if (!isSelectionMode) {
+          Navigator.of(context).pushNamed(PeopleBrowser.routeName,
+              arguments: PeopleBrowserArguments(widget.account));
         }
       },
     );
@@ -356,6 +370,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       }
     }).map((e) => e.item2);
     itemStreamListItems = [
+      if (Lab().enablePeople) _buildPersonItem(context),
       _buildArchiveItem(context),
       _buildTrashbinItem(context),
       if (Lab().enableSharedAlbum) _buildShareItem(context),

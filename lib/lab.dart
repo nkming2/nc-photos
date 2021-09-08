@@ -10,6 +10,7 @@ class Lab {
   }
 
   bool get enableSharedAlbum => Pref.inst().isLabEnableSharedAlbumOr(false);
+  bool get enablePeople => Pref.inst().isLabEnablePeopleOr(false);
 
   Lab._();
 
