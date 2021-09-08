@@ -49,26 +49,6 @@
     "unmuteTooltip"
   ],
 
-  "es": [
-    "collectionsTooltip",
-    "settingsViewerTitle",
-    "settingsViewerDescription",
-    "settingsViewerPageTitle",
-    "settingsThemeTitle",
-    "settingsThemeDescription",
-    "settingsThemePageTitle",
-    "settingsFollowSystemThemeTitle",
-    "settingsUseBlackInDarkThemeTitle",
-    "settingsUseBlackInDarkThemeTrueDescription",
-    "settingsUseBlackInDarkThemeFalseDescription",
-    "unsetAlbumCoverTooltip",
-    "unsetAlbumCoverProcessingNotification",
-    "unsetAlbumCoverSuccessNotification",
-    "unsetAlbumCoverFailureNotification",
-    "muteTooltip",
-    "unmuteTooltip"
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsViewerTitle",
