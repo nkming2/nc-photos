@@ -251,12 +251,16 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       try {
         shares = await shareRepo.listDir(ev.account,
             File(path: remote_storage_util.getRemoteAlbumsDir(ev.account)));
-      } on ApiException catch(e) {
+      } on ApiException catch (e, stackTrace) {
         if (e.response.statusCode == 404) {
           // Normal when album dir is not created yet
         } else {
-          rethrow;
+          _log.shout("[_queryWithAlbumDataSource] Failed while listDir", e,
+              stackTrace);
         }
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_queryWithAlbumDataSource] Failed while listDir", e, stackTrace);
       }
       final items = albums.map((e) {
         final isSharedByMe = shares.any((element) =>
