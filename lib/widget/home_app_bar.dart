@@ -5,6 +5,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
@@ -114,7 +115,7 @@ class HomeSliverAppBar extends StatelessWidget {
                     Navigator.of(context).pushNamed(Settings.routeName,
                         arguments: SettingsArguments(account));
                   } else if (option == _menuValueHelp) {
-                    launch("https://gitlab.com/nkming2/nc-photos/-/wikis/home");
+                    launch(help_utils.mainUrl);
                   }
                 }
               },
