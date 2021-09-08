@@ -466,20 +466,20 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         title: L10n.global().sortOptionDialogTitle,
         items: [
           FancyOptionPickerItem(
-            label: L10n.global().sortOptionTimeAscendingLabel,
-            isSelected: sortProvider is AlbumTimeSortProvider &&
-                sortProvider.isAscending,
-            onSelect: () {
-              _onSortOldestPressed();
-              Navigator.of(context).pop();
-            },
-          ),
-          FancyOptionPickerItem(
             label: L10n.global().sortOptionTimeDescendingLabel,
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {
               _onSortNewestPressed();
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionTimeAscendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                sortProvider.isAscending,
+            onSelect: () {
+              _onSortOldestPressed();
               Navigator.of(context).pop();
             },
           ),
