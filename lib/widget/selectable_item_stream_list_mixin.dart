@@ -68,6 +68,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       );
     } else {
       content = SliverStaggeredGrid.extentBuilder(
+        key: ObjectKey(maxCrossAxisExtent),
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
         itemBuilder: _buildItem,
