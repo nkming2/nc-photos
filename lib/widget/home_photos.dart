@@ -31,8 +31,8 @@ import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
-import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
@@ -409,16 +409,7 @@ class _HomePhotosState extends State<HomePhotos>
         .toList();
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      await UpdateAlbum(albumRepo)(
-          widget.account,
-          album.copyWith(
-            provider: AlbumStaticProvider(
-              items: makeDistinctAlbumItems([
-                ...selected,
-                ...AlbumStaticProvider.of(album).items,
-              ]),
-            ),
-          ));
+      await AddToAlbum(albumRepo)(widget.account, album, selected);
     } catch (e, stacktrace) {
       _log.shout(
           "[_addSelectedToAlbum] Failed while updating album", e, stacktrace);

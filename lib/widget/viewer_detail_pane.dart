@@ -27,6 +27,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
@@ -503,16 +504,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         ));
         return Future.error(ArgumentError("File already in album"));
       }
-      await UpdateAlbum(albumRepo)(
-          widget.account,
-          album.copyWith(
-            provider: AlbumStaticProvider(
-              items: [
-                AlbumFileItem(file: widget.file),
-                ...AlbumStaticProvider.of(album).items,
-              ],
-            ),
-          ));
+      await AddToAlbum(albumRepo)(
+          widget.account, album, [AlbumFileItem(file: widget.file)]);
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
