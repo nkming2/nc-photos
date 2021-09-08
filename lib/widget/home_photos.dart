@@ -25,6 +25,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
@@ -184,18 +185,18 @@ class _HomePhotosState extends State<HomePhotos>
           icon: const Icon(Icons.playlist_add),
           tooltip: L10n.global().addToAlbumTooltip,
           onPressed: () {
-            _onSelectionAppBarAddToAlbumPressed(context);
+            _onAddToAlbumPressed(context);
           },
         ),
-        PopupMenuButton<_SelectionAppBarMenuOption>(
+        PopupMenuButton<_SelectionMenuOption>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
             PopupMenuItem(
-              value: _SelectionAppBarMenuOption.archive,
+              value: _SelectionMenuOption.archive,
               child: Text(L10n.global().archiveTooltip),
             ),
             PopupMenuItem(
-              value: _SelectionAppBarMenuOption.delete,
+              value: _SelectionMenuOption.delete,
               child: Text(L10n.global().deleteTooltip),
             ),
           ],
@@ -360,74 +361,73 @@ class _HomePhotosState extends State<HomePhotos>
     });
   }
 
-  void _onSelectionAppBarAddToAlbumPressed(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => AlbumPickerDialog(
-        account: widget.account,
-      ),
-    ).then((value) {
+  Future<void> _onAddToAlbumPressed(BuildContext context) async {
+    try {
+      final value = await showDialog<Album>(
+        context: context,
+        builder: (_) => AlbumPickerDialog(
+          account: widget.account,
+        ),
+      );
       if (value == null) {
         // user cancelled the dialog
-      } else if (value is Album) {
-        _log.info(
-            "[_onSelectionAppBarAddToAlbumPressed] Album picked: ${value.name}");
-        _addSelectedToAlbum(context, value).then((_) {
+        return;
+      }
+
+      _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
+      await NotifiedAction(
+        () async {
+          assert(value.provider is AlbumStaticProvider);
+          final selected = selectedListItems
+              .whereType<_FileListItem>()
+              .map((e) => AlbumFileItem(file: e.file))
+              .toList();
+          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          await AddToAlbum(albumRepo)(widget.account, value, selected);
           setState(() {
             clearSelectedItems();
           });
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(L10n.global()
-                .addSelectedToAlbumSuccessNotification(value.name)),
-            duration: k.snackBarDurationNormal,
-          ));
-        }).catchError((_) {});
-      } else {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().addSelectedToAlbumFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-      }
-    }).catchError((e, stacktrace) {
-      _log.severe(
-          "[_onSelectionAppBarAddToAlbumPressed] Failed while showDialog",
-          e,
-          stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().addSelectedToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-    });
-  }
-
-  Future<void> _addSelectedToAlbum(BuildContext context, Album album) async {
-    assert(album.provider is AlbumStaticProvider);
-    final selected = selectedListItems
-        .whereType<_FileListItem>()
-        .map((e) => AlbumFileItem(file: e.file))
-        .toList();
-    try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      await AddToAlbum(albumRepo)(widget.account, album, selected);
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_addSelectedToAlbum] Failed while updating album", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().addSelectedToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-      rethrow;
+        },
+        null,
+        L10n.global().addSelectedToAlbumSuccessNotification(value.name),
+        failureText: L10n.global().addSelectedToAlbumFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout("[_onAddToAlbumPressed] Exception", e, stackTrace);
     }
   }
 
-  Future<void> _onSelectionAppBarDeletePressed(BuildContext context) async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global()
-          .deleteSelectedProcessingNotification(selectedListItems.length)),
-      duration: k.snackBarDurationShort,
-    ));
+  Future<void> _onArchivePressed(BuildContext context) async {
+    final selectedFiles = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    setState(() {
+      clearSelectedItems();
+    });
+    final fileRepo = FileRepo(FileCachedDataSource());
+    await NotifiedListAction<File>(
+      list: selectedFiles,
+      action: (file) async {
+        await UpdateProperty(fileRepo)
+            .updateIsArchived(widget.account, file, true);
+      },
+      processingText: L10n.global()
+          .archiveSelectedProcessingNotification(selectedFiles.length),
+      successText: L10n.global().archiveSelectedSuccessNotification,
+      getFailureText: (failures) =>
+          L10n.global().archiveSelectedFailureNotification(failures.length),
+      onActionError: (file, e, stackTrace) {
+        _log.shout(
+            "[_onArchivePressed] Failed while archiving file" +
+                (shouldLogFileName ? ": ${file.path}" : ""),
+            e,
+            stackTrace);
+      },
+    )();
+  }
+
+  Future<void> _onDeletePressed(BuildContext context) async {
     final selectedFiles = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
@@ -437,89 +437,40 @@ class _HomePhotosState extends State<HomePhotos>
     });
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final failures = <File>[];
-    for (final f in selectedFiles) {
-      try {
-        await Remove(fileRepo, albumRepo)(widget.account, f);
-      } catch (e, stacktrace) {
+    await NotifiedListAction<File>(
+      list: selectedFiles,
+      action: (file) async {
+        await Remove(fileRepo, albumRepo)(widget.account, file);
+      },
+      processingText: L10n.global()
+          .deleteSelectedProcessingNotification(selectedFiles.length),
+      successText: L10n.global().deleteSelectedSuccessNotification,
+      getFailureText: (failures) =>
+          L10n.global().deleteSelectedFailureNotification(failures.length),
+      onActionError: (file, e, stackTrace) {
         _log.shout(
-            "[_onSelectionAppBarDeletePressed] Failed while removing file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
+            "[_onDeletePressed] Failed while removing file" +
+                (shouldLogFileName ? ": ${file.path}" : ""),
             e,
-            stacktrace);
-        failures.add(f);
-      }
-    }
-    if (failures.isEmpty) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().deleteSelectedSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    } else {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            L10n.global().deleteSelectedFailureNotification(failures.length)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
+            stackTrace);
+      },
+    )();
   }
 
   void _onSelectionAppBarMenuSelected(
-      BuildContext context, _SelectionAppBarMenuOption option) {
+      BuildContext context, _SelectionMenuOption option) {
     switch (option) {
-      case _SelectionAppBarMenuOption.archive:
-        _onSelectionAppBarArchivePressed(context);
+      case _SelectionMenuOption.archive:
+        _onArchivePressed(context);
         break;
 
-      case _SelectionAppBarMenuOption.delete:
-        _onSelectionAppBarDeletePressed(context);
+      case _SelectionMenuOption.delete:
+        _onDeletePressed(context);
         break;
 
       default:
         _log.shout("[_onSelectionAppBarMenuSelected] Unknown option: $option");
         break;
-    }
-  }
-
-  Future<void> _onSelectionAppBarArchivePressed(BuildContext context) async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global()
-          .archiveSelectedProcessingNotification(selectedListItems.length)),
-      duration: k.snackBarDurationShort,
-    ));
-    final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
-        .map((e) => e.file)
-        .toList();
-    setState(() {
-      clearSelectedItems();
-    });
-    final fileRepo = FileRepo(FileCachedDataSource());
-    final failures = <File>[];
-    for (final f in selectedFiles) {
-      try {
-        await UpdateProperty(fileRepo)
-            .updateIsArchived(widget.account, f, true);
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onSelectionAppBarArchivePressed] Failed while archiving file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
-            e,
-            stacktrace);
-        failures.add(f);
-      }
-    }
-    if (failures.isEmpty) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().archiveSelectedSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    } else {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            L10n.global().archiveSelectedFailureNotification(failures.length)),
-        duration: k.snackBarDurationNormal,
-      ));
     }
   }
 
@@ -854,7 +805,7 @@ class _MetadataTaskLoadingIcon extends AnimatedWidget {
   Animation<double> get _progress => listenable as Animation<double>;
 }
 
-enum _SelectionAppBarMenuOption {
+enum _SelectionMenuOption {
   archive,
   delete,
 }
