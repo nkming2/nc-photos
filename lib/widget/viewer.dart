@@ -25,6 +25,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
@@ -456,7 +457,8 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     });
     dynamic result;
     try {
-      result = await platform.Downloader().downloadFile(widget.account, file);
+      final fileRepo = FileRepo(FileCachedDataSource());
+      result = await DownloadFile(fileRepo)(widget.account, file);
       controller?.close();
     } on PermissionException catch (_) {
       _log.warning("[_onDownloadPressed] Permission not granted");

@@ -4,14 +4,14 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:tuple/tuple.dart';
 
@@ -25,11 +25,11 @@ class ShareHandler {
       builder: (context) =>
           ProcessingDialog(text: L10n.global().shareDownloadingDialogContent),
     );
+    final fileRepo = FileRepo(FileCachedDataSource());
     final results = <Tuple2<File, dynamic>>[];
     for (final f in files) {
       try {
-        results.add(
-            Tuple2(f, await platform.Downloader().downloadFile(account, f)));
+        results.add(Tuple2(f, await DownloadFile(fileRepo)(account, f)));
       } on PermissionException catch (_) {
         _log.warning("[shareFiles] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(
