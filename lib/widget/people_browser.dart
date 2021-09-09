@@ -76,18 +76,8 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   }
 
   void _initBloc() {
-    _bloc = ListPersonBloc.of(widget.account);
-    if (_bloc.state is ListPersonBlocInit) {
-      _log.info("[_initBloc] Initialize bloc");
-      _reqQuery();
-    } else {
-      // process the current state
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
-        setState(() {
-          _onStateChange(context, _bloc.state);
-        });
-      });
-    }
+    _log.info("[_initBloc] Initialize bloc");
+    _reqQuery();
   }
 
   Widget _buildContent(BuildContext context, ListPersonBlocState state) {
@@ -218,7 +208,7 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
     _bloc.add(ListPersonBlocQuery(widget.account));
   }
 
-  late ListPersonBloc _bloc;
+  final _bloc = ListPersonBloc();
 
   var _items = <_ListItem>[];
 
