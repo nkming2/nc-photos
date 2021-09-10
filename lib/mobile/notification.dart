@@ -13,3 +13,15 @@ class AndroidItemDownloadSuccessfulNotification
   final List<String> fileUris;
   final List<String?> mimeTypes;
 }
+
+class AndroidLogSaveSuccessfulNotification
+    extends itf.LogSaveSuccessfulNotification {
+  AndroidLogSaveSuccessfulNotification(this.fileUri);
+
+  @override
+  Future<void> notify() {
+    return Notification.notifyLogSaveSuccessful(fileUri);
+  }
+
+  final String fileUri;
+}

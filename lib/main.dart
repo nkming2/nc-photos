@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
@@ -69,6 +70,7 @@ void _initLog() {
       msg = "\x1B[${color}m$msg\x1B[0m";
     }
     debugPrint(msg);
+    LogCapturer().onLog(msg);
   });
 }
 

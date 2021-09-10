@@ -48,6 +48,13 @@ class NotificationChannelHandler(activity: Activity)
 			} catch (e: Throwable) {
 				result.error("systemException", e.toString(), null)
 			}
+		} else if (call.method == "notifyLogSaveSuccessful") {
+			try {
+				notifyLogSaveSuccessful(call.argument<String>("fileUri")!!,
+						result)
+			} catch (e: Throwable) {
+				result.error("systemException", e.toString(), null)
+			}
 		} else {
 			result.notImplemented()
 		}
@@ -123,6 +130,44 @@ class NotificationChannelHandler(activity: Activity)
 		builder.addAction(0, _context.getString(
 				R.string.download_successful_notification_action_share),
 				sharePendingIntent)
+
+		with(NotificationManagerCompat.from(_context)) {
+			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
+		}
+		result.success(null)
+	}
+
+	private fun notifyLogSaveSuccessful(fileUri: String,
+			result: MethodChannel.Result) {
+		val uri = Uri.parse(fileUri)
+		val mimeType = "text/plain"
+		val builder = NotificationCompat.Builder(_context, DOWNLOAD_CHANNEL_ID)
+				.setSmallIcon(R.drawable.baseline_download_white_18)
+				.setWhen(System.currentTimeMillis())
+				.setPriority(NotificationCompat.PRIORITY_HIGH)
+				.setSound(RingtoneManager.getDefaultUri(
+						RingtoneManager.TYPE_NOTIFICATION))
+				.setAutoCancel(true)
+				.setLocalOnly(true)
+				.setTicker(_context.getString(
+						R.string.log_save_successful_notification_title))
+				.setContentTitle(_context.getString(
+						R.string.log_save_successful_notification_title))
+				.setContentText(_context.getString(
+						R.string.log_save_successful_notification_text))
+
+		val openIntent = Intent().apply {
+			action = Intent.ACTION_VIEW
+			setDataAndType(uri, mimeType)
+			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+		}
+		val openPendingIntent = PendingIntent.getActivity(_context, 0,
+				openIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+		builder.setContentIntent(openPendingIntent)
+
+		// can't add the share action here because android will share the URI as
+		// plain text instead of treating it as a text file...
 
 		with(NotificationManagerCompat.from(_context)) {
 			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())

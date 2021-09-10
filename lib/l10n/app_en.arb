@@ -361,6 +361,11 @@
 	"@settingsBugReportTitle": {
 		"description": "Report issue"
 	},
+	"settingsCaptureLogsTitle": "Capture logs",
+	"@settingsCaptureLogsTitle": {
+		"description": "Capture app logs for bug report"
+	},
+	"settingsCaptureLogsDescription": "Help developer to diagnose bugs",
 	"settingsTranslatorTitle": "Translator",
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
@@ -380,6 +385,14 @@
 	"exifSupportConfirmationDialogTitle": "Enable EXIF support?",
 	"@exifSupportConfirmationDialogTitle": {
 		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"captureLogDetails": "To take logs for a bug report:\n\n1. Enable this setting\n2. Reproduce the issue\n3. Disable this setting\n4. Look for nc-photos.log in the download folder\n\n*If the issue causes the app to crash, no logs could be captured. In such case, please contact the developer for further instructions",
+	"@captureLogDetails": {
+		"description": "Detailed description on capturing logs"
+	},
+	"captureLogSuccessNotification": "Logs saved successfully",
+	"@captureLogSuccessNotification": {
+		"description": "Captured logs are successfully saved to the download directory"
 	},
 	"doneButtonLabel": "DONE",
 	"@doneButtonLabel": {

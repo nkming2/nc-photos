@@ -4,11 +4,13 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
+import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -121,6 +123,12 @@ class _SettingsState extends State<Settings> {
                 onTap: () {
                   launch(_bugReportUrl);
                 },
+              ),
+              SwitchListTile(
+                title: Text(L10n.global().settingsCaptureLogsTitle),
+                subtitle: Text(L10n.global().settingsCaptureLogsDescription),
+                value: LogCapturer().isEnable,
+                onChanged: (value) => _onCaptureLogChanged(context, value),
               ),
               if (translator.isNotEmpty)
                 ListTile(
@@ -249,6 +257,64 @@ class _SettingsState extends State<Settings> {
       Navigator.of(context).pushNamed(LabSettings.routeName);
       _labUnlockCount = 0;
     }
+  }
+
+  void _onCaptureLogChanged(BuildContext context, bool value) async {
+    if (value) {
+      final result = await showDialog<bool>(
+        context: context,
+        builder: (context) => AppTheme(
+          child: AlertDialog(
+            content: Text(L10n.global().captureLogDetails),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(L10n.global().enableButtonLabel),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (result == true) {
+        setState(() {
+          LogCapturer().start();
+        });
+      }
+    } else {
+      if (LogCapturer().isEnable) {
+        setState(() {
+          LogCapturer().stop().then((result) {
+            _onLogSaveSuccessful(result);
+          });
+        });
+      }
+    }
+  }
+
+  void _onLogSaveSuccessful(dynamic result) {
+    var notif;
+    if (platform_k.isAndroid) {
+      notif = AndroidLogSaveSuccessfulNotification(result);
+    }
+    if (notif != null) {
+      try {
+        notif.notify();
+        return;
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_onLogSaveSuccessful] Failed showing platform notification",
+            e,
+            stacktrace);
+      }
+    }
+
+    // fallback
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(L10n.global().downloadSuccessNotification),
+      duration: k.snackBarDurationShort,
+    ));
   }
 
   Future<void> _setExifSupport(bool value) async {

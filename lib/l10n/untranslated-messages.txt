@@ -15,6 +15,10 @@
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription",
+    "settingsCaptureLogsTitle",
+    "settingsCaptureLogsDescription",
+    "captureLogDetails",
+    "captureLogSuccessNotification",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel",
     "listEmptyText",
@@ -51,6 +55,13 @@
     "unmuteTooltip"
   ],
 
+  "es": [
+    "settingsCaptureLogsTitle",
+    "settingsCaptureLogsDescription",
+    "captureLogDetails",
+    "captureLogSuccessNotification"
+  ],
+
   "fr": [
     "collectionsTooltip",
     "settingsViewerTitle",
@@ -67,6 +78,10 @@
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
     "settingsUseBlackInDarkThemeFalseDescription",
+    "settingsCaptureLogsTitle",
+    "settingsCaptureLogsDescription",
+    "captureLogDetails",
+    "captureLogSuccessNotification",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel",
     "helpTooltip",
@@ -84,6 +99,10 @@
   ],
 
   "ru": [
+    "settingsCaptureLogsTitle",
+    "settingsCaptureLogsDescription",
+    "captureLogDetails",
+    "captureLogSuccessNotification",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel"
   ]

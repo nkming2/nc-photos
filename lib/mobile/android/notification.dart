@@ -8,6 +8,11 @@ class Notification {
         "mimeTypes": mimeTypes,
       });
 
+  static Future<void> notifyLogSaveSuccessful(String fileUri) =>
+      _channel.invokeMethod("notifyLogSaveSuccessful", <String, dynamic>{
+        "fileUri": fileUri,
+      });
+
   static const _channel =
       const MethodChannel("com.nkming.nc_photos/notification");
 }
