@@ -453,6 +453,8 @@ class _OcsFacerecognition {
   _OcsFacerecognition(this._ocs);
 
   _OcsFacerecognitionPersons persons() => _OcsFacerecognitionPersons(this);
+  _OcsFacerecognitionPerson person(String name) =>
+      _OcsFacerecognitionPerson(this, name);
 
   final _Ocs _ocs;
 }
@@ -481,6 +483,42 @@ class _OcsFacerecognitionPersons {
   final _OcsFacerecognition _facerecognition;
 
   static final _log = Logger("api.api._OcsFacerecognitionPersons");
+}
+
+class _OcsFacerecognitionPerson {
+  _OcsFacerecognitionPerson(this._facerecognition, this._name);
+
+  _OcsFacerecognitionPersonFaces faces() =>
+      _OcsFacerecognitionPersonFaces(this);
+
+  final _OcsFacerecognition _facerecognition;
+  final String _name;
+}
+
+class _OcsFacerecognitionPersonFaces {
+  _OcsFacerecognitionPersonFaces(this._person);
+
+  Future<Response> get() async {
+    try {
+      return await _person._facerecognition._ocs._api.request(
+        "GET",
+        "ocs/v2.php/apps/facerecognition/api/v1/person/${_person._name}/faces",
+        header: {
+          "OCS-APIRequest": "true",
+        },
+        queryParameters: {
+          "format": "json",
+        },
+      );
+    } catch (e) {
+      _log.severe("[get] Failed while get", e);
+      rethrow;
+    }
+  }
+
+  final _OcsFacerecognitionPerson _person;
+
+  static final _log = Logger("api.api._OcsFacerecognitionPersonFaces");
 }
 
 class _OcsFilesSharing {

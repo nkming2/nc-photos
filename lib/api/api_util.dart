@@ -4,7 +4,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 
 /// Return the preview image URL for [file]. See [getFilePreviewUrlRelative]
@@ -71,20 +70,20 @@ String getTrashbinPath(Account account) =>
 /// Return the face image URL. See [getFacePreviewUrlRelative]
 String getFacePreviewUrl(
   Account account,
-  Face face, {
+  int faceId, {
   required int size,
 }) {
   return "${account.url}/"
-      "${getFacePreviewUrlRelative(account, face, size: size)}";
+      "${getFacePreviewUrlRelative(account, faceId, size: size)}";
 }
 
 /// Return the relative URL of the face image
 String getFacePreviewUrlRelative(
   Account account,
-  Face face, {
+  int faceId, {
   required int size,
 }) {
-  return "index.php/apps/facerecognition/face/${face.id}/thumb/$size";
+  return "index.php/apps/facerecognition/face/$faceId/thumb/$size";
 }
 
 /// Query the app password for [account]

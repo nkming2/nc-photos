@@ -2,21 +2,21 @@ import 'package:idb_shim/idb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 
 class PopulatePerson {
-  /// Return a list of files belonging to this person
-  Future<List<File>> call(Account account, Person person) async {
+  /// Return a list of files of the faces
+  Future<List<File>> call(Account account, List<Face> faces) async {
     return await AppDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
       final index = store.index(AppDbFileDbEntry.indexName);
       final products = <File>[];
-      for (final f in person.faces) {
+      for (final f in faces) {
         try {
           products.add(await _populateOne(account, f, store, index));
         } catch (e, stackTrace) {

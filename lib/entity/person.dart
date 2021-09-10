@@ -1,39 +1,32 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 
-class Face with EquatableMixin {
-  Face({
-    required this.id,
-    required this.fileId,
+class Person with EquatableMixin {
+  Person({
+    required this.name,
+    required this.thumbFaceId,
+    required this.count,
   });
 
   @override
-  get props => [
-        id,
-        fileId,
-      ];
-
-  final int id;
-  final int fileId;
-}
-
-class Person with EquatableMixin {
-  Person({
-    this.name,
-    required this.id,
-    required this.faces,
-  });
+  toString() {
+    return "$runtimeType {"
+        "name: '$name', "
+        "thumbFaceId: '$thumbFaceId', "
+        "count: '$count', "
+        "}";
+  }
 
   @override
   get props => [
         name,
-        id,
-        faces,
+        thumbFaceId,
+        count,
       ];
 
-  final String? name;
-  final int id;
-  final List<Face> faces;
+  final String name;
+  final int thumbFaceId;
+  final int count;
 }
 
 class PersonRepo {

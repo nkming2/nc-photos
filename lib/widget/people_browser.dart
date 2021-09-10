@@ -191,12 +191,11 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
 
   void _transformItems(List<Person> items) {
     _items = items
-        .where((element) => element.name != null)
-        .sorted((a, b) => a.name!.compareTo(b.name!))
+        .sorted((a, b) => a.name.compareTo(b.name))
         .map((e) => _PersonListItem(
               account: widget.account,
-              name: e.name!,
-              faceUrl: api_util.getFacePreviewUrl(widget.account, e.faces.first,
+              name: e.name,
+              faceUrl: api_util.getFacePreviewUrl(widget.account, e.thumbFaceId,
                   size: 256),
               onTap: () => _onItemTap(e),
             ))

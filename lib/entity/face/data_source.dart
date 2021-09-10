@@ -3,17 +3,23 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
 
-class PersonRemoteDataSource implements PersonDataSource {
-  const PersonRemoteDataSource();
+class FaceRemoteDataSource implements FaceDataSource {
+  const FaceRemoteDataSource();
 
   @override
-  list(Account account) async {
-    _log.info("[list] $account");
-    final response = await Api(account).ocs().facerecognition().persons().get();
+  list(Account account, Person person) async {
+    _log.info("[list] $person");
+    final response = await Api(account)
+        .ocs()
+        .facerecognition()
+        .person(person.name)
+        .faces()
+        .get();
     if (!response.isGood) {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
@@ -23,16 +29,15 @@ class PersonRemoteDataSource implements PersonDataSource {
 
     final json = jsonDecode(response.body);
     final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
-    return _PersonParser().parseList(dataJson);
+    return _FaceParser().parseList(dataJson);
   }
 
-  static final _log =
-      Logger("entity.person.data_source.PersonRemoteDataSource");
+  static final _log = Logger("entity.face.data_source.FaceRemoteDataSource");
 }
 
-class _PersonParser {
-  List<Person> parseList(List<JsonObj> jsons) {
-    final product = <Person>[];
+class _FaceParser {
+  List<Face> parseList(List<JsonObj> jsons) {
+    final product = <Face>[];
     for (final j in jsons) {
       try {
         product.add(parseSingle(j));
@@ -43,13 +48,12 @@ class _PersonParser {
     return product;
   }
 
-  Person parseSingle(JsonObj json) {
-    return Person(
-      name: json["name"],
-      thumbFaceId: json["thumbFaceId"],
-      count: json["count"],
+  Face parseSingle(JsonObj json) {
+    return Face(
+      id: json["id"],
+      fileId: json["fileId"],
     );
   }
 
-  static final _log = Logger("entity.person.data_source._PersonParser");
+  static final _log = Logger("entity.face.data_source._FaceParser");
 }

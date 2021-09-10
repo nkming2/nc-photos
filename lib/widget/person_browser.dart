@@ -1,26 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/bloc/list_face.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
@@ -74,7 +80,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   @override
   initState() {
     super.initState();
-    _initPerson();
+    _initBloc();
     _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
 
     _filePropertyUpdatedListener.begin();
@@ -90,20 +96,21 @@ class _PersonBrowserState extends State<PersonBrowser>
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
+        body: BlocListener<ListFaceBloc, ListFaceBlocState>(
+          bloc: _bloc,
+          listener: (context, state) => _onStateChange(context, state),
+          child: BlocBuilder<ListFaceBloc, ListFaceBlocState>(
+            bloc: _bloc,
+            builder: (context, state) => _buildContent(context),
+          ),
         ),
       ),
     );
   }
 
-  void _initPerson() async {
-    final items = await PopulatePerson()(widget.account, widget.person);
-    if (mounted) {
-      setState(() {
-        _transformItems(items);
-      });
-    }
+  void _initBloc() {
+    _log.info("[_initBloc] Initialize bloc");
+    _reqQuery();
   }
 
   Widget _buildContent(BuildContext context) {
@@ -162,7 +169,7 @@ class _PersonBrowserState extends State<PersonBrowser>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  widget.person.name!,
+                  widget.person.name,
                   style: TextStyle(
                     color: AppTheme.getPrimaryTextColor(context),
                   ),
@@ -172,7 +179,7 @@ class _PersonBrowserState extends State<PersonBrowser>
                 ),
                 if (_backingFiles != null)
                   Text(
-                    "${_backingFiles!.length} photos",
+                    "${itemStreamListItems.length} photos",
                     style: TextStyle(
                       color: AppTheme.getSecondaryTextColor(context),
                       fontSize: 12,
@@ -208,7 +215,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         fit: BoxFit.cover,
         child: CachedNetworkImage(
           imageUrl: api_util.getFacePreviewUrl(
-              widget.account, widget.person.faces.first,
+              widget.account, widget.person.thumbFaceId,
               size: 64),
           httpHeaders: {
             "Authorization": Api.getAuthorizationHeaderValue(widget.account),
@@ -282,6 +289,20 @@ class _PersonBrowserState extends State<PersonBrowser>
         ),
       ],
     );
+  }
+
+  void _onStateChange(BuildContext context, ListFaceBlocState state) {
+    if (state is ListFaceBlocInit) {
+      _backingFiles = null;
+    } else if (state is ListFaceBlocSuccess || state is ListFaceBlocLoading) {
+      _transformItems(state.items);
+    } else if (state is ListFaceBlocFailure) {
+      _transformItems(state.items);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(state.exception)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   void _onItemTap(int index) {
@@ -420,26 +441,33 @@ class _PersonBrowserState extends State<PersonBrowser>
     );
   }
 
-  void _transformItems(List<File> items) {
-    _backingFiles = items
+  void _transformItems(List<Face> items) async {
+    final files = await PopulatePerson()(widget.account, items);
+    _backingFiles = files
         .sorted(compareFileDateTimeDescending)
         .where((element) =>
             file_util.isSupportedFormat(element) && element.isArchived != true)
         .toList();
-    itemStreamListItems = _backingFiles!
-        .mapWithIndex((i, f) => _ListItem(
-              index: i,
-              file: f,
-              account: widget.account,
-              previewUrl: api_util.getFilePreviewUrl(
-                widget.account,
-                f,
-                width: _thumbSize,
-                height: _thumbSize,
-              ),
-              onTap: () => _onItemTap(i),
-            ))
-        .toList();
+    setState(() {
+      itemStreamListItems = _backingFiles!
+          .mapWithIndex((i, f) => _ListItem(
+                index: i,
+                file: f,
+                account: widget.account,
+                previewUrl: api_util.getFilePreviewUrl(
+                  widget.account,
+                  f,
+                  width: _thumbSize,
+                  height: _thumbSize,
+                ),
+                onTap: () => _onItemTap(i),
+              ))
+          .toList();
+    });
+  }
+
+  void _reqQuery() {
+    _bloc.add(ListFaceBlocQuery(widget.account, widget.person));
   }
 
   int get _thumbSize {
@@ -456,13 +484,16 @@ class _PersonBrowserState extends State<PersonBrowser>
     }
   }
 
+  final ListFaceBloc _bloc = ListFaceBloc();
   List<File>? _backingFiles;
 
   var _thumbZoomLevel = 0;
 
   late final Throttler _refreshThrottler = Throttler(
     onTriggered: (_) {
-      _initPerson();
+      if (mounted) {
+        _transformItems(_bloc.state.items);
+      }
     },
     logTag: "_PersonBrowserState.refresh",
   );
