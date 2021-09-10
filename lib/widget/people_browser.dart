@@ -85,7 +85,7 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
       return Column(
         children: [
           AppBar(
-            title: Text("People"),
+            title: Text(L10n.global().collectionPeopleLabel),
             elevation: 0,
             actions: [
               Stack(
@@ -159,7 +159,7 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
 
   Widget _buildAppBar(BuildContext context) {
     return SliverAppBar(
-      title: Text("People"),
+      title: Text(L10n.global().collectionPeopleLabel),
       floating: true,
     );
   }

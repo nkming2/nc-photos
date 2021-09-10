@@ -787,6 +787,19 @@
 	"@unmuteTooltip": {
 		"description": "Unmute the video player"
 	},
+	"collectionPeopleLabel": "People",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"personPhotoCountText": "{count, plural, =1{1 photo} other{{count} photos}}",
+	"@personPhotoCountText": {
+		"description": "Number of photos associated to a specific person",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

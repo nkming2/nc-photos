@@ -179,7 +179,8 @@ class _PersonBrowserState extends State<PersonBrowser>
                 ),
                 if (_backingFiles != null)
                   Text(
-                    "${itemStreamListItems.length} photos",
+                    L10n.global()
+                        .personPhotoCountText(itemStreamListItems.length),
                     style: TextStyle(
                       color: AppTheme.getSecondaryTextColor(context),
                       fontSize: 12,

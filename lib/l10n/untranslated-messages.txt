@@ -52,14 +52,18 @@
     "unsetAlbumCoverSuccessNotification",
     "unsetAlbumCoverFailureNotification",
     "muteTooltip",
-    "unmuteTooltip"
+    "unmuteTooltip",
+    "collectionPeopleLabel",
+    "personPhotoCountText"
   ],
 
   "es": [
     "settingsCaptureLogsTitle",
     "settingsCaptureLogsDescription",
     "captureLogDetails",
-    "captureLogSuccessNotification"
+    "captureLogSuccessNotification",
+    "collectionPeopleLabel",
+    "personPhotoCountText"
   ],
 
   "fr": [
@@ -95,7 +99,9 @@
     "unsetAlbumCoverSuccessNotification",
     "unsetAlbumCoverFailureNotification",
     "muteTooltip",
-    "unmuteTooltip"
+    "unmuteTooltip",
+    "collectionPeopleLabel",
+    "personPhotoCountText"
   ],
 
   "ru": [
@@ -104,6 +110,8 @@
     "captureLogDetails",
     "captureLogSuccessNotification",
     "sortOptionAlbumNameLabel",
-    "sortOptionAlbumNameDescendingLabel"
+    "sortOptionAlbumNameDescendingLabel",
+    "collectionPeopleLabel",
+    "personPhotoCountText"
   ]
 }

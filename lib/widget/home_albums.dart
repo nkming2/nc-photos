@@ -199,7 +199,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildPersonItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.person_outlined,
-      label: "People",
+      label: L10n.global().collectionPeopleLabel,
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(PeopleBrowser.routeName,
