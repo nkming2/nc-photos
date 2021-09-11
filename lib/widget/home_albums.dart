@@ -442,9 +442,9 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }).map((e) => e.item2);
     itemStreamListItems = [
       if (Lab().enablePeople) _buildPersonItem(context),
+      if (Lab().enableSharedAlbum) _buildShareItem(context),
       _buildArchiveItem(context),
       _buildTrashbinItem(context),
-      if (Lab().enableSharedAlbum) _buildShareItem(context),
       _buildNewAlbumItem(context),
       _SeparatorListItem(),
       ...sortedAlbums.map((e) => _AlbumListItem(
