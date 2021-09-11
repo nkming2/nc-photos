@@ -51,11 +51,6 @@
     "unmuteTooltip"
   ],
 
-  "es": [
-    "sortOptionAlbumNameLabel",
-    "sortOptionAlbumNameDescendingLabel"
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsViewerTitle",
