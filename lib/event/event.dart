@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/pref.dart';
 
 class AppEventListener<T> {
   AppEventListener(this._listener);
@@ -92,6 +93,13 @@ class MetadataTaskStateChangedEvent {
   const MetadataTaskStateChangedEvent(this.state);
 
   final MetadataTaskState state;
+}
+
+class PrefUpdatedEvent {
+  PrefUpdatedEvent(this.key, this.value);
+
+  final PrefKey key;
+  final dynamic value;
 }
 
 extension FilePropertyUpdatedEventExtension on FilePropertyUpdatedEvent {
