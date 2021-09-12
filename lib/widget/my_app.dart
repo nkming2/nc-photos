@@ -71,11 +71,14 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       locale: language_util.getSelectedLocale(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: <Locale>[
+        // the order here doesn't matter, except for the first one, which must
+        // be en
         Locale("en"),
         Locale("el"),
         Locale("es"),
         Locale("fr"),
         Locale("ru"),
+        Locale("de"),
       ],
       builder: (context, child) {
         MyApp._globalContext = context;

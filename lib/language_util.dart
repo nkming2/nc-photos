@@ -21,6 +21,8 @@ final supportedLanguages = {
       _AppLanguageEnum.english.index, "English", "English", const Locale("en")),
   _AppLanguageEnum.french.index: AppLanguage(
       _AppLanguageEnum.french.index, "français", "French", const Locale("fr")),
+  _AppLanguageEnum.german.index: AppLanguage(
+      _AppLanguageEnum.german.index, "Deutsch", "German", const Locale("de")),
   _AppLanguageEnum.greek.index: AppLanguage(
       _AppLanguageEnum.greek.index, "ελληνικά", "Greek", const Locale("el")),
   _AppLanguageEnum.russian.index: AppLanguage(
@@ -37,6 +39,7 @@ enum _AppLanguageEnum {
   greek,
   french,
   russian,
+  german,
 }
 
 AppLanguage _getSelectedLanguage() {
