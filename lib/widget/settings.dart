@@ -8,7 +8,6 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
-import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -322,11 +321,7 @@ class _SettingsState extends State<Settings> {
     setState(() {
       _isEnableExif = value;
     });
-    if (await Pref.inst().setEnableExif(value)) {
-      if (value) {
-        MetadataTaskManager().addTask(MetadataTask(widget.account));
-      }
-    } else {
+    if (!await Pref.inst().setEnableExif(value)) {
       _log.severe("[_setExifSupport] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),

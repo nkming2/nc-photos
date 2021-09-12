@@ -70,12 +70,14 @@ class _HomePhotosState extends State<HomePhotos>
     _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevelOr(0);
     _initBloc();
     _metadataTaskStateChangedListener.begin();
+    _prefUpdatedListener.begin();
   }
 
   @override
   dispose() {
     _metadataTaskIconController.stop();
     _metadataTaskStateChangedListener.end();
+    _prefUpdatedListener.end();
     super.dispose();
   }
 
@@ -325,10 +327,7 @@ class _HomePhotosState extends State<HomePhotos>
     } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanDirBlocSuccess) {
-        if (Pref.inst().isEnableExifOr() && !_hasFiredMetadataTask.value) {
-          MetadataTaskManager().addTask(MetadataTask(widget.account));
-          _hasFiredMetadataTask.value = true;
-        }
+        _tryStartMetadataTask();
       }
     } else if (state is ScanDirBlocFailure) {
       _transformItems(state.files);
@@ -487,6 +486,23 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  void _onPrefUpdated(PrefUpdatedEvent ev) {
+    if (ev.key == PrefKey.enableExif && ev.value == true) {
+      _tryStartMetadataTask(ignoreFired: true);
+    }
+  }
+
+  void _tryStartMetadataTask({
+    bool ignoreFired = false,
+  }) {
+    if (_bloc.state is ScanDirBlocSuccess &&
+        Pref.inst().isEnableExifOr(false) &&
+        (!_hasFiredMetadataTask.value || ignoreFired)) {
+      MetadataTaskManager().addTask(MetadataTask(widget.account));
+      _hasFiredMetadataTask.value = true;
+    }
+  }
+
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
@@ -633,6 +649,8 @@ class _HomePhotosState extends State<HomePhotos>
       AppEventListener<MetadataTaskStateChangedEvent>(
           _onMetadataTaskStateChanged);
   var _metadataTaskState = MetadataTaskManager().state;
+  late final _prefUpdatedListener =
+      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
   late final _metadataTaskIconController = AnimationController(
     upperBound: 2 * math.pi,
     duration: const Duration(seconds: 10),
