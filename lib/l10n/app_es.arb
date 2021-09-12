@@ -361,6 +361,11 @@
 	"@settingsBugReportTitle": {
 		"description": "Report issue"
 	},
+	"settingsCaptureLogsTitle": "Capturar logs",
+	"@settingsCaptureLogsTitle": {
+		"description": "Capture app logs for bug report"
+	},
+	"settingsCaptureLogsDescription": "Ayuda al desarrollador a diagnosticar fallos",
 	"settingsTranslatorTitle": "Traductor",
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
@@ -380,6 +385,14 @@
 	"exifSupportConfirmationDialogTitle": "¿Habilitar soporte EXIF?",
 	"@exifSupportConfirmationDialogTitle": {
 		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"captureLogDetails": "Para obtener logs para reportar fallos:\n\n1. Habilita ésta opción\n2. Reproduce el fallo\n3. Desabilita ésta opción\n4. Busca nc-photos.log en la carpeta de descargas\n\n*Si el fallo provoca que la aplicación se cierre, no se puede capturar el log. En ese caso, por favor contacta con el desarrollador para más instrucciones",
+	"@captureLogDetails": {
+		"description": "Detailed description on capturing logs"
+	},
+	"captureLogSuccessNotification": "Logs guargados con éxito",
+	"@captureLogSuccessNotification": {
+		"description": "Captured logs are successfully saved to the download directory"
 	},
 	"doneButtonLabel": "LISTO",
 	"@doneButtonLabel": {
@@ -767,7 +780,26 @@
 		"description": "Cannot unset the cover of the opened album"
 	},
 	"muteTooltip": "Silenciar",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
 	"unmuteTooltip": "No silenciar",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
+	"collectionPeopleLabel": "Gente",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"personPhotoCountText": "{count, plural, =1{1 foto} other{{count} fotos}}",
+	"@personPhotoCountText": {
+		"description": "Number of photos associated to a specific person",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
