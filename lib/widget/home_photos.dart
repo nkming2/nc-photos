@@ -71,6 +71,7 @@ class _HomePhotosState extends State<HomePhotos>
     _initBloc();
     _metadataTaskStateChangedListener.begin();
     _prefUpdatedListener.begin();
+    _filePropertyUpdatedListener.begin();
   }
 
   @override
@@ -78,6 +79,7 @@ class _HomePhotosState extends State<HomePhotos>
     _metadataTaskIconController.stop();
     _metadataTaskStateChangedListener.end();
     _prefUpdatedListener.end();
+    _filePropertyUpdatedListener.end();
     super.dispose();
   }
 
@@ -270,7 +272,8 @@ class _HomePhotosState extends State<HomePhotos>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        L10n.global().metadataTaskProcessingNotification,
+                        L10n.global().metadataTaskProcessingNotification +
+                            _getMetadataTaskProgressString(),
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -479,6 +482,9 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onMetadataTaskStateChanged(MetadataTaskStateChangedEvent ev) {
+    if (ev.state == MetadataTaskState.idle) {
+      _metadataTaskProcessCount = 0;
+    }
     if (ev.state != _metadataTaskState) {
       setState(() {
         _metadataTaskState = ev.state;
@@ -492,6 +498,15 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
+    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
+      return;
+    }
+    setState(() {
+      ++_metadataTaskProcessCount;
+    });
+  }
+
   void _tryStartMetadataTask({
     bool ignoreFired = false,
   }) {
@@ -499,6 +514,9 @@ class _HomePhotosState extends State<HomePhotos>
         Pref.inst().isEnableExifOr(false) &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       MetadataTaskManager().addTask(MetadataTask(widget.account));
+      _metadataTaskProcessTotalCount = _backingFiles
+          .where((f) => file_util.isSupportedFormat(f) && f.metadata == null)
+          .length;
       _hasFiredMetadataTask.value = true;
     }
   }
@@ -600,6 +618,15 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  String _getMetadataTaskProgressString() {
+    if (_metadataTaskProcessTotalCount == 0) {
+      return "";
+    }
+    final clippedCount =
+        math.min(_metadataTaskProcessCount, _metadataTaskProcessTotalCount - 1);
+    return " ($clippedCount/$_metadataTaskProcessTotalCount)";
+  }
+
   int get _thumbSize {
     switch (_thumbZoomLevel) {
       case -1:
@@ -651,6 +678,10 @@ class _HomePhotosState extends State<HomePhotos>
   var _metadataTaskState = MetadataTaskManager().state;
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
+  late final _filePropertyUpdatedListener =
+      AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
+  var _metadataTaskProcessCount = 0;
+  var _metadataTaskProcessTotalCount = 0;
   late final _metadataTaskIconController = AnimationController(
     upperBound: 2 * math.pi,
     duration: const Duration(seconds: 10),
