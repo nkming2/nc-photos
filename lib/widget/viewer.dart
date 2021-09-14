@@ -108,7 +108,7 @@ class _ViewerState extends State<Viewer>
         children: [
           Container(color: Colors.black),
           if (!_isViewerLoaded ||
-              !_pageStates[_viewerController.currentPage]!.hasLoaded)
+              _pageStates[_viewerController.currentPage]?.hasLoaded != true)
             Align(
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
