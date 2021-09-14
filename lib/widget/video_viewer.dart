@@ -13,8 +13,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
+import 'package:nc_photos/widget/disposable.dart';
+import 'package:nc_photos/widget/wakelock_util.dart';
 import 'package:video_player/video_player.dart';
-import 'package:wakelock/wakelock.dart';
 
 class VideoViewer extends StatefulWidget {
   VideoViewer({
@@ -41,7 +42,8 @@ class VideoViewer extends StatefulWidget {
   final bool canPlay;
 }
 
-class _VideoViewerState extends State<VideoViewer> {
+class _VideoViewerState extends State<VideoViewer>
+    with DisposableManagerMixin<VideoViewer> {
   @override
   initState() {
     super.initState();
@@ -56,8 +58,14 @@ class _VideoViewerState extends State<VideoViewer> {
         duration: k.snackBarDurationNormal,
       ));
     });
+  }
 
-    Wakelock.enable();
+  @override
+  initDisposables() {
+    return [
+      ...super.initDisposables(),
+      WakelockControllerDisposable(),
+    ];
   }
 
   @override
@@ -81,7 +89,6 @@ class _VideoViewerState extends State<VideoViewer> {
   dispose() {
     super.dispose();
     _controller.dispose();
-    Wakelock.disable();
   }
 
   void _initController(String url) async {
