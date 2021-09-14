@@ -87,6 +87,19 @@ class Viewer extends StatefulWidget {
 
 class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
   @override
+  initDisposables() {
+    return [
+      ...super.initDisposables(),
+      if (platform_k.isMobile) _ViewerBrightnessController(),
+      _ViewerSystemUiResetter(),
+      if (platform_k.isMobile && Pref.inst().isViewerForceRotationOr(false))
+        _ViewerOrientationController(
+          onChanged: _onOrientationChanged,
+        ),
+    ];
+  }
+
+  @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
@@ -643,15 +656,6 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
   bool _canSwitchPage() => !_isZoomed;
   bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
-
-  late final disposables = [
-    if (platform_k.isMobile) _ViewerBrightnessController(),
-    _ViewerSystemUiResetter(),
-    if (platform_k.isMobile && Pref.inst().isViewerForceRotationOr(false))
-      _ViewerOrientationController(
-        onChanged: _onOrientationChanged,
-      ),
-  ];
 
   var _isShowAppBar = true;
 
