@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -18,8 +17,6 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/notification.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -31,10 +28,12 @@ import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
+import 'package:nc_photos/widget/slideshow_dialog.dart';
+import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
-import 'package:screen_brightness/screen_brightness.dart';
+import 'package:nc_photos/widget/viewer_mixin.dart';
 
 class ViewerArguments {
   ViewerArguments(
@@ -85,20 +84,8 @@ class Viewer extends StatefulWidget {
   final Album? album;
 }
 
-class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
-  @override
-  initDisposables() {
-    return [
-      ...super.initDisposables(),
-      if (platform_k.isMobile) _ViewerBrightnessController(),
-      _ViewerSystemUiResetter(),
-      if (platform_k.isMobile && Pref.inst().isViewerForceRotationOr(false))
-        _ViewerOrientationController(
-          onChanged: _onOrientationChanged,
-        ),
-    ];
-  }
-
+class _ViewerState extends State<Viewer>
+    with DisposableManagerMixin<Viewer>, ViewerControllersMixin<Viewer> {
   @override
   build(BuildContext context) {
     return AppTheme(
@@ -286,6 +273,7 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
                       account: widget.account,
                       file: widget.streamFiles[index],
                       album: widget.album,
+                      onSlideshowPressed: _onSlideshowPressed,
                     ),
                   ),
                 ),
@@ -555,30 +543,27 @@ class _ViewerState extends State<Viewer> with DisposableManagerMixin<Viewer> {
     }
   }
 
-  void _onOrientationChanged(NativeDeviceOrientation orientation) {
-    _log.info("[_onOrientationChanged] $orientation");
-    if (!mounted) {
+  void _onSlideshowPressed() async {
+    final result = await showDialog<SlideshowConfig>(
+      context: context,
+      builder: (_) => SlideshowDialog(
+        duration: Duration(seconds: Pref.inst().getSlideshowDurationOr(5)),
+        isShuffle: Pref.inst().isSlideshowShuffleOr(false),
+        isRepeat: Pref.inst().isSlideshowRepeatOr(false),
+      ),
+    );
+    if (result == null) {
       return;
     }
-    final List<DeviceOrientation> prefer;
-    switch (orientation) {
-      case NativeDeviceOrientation.portraitDown:
-        prefer = [DeviceOrientation.portraitDown];
-        break;
-      case NativeDeviceOrientation.landscapeLeft:
-        prefer = [DeviceOrientation.landscapeLeft];
-        break;
-
-      case NativeDeviceOrientation.landscapeRight:
-        prefer = [DeviceOrientation.landscapeRight];
-        break;
-
-      case NativeDeviceOrientation.portraitUp:
-      default:
-        prefer = [DeviceOrientation.portraitUp];
-        break;
-    }
-    SystemChrome.setPreferredOrientations(prefer);
+    Pref.inst()
+      ..setSlideshowDuration(result.duration.inSeconds)
+      ..setSlideshowShuffle(result.isShuffle)
+      ..setSlideshowRepeat(result.isRepeat);
+    Navigator.of(context).pushNamed(
+      SlideshowViewer.routeName,
+      arguments: SlideshowViewerArguments(widget.account, widget.streamFiles,
+          _viewerController.currentPage, result),
+    );
   }
 
   double _calcDetailPaneOffset(int index) {
@@ -680,55 +665,4 @@ class _PageState {
   ScrollController scrollController;
   double? itemHeight;
   bool hasLoaded = false;
-}
-
-/// Control the screen brightness according to the settings
-class _ViewerBrightnessController implements Disposable {
-  @override
-  init(State state) {
-    final brightness = Pref.inst().getViewerScreenBrightness();
-    if (brightness != null && brightness >= 0) {
-      ScreenBrightness.setScreenBrightness(brightness / 100.0);
-    }
-  }
-
-  @override
-  dispose(State state) {
-    ScreenBrightness.resetScreenBrightness();
-  }
-}
-
-/// Make sure the system UI overlay is reset on dispose
-class _ViewerSystemUiResetter implements Disposable {
-  @override
-  init(State state) {}
-
-  @override
-  dispose(State state) {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  }
-}
-
-class _ViewerOrientationController implements Disposable {
-  _ViewerOrientationController({
-    this.onChanged,
-  });
-
-  @override
-  init(State state) {
-    _subscription = NativeDeviceOrientationCommunicator()
-        .onOrientationChanged(useSensor: true)
-        .listen((orientation) {
-      onChanged?.call(orientation);
-    });
-  }
-
-  @override
-  dispose(State state) {
-    _subscription.cancel();
-    SystemChrome.setPreferredOrientations([]);
-  }
-
-  ValueChanged<NativeDeviceOrientation>? onChanged;
-  late final StreamSubscription<NativeDeviceOrientation> _subscription;
 }

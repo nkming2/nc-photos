@@ -22,6 +22,7 @@ import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
+import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
@@ -136,6 +137,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handlePendingAlbumsRoute(settings);
     route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePersonBrowserRoute(settings);
+    route ??= _handleSlideshowViewerRoute(settings);
     return route;
   }
 
@@ -349,6 +351,20 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       }
     } catch (e) {
       _log.severe("[_handlePersonBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleSlideshowViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == SlideshowViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as SlideshowViewerArguments;
+        return SlideshowViewer.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleSlideshowViewerRoute] Failed while handling route", e);
     }
     return null;
   }

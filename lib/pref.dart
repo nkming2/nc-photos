@@ -97,6 +97,23 @@ class Pref {
   int getLanguageOr(int def) => getLanguage() ?? def;
   Future<bool> setLanguage(int value) => _setInt(PrefKey.language, value);
 
+  int? getSlideshowDuration() =>
+      _pref.getInt(_toKey(PrefKey.slideshowDuration));
+  int getSlideshowDurationOr(int def) => getSlideshowDuration() ?? def;
+  Future<bool> setSlideshowDuration(int value) =>
+      _setInt(PrefKey.slideshowDuration, value);
+
+  bool? isSlideshowShuffle() =>
+      _pref.getBool(_toKey(PrefKey.isSlideshowShuffle));
+  bool isSlideshowShuffleOr(bool def) => isSlideshowShuffle() ?? def;
+  Future<bool> setSlideshowShuffle(bool value) =>
+      _setBool(PrefKey.isSlideshowShuffle, value);
+
+  bool? isSlideshowRepeat() => _pref.getBool(_toKey(PrefKey.isSlideshowRepeat));
+  bool isSlideshowRepeatOr(bool def) => isSlideshowRepeat() ?? def;
+  Future<bool> setSlideshowRepeat(bool value) =>
+      _setBool(PrefKey.isSlideshowRepeat, value);
+
   bool? hasNewSharedAlbum() => _pref.getBool(_toKey(PrefKey.newSharedAlbum));
   bool hasNewSharedAlbumOr(bool def) => hasNewSharedAlbum() ?? def;
   Future<bool> setNewSharedAlbum(bool value) =>
@@ -173,6 +190,12 @@ class Pref {
         return "isLabEnableSharedAlbum";
       case PrefKey.labEnablePeople:
         return "isLabEnablePeople";
+      case PrefKey.slideshowDuration:
+        return "slideshowDuration";
+      case PrefKey.isSlideshowShuffle:
+        return "isSlideshowShuffle";
+      case PrefKey.isSlideshowRepeat:
+        return "isSlideshowRepeat";
     }
   }
 
@@ -198,6 +221,9 @@ enum PrefKey {
   newSharedAlbum,
   labEnableSharedAlbum,
   labEnablePeople,
+  slideshowDuration,
+  isSlideshowShuffle,
+  isSlideshowRepeat,
 }
 
 extension PrefExtension on Pref {

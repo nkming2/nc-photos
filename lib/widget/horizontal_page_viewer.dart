@@ -9,7 +9,7 @@ import 'package:nc_photos/widget/page_changed_listener.dart';
 class HorizontalPageViewer extends StatefulWidget {
   HorizontalPageViewer({
     Key? key,
-    required this.pageCount,
+    this.pageCount,
     required this.pageBuilder,
     this.initialPage = 0,
     HorizontalPageViewerController? controller,
@@ -23,7 +23,7 @@ class HorizontalPageViewer extends StatefulWidget {
   createState() => _HorizontalPageViewerState();
 
   final int initialPage;
-  final int pageCount;
+  final int? pageCount;
   final Widget Function(BuildContext context, int index) pageBuilder;
   final HorizontalPageViewerController controller;
   final double viewportFraction;
@@ -226,7 +226,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
     if (!platform_k.isWeb) {
       return;
     }
-    final hasNext = page < widget.pageCount - 1;
+    final hasNext = widget.pageCount == null || page < widget.pageCount! - 1;
     final hasPrev = page > 0;
     final hasLeft =
         Directionality.of(context) == TextDirection.ltr ? hasPrev : hasNext;
@@ -262,6 +262,15 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
 }
 
 class HorizontalPageViewerController {
+  Future<void> nextPage({
+    required Duration duration,
+    required Curve curve,
+  }) =>
+      _pageController.nextPage(
+        duration: duration,
+        curve: curve,
+      );
+
   int get currentPage => _pageController.hasClients
       ? _pageController.page!.round()
       : _pageController.initialPage;

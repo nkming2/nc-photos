@@ -41,6 +41,7 @@ class ViewerDetailPane extends StatefulWidget {
     required this.account,
     required this.file,
     this.album,
+    this.onSlideshowPressed,
   }) : super(key: key);
 
   @override
@@ -51,6 +52,8 @@ class ViewerDetailPane extends StatefulWidget {
 
   /// The album this file belongs to, or null
   final Album? album;
+
+  final VoidCallback? onSlideshowPressed;
 }
 
 class _ViewerDetailPaneState extends State<ViewerDetailPane> {
@@ -153,6 +156,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     label: L10n.global().archiveTooltip,
                     onPressed: () => _onArchivePressed(context),
                   ),
+                _DetailPaneButton(
+                  icon: Icons.slideshow_outlined,
+                  label: L10n.global().slideshowTooltip,
+                  onPressed: widget.onSlideshowPressed,
+                ),
               ],
             ),
           ),

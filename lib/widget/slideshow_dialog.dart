@@ -1,0 +1,203 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/num_extension.dart';
+import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/widget/switch_form_field.dart';
+
+class SlideshowConfig {
+  SlideshowConfig({
+    required this.duration,
+    required this.isShuffle,
+    required this.isRepeat,
+  });
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "duration: $duration, "
+        "isShuffle: $isShuffle, "
+        "isRepeat: $isRepeat, "
+        "}";
+  }
+
+  /// Time where each item is shown
+  final Duration duration;
+
+  /// Whether to shuffle the items
+  final bool isShuffle;
+
+  /// Whether to repeat the slideshow after finishing
+  final bool isRepeat;
+}
+
+class SlideshowDialog extends StatefulWidget {
+  SlideshowDialog({
+    Key? key,
+    required this.duration,
+    required this.isShuffle,
+    required this.isRepeat,
+  }) : super(key: key);
+
+  @override
+  createState() => _SlideshowDialogState();
+
+  final Duration duration;
+  final bool isShuffle;
+  final bool isRepeat;
+}
+
+class _SlideshowDialogState extends State<SlideshowDialog> {
+  @override
+  initState() {
+    super.initState();
+    _durationSecond = widget.duration.inSeconds % 60;
+    _durationMinute = widget.duration.inMinutes;
+  }
+
+  @override
+  build(BuildContext context) {
+    return AlertDialog(
+      title: Text(L10n.global().slideshowSetupDialogTitle),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              L10n.global().slideshowSetupDialogDurationTitle,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().timeMinuteInputHint,
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (_durationSecond == 0 && int.tryParse(value!) == 0) {
+                        return L10n.global().dateTimeInputInvalid;
+                      }
+                      if (int.tryParse(value!)?.inRange(0, 59) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.minute = int.parse(value!);
+                    },
+                    onChanged: (value) {
+                      try {
+                        _durationMinute = int.parse(value);
+                      } catch (_) {}
+                    },
+                    initialValue:
+                        widget.duration.inMinutes.toString().padLeft(2, "0"),
+                  ),
+                  flex: 1,
+                ),
+                const SizedBox(width: 4),
+                Text(":"),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().timeSecondInputHint,
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (_durationMinute == 0 && int.tryParse(value!) == 0) {
+                        return L10n.global().dateTimeInputInvalid;
+                      }
+                      if (int.tryParse(value!)?.inRange(0, 59) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.second = int.parse(value!);
+                    },
+                    onChanged: (value) {
+                      try {
+                        _durationSecond = int.parse(value);
+                      } catch (_) {}
+                    },
+                    initialValue: (widget.duration.inSeconds % 60)
+                        .toString()
+                        .padLeft(2, "0"),
+                  ),
+                  flex: 1,
+                ),
+              ],
+            ),
+            SwitchFormField(
+              title: Text(L10n.global().slideshowSetupDialogShuffleTitle),
+              onSaved: (value) {
+                _formValue.isShuffle = value!;
+              },
+              initialValue: widget.isShuffle,
+            ),
+            SwitchFormField(
+              title: Text(L10n.global().slideshowSetupDialogRepeatTitle),
+              onSaved: (value) {
+                _formValue.isRepeat = value!;
+              },
+              initialValue: widget.isRepeat,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => _onOkPressed(context),
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+        ),
+      ],
+    );
+  }
+
+  void _onOkPressed(BuildContext context) {
+    if (_formKey.currentState?.validate() == true) {
+      _formKey.currentState!.save();
+      if (_formValue.minute == 0 && _formValue.second == 0) {
+        // invalid
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().dateTimeInputInvalid),
+          duration: k.snackBarDurationNormal,
+        ));
+        return;
+      }
+
+      final product = SlideshowConfig(
+        duration: Duration(
+          minutes: _formValue.minute,
+          seconds: _formValue.second,
+        ),
+        isShuffle: _formValue.isShuffle,
+        isRepeat: _formValue.isRepeat,
+      );
+      _log.info("[_onOkPressed] Config: $product");
+      Navigator.of(context).pop(product);
+    }
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  final _formValue = _FormValue();
+
+  late int _durationSecond;
+  late int _durationMinute;
+
+  static final _log = Logger("widget.slideshow_dialog._SlideshowDialog");
+}
+
+class _FormValue {
+  late int minute;
+  late int second;
+  late bool isShuffle;
+  late bool isRepeat;
+}

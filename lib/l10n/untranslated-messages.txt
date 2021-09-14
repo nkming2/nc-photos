@@ -1,4 +1,13 @@
 {
+  "de": [
+    "timeSecondInputHint",
+    "slideshowTooltip",
+    "slideshowSetupDialogTitle",
+    "slideshowSetupDialogDurationTitle",
+    "slideshowSetupDialogShuffleTitle",
+    "slideshowSetupDialogRepeatTitle"
+  ],
+
   "el": [
     "collectionsTooltip",
     "settingsViewerTitle",
@@ -19,6 +28,7 @@
     "settingsCaptureLogsDescription",
     "captureLogDetails",
     "captureLogSuccessNotification",
+    "timeSecondInputHint",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel",
     "listEmptyText",
@@ -54,7 +64,21 @@
     "muteTooltip",
     "unmuteTooltip",
     "collectionPeopleLabel",
-    "personPhotoCountText"
+    "personPhotoCountText",
+    "slideshowTooltip",
+    "slideshowSetupDialogTitle",
+    "slideshowSetupDialogDurationTitle",
+    "slideshowSetupDialogShuffleTitle",
+    "slideshowSetupDialogRepeatTitle"
+  ],
+
+  "es": [
+    "timeSecondInputHint",
+    "slideshowTooltip",
+    "slideshowSetupDialogTitle",
+    "slideshowSetupDialogDurationTitle",
+    "slideshowSetupDialogShuffleTitle",
+    "slideshowSetupDialogRepeatTitle"
   ],
 
   "fr": [
@@ -77,6 +101,7 @@
     "settingsCaptureLogsDescription",
     "captureLogDetails",
     "captureLogSuccessNotification",
+    "timeSecondInputHint",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel",
     "helpTooltip",
@@ -92,7 +117,12 @@
     "muteTooltip",
     "unmuteTooltip",
     "collectionPeopleLabel",
-    "personPhotoCountText"
+    "personPhotoCountText",
+    "slideshowTooltip",
+    "slideshowSetupDialogTitle",
+    "slideshowSetupDialogDurationTitle",
+    "slideshowSetupDialogShuffleTitle",
+    "slideshowSetupDialogRepeatTitle"
   ],
 
   "ru": [
@@ -100,9 +130,15 @@
     "settingsCaptureLogsDescription",
     "captureLogDetails",
     "captureLogSuccessNotification",
+    "timeSecondInputHint",
     "sortOptionAlbumNameLabel",
     "sortOptionAlbumNameDescendingLabel",
     "collectionPeopleLabel",
-    "personPhotoCountText"
+    "personPhotoCountText",
+    "slideshowTooltip",
+    "slideshowSetupDialogTitle",
+    "slideshowSetupDialogDurationTitle",
+    "slideshowSetupDialogShuffleTitle",
+    "slideshowSetupDialogRepeatTitle"
   ]
 }

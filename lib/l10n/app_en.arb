@@ -488,6 +488,7 @@
 	"dateDayInputHint": "Day",
 	"timeHourInputHint": "Hour",
 	"timeMinuteInputHint": "Minute",
+	"timeSecondInputHint": "Second",
 	"dateTimeInputInvalid": "Invalid value",
 	"@dateTimeInputInvalid": {
 		"description": "Invalid date/time input (e.g., non-numeric characters)"
@@ -799,6 +800,26 @@
 				"example": "1"
 			}
 		}
+	},
+	"slideshowTooltip": "Slideshow",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "Setup slideshow",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "Image duration (MM:SS)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "Shuffle",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "Repeat",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

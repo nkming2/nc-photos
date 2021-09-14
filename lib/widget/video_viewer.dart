@@ -22,6 +22,7 @@ class VideoViewer extends StatefulWidget {
     required this.account,
     required this.file,
     this.onLoaded,
+    this.onLoadFailure,
     this.onHeightChanged,
     this.onPlay,
     this.onPause,
@@ -35,6 +36,7 @@ class VideoViewer extends StatefulWidget {
   final Account account;
   final File file;
   final VoidCallback? onLoaded;
+  final VoidCallback? onLoadFailure;
   final ValueChanged<double>? onHeightChanged;
   final VoidCallback? onPlay;
   final VoidCallback? onPause;
@@ -57,6 +59,7 @@ class _VideoViewerState extends State<VideoViewer>
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
+      widget.onLoadFailure?.call();
     });
   }
 
@@ -117,6 +120,7 @@ class _VideoViewerState extends State<VideoViewer>
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
+      widget.onLoadFailure?.call();
     }
   }
 
