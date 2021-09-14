@@ -83,6 +83,7 @@ dependencies:
 dev_dependencies:
   test: any
   bloc_test: any
+  flutter_lints: ^1.0.4
   # flutter_test:
   #   sdk: flutter
   # integration_test:
