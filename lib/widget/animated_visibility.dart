@@ -28,6 +28,12 @@ class AnimatedVisibility extends StatefulWidget {
 
 class _AnimatedVisibilityState extends State<AnimatedVisibility> {
   @override
+  initState() {
+    super.initState();
+    _isActive = widget.opacity > 0;
+  }
+
+  @override
   build(BuildContext context) {
     if (!_isActive && widget.opacity > 0) {
       _isActive = true;
@@ -54,5 +60,5 @@ class _AnimatedVisibilityState extends State<AnimatedVisibility> {
     widget.onEnd?.call();
   }
 
-  bool _isActive = true;
+  late bool _isActive;
 }
