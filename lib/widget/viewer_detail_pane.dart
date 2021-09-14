@@ -550,7 +550,7 @@ class _DetailPaneButton extends StatelessWidget {
         width: 96,
         height: 96,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
           child: Column(
             children: [
               Icon(
