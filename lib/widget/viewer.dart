@@ -593,9 +593,10 @@ class _ViewerState extends State<Viewer>
   void _setShowActionBar(bool flag) {
     _isShowAppBar = flag;
     if (flag) {
-      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values);
     } else {
-      SystemChrome.setEnabledSystemUIOverlays([]);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     }
   }
 

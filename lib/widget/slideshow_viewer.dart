@@ -79,7 +79,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
       }
     }();
     _initSlideshow();
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
   @override
@@ -253,6 +253,8 @@ class _SlideshowViewerState extends State<SlideshowViewer>
       return;
     }
     _setupSlideTransition(newPage);
+
+    SystemChrome.restoreSystemUIOverlays();
   }
 
   void _setupSlideTransition(int index) {
@@ -267,6 +269,12 @@ class _SlideshowViewerState extends State<SlideshowViewer>
 
   void _setShowActionBar(bool flag) {
     _isShowAppBar = flag;
+    if (flag) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    }
   }
 
   /// Return the page index to the corresponding item index

@@ -76,7 +76,8 @@ class _ViewerSystemUiResetter implements Disposable {
 
   @override
   dispose(State state) {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
   }
 }
 
