@@ -101,10 +101,13 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
         _processingSharee.any((element) => element == sharee.shareWith);
     final Widget trailing;
     if (isProcessing) {
-      trailing = const SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(),
+      trailing = const Padding(
+        padding: EdgeInsetsDirectional.only(end: 12),
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(),
+        ),
       );
     } else {
       trailing = Checkbox(
@@ -156,6 +159,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     } else {
       // remove share
       try {
+        await Future.delayed(const Duration(seconds: 3));
         await shareRepo.delete(widget.account, share);
         _overrideSharee[sharee.shareWith] = null;
       } catch (e, stackTrace) {
