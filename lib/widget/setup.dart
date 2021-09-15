@@ -14,6 +14,10 @@ bool isNeedSetup() =>
 class Setup extends StatefulWidget {
   static const routeName = "/setup";
 
+  const Setup({
+    Key? key,
+  }) : super(key: key);
+
   @override
   createState() => _SetupState();
 }
@@ -49,7 +53,7 @@ class _SetupState extends State<Setup> {
         Expanded(
           child: PageView(
             controller: _pageController,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: pages,
             onPageChanged: (page) {
               setState(() {
@@ -117,7 +121,7 @@ class _SetupState extends State<Setup> {
 
   final _initialProgress = Pref.inst().getSetupProgressOr();
   final _pageController = PageController();
-  var _currentPageNotifier = ValueNotifier<int>(0);
+  final _currentPageNotifier = ValueNotifier<int>(0);
 }
 
 class _PageId {

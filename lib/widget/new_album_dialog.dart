@@ -16,7 +16,7 @@ import 'package:nc_photos/widget/album_dir_picker.dart';
 /// The created album will be popped to the previous route, or null if user
 /// cancelled
 class NewAlbumDialog extends StatefulWidget {
-  NewAlbumDialog({
+  const NewAlbumDialog({
     Key? key,
     required this.account,
     this.isAllowDynamic = true,
@@ -44,7 +44,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         content: Form(
           key: _formKey,
           child: Container(
-            constraints: BoxConstraints.tightFor(width: 280),
+            constraints: const BoxConstraints.tightFor(width: 280),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         items: const [],
       ),
       coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: AlbumTimeSortProvider(isAscending: false),
+      sortProvider: const AlbumTimeSortProvider(isAscending: false),
     );
     _log.info("[_onOkPressed] Creating static album: $album");
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -150,7 +150,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
           dirs: value,
         ),
         coverProvider: AlbumAutoCoverProvider(),
-        sortProvider: AlbumTimeSortProvider(isAscending: false),
+        sortProvider: const AlbumTimeSortProvider(isAscending: false),
       );
       _log.info("[_onOkPressed] Creating dir album: $album");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());

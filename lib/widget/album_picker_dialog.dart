@@ -17,7 +17,7 @@ import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:tuple/tuple.dart';
 
 class AlbumPickerDialog extends StatefulWidget {
-  AlbumPickerDialog({
+  const AlbumPickerDialog({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -101,7 +101,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
                       onPressed: () => _onItemPressed(context, e),
                       child: ListTile(
                         dense: true,
-                        title: Text("${e.name}"),
+                        title: Text(e.name),
                       ),
                     ))
                 .toList() +

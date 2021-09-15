@@ -9,7 +9,7 @@ abstract class MeasurableItemListState {
 }
 
 class MeasurableItemList extends StatefulWidget {
-  MeasurableItemList({
+  const MeasurableItemList({
     Key? key,
     required this.maxCrossAxisExtent,
     required this.itemCount,
@@ -67,9 +67,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
     // on mobile, LayoutBuilder conflicts with TextFields.
     // See https://github.com/flutter/flutter/issues/63919
     return SliverLayoutBuilder(builder: (context, constraints) {
-      if (_prevListWidth == null) {
-        _prevListWidth = constraints.crossAxisExtent;
-      }
+      _prevListWidth ??= constraints.crossAxisExtent;
       if (constraints.crossAxisExtent != _prevListWidth) {
         _log.info("[build] updateListHeight: list viewport width changed");
         WidgetsBinding.instance!
@@ -79,9 +77,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
       // need to rebuild grid after cell size changed
       final cellSize = widget.maxCrossAxisExtent;
-      if (_prevCellSize == null) {
-        _prevCellSize = cellSize;
-      }
+      _prevCellSize ??= cellSize;
       if (cellSize != _prevCellSize) {
         _log.info("[build] updateListHeight: cell size changed");
         WidgetsBinding.instance!
@@ -132,7 +128,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
   Orientation? _prevOrientation;
 
   // this unique token is there to keep the global key unique
-  final _uniqueToken = Uuid().v4();
+  final _uniqueToken = const Uuid().v4();
   late GlobalObjectKey _gridKey;
 
   static final _log =

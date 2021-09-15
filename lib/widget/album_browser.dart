@@ -47,7 +47,7 @@ class AlbumBrowser extends StatefulWidget {
         builder: (context) => AlbumBrowser.fromArgs(args),
       );
 
-  AlbumBrowser({
+  const AlbumBrowser({
     Key? key,
     required this.account,
     required this.album,
@@ -108,6 +108,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     );
   }
 
+  @override
   @protected
   get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
 
@@ -186,7 +187,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         slivers: [
           buildNormalAppBar(context, widget.account, widget.album),
           const SliverToBoxAdapter(
-            child: const LinearProgressIndicator(),
+            child: LinearProgressIndicator(),
           ),
         ],
       );
@@ -259,12 +260,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   Widget _buildEditAppBar(BuildContext context) {
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
-        icon: Icon(Icons.text_fields),
+        icon: const Icon(Icons.text_fields),
         tooltip: L10n.global().albumAddTextTooltip,
         onPressed: _onEditAppBarAddTextPressed,
       ),
       IconButton(
-        icon: Icon(Icons.sort_by_alpha),
+        icon: const Icon(Icons.sort_by_alpha),
         tooltip: L10n.global().sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
@@ -374,7 +375,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   void _onSortOldestPressed() {
     _editAlbum = _editAlbum!.copyWith(
-      sortProvider: AlbumTimeSortProvider(isAscending: true),
+      sortProvider: const AlbumTimeSortProvider(isAscending: true),
     );
     setState(() {
       _transformItems();
@@ -383,7 +384,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   void _onSortNewestPressed() {
     _editAlbum = _editAlbum!.copyWith(
-      sortProvider: AlbumTimeSortProvider(isAscending: false),
+      sortProvider: const AlbumTimeSortProvider(isAscending: false),
     );
     setState(() {
       _transformItems();
@@ -441,7 +442,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         toIndex + (isBefore ? 0 : 1) + (fromIndex < toIndex ? -1 : 0);
     _sortedItems.insert(newIndex, item);
     _editAlbum = _editAlbum!.copyWith(
-      sortProvider: AlbumNullSortProvider(),
+      sortProvider: const AlbumNullSortProvider(),
       // save the current order
       provider: AlbumStaticProvider(
         items: _sortedItems,
@@ -455,7 +456,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   void _onEditAppBarAddTextPressed() {
     showDialog<String>(
       context: context,
-      builder: (context) => SimpleInputDialog(),
+      builder: (context) => const SimpleInputDialog(),
     ).then((value) {
       if (value == null) {
         return;

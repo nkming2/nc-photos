@@ -8,5 +8,5 @@ class Share {
         "mimeTypes": mimeTypes,
       });
 
-  static const _channel = const MethodChannel("com.nkming.nc_photos/share");
+  static const _channel = MethodChannel("com.nkming.nc_photos/share");
 }

@@ -104,7 +104,7 @@ class ListAlbumBlocInconsistent extends ListAlbumBlocState {
 }
 
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
-  ListAlbumBloc() : super(ListAlbumBlocInit()) {
+  ListAlbumBloc() : super(const ListAlbumBlocInit()) {
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _fileRemovedListener =
@@ -118,7 +118,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
-        add(_ListAlbumBlocExternalEvent());
+        add(const _ListAlbumBlocExternalEvent());
       },
       logTag: "ListAlbumBloc.refresh",
     );
@@ -214,7 +214,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    add(_ListAlbumBlocExternalEvent());
+    add(const _ListAlbumBlocExternalEvent());
   }
 
   Future<ListAlbumBlocState> _queryOffline(ListAlbumBlocQuery ev) =>

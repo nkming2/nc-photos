@@ -10,7 +10,8 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
 
 class ImageViewer extends StatefulWidget {
-  ImageViewer({
+  const ImageViewer({
+    Key? key,
     required this.account,
     required this.file,
     required this.canZoom,
@@ -18,7 +19,7 @@ class ImageViewer extends StatefulWidget {
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
-  });
+  }) : super(key: key);
 
   @override
   createState() => _ImageViewerState();
@@ -205,7 +206,7 @@ class _ImageViewerState extends State<ImageViewer>
   var _wasZoomed = false;
 
   int _finger = 0;
-  var _prevFingerPosition = Offset(0, 0);
+  var _prevFingerPosition = const Offset(0, 0);
 
   static final _log = Logger("widget.image_viewer._ImageViewerState");
 }

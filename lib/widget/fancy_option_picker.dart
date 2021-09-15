@@ -19,7 +19,7 @@ class FancyOptionPickerItem {
 
 /// A fancy looking dialog to pick an option
 class FancyOptionPicker extends StatelessWidget {
-  FancyOptionPicker({
+  const FancyOptionPicker({
     Key? key,
     this.title,
     required this.items,

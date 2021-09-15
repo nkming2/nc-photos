@@ -39,11 +39,11 @@ class UpdateMissingMetadata {
         // we only do it with WiFi
         await connectivity_util.waitUntilWifi(onNoWifi: () {
           KiwiContainer().resolve<EventBus>().fire(
-              MetadataTaskStateChangedEvent(MetadataTaskState.waitingForWifi));
+              const MetadataTaskStateChangedEvent(
+                  MetadataTaskState.waitingForWifi));
         });
-        KiwiContainer()
-            .resolve<EventBus>()
-            .fire(MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
+        KiwiContainer().resolve<EventBus>().fire(
+            const MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
         if (!shouldRun) {
           return;
         }

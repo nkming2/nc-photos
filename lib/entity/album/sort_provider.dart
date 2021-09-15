@@ -53,7 +53,7 @@ class AlbumNullSortProvider extends AlbumSortProvider {
   const AlbumNullSortProvider();
 
   factory AlbumNullSortProvider.fromJson(JsonObj json) {
-    return AlbumNullSortProvider();
+    return const AlbumNullSortProvider();
   }
 
   @override

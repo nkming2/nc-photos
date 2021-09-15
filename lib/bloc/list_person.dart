@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/person.dart';
@@ -90,7 +89,7 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
   }
 
   Future<List<Person>> _query(ListPersonBlocQuery ev) {
-    final personRepo = PersonRepo(PersonRemoteDataSource());
+    const personRepo = PersonRepo(PersonRemoteDataSource());
     return personRepo.list(ev.account);
   }
 

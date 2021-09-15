@@ -68,9 +68,9 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
               : _buildList(context, state),
         ),
         if (state is LsDirBlocLoading)
-          Align(
+          const Align(
             alignment: Alignment.topCenter,
-            child: const LinearProgressIndicator(),
+            child: LinearProgressIndicator(),
           ),
       ],
     );
@@ -164,7 +164,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
                 }
               },
             )
-          : IconButton(
+          : const IconButton(
               icon: Icon(null),
               onPressed: null,
             ),
@@ -274,7 +274,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
         final parents = _picks
             .where((element) => item.file.path.startsWith(element.path))
             .toList()
-              ..sort((a, b) => b.path.length.compareTo(a.path.length));
+          ..sort((a, b) => b.path.length.compareTo(a.path.length));
         final parent = parents.first;
         try {
           _picks.addAll(_pickedAllExclude(path: parent.path, exclude: item)

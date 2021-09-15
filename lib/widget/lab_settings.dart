@@ -6,6 +6,10 @@ import 'package:nc_photos/theme.dart';
 class LabSettings extends StatefulWidget {
   static const routeName = "/lab-settings";
 
+  const LabSettings({
+    Key? key,
+  }) : super(key: key);
+
   @override
   createState() => _LabSettingsState();
 }
@@ -18,8 +22,8 @@ class _LabSettingsState extends State<LabSettings> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Warning"),
-          content: Text(
+          title: const Text("Warning"),
+          content: const Text(
               "Features listed here may be untested, unfinished, or even completely broken. They may break the app and corrupt your data. No help/support will be provided.\n\nDO NOT proceed unless you understand the risk"),
           actions: [
             Align(
@@ -28,7 +32,7 @@ class _LabSettingsState extends State<LabSettings> {
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
-                child: Text("I UNDERSTAND"),
+                child: const Text("I UNDERSTAND"),
               ),
             ),
           ],
@@ -47,7 +51,7 @@ class _LabSettingsState extends State<LabSettings> {
       child: Scaffold(
         body: Builder(builder: (context) => _buildContent(context)),
         appBar: AppBar(
-          title: Text("Lab Settings"),
+          title: const Text("Lab Settings"),
         ),
       ),
     );
@@ -57,14 +61,14 @@ class _LabSettingsState extends State<LabSettings> {
     return ListView(
       children: [
         _LabBoolItem(
-          title: Text("enableSharedAlbum"),
+          title: const Text("enableSharedAlbum"),
           isSelected: Pref.inst().isLabEnableSharedAlbumOr(false),
           onChanged: (value) {
             Pref.inst().setLabEnableSharedAlbum(value);
           },
         ),
         _LabBoolItem(
-          title: Text("enablePeople"),
+          title: const Text("enablePeople"),
           isSelected: Pref.inst().isLabEnablePeopleOr(false),
           onChanged: (value) {
             Pref.inst().setLabEnablePeople(value);
@@ -76,7 +80,7 @@ class _LabSettingsState extends State<LabSettings> {
 }
 
 class _LabBoolItem extends StatefulWidget {
-  _LabBoolItem({
+  const _LabBoolItem({
     Key? key,
     required this.title,
     this.subtitle,

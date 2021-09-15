@@ -34,7 +34,7 @@ class PendingAlbums extends StatefulWidget {
         builder: (context) => PendingAlbums.fromArgs(args),
       );
 
-  PendingAlbums({
+  const PendingAlbums({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -85,7 +85,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
       return Column(
         children: [
           AppBar(
-            title: Text("Sharing with you"),
+            title: const Text("Sharing with you"),
             elevation: 0,
           ),
           Expanded(
@@ -105,7 +105,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
             ),
             child: CustomScrollView(
               slivers: [
-                SliverAppBar(
+                const SliverAppBar(
                   title: Text("Sharing with you"),
                 ),
                 SliverPadding(
@@ -123,9 +123,9 @@ class _PendingAlbumsState extends State<PendingAlbums> {
             ),
           ),
           if (!_isReady || state is ListPendingSharedAlbumBlocLoading)
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
         ],
       );
@@ -190,7 +190,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
   }
 
   Future<void> _importPotentialSharedAlbum() async {
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     // don't want the potential albums to be cached at this moment
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {
@@ -206,7 +206,7 @@ class _PendingAlbumsState extends State<PendingAlbums> {
   final _bloc = ListPendingSharedAlbumBloc();
   bool _isReady = false;
 
-  var _items = <_GridItem>[];
+  final _items = <_GridItem>[];
 
   static final _log = Logger("widget.pending_albums._PendingAlbumsState");
 }

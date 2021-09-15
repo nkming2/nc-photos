@@ -35,7 +35,7 @@ class PeopleBrowser extends StatefulWidget {
         builder: (context) => PeopleBrowser.fromArgs(args),
       );
 
-  PeopleBrowser({
+  const PeopleBrowser({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -102,9 +102,9 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
                     textDirection: Directionality.of(context),
                     end: 0,
                     top: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 10),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                       child: Icon(
                         Icons.circle,
                         color: Colors.red,
@@ -148,9 +148,9 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
             ),
           ),
           if (state is ListPersonBlocLoading)
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
         ],
       );

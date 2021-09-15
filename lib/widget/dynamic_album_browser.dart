@@ -50,7 +50,7 @@ class DynamicAlbumBrowser extends StatefulWidget {
         builder: (context) => DynamicAlbumBrowser.fromArgs(args),
       );
 
-  DynamicAlbumBrowser({
+  const DynamicAlbumBrowser({
     Key? key,
     required this.account,
     required this.album,
@@ -110,6 +110,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     );
   }
 
+  @override
   @protected
   get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
 
@@ -178,7 +179,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         timeDescSortedFiles = _backingFiles;
       }
     } else {
-      timeDescSortedFiles = AlbumTimeSortProvider(isAscending: false)
+      timeDescSortedFiles = const AlbumTimeSortProvider(isAscending: false)
           .sort(items)
           .whereType<AlbumFileItem>()
           .map((e) => e.file)
@@ -216,7 +217,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         slivers: [
           buildNormalAppBar(context, widget.account, widget.album),
           const SliverToBoxAdapter(
-            child: const LinearProgressIndicator(),
+            child: LinearProgressIndicator(),
           ),
         ],
       );
@@ -315,7 +316,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   Widget _buildEditAppBar(BuildContext context) {
     return buildEditAppBar(context, widget.account, widget.album, actions: [
       IconButton(
-        icon: Icon(Icons.sort_by_alpha),
+        icon: const Icon(Icons.sort_by_alpha),
         tooltip: L10n.global().sortTooltip,
         onPressed: _onEditAppBarSortPressed,
       ),
@@ -490,7 +491,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   void _onSortOldestPressed() {
     _editAlbum = _editAlbum!.copyWith(
-      sortProvider: AlbumTimeSortProvider(isAscending: true),
+      sortProvider: const AlbumTimeSortProvider(isAscending: true),
     );
     setState(() {
       _transformItems(_sortedItems);
@@ -499,7 +500,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   void _onSortNewestPressed() {
     _editAlbum = _editAlbum!.copyWith(
-      sortProvider: AlbumTimeSortProvider(isAscending: false),
+      sortProvider: const AlbumTimeSortProvider(isAscending: false),
     );
     setState(() {
       _transformItems(_sortedItems);

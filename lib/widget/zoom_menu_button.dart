@@ -4,7 +4,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/theme.dart';
 
 class ZoomMenuButton extends StatelessWidget {
-  ZoomMenuButton({
+  const ZoomMenuButton({
     Key? key,
     required this.initialZoom,
     required this.minZoom,
@@ -35,7 +35,7 @@ class ZoomMenuButton extends StatelessWidget {
 }
 
 class _PopupMenuZoom extends PopupMenuEntry<void> {
-  _PopupMenuZoom({
+  const _PopupMenuZoom({
     Key? key,
     required this.initialValue,
     required this.minValue,

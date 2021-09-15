@@ -29,9 +29,9 @@ class Exif with EquatableMixin {
   bool containsKey(String key) => data.containsKey(key);
 
   JsonObj toJson() {
-    return Map.fromIterable(
+    return Map.fromEntries(
       data.entries.where((e) => e.key != "MakerNote").map((e) {
-        var jsonValue;
+        dynamic jsonValue;
         if (e.value is Rational) {
           jsonValue = e.value.toJson();
         } else if (e.value is List) {
@@ -47,18 +47,16 @@ class Exif with EquatableMixin {
         }
         return MapEntry(e.key, jsonValue);
       }),
-      key: (e) => e.key,
-      value: (e) => e.value,
     );
   }
 
   factory Exif.fromJson(JsonObj json) {
-    return Exif(Map.fromIterable(
+    return Exif(Map.fromEntries(
       // we are filtering out MakerNote here because it's generally very large
       // and could exceed the 1MB cursor size limit on Android. Second, the
       // content is proprietary and thus useless to us anyway
       json.entries.where((e) => e.key != "MakerNote").map((e) {
-        var exifValue;
+        dynamic exifValue;
         if (e.value is Map) {
           exifValue = Rational.fromJson(e.value.cast<String, dynamic>());
         } else if (e.value is List) {
@@ -74,8 +72,6 @@ class Exif with EquatableMixin {
         }
         return MapEntry(e.key, exifValue);
       }),
-      key: (e) => e.key,
-      value: (e) => e.value,
     ));
   }
 

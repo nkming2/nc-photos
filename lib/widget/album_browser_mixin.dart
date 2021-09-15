@@ -259,7 +259,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     controller?.closed.whenComplete(() {
       controller = null;
     });
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     try {
       await ImportPendingSharedAlbum(fileRepo)(account, album.albumFile!);
       controller?.close();

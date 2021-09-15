@@ -14,7 +14,7 @@ import 'package:nc_photos/widget/sign_in.dart';
 
 /// A dialog that allows the user to switch between accounts
 class AccountPickerDialog extends StatefulWidget {
-  AccountPickerDialog({
+  const AccountPickerDialog({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -151,7 +151,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           return;
         }
         accounts[Pref.inst().getCurrentAccountIndex()!] = result;
-        Pref.inst()..setAccounts(accounts);
+        Pref.inst().setAccounts(accounts);
         Navigator.pushNamedAndRemoveUntil(
             context, Home.routeName, (route) => false,
             arguments: HomeArguments(result));

@@ -3,11 +3,11 @@ import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
   /// Return a new sorted list
-  List<T> sorted([int compare(T a, T b)?]) => this.toList()..sort(compare);
+  List<T> sorted([int Function(T a, T b)? compare]) => toList()..sort(compare);
 
   /// Return a new stable sorted list
-  List<T> stableSorted([int compare(T a, T b)?]) {
-    final tmp = this.toList();
+  List<T> stableSorted([int Function(T a, T b)? compare]) {
+    final tmp = toList();
     mergeSort(tmp, compare: compare);
     return tmp;
   }
@@ -16,7 +16,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// toString for each items
   String toReadableString() => "[${join(', ')}]";
 
-  Iterable<U> mapWithIndex<U>(U fn(int index, T element)) sync* {
+  Iterable<U> mapWithIndex<U>(U Function(int index, T element) fn) sync* {
     int i = 0;
     for (final e in this) {
       yield fn(i++, e);

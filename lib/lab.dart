@@ -3,9 +3,7 @@ import 'package:nc_photos/pref.dart';
 /// Experimental feature flags
 class Lab {
   factory Lab() {
-    if (_inst == null) {
-      _inst = Lab._();
-    }
+    _inst ??= Lab._();
     return _inst!;
   }
 

@@ -10,7 +10,7 @@ class CancelableGetFile {
     FileInfo? product;
     while (product == null && _shouldRun) {
       product = await store.getFile(key, ignoreMemCache: ignoreMemCache);
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
     if (product == null) {
       return Future.error("Interrupted");

@@ -114,7 +114,7 @@ class ScanDirBlocInconsistent extends ScanDirBlocState {
 ///
 /// See [ScanDir]
 class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
-  ScanDirBloc() : super(ScanDirBlocInit()) {
+  ScanDirBloc() : super(const ScanDirBlocInit()) {
     _fileRemovedEventListener =
         AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
     _filePropertyUpdatedEventListener =
@@ -129,7 +129,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
-        add(_ScanDirBlocExternalEvent());
+        add(const _ScanDirBlocExternalEvent());
       },
       logTag: "ScanDirBloc.refresh",
     );
@@ -188,7 +188,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
     if (!hasContent) {
       // show something instantly on first load
-      ScanDirBlocState cacheState = ScanDirBlocInit();
+      ScanDirBlocState cacheState = const ScanDirBlocInit();
       await for (final s in _queryOffline(ev, () => cacheState)) {
         cacheState = s;
       }
@@ -196,7 +196,7 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       hasContent = cacheState.files.isNotEmpty;
     }
 
-    ScanDirBlocState newState = ScanDirBlocInit();
+    ScanDirBlocState newState = const ScanDirBlocInit();
     if (!hasContent) {
       await for (final s in _queryOnline(ev, () => newState)) {
         newState = s;

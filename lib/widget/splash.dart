@@ -13,7 +13,9 @@ import 'package:nc_photos/widget/sign_in.dart';
 class Splash extends StatefulWidget {
   static const routeName = "/splash";
 
-  Splash({Key? key}) : super(key: key);
+  const Splash({
+    Key? key,
+  }) : super(key: key);
 
   @override
   createState() => _SplashState();

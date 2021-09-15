@@ -4,7 +4,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/theme.dart';
 
 class SelectionAppBar extends StatelessWidget {
-  SelectionAppBar({
+  const SelectionAppBar({
     Key? key,
     required this.count,
     this.onClosePressed,

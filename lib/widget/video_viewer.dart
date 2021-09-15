@@ -18,7 +18,8 @@ import 'package:nc_photos/widget/wakelock_util.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoViewer extends StatefulWidget {
-  VideoViewer({
+  const VideoViewer({
+    Key? key,
     required this.account,
     required this.file,
     this.onLoaded,
@@ -28,7 +29,7 @@ class VideoViewer extends StatefulWidget {
     this.onPause,
     this.isControlVisible = false,
     this.canPlay = true,
-  });
+  }) : super(key: key);
 
   @override
   createState() => _VideoViewerState();
@@ -169,7 +170,7 @@ class _VideoViewerState extends State<VideoViewer>
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                   bottom: kToolbarHeight + 8, left: 8, right: 8),
               child: AnimatedVisibility(
                 opacity: widget.isControlVisible ? 1.0 : 0.0,
@@ -195,7 +196,7 @@ class _VideoViewerState extends State<VideoViewer>
                           _controller,
                           allowScrubbing: true,
                           padding: const EdgeInsets.symmetric(vertical: 8),
-                          colors: VideoProgressColors(
+                          colors: const VideoProgressColors(
                             backgroundColor: Colors.white24,
                             bufferedColor: Colors.white38,
                             playedColor: Colors.white,
@@ -217,7 +218,8 @@ class _VideoViewerState extends State<VideoViewer>
                             ? L10n.global().unmuteTooltip
                             : L10n.global().muteTooltip,
                         child: InkWell(
-                          borderRadius: BorderRadius.all(Radius.circular(32)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(32)),
                           onTap: _onVolumnPressed,
                           child: Padding(
                             padding: const EdgeInsets.all(4),

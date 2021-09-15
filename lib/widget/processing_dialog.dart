@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ProcessingDialog extends StatelessWidget {
-  ProcessingDialog({
+  const ProcessingDialog({
     Key? key,
     required this.text,
-  });
+  }) : super(key: key);
 
   @override
   build(BuildContext context) {
@@ -15,7 +15,7 @@ class ProcessingDialog extends StatelessWidget {
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
+            const CircularProgressIndicator(),
             const SizedBox(width: 24),
             Text(text),
           ],

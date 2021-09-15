@@ -39,7 +39,7 @@ import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
-  HomeAlbums({
+  const HomeAlbums({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -126,9 +126,9 @@ class _HomeAlbumsState extends State<HomeAlbums>
           ),
         ),
         if (state is ListAlbumBlocLoading)
-          Align(
+          const Align(
             alignment: Alignment.bottomCenter,
-            child: const LinearProgressIndicator(),
+            child: LinearProgressIndicator(),
           ),
       ],
     );
@@ -477,10 +477,10 @@ class _HomeAlbumsState extends State<HomeAlbums>
 abstract class _ListItem implements SelectableItem {
   _ListItem({
     VoidCallback? onTap,
-  }) : _onTap = onTap;
+  }) : _myOnTap = onTap;
 
   @override
-  get onTap => _onTap;
+  get onTap => _myOnTap;
 
   @override
   get isSelectable => true;
@@ -488,7 +488,7 @@ abstract class _ListItem implements SelectableItem {
   @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
-  final VoidCallback? _onTap;
+  final VoidCallback? _myOnTap;
 }
 
 class _ButtonListItem extends _ListItem {
@@ -536,7 +536,7 @@ class _ButtonListItem extends _ListItem {
                     child: Text(label),
                   ),
                   if (isShowIndicator)
-                    Icon(
+                    const Icon(
                       Icons.circle,
                       color: Colors.red,
                       size: 8,

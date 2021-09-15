@@ -106,7 +106,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
     return [
       if (_canSwitchRight)
         Align(
-          key: ValueKey(0),
+          key: const ValueKey(0),
           alignment: Alignment.centerRight,
           child: Material(
             type: MaterialType.transparency,
@@ -130,7 +130,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 36),
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_forward_ios_outlined,
                         color: Colors.white,
                       ),
@@ -144,7 +144,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
         ),
       if (_canSwitchLeft)
         Align(
-          key: ValueKey(1),
+          key: const ValueKey(1),
           alignment: Alignment.centerLeft,
           child: Material(
             type: MaterialType.transparency,
@@ -168,7 +168,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 36),
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back_ios_outlined,
                         color: Colors.white,
                       ),

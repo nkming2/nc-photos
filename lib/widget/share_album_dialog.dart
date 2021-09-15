@@ -16,11 +16,11 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 
 class ShareAlbumDialog extends StatefulWidget {
-  ShareAlbumDialog({
+  const ShareAlbumDialog({
     Key? key,
     required this.account,
     required this.file,
-  });
+  }) : super(key: key);
 
   @override
   createState() => _ShareAlbumDialogState();
@@ -66,7 +66,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
+              const CircularProgressIndicator(),
               const SizedBox(width: 24),
               Text(L10n.global().genericProcessingDialogContent),
             ],
@@ -81,7 +81,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           .toList();
     }
     return SimpleDialog(
-      title: Text("Share with user"),
+      title: const Text("Share with user"),
       children: children,
     );
   }
@@ -102,10 +102,10 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     final Widget trailing;
     if (isProcessing) {
       trailing = Container(
-        child: SizedBox(
+        child: const SizedBox(
           width: 24,
           height: 24,
-          child: const CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         ),
       );
     } else {

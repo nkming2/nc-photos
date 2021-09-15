@@ -6,9 +6,7 @@ import 'package:nc_photos/mobile/platform.dart'
 
 class LogCapturer {
   factory LogCapturer() {
-    if (_inst == null) {
-      _inst = LogCapturer._();
-    }
+    _inst ??= LogCapturer._();
     return _inst!;
   }
 
@@ -23,7 +21,7 @@ class LogCapturer {
   Future<dynamic> stop() {
     _isEnable = false;
     final saver = platform.FileSaver();
-    final content = Utf8Encoder().convert(_logs.join("\n"));
+    final content = const Utf8Encoder().convert(_logs.join("\n"));
     _logs.clear();
     return saver.saveFile("nc-photos.log", content);
   }

@@ -38,7 +38,7 @@ class AlbumImporter extends StatefulWidget {
         builder: (context) => AlbumImporter.fromArgs(args),
       );
 
-  AlbumImporter({
+  const AlbumImporter({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -124,9 +124,9 @@ class _AlbumImporterState extends State<AlbumImporter> {
                   child: _buildList(context, state),
                 ),
                 if (state is ListImportableAlbumBlocLoading)
-                  Align(
+                  const Align(
                     alignment: Alignment.topCenter,
-                    child: const LinearProgressIndicator(),
+                    child: LinearProgressIndicator(),
                   ),
               ],
             ),
@@ -171,7 +171,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
 
   Widget _buildItem(BuildContext context, File file) {
     final isPicked = _picks.containsIdentical(file);
-    final onTap = () {
+    onTap() {
       setState(() {
         if (isPicked) {
           _picks.removeWhere((p) => identical(p, file));
@@ -179,7 +179,8 @@ class _AlbumImporterState extends State<AlbumImporter> {
           _picks.add(file);
         }
       });
-    };
+    }
+
     return ListTile(
       dense: true,
       leading: IconButton(
@@ -238,7 +239,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
             dirs: [p],
           ),
           coverProvider: AlbumAutoCoverProvider(),
-          sortProvider: AlbumTimeSortProvider(isAscending: false),
+          sortProvider: const AlbumTimeSortProvider(isAscending: false),
         );
         _log.info("[_onImportPressed] Creating dir album: $album");
 

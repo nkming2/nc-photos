@@ -14,7 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {
-  HomeSliverAppBar({
+  const HomeSliverAppBar({
     Key? key,
     required this.account,
     this.actions,
@@ -41,7 +41,7 @@ class HomeSliverAppBar extends StatelessWidget {
               Stack(
                 children: [
                   if (account.scheme == "http")
-                    Icon(
+                    const Icon(
                       Icons.no_encryption_outlined,
                       color: Colors.orange,
                     )

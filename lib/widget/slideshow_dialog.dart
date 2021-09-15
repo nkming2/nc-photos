@@ -34,7 +34,7 @@ class SlideshowConfig {
 }
 
 class SlideshowDialog extends StatefulWidget {
-  SlideshowDialog({
+  const SlideshowDialog({
     Key? key,
     required this.duration,
     required this.isShuffle,
@@ -102,7 +102,7 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
                   flex: 1,
                 ),
                 const SizedBox(width: 4),
-                Text(":"),
+                const Text(":"),
                 const SizedBox(width: 4),
                 Flexible(
                   child: TextFormField(

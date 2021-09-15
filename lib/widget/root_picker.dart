@@ -30,7 +30,7 @@ class RootPicker extends StatefulWidget {
         builder: (context) => RootPicker.fromArgs(args),
       );
 
-  RootPicker({
+  const RootPicker({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -57,7 +57,7 @@ class _RootPickerState extends State<RootPicker>
 
   void _initAccount() async {
     try {
-      final fileSrc = FileWebdavDataSource();
+      const fileSrc = FileWebdavDataSource();
       final files = <File>[];
       for (final r in widget.account.roots) {
         if (r.isNotEmpty) {

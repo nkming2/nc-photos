@@ -29,7 +29,7 @@ class Connect extends StatefulWidget {
         builder: (context) => Connect.fromArgs(args),
       );
 
-  Connect({
+  const Connect({
     Key? key,
     required this.account,
   }) : super(key: key);

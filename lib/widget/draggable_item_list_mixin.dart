@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:nc_photos/widget/draggable.dart' as _;
+import 'package:nc_photos/widget/draggable.dart' as my;
 import 'package:nc_photos/widget/measurable_item_list.dart';
 
 abstract class DraggableItem {
@@ -42,7 +42,7 @@ mixin DraggableItemListMixin<T extends StatefulWidget> on State<T> {
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _items[index];
-    return _.Draggable(
+    return my.Draggable(
       data: item,
       child: item.buildWidget(context),
       feedback: item.buildDragFeedbackWidget(context),

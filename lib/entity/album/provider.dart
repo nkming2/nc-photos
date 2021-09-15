@@ -61,7 +61,7 @@ abstract class AlbumProvider with EquatableMixin {
 class AlbumStaticProvider extends AlbumProvider {
   AlbumStaticProvider({
     required List<AlbumItem> items,
-  }) : this.items = UnmodifiableListView(items);
+  }) : items = UnmodifiableListView(items);
 
   factory AlbumStaticProvider.fromJson(JsonObj json) {
     return AlbumStaticProvider(

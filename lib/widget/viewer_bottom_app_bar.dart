@@ -5,19 +5,20 @@ import 'package:flutter/widgets.dart';
 ///
 /// Buttons are spread evenly across the horizontal axis
 class ViewerBottomAppBar extends StatelessWidget {
-  ViewerBottomAppBar({
+  const ViewerBottomAppBar({
+    Key? key,
     required this.children,
-  });
+  }) : super(key: key);
 
   @override
   build(BuildContext context) {
     return Container(
       height: kToolbarHeight,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
-          begin: const Alignment(0, -1),
-          end: const Alignment(0, 1),
+          begin: Alignment(0, -1),
+          end: Alignment(0, 1),
           colors: [
             Color.fromARGB(0, 0, 0, 0),
             Color.fromARGB(192, 0, 0, 0),

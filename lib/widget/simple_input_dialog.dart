@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class SimpleInputDialog extends StatefulWidget {
-  SimpleInputDialog({
+  const SimpleInputDialog({
     Key? key,
     this.initialText,
     this.hintText,

@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 /// Slider with state
 class StatefulSlider extends StatefulWidget {
-  StatefulSlider({
+  const StatefulSlider({
     Key? key,
     required this.initialValue,
     this.min = 0.0,

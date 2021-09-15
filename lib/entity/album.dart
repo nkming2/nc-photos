@@ -37,7 +37,7 @@ class Album with EquatableMixin {
     required this.coverProvider,
     required this.sortProvider,
     this.albumFile,
-  }) : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
+  }) : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
   static Album? fromJson(
     JsonObj json, {
@@ -176,20 +176,20 @@ class AlbumRepo {
 
   /// See [AlbumDataSource.get]
   Future<Album> get(Account account, File albumFile) =>
-      this.dataSrc.get(account, albumFile);
+      dataSrc.get(account, albumFile);
 
   /// See [AlbumDataSource.create]
   Future<Album> create(Account account, Album album) =>
-      this.dataSrc.create(account, album);
+      dataSrc.create(account, album);
 
   /// See [AlbumDataSource.update]
   Future<void> update(Account account, Album album) =>
-      this.dataSrc.update(account, album);
+      dataSrc.update(account, album);
 
   /// See [AlbumDataSource.cleanUp]
   Future<void> cleanUp(
           Account account, String rootDir, List<File> albumFiles) =>
-      this.dataSrc.cleanUp(account, rootDir, albumFiles);
+      dataSrc.cleanUp(account, rootDir, albumFiles);
 
   final AlbumDataSource dataSrc;
 }
@@ -216,7 +216,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
   @override
   get(Account account, File albumFile) async {
     _log.info("[get] ${albumFile.path}");
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     final data = await GetFileBinary(fileRepo)(account, albumFile);
     try {
       return Album.fromJson(
@@ -235,7 +235,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         d = utf8.decode(data);
       } catch (_) {}
       _log.severe("[get] Invalid json data: $d", e, stacktrace);
-      throw FormatException("Invalid album format");
+      throw const FormatException("Invalid album format");
     }
   }
 
@@ -245,9 +245,9 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final fileName = _makeAlbumFileName();
     final filePath =
         "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     await PutFileBinary(fileRepo)(account, filePath,
-        Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
+        const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
         shouldCreateMissingDir: true);
     // query album file
     final list = await Ls(fileRepo)(account, File(path: filePath),
@@ -258,9 +258,9 @@ class AlbumRemoteDataSource implements AlbumDataSource {
   @override
   update(Account account, Album album) async {
     _log.info("[update] ${album.albumFile!.path}");
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     await PutFileBinary(fileRepo)(account, album.albumFile!.path,
-        Utf8Encoder().convert(jsonEncode(album.toRemoteJson())));
+        const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())));
   }
 
   @override

@@ -26,7 +26,7 @@ class AlbumDirPicker extends StatefulWidget {
         builder: (context) => AlbumDirPicker.fromArgs(args),
       );
 
-  AlbumDirPicker({
+  const AlbumDirPicker({
     Key? key,
     required this.account,
   }) : super(key: key);

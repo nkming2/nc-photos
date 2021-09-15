@@ -39,7 +39,7 @@ class MetadataTask {
     } finally {
       KiwiContainer()
           .resolve<EventBus>()
-          .fire(MetadataTaskStateChangedEvent(MetadataTaskState.idle));
+          .fire(const MetadataTaskStateChangedEvent(MetadataTaskState.idle));
     }
   }
 
@@ -51,9 +51,7 @@ class MetadataTask {
 /// Manage metadata tasks to run concurrently
 class MetadataTaskManager {
   factory MetadataTaskManager() {
-    if (_inst == null) {
-      _inst = MetadataTaskManager._();
-    }
+    _inst ??= MetadataTaskManager._();
     return _inst!;
   }
 

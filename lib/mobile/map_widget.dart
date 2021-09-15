@@ -30,7 +30,7 @@ class Map extends StatelessWidget {
       ),
       markers: {
         Marker(
-          markerId: MarkerId("at"),
+          markerId: const MarkerId("at"),
           position: centerLl,
           // for some reason, GoogleMap's onTap is not triggered if
           // tapped on top of the marker

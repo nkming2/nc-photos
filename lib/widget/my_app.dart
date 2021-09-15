@@ -29,6 +29,10 @@ import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
 class MyApp extends StatefulWidget {
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
+
   @override
   createState() => _MyAppState();
 
@@ -71,7 +75,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       scaffoldMessengerKey: _scaffoldMessengerKey,
       locale: language_util.getSelectedLocale(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: <Locale>[
+      supportedLocales: const <Locale>[
         // the order here doesn't matter, except for the first one, which must
         // be en
         Locale("en"),
@@ -112,10 +116,10 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       );
 
   Map<String, WidgetBuilder> _getRouter() => {
-        Setup.routeName: (context) => Setup(),
-        SignIn.routeName: (context) => SignIn(),
-        Splash.routeName: (context) => Splash(),
-        LabSettings.routeName: (context) => LabSettings(),
+        Setup.routeName: (context) => const Setup(),
+        SignIn.routeName: (context) => const SignIn(),
+        Splash.routeName: (context) => const Splash(),
+        LabSettings.routeName: (context) => const LabSettings(),
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {

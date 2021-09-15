@@ -43,19 +43,19 @@ class ShareRepo {
 
   /// See [ShareDataSource.list]
   Future<List<Share>> list(Account account, File file) =>
-      this.dataSrc.list(account, file);
+      dataSrc.list(account, file);
 
   /// See [ShareDataSource.listDir]
   Future<List<Share>> listDir(Account account, File dir) =>
-      this.dataSrc.listDir(account, dir);
+      dataSrc.listDir(account, dir);
 
   /// See [ShareDataSource.create]
   Future<Share> create(Account account, File file, String shareWith) =>
-      this.dataSrc.create(account, file, shareWith);
+      dataSrc.create(account, file, shareWith);
 
   /// See [ShareDataSource.delete]
   Future<void> delete(Account account, Share share) =>
-      this.dataSrc.delete(account, share);
+      dataSrc.delete(account, share);
 
   final ShareDataSource dataSrc;
 }

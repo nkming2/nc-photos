@@ -8,7 +8,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/theme.dart';
 
 class AlbumBrowserAppBar extends StatelessWidget {
-  AlbumBrowserAppBar({
+  const AlbumBrowserAppBar({
     Key? key,
     required this.account,
     required this.album,
@@ -41,7 +41,7 @@ class AlbumBrowserAppBar extends StatelessWidget {
 }
 
 class AlbumBrowserEditAppBar extends StatefulWidget {
-  AlbumBrowserEditAppBar({
+  const AlbumBrowserEditAppBar({
     Key? key,
     required this.account,
     required this.album,

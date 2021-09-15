@@ -5,7 +5,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/num_extension.dart';
 
 class PhotoDateTimeEditDialog extends StatefulWidget {
-  PhotoDateTimeEditDialog({
+  const PhotoDateTimeEditDialog({
     Key? key,
     required this.initialDateTime,
   }) : super(key: key);
@@ -151,8 +151,8 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     flex: 1,
                   ),
                   const SizedBox(width: 4),
-                  Flexible(
-                    child: const SizedBox(),
+                  const Flexible(
+                    child: SizedBox(),
                     flex: 1,
                   ),
                 ],

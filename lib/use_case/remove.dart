@@ -42,9 +42,7 @@ class _CleanUpAlbumsData {
 
 class _CleanUpAlbums {
   factory _CleanUpAlbums() {
-    if (_inst == null) {
-      _inst = _CleanUpAlbums._();
-    }
+    _inst ??= _CleanUpAlbums._();
     return _inst!;
   }
 

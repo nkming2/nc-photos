@@ -14,6 +14,5 @@ class MediaStore {
     }))!;
   }
 
-  static const _channel =
-      const MethodChannel("com.nkming.nc_photos/media_store");
+  static const _channel = MethodChannel("com.nkming.nc_photos/media_store");
 }

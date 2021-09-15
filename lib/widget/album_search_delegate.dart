@@ -37,7 +37,7 @@ class AlbumSearchDelegate extends SearchDelegate {
   buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         tooltip: L10n.global().clearTooltip,
         onPressed: () {
           query = "";

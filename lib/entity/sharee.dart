@@ -55,7 +55,7 @@ class ShareeRepo {
   ShareeRepo(this.dataSrc);
 
   /// See [ShareeDataSource.list]
-  Future<List<Sharee>> list(Account account) => this.dataSrc.list(account);
+  Future<List<Sharee>> list(Account account) => dataSrc.list(account);
 
   final ShareeDataSource dataSrc;
 }

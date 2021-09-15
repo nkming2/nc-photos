@@ -164,9 +164,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 32),
+            child: Divider(),
           ),
           ListTile(
             leading: Container(
@@ -503,7 +503,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         // already added, do nothing
         _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text("${L10n.global().addToAlbumAlreadyAddedNotification}"),
+          content: Text(L10n.global().addToAlbumAlreadyAddedNotification),
           duration: k.snackBarDurationNormal,
         ));
         return Future.error(ArgumentError("File already in album"));

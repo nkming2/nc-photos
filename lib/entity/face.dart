@@ -31,7 +31,7 @@ class FaceRepo {
 
   /// See [FaceDataSource.list]
   Future<List<Face>> list(Account account, Person person) =>
-      this.dataSrc.list(account, person);
+      dataSrc.list(account, person);
 
   final FaceDataSource dataSrc;
 }

@@ -27,7 +27,7 @@ class Metadata with EquatableMixin {
     this.imageWidth,
     this.imageHeight,
     this.exif,
-  }) : this.lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
+  }) : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
   @override
   // ignore: hash_and_equals
@@ -147,6 +147,7 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
     this.logFilePath,
   });
 
+  @override
   JsonObj? call(JsonObj json) {
     if (fileContentType == "image/webp") {
       // Version 1 metadata for webp is bugged, drop it
@@ -172,6 +173,7 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
     this.logFilePath,
   });
 
+  @override
   JsonObj? call(JsonObj json) {
     if (fileContentType == "image/jpeg") {
       // Version 2 metadata for jpeg doesn't consider orientation
@@ -215,7 +217,7 @@ class File with EquatableMixin {
     this.trashbinFilename,
     this.trashbinOriginalLocation,
     this.trashbinDeletionTime,
-  }) : this.path = path.trimAny("/");
+  }) : path = path.trimAny("/");
 
   @override
   // ignore: hash_and_equals
@@ -472,19 +474,19 @@ class FileRepo {
 
   /// See [FileDataSource.list]
   Future<List<File>> list(Account account, File root) =>
-      this.dataSrc.list(account, root);
+      dataSrc.list(account, root);
 
   /// See [FileDataSource.remove]
   Future<void> remove(Account account, File file) =>
-      this.dataSrc.remove(account, file);
+      dataSrc.remove(account, file);
 
   /// See [FileDataSource.getBinary]
   Future<Uint8List> getBinary(Account account, File file) =>
-      this.dataSrc.getBinary(account, file);
+      dataSrc.getBinary(account, file);
 
   /// See [FileDataSource.putBinary]
   Future<void> putBinary(Account account, String path, Uint8List content) =>
-      this.dataSrc.putBinary(account, path, content);
+      dataSrc.putBinary(account, path, content);
 
   /// See [FileDataSource.updateMetadata]
   Future<void> updateProperty(
@@ -494,13 +496,13 @@ class FileRepo {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
   }) =>
-      this.dataSrc.updateProperty(
-            account,
-            file,
-            metadata: metadata,
-            isArchived: isArchived,
-            overrideDateTime: overrideDateTime,
-          );
+      dataSrc.updateProperty(
+        account,
+        file,
+        metadata: metadata,
+        isArchived: isArchived,
+        overrideDateTime: overrideDateTime,
+      );
 
   /// See [FileDataSource.copy]
   Future<void> copy(
@@ -509,12 +511,12 @@ class FileRepo {
     String destination, {
     bool? shouldOverwrite,
   }) =>
-      this.dataSrc.copy(
-            account,
-            f,
-            destination,
-            shouldOverwrite: shouldOverwrite,
-          );
+      dataSrc.copy(
+        account,
+        f,
+        destination,
+        shouldOverwrite: shouldOverwrite,
+      );
 
   /// See [FileDataSource.move]
   Future<void> move(
@@ -523,16 +525,16 @@ class FileRepo {
     String destination, {
     bool? shouldOverwrite,
   }) =>
-      this.dataSrc.move(
-            account,
-            f,
-            destination,
-            shouldOverwrite: shouldOverwrite,
-          );
+      dataSrc.move(
+        account,
+        f,
+        destination,
+        shouldOverwrite: shouldOverwrite,
+      );
 
   /// See [FileDataSource.createDir]
   Future<void> createDir(Account account, String path) =>
-      this.dataSrc.createDir(account, path);
+      dataSrc.createDir(account, path);
 
   final FileDataSource dataSrc;
 }

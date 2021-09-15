@@ -91,7 +91,7 @@ class ListFaceBloc extends Bloc<ListFaceBlocEvent, ListFaceBlocState> {
   }
 
   Future<List<Face>> _query(ListFaceBlocQuery ev) {
-    final personRepo = FaceRepo(FaceRemoteDataSource());
+    const personRepo = FaceRepo(FaceRemoteDataSource());
     return personRepo.list(ev.account, ev.person);
   }
 

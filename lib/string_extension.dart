@@ -5,7 +5,7 @@ extension StringExtension on String {
     while (i < length && characters.contains(this[i])) {
       i += 1;
     }
-    return this.substring(i);
+    return substring(i);
   }
 
   /// Returns the string without any trailing characters included in
@@ -15,7 +15,7 @@ extension StringExtension on String {
     while (i < length && characters.contains(this[length - 1 - i])) {
       i += 1;
     }
-    return this.substring(0, length - i);
+    return substring(0, length - i);
   }
 
   /// Returns the string without any leading and trailing characters included in

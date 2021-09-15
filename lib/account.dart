@@ -11,10 +11,10 @@ class Account with EquatableMixin {
     this.username,
     this.password,
     List<String> roots,
-  )   : this.address = address.trimRightAny("/"),
+  )   : address = address.trimRightAny("/"),
         _roots = roots.map((e) => e.trimRightAny("/")).toList() {
     if (scheme != "http" && scheme != "https") {
-      throw FormatException("scheme is neither http or https");
+      throw const FormatException("scheme is neither http or https");
     }
   }
 

@@ -130,7 +130,7 @@ class ListPendingSharedAlbumBloc extends Bloc<
 
   Stream<ListPendingSharedAlbumBlocState> _onEventQuery(
       ListPendingSharedAlbumBlocQuery ev) async* {
-    yield ListPendingSharedAlbumBlocLoading([]);
+    yield const ListPendingSharedAlbumBlocLoading([]);
     try {
       final fileRepo = FileRepo(FileCachedDataSource());
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
@@ -171,7 +171,7 @@ class ListPendingSharedAlbumBloc extends Bloc<
     }
     if (ev.file.path.startsWith(
         remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account))) {
-      add(_ListPendingSharedAlbumBlocExternalEvent());
+      add(const _ListPendingSharedAlbumBlocExternalEvent());
     }
   }
 

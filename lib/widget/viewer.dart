@@ -56,7 +56,7 @@ class Viewer extends StatefulWidget {
         builder: (context) => Viewer.fromArgs(args),
       );
 
-  Viewer({
+  const Viewer({
     Key? key,
     required this.account,
     required this.streamFiles,
@@ -109,9 +109,9 @@ class _ViewerState extends State<Viewer>
           Container(color: Colors.black),
           if (!_isViewerLoaded ||
               _pageStates[_viewerController.currentPage]?.hasLoaded != true)
-            Align(
+            const Align(
               alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
+              child: CircularProgressIndicator(),
             ),
           HorizontalPageViewer(
             pageCount: widget.streamFiles.length,
@@ -142,10 +142,10 @@ class _ViewerState extends State<Viewer>
               Container(
                 // + status bar height
                 height: kToolbarHeight + MediaQuery.of(context).padding.top,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    begin: const Alignment(0, -1),
-                    end: const Alignment(0, 1),
+                    begin: Alignment(0, -1),
+                    end: Alignment(0, 1),
                     colors: [
                       Color.fromARGB(192, 0, 0, 0),
                       Color.fromARGB(0, 0, 0, 0),
@@ -265,8 +265,8 @@ class _ViewerState extends State<Viewer>
                         minHeight: MediaQuery.of(context).size.height),
                     decoration: BoxDecoration(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: const BorderRadius.vertical(
-                          top: const Radius.circular(4)),
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(4)),
                     ),
                     margin: EdgeInsets.only(top: _calcDetailPaneOffset(index)),
                     child: ViewerDetailPane(
@@ -485,7 +485,7 @@ class _ViewerState extends State<Viewer>
   }
 
   void _onDownloadSuccessful(File file, dynamic result) {
-    var notif;
+    dynamic notif;
     if (platform_k.isAndroid) {
       notif = AndroidItemDownloadSuccessfulNotification(
           [result], [file.contentType]);

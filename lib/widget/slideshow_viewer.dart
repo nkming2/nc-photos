@@ -37,7 +37,7 @@ class SlideshowViewer extends StatefulWidget {
         builder: (context) => SlideshowViewer.fromArgs(args),
       );
 
-  SlideshowViewer({
+  const SlideshowViewer({
     Key? key,
     required this.account,
     required this.streamFiles,
@@ -138,10 +138,10 @@ class _SlideshowViewerState extends State<SlideshowViewer>
               Container(
                 // + status bar height
                 height: kToolbarHeight + MediaQuery.of(context).padding.top,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    begin: const Alignment(0, -1),
-                    end: const Alignment(0, 1),
+                    begin: Alignment(0, -1),
+                    end: Alignment(0, 1),
                     colors: [
                       Color.fromARGB(192, 0, 0, 0),
                       Color.fromARGB(0, 0, 0, 0),

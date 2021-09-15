@@ -40,7 +40,7 @@ class Throttler<T> {
       _doTrigger();
     } else {
       final responseTime = _minDuration(
-          maxResponceTime, _currentResponseTime ?? Duration(days: 1));
+          maxResponceTime, _currentResponseTime ?? const Duration(days: 1));
       _subscription = Future.delayed(responseTime).asStream().listen((event) {
         _log.info("[trigger]$_logTag Triggered after $responseTime");
         _doTrigger();
@@ -67,6 +67,7 @@ class Throttler<T> {
   String get _logTag => logTag == null ? "" : "[$logTag]";
 
   final ValueChanged<List<T>>? onTriggered;
+
   /// Extra tag printed with logs from this class
   final String? logTag;
 

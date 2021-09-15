@@ -55,12 +55,12 @@ class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
         "}";
   }
 
-  final exception;
+  final dynamic exception;
 }
 
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
-  AppPasswordExchangeBloc() : super(AppPasswordExchangeBlocInit());
+  AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit());
 
   @override
   mapEventToState(AppPasswordExchangeBlocEvent event) async* {

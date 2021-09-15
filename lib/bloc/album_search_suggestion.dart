@@ -61,7 +61,7 @@ class AlbumSearchSuggestionBlocSuccess extends AlbumSearchSuggestionBlocState {
 
 class AlbumSearchSuggestionBloc extends Bloc<AlbumSearchSuggestionBlocEvent,
     AlbumSearchSuggestionBlocState> {
-  AlbumSearchSuggestionBloc() : super(AlbumSearchSuggestionBlocInit());
+  AlbumSearchSuggestionBloc() : super(const AlbumSearchSuggestionBlocInit());
 
   @override
   mapEventToState(AlbumSearchSuggestionBlocEvent event) async* {

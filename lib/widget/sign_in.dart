@@ -16,7 +16,9 @@ import 'package:nc_photos/widget/root_picker.dart';
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in";
 
-  SignIn({Key? key}) : super(key: key);
+  const SignIn({
+    Key? key,
+  }) : super(key: key);
 
   @override
   createState() => _SignInState();
@@ -71,7 +73,7 @@ class _SignInState extends State<SignIn> {
                             horizontal: 32, vertical: 16),
                         child: Text(
                           L10n.global().signIn2faHintText,
-                          style: TextStyle(fontStyle: FontStyle.italic),
+                          style: const TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ),
                       if (!platform_k.isWeb) Expanded(child: Container()),
@@ -152,8 +154,8 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             const Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: const Text("://"),
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Text("://"),
             ),
             Expanded(
               child: TextFormField(

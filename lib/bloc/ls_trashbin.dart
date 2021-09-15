@@ -101,7 +101,7 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
-        add(_LsTrashbinBlocExternalEvent());
+        add(const _LsTrashbinBlocExternalEvent());
       },
       logTag: "LsTrashbinBloc.refresh",
     );
@@ -173,7 +173,7 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
 
   Future<List<File>> _query(LsTrashbinBlocQuery ev) {
     // caching contents in trashbin doesn't sounds useful
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     return LsTrashbin(fileRepo)(ev.account);
   }
 

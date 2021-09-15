@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
 class Draggable<T extends Object> extends StatelessWidget {
-  Draggable({
+  const Draggable({
     Key? key,
     required this.data,
     required this.child,
@@ -17,7 +17,7 @@ class Draggable<T extends Object> extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    final buildIndicator = (alignment, isActive) {
+    buildIndicator(alignment, isActive) {
       return Stack(
         children: [
           Container(),
@@ -26,14 +26,14 @@ class Draggable<T extends Object> extends StatelessWidget {
             child: Align(
               alignment: alignment,
               child: Container(
-                constraints: BoxConstraints.tightFor(width: 2),
+                constraints: const BoxConstraints.tightFor(width: 2),
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
         ],
       );
-    };
+    }
 
     return Stack(
       fit: StackFit.expand,

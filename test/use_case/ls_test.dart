@@ -7,8 +7,7 @@ import 'package:test/test.dart';
 import '../mock_type.dart';
 
 void main() {
-  final _buildAccount =
-      () => Account("http", "example.com", "admin", "pass", [""]);
+  _buildAccount() => Account("http", "example.com", "admin", "pass", [""]);
 
   group("Ls", () {
     test("normal", () async {

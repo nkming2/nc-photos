@@ -47,7 +47,7 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 class HomePhotos extends StatefulWidget {
-  HomePhotos({
+  const HomePhotos({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -151,9 +151,9 @@ class _HomePhotosState extends State<HomePhotos>
             ),
           ),
           if (state is ScanDirBlocLoading)
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
         ],
       );
@@ -274,7 +274,7 @@ class _HomePhotosState extends State<HomePhotos>
                       Text(
                         L10n.global().metadataTaskProcessingNotification +
                             _getMetadataTaskProgressString(),
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   )
@@ -282,14 +282,14 @@ class _HomePhotosState extends State<HomePhotos>
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.sync_problem,
                         size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         L10n.global().metadataTaskPauseNoWiFiNotification,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),

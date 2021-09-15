@@ -55,7 +55,7 @@ class PersonBrowser extends StatefulWidget {
         builder: (context) => PersonBrowser.fromArgs(args),
       );
 
-  PersonBrowser({
+  const PersonBrowser({
     Key? key,
     required this.account,
     required this.person,
@@ -119,7 +119,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         slivers: [
           _buildNormalAppBar(context),
           const SliverToBoxAdapter(
-            child: const LinearProgressIndicator(),
+            child: LinearProgressIndicator(),
           ),
         ],
       );

@@ -4,8 +4,9 @@ import 'package:nc_photos/pref.dart';
 
 class AppTheme extends StatelessWidget {
   const AppTheme({
+    Key? key,
     required this.child,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +154,8 @@ class AppTheme extends StatelessWidget {
   /// https://flutter.dev/go/material-button-migration-guide
   static final flatButtonStyle = TextButton.styleFrom(
     primary: Colors.black87,
-    minimumSize: Size(88, 36),
-    padding: EdgeInsets.symmetric(horizontal: 16.0),
+    minimumSize: const Size(88, 36),
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(2.0)),
     ),

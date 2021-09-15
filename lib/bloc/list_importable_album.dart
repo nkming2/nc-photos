@@ -98,7 +98,7 @@ class ListImportableAlbumBloc
 
   Stream<ListImportableAlbumBlocState> _onEventQuery(
       ListImportableAlbumBlocQuery ev) async* {
-    yield ListImportableAlbumBlocLoading([]);
+    yield const ListImportableAlbumBlocLoading([]);
     try {
       final fileRepo = FileRepo(FileCachedDataSource());
       final albumRepo = AlbumRepo(AlbumCachedDataSource());

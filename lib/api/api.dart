@@ -109,7 +109,7 @@ bool _isHttpStatusGood(int status) => status ~/ 100 == 2;
 class _Files {
   _Files(this._api);
 
-  Api _api;
+  final Api _api;
 
   Future<Response> delete({
     required String path,
@@ -319,7 +319,7 @@ class _Files {
             builder.element("d:set", nest: () {
               builder.element("d:prop", nest: () {
                 for (final e in set.entries) {
-                  builder.element("${e.key}", nest: () {
+                  builder.element(e.key, nest: () {
                     builder.text("${e.value}");
                   });
                 }
@@ -330,7 +330,7 @@ class _Files {
             builder.element("d:remove", nest: () {
               builder.element("d:prop", nest: () {
                 for (final e in remove) {
-                  builder.element("$e");
+                  builder.element(e);
                 }
               });
             });
@@ -408,7 +408,7 @@ class _Ocs {
   _OcsFacerecognition facerecognition() => _OcsFacerecognition(this);
   _OcsFilesSharing filesSharing() => _OcsFilesSharing(this);
 
-  Api _api;
+  final Api _api;
 }
 
 class _OcsDav {
@@ -416,7 +416,7 @@ class _OcsDav {
 
   _OcsDavDirect direct() => _OcsDavDirect(this);
 
-  _Ocs _ocs;
+  final _Ocs _ocs;
 }
 
 class _OcsDavDirect {
@@ -444,7 +444,7 @@ class _OcsDavDirect {
     }
   }
 
-  _OcsDav _dav;
+  final _OcsDav _dav;
 
   static final _log = Logger("api.api._OcsDavDirect");
 }

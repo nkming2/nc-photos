@@ -33,7 +33,7 @@ class TrashbinViewer extends StatefulWidget {
         builder: (context) => TrashbinViewer.fromArgs(args),
       );
 
-  TrashbinViewer({
+  const TrashbinViewer({
     Key? key,
     required this.account,
     required this.streamFiles,
@@ -80,9 +80,9 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
           Container(color: Colors.black),
           if (!_isViewerLoaded ||
               !_pageStates[_viewerController.currentPage]!.hasLoaded)
-            Align(
+            const Align(
               alignment: Alignment.center,
-              child: const CircularProgressIndicator(),
+              child: CircularProgressIndicator(),
             ),
           HorizontalPageViewer(
             pageCount: widget.streamFiles.length,
@@ -106,10 +106,10 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
             Container(
               // + status bar height
               height: kToolbarHeight + MediaQuery.of(context).padding.top,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  begin: const Alignment(0, -1),
-                  end: const Alignment(0, 1),
+                  begin: Alignment(0, -1),
+                  end: Alignment(0, 1),
                   colors: [
                     Color.fromARGB(192, 0, 0, 0),
                     Color.fromARGB(0, 0, 0, 0),

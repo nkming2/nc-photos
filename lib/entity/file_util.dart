@@ -21,7 +21,7 @@ bool isTrash(Account account, File file) =>
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
 String getUserDirName(File file) {
   if (file.path.startsWith("remote.php/dav/files/")) {
-    final beg = "remote.php/dav/files/".length;
+    const beg = "remote.php/dav/files/".length;
     final end = file.path.indexOf("/", beg);
     if (end != -1) {
       return file.path.substring(beg, end);

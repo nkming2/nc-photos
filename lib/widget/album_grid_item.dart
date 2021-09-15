@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:nc_photos/theme.dart';
 
 class AlbumGridItem extends StatelessWidget {
-  AlbumGridItem({
+  const AlbumGridItem({
     Key? key,
     required this.cover,
     required this.title,

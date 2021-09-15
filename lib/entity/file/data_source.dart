@@ -451,7 +451,7 @@ class FileCachedDataSource implements FileDataSource {
             ));
 
     // generate a new random token
-    final token = Uuid().v4().replaceAll("-", "");
+    final token = const Uuid().v4().replaceAll("-", "");
     final tokenManager = TouchTokenManager();
     final dir = File(path: path.dirname(f.path));
     await tokenManager.setLocalToken(account, dir, token);
@@ -595,7 +595,7 @@ class FileCachedDataSource implements FileDataSource {
 
   final bool shouldCheckCache;
 
-  final _remoteSrc = FileWebdavDataSource();
+  final _remoteSrc = const FileWebdavDataSource();
   final _appDbSrc = FileAppDbDataSource();
 
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
@@ -623,10 +623,8 @@ class _CacheManager {
       if (cacheEtag != null) {
         // compare the etag to see if the content has been updated
         var remoteEtag = f.etag;
-        if (remoteEtag == null) {
-          // no etag supplied, we need to query it form remote
-          remoteEtag = (await LsSingleFile(remoteSrc)(account, f.path)).etag;
-        }
+        // if no etag supplied, we need to query it form remote
+        remoteEtag ??= (await LsSingleFile(remoteSrc)(account, f.path)).etag;
         if (cacheEtag == remoteEtag) {
           _log.fine(
               "[_listCache] etag matched for ${AppDbFileEntry.toPath(account, f)}");

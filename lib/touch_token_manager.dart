@@ -29,7 +29,7 @@ class TouchTokenManager {
       return Remove(fileRepo, null)(account, file);
     } else {
       return PutFileBinary(fileRepo)(
-          account, path, Utf8Encoder().convert(token),
+          account, path, const Utf8Encoder().convert(token),
           shouldCreateMissingDir: true);
     }
   }
@@ -41,7 +41,7 @@ class TouchTokenManager {
     final path = _getRemotePath(account, file);
     try {
       final content = await GetFileBinary(fileRepo)(account, File(path: path));
-      return Utf8Decoder().convert(content);
+      return const Utf8Decoder().convert(content);
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
         return null;

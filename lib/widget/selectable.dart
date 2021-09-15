@@ -4,7 +4,7 @@ import 'package:nc_photos/theme.dart';
 
 // Overlay a check mark if an item is selected
 class Selectable extends StatelessWidget {
-  Selectable({
+  const Selectable({
     Key? key,
     required this.child,
     this.isSelected = false,

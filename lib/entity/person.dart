@@ -33,7 +33,7 @@ class PersonRepo {
   const PersonRepo(this.dataSrc);
 
   /// See [PersonDataSource.list]
-  Future<List<Person>> list(Account account) => this.dataSrc.list(account);
+  Future<List<Person>> list(Account account) => dataSrc.list(account);
 
   final PersonDataSource dataSrc;
 }

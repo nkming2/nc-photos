@@ -13,6 +13,5 @@ class Notification {
         "fileUri": fileUri,
       });
 
-  static const _channel =
-      const MethodChannel("com.nkming.nc_photos/notification");
+  static const _channel = MethodChannel("com.nkming.nc_photos/notification");
 }

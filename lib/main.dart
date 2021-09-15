@@ -28,7 +28,7 @@ void main() async {
     _initSelfSignedCertManager();
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 void _initLog() {

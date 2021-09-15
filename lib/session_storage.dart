@@ -12,5 +12,5 @@ class SessionStorage {
   /// Whether the drag to rearrange notification has been shown
   bool hasShowDragRearrangeNotification = false;
 
-  static SessionStorage _inst = SessionStorage._();
+  static final _inst = SessionStorage._();
 }

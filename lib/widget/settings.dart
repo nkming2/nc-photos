@@ -33,13 +33,14 @@ class Settings extends StatefulWidget {
         builder: (context) => Settings.fromArgs(args),
       );
 
-  Settings({
+  const Settings({
     Key? key,
     required this.account,
   }) : super(key: key);
 
   Settings.fromArgs(SettingsArguments args, {Key? key})
       : this(
+          key: key,
           account: args.account,
         );
 
@@ -293,7 +294,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void _onLogSaveSuccessful(dynamic result) {
-    var notif;
+    dynamic notif;
     if (platform_k.isAndroid) {
       notif = AndroidLogSaveSuccessfulNotification(result);
     }

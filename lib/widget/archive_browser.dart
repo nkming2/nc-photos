@@ -39,7 +39,7 @@ class ArchiveBrowser extends StatefulWidget {
         builder: (context) => ArchiveBrowser.fromArgs(args),
       );
 
-  ArchiveBrowser({
+  const ArchiveBrowser({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -135,9 +135,9 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
             ),
           ),
           if (state is ScanDirBlocLoading)
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
         ],
       );

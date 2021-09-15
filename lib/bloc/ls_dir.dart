@@ -147,7 +147,7 @@ class LsDirBlocFailure extends LsDirBlocState {
 /// A bloc that return all directories under a dir recursively
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
   LsDirBloc({
-    this.fileRepo = const FileRepo(const FileWebdavDataSource()),
+    this.fileRepo = const FileRepo(FileWebdavDataSource()),
   }) : super(LsDirBlocInit());
 
   @override

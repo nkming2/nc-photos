@@ -27,13 +27,14 @@ class Home extends StatefulWidget {
         builder: (context) => Home.fromArgs(args),
       );
 
-  Home({
+  const Home({
     Key? key,
     required this.account,
   }) : super(key: key);
 
   Home.fromArgs(HomeArguments args, {Key? key})
       : this(
+          key: key,
           account: args.account,
         );
 
@@ -126,7 +127,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Album>> _importPotentialSharedAlbum() async {
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     // don't want the potential albums to be cached at this moment
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {

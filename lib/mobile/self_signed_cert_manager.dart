@@ -78,7 +78,7 @@ class SelfSignedCertManager {
   Future<_CertInfo> _writeCert(String host, X509Certificate cert) async {
     final certDir = await _openCertsDir();
     while (true) {
-      final fileName = Uuid().v4();
+      final fileName = const Uuid().v4();
       final certF = File("${certDir.path}/$fileName");
       if (await certF.exists()) {
         continue;
@@ -107,7 +107,7 @@ class SelfSignedCertManager {
   late _BadCertInfo _latestBadCert;
   var _whitelist = <_CertInfo>[];
 
-  static SelfSignedCertManager _inst = SelfSignedCertManager._();
+  static final _inst = SelfSignedCertManager._();
 
   static final _log =
       Logger("mobile.self_signed_cert_manager.SelfSignedCertManager");

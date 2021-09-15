@@ -40,7 +40,7 @@ class TrashbinBrowser extends StatefulWidget {
         builder: (context) => TrashbinBrowser.fromArgs(args),
       );
 
-  TrashbinBrowser({
+  const TrashbinBrowser({
     Key? key,
     required this.account,
   }) : super(key: key);
@@ -137,9 +137,9 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
             ),
           ),
           if (state is LsTrashbinBlocLoading)
-            Align(
+            const Align(
               alignment: Alignment.bottomCenter,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
         ],
       );
@@ -289,7 +289,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileWebdavDataSource());
+    const fileRepo = FileRepo(FileWebdavDataSource());
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
