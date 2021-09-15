@@ -10,7 +10,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
@@ -184,7 +183,7 @@ class _VideoViewerState extends State<VideoViewer>
                         _durationToString(value.position),
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppTheme.getSecondaryTextColor(context),
+                          color: Colors.white.withOpacity(.87),
                         ),
                       ),
                     ),
@@ -207,7 +206,7 @@ class _VideoViewerState extends State<VideoViewer>
                         _durationToString(_controller.value.duration),
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppTheme.getSecondaryTextColor(context),
+                          color: Colors.white.withOpacity(.87),
                         ),
                       ),
                     const SizedBox(width: 4),
@@ -225,7 +224,7 @@ class _VideoViewerState extends State<VideoViewer>
                             _controller.value.volume == 0
                                 ? Icons.volume_mute_outlined
                                 : Icons.volume_up_outlined,
-                            color: AppTheme.getSecondaryTextColor(context),
+                            color: Colors.white.withOpacity(.87),
                           ),
                         ),
                       ),
