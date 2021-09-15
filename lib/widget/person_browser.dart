@@ -128,7 +128,9 @@ class _PersonBrowserState extends State<PersonBrowser>
         context,
         child: Theme(
           data: Theme.of(context).copyWith(
-            accentColor: AppTheme.getOverscrollIndicatorColor(context),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  secondary: AppTheme.getOverscrollIndicatorColor(context),
+                ),
           ),
           child: CustomScrollView(
             slivers: [

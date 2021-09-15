@@ -222,7 +222,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       context,
       child: Theme(
         data: Theme.of(context).copyWith(
-          accentColor: AppTheme.getOverscrollIndicatorColor(context),
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                secondary: AppTheme.getOverscrollIndicatorColor(context),
+              ),
         ),
         child: content,
       ),

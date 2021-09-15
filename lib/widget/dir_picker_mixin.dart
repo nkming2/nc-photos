@@ -12,7 +12,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:path/path.dart' as path;
 
 mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
@@ -78,47 +77,42 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
 
   Widget _buildList(BuildContext context, LsDirBlocState state) {
     final isTopLevel = _currentPath == getPickerRoot();
-    return Theme(
-      data: Theme.of(context).copyWith(
-        accentColor: AppTheme.getOverscrollIndicatorColor(context),
+    return AnimatedSwitcher(
+      duration: k.animationDurationNormal,
+      // see AnimatedSwitcher.defaultLayoutBuilder
+      layoutBuilder: (currentChild, previousChildren) => Stack(
+        children: <Widget>[
+          ...previousChildren,
+          if (currentChild != null) currentChild,
+        ],
+        alignment: Alignment.topLeft,
       ),
-      child: AnimatedSwitcher(
-        duration: k.animationDurationNormal,
-        // see AnimatedSwitcher.defaultLayoutBuilder
-        layoutBuilder: (currentChild, previousChildren) => Stack(
-          children: <Widget>[
-            ...previousChildren,
-            if (currentChild != null) currentChild,
-          ],
-          alignment: Alignment.topLeft,
-        ),
-        child: ListView.separated(
-          key: Key(_currentPath),
-          itemBuilder: (context, index) {
-            if (!isTopLevel && index == 0) {
-              return ListTile(
-                dense: true,
-                leading: const SizedBox(width: 24),
-                title: Text(L10n.global().rootPickerNavigateUpItemText),
-                onTap: () {
-                  try {
-                    _navigateInto(File(path: path.dirname(_currentPath)));
-                  } catch (e) {
-                    SnackBarManager().showSnackBar(SnackBar(
-                      content: Text(exception_util.toUserString(e)),
-                      duration: k.snackBarDurationNormal,
-                    ));
-                  }
-                },
-              );
-            } else {
-              return _buildItem(
-                  context, state.items[index - (isTopLevel ? 0 : 1)]);
-            }
-          },
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: state.items.length + (isTopLevel ? 0 : 1),
-        ),
+      child: ListView.separated(
+        key: Key(_currentPath),
+        itemBuilder: (context, index) {
+          if (!isTopLevel && index == 0) {
+            return ListTile(
+              dense: true,
+              leading: const SizedBox(width: 24),
+              title: Text(L10n.global().rootPickerNavigateUpItemText),
+              onTap: () {
+                try {
+                  _navigateInto(File(path: path.dirname(_currentPath)));
+                } catch (e) {
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(exception_util.toUserString(e)),
+                    duration: k.snackBarDurationNormal,
+                  ));
+                }
+              },
+            );
+          } else {
+            return _buildItem(
+                context, state.items[index - (isTopLevel ? 0 : 1)]);
+          }
+        },
+        separatorBuilder: (context, index) => const Divider(),
+        itemCount: state.items.length + (isTopLevel ? 0 : 1),
       ),
     );
   }

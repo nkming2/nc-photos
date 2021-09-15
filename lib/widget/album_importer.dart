@@ -156,16 +156,11 @@ class _AlbumImporterState extends State<AlbumImporter> {
   }
 
   Widget _buildList(BuildContext context, ListImportableAlbumBlocState state) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        accentColor: AppTheme.getOverscrollIndicatorColor(context),
-      ),
-      child: ListView.separated(
-        itemBuilder: (context, index) =>
-            _buildItem(context, _backingFiles[index]),
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: _backingFiles.length,
-      ),
+    return ListView.separated(
+      itemBuilder: (context, index) =>
+          _buildItem(context, _backingFiles[index]),
+      separatorBuilder: (context, index) => const Divider(),
+      itemCount: _backingFiles.length,
     );
   }
 

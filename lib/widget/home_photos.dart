@@ -119,7 +119,9 @@ class _HomePhotosState extends State<HomePhotos>
             context,
             child: Theme(
               data: Theme.of(context).copyWith(
-                accentColor: AppTheme.getOverscrollIndicatorColor(context),
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                      secondary: AppTheme.getOverscrollIndicatorColor(context),
+                    ),
               ),
               child: DraggableScrollbar.semicircle(
                 controller: _scrollController,

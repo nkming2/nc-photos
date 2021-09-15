@@ -182,7 +182,7 @@ class _SettingsState extends State<Settings> {
       child: Text(
         label,
         style: TextStyle(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
         ),
       ),
     );
