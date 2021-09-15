@@ -319,9 +319,11 @@ packages:
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
-      name: flutter_staggered_grid_view
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "v0.4.0-nc-photos-1"
+      resolved-ref: "361b081221dfe73d84435db880699204790659bd"
+      url: "https://gitlab.com/nkming2/flutter_staggered_grid_view"
+    source: git
     version: "0.4.0"
   flutter_test:
     dependency: transitive
