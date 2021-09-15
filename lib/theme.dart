@@ -27,23 +27,13 @@ class AppTheme extends StatelessWidget {
     final theme = Theme.of(context);
     if (theme.brightness == Brightness.light) {
       return theme.appBarTheme.copyWith(
-        brightness: Brightness.dark,
-        color: Colors.grey[800],
-        actionsIconTheme: theme.primaryIconTheme
-            .copyWith(color: Colors.white.withOpacity(.87)),
-        iconTheme: theme.primaryIconTheme
-            .copyWith(color: Colors.white.withOpacity(.87)),
-        textTheme: theme.primaryTextTheme
-            .apply(bodyColor: Colors.white.withOpacity(.87)),
+        backgroundColor: Colors.grey[800],
+        foregroundColor: Colors.white.withOpacity(.87),
       );
     } else {
       return theme.appBarTheme.copyWith(
-        brightness: Brightness.dark,
-        color: Colors.grey[200],
-        actionsIconTheme:
-            theme.primaryIconTheme.copyWith(color: Colors.black87),
-        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
-        textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
+        backgroundColor: Colors.grey[200],
+        foregroundColor: Colors.black87,
       );
     }
   }
@@ -98,11 +88,8 @@ class AppTheme extends StatelessWidget {
 
   static ThemeData _buildLightThemeData(BuildContext context, ThemeData theme) {
     final appBarTheme = theme.appBarTheme.copyWith(
-      brightness: Brightness.dark,
-      color: theme.scaffoldBackgroundColor,
-      actionsIconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
-      iconTheme: theme.primaryIconTheme.copyWith(color: Colors.black87),
-      textTheme: theme.primaryTextTheme.apply(bodyColor: Colors.black87),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      foregroundColor: theme.colorScheme.onSurface,
     );
     return theme.copyWith(appBarTheme: appBarTheme);
   }
@@ -121,14 +108,8 @@ class AppTheme extends StatelessWidget {
     }
 
     final appBarTheme = theme.appBarTheme.copyWith(
-      brightness: Brightness.dark,
-      color: background,
-      actionsIconTheme:
-          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
-      iconTheme:
-          theme.primaryIconTheme.copyWith(color: Colors.white.withOpacity(.87)),
-      textTheme: theme.primaryTextTheme
-          .apply(bodyColor: Colors.white.withOpacity(.87)),
+      backgroundColor: background,
+      foregroundColor: theme.colorScheme.onSurface,
     );
     final bottomNavigationBarTheme = theme.bottomNavigationBarTheme.copyWith(
       backgroundColor: background,

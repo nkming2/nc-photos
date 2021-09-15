@@ -156,13 +156,7 @@ class _ViewerState extends State<Viewer>
               AppBar(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
-                brightness: Brightness.dark,
-                iconTheme: Theme.of(context).iconTheme.copyWith(
-                      color: Colors.white.withOpacity(.87),
-                    ),
-                actionsIconTheme: Theme.of(context).iconTheme.copyWith(
-                      color: Colors.white.withOpacity(.87),
-                    ),
+                foregroundColor: Colors.white.withOpacity(.87),
                 actions: [
                   if (!_isDetailPaneActive && _canOpenDetailPane())
                     IconButton(
