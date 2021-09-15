@@ -169,7 +169,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             child: Divider(),
           ),
           ListTile(
-            leading: Container(
+            leading: SizedBox(
               height: double.infinity,
               child: Icon(
                 Icons.image_outlined,
@@ -181,7 +181,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           ),
           if (!widget.file.isOwned(widget.account.username))
             ListTile(
-              leading: Container(
+              leading: SizedBox(
                 height: double.infinity,
                 child: Icon(
                   Icons.share_outlined,
@@ -206,7 +206,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (widget.file.metadata?.imageWidth != null &&
               widget.file.metadata?.imageHeight != null)
             ListTile(
-              leading: Container(
+              leading: SizedBox(
                 height: double.infinity,
                 child: Icon(
                   Icons.aspect_ratio,
@@ -219,7 +219,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             )
           else
             ListTile(
-              leading: Container(
+              leading: SizedBox(
                 height: double.infinity,
                 child: Icon(
                   Icons.aspect_ratio,
@@ -230,7 +230,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             ),
           if (_model != null)
             ListTile(
-              leading: Container(
+              leading: SizedBox(
                 height: double.infinity,
                 child: Icon(
                   Icons.camera_outlined,

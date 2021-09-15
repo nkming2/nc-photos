@@ -101,12 +101,10 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
         _processingSharee.any((element) => element == sharee.shareWith);
     final Widget trailing;
     if (isProcessing) {
-      trailing = Container(
-        child: const SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(),
-        ),
+      trailing = const SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(),
       );
     } else {
       trailing = Checkbox(

@@ -23,142 +23,138 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
       title: Text(L10n.global().updateDateTimeDialogTitle),
       content: Form(
         key: _formKey,
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                L10n.global().dateSubtitle,
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: L10n.global().dateYearInputHint,
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        try {
-                          int.parse(value!);
-                          return null;
-                        } catch (_) {
-                          return L10n.global().dateTimeInputInvalid;
-                        }
-                      },
-                      onSaved: (value) {
-                        _formValue.year = int.parse(value!);
-                      },
-                      initialValue: "${widget.initialDateTime.year}",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              L10n.global().dateSubtitle,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().dateYearInputHint,
                     ),
-                    flex: 1,
-                  ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: L10n.global().dateMonthInputHint,
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (int.tryParse(value!)?.inRange(1, 12) == true) {
-                          return null;
-                        }
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      try {
+                        int.parse(value!);
+                        return null;
+                      } catch (_) {
                         return L10n.global().dateTimeInputInvalid;
-                      },
-                      onSaved: (value) {
-                        _formValue.month = int.parse(value!);
-                      },
-                      initialValue: widget.initialDateTime.month
-                          .toString()
-                          .padLeft(2, "0"),
+                      }
+                    },
+                    onSaved: (value) {
+                      _formValue.year = int.parse(value!);
+                    },
+                    initialValue: "${widget.initialDateTime.year}",
+                  ),
+                  flex: 1,
+                ),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().dateMonthInputHint,
                     ),
-                    flex: 1,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (int.tryParse(value!)?.inRange(1, 12) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.month = int.parse(value!);
+                    },
+                    initialValue:
+                        widget.initialDateTime.month.toString().padLeft(2, "0"),
                   ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: L10n.global().dateDayInputHint,
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (int.tryParse(value!)?.inRange(1, 31) == true) {
-                          return null;
-                        }
-                        return L10n.global().dateTimeInputInvalid;
-                      },
-                      onSaved: (value) {
-                        _formValue.day = int.parse(value!);
-                      },
-                      initialValue:
-                          widget.initialDateTime.day.toString().padLeft(2, "0"),
+                  flex: 1,
+                ),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().dateDayInputHint,
                     ),
-                    flex: 1,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (int.tryParse(value!)?.inRange(1, 31) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.day = int.parse(value!);
+                    },
+                    initialValue:
+                        widget.initialDateTime.day.toString().padLeft(2, "0"),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                L10n.global().timeSubtitle,
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: L10n.global().timeHourInputHint,
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (int.tryParse(value!)?.inRange(0, 23) == true) {
-                          return null;
-                        }
-                        return L10n.global().dateTimeInputInvalid;
-                      },
-                      onSaved: (value) {
-                        _formValue.hour = int.parse(value!);
-                      },
-                      initialValue: widget.initialDateTime.hour
-                          .toString()
-                          .padLeft(2, "0"),
+                  flex: 1,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              L10n.global().timeSubtitle,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+            Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().timeHourInputHint,
                     ),
-                    flex: 1,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (int.tryParse(value!)?.inRange(0, 23) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.hour = int.parse(value!);
+                    },
+                    initialValue:
+                        widget.initialDateTime.hour.toString().padLeft(2, "0"),
                   ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: L10n.global().timeMinuteInputHint,
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (int.tryParse(value!)?.inRange(0, 59) == true) {
-                          return null;
-                        }
-                        return L10n.global().dateTimeInputInvalid;
-                      },
-                      onSaved: (value) {
-                        _formValue.minute = int.parse(value!);
-                      },
-                      initialValue: widget.initialDateTime.minute
-                          .toString()
-                          .padLeft(2, "0"),
+                  flex: 1,
+                ),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: L10n.global().timeMinuteInputHint,
                     ),
-                    flex: 1,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (int.tryParse(value!)?.inRange(0, 59) == true) {
+                        return null;
+                      }
+                      return L10n.global().dateTimeInputInvalid;
+                    },
+                    onSaved: (value) {
+                      _formValue.minute = int.parse(value!);
+                    },
+                    initialValue: widget.initialDateTime.minute
+                        .toString()
+                        .padLeft(2, "0"),
                   ),
-                  const SizedBox(width: 4),
-                  const Flexible(
-                    child: SizedBox(),
-                    flex: 1,
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  flex: 1,
+                ),
+                const SizedBox(width: 4),
+                const Flexible(
+                  child: SizedBox(),
+                  flex: 1,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       actions: [

@@ -38,13 +38,11 @@ class PhotoListImage extends StatelessWidget {
                   // won't work on web because the image is downloaded by the cache
                   // manager instead
                   // where's the preview???
-                  return Container(
-                    child: Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 64,
-                        color: Colors.white.withOpacity(.8),
-                      ),
+                  return Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: Colors.white.withOpacity(.8),
                     ),
                   );
                 },
@@ -104,13 +102,11 @@ class PhotoListVideo extends StatelessWidget {
                 errorWidget: (context, url, error) {
                   // no preview for this video. Normal since video preview is disabled
                   // by default
-                  return Container(
-                    child: Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 64,
-                        color: Colors.white.withOpacity(.8),
-                      ),
+                  return Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: Colors.white.withOpacity(.8),
                     ),
                   );
                 },

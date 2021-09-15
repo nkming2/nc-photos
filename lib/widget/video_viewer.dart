@@ -166,74 +166,71 @@ class _VideoViewerState extends State<VideoViewer>
             ),
           ),
         ),
-        Container(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  bottom: kToolbarHeight + 8, left: 8, right: 8),
-              child: AnimatedVisibility(
-                opacity: widget.isControlVisible ? 1.0 : 0.0,
-                duration: k.animationDurationNormal,
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: Row(
-                    children: [
-                      ValueListenableBuilder(
-                        valueListenable: _controller,
-                        builder: (context, VideoPlayerValue value, child) =>
-                            Text(
-                          _durationToString(value.position),
-                          style: TextStyle(
-                            fontSize: 14,
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(
+                bottom: kToolbarHeight + 8, left: 8, right: 8),
+            child: AnimatedVisibility(
+              opacity: widget.isControlVisible ? 1.0 : 0.0,
+              duration: k.animationDurationNormal,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Row(
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: _controller,
+                      builder: (context, VideoPlayerValue value, child) => Text(
+                        _durationToString(value.position),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.getSecondaryTextColor(context),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: VideoProgressIndicator(
+                        _controller,
+                        allowScrubbing: true,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        colors: const VideoProgressColors(
+                          backgroundColor: Colors.white24,
+                          bufferedColor: Colors.white38,
+                          playedColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    if (_controller.value.duration != Duration.zero)
+                      Text(
+                        _durationToString(_controller.value.duration),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.getSecondaryTextColor(context),
+                        ),
+                      ),
+                    const SizedBox(width: 4),
+                    Tooltip(
+                      message: _controller.value.volume == 0
+                          ? L10n.global().unmuteTooltip
+                          : L10n.global().muteTooltip,
+                      child: InkWell(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(32)),
+                        onTap: _onVolumnPressed,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Icon(
+                            _controller.value.volume == 0
+                                ? Icons.volume_mute_outlined
+                                : Icons.volume_up_outlined,
                             color: AppTheme.getSecondaryTextColor(context),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: VideoProgressIndicator(
-                          _controller,
-                          allowScrubbing: true,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          colors: const VideoProgressColors(
-                            backgroundColor: Colors.white24,
-                            bufferedColor: Colors.white38,
-                            playedColor: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (_controller.value.duration != Duration.zero)
-                        Text(
-                          _durationToString(_controller.value.duration),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.getSecondaryTextColor(context),
-                          ),
-                        ),
-                      const SizedBox(width: 4),
-                      Tooltip(
-                        message: _controller.value.volume == 0
-                            ? L10n.global().unmuteTooltip
-                            : L10n.global().muteTooltip,
-                        child: InkWell(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(32)),
-                          onTap: _onVolumnPressed,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Icon(
-                              _controller.value.volume == 0
-                                  ? Icons.volume_mute_outlined
-                                  : Icons.volume_up_outlined,
-                              color: AppTheme.getSecondaryTextColor(context),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

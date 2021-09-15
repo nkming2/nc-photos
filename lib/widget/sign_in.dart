@@ -131,7 +131,7 @@ class _SignInState extends State<SignIn> {
         const SizedBox(height: 8),
         Row(
           children: [
-            Container(
+            SizedBox(
               width: 64,
               child: DropdownButtonHideUnderline(
                 child: DropdownButtonFormField<_Scheme>(
