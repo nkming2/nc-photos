@@ -14,8 +14,13 @@ Features:
 - Sign-in to multiple servers
 - and more to come!
 
+Compatible Nextcloud apps:
+- Face Recognition
+  - Experimental, please read the [setup guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/people)
+
 Translations (sorted by ISO name):
 - français (contributed by mgreil)
+- Deutsch (contributed by PhilProg)
 - ελληνικά (contributed by Chris Karasoulis)
 - русский (contributed by meixnt & eriane)
 - Español (contributed by luckkmaxx)
