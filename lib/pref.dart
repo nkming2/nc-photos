@@ -125,11 +125,6 @@ class Pref {
   Future<bool> setLabEnableSharedAlbum(bool value) =>
       _setBool(PrefKey.labEnableSharedAlbum, value);
 
-  bool? isLabEnablePeople() => _pref.getBool(_toKey(PrefKey.labEnablePeople));
-  bool isLabEnablePeopleOr(bool def) => isLabEnablePeople() ?? def;
-  Future<bool> setLabEnablePeople(bool value) =>
-      _setBool(PrefKey.labEnablePeople, value);
-
   Pref._();
 
   Future<bool> _setBool(PrefKey key, bool value) async {
@@ -188,8 +183,6 @@ class Pref {
         return "hasNewSharedAlbum";
       case PrefKey.labEnableSharedAlbum:
         return "isLabEnableSharedAlbum";
-      case PrefKey.labEnablePeople:
-        return "isLabEnablePeople";
       case PrefKey.slideshowDuration:
         return "slideshowDuration";
       case PrefKey.isSlideshowShuffle:
@@ -220,7 +213,6 @@ enum PrefKey {
   language,
   newSharedAlbum,
   labEnableSharedAlbum,
-  labEnablePeople,
   slideshowDuration,
   isSlideshowShuffle,
   isSlideshowRepeat,
