@@ -90,4 +90,16 @@ This version includes changes that are not compatible with older versions. Pleas
 - New settings:
   - Follow system dark theme settings (Android 10+)
 """,
+  // v29
+  """29.0
+Features:
+  - (Experimental) Support the Nextcloud Face Recognition app
+  - Slideshow
+  - Performance & cache tweaks
+    - Due to an overhaul to the cache management, the old cache can't be used and will be cleared. First run after update will thus be slower
+
+Localization (new/update):
+  - German (by PhilProg)
+  - Spanish (by luckkmaxx)
+""",
 ];
