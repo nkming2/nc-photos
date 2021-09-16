@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -6,7 +8,9 @@ import 'package:nc_photos/changelog.dart' as changelog;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/widget/home.dart';
+import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 
@@ -87,35 +91,66 @@ class _SplashState extends State<Splash> {
     return lastVersion < k.version;
   }
 
-  void _handleUpgrade() {
-    final lastVersion = Pref.inst().getLastVersionOr(k.version);
-    // ...
+  void _handleUpgrade() async {
+    try {
+      final lastVersion = Pref.inst().getLastVersionOr(k.version);
+      await _upgrade(lastVersion);
 
-    final change = _gatherChangelog(lastVersion);
-    if (change.isNotEmpty) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(L10n.global().changelogTitle),
-          content: SingleChildScrollView(
-            child: Text(change),
+      final change = _gatherChangelog(lastVersion);
+      if (change.isNotEmpty) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(L10n.global().changelogTitle),
+            content: SingleChildScrollView(
+              child: Text(change),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
+              )
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(MaterialLocalizations.of(context).okButtonLabel),
-            )
-          ],
-        ),
-      ).whenComplete(() {
-        _initTimedExit();
-        Pref.inst().setLastVersion(k.version);
-      });
-    } else {
+        );
+      }
+    } finally {
       _initTimedExit();
       Pref.inst().setLastVersion(k.version);
+    }
+  }
+
+  Future<void> _upgrade(int lastVersion) async {
+    if (lastVersion < 290) {
+      await _upgrade29(lastVersion);
+    }
+  }
+
+  Future<void> _upgrade29(int lastVersion) async {
+    await _peformUpgrade(() async {
+      try {
+        _log.info("[_upgrade29] clearDefaultCache");
+        await CompatV29.clearDefaultCache();
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
+        // just leave the cache then
+      }
+    });
+  }
+
+  Future<void> _peformUpgrade(FutureOr<void> Function() fn) async {
+    showDialog(
+        context: context,
+        builder: (_) => ProcessingDialog(
+              text: L10n.global().genericProcessingDialogContent,
+            ));
+    try {
+      await fn();
+    } finally {
+      Navigator.of(context).pop();
     }
   }
 
