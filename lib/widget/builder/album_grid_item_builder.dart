@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -53,6 +54,7 @@ class AlbumGridItemBuilder {
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
         child: CachedNetworkImage(
+          cacheManager: CoverCacheManager.inst,
           imageUrl: previewUrl,
           httpHeaders: {
             "Authorization": Api.getAuthorizationHeaderValue(account),

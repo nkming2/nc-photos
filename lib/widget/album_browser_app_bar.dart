@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/theme.dart';
 
@@ -122,6 +123,7 @@ Widget? _getAppBarCover(
           clipBehavior: Clip.hardEdge,
           fit: BoxFit.cover,
           child: CachedNetworkImage(
+            cacheManager: CoverCacheManager.inst,
             imageUrl: coverPreviewUrl,
             httpHeaders: {
               "Authorization": Api.getAuthorizationHeaderValue(account),

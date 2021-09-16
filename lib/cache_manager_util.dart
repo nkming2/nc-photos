@@ -29,3 +29,49 @@ class CancelableGetFile {
 
   bool _shouldRun = true;
 }
+
+/// Cache manager for thumbnails
+///
+/// Thumbnails are pretty small in file size and also critical to the scrolling
+/// performance, thus a large number of them will be kept
+class ThumbnailCacheManager {
+  static const key = "thumbnailCache";
+  static CacheManager inst = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 30),
+      maxNrOfCacheObjects: 20000,
+    ),
+  );
+}
+
+/// Cache manager for large images
+///
+/// Large images are only loaded when explicitly opening the photos, they are
+/// very large in size. Since large images are only viewed one by one (unlike
+/// thumbnails), they are less critical to the overall app responsiveness
+class LargeImageCacheManager {
+  static const key = "largeImageCache";
+  static CacheManager inst = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 30),
+      maxNrOfCacheObjects: 1000,
+    ),
+  );
+}
+
+/// Cache manager for covers
+///
+/// Covers are larger than thumbnails but smaller than full sized photos. They
+/// are used to represent a collection
+class CoverCacheManager {
+  static const key = "coverCache";
+  static CacheManager inst = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 30),
+      maxNrOfCacheObjects: 300,
+    ),
+  );
+}

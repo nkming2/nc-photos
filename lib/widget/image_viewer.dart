@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
@@ -25,7 +25,7 @@ class ImageViewer extends StatefulWidget {
   createState() => _ImageViewerState();
 
   static void preloadImage(Account account, File file) {
-    DefaultCacheManager().getFileStream(
+    LargeImageCacheManager.inst.getFileStream(
       _getImageUrl(account, file),
       headers: {
         "Authorization": Api.getAuthorizationHeaderValue(account),
@@ -69,6 +69,7 @@ class _ImageViewerState extends State<ImageViewer>
           child: SizeChangedLayoutNotifier(
             child: mod.CachedNetworkImage(
               key: _key,
+              cacheManager: LargeImageCacheManager.inst,
               imageUrl: _getImageUrl(widget.account, widget.file),
               httpHeaders: {
                 "Authorization":

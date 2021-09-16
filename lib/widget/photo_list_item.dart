@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/theme.dart';
 
 class PhotoListImage extends StatelessWidget {
@@ -28,6 +29,7 @@ class PhotoListImage extends StatelessWidget {
               constraints: BoxConstraints.tight(const Size(128, 128)),
               color: AppTheme.getListItemBackgroundColor(context),
               child: CachedNetworkImage(
+                cacheManager: ThumbnailCacheManager.inst,
                 imageUrl: previewUrl,
                 httpHeaders: {
                   "Authorization": Api.getAuthorizationHeaderValue(account),
@@ -93,6 +95,7 @@ class PhotoListVideo extends StatelessWidget {
               constraints: BoxConstraints.tight(const Size(128, 128)),
               color: AppTheme.getListItemBackgroundColor(context),
               child: CachedNetworkImage(
+                cacheManager: ThumbnailCacheManager.inst,
                 imageUrl: previewUrl,
                 httpHeaders: {
                   "Authorization": Api.getAuthorizationHeaderValue(account),

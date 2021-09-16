@@ -10,6 +10,7 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_person.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_utils;
@@ -282,6 +283,7 @@ class _PersonListItem extends _ListItem {
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
         child: CachedNetworkImage(
+          cacheManager: ThumbnailCacheManager.inst,
           imageUrl: faceUrl!,
           httpHeaders: {
             "Authorization": Api.getAuthorizationHeaderValue(account),

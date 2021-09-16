@@ -9,6 +9,7 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_face.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -217,6 +218,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
         child: CachedNetworkImage(
+          cacheManager: ThumbnailCacheManager.inst,
           imageUrl: api_util.getFacePreviewUrl(
               widget.account, widget.person.thumbFaceId,
               size: 64),
