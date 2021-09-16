@@ -542,8 +542,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
           final previewUrl = api_util.getFilePreviewUrl(
             widget.account,
             item.file,
-            width: thumbSize,
-            height: thumbSize,
+            width: k.photoThumbSize,
+            height: k.photoThumbSize,
           );
           if (file_util.isSupportedImageFormat(item.file)) {
             yield _ImageListItem(

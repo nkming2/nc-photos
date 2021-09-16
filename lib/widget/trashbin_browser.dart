@@ -359,7 +359,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
         final f = _backingFiles[i];
 
         final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: _thumbSize, height: _thumbSize);
+            width: k.photoThumbSize, height: k.photoThumbSize);
         if (file_util.isSupportedImageFormat(f)) {
           yield _ImageListItem(
             file: f,

@@ -16,3 +16,17 @@ const animationDurationNormal = Duration(milliseconds: 250);
 
 /// Duration for long animation
 const animationDurationLong = Duration(milliseconds: 500);
+
+/// Size of the photo/video thumbnails
+///
+/// It's advisable to use a single size to minimize cache size
+const photoThumbSize = 256;
+
+/// Size of the face thumbnails
+const faceThumbSize = 192;
+
+/// Size of the opened photos
+const photoLargeSize = 1080;
+
+/// Size of the cover photos
+const coverSize = 512;

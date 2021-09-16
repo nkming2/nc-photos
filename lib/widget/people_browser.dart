@@ -199,7 +199,7 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
               account: widget.account,
               name: e.name,
               faceUrl: api_util.getFacePreviewUrl(widget.account, e.thumbFaceId,
-                  size: 256),
+                  size: k.faceThumbSize),
               onTap: () => _onItemTap(e),
             ))
         .toList();

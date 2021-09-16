@@ -8,6 +8,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
 
@@ -49,7 +50,7 @@ class AlbumGridItemBuilder {
     try {
       final coverFile = album.coverProvider.getCover(album);
       final previewUrl = api_util.getFilePreviewUrl(account, coverFile!,
-          width: 512, height: 512);
+          width: k.coverSize, height: k.coverSize);
       cover = FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,

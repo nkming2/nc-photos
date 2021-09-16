@@ -221,7 +221,7 @@ class _PersonBrowserState extends State<PersonBrowser>
           cacheManager: ThumbnailCacheManager.inst,
           imageUrl: api_util.getFacePreviewUrl(
               widget.account, widget.person.thumbFaceId,
-              size: 64),
+              size: k.faceThumbSize),
           httpHeaders: {
             "Authorization": Api.getAuthorizationHeaderValue(widget.account),
           },
@@ -462,8 +462,8 @@ class _PersonBrowserState extends State<PersonBrowser>
                 previewUrl: api_util.getFilePreviewUrl(
                   widget.account,
                   f,
-                  width: _thumbSize,
-                  height: _thumbSize,
+                  width: k.photoThumbSize,
+                  height: k.photoThumbSize,
                 ),
                 onTap: () => _onItemTap(i),
               ))

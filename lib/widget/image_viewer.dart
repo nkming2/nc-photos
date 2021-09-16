@@ -219,8 +219,8 @@ String _getImageUrl(Account account, File file) {
     return api_util.getFilePreviewUrl(
       account,
       file,
-      width: 1080,
-      height: 1080,
+      width: k.photoLargeSize,
+      height: k.photoLargeSize,
       a: true,
     );
   }
