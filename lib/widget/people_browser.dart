@@ -12,6 +12,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_person.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/iterable_extension.dart';
@@ -82,7 +83,8 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   }
 
   Widget _buildContent(BuildContext context, ListPersonBlocState state) {
-    if (state is ListPersonBlocSuccess && _items.isEmpty) {
+    if ((state is ListPersonBlocSuccess || state is ListPersonBlocFailure) &&
+        _items.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -180,6 +182,13 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
       _transformItems(state.items);
     } else if (state is ListPersonBlocFailure) {
       _transformItems(state.items);
+      try {
+        final e = state.exception as ApiException;
+        if (e.response.statusCode == 404) {
+          // face recognition app probably not installed, ignore
+          return;
+        }
+      } catch (_) {}
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
