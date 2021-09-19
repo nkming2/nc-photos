@@ -19,8 +19,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-private const val PERMISSION_REQUEST_CODE = 11011
-
 /*
  * Save downloaded item on device
  *
@@ -85,12 +83,7 @@ class MediaStoreChannelHandler(activity: Activity)
 
 	private fun saveFileToDownload0(fileName: String, content: ByteArray,
 			result: MethodChannel.Result) {
-		if (ContextCompat.checkSelfPermission(_activity,
-						Manifest.permission.WRITE_EXTERNAL_STORAGE)
-				!= PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(_activity,
-					arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-					PERMISSION_REQUEST_CODE)
+		if (!PermissionHandler.ensureWriteExternalStorage(_activity)) {
 			result.error("permissionError", "Permission not granted", null)
 			return
 		}

@@ -4,7 +4,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -25,11 +24,16 @@ class ShareHandler {
       builder: (context) =>
           ProcessingDialog(text: L10n.global().shareDownloadingDialogContent),
     );
-    final fileRepo = FileRepo(FileCachedDataSource());
     final results = <Tuple2<File, dynamic>>[];
     for (final f in files) {
       try {
-        results.add(Tuple2(f, await DownloadFile(fileRepo)(account, f)));
+        results.add(Tuple2(
+            f,
+            await DownloadFile()(
+              account,
+              f,
+              shouldNotify: false,
+            )));
       } on PermissionException catch (_) {
         _log.warning("[shareFiles] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(

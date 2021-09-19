@@ -452,9 +452,9 @@ class _ViewerState extends State<Viewer>
     });
     dynamic result;
     try {
-      final fileRepo = FileRepo(FileCachedDataSource());
-      result = await DownloadFile(fileRepo)(widget.account, file);
+      result = await DownloadFile()(widget.account, file);
       controller?.close();
+      _onDownloadSuccessful(file, result);
     } on PermissionException catch (_) {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
@@ -462,7 +462,8 @@ class _ViewerState extends State<Viewer>
         content: Text(L10n.global().downloadFailureNoPermissionNotification),
         duration: k.snackBarDurationNormal,
       ));
-      return;
+    } on JobCanceledException catch (_) {
+      _log.info("[_onDownloadPressed] Canceled");
     } catch (e, stacktrace) {
       _log.shout(
           "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
@@ -472,10 +473,7 @@ class _ViewerState extends State<Viewer>
             "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
-      return;
     }
-
-    _onDownloadSuccessful(file, result);
   }
 
   void _onDownloadSuccessful(File file, dynamic result) {

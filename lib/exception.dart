@@ -65,3 +65,27 @@ class InvalidBaseUrlException implements Exception {
 
   final dynamic message;
 }
+
+/// A download job has failed
+class DownloadException implements Exception {
+  DownloadException([this.message]);
+
+  @override
+  toString() {
+    return "DownloadException: $message";
+  }
+
+  final dynamic message;
+}
+
+/// A running job has been canceled
+class JobCanceledException implements Exception {
+  JobCanceledException([this.message]);
+
+  @override
+  toString() {
+    return "JobCanceledException: $message";
+  }
+
+  final dynamic message;
+}
