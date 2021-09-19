@@ -454,7 +454,7 @@ class _ViewerState extends State<Viewer>
     try {
       result = await DownloadFile()(widget.account, file);
       controller?.close();
-      _onDownloadSuccessful(file, result);
+      await _onDownloadSuccessful(file, result);
     } on PermissionException catch (_) {
       _log.warning("[_onDownloadPressed] Permission not granted");
       controller?.close();
@@ -476,7 +476,7 @@ class _ViewerState extends State<Viewer>
     }
   }
 
-  void _onDownloadSuccessful(File file, dynamic result) {
+  Future<void> _onDownloadSuccessful(File file, dynamic result) async {
     dynamic notif;
     if (platform_k.isAndroid) {
       notif = AndroidItemDownloadSuccessfulNotification(
@@ -484,7 +484,7 @@ class _ViewerState extends State<Viewer>
     }
     if (notif != null) {
       try {
-        notif.notify();
+        await notif.notify();
         return;
       } catch (e, stacktrace) {
         _log.shout(
