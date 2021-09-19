@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -7,6 +9,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -19,13 +22,21 @@ class ShareHandler {
   Future<void> shareFiles(
       BuildContext context, Account account, List<File> files) async {
     assert(platform_k.isAndroid);
+    final controller = StreamController<String>();
     showDialog(
       context: context,
-      builder: (context) =>
-          ProcessingDialog(text: L10n.global().shareDownloadingDialogContent),
+      builder: (context) => StreamBuilder(
+        stream: controller.stream,
+        builder: (context, snapshot) => ProcessingDialog(
+          text: L10n.global().shareDownloadingDialogContent +
+              (snapshot.hasData ? " ${snapshot.data}" : ""),
+        ),
+      ),
     );
     final results = <Tuple2<File, dynamic>>[];
-    for (final f in files) {
+    for (final pair in files.withIndex()) {
+      final i = pair.item1, f = pair.item2;
+      controller.add("(${i + 1}/${files.length})");
       try {
         results.add(Tuple2(
             f,
