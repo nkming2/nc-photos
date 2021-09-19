@@ -892,25 +892,29 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/video_player/video_player"
-      ref: video-player-nc-photos
-      resolved-ref: "8fdcdc2eddaa07ed92cd3ce8a33d83ffe0f413fb"
+      ref: "video_player-v2.1.1-nc-photos-2"
+      resolved-ref: "0211528e3091bc13f9e52aeeb9931ec1614bd2ca"
       url: "https://gitlab.com/nkming2/flutter-plugins"
     source: git
     version: "2.1.1"
   video_player_platform_interface:
     dependency: transitive
     description:
-      name: video_player_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/video_player/video_player_platform_interface"
+      ref: "video_player-v2.1.1-nc-photos-2"
+      resolved-ref: "0211528e3091bc13f9e52aeeb9931ec1614bd2ca"
+      url: "https://gitlab.com/nkming2/flutter-plugins"
+    source: git
     version: "4.1.0"
   video_player_web:
     dependency: transitive
     description:
-      name: video_player_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
+      path: "packages/video_player/video_player_web"
+      ref: "video_player-v2.1.1-nc-photos-2"
+      resolved-ref: "0211528e3091bc13f9e52aeeb9931ec1614bd2ca"
+      url: "https://gitlab.com/nkming2/flutter-plugins"
+    source: git
+    version: "2.0.0"
   vm_service:
     dependency: transitive
     description:

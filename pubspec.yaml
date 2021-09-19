@@ -77,7 +77,7 @@ dependencies:
   video_player:
     git:
       url: https://gitlab.com/nkming2/flutter-plugins
-      ref: video-player-nc-photos
+      ref: video_player-v2.1.1-nc-photos-2
       path: packages/video_player/video_player
   wakelock: ^0.5.2
   woozy_search: ^2.0.3
