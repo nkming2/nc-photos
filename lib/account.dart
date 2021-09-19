@@ -38,8 +38,8 @@ class Account with EquatableMixin {
   toString() {
     return "$runtimeType {"
         "scheme: '$scheme', "
-        "address: '$address', "
-        "username: '$username', "
+        "address: '${kDebugMode ? address : "***"}', "
+        "username: '${kDebugMode ? username : "***"}', "
         "password: '${password.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
         "roots: List {'${roots.join('\', \'')}'}, "
         "}";
