@@ -488,6 +488,7 @@
 	"dateDayInputHint": "Día",
 	"timeHourInputHint": "Hora",
 	"timeMinuteInputHint": "Minuto",
+	"timeSecondInputHint": "Segundo",
 	"dateTimeInputInvalid": "Valor inválido",
 	"@dateTimeInputInvalid": {
 		"description": "Invalid date/time input (e.g., non-numeric characters)"
@@ -799,6 +800,26 @@
 				"example": "1"
 			}
 		}
+	},
+	"slideshowTooltip": "Presentación de diapositivas",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "Configurar diapositivas",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "Duración de cada imagen (MM:SS)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "Aleatorias",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "Repetir",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
