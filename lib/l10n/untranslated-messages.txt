@@ -72,15 +72,6 @@
     "slideshowSetupDialogRepeatTitle"
   ],
 
-  "es": [
-    "timeSecondInputHint",
-    "slideshowTooltip",
-    "slideshowSetupDialogTitle",
-    "slideshowSetupDialogDurationTitle",
-    "slideshowSetupDialogShuffleTitle",
-    "slideshowSetupDialogRepeatTitle"
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsViewerTitle",
