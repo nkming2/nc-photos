@@ -37,6 +37,7 @@ final _supportedFormatMimes = [
   "image/heic",
   "image/gif",
   "video/mp4",
+  "video/quicktime",
   if (platform_k.isAndroid || platform_k.isWeb) "video/webm",
 ];
 
