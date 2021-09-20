@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,6 +91,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         return child!;
       },
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const _MyScrollBehavior(),
     );
   }
 
@@ -379,4 +381,16 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   late AppEventListener<LanguageChangedEvent> _langChangedListener;
 
   static final _log = Logger("widget.my_app.MyAppState");
+}
+
+class _MyScrollBehavior extends MaterialScrollBehavior {
+  const _MyScrollBehavior();
+
+  @override
+  get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.invertedStylus,
+    PointerDeviceKind.mouse,
+  };
 }
