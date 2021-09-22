@@ -262,7 +262,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Widget _buildEditAppBar(BuildContext context) {
-    return buildEditAppBar(context, widget.account, widget.album, actions: [
+    return buildEditAppBar(context, widget.account, _album!, actions: [
       IconButton(
         icon: const Icon(Icons.text_fields),
         tooltip: L10n.global().albumAddTextTooltip,
