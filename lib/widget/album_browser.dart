@@ -145,8 +145,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         setState(() {
           _album = newAlbum;
         });
-        UpdateAlbum(albumRepo)(widget.account, newAlbum)
-            .catchError((e, stacktrace) {
+        UpdateAlbum(albumRepo)(
+          widget.account,
+          newAlbum,
+        ).catchError((e, stackTrace) {
           SnackBarManager().showSnackBar(SnackBar(
             content: Text(exception_util.toUserString(e)),
             duration: k.snackBarDurationNormal,
@@ -309,7 +311,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  void _onSelectionAppBarRemovePressed() {
+  Future<void> _onSelectionAppBarRemovePressed() async {
     final selectedIndexes =
         selectedListItems.map((e) => (e as _ListItem).index).toList();
     final newItems = _sortedItems
@@ -317,6 +319,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         .where((element) => !selectedIndexes.contains(element.item1))
         .map((e) => e.item2)
         .toList();
+    setState(() {
+      clearSelectedItems();
+    });
 
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final newAlbum = _album!.copyWith(
@@ -324,25 +329,23 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         items: newItems,
       ),
     );
-    UpdateAlbum(albumRepo)(widget.account, newAlbum).then((_) {
+    try {
+      await UpdateAlbum(albumRepo)(widget.account, newAlbum);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
             selectedIndexes.length)),
         duration: k.snackBarDurationNormal,
       ));
-    }).catchError((e, stacktrace) {
+    } catch (e, stackTrace) {
       _log.shout("[_onSelectionRemovePressed] Failed while updating album", e,
-          stacktrace);
+          stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
         content:
             Text("${L10n.global().removeSelectedFromAlbumFailureNotification}: "
                 "${exception_util.toUserString(e)}"),
         duration: k.snackBarDurationNormal,
       ));
-    });
-    setState(() {
-      clearSelectedItems();
-    });
+    }
   }
 
   void _onEditAppBarSortPressed() {

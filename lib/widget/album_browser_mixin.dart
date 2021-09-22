@@ -223,7 +223,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
       await NotifiedAction(
         () async {
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
-          await UpdateAlbum(albumRepo).call(
+          await UpdateAlbum(albumRepo)(
               account,
               album.copyWith(
                 coverProvider: AlbumAutoCoverProvider(),
