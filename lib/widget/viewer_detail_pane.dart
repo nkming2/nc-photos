@@ -326,7 +326,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       await NotifiedAction(
         () async {
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
-          await UpdateAlbum(albumRepo).call(
+          await UpdateAlbum(albumRepo)(
               widget.account,
               widget.album!.copyWith(
                 coverProvider: AlbumManualCoverProvider(
