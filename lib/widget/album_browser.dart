@@ -150,6 +150,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
           widget.account,
           newAlbum,
         ).catchError((e, stackTrace) {
+          _log.shout("[doneEditMode] Failed while UpdateAlbum", e, stackTrace);
           SnackBarManager().showSnackBar(SnackBar(
             content: Text(exception_util.toUserString(e)),
             duration: k.snackBarDurationNormal,

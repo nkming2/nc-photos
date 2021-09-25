@@ -236,7 +236,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
           coverProvider: AlbumAutoCoverProvider(),
           sortProvider: const AlbumTimeSortProvider(isAscending: false),
         );
-        _log.info("[_onImportPressed] Creating dir album: $album");
+        _log.info("[_createAllAlbums] Creating dir album: $album");
 
         final items = await PopulateAlbum()(widget.account, album);
         final sortedFiles = items

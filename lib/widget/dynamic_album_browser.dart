@@ -136,8 +136,11 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         setState(() {
           _album = newAlbum;
         });
-        UpdateAlbum(albumRepo)(widget.account, newAlbum)
-            .catchError((e, stacktrace) {
+        UpdateAlbum(albumRepo)(
+          widget.account,
+          newAlbum,
+        ).catchError((e, stackTrace) {
+          _log.shout("[doneEditMode] Failed while UpdateAlbum", e, stackTrace);
           SnackBarManager().showSnackBar(SnackBar(
             content: Text(exception_util.toUserString(e)),
             duration: k.snackBarDurationNormal,
