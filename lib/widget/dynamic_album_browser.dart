@@ -340,8 +340,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             album: widget.album));
   }
 
-  void _onAppBarConvertBasicPressed(BuildContext context) {
-    showDialog(
+  Future<void> _onAppBarConvertBasicPressed(BuildContext context) async {
+    final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(L10n.global().convertBasicAlbumConfirmationDialogTitle),
@@ -361,38 +361,39 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
           ),
         ],
       ),
-    ).then((value) {
-      if (value != true) {
-        return;
+    );
+    if (result != true) {
+      return;
+    }
+    _log.info(
+        "[_onAppBarConvertBasicPressed] Converting album '${_album!.name}' to static");
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    try {
+      await UpdateAlbum(albumRepo)(
+          widget.account,
+          _album!.copyWith(
+            provider: AlbumStaticProvider(
+              items: _sortedItems,
+            ),
+            coverProvider: AlbumAutoCoverProvider(),
+          ));
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().convertBasicAlbumSuccessNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      if (mounted) {
+        Navigator.of(context).pop();
       }
-      _log.info(
-          "[_onAppBarConvertBasicPressed] Converting album '${_album!.name}' to static");
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      UpdateAlbum(albumRepo)(
-        widget.account,
-        _album!.copyWith(
-          provider: AlbumStaticProvider(items: _sortedItems),
-          coverProvider: AlbumAutoCoverProvider(),
-        ),
-      ).then((value) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().convertBasicAlbumSuccessNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      }).catchError((e, stacktrace) {
-        _log.shout(
-            "[_onAppBarConvertBasicPressed] Failed while converting to basic album",
-            e,
-            stacktrace);
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(e)),
-          duration: k.snackBarDurationNormal,
-        ));
-      });
-    });
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onAppBarConvertBasicPressed] Failed while converting to basic album",
+          e,
+          stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
   }
 
   void _onSelectionAppBarSharePressed(BuildContext context) {
