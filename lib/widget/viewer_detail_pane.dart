@@ -28,6 +28,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
+import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
@@ -297,21 +298,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       await NotifiedAction(
         () async {
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
-          final newItems =
-              AlbumStaticProvider.of(widget.album!).items.where((element) {
-            if (element is AlbumFileItem) {
-              return element.file.path != widget.file.path;
-            } else {
-              return true;
-            }
-          }).toList();
-          await UpdateAlbum(albumRepo)(
-              widget.account,
-              widget.album!.copyWith(
-                provider: AlbumStaticProvider.of(widget.album!).copyWith(
-                  items: newItems,
-                ),
-              ));
+          final thisItem = AlbumStaticProvider.of(widget.album!)
+              .items
+              .whereType<AlbumFileItem>()
+              .firstWhere((element) => element.file.path == widget.file.path);
+          await RemoveFromAlbum(albumRepo)(
+              widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();
           }

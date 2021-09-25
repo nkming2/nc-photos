@@ -22,6 +22,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
@@ -314,23 +315,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   Future<void> _onSelectionAppBarRemovePressed() async {
     final selectedIndexes =
         selectedListItems.map((e) => (e as _ListItem).index).toList();
-    final newItems = _sortedItems
-        .withIndex()
-        .where((element) => !selectedIndexes.contains(element.item1))
-        .map((e) => e.item2)
-        .toList();
+    final selectedItems = _sortedItems.takeIndex(selectedIndexes).toList();
     setState(() {
       clearSelectedItems();
     });
 
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final newAlbum = _album!.copyWith(
-      provider: AlbumStaticProvider.of(_album!).copyWith(
-        items: newItems,
-      ),
-    );
     try {
-      await UpdateAlbum(albumRepo)(widget.account, newAlbum);
+      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      await RemoveFromAlbum(albumRepo)(widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
             selectedIndexes.length)),
