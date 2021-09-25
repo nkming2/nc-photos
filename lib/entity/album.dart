@@ -44,6 +44,7 @@ class Album with EquatableMixin {
     required AlbumUpgraderV1? upgraderV1,
     required AlbumUpgraderV2? upgraderV2,
     required AlbumUpgraderV3? upgraderV3,
+    required AlbumUpgraderV4? upgraderV4,
   }) {
     final jsonVersion = json["version"];
     JsonObj? result = json;
@@ -63,6 +64,13 @@ class Album with EquatableMixin {
     }
     if (jsonVersion < 4) {
       result = upgraderV3?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 5) {
+      result = upgraderV4?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -168,7 +176,7 @@ class Album with EquatableMixin {
   final File? albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 4;
+  static const version = 5;
 }
 
 class AlbumRepo {
@@ -224,6 +232,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
         upgraderV3: AlbumUpgraderV3(),
+        upgraderV4: AlbumUpgraderV4(),
       )!
           .copyWith(
         lastUpdated: OrNull(null),

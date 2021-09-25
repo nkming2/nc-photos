@@ -27,8 +27,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/populate_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
-import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
-import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
+import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -159,58 +158,16 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
   }
 
-  void _initAlbum() {
+  Future<void> _initAlbum() async {
     assert(widget.album.provider is AlbumDynamicProvider);
-    PopulateAlbum()(widget.account, widget.album).then((items) {
-      if (mounted) {
-        setState(() {
-          _album = widget.album;
-          _transformItems(items);
-          initCover(widget.account, widget.album);
-          _updateAlbumPostPopulate(items);
-        });
-      }
-    });
-  }
-
-  Future<void> _updateAlbumPostPopulate(List<AlbumItem> items) async {
-    final List<File> timeDescSortedFiles;
-    if (widget.album.sortProvider is AlbumTimeSortProvider) {
-      if ((widget.album.sortProvider as AlbumTimeSortProvider).isAscending) {
-        timeDescSortedFiles = _backingFiles.reversed.toList();
-      } else {
-        timeDescSortedFiles = _backingFiles;
-      }
-    } else {
-      timeDescSortedFiles = const AlbumTimeSortProvider(isAscending: false)
-          .sort(items)
-          .whereType<AlbumFileItem>()
-          .map((e) => e.file)
-          .where((element) => file_util.isSupportedFormat(element))
-          .toList();
-    }
-
-    bool shouldUpdate = false;
-    final albumUpdatedCover = UpdateDynamicAlbumCover()
-        .updateWithSortedFiles(_album!, timeDescSortedFiles);
-    if (!identical(albumUpdatedCover, _album)) {
-      _log.info("[_updateAlbumPostPopulate] Update album cover");
-      shouldUpdate = true;
-    }
-    _album = albumUpdatedCover;
-
-    final albumUpdatedTime = UpdateDynamicAlbumTime()
-        .updateWithSortedFiles(_album!, timeDescSortedFiles);
-    if (!identical(albumUpdatedTime, _album)) {
-      _log.info(
-          "[_updateAlbumPostPopulate] Update album time: ${albumUpdatedTime.provider.latestItemTime}");
-      shouldUpdate = true;
-    }
-    _album = albumUpdatedTime;
-
-    if (shouldUpdate) {
-      await UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
-          widget.account, _album!);
+    final items = await PopulateAlbum()(widget.account, widget.album);
+    final album = await _updateAlbumPostPopulate(widget.album, items);
+    if (mounted) {
+      setState(() {
+        _album = album;
+        _transformItems(items);
+        initCover(widget.account, widget.album);
+      });
     }
   }
 
@@ -376,6 +333,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
           widget.account,
           _album!.copyWith(
             provider: AlbumStaticProvider(
+              latestItemTime: _album!.provider.latestItemTime,
               items: _sortedItems,
             ),
             coverProvider: AlbumAutoCoverProvider(),
@@ -513,12 +471,12 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     });
   }
 
-  void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {
+  Future<void> _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) async {
     if (ev.album.albumFile!.path == _album?.albumFile?.path) {
+      final album = await _updateAlbumPostPopulate(ev.album, _sortedItems);
       setState(() {
-        _album = ev.album;
-        initCover(widget.account, ev.album);
-        _updateAlbumPostPopulate(_sortedItems);
+        _album = album;
+        initCover(widget.account, album);
       });
     }
   }
@@ -570,6 +528,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       }
     }()
         .toList();
+  }
+
+  Future<Album> _updateAlbumPostPopulate(
+      Album album, List<AlbumItem> items) async {
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    return await UpdateAlbumWithActualItems(albumRepo)(
+        widget.account, album, items);
   }
 
   Album? _album;

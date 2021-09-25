@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
 
 List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
@@ -94,6 +95,10 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
       "file": file.toJson(),
     };
   }
+
+  AlbumFileItem minimize() => AlbumFileItem(
+        file: file.copyWith(metadata: OrNull(null)),
+      );
 
   @override
   get props => [

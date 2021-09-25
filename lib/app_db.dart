@@ -140,6 +140,7 @@ class AppDbAlbumEntry {
         upgraderV1: AlbumUpgraderV1(),
         upgraderV2: AlbumUpgraderV2(),
         upgraderV3: AlbumUpgraderV3(),
+        upgraderV4: AlbumUpgraderV4(),
       )!,
     );
   }

@@ -49,4 +49,12 @@ extension IterableExtension<T> on Iterable<T> {
       return null;
     }
   }
+
+  T? get lastOrNull {
+    try {
+      return last;
+    } on StateError catch (_) {
+      return null;
+    }
+  }
 }

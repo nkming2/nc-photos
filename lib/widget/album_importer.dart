@@ -8,11 +8,9 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -20,8 +18,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/use_case/populate_album.dart';
-import 'package:nc_photos/use_case/update_dynamic_album_cover.dart';
-import 'package:nc_photos/use_case/update_dynamic_album_time.dart';
+import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:path/path.dart' as path;
 
@@ -239,15 +236,8 @@ class _AlbumImporterState extends State<AlbumImporter> {
         _log.info("[_createAllAlbums] Creating dir album: $album");
 
         final items = await PopulateAlbum()(widget.account, album);
-        final sortedFiles = items
-            .whereType<AlbumFileItem>()
-            .map((e) => e.file)
-            .where((element) => file_util.isSupportedFormat(element))
-            .sorted(compareFileDateTimeDescending);
-        album =
-            UpdateDynamicAlbumCover().updateWithSortedFiles(album, sortedFiles);
-        album =
-            UpdateDynamicAlbumTime().updateWithSortedFiles(album, sortedFiles);
+        album = await UpdateAlbumWithActualItems(null)(
+            widget.account, album, items);
 
         final albumRepo = AlbumRepo(AlbumCachedDataSource());
         await CreateAlbum(albumRepo)(widget.account, album);

@@ -1,5 +1,8 @@
 import 'package:logging/logging.dart';
+import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:tuple/tuple.dart';
 
 abstract class AlbumUpgrader {
   JsonObj? call(JsonObj json);
@@ -84,4 +87,73 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
   final String? logFilePath;
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV3");
+}
+
+/// Upgrade v4 Album to v5
+class AlbumUpgraderV4 implements AlbumUpgrader {
+  AlbumUpgraderV4({
+    this.logFilePath,
+  });
+
+  @override
+  call(JsonObj json) {
+    _log.fine("[call] Upgrade v4 Album for file: $logFilePath");
+    final result = JsonObj.from(json);
+    try {
+      if (result["provider"]["type"] != "static") {
+        return result;
+      }
+      final latestItem = (result["provider"]["content"]["items"] as List)
+          .map((e) => e.cast<String, dynamic>())
+          .where((e) => e["type"] == "file")
+          .map((e) => e["content"]["file"] as JsonObj)
+          .map((e) {
+            final overrideDateTime = e["overrideDateTime"] == null
+                ? null
+                : DateTime.parse(e["overrideDateTime"]);
+            final String? dateTimeOriginalStr =
+                e["metadata"]?["exif"]?["DateTimeOriginal"];
+            final dateTimeOriginal =
+                dateTimeOriginalStr == null || dateTimeOriginalStr.isEmpty
+                    ? null
+                    : Exif.dateTimeFormat.parse(dateTimeOriginalStr).toUtc();
+            final lastModified = e["lastModified"] == null
+                ? null
+                : DateTime.parse(e["lastModified"]);
+            final latestItemTime =
+                overrideDateTime ?? dateTimeOriginal ?? lastModified;
+
+            // remove metadata
+            e.remove("metadata");
+            if (latestItemTime != null) {
+              return Tuple2(latestItemTime, e);
+            } else {
+              return null;
+            }
+          })
+          .whereType<Tuple2<DateTime, JsonObj>>()
+          .sorted((a, b) => a.item1.compareTo(b.item1))
+          .lastOrNull;
+      if (latestItem != null) {
+        // save the latest item time
+        result["provider"]["content"]["latestItemTime"] =
+            latestItem.item1.toIso8601String();
+        if (result["coverProvider"]["type"] == "auto") {
+          // save the cover
+          result["coverProvider"]["content"]["coverFile"] =
+              Map.of(latestItem.item2);
+        }
+      }
+    } catch (e, stackTrace) {
+      // this upgrade is not a must, if it failed then just leave it and it'll
+      // be upgraded the next time the album is saved
+      _log.shout("[call] Failed while upgrade", e, stackTrace);
+    }
+    return result;
+  }
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV4");
 }

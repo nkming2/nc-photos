@@ -10,11 +10,11 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
-  Future<Album> call(Account account, Album album) async {
+  Future<List<AlbumItem>> call(Account account, Album album) async {
+    _log.info("[call] Resync album: ${album.name}");
     if (album.provider is! AlbumStaticProvider) {
-      _log.warning(
-          "[call] Resync only make sense for static albums: ${album.name}");
-      return album;
+      throw ArgumentError(
+          "Resync only make sense for static albums: ${album.name}");
     }
     return await AppDb.use((db) async {
       final transaction =
@@ -38,7 +38,7 @@ class ResyncAlbum {
           newItems.add(item);
         }
       }
-      return album.copyWith(provider: AlbumStaticProvider(items: newItems));
+      return newItems;
     });
   }
 

@@ -6,7 +6,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 
@@ -58,13 +57,54 @@ abstract class AlbumProvider with EquatableMixin {
   static final _log = Logger("entity.album.provider.AlbumProvider");
 }
 
-class AlbumStaticProvider extends AlbumProvider {
+abstract class AlbumProviderBase extends AlbumProvider {
+  const AlbumProviderBase({
+    this.latestItemTime,
+  });
+
+  @override
+  toString({bool isDeep = false}) {
+    return "$runtimeType {"
+        "latestItemTime: $latestItemTime, "
+        "}";
+  }
+
+  @override
+  toContentJson() {
+    return {
+      if (latestItemTime != null)
+        "latestItemTime": latestItemTime!.toUtc().toIso8601String(),
+    };
+  }
+
+  @override
+  AlbumProviderBase copyWith({
+    DateTime? latestItemTime,
+  });
+
+  @override
+  get props => [
+        latestItemTime,
+      ];
+
+  @override
+  final DateTime? latestItemTime;
+}
+
+class AlbumStaticProvider extends AlbumProviderBase {
   AlbumStaticProvider({
+    DateTime? latestItemTime,
     required List<AlbumItem> items,
-  }) : items = UnmodifiableListView(items);
+  })  : items = UnmodifiableListView(items),
+        super(
+          latestItemTime: latestItemTime,
+        );
 
   factory AlbumStaticProvider.fromJson(JsonObj json) {
     return AlbumStaticProvider(
+      latestItemTime: json["latestItemTime"] == null
+          ? null
+          : DateTime.parse(json["latestItemTime"]),
       items: (json["items"] as List)
           .map((e) => AlbumItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
@@ -79,6 +119,7 @@ class AlbumStaticProvider extends AlbumProvider {
     final itemsStr =
         isDeep ? items.toReadableString() : "List {length: ${items.length}}";
     return "$runtimeType {"
+        "super: ${super.toString(isDeep: isDeep)}, "
         "items: $itemsStr, "
         "}";
   }
@@ -86,36 +127,25 @@ class AlbumStaticProvider extends AlbumProvider {
   @override
   toContentJson() {
     return {
+      ...super.toContentJson(),
       "items": items.map((e) => e.toJson()).toList(),
     };
   }
 
   @override
   AlbumStaticProvider copyWith({
+    DateTime? latestItemTime,
     List<AlbumItem>? items,
   }) {
     return AlbumStaticProvider(
+      latestItemTime: latestItemTime ?? this.latestItemTime,
       items: items ?? this.items,
     );
   }
 
   @override
-  get latestItemTime {
-    try {
-      return items
-          .whereType<AlbumFileItem>()
-          .map((e) => e.file)
-          .where((element) => file_util.isSupportedFormat(element))
-          .sorted(compareFileDateTimeDescending)
-          .first
-          .bestDateTime;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
   get props => [
+        ...super.props,
         items,
       ];
 
@@ -125,55 +155,28 @@ class AlbumStaticProvider extends AlbumProvider {
   static const _type = "static";
 }
 
-abstract class AlbumDynamicProvider extends AlbumProvider {
-  AlbumDynamicProvider({
+abstract class AlbumDynamicProvider extends AlbumProviderBase {
+  const AlbumDynamicProvider({
     DateTime? latestItemTime,
-  }) : _latestItemTime = latestItemTime;
-
-  @override
-  toString({bool isDeep = false}) {
-    return "$runtimeType {"
-        "latestItemTime: $_latestItemTime, "
-        "}";
-  }
-
-  @override
-  toContentJson() {
-    return {
-      "latestItemTime": _latestItemTime?.toUtc().toIso8601String(),
-    };
-  }
-
-  @override
-  AlbumDynamicProvider copyWith({
-    DateTime? latestItemTime,
-  });
-
-  @override
-  get latestItemTime => _latestItemTime;
-
-  @override
-  get props => [
-        _latestItemTime,
-      ];
-
-  final DateTime? _latestItemTime;
+  }) : super(latestItemTime: latestItemTime);
 }
 
 class AlbumDirProvider extends AlbumDynamicProvider {
-  AlbumDirProvider({
+  const AlbumDirProvider({
     required this.dirs,
     DateTime? latestItemTime,
-  }) : super(latestItemTime: latestItemTime);
+  }) : super(
+          latestItemTime: latestItemTime,
+        );
 
   factory AlbumDirProvider.fromJson(JsonObj json) {
     return AlbumDirProvider(
-      dirs: (json["dirs"] as List)
-          .map((e) => File.fromJson(e.cast<String, dynamic>()))
-          .toList(),
       latestItemTime: json["latestItemTime"] == null
           ? null
           : DateTime.parse(json["latestItemTime"]),
+      dirs: (json["dirs"] as List)
+          .map((e) => File.fromJson(e.cast<String, dynamic>()))
+          .toList(),
     );
   }
 
@@ -195,12 +198,12 @@ class AlbumDirProvider extends AlbumDynamicProvider {
 
   @override
   AlbumDirProvider copyWith({
-    List<File>? dirs,
     DateTime? latestItemTime,
+    List<File>? dirs,
   }) {
     return AlbumDirProvider(
-      dirs: dirs ?? this.dirs,
       latestItemTime: latestItemTime ?? this.latestItemTime,
+      dirs: dirs ?? this.dirs,
     );
   }
 

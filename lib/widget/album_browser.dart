@@ -14,8 +14,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
@@ -25,6 +25,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
@@ -32,7 +33,6 @@ import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
-import 'package:quiver/iterables.dart';
 
 class AlbumBrowserArguments {
   AlbumBrowserArguments(this.account, this.album);
@@ -169,20 +169,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     }
   }
 
-  void _initAlbum() {
-    assert(widget.album.provider is AlbumStaticProvider);
-    ResyncAlbum()(widget.account, widget.album).then((album) {
-      if (_shouldPropagateResyncedAlbum(album)) {
-        _propagateResyncedAlbum(album);
-      }
-      if (mounted) {
-        setState(() {
-          _album = album;
-          _transformItems();
-          initCover(widget.account, album);
-        });
-      }
-    });
+  Future<void> _initAlbum() async {
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final album = await albumRepo.get(widget.account, widget.album.albumFile!);
+    await _setAlbum(album);
   }
 
   Widget _buildContent(BuildContext context) {
@@ -495,13 +485,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {
+  Future<void> _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) async {
     if (ev.album.albumFile!.path == _album?.albumFile?.path) {
-      setState(() {
-        _album = ev.album;
-        _transformItems();
-        initCover(widget.account, ev.album);
-      });
+      await _setAlbum(ev.album);
     }
   }
 
@@ -600,64 +586,29 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     draggableItemList = items;
   }
 
-  void _propagateResyncedAlbum(Album album) {
-    final propagateItems =
-        zip([_getAlbumItemsOf(album), _getAlbumItemsOf(widget.album)]).map((e) {
-      if (e[0] is AlbumFileItem) {
-        final item = e[0] as AlbumFileItem;
-        if (!item.file.isOwned(widget.account.username)) {
-          // don't propagate shared file not owned by this user, this is to
-          // prevent multiple user having different properties to keep
-          // overriding each others
-          _log.info(
-              "[_propagateResyncedAlbum] Skip shared file: ${item.file.path}");
-          return e[1];
-        }
-      }
-      return e[0];
-    }).toList();
-    final propagateAlbum = album.copyWith(
+  Future<void> _setAlbum(Album album) async {
+    assert(album.provider is AlbumStaticProvider);
+    final items = await ResyncAlbum()(widget.account, album);
+    album = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
-        items: propagateItems,
+        items: items,
       ),
     );
-    UpdateAlbum(AlbumRepo(AlbumCachedDataSource()))(
-            widget.account, propagateAlbum)
-        .catchError((e, stacktrace) {
-      _log.shout("[_propagateResyncedAlbum] Failed while updating album", e,
-          stacktrace);
-    });
+    album = await _updateAlbumPostResync(album, items);
+    if (mounted) {
+      setState(() {
+        _album = album;
+        _transformItems();
+        initCover(widget.account, album);
+      });
+    }
   }
 
-  bool _shouldPropagateResyncedAlbum(Album album) {
-    final origItems = _getAlbumItemsOf(widget.album);
-    final resyncItems = _getAlbumItemsOf(album);
-    if (origItems.length != resyncItems.length) {
-      _log.info(
-          "[_shouldPropagateResyncedAlbum] Item length differ: ${origItems.length}, ${resyncItems.length}");
-      return true;
-    }
-    for (final z in zip([origItems, resyncItems])) {
-      final a = z[0], b = z[1];
-      bool isEqual;
-      if (a is AlbumFileItem && b is AlbumFileItem) {
-        if (!a.file.isOwned(widget.account.username)) {
-          // ignore shared files
-          continue;
-        }
-        // faster compare
-        isEqual = a.equals(b, isDeep: false);
-      } else {
-        isEqual = a == b;
-      }
-      if (!isEqual) {
-        _log.info(
-            "[_shouldPropagateResyncedAlbum] Item differ:\nOriginal: ${z[0]}\nResynced: ${z[1]}");
-        return true;
-      }
-    }
-    _log.info("[_shouldPropagateResyncedAlbum] false");
-    return false;
+  Future<Album> _updateAlbumPostResync(
+      Album album, List<AlbumItem> items) async {
+    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    return await UpdateAlbumWithActualItems(albumRepo)(
+        widget.account, album, items);
   }
 
   static List<AlbumItem> _getAlbumItemsOf(Album a) =>

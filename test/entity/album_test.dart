@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -31,8 +32,13 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json,
-                upgraderV1: null, upgraderV2: null, upgraderV3: null),
+            Album.fromJson(
+              json,
+              upgraderV1: null,
+              upgraderV2: null,
+              upgraderV3: null,
+              upgraderV4: null,
+            ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -65,8 +71,13 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json,
-                upgraderV1: null, upgraderV2: null, upgraderV3: null),
+            Album.fromJson(
+              json,
+              upgraderV1: null,
+              upgraderV2: null,
+              upgraderV3: null,
+              upgraderV4: null,
+            ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "album",
@@ -117,8 +128,13 @@ void main() {
             },
           };
           expect(
-              Album.fromJson(json,
-                  upgraderV1: null, upgraderV2: null, upgraderV3: null),
+              Album.fromJson(
+                json,
+                upgraderV1: null,
+                upgraderV2: null,
+                upgraderV3: null,
+                upgraderV4: null,
+              ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                 name: "",
@@ -165,8 +181,13 @@ void main() {
             },
           };
           expect(
-              Album.fromJson(json,
-                  upgraderV1: null, upgraderV2: null, upgraderV3: null),
+              Album.fromJson(
+                json,
+                upgraderV1: null,
+                upgraderV2: null,
+                upgraderV3: null,
+                upgraderV4: null,
+              ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                 name: "",
@@ -208,8 +229,13 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json,
-                upgraderV1: null, upgraderV2: null, upgraderV3: null),
+            Album.fromJson(
+              json,
+              upgraderV1: null,
+              upgraderV2: null,
+              upgraderV3: null,
+              upgraderV4: null,
+            ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -248,8 +274,13 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json,
-                upgraderV1: null, upgraderV2: null, upgraderV3: null),
+            Album.fromJson(
+              json,
+              upgraderV1: null,
+              upgraderV2: null,
+              upgraderV3: null,
+              upgraderV4: null,
+            ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -287,8 +318,13 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(json,
-                upgraderV1: null, upgraderV2: null, upgraderV3: null),
+            Album.fromJson(
+              json,
+              upgraderV1: null,
+              upgraderV2: null,
+              upgraderV3: null,
+              upgraderV4: null,
+            ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               name: "",
@@ -940,6 +976,375 @@ void main() {
         "albumFile": <String, dynamic>{
           "path": "remote.php/dav/files/admin/test1.json",
         },
+      });
+    });
+
+    group("AlbumUpgraderV4", () {
+      test("Non AlbumFileItem", () {
+        final json = <String, dynamic>{
+          "version": 4,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "label",
+                  "content": <String, dynamic>{
+                    "text": "123",
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+          },
+        };
+        expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          "version": 4,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "label",
+                  "content": <String, dynamic>{
+                    "text": "123",
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+          },
+        });
+      });
+
+      group("AlbumFileItem", () {
+        test("drop metadata", () {
+          final json = <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "metadata": <String, dynamic>{
+                          "Make": "Super",
+                          "Model": "A123",
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          };
+          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          });
+        });
+
+        test("lastModified as latestItemTime", () {
+          final json = <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "lastModified": "2020-01-02T03:04:05.678901Z",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          };
+          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "latestItemTime": "2020-01-02T03:04:05.678901Z",
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "lastModified": "2020-01-02T03:04:05.678901Z",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{
+                "coverFile": <String, dynamic>{
+                  "path": "remote.php/dav/files/admin/test1.jpg",
+                  "lastModified": "2020-01-02T03:04:05.678901Z",
+                },
+              },
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          });
+        });
+
+        test("dateTimeOriginal as latestItemTime", () {
+          final json = <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "metadata": <String, dynamic>{
+                          "exif": <String, dynamic>{
+                            // convert 2020-01-02T03:04:05Z to local time
+                            "DateTimeOriginal":
+                                DateFormat("yyyy:MM:dd HH:mm:ss").format(
+                                    DateTime.utc(2020, 1, 2, 3, 4, 5)
+                                        .toLocal()),
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          };
+          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "latestItemTime": "2020-01-02T03:04:05.000Z",
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{
+                "coverFile": <String, dynamic>{
+                  "path": "remote.php/dav/files/admin/test1.jpg",
+                },
+              },
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          });
+        });
+
+        test("overrideDateTime as latestItemTime", () {
+          final json = <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "overrideDateTime": "2020-01-02T03:04:05.678901Z",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{},
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          };
+          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+            "version": 4,
+            "lastUpdated": "2020-01-02T03:04:05.678901Z",
+            "provider": <String, dynamic>{
+              "type": "static",
+              "content": <String, dynamic>{
+                "latestItemTime": "2020-01-02T03:04:05.678901Z",
+                "items": [
+                  <String, dynamic>{
+                    "type": "file",
+                    "content": <String, dynamic>{
+                      "file": <String, dynamic>{
+                        "path": "remote.php/dav/files/admin/test1.jpg",
+                        "overrideDateTime": "2020-01-02T03:04:05.678901Z",
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+            "coverProvider": <String, dynamic>{
+              "type": "auto",
+              "content": <String, dynamic>{
+                "coverFile": <String, dynamic>{
+                  "path": "remote.php/dav/files/admin/test1.jpg",
+                  "overrideDateTime": "2020-01-02T03:04:05.678901Z",
+                },
+              },
+            },
+            "sortProvider": <String, dynamic>{
+              "type": "time",
+              "content": <String, dynamic>{
+                "isAscending": false,
+              },
+            },
+            "albumFile": <String, dynamic>{
+              "path": "remote.php/dav/files/admin/test1.json",
+            },
+          });
+        });
       });
     });
   });
