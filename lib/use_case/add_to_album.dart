@@ -12,7 +12,7 @@ class AddToAlbum {
       UpdateAlbum(albumRepo)(
           account,
           album.copyWith(
-            provider: AlbumStaticProvider(
+            provider: AlbumStaticProvider.of(album).copyWith(
               items: makeDistinctAlbumItems([
                 ...items,
                 ...AlbumStaticProvider.of(album).items,

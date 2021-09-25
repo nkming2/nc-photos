@@ -96,7 +96,7 @@ class _CleanUpAlbums {
           await UpdateAlbum(albumRepo)(
               account,
               a.copyWith(
-                provider: AlbumStaticProvider(
+                provider: AlbumStaticProvider.of(a).copyWith(
                   items: newItems,
                 ),
               ));

@@ -297,7 +297,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
           }).reduce((value, element) => value + element);
           return entries.first.album.copyWith(
             lastUpdated: OrNull(null),
-            provider: AlbumStaticProvider(
+            provider: AlbumStaticProvider.of(entries.first.album).copyWith(
               items: items,
             ),
           );
@@ -433,7 +433,9 @@ Future<void> _cacheAlbum(
         pair.item1,
         album.copyWith(
           lastUpdated: OrNull(null),
-          provider: AlbumStaticProvider(items: pair.item2),
+          provider: AlbumStaticProvider.of(album).copyWith(
+            items: pair.item2,
+          ),
         ))));
   } else {
     entries.add(AppDbAlbumEntry(path, 0, album));

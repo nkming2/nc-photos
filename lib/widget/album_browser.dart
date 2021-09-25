@@ -325,7 +325,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
     final newAlbum = _album!.copyWith(
-      provider: AlbumStaticProvider(
+      provider: AlbumStaticProvider.of(_album!).copyWith(
         items: newItems,
       ),
     );
@@ -449,7 +449,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     _editAlbum = _editAlbum!.copyWith(
       sortProvider: const AlbumNullSortProvider(),
       // save the current order
-      provider: AlbumStaticProvider(
+      provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
         items: _sortedItems,
       ),
     );
@@ -467,7 +467,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         return;
       }
       _editAlbum = _editAlbum!.copyWith(
-        provider: AlbumStaticProvider(
+        provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
           items: [
             AlbumLabelItem(text: value),
             ..._sortedItems,
@@ -492,7 +492,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       }
       _sortedItems[index] = AlbumLabelItem(text: value);
       _editAlbum = _editAlbum!.copyWith(
-        provider: AlbumStaticProvider(
+        provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
           items: _sortedItems,
         ),
       );
@@ -624,7 +624,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       return e[0];
     }).toList();
     final propagateAlbum = album.copyWith(
-      provider: AlbumStaticProvider(
+      provider: AlbumStaticProvider.of(album).copyWith(
         items: propagateItems,
       ),
     );

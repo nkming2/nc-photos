@@ -308,7 +308,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           await UpdateAlbum(albumRepo)(
               widget.account,
               widget.album!.copyWith(
-                provider: AlbumStaticProvider(
+                provider: AlbumStaticProvider.of(widget.album!).copyWith(
                   items: newItems,
                 ),
               ));
