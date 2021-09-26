@@ -59,7 +59,7 @@ class ResyncAlbum {
       }
     } else {
       dbItem = await objStore
-          .getObject(AppDbFileDbEntry.toPrimaryKey(account, item.file)) as Map;
+          .getObject(AppDbFileDbEntry.toPrimaryKey(account, item.file)) as Map?;
     }
     if (dbItem == null) {
       _log.warning(
