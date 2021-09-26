@@ -229,10 +229,10 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     try {
       return Album.fromJson(
         jsonDecode(utf8.decode(data)),
-        upgraderV1: AlbumUpgraderV1(),
-        upgraderV2: AlbumUpgraderV2(),
-        upgraderV3: AlbumUpgraderV3(),
-        upgraderV4: AlbumUpgraderV4(),
+        upgraderV1: AlbumUpgraderV1(logFilePath: albumFile.path),
+        upgraderV2: AlbumUpgraderV2(logFilePath: albumFile.path),
+        upgraderV3: AlbumUpgraderV3(logFilePath: albumFile.path),
+        upgraderV4: AlbumUpgraderV4(logFilePath: albumFile.path),
       )!
           .copyWith(
         lastUpdated: OrNull(null),

@@ -137,10 +137,10 @@ class AppDbAlbumEntry {
       json["index"],
       Album.fromJson(
         json["album"].cast<String, dynamic>(),
-        upgraderV1: AlbumUpgraderV1(),
-        upgraderV2: AlbumUpgraderV2(),
-        upgraderV3: AlbumUpgraderV3(),
-        upgraderV4: AlbumUpgraderV4(),
+        upgraderV1: AlbumUpgraderV1(logFilePath: json["path"]),
+        upgraderV2: AlbumUpgraderV2(logFilePath: json["path"]),
+        upgraderV3: AlbumUpgraderV3(logFilePath: json["path"]),
+        upgraderV4: AlbumUpgraderV4(logFilePath: json["path"]),
       )!,
     );
   }
