@@ -262,12 +262,12 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         itemBuilder: (context) => [
           PopupMenuItem(
-            value: _SelectionAppBarOption.delete,
+            value: _SelectionMenuOption.delete,
             child: Text(L10n.global().deleteTooltip),
           ),
         ],
         onSelected: (option) {
-          if (option == _SelectionAppBarOption.delete) {
+          if (option == _SelectionMenuOption.delete) {
             _onSelectionAppBarDeletePressed();
           }
         },
@@ -551,6 +551,10 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   static const _menuValueConvertBasic = 0;
 }
 
+enum _SelectionMenuOption {
+  delete,
+}
+
 abstract class _ListItem implements SelectableItem {
   _ListItem({
     required this.index,
@@ -640,8 +644,4 @@ class _VideoListItem extends _FileListItem {
 
   final Account account;
   final String previewUrl;
-}
-
-enum _SelectionAppBarOption {
-  delete,
 }
