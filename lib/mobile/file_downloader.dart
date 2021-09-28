@@ -57,12 +57,17 @@ class FileDownloader extends itf.FileDownloader {
         }
       }
 
-      DownloadEvent.listenDownloadComplete()
-        ..onData(onDownloadComplete)
-        ..onError((e, stackTrace) {
-          completer.completeError(e, stackTrace);
-        });
-      await completer.future;
+      StreamSubscription<DownloadCompleteEvent>? subscription;
+      try {
+        subscription = DownloadEvent.listenDownloadComplete()
+          ..onData(onDownloadComplete)
+          ..onError((e, stackTrace) {
+            completer.completeError(e, stackTrace);
+          });
+        await completer.future;
+      } finally {
+        subscription?.cancel();
+      }
       return uri;
     } on PlatformException catch (e) {
       switch (e.code) {
