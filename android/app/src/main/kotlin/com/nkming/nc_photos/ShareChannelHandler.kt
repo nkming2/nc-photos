@@ -60,6 +60,7 @@ class ShareChannelHandler(activity: Activity) :
 			)
 		)
 		_context.startActivity(shareChooser)
+		result.success(null)
 	}
 
 	private val _activity = activity
