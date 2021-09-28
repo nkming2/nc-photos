@@ -8,5 +8,12 @@ class Share {
         "mimeTypes": mimeTypes,
       });
 
+  static Future<void> shareText(
+          String text, String? mimeType) =>
+      _channel.invokeMethod("shareText", <String, dynamic>{
+        "text": text,
+        "mimeType": mimeType,
+      });
+
   static const _channel = MethodChannel("com.nkming.nc_photos/share");
 }

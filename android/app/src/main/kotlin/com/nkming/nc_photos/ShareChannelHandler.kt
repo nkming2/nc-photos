@@ -25,6 +25,17 @@ class ShareChannelHandler(activity: Activity) :
 					result.error("systemException", e.toString(), null)
 				}
 			}
+			"shareText" -> {
+				try {
+					shareText(
+						call.argument("text")!!,
+						call.argument("mimeType"),
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
 			else -> {
 				result.notImplemented()
 			}
@@ -53,6 +64,23 @@ class ShareChannelHandler(activity: Activity) :
 				if (mimeTypes.all { it?.startsWith("image/") == true }) "image/*" else "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+		}
+		val shareChooser = Intent.createChooser(
+			shareIntent, _context.getString(
+				R.string.download_successful_notification_action_share_chooser
+			)
+		)
+		_context.startActivity(shareChooser)
+		result.success(null)
+	}
+
+	private fun shareText(
+		text: String, mimeType: String?, result: MethodChannel.Result
+	) {
+		val shareIntent = Intent().apply {
+			action = Intent.ACTION_SEND
+			type = mimeType ?: "text/plain"
+			putExtra(Intent.EXTRA_TEXT, text)
 		}
 		val shareChooser = Intent.createChooser(
 			shareIntent, _context.getString(

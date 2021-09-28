@@ -5,24 +5,29 @@ class SimpleInputDialog extends StatefulWidget {
   const SimpleInputDialog({
     Key? key,
     required this.buttonText,
+    this.titleText,
     this.initialText,
     this.hintText,
     this.validator,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
   createState() => _SimpleInputDialogState();
 
   final String buttonText;
+  final String? titleText;
   final String? initialText;
   final String? hintText;
   final FormFieldValidator<String>? validator;
+  final bool obscureText;
 }
 
 class _SimpleInputDialogState extends State<SimpleInputDialog> {
   @override
   build(BuildContext context) {
     return AlertDialog(
+      title: widget.titleText == null ? null : Text(widget.titleText!),
       content: Form(
         key: _formKey,
         child: TextFormField(
@@ -34,6 +39,7 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
             _formValue.text = value!;
           },
           initialValue: widget.initialText,
+          obscureText: widget.obscureText,
         ),
       ),
       actions: [

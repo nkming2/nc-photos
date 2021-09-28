@@ -5,7 +5,15 @@
     "slideshowSetupDialogTitle",
     "slideshowSetupDialogDurationTitle",
     "slideshowSetupDialogShuffleTitle",
-    "slideshowSetupDialogRepeatTitle"
+    "slideshowSetupDialogRepeatTitle",
+    "linkCopiedNotification",
+    "shareMethodDialogTitle",
+    "shareMethodFileTitle",
+    "shareMethodFileDescription",
+    "shareMethodPublicLinkTitle",
+    "shareMethodPublicLinkDescription",
+    "shareMethodPasswordLinkTitle",
+    "shareMethodPasswordLinkDescription"
   ],
 
   "el": [
@@ -69,7 +77,26 @@
     "slideshowSetupDialogTitle",
     "slideshowSetupDialogDurationTitle",
     "slideshowSetupDialogShuffleTitle",
-    "slideshowSetupDialogRepeatTitle"
+    "slideshowSetupDialogRepeatTitle",
+    "linkCopiedNotification",
+    "shareMethodDialogTitle",
+    "shareMethodFileTitle",
+    "shareMethodFileDescription",
+    "shareMethodPublicLinkTitle",
+    "shareMethodPublicLinkDescription",
+    "shareMethodPasswordLinkTitle",
+    "shareMethodPasswordLinkDescription"
+  ],
+
+  "es": [
+    "linkCopiedNotification",
+    "shareMethodDialogTitle",
+    "shareMethodFileTitle",
+    "shareMethodFileDescription",
+    "shareMethodPublicLinkTitle",
+    "shareMethodPublicLinkDescription",
+    "shareMethodPasswordLinkTitle",
+    "shareMethodPasswordLinkDescription"
   ],
 
   "fr": [
@@ -113,7 +140,15 @@
     "slideshowSetupDialogTitle",
     "slideshowSetupDialogDurationTitle",
     "slideshowSetupDialogShuffleTitle",
-    "slideshowSetupDialogRepeatTitle"
+    "slideshowSetupDialogRepeatTitle",
+    "linkCopiedNotification",
+    "shareMethodDialogTitle",
+    "shareMethodFileTitle",
+    "shareMethodFileDescription",
+    "shareMethodPublicLinkTitle",
+    "shareMethodPublicLinkDescription",
+    "shareMethodPasswordLinkTitle",
+    "shareMethodPasswordLinkDescription"
   ],
 
   "ru": [
@@ -130,6 +165,14 @@
     "slideshowSetupDialogTitle",
     "slideshowSetupDialogDurationTitle",
     "slideshowSetupDialogShuffleTitle",
-    "slideshowSetupDialogRepeatTitle"
+    "slideshowSetupDialogRepeatTitle",
+    "linkCopiedNotification",
+    "shareMethodDialogTitle",
+    "shareMethodFileTitle",
+    "shareMethodFileDescription",
+    "shareMethodPublicLinkTitle",
+    "shareMethodPublicLinkDescription",
+    "shareMethodPasswordLinkTitle",
+    "shareMethodPasswordLinkDescription"
   ]
 }

@@ -61,6 +61,7 @@ class Share with EquatableMixin {
     required this.shareType,
     required this.shareWith,
     required this.shareWithDisplayName,
+    this.url,
   });
 
   @override
@@ -71,6 +72,7 @@ class Share with EquatableMixin {
         "shareType: $shareType, "
         "shareWith: $shareWith, "
         "shareWithDisplayName: $shareWithDisplayName, "
+        "url: $url, "
         "}";
   }
 
@@ -81,13 +83,15 @@ class Share with EquatableMixin {
         shareType,
         shareWith,
         shareWithDisplayName,
+        url,
       ];
 
   final String id;
   final String path;
   final ShareType shareType;
-  final String shareWith;
+  final String? shareWith;
   final String shareWithDisplayName;
+  final String? url;
 }
 
 class ShareRepo {
@@ -105,6 +109,14 @@ class ShareRepo {
   Future<Share> create(Account account, File file, String shareWith) =>
       dataSrc.create(account, file, shareWith);
 
+  /// See [ShareDataSource.createLink]
+  Future<Share> createLink(
+    Account account,
+    File file, {
+    String? password,
+  }) =>
+      dataSrc.createLink(account, file, password: password);
+
   /// See [ShareDataSource.delete]
   Future<void> delete(Account account, Share share) =>
       dataSrc.delete(account, share);
@@ -121,6 +133,15 @@ abstract class ShareDataSource {
 
   /// Share a file/folder with a user
   Future<Share> create(Account account, File file, String shareWith);
+
+  /// Share a file/folder with a share link
+  ///
+  /// If [password] is not null, the share link will be password protected
+  Future<Share> createLink(
+    Account account,
+    File file, {
+    String? password,
+  });
 
   /// Remove the given share
   Future<void> delete(Account account, Share share);

@@ -49,6 +49,30 @@ class ShareRemoteDataSource implements ShareDataSource {
   }
 
   @override
+  createLink(
+    Account account,
+    File file, {
+    String? password,
+  }) async {
+    _log.info("[createLink] Share '${file.path}' with a share link");
+    final response = await Api(account).ocs().filesSharing().shares().post(
+          path: file.strippedPath,
+          shareType: ShareType.publicLink.toValue(),
+          password: password,
+        );
+    if (!response.isGood) {
+      _log.severe("[create] Failed requesting server: $response");
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
+    }
+
+    final json = jsonDecode(response.body);
+    final JsonObj dataJson = json["ocs"]["data"];
+    return _ShareParser().parseSingle(dataJson);
+  }
+
+  @override
   delete(Account account, Share share) async {
     _log.info("[delete] $share");
     final response =
@@ -96,8 +120,11 @@ class _ShareParser {
       id: json["id"],
       path: json["path"],
       shareType: shareType,
-      shareWith: json["share_with"],
+      // when shared with a password protected link, shareWith somehow contains
+      // the password, which doesn't make sense. We set it to null instead
+      shareWith: shareType == ShareType.publicLink ? null : json["share_with"],
       shareWithDisplayName: json["share_with_displayname"],
+      url: json["url"],
     );
   }
 

@@ -821,6 +821,29 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"linkCopiedNotification": "Link copied",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "Share as",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodFileTitle": "File",
+	"@shareMethodFileTitle": {
+		"description": "Share the actual file"
+	},
+	"shareMethodFileDescription": "Download the file and share it to other apps",
+	"shareMethodPublicLinkTitle": "Public link",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	},
+	"shareMethodPublicLinkDescription": "Create a new public link on the server. Anyone with the link can access the file",
+	"shareMethodPasswordLinkTitle": "Password protected link",
+	"@shareMethodPasswordLinkTitle": {
+		"description": "Create a password protected share link on server and share it"
+	},
+	"shareMethodPasswordLinkDescription": "Create a new password protected link on the server",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
