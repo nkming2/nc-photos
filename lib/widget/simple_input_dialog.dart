@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 class SimpleInputDialog extends StatefulWidget {
   const SimpleInputDialog({
     Key? key,
+    required this.buttonText,
     this.initialText,
     this.hintText,
     this.validator,
@@ -12,6 +13,7 @@ class SimpleInputDialog extends StatefulWidget {
   @override
   createState() => _SimpleInputDialogState();
 
+  final String buttonText;
   final String? initialText;
   final String? hintText;
   final FormFieldValidator<String>? validator;
@@ -36,16 +38,14 @@ class _SimpleInputDialogState extends State<SimpleInputDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: _onSavePressed,
-          child: Text(
-            MaterialLocalizations.of(context).saveButtonLabel,
-          ),
+          onPressed: _onButtonPressed,
+          child: Text(widget.buttonText),
         ),
       ],
     );
   }
 
-  void _onSavePressed() {
+  void _onButtonPressed() {
     if (_formKey.currentState?.validate() == true) {
       _formValue = _FormValue();
       _formKey.currentState!.save();

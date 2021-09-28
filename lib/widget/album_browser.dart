@@ -444,7 +444,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   void _onEditAppBarAddTextPressed() {
     showDialog<String>(
       context: context,
-      builder: (context) => const SimpleInputDialog(),
+      builder: (context) => SimpleInputDialog(
+        buttonText: MaterialLocalizations.of(context).saveButtonLabel,
+      ),
     ).then((value) {
       if (value == null) {
         return;
@@ -467,6 +469,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(
+        buttonText: MaterialLocalizations.of(context).saveButtonLabel,
         initialText: item.text,
       ),
     ).then((value) {
