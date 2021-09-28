@@ -59,7 +59,9 @@ class DownloadEventCompleteChannelHandler(context: Context) :
 				_eventSink?.error(
 					"downloadError",
 					"Download #$downloadId was not successful, status: $status, reason: $reason",
-					null
+					mapOf(
+						"downloadId" to downloadId
+					)
 				)
 			}
 		} else {
@@ -68,7 +70,9 @@ class DownloadEventCompleteChannelHandler(context: Context) :
 				"ID #$downloadId not found, user canceled the job?"
 			)
 			_eventSink?.error(
-				"userCanceled", "Download #$downloadId was canceled", null
+				"userCanceled", "Download #$downloadId was canceled", mapOf(
+					"downloadId" to downloadId
+				)
 			)
 		}
 	}

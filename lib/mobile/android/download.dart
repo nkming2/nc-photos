@@ -40,7 +40,16 @@ class DownloadEvent {
       .map((data) => DownloadCompleteEvent(
             data["downloadId"],
             data["uri"],
-          ));
+          ))
+      .handleError(
+    (e, stackTrace) {
+      throw AndroidDownloadError(e.details["downloadId"], e, stackTrace);
+    },
+    test: (e) =>
+        e is PlatformException &&
+        e.details is Map &&
+        e.details["downloadId"] is int,
+  );
 }
 
 class DownloadCompleteEvent {
@@ -48,4 +57,12 @@ class DownloadCompleteEvent {
 
   final int downloadId;
   final String uri;
+}
+
+class AndroidDownloadError implements Exception {
+  const AndroidDownloadError(this.downloadId, this.error, this.stackTrace);
+
+  final int downloadId;
+  final dynamic error;
+  final StackTrace stackTrace;
 }

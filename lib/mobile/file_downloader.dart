@@ -62,7 +62,15 @@ class FileDownloader extends itf.FileDownloader {
         subscription = DownloadEvent.listenDownloadComplete()
           ..onData(onDownloadComplete)
           ..onError((e, stackTrace) {
-            completer.completeError(e, stackTrace);
+            if (e is AndroidDownloadError) {
+              if (e.downloadId != id) {
+                // not us, ignore
+                return;
+              }
+              completer.completeError(e.error, e.stackTrace);
+            } else {
+              completer.completeError(e, stackTrace);
+            }
           });
         await completer.future;
       } finally {
