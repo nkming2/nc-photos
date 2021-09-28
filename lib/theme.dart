@@ -44,12 +44,6 @@ class AppTheme extends StatelessWidget {
         : primarySwatchDark[700]!.withOpacity(0.7);
   }
 
-  static Color getSelectionCheckColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? Colors.grey[800]!
-        : Colors.grey[350]!;
-  }
-
   static Color getOverscrollIndicatorColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
         ? Colors.grey[800]!
