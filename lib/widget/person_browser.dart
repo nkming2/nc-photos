@@ -11,6 +11,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_face.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -280,6 +281,10 @@ class _PersonBrowserState extends State<PersonBrowser>
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
             PopupMenuItem(
+              value: _SelectionMenuOption.download,
+              child: Text(L10n.global().downloadTooltip),
+            ),
+            PopupMenuItem(
               value: _SelectionMenuOption.archive,
               child: Text(L10n.global().archiveTooltip),
             ),
@@ -362,6 +367,15 @@ class _PersonBrowserState extends State<PersonBrowser>
     }
   }
 
+  void _onDownloadPressed() {
+    final selected =
+        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    DownloadHandler().downloadFiles(widget.account, selected);
+    setState(() {
+      clearSelectedItems();
+    });
+  }
+
   Future<void> _onArchivePressed(BuildContext context) async {
     final selectedFiles =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
@@ -427,6 +441,10 @@ class _PersonBrowserState extends State<PersonBrowser>
 
       case _SelectionMenuOption.delete:
         _onDeletePressed(context);
+        break;
+
+      case _SelectionMenuOption.download:
+        _onDownloadPressed();
         break;
 
       default:
@@ -561,4 +579,5 @@ class _ListItem implements SelectableItem {
 enum _SelectionMenuOption {
   archive,
   delete,
+  download,
 }

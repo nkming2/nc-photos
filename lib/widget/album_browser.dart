@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -249,7 +250,17 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         icon: const Icon(Icons.remove),
         tooltip: L10n.global().removeSelectedFromAlbumTooltip,
         onPressed: _onSelectionAppBarRemovePressed,
-      )
+      ),
+      PopupMenuButton<_SelectionMenuOption>(
+        tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: _SelectionMenuOption.download,
+            child: Text(L10n.global().downloadTooltip),
+          ),
+        ],
+        onSelected: (option) => _onSelectionMenuSelected(context, option),
+      ),
     ]);
   }
 
@@ -329,6 +340,29 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         duration: k.snackBarDurationNormal,
       ));
     }
+  }
+
+  void _onSelectionMenuSelected(
+      BuildContext context, _SelectionMenuOption option) {
+    switch (option) {
+      case _SelectionMenuOption.download:
+        _onSelectionDownloadPressed();
+        break;
+      default:
+        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onSelectionDownloadPressed() {
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    DownloadHandler().downloadFiles(widget.account, selected);
+    setState(() {
+      clearSelectedItems();
+    });
   }
 
   void _onEditAppBarSortPressed() {
@@ -632,6 +666,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
 
   static final _log = Logger("widget.album_browser._AlbumBrowserState");
+}
+
+enum _SelectionMenuOption {
+  download,
 }
 
 abstract class _ListItem implements SelectableItem, DraggableItem {

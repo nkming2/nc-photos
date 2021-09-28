@@ -14,6 +14,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_dir.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -197,6 +198,10 @@ class _HomePhotosState extends State<HomePhotos>
         PopupMenuButton<_SelectionMenuOption>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
+            PopupMenuItem(
+              value: _SelectionMenuOption.download,
+              child: Text(L10n.global().downloadTooltip),
+            ),
             PopupMenuItem(
               value: _SelectionMenuOption.archive,
               child: Text(L10n.global().archiveTooltip),
@@ -401,6 +406,17 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  void _onDownloadPressed() {
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    DownloadHandler().downloadFiles(widget.account, selected);
+    setState(() {
+      clearSelectedItems();
+    });
+  }
+
   Future<void> _onArchivePressed(BuildContext context) async {
     final selectedFiles = selectedListItems
         .whereType<_FileListItem>()
@@ -470,6 +486,10 @@ class _HomePhotosState extends State<HomePhotos>
 
       case _SelectionMenuOption.delete:
         _onDeletePressed(context);
+        break;
+
+      case _SelectionMenuOption.download:
+        _onDownloadPressed();
         break;
 
       default:
@@ -859,4 +879,5 @@ class _MetadataTaskLoadingIcon extends AnimatedWidget {
 enum _SelectionMenuOption {
   archive,
   delete,
+  download,
 }

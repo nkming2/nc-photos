@@ -9,20 +9,18 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
@@ -440,65 +438,10 @@ class _ViewerState extends State<Viewer>
     ShareHandler().shareFiles(context, widget.account, [file]);
   }
 
-  void _onDownloadPressed() async {
+  void _onDownloadPressed() {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().downloadProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    dynamic result;
-    try {
-      result = await DownloadFile()(widget.account, file);
-      controller?.close();
-      await _onDownloadSuccessful(file, result);
-    } on PermissionException catch (_) {
-      _log.warning("[_onDownloadPressed] Permission not granted");
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().downloadFailureNoPermissionNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    } on JobCanceledException catch (_) {
-      _log.info("[_onDownloadPressed] Canceled");
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_onDownloadPressed] Failed while downloadFile", e, stacktrace);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().downloadFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  Future<void> _onDownloadSuccessful(File file, dynamic result) async {
-    dynamic notif;
-    if (platform_k.isAndroid) {
-      notif = AndroidItemDownloadSuccessfulNotification(
-          [result], [file.contentType]);
-    }
-    if (notif != null) {
-      try {
-        await notif.notify();
-        return;
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onDownloadSuccessful] Failed showing platform notification",
-            e,
-            stacktrace);
-      }
-    }
-
-    // fallback
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().downloadSuccessNotification),
-      duration: k.snackBarDurationShort,
-    ));
+    DownloadHandler().downloadFiles(widget.account, [file]);
   }
 
   void _onDeletePressed(BuildContext context) async {
