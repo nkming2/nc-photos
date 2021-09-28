@@ -129,7 +129,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
   // this unique token is there to keep the global key unique
   final _uniqueToken = const Uuid().v4();
-  late GlobalObjectKey _gridKey;
+  late _GridKey _gridKey;
 
   static final _log =
       Logger("widget.measurable_item_list._MeasurableItemListState");
@@ -137,4 +137,12 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 
 class _GridKey extends GlobalObjectKey {
   const _GridKey(Object value) : super(value);
+
+  @override
+  operator ==(Object other) {
+    return other is _GridKey && value == other.value;
+  }
+
+  @override
+  get hashCode => value.hashCode;
 }
