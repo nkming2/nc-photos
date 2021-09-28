@@ -30,8 +30,15 @@ class NotificationChannelHandler(activity: Activity) :
 	companion object {
 		const val CHANNEL = "com.nkming.nc_photos/notification"
 
+		private fun getNextNotificationId(): Int {
+			if (++notificationId >= K.DOWNLOAD_NOTIFICATION_ID_MAX) {
+				notificationId = K.DOWNLOAD_NOTIFICATION_ID_MIN
+			}
+			return notificationId
+		}
+
 		private const val DOWNLOAD_CHANNEL_ID = "download"
-		private const val DOWNLOAD_NOTIFICATION_ID = 1
+		private var notificationId = K.DOWNLOAD_NOTIFICATION_ID_MIN
 	}
 
 	init {
@@ -156,7 +163,7 @@ class NotificationChannelHandler(activity: Activity) :
 		)
 
 		with(NotificationManagerCompat.from(_context)) {
-			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
+			notify(getNextNotificationId(), builder.build())
 		}
 		result.success(null)
 	}
@@ -202,7 +209,7 @@ class NotificationChannelHandler(activity: Activity) :
 		// plain text instead of treating it as a text file...
 
 		with(NotificationManagerCompat.from(_context)) {
-			notify(DOWNLOAD_NOTIFICATION_ID, builder.build())
+			notify(getNextNotificationId(), builder.build())
 		}
 		result.success(null)
 	}
