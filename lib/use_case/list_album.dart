@@ -3,11 +3,11 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/compat/v15.dart';
 import 'package:nc_photos/use_case/compat/v25.dart';
 import 'package:nc_photos/use_case/ls.dart';
-import 'package:tuple/tuple.dart';
 
 class ListAlbum {
   ListAlbum(this.fileRepo, this.albumRepo);
@@ -38,12 +38,12 @@ class ListAlbum {
           File(
             path: remote_storage_util.getRemoteAlbumsDir(account),
           ));
-    } catch (e, stacktrace) {
+    } catch (e, stackTrace) {
       if (e is ApiException && e.response.statusCode == 404) {
         // no albums
         return;
       }
-      yield Tuple2(e, stacktrace);
+      yield ExceptionEvent(e, stackTrace);
       return;
     }
     final albumFiles =
@@ -56,8 +56,8 @@ class ListAlbum {
         }
         albumFiles[i] = f;
         yield await albumRepo.get(account, f);
-      } catch (e, stacktrace) {
-        yield Tuple2(e, stacktrace);
+      } catch (e, stackTrace) {
+        yield ExceptionEvent(e, stackTrace);
       }
     }
     try {

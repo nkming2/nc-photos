@@ -8,11 +8,11 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
-import 'package:tuple/tuple.dart';
 
 class ListAlbumBlocItem {
   ListAlbumBlocItem(this.album, this.isSharedByMe, this.isSharedToMe);
@@ -232,15 +232,15 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       final errors = <dynamic>[];
       await for (final result in ListAlbum(
           FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account)) {
-        if (result is Tuple2) {
-          if (result.item1 is CacheNotFoundException) {
+        if (result is ExceptionEvent) {
+          if (result.error is CacheNotFoundException) {
             _log.info(
-                "[_queryWithAlbumDataSource] Cache not found", result.item1);
+                "[_queryWithAlbumDataSource] Cache not found", result.error);
           } else {
             _log.shout("[_queryWithAlbumDataSource] Exception while ListAlbum",
-                result.item1, result.item2);
+                result.error, result.stackTrace);
           }
-          errors.add(result.item1);
+          errors.add(result.error);
         } else if (result is Album) {
           albums.add(result);
         }

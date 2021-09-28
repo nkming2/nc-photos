@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_pending_shared_album.dart';
 import 'package:tuple/tuple.dart';
@@ -138,10 +139,10 @@ class ListPendingSharedAlbumBloc extends Bloc<
       final errors = <dynamic>[];
       await for (final result
           in ListPendingSharedAlbum(fileRepo, albumRepo)(ev.account)) {
-        if (result is Tuple2) {
+        if (result is ExceptionEvent) {
           _log.severe("[_onEventQuery] Exception while ListPendingSharedAlbum",
-              result.item1, result.item2);
-          errors.add(result.item1);
+              result.error, result.stackTrace);
+          errors.add(result.error);
         } else if (result is Album) {
           albums.add(result);
         }
