@@ -2,6 +2,58 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 
+enum ShareType {
+  user,
+  group,
+  publicLink,
+  email,
+  federatedCloudShare,
+  circle,
+  talk,
+}
+
+extension ShareTypeExtension on ShareType {
+  static ShareType fromValue(int shareTypeVal) {
+    switch (shareTypeVal) {
+      case 0:
+        return ShareType.user;
+      case 1:
+        return ShareType.group;
+      case 3:
+        return ShareType.publicLink;
+      case 4:
+        return ShareType.email;
+      case 6:
+        return ShareType.federatedCloudShare;
+      case 7:
+        return ShareType.circle;
+      case 10:
+        return ShareType.talk;
+      default:
+        throw ArgumentError("Invalid shareType: $shareTypeVal");
+    }
+  }
+
+  int toValue() {
+    switch (this) {
+      case ShareType.user:
+        return 0;
+      case ShareType.group:
+        return 1;
+      case ShareType.publicLink:
+        return 3;
+      case ShareType.email:
+        return 4;
+      case ShareType.federatedCloudShare:
+        return 6;
+      case ShareType.circle:
+        return 7;
+      case ShareType.talk:
+        return 10;
+    }
+  }
+}
+
 class Share with EquatableMixin {
   Share({
     required this.id,
@@ -33,7 +85,7 @@ class Share with EquatableMixin {
 
   final String id;
   final String path;
-  final int shareType;
+  final ShareType shareType;
   final String shareWith;
   final String shareWithDisplayName;
 }

@@ -33,7 +33,7 @@ class ShareRemoteDataSource implements ShareDataSource {
     _log.info("[create] Share '${file.path}' with '$shareWith'");
     final response = await Api(account).ocs().filesSharing().shares().post(
           path: file.strippedPath,
-          shareType: 0,
+          shareType: ShareType.user.toValue(),
           shareWith: shareWith,
         );
     if (!response.isGood) {
@@ -91,10 +91,11 @@ class _ShareParser {
   }
 
   Share parseSingle(JsonObj json) {
+    final shareType = ShareTypeExtension.fromValue(json["share_type"]);
     return Share(
       id: json["id"],
       path: json["path"],
-      shareType: json["share_type"],
+      shareType: shareType,
       shareWith: json["share_with"],
       shareWithDisplayName: json["share_with_displayname"],
     );
