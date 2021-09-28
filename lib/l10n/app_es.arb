@@ -89,7 +89,7 @@
 			}
 		}
 	},
-	"archiveTooltip": "Archivar selección",
+	"archiveTooltip": "Archivar",
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
@@ -102,7 +102,7 @@
 			}
 		}
 	},
-	"archiveSelectedSuccessNotification": "Selección archivada con éxito",
+	"archiveSelectedSuccessNotification": "Archivado con éxito",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
 	},
