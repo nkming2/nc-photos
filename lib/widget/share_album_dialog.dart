@@ -14,6 +14,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/use_case/create_share.dart';
 
 class ShareAlbumDialog extends StatefulWidget {
   const ShareAlbumDialog({
@@ -146,7 +147,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     if (share == null) {
       // create new share
       try {
-        final newShare = await shareRepo.create(
+        final newShare = await CreateUserShare(shareRepo)(
             widget.account, widget.file, sharee.shareWith);
         _overrideSharee[sharee.shareWith] = newShare;
       } catch (e, stackTrace) {
