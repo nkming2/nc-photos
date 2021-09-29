@@ -14,7 +14,11 @@ import 'package:nc_photos/use_case/download_file.dart';
 import 'package:tuple/tuple.dart';
 
 class DownloadHandler {
-  Future<void> downloadFiles(Account account, List<File> files) async {
+  Future<void> downloadFiles(
+    Account account,
+    List<File> files, {
+    String? parentDir,
+  }) async {
     _log.info("[downloadFiles] Downloading ${files.length} file");
     var controller = SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.global().downloadProcessingNotification),
@@ -26,7 +30,12 @@ class DownloadHandler {
     final successes = <Tuple2<File, dynamic>>[];
     for (final f in files) {
       try {
-        successes.add(Tuple2(f, await DownloadFile()(account, f)));
+        final result = await DownloadFile()(
+          account,
+          f,
+          parentDir: parentDir,
+        );
+        successes.add(Tuple2(f, result));
       } on PermissionException catch (_) {
         _log.warning("[downloadFiles] Permission not granted");
         controller?.close();

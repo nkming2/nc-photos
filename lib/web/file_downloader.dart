@@ -10,6 +10,7 @@ class FileDownloader extends itf.FileDownloader {
     Map<String, String>? headers,
     String? mimeType,
     required String filename,
+    String? parentDir,
     bool? shouldNotify,
   }) async {
     final uri = Uri.parse(url);

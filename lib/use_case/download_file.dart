@@ -6,14 +6,13 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:path/path.dart' as path;
 
 class DownloadFile {
-  DownloadFile();
-
   /// Download [file]
   ///
   /// See [FileDownloader.downloadUrl]
   Future<dynamic> call(
     Account account,
     File file, {
+    String? parentDir,
     bool? shouldNotify,
   }) {
     final downloader = platform.FileDownloader();
@@ -25,6 +24,7 @@ class DownloadFile {
       },
       mimeType: file.contentType,
       filename: path.basename(file.path),
+      parentDir: parentDir,
       shouldNotify: shouldNotify,
     );
   }

@@ -223,24 +223,32 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
+    final menuItems = <PopupMenuEntry<int>>[
+      PopupMenuItem(
+        value: _menuValueDownload,
+        child: Text(L10n.global().downloadTooltip),
+      ),
+    ];
+    if (canEdit) {
+      menuItems.add(PopupMenuItem(
+        value: _menuValueConvertBasic,
+        child: Text(L10n.global().convertBasicAlbumMenuLabel),
+      ));
+    }
+
     return buildNormalAppBar(
       context,
       widget.account,
       _album!,
-      menuItemBuilder: canEdit
-          ? (context) => [
-                PopupMenuItem(
-                  value: _menuValueConvertBasic,
-                  child: Text(L10n.global().convertBasicAlbumMenuLabel),
-                ),
-              ]
-          : null,
+      menuItemBuilder: (_) => menuItems,
       onSelectedMenuItem: (option) {
         switch (option) {
           case _menuValueConvertBasic:
             _onAppBarConvertBasicPressed(context);
             break;
-
+          case _menuValueDownload:
+            _onDownloadPressed();
+            break;
           default:
             _log.shout("[_buildNormalAppBar] Unknown value: $option");
             break;
@@ -356,6 +364,14 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         duration: k.snackBarDurationNormal,
       ));
     }
+  }
+
+  void _onDownloadPressed() {
+    DownloadHandler().downloadFiles(
+      widget.account,
+      _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
+      parentDir: _album!.name,
+    );
   }
 
   void _onSelectionAppBarSharePressed(BuildContext context) {
@@ -576,6 +592,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   static final _log =
       Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
   static const _menuValueConvertBasic = 0;
+  static const _menuValueDownload = 1;
 }
 
 enum _SelectionMenuOption {

@@ -15,6 +15,7 @@ class FileDownloader extends itf.FileDownloader {
     Map<String, String>? headers,
     String? mimeType,
     required String filename,
+    String? parentDir,
     bool? shouldNotify,
   }) {
     if (platform_k.isAndroid) {
@@ -23,6 +24,7 @@ class FileDownloader extends itf.FileDownloader {
         headers: headers,
         mimeType: mimeType,
         filename: filename,
+        parentDir: parentDir,
         shouldNotify: shouldNotify,
       );
     } else {
@@ -35,15 +37,23 @@ class FileDownloader extends itf.FileDownloader {
     Map<String, String>? headers,
     String? mimeType,
     required String filename,
+    String? parentDir,
     bool? shouldNotify,
   }) async {
+    final String path;
+    if (parentDir?.isNotEmpty == true) {
+      path = "$parentDir/$filename";
+    } else {
+      path = filename;
+    }
+
     try {
       _log.info("[_downloadUrlAndroid] Start downloading '$url'");
       final id = await Download.downloadUrl(
         url: url,
         headers: headers,
         mimeType: mimeType,
-        filename: filename,
+        filename: path,
         shouldNotify: shouldNotify,
       );
       late final String uri;

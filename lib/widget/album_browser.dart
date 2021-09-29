@@ -232,7 +232,18 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     } else if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
-      return buildNormalAppBar(context, widget.account, _album!);
+      return buildNormalAppBar(
+        context,
+        widget.account,
+        _album!,
+        menuItemBuilder: (_) => [
+          PopupMenuItem(
+            value: _menuValueDownload,
+            child: Text(L10n.global().downloadTooltip),
+          ),
+        ],
+        onSelectedMenuItem: (option) => _onMenuSelected(context, option),
+      );
     }
   }
 
@@ -292,6 +303,25 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     Navigator.pushNamed(context, Viewer.routeName,
         arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
             album: _album));
+  }
+
+  void _onMenuSelected(BuildContext context, int option) {
+    switch (option) {
+      case _menuValueDownload:
+        _onDownloadPressed();
+        break;
+      default:
+        _log.shout("[_onMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onDownloadPressed() {
+    DownloadHandler().downloadFiles(
+      widget.account,
+      _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
+      parentDir: _album!.name,
+    );
   }
 
   void _onSelectionAppBarSharePressed(BuildContext context) {
@@ -666,6 +696,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
 
   static final _log = Logger("widget.album_browser._AlbumBrowserState");
+
+  static const _menuValueDownload = 0;
 }
 
 enum _SelectionMenuOption {
