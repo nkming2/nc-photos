@@ -244,7 +244,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       onSelectedMenuItem: (option) {
         switch (option) {
           case _menuValueConvertBasic:
-            _onAppBarConvertBasicPressed(context);
+            _onConvertBasicPressed(context);
             break;
           case _menuValueDownload:
             _onDownloadPressed();
@@ -264,7 +264,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
           icon: const Icon(Icons.share),
           tooltip: L10n.global().shareTooltip,
           onPressed: () {
-            _onSelectionAppBarSharePressed(context);
+            _onSelectionSharePressed(context);
           },
         ),
       PopupMenuButton<_SelectionMenuOption>(
@@ -289,7 +289,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       IconButton(
         icon: const Icon(Icons.sort_by_alpha),
         tooltip: L10n.global().sortTooltip,
-        onPressed: _onEditAppBarSortPressed,
+        onPressed: _onEditSortPressed,
       ),
     ]);
   }
@@ -309,7 +309,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             album: widget.album));
   }
 
-  Future<void> _onAppBarConvertBasicPressed(BuildContext context) async {
+  Future<void> _onConvertBasicPressed(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -335,7 +335,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       return;
     }
     _log.info(
-        "[_onAppBarConvertBasicPressed] Converting album '${_album!.name}' to static");
+        "[_onConvertBasicPressed] Converting album '${_album!.name}' to static");
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
     try {
       await UpdateAlbum(albumRepo)(
@@ -356,7 +356,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       }
     } catch (e, stackTrace) {
       _log.shout(
-          "[_onAppBarConvertBasicPressed] Failed while converting to basic album",
+          "[_onConvertBasicPressed] Failed while converting to basic album",
           e,
           stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
@@ -374,7 +374,22 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     );
   }
 
-  void _onSelectionAppBarSharePressed(BuildContext context) {
+  void _onSelectionMenuSelected(
+      BuildContext context, _SelectionMenuOption option) {
+    switch (option) {
+      case _SelectionMenuOption.delete:
+        _onSelectionDeletePressed();
+        break;
+      case _SelectionMenuOption.download:
+        _onSelectionDownloadPressed();
+        break;
+      default:
+        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onSelectionSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
     final selected = selectedListItems
         .whereType<_FileListItem>()
@@ -387,22 +402,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     });
   }
 
-  void _onSelectionMenuSelected(
-      BuildContext context, _SelectionMenuOption option) {
-    switch (option) {
-      case _SelectionMenuOption.delete:
-        _onSelectionAppBarDeletePressed();
-        break;
-      case _SelectionMenuOption.download:
-        _onSelectionDownloadPressed();
-        break;
-      default:
-        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
-        break;
-    }
-  }
-
-  void _onSelectionAppBarDeletePressed() async {
+  void _onSelectionDeletePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.global()
           .deleteSelectedProcessingNotification(selectedListItems.length)),
@@ -424,7 +424,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         successes.add(item);
       } catch (e, stacktrace) {
         _log.shout(
-            "[_onSelectionAppBarDeletePressed] Failed while removing file" +
+            "[_onSelectionDeletePressed] Failed while removing file" +
                 (shouldLogFileName ? ": ${item.file.path}" : ""),
             e,
             stacktrace);
@@ -466,7 +466,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     });
   }
 
-  void _onEditAppBarSortPressed() {
+  void _onEditSortPressed() {
     final sortProvider = _editAlbum!.sortProvider;
     showDialog(
       context: context,
@@ -478,7 +478,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 !sortProvider.isAscending,
             onSelect: () {
-              _onSortNewestPressed();
+              _onEditSortNewestPressed();
               Navigator.of(context).pop();
             },
           ),
@@ -487,7 +487,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             isSelected: sortProvider is AlbumTimeSortProvider &&
                 sortProvider.isAscending,
             onSelect: () {
-              _onSortOldestPressed();
+              _onEditSortOldestPressed();
               Navigator.of(context).pop();
             },
           ),
@@ -496,7 +496,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     );
   }
 
-  void _onSortOldestPressed() {
+  void _onEditSortOldestPressed() {
     _editAlbum = _editAlbum!.copyWith(
       sortProvider: const AlbumTimeSortProvider(isAscending: true),
     );
@@ -505,7 +505,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     });
   }
 
-  void _onSortNewestPressed() {
+  void _onEditSortNewestPressed() {
     _editAlbum = _editAlbum!.copyWith(
       sortProvider: const AlbumTimeSortProvider(isAscending: false),
     );

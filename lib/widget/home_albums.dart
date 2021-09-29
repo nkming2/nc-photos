@@ -157,7 +157,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
           icon: const Icon(Icons.delete),
           tooltip: L10n.global().deleteTooltip,
           onPressed: () {
-            _onSelectionAppBarDeletePressed();
+            _onSelectionDeletePressed();
           },
         ),
       ],
@@ -191,7 +191,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
             break;
 
           case _menuValueImport:
-            _onAppBarImportPressed(context);
+            _onImportPressed(context);
             break;
         }
       },
@@ -307,6 +307,17 @@ class _HomeAlbumsState extends State<HomeAlbums>
     });
   }
 
+  void _onSearchPressed(BuildContext context) {
+    showSearch(
+      context: context,
+      delegate: AlbumSearchDelegate(context, widget.account),
+    ).then((value) {
+      if (value is Album) {
+        _openAlbum(context, value);
+      }
+    });
+  }
+
   void _onSortPressed(BuildContext context) {
     showDialog(
       context: context,
@@ -357,12 +368,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
     });
   }
 
-  void _onAppBarImportPressed(BuildContext context) {
+  void _onImportPressed(BuildContext context) {
     Navigator.of(context).pushNamed(AlbumImporter.routeName,
         arguments: AlbumImporterArguments(widget.account));
   }
 
-  Future<void> _onSelectionAppBarDeletePressed() async {
+  Future<void> _onSelectionDeletePressed() async {
     final selected = selectedListItems
         .whereType<_AlbumListItem>()
         .map((e) => e.album)
@@ -384,7 +395,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
         await Remove(fileRepo, albumRepo)(widget.account, f);
       } catch (e, stacktrace) {
         _log.shout(
-            "[_onSelectionAppBarDeletePressed] Failed while removing file" +
+            "[_onSelectionDeletePressed] Failed while removing file" +
                 (shouldLogFileName ? ": ${f.path}" : ""),
             e,
             stacktrace);
@@ -403,17 +414,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
         duration: k.snackBarDurationNormal,
       ));
     }
-  }
-
-  void _onSearchPressed(BuildContext context) {
-    showSearch(
-      context: context,
-      delegate: AlbumSearchDelegate(context, widget.account),
-    ).then((value) {
-      if (value is Album) {
-        _openAlbum(context, value);
-      }
-    });
   }
 
   /// Transform an Album list to grid items

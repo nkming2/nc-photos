@@ -209,7 +209,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     );
     if (isEditMode) {
       content = Listener(
-        onPointerMove: _onEditModePointerMove,
+        onPointerMove: _onEditPointerMove,
         child: content,
       );
     }
@@ -254,13 +254,13 @@ class _AlbumBrowserState extends State<AlbumBrowser>
           icon: const Icon(Icons.share),
           tooltip: L10n.global().shareTooltip,
           onPressed: () {
-            _onSelectionAppBarSharePressed(context);
+            _onSelectionSharePressed(context);
           },
         ),
       IconButton(
         icon: const Icon(Icons.remove),
         tooltip: L10n.global().removeSelectedFromAlbumTooltip,
-        onPressed: _onSelectionAppBarRemovePressed,
+        onPressed: _onSelectionRemovePressed,
       ),
       PopupMenuButton<_SelectionMenuOption>(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
@@ -280,12 +280,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       IconButton(
         icon: const Icon(Icons.text_fields),
         tooltip: L10n.global().albumAddTextTooltip,
-        onPressed: _onEditAppBarAddTextPressed,
+        onPressed: _onEditAddTextPressed,
       ),
       IconButton(
         icon: const Icon(Icons.sort_by_alpha),
         tooltip: L10n.global().sortTooltip,
-        onPressed: _onEditAppBarSortPressed,
+        onPressed: _onEditSortPressed,
       ),
     ]);
   }
@@ -324,7 +324,19 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     );
   }
 
-  void _onSelectionAppBarSharePressed(BuildContext context) {
+  void _onSelectionMenuSelected(
+      BuildContext context, _SelectionMenuOption option) {
+    switch (option) {
+      case _SelectionMenuOption.download:
+        _onSelectionDownloadPressed();
+        break;
+      default:
+        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onSelectionSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
     final selected = selectedListItems
         .whereType<_FileListItem>()
@@ -344,7 +356,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  Future<void> _onSelectionAppBarRemovePressed() async {
+  Future<void> _onSelectionRemovePressed() async {
     final selectedIndexes =
         selectedListItems.map((e) => (e as _ListItem).index).toList();
     final selectedItems = _sortedItems.takeIndex(selectedIndexes).toList();
@@ -372,18 +384,6 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     }
   }
 
-  void _onSelectionMenuSelected(
-      BuildContext context, _SelectionMenuOption option) {
-    switch (option) {
-      case _SelectionMenuOption.download:
-        _onSelectionDownloadPressed();
-        break;
-      default:
-        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
-        break;
-    }
-  }
-
   void _onSelectionDownloadPressed() {
     final selected = selectedListItems
         .whereType<_FileListItem>()
@@ -395,55 +395,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  void _onEditAppBarSortPressed() {
-    final sortProvider = _editAlbum!.sortProvider;
-    showDialog(
-      context: context,
-      builder: (context) => FancyOptionPicker(
-        title: L10n.global().sortOptionDialogTitle,
-        items: [
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionTimeDescendingLabel,
-            isSelected: sortProvider is AlbumTimeSortProvider &&
-                !sortProvider.isAscending,
-            onSelect: () {
-              _onSortNewestPressed();
-              Navigator.of(context).pop();
-            },
-          ),
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionTimeAscendingLabel,
-            isSelected: sortProvider is AlbumTimeSortProvider &&
-                sortProvider.isAscending,
-            onSelect: () {
-              _onSortOldestPressed();
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onSortOldestPressed() {
-    _editAlbum = _editAlbum!.copyWith(
-      sortProvider: const AlbumTimeSortProvider(isAscending: true),
-    );
-    setState(() {
-      _transformItems();
-    });
-  }
-
-  void _onSortNewestPressed() {
-    _editAlbum = _editAlbum!.copyWith(
-      sortProvider: const AlbumTimeSortProvider(isAscending: false),
-    );
-    setState(() {
-      _transformItems();
-    });
-  }
-
-  void _onEditModePointerMove(PointerMoveEvent event) {
+  void _onEditPointerMove(PointerMoveEvent event) {
     assert(isEditMode);
     if (!_isDragging) {
       return;
@@ -455,7 +407,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       }
       final maxExtent =
           _itemListMaxExtent ?? _scrollController.position.maxScrollExtent;
-      _log.fine("[_onEditModePointerMove] Begin scrolling down");
+      _log.fine("[_onEditPointerMove] Begin scrolling down");
       if (_scrollController.offset <
           _scrollController.position.maxScrollExtent) {
         _scrollController.animateTo(maxExtent,
@@ -470,7 +422,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (_isDragScrollingDown == false) {
         return;
       }
-      _log.fine("[_onEditModePointerMove] Begin scrolling up");
+      _log.fine("[_onEditPointerMove] Begin scrolling up");
       if (_scrollController.offset > 0) {
         _scrollController.animateTo(0,
             duration: Duration(
@@ -479,13 +431,13 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         _isDragScrollingDown = false;
       }
     } else if (_isDragScrollingDown != null) {
-      _log.fine("[_onEditModePointerMove] Stop scrolling");
+      _log.fine("[_onEditPointerMove] Stop scrolling");
       _scrollController.jumpTo(_scrollController.offset);
       _isDragScrollingDown = null;
     }
   }
 
-  void _onItemMoved(int fromIndex, int toIndex, bool isBefore) {
+  void _onEditItemMoved(int fromIndex, int toIndex, bool isBefore) {
     if (fromIndex == toIndex) {
       return;
     }
@@ -505,7 +457,55 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  void _onEditAppBarAddTextPressed() {
+  void _onEditSortPressed() {
+    final sortProvider = _editAlbum!.sortProvider;
+    showDialog(
+      context: context,
+      builder: (context) => FancyOptionPicker(
+        title: L10n.global().sortOptionDialogTitle,
+        items: [
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionTimeDescendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                !sortProvider.isAscending,
+            onSelect: () {
+              _onEditSortNewestPressed();
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionTimeAscendingLabel,
+            isSelected: sortProvider is AlbumTimeSortProvider &&
+                sortProvider.isAscending,
+            onSelect: () {
+              _onEditSortOldestPressed();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onEditSortOldestPressed() {
+    _editAlbum = _editAlbum!.copyWith(
+      sortProvider: const AlbumTimeSortProvider(isAscending: true),
+    );
+    setState(() {
+      _transformItems();
+    });
+  }
+
+  void _onEditSortNewestPressed() {
+    _editAlbum = _editAlbum!.copyWith(
+      sortProvider: const AlbumTimeSortProvider(isAscending: false),
+    );
+    setState(() {
+      _transformItems();
+    });
+  }
+
+  void _onEditAddTextPressed() {
     showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(
@@ -529,7 +529,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
   }
 
-  void _onLabelItemEditPressed(AlbumLabelItem item, int index) {
+  void _onEditLabelItemEditPressed(AlbumLabelItem item, int index) {
     showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(
@@ -590,9 +590,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
               previewUrl: previewUrl,
               onTap: () => _onItemTap(i),
               onDropBefore: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, true),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, true),
               onDropAfter: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, false),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, false),
               onDragStarted: () {
                 _isDragging = true;
               },
@@ -608,9 +608,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
               previewUrl: previewUrl,
               onTap: () => _onItemTap(i),
               onDropBefore: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, true),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, true),
               onDropAfter: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, false),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, false),
               onDragStarted: () {
                 _isDragging = true;
               },
@@ -627,11 +627,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             yield _EditLabelListItem(
               index: i,
               text: item.text,
-              onEditPressed: () => _onLabelItemEditPressed(item, i),
+              onEditPressed: () => _onEditLabelItemEditPressed(item, i),
               onDropBefore: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, true),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, true),
               onDropAfter: (dropItem) =>
-                  _onItemMoved((dropItem as _ListItem).index, i, false),
+                  _onEditItemMoved((dropItem as _ListItem).index, i, false),
               onDragStarted: () {
                 _isDragging = true;
               },

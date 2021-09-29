@@ -267,14 +267,14 @@ class _PersonBrowserState extends State<PersonBrowser>
             icon: const Icon(Icons.share),
             tooltip: L10n.global().shareTooltip,
             onPressed: () {
-              _onSharePressed(context);
+              _onSelectionSharePressed(context);
             },
           ),
         IconButton(
           icon: const Icon(Icons.playlist_add),
           tooltip: L10n.global().addToAlbumTooltip,
           onPressed: () {
-            _onAddToAlbumPressed(context);
+            _onSelectionAddToAlbumPressed(context);
           },
         ),
         PopupMenuButton<_SelectionMenuOption>(
@@ -294,7 +294,7 @@ class _PersonBrowserState extends State<PersonBrowser>
             ),
           ],
           onSelected: (option) {
-            _onOptionMenuSelected(context, option);
+            _onSelectionMenuSelected(context, option);
           },
         ),
       ],
@@ -320,7 +320,25 @@ class _PersonBrowserState extends State<PersonBrowser>
         arguments: ViewerArguments(widget.account, _backingFiles!, index));
   }
 
-  void _onSharePressed(BuildContext context) {
+  void _onSelectionMenuSelected(
+      BuildContext context, _SelectionMenuOption option) {
+    switch (option) {
+      case _SelectionMenuOption.archive:
+        _onSelectionArchivePressed(context);
+        break;
+      case _SelectionMenuOption.delete:
+        _onSelectionDeletePressed(context);
+        break;
+      case _SelectionMenuOption.download:
+        _onSelectionDownloadPressed();
+        break;
+      default:
+        _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
+        break;
+    }
+  }
+
+  void _onSelectionSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
     final selected =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
@@ -331,7 +349,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     });
   }
 
-  Future<void> _onAddToAlbumPressed(BuildContext context) async {
+  Future<void> _onSelectionAddToAlbumPressed(BuildContext context) async {
     try {
       final value = await showDialog<Album>(
         context: context,
@@ -344,7 +362,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         return;
       }
 
-      _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
+      _log.info("[_onSelectionAddToAlbumPressed] Album picked: ${value.name}");
       await NotifiedAction(
         () async {
           assert(value.provider is AlbumStaticProvider);
@@ -363,11 +381,11 @@ class _PersonBrowserState extends State<PersonBrowser>
         failureText: L10n.global().addSelectedToAlbumFailureNotification,
       )();
     } catch (e, stackTrace) {
-      _log.shout("[_onAddToAlbumPressed] Exception", e, stackTrace);
+      _log.shout("[_onSelectionAddToAlbumPressed] Exception", e, stackTrace);
     }
   }
 
-  void _onDownloadPressed() {
+  void _onSelectionDownloadPressed() {
     final selected =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
     DownloadHandler().downloadFiles(widget.account, selected);
@@ -376,7 +394,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     });
   }
 
-  Future<void> _onArchivePressed(BuildContext context) async {
+  Future<void> _onSelectionArchivePressed(BuildContext context) async {
     final selectedFiles =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
     setState(() {
@@ -396,7 +414,7 @@ class _PersonBrowserState extends State<PersonBrowser>
           L10n.global().archiveSelectedFailureNotification(failures.length),
       onActionError: (file, e, stackTrace) {
         _log.shout(
-            "[_onArchivePressed] Failed while archiving file" +
+            "[_onSelectionArchivePressed] Failed while archiving file" +
                 (shouldLogFileName ? ": ${file.path}" : ""),
             e,
             stackTrace);
@@ -404,7 +422,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     )();
   }
 
-  Future<void> _onDeletePressed(BuildContext context) async {
+  Future<void> _onSelectionDeletePressed(BuildContext context) async {
     final selectedFiles =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
     setState(() {
@@ -424,33 +442,12 @@ class _PersonBrowserState extends State<PersonBrowser>
           L10n.global().deleteSelectedFailureNotification(failures.length),
       onActionError: (file, e, stackTrace) {
         _log.shout(
-            "[_onDeletePressed] Failed while removing file" +
+            "[_onSelectionDeletePressed] Failed while removing file" +
                 (shouldLogFileName ? ": ${file.path}" : ""),
             e,
             stackTrace);
       },
     )();
-  }
-
-  void _onOptionMenuSelected(
-      BuildContext context, _SelectionMenuOption option) {
-    switch (option) {
-      case _SelectionMenuOption.archive:
-        _onArchivePressed(context);
-        break;
-
-      case _SelectionMenuOption.delete:
-        _onDeletePressed(context);
-        break;
-
-      case _SelectionMenuOption.download:
-        _onDownloadPressed();
-        break;
-
-      default:
-        _log.shout("[_onOptionMenuSelected] Unknown option: $option");
-        break;
-    }
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
