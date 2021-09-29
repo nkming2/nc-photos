@@ -23,8 +23,8 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
-import 'package:nc_photos/use_case/resync_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
@@ -655,7 +655,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<void> _setAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
-    final items = await ResyncAlbum()(widget.account, album);
+    final items = await PreProcessAlbum()(widget.account, album);
     album = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
         items: items,

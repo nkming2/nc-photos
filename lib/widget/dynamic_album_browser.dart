@@ -25,7 +25,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/populate_album.dart';
+import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
@@ -161,7 +161,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Future<void> _initAlbum() async {
     assert(widget.album.provider is AlbumDynamicProvider);
-    final items = await PopulateAlbum()(widget.account, widget.album);
+    final items = await PreProcessAlbum()(widget.account, widget.album);
     final album = await _updateAlbumPostPopulate(widget.album, items);
     if (mounted) {
       setState(() {

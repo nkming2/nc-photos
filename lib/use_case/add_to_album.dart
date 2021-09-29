@@ -3,7 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/use_case/resync_album.dart';
+import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
@@ -16,7 +16,7 @@ class AddToAlbum {
     _log.info("[call] Add ${items.length} items to album '${album.name}'");
     assert(album.provider is AlbumStaticProvider);
     // resync is needed to work out album cover and latest item
-    final oldItems = await ResyncAlbum()(account, album);
+    final oldItems = await PreProcessAlbum()(account, album);
     final newItems = makeDistinctAlbumItems([
       ...items,
       ...oldItems,

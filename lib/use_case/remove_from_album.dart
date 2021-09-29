@@ -5,7 +5,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/use_case/resync_album.dart';
+import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
@@ -34,7 +34,7 @@ class RemoveFromAlbum {
         element.file.bestDateTime == album.provider.latestItemTime)) {
       _log.info("[call] Resync as latest item is being removed");
       // need to update the album properties
-      final newItemsSynced = await ResyncAlbum()(account, newAlbum);
+      final newItemsSynced = await PreProcessAlbum()(account, newAlbum);
       newAlbum = await UpdateAlbumWithActualItems(null)(
         account,
         newAlbum,
