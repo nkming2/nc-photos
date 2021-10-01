@@ -821,6 +821,29 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"linkCopiedNotification": "Enlace copiado",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "Compartir como",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodFileTitle": "Archivo",
+	"@shareMethodFileTitle": {
+		"description": "Share the actual file"
+	},
+	"shareMethodFileDescription": "Descarga el archivo y compártelo con otras apps",
+	"shareMethodPublicLinkTitle": "Enlace público",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	},
+	"shareMethodPublicLinkDescription": "Crea en el servidor un nuevo enlace público. Cualquiera con el enlace puede acceder al archivo",
+	"shareMethodPasswordLinkTitle": "Enlace protegido con contraseña",
+	"@shareMethodPasswordLinkTitle": {
+		"description": "Create a password protected share link on server and share it"
+	},
+	"shareMethodPasswordLinkDescription": "Crea en el servidor un nuevo enlace protegido con contraseña",
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
