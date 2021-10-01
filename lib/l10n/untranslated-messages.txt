@@ -88,17 +88,6 @@
     "shareMethodPasswordLinkDescription"
   ],
 
-  "es": [
-    "linkCopiedNotification",
-    "shareMethodDialogTitle",
-    "shareMethodFileTitle",
-    "shareMethodFileDescription",
-    "shareMethodPublicLinkTitle",
-    "shareMethodPublicLinkDescription",
-    "shareMethodPasswordLinkTitle",
-    "shareMethodPasswordLinkDescription"
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsViewerTitle",
