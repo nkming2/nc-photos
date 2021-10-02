@@ -8,7 +8,6 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_pending_shared_album.dart';
-import 'package:tuple/tuple.dart';
 
 class ListPendingSharedAlbumBlocItem {
   ListPendingSharedAlbumBlocItem(this.album);
@@ -20,8 +19,7 @@ abstract class ListPendingSharedAlbumBlocEvent {
   const ListPendingSharedAlbumBlocEvent();
 }
 
-class ListPendingSharedAlbumBlocQuery
-    extends ListPendingSharedAlbumBlocEvent {
+class ListPendingSharedAlbumBlocQuery extends ListPendingSharedAlbumBlocEvent {
   const ListPendingSharedAlbumBlocQuery(
     this.account,
   );
@@ -61,8 +59,7 @@ abstract class ListPendingSharedAlbumBlocState {
   final List<ListPendingSharedAlbumBlocItem> items;
 }
 
-class ListPendingSharedAlbumBlocInit
-    extends ListPendingSharedAlbumBlocState {
+class ListPendingSharedAlbumBlocInit extends ListPendingSharedAlbumBlocState {
   ListPendingSharedAlbumBlocInit() : super(const []);
 }
 
@@ -107,8 +104,8 @@ class ListPendingSharedAlbumBlocInconsistent
 }
 
 /// Return a list of importable shared albums in the pending dir
-class ListPendingSharedAlbumBloc extends Bloc<
-    ListPendingSharedAlbumBlocEvent, ListPendingSharedAlbumBlocState> {
+class ListPendingSharedAlbumBloc extends Bloc<ListPendingSharedAlbumBlocEvent,
+    ListPendingSharedAlbumBlocState> {
   ListPendingSharedAlbumBloc() : super(ListPendingSharedAlbumBlocInit()) {
     _fileMovedEventListener.begin();
   }
