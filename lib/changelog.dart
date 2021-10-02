@@ -102,4 +102,15 @@ Localization (new/update):
   - German (by PhilProg)
   - Spanish (by luckkmaxx)
 """,
+  // v30
+  """30.0
+Features:
+  - Share a single item using a link
+  - Optimize albums: the JSON files are now much smaller
+  - Download album/selected items
+
+Localization (new/update):
+  - Czech (by Skyhawk)
+  - Spanish (by luckkmaxx)
+""",
 ];
