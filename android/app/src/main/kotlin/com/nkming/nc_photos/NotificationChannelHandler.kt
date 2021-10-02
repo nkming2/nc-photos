@@ -91,11 +91,7 @@ class NotificationChannelHandler(activity: Activity) :
 			).setOnlyAlertOnce(true).setAutoCancel(true).setLocalOnly(true)
 
 		if (uris.size == 1) {
-			builder.setTicker(
-				_context.getString(
-					R.string.download_successful_notification_title
-				)
-			).setContentTitle(
+			builder.setContentTitle(
 				_context.getString(
 					R.string.download_successful_notification_title
 				)
@@ -127,11 +123,12 @@ class NotificationChannelHandler(activity: Activity) :
 				}
 			}
 		} else {
-			val title = _context.getString(
-				R.string.download_multiple_successful_notification_title,
-				fileUris.size
+			builder.setContentTitle(
+				_context.getString(
+					R.string.download_multiple_successful_notification_title,
+					fileUris.size
+				)
 			)
-			builder.setTicker(title).setContentTitle(title)
 		}
 
 		val shareIntent = if (uris.size == 1) Intent().apply {
