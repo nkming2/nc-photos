@@ -162,7 +162,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
               icon: Icon(null),
               onPressed: null,
             ),
-      title: Text(path.basename(item.file.path)),
+      title: Text(item.file.filename),
       trailing: item.children?.isNotEmpty == true
           ? const Icon(Icons.arrow_forward_ios)
           : null,

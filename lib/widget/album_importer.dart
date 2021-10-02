@@ -20,7 +20,6 @@ import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
-import 'package:path/path.dart' as path;
 
 class AlbumImporterArguments {
   AlbumImporterArguments(this.account);
@@ -187,7 +186,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
         ),
         onPressed: onTap,
       ),
-      title: Text(path.basename(file.path)),
+      title: Text(file.filename),
       subtitle: Text(file.strippedPath),
       onTap: onTap,
     );
@@ -226,7 +225,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
     for (final p in _picks) {
       try {
         var album = Album(
-          name: path.basename(p.path),
+          name: p.filename,
           provider: AlbumDirProvider(
             dirs: [p],
           ),

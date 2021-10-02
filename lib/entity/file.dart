@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:path/path.dart' as path_util;
 
 int compareFileDateTimeDescending(File x, File y) {
   final tmp = y.bestDateTime.compareTo(x.bestDateTime);
@@ -406,6 +407,8 @@ class File with EquatableMixin {
       return path;
     }
   }
+
+  String get filename => path_util.basename(path);
 
   @override
   get props => [

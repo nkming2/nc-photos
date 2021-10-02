@@ -3,7 +3,6 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:path/path.dart' as path;
 
 class DownloadFile {
   /// Download [file]
@@ -23,7 +22,7 @@ class DownloadFile {
         "authorization": Api.getAuthorizationHeaderValue(account),
       },
       mimeType: file.contentType,
-      filename: path.basename(file.path),
+      filename: file.filename,
       parentDir: parentDir,
       shouldNotify: shouldNotify,
     );

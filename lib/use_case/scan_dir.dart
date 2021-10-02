@@ -5,7 +5,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls.dart';
-import 'package:path/path.dart' as path;
 
 class ScanDir {
   ScanDir(this.fileRepo);
@@ -46,7 +45,7 @@ class ScanDir {
   /// this dir
   static bool _shouldScanIgnoreDir(Iterable<File> files) {
     return files.any((element) {
-      final basename = path.basename(element.path);
+      final basename = element.filename;
       return basename == ".nomedia" || basename == ".noimage";
     });
   }

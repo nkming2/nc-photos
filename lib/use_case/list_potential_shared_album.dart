@@ -3,7 +3,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/ls.dart';
-import 'package:path/path.dart' as path;
 
 /// List all shared files that are potentially albums
 ///
@@ -28,7 +27,7 @@ class ListPotentialSharedAlbum {
 
   bool _checkFileName(File f) {
     try {
-      final match = _regex.firstMatch(path.basename(f.path));
+      final match = _regex.firstMatch(f.filename);
       if (match == null) {
         return false;
       }

@@ -5,7 +5,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_potential_shared_album.dart';
 import 'package:nc_photos/use_case/move.dart';
-import 'package:path/path.dart' as path;
 
 /// Import new shared albums to the pending dir
 class ImportPotentialSharedAlbum {
@@ -23,7 +22,7 @@ class ImportPotentialSharedAlbum {
         await Move(fileRepo)(
           account,
           f,
-          "${remote_storage_util.getRemotePendingSharedAlbumsDir(account)}/${path.basename(f.path)}",
+          "${remote_storage_util.getRemotePendingSharedAlbumsDir(account)}/${f.filename}",
           shouldCreateMissingDir: true,
         );
         products.add(album);

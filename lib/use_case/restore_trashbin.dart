@@ -4,7 +4,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/move.dart';
-import 'package:path/path.dart' as path;
 
 class RestoreTrashbin {
   RestoreTrashbin(this.fileRepo);
@@ -13,7 +12,7 @@ class RestoreTrashbin {
     await Move(fileRepo)(
       account,
       file,
-      "remote.php/dav/trashbin/${account.username}/restore/${path.basename(file.path)}",
+      "remote.php/dav/trashbin/${account.username}/restore/${file.filename}",
       shouldOverwrite: true,
     );
     KiwiContainer()

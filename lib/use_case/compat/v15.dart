@@ -6,7 +6,6 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/ls.dart';
-import 'package:path/path.dart' as path;
 
 /// Compatibility helper for v15
 class CompatV15 {
@@ -45,8 +44,7 @@ class _MigrateAlbumFiles {
         await CreateDir(fileRepo)(account, intermediateDir);
       }
       for (final f in albumFiles) {
-        final fileName = path.basename(f.path);
-        await fileRepo.copy(account, f, "$intermediateDir/$fileName",
+        await fileRepo.copy(account, f, "$intermediateDir/${f.filename}",
             shouldOverwrite: true);
       }
       // rename intermediate
