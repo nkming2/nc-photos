@@ -19,10 +19,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   _initLog();
+  _initKiwi();
   await _initPref();
   await _initDeviceInfo();
   _initBloc();
-  _initKiwi();
   _initEquatable();
   if (features.isSupportSelfSignedCert) {
     _initSelfSignedCertManager();
