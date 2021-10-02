@@ -26,21 +26,24 @@ class DownloadChannelHandler(activity: Activity) :
 	}
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-		if (call.method == "downloadUrl") {
-			try {
-				downloadUrl(
-					call.argument("url")!!,
-					call.argument("headers"),
-					call.argument("mimeType"),
-					call.argument("filename")!!,
-					call.argument("shouldNotify"),
-					result
-				)
-			} catch (e: Throwable) {
-				result.error("systemException", e.toString(), null)
+		when (call.method) {
+			"downloadUrl" -> {
+				try {
+					downloadUrl(
+						call.argument("url")!!,
+						call.argument("headers"),
+						call.argument("mimeType"),
+						call.argument("filename")!!,
+						call.argument("shouldNotify"),
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
 			}
-		} else {
-			result.notImplemented()
+			else -> {
+				result.notImplemented()
+			}
 		}
 	}
 
