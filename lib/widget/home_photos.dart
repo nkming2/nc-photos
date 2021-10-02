@@ -530,7 +530,7 @@ class _HomePhotosState extends State<HomePhotos>
     bool ignoreFired = false,
   }) {
     if (_bloc.state is ScanDirBlocSuccess &&
-        Pref.inst().isEnableExifOr(false) &&
+        Pref.inst().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       MetadataTaskManager().addTask(MetadataTask(widget.account));
       _metadataTaskProcessTotalCount = _backingFiles
