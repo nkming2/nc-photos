@@ -19,6 +19,14 @@ class Download {
     }))!;
   }
 
+  static Future<bool> cancel({
+    required int id,
+  }) async {
+    return (await _channel.invokeMethod<bool>("cancel", <String, dynamic>{
+      "id": id,
+    }))!;
+  }
+
   /// The download job has failed
   static const exceptionCodeDownloadError = "downloadError";
 
@@ -27,7 +35,10 @@ class Download {
 
 class DownloadEvent {
   static StreamSubscription<DownloadCompleteEvent> listenDownloadComplete() =>
-      _stream.listen(null);
+      _completeStream.listen(null);
+
+  static StreamSubscription<DownloadCancelEvent> listenDownloadCancel() =>
+      _cancelStream.listen(null);
 
   /// User canceled the download job
   static const exceptionCodeUserCanceled = "userCanceled";
@@ -35,7 +46,7 @@ class DownloadEvent {
   static const _downloadCompleteChannel = EventChannel(
       "com.nkming.nc_photos/download_event/action_download_complete");
 
-  static late final _stream = _downloadCompleteChannel
+  static late final _completeStream = _downloadCompleteChannel
       .receiveBroadcastStream()
       .map((data) => DownloadCompleteEvent(
             data["downloadId"],
@@ -50,6 +61,15 @@ class DownloadEvent {
         e.details is Map &&
         e.details["downloadId"] is int,
   );
+
+  static const _downloadCancelChannel = EventChannel(
+      "com.nkming.nc_photos/download_event/action_download_cancel");
+
+  static late final _cancelStream = _downloadCancelChannel
+      .receiveBroadcastStream()
+      .map((data) => DownloadCancelEvent(
+            data["notificationId"],
+          ));
 }
 
 class DownloadCompleteEvent {
@@ -65,4 +85,10 @@ class AndroidDownloadError implements Exception {
   final int downloadId;
   final dynamic error;
   final StackTrace stackTrace;
+}
+
+class DownloadCancelEvent {
+  const DownloadCancelEvent(this.notificationId);
+
+  final int notificationId;
 }

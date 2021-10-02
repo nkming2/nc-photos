@@ -28,5 +28,8 @@ class MainActivity : FlutterActivity() {
 		EventChannel(flutterEngine.dartExecutor.binaryMessenger,
 				DownloadEventCompleteChannelHandler.CHANNEL).setStreamHandler(
 				DownloadEventCompleteChannelHandler(this))
+		EventChannel(flutterEngine.dartExecutor.binaryMessenger,
+				DownloadEventCancelChannelHandler.CHANNEL).setStreamHandler(
+				DownloadEventCancelChannelHandler(this))
 	}
 }

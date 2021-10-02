@@ -94,3 +94,42 @@ class DownloadEventCompleteChannelHandler(context: Context) :
 		_context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 	}
 }
+
+class DownloadEventCancelChannelHandler(context: Context) : BroadcastReceiver(),
+	EventChannel.StreamHandler {
+	companion object {
+		@JvmStatic
+		val CHANNEL =
+			"com.nkming.nc_photos/download_event/action_download_cancel"
+	}
+
+	override fun onReceive(context: Context?, intent: Intent?) {
+		if (intent?.action != K.ACTION_DOWNLOAD_CANCEL || !intent.hasExtra(
+				K.EXTRA_NOTIFICATION_ID
+			)
+		) {
+			return
+		}
+
+		val id = intent.getIntExtra(K.EXTRA_NOTIFICATION_ID, 0)
+		_eventSink?.success(
+			mapOf(
+				"notificationId" to id
+			)
+		)
+	}
+
+	override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+		_context.registerReceiver(
+			this, IntentFilter(K.ACTION_DOWNLOAD_CANCEL)
+		)
+		_eventSink = events
+	}
+
+	override fun onCancel(arguments: Any?) {
+		_context.unregisterReceiver(this)
+	}
+
+	private val _context = context
+	private var _eventSink: EventChannel.EventSink? = null
+}

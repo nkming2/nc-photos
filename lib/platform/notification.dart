@@ -1,7 +1,5 @@
-abstract class ItemDownloadSuccessfulNotification {
+abstract class Notification {
   Future<void> notify();
-}
 
-abstract class LogSaveSuccessfulNotification {
-  Future<void> notify();
+  Future<void> dismiss();
 }

@@ -30,14 +30,14 @@ class NotificationChannelHandler(activity: Activity) :
 	companion object {
 		const val CHANNEL = "com.nkming.nc_photos/notification"
 
-		private fun getNextNotificationId(): Int {
+		fun getNextNotificationId(): Int {
 			if (++notificationId >= K.DOWNLOAD_NOTIFICATION_ID_MAX) {
 				notificationId = K.DOWNLOAD_NOTIFICATION_ID_MIN
 			}
 			return notificationId
 		}
 
-		private const val DOWNLOAD_CHANNEL_ID = "download"
+		const val DOWNLOAD_CHANNEL_ID = "download"
 		private var notificationId = K.DOWNLOAD_NOTIFICATION_ID_MIN
 	}
 
@@ -47,11 +47,25 @@ class NotificationChannelHandler(activity: Activity) :
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 		when (call.method) {
-			"notifyItemsDownloadSuccessful" -> {
+			"notifyDownloadSuccessful" -> {
 				try {
-					notifyItemsDownloadSuccessful(
+					notifyDownloadSuccessful(
 						call.argument("fileUris")!!,
 						call.argument("mimeTypes")!!,
+						call.argument("notificationId"),
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+			"notifyDownloadProgress" -> {
+				try {
+					notifyDownloadProgress(
+						call.argument("progress")!!,
+						call.argument("max")!!,
+						call.argument("currentItemTitle"),
+						call.argument("notificationId"),
 						result
 					)
 				} catch (e: Throwable) {
@@ -67,15 +81,23 @@ class NotificationChannelHandler(activity: Activity) :
 					result.error("systemException", e.toString(), null)
 				}
 			}
+			"dismiss" -> {
+				try {
+					dismiss(call.argument("notificationId")!!, result)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
 			else -> {
 				result.notImplemented()
 			}
 		}
 	}
 
-	private fun notifyItemsDownloadSuccessful(
+	private fun notifyDownloadSuccessful(
 		fileUris: List<String>,
 		mimeTypes: List<String?>,
+		notificationId: Int?,
 		result: MethodChannel.Result
 	) {
 		assert(fileUris.isNotEmpty())
@@ -88,7 +110,7 @@ class NotificationChannelHandler(activity: Activity) :
 				RingtoneManager.getDefaultUri(
 					RingtoneManager.TYPE_NOTIFICATION
 				)
-			).setOnlyAlertOnce(true).setAutoCancel(true).setLocalOnly(true)
+			).setOnlyAlertOnce(false).setAutoCancel(true).setLocalOnly(true)
 
 		if (uris.size == 1) {
 			builder.setContentTitle(
@@ -159,10 +181,57 @@ class NotificationChannelHandler(activity: Activity) :
 			), sharePendingIntent
 		)
 
+		val id = notificationId ?: getNextNotificationId()
 		with(NotificationManagerCompat.from(_context)) {
-			notify(getNextNotificationId(), builder.build())
+			notify(id, builder.build())
 		}
-		result.success(null)
+		result.success(id)
+	}
+
+	private fun notifyDownloadProgress(
+		progress: Int,
+		max: Int,
+		currentItemTitle: String?,
+		notificationId: Int?,
+		result: MethodChannel.Result
+	) {
+		val id = notificationId ?: getNextNotificationId()
+		val builder = NotificationCompat.Builder(_context, DOWNLOAD_CHANNEL_ID)
+			.setSmallIcon(android.R.drawable.stat_sys_download)
+			.setWhen(System.currentTimeMillis())
+			.setPriority(NotificationCompat.PRIORITY_HIGH).setSound(
+				RingtoneManager.getDefaultUri(
+					RingtoneManager.TYPE_NOTIFICATION
+				)
+			).setOnlyAlertOnce(true).setAutoCancel(false).setLocalOnly(true)
+			.setProgress(max, progress, false).setContentText("$progress/$max")
+		if (currentItemTitle == null) {
+			builder.setContentTitle(_context.getString(R.string.download_progress_notification_untitled_text))
+		} else {
+			builder.setContentTitle(
+				_context.getString(
+					R.string.download_progress_notification_text,
+					currentItemTitle
+				)
+			)
+		}
+
+		val cancelIntent = Intent().apply {
+			`package` = BuildConfig.APPLICATION_ID
+			action = K.ACTION_DOWNLOAD_CANCEL
+			putExtra(K.EXTRA_NOTIFICATION_ID, id)
+		}
+		val cancelPendingIntent = PendingIntent.getBroadcast(
+			_context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT
+		)
+		builder.addAction(
+			0, _context.getString(android.R.string.cancel), cancelPendingIntent
+		)
+
+		with(NotificationManagerCompat.from(_context)) {
+			notify(id, builder.build())
+		}
+		result.success(id)
 	}
 
 	private fun notifyLogSaveSuccessful(
@@ -205,8 +274,16 @@ class NotificationChannelHandler(activity: Activity) :
 		// can't add the share action here because android will share the URI as
 		// plain text instead of treating it as a text file...
 
+		val id = getNextNotificationId()
 		with(NotificationManagerCompat.from(_context)) {
-			notify(getNextNotificationId(), builder.build())
+			notify(id, builder.build())
+		}
+		result.success(id)
+	}
+
+	private fun dismiss(notificationId: Int, result: MethodChannel.Result) {
+		with(NotificationManagerCompat.from(_context)) {
+			cancel(notificationId)
 		}
 		result.success(null)
 	}

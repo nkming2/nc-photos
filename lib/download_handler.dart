@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -6,7 +8,9 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/download.dart';
 import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -15,6 +19,136 @@ import 'package:tuple/tuple.dart';
 
 class DownloadHandler {
   Future<void> downloadFiles(
+    Account account,
+    List<File> files, {
+    String? parentDir,
+  }) {
+    final _DownloadHandlerBase handler;
+    if (platform_k.isAndroid) {
+      handler = _DownlaodHandlerAndroid();
+    } else {
+      handler = _DownloadHandlerWeb();
+    }
+    return handler.downloadFiles(
+      account,
+      files,
+      parentDir: parentDir,
+    );
+  }
+}
+
+abstract class _DownloadHandlerBase {
+  Future<void> downloadFiles(
+    Account account,
+    List<File> files, {
+    String? parentDir,
+  });
+}
+
+class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
+  @override
+  downloadFiles(
+    Account account,
+    List<File> files, {
+    String? parentDir,
+  }) async {
+    _log.info("[downloadFiles] Downloading ${files.length} file");
+    final notif = AndroidDownloadProgressNotification(
+      0,
+      files.length,
+      currentItemTitle: files.firstOrNull?.filename,
+    );
+    await notif.notify();
+
+    final successes = <Tuple2<File, dynamic>>[];
+    StreamSubscription<DownloadCancelEvent>? subscription;
+    try {
+      bool isCancel = false;
+      subscription = DownloadEvent.listenDownloadCancel()
+        ..onData((data) {
+          if (data.notificationId == notif.notificationId) {
+            isCancel = true;
+          }
+        });
+
+      int count = 0;
+      for (final f in files) {
+        if (isCancel == true) {
+          _log.info("[downloadFiles] User canceled remaining files");
+          break;
+        }
+        notif.update(
+          count++,
+          currentItemTitle: f.filename,
+        );
+
+        StreamSubscription<DownloadCancelEvent>? itemSubscription;
+        try {
+          final download = DownloadFile().build(
+            account,
+            f,
+            parentDir: parentDir,
+            shouldNotify: false,
+          );
+          itemSubscription = DownloadEvent.listenDownloadCancel()
+            ..onData((data) {
+              if (data.notificationId == notif.notificationId) {
+                _log.info("[downloadFiles] Cancel requested");
+                download.cancel();
+              }
+            });
+          final result = await download();
+          successes.add(Tuple2(f, result));
+        } on PermissionException catch (_) {
+          _log.warning("[downloadFiles] Permission not granted");
+          SnackBarManager().showSnackBar(SnackBar(
+            content:
+                Text(L10n.global().downloadFailureNoPermissionNotification),
+            duration: k.snackBarDurationNormal,
+          ));
+          break;
+        } on JobCanceledException catch (_) {
+          _log.info("[downloadFiles] User canceled");
+          break;
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[downloadFiles] Failed while DownloadFile", e, stackTrace);
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text("${L10n.global().downloadFailureNotification}: "
+                "${exception_util.toUserString(e)}"),
+            duration: k.snackBarDurationNormal,
+          ));
+        } finally {
+          itemSubscription?.cancel();
+        }
+      }
+    } finally {
+      subscription?.cancel();
+      if (successes.isNotEmpty) {
+        await _onDownloadSuccessful(successes.map((e) => e.item1).toList(),
+            successes.map((e) => e.item2).toList(), notif.notificationId);
+      } else {
+        await notif.dismiss();
+      }
+    }
+  }
+
+  Future<void> _onDownloadSuccessful(
+      List<File> files, List<dynamic> results, int? notificationId) async {
+    final notif = AndroidDownloadSuccessfulNotification(
+      results.cast<String>(),
+      files.map((e) => e.contentType).toList(),
+      notificationId: notificationId,
+    );
+    await notif.notify();
+  }
+
+  static final _log = Logger("download_handler._DownloadHandlerAndroid");
+}
+
+class _DownloadHandlerWeb extends _DownloadHandlerBase {
+  @override
+  downloadFiles(
     Account account,
     List<File> files, {
     String? parentDir,
@@ -27,15 +161,15 @@ class DownloadHandler {
     controller?.closed.whenComplete(() {
       controller = null;
     });
-    final successes = <Tuple2<File, dynamic>>[];
+    int successCount = 0;
     for (final f in files) {
       try {
-        final result = await DownloadFile()(
+        await DownloadFile()(
           account,
           f,
           parentDir: parentDir,
         );
-        successes.add(Tuple2(f, result));
+        ++successCount;
       } on PermissionException catch (_) {
         _log.warning("[downloadFiles] Permission not granted");
         controller?.close();
@@ -57,38 +191,14 @@ class DownloadHandler {
         ));
       }
     }
-    if (successes.isNotEmpty) {
+    if (successCount > 0) {
       controller?.close();
-      await _onDownloadSuccessful(successes.map((e) => e.item1).toList(),
-          successes.map((e) => e.item2).toList());
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().downloadSuccessNotification),
+        duration: k.snackBarDurationShort,
+      ));
     }
   }
 
-  Future<void> _onDownloadSuccessful(
-      List<File> files, List<dynamic> results) async {
-    dynamic notif;
-    if (platform_k.isAndroid) {
-      notif = AndroidItemDownloadSuccessfulNotification(
-          results.cast<String>(), files.map((e) => e.contentType).toList());
-    }
-    if (notif != null) {
-      try {
-        await notif.notify();
-        return;
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onDownloadSuccessful] Failed showing platform notification",
-            e,
-            stacktrace);
-      }
-    }
-
-    // fallback
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().downloadSuccessNotification),
-      duration: k.snackBarDurationShort,
-    ));
-  }
-
-  static final _log = Logger("download_handler.DownloadHandler");
+  static final _log = Logger("download_handler._DownloadHandlerWeb");
 }

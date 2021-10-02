@@ -9,6 +9,8 @@
 	<string name="download_successful_notification_action_share">SHARE</string>
 	<string name="download_successful_notification_action_share_chooser">Share with:</string>
 	<string name="download_multiple_successful_notification_title">Downloaded %1$d items successfully</string>
+	<string name="download_progress_notification_text">Downloading %1$s</string>
+	<string name="download_progress_notification_untitled_text">Downloading</string>
 	<string name="log_save_successful_notification_title">Logs saved successfully</string>
 	<string name="log_save_successful_notification_text">Tap to view your saved logs</string>
 </resources>

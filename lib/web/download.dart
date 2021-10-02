@@ -1,18 +1,35 @@
 import 'package:http/http.dart' as http;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/platform/file_downloader.dart' as itf;
+import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos/web/file_saver.dart';
 
-class FileDownloader extends itf.FileDownloader {
+class DownloadBuilder extends itf.DownloadBuilder {
   @override
-  downloadUrl({
+  build({
     required String url,
     Map<String, String>? headers,
     String? mimeType,
     required String filename,
     String? parentDir,
     bool? shouldNotify,
-  }) async {
+  }) {
+    return _WebDownload(
+      url: url,
+      headers: headers,
+      filename: filename,
+    );
+  }
+}
+
+class _WebDownload extends itf.Download {
+  _WebDownload({
+    required this.url,
+    this.headers,
+    required this.filename,
+  });
+
+  @override
+  call() async {
     final uri = Uri.parse(url);
     final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
     final response =
@@ -24,4 +41,11 @@ class FileDownloader extends itf.FileDownloader {
     final saver = FileSaver();
     await saver.saveFile(filename, response.bodyBytes);
   }
+
+  @override
+  cancel() => Future.value(false);
+
+  final String url;
+  final Map<String, String>? headers;
+  final String filename;
 }

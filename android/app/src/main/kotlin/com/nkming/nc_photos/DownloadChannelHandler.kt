@@ -41,6 +41,15 @@ class DownloadChannelHandler(activity: Activity) :
 					result.error("systemException", e.toString(), null)
 				}
 			}
+			"cancel" -> {
+				try {
+					cancel(
+						call.argument("id")!!, result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
 			else -> {
 				result.notImplemented()
 			}
@@ -83,6 +92,13 @@ class DownloadChannelHandler(activity: Activity) :
 
 		val id = _downloadManager.enqueue(req)
 		result.success(id)
+	}
+
+	private fun cancel(
+		id: Long, result: MethodChannel.Result
+	) {
+		val count = _downloadManager.remove(id)
+		result.success(count > 0)
 	}
 
 	private val _activity = activity
