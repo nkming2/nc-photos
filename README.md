@@ -19,6 +19,7 @@ Compatible Nextcloud apps:
   - Experimental, please read the [setup guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/people)
 
 Translations (sorted by ISO name):
+- čeština (contributed by Skyhawk)
 - français (contributed by mgreil)
 - Deutsch (contributed by PhilProg)
 - ελληνικά (contributed by Chris Karasoulis)
