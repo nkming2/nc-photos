@@ -174,8 +174,14 @@ class _ExifState extends State<_Exif> {
     );
   }
 
+  @override
+  dispose() {
+    super.dispose();
+    // persist user's choice
+    Pref.inst().setEnableExif(_isEnableExif);
+  }
+
   void _onValueChanged(bool value) {
-    Pref.inst().setEnableExif(value);
     setState(() {
       _isEnableExif = value;
     });
