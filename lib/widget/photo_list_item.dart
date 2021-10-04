@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
@@ -191,4 +192,37 @@ class PhotoListLabelEdit extends PhotoListLabel {
   }
 
   final VoidCallback? onEditPressed;
+}
+
+class PhotoListDate extends StatelessWidget {
+  const PhotoListDate({
+    Key? key,
+    required this.date,
+    this.isMonthOnly = false,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    final pattern =
+        isMonthOnly ? DateFormat.YEAR_MONTH : DateFormat.YEAR_MONTH_DAY;
+    final subtitle =
+        DateFormat(pattern, Localizations.localeOf(context).languageCode)
+            .format(date.toLocal());
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.caption!.copyWith(
+                color: AppTheme.getPrimaryTextColor(context),
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
+    );
+  }
+
+  final DateTime date;
+  final bool isMonthOnly;
 }

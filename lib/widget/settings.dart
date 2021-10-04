@@ -101,6 +101,12 @@ class _SettingsState extends State<Settings> {
                 ),
               _buildSubSettings(
                 context,
+                label: L10n.global().settingsAlbumTitle,
+                description: L10n.global().settingsAlbumDescription,
+                builder: () => _AlbumSettings(),
+              ),
+              _buildSubSettings(
+                context,
                 label: L10n.global().settingsThemeTitle,
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
@@ -510,6 +516,75 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
   late bool _isForceRotation;
 
   static final _log = Logger("widget.settings._ViewerSettingsState");
+}
+
+class _AlbumSettings extends StatefulWidget {
+  @override
+  createState() => _AlbumSettingsState();
+}
+
+class _AlbumSettingsState extends State<_AlbumSettings> {
+  @override
+  initState() {
+    super.initState();
+    _isBrowserShowDate = Pref.inst().isAlbumBrowserShowDateOr();
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsAlbumPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SwitchListTile(
+                title: Text(L10n.global().settingsShowDateInAlbumTitle),
+                subtitle:
+                    Text(L10n.global().settingsShowDateInAlbumDescription),
+                value: _isBrowserShowDate,
+                onChanged: (value) => _onBrowserShowDateChanged(value),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onBrowserShowDateChanged(bool value) async {
+    final oldValue = _isBrowserShowDate;
+    setState(() {
+      _isBrowserShowDate = value;
+    });
+    if (!await Pref.inst().setAlbumBrowserShowDate(value)) {
+      _log.severe("[_onBrowserShowDateChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isBrowserShowDate = oldValue;
+      });
+    }
+  }
+
+  late bool _isBrowserShowDate;
+
+  static final _log = Logger("widget.settings._AlbumSettingsState");
 }
 
 class _ThemeSettings extends StatefulWidget {

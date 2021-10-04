@@ -114,6 +114,13 @@ class Pref {
   Future<bool> setSlideshowRepeat(bool value) =>
       _setBool(PrefKey.isSlideshowRepeat, value);
 
+  bool? isAlbumBrowserShowDate() =>
+      _pref.getBool(_toKey(PrefKey.isAlbumBrowserShowDate));
+  bool isAlbumBrowserShowDateOr([bool def = false]) =>
+      isAlbumBrowserShowDate() ?? def;
+  Future<bool> setAlbumBrowserShowDate(bool value) =>
+      _setBool(PrefKey.isAlbumBrowserShowDate, value);
+
   bool? hasNewSharedAlbum() => _pref.getBool(_toKey(PrefKey.newSharedAlbum));
   bool hasNewSharedAlbumOr(bool def) => hasNewSharedAlbum() ?? def;
   Future<bool> setNewSharedAlbum(bool value) =>
@@ -189,6 +196,8 @@ class Pref {
         return "isSlideshowShuffle";
       case PrefKey.isSlideshowRepeat:
         return "isSlideshowRepeat";
+      case PrefKey.isAlbumBrowserShowDate:
+        return "isAlbumBrowserShowDate";
     }
   }
 
@@ -216,6 +225,7 @@ enum PrefKey {
   slideshowDuration,
   isSlideshowShuffle,
   isSlideshowRepeat,
+  isAlbumBrowserShowDate,
 }
 
 extension PrefExtension on Pref {

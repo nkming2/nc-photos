@@ -19,6 +19,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -30,6 +31,7 @@ import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
@@ -571,6 +573,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
         .toList();
+    final dateHelper = PhotoListDateGroupHelper(
+      isMonthOnly: false,
+    );
 
     final items = () sync* {
       for (int i = 0; i < _sortedItems.length; ++i) {
@@ -582,6 +587,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             width: k.photoThumbSize,
             height: k.photoThumbSize,
           );
+          if ((_editAlbum ?? _album)?.sortProvider is AlbumTimeSortProvider &&
+              Pref.inst().isAlbumBrowserShowDateOr()) {
+            final date = dateHelper.onFile(item.file);
+            if (date != null) {
+              yield _DateListItem(date: date);
+            }
+          }
+
           if (file_util.isSupportedImageFormat(item.file)) {
             yield _ImageListItem(
               index: i,
@@ -705,7 +718,7 @@ enum _SelectionMenuOption {
 }
 
 abstract class _ListItem implements SelectableItem, DraggableItem {
-  _ListItem({
+  const _ListItem({
     required this.index,
     VoidCallback? onTap,
     DragTargetAccept<DraggableItem>? onDropBefore,
@@ -910,4 +923,25 @@ class _EditLabelListItem extends _LabelListItem {
   }
 
   final VoidCallback? onEditPressed;
+}
+
+class _DateListItem extends _ListItem {
+  const _DateListItem({
+    required this.date,
+  }) : super(index: -1);
+
+  @override
+  get isSelectable => false;
+
+  @override
+  get staggeredTile => const StaggeredTile.extent(99, 32);
+
+  @override
+  buildWidget(BuildContext context) {
+    return PhotoListDate(
+      date: date,
+    );
+  }
+
+  final DateTime date;
 }

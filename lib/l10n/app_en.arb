@@ -323,6 +323,14 @@
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ignore rotation lock",
 	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
+	"settingsAlbumTitle": "Album",
+	"settingsAlbumDescription": "Customize albums",
+	"settingsAlbumPageTitle": "Album settings",
+	"@settingsAlbumPageTitle": {
+		"description": "Dedicated page for album settings"
+	},
+	"settingsShowDateInAlbumTitle": "Group photos by date",
+	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
 	"settingsThemeTitle": "Theme",
 	"settingsThemeDescription": "Customize the appearance of the app",
 	"settingsThemePageTitle": "Theme settings",
@@ -844,7 +852,6 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Create a new password protected link on the server",
-
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

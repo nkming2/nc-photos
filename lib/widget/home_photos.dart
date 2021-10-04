@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -40,6 +39,7 @@ import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -547,18 +547,16 @@ class _HomePhotosState extends State<HomePhotos>
             file_util.isSupportedFormat(element) && element.isArchived != true)
         .sorted(compareFileDateTimeDescending);
 
-    DateTime? currentDate;
     final isMonthOnly = _thumbZoomLevel < 0;
+    final dateHelper = PhotoListDateGroupHelper(
+      isMonthOnly: isMonthOnly,
+    );
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
-
-        final newDate = f.bestDateTime.toLocal();
-        if (newDate.year != currentDate?.year ||
-            newDate.month != currentDate?.month ||
-            (!isMonthOnly && newDate.day != currentDate?.day)) {
-          yield _DateListItem(date: newDate, isMonthOnly: isMonthOnly);
-          currentDate = newDate;
+        final date = dateHelper.onFile(f);
+        if (date != null) {
+          yield _DateListItem(date: date, isMonthOnly: isMonthOnly);
         }
 
         final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
@@ -744,30 +742,13 @@ class _DateListItem extends _ListItem {
 
   @override
   buildWidget(BuildContext context) {
-    String subtitle = "";
-    if (date != null) {
-      final pattern =
-          isMonthOnly ? DateFormat.YEAR_MONTH : DateFormat.YEAR_MONTH_DAY;
-      subtitle =
-          DateFormat(pattern, Localizations.localeOf(context).languageCode)
-              .format(date!.toLocal());
-    }
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Text(
-          subtitle,
-          style: Theme.of(context).textTheme.caption!.copyWith(
-                color: AppTheme.getPrimaryTextColor(context),
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ),
+    return PhotoListDate(
+      date: date,
+      isMonthOnly: isMonthOnly,
     );
   }
 
-  final DateTime? date;
+  final DateTime date;
   final bool isMonthOnly;
 }
 
