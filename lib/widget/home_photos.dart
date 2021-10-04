@@ -130,24 +130,30 @@ class _HomePhotosState extends State<HomePhotos>
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      _buildAppBar(context),
-                      if (_metadataTaskState != MetadataTaskState.idle)
-                        _buildMetadataTaskHeader(context),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        sliver: buildItemStreamList(
-                          maxCrossAxisExtent: _thumbSize.toDouble(),
-                          onMaxExtentChanged: (value) {
-                            setState(() {
-                              _itemListMaxExtent = value;
-                            });
-                          },
+                  child: RefreshIndicator(
+                    backgroundColor: Colors.grey[100],
+                    onRefresh: () async {
+                      _onRefreshSelected();
+                    },
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      slivers: [
+                        _buildAppBar(context),
+                        if (_metadataTaskState != MetadataTaskState.idle)
+                          _buildMetadataTaskHeader(context),
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          sliver: buildItemStreamList(
+                            maxCrossAxisExtent: _thumbSize.toDouble(),
+                            onMaxExtentChanged: (value) {
+                              setState(() {
+                                _itemListMaxExtent = value;
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
