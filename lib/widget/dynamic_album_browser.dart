@@ -196,15 +196,12 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
-            SliverPadding(
-              padding: const EdgeInsets.only(top: 8),
-              sliver: SliverIgnorePointer(
-                ignoring: isEditMode,
-                sliver: SliverOpacity(
-                  opacity: isEditMode ? .25 : 1,
-                  sliver: buildItemStreamList(
-                    maxCrossAxisExtent: thumbSize.toDouble(),
-                  ),
+            SliverIgnorePointer(
+              ignoring: isEditMode,
+              sliver: SliverOpacity(
+                opacity: isEditMode ? .25 : 1,
+                sliver: buildItemStreamList(
+                  maxCrossAxisExtent: thumbSize.toDouble(),
                 ),
               ),
             ),

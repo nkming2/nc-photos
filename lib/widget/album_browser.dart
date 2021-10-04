@@ -194,19 +194,16 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       controller: _scrollController,
       slivers: [
         _buildAppBar(context),
-        SliverPadding(
-          padding: const EdgeInsets.only(top: 8),
-          sliver: isEditMode
-              ? buildDraggableItemList(
-                  maxCrossAxisExtent: thumbSize.toDouble(),
-                  onMaxExtentChanged: (value) {
-                    _itemListMaxExtent = value;
-                  },
-                )
-              : buildItemStreamList(
-                  maxCrossAxisExtent: thumbSize.toDouble(),
-                ),
-        ),
+        isEditMode
+            ? buildDraggableItemList(
+                maxCrossAxisExtent: thumbSize.toDouble(),
+                onMaxExtentChanged: (value) {
+                  _itemListMaxExtent = value;
+                },
+              )
+            : buildItemStreamList(
+                maxCrossAxisExtent: thumbSize.toDouble(),
+              ),
       ],
     );
     if (isEditMode) {
