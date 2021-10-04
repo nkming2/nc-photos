@@ -484,6 +484,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
               Navigator.of(context).pop();
             },
           ),
+          if (sortProvider is AlbumNullSortProvider)
+            FancyOptionPickerItem(
+              label: L10n.global().sortOptionManualLabel,
+              isSelected: true,
+              onSelect: () {
+                Navigator.of(context).pop();
+              },
+            ),
         ],
       ),
     );

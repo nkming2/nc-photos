@@ -601,6 +601,10 @@
 	"@sortOptionAlbumNameDescendingLabel": {
 		"description": "Sort by album name, in descending order"
 	},
+	"sortOptionManualLabel": "Manual",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
+	},
 	"albumEditDragRearrangeNotification": "Long press and drag an item to rearrange it manually",
 	"@albumEditDragRearrangeNotification": {
 		"description": "Instructions on how to rearrange photos"
