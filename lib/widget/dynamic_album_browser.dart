@@ -525,12 +525,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _transformItems(List<AlbumItem> items) {
-    if (_editAlbum != null) {
-      // edit mode
-      _sortedItems = _editAlbum!.sortProvider.sort(items);
-    } else {
-      _sortedItems = _album!.sortProvider.sort(items);
-    }
+    _sortedItems = (_editAlbum ?? _album)!.sortProvider.sort(items);
     _onSortedItemsUpdated();
   }
 
