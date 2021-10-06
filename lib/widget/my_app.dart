@@ -421,9 +421,9 @@ class _MyScrollBehavior extends MaterialScrollBehavior {
 
   @override
   get dragDevices => {
-    PointerDeviceKind.touch,
-    PointerDeviceKind.stylus,
-    PointerDeviceKind.invertedStylus,
-    PointerDeviceKind.mouse,
-  };
+        PointerDeviceKind.touch,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.invertedStylus,
+        PointerDeviceKind.mouse,
+      };
 }
