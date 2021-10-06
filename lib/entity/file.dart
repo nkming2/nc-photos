@@ -391,25 +391,6 @@ class File with EquatableMixin {
     );
   }
 
-  /// Return the path of this file with the DAV part stripped
-  ///
-  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}
-  String get strippedPath {
-    if (path.contains("remote.php/dav/files")) {
-      final position = path.indexOf("/", "remote.php/dav/files/".length) + 1;
-      if (position == 0) {
-        // root dir path
-        return ".";
-      } else {
-        return path.substring(position);
-      }
-    } else {
-      return path;
-    }
-  }
-
-  String get filename => path_util.basename(path);
-
   @override
   get props => [
         path,
@@ -468,6 +449,25 @@ extension FileExtension on File {
 
   bool isOwned(String username) =>
       ownerId == null || ownerId?.toLowerCase() == username.toLowerCase();
+
+  /// Return the path of this file with the DAV part stripped
+  ///
+  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}
+  String get strippedPath {
+    if (path.contains("remote.php/dav/files")) {
+      final position = path.indexOf("/", "remote.php/dav/files/".length) + 1;
+      if (position == 0) {
+        // root dir path
+        return ".";
+      } else {
+        return path.substring(position);
+      }
+    } else {
+      return path;
+    }
+  }
+
+  String get filename => path_util.basename(path);
 
   static final _log = Logger("entity.file.FileExtension");
 }
