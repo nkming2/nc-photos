@@ -254,7 +254,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildShareItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.share_outlined,
-      label: "Sharing",
+      label: "Sharing (Lab)",
       isShowIndicator: Pref.inst().hasNewSharedAlbumOr(false),
       onTap: () {
         if (!isSelectionMode) {
