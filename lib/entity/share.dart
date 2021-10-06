@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:path/path.dart' as path_util;
 
 enum ShareType {
   user,
@@ -54,11 +55,42 @@ extension ShareTypeExtension on ShareType {
   }
 }
 
+enum ShareItemType {
+  file,
+  folder,
+}
+
+extension ShareItemTypeExtension on ShareItemType {
+  static ShareItemType fromValue(String itemTypeVal) {
+    switch (itemTypeVal) {
+      case "file":
+        return ShareItemType.file;
+      case "folder":
+        return ShareItemType.folder;
+      default:
+        throw ArgumentError("Invalid itemType: $itemTypeVal");
+    }
+  }
+
+  String toValue() {
+    switch (this) {
+      case ShareItemType.file:
+        return "file";
+      case ShareItemType.folder:
+        return "folder";
+    }
+  }
+}
+
 class Share with EquatableMixin {
   Share({
     required this.id,
-    required this.path,
     required this.shareType,
+    required this.stime,
+    required this.path,
+    required this.itemType,
+    required this.mimeType,
+    required this.itemSource,
     required this.shareWith,
     required this.shareWithDisplayName,
     this.url,
@@ -68,8 +100,12 @@ class Share with EquatableMixin {
   toString() {
     return "$runtimeType {"
         "id: $id, "
-        "path: $path, "
         "shareType: $shareType, "
+        "stime: $stime, "
+        "path: $path, "
+        "itemType: $itemType, "
+        "mimeType: $mimeType, "
+        "itemSource: $itemSource, "
         "shareWith: $shareWith, "
         "shareWithDisplayName: $shareWithDisplayName, "
         "url: $url, "
@@ -79,19 +115,32 @@ class Share with EquatableMixin {
   @override
   get props => [
         id,
-        path,
         shareType,
+        stime,
+        path,
+        itemType,
+        mimeType,
+        itemSource,
         shareWith,
         shareWithDisplayName,
         url,
       ];
 
+  // see: https://doc.owncloud.com/server/latest/developer_manual/core/apis/ocs-share-api.html#response-attributes-2
   final String id;
-  final String path;
   final ShareType shareType;
+  final DateTime stime;
+  final String path;
+  final ShareItemType itemType;
+  final String mimeType;
+  final int itemSource;
   final String? shareWith;
   final String shareWithDisplayName;
   final String? url;
+}
+
+extension ShareExtension on Share {
+  String get filename => path_util.basename(path);
 }
 
 class ShareRepo {
@@ -104,6 +153,9 @@ class ShareRepo {
   /// See [ShareDataSource.listDir]
   Future<List<Share>> listDir(Account account, File dir) =>
       dataSrc.listDir(account, dir);
+
+  /// See [ShareDataSource.listAll]
+  Future<List<Share>> listAll(Account account) => dataSrc.listAll(account);
 
   /// See [ShareDataSource.create]
   Future<Share> create(Account account, File file, String shareWith) =>
@@ -130,6 +182,9 @@ abstract class ShareDataSource {
 
   /// List all shares from a given directory
   Future<List<Share>> listDir(Account account, File dir);
+
+  /// List all shares from a given user
+  Future<List<Share>> listAll(Account account);
 
   /// Share a file/folder with a user
   Future<Share> create(Account account, File file, String shareWith);

@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
 
@@ -83,6 +84,13 @@ class FileMovedEvent {
   final Account account;
   final File file;
   final String destination;
+}
+
+class ShareRemovedEvent {
+  const ShareRemovedEvent(this.account, this.share);
+
+  final Account account;
+  final Share share;
 }
 
 class ThemeChangedEvent {}

@@ -22,6 +22,8 @@ import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
+import 'package:nc_photos/widget/shared_file_viewer.dart';
+import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/splash.dart';
@@ -145,6 +147,8 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePersonBrowserRoute(settings);
     route ??= _handleSlideshowViewerRoute(settings);
+    route ??= _handleSharingBrowserRoute(settings);
+    route ??= _handleSharedFileViewerRoute(settings);
     return route;
   }
 
@@ -372,6 +376,34 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleSlideshowViewerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleSharingBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == SharingBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as SharingBrowserArguments;
+        return SharingBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleSharingBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleSharedFileViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == SharedFileViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as SharedFileViewerArguments;
+        return SharedFileViewer.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleSharedFileViewerRoute] Failed while handling route", e);
     }
     return null;
   }

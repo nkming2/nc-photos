@@ -856,6 +856,36 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Create a new password protected link on the server",
+	"collectionSharingLabel": "Sharing",
+	"@collectionSharingLabel": {
+		"description": "List items being shared by the current account"
+	},
+	"fileLastSharedDescription": "Last shared on {date}",
+	"@fileLastSharedDescription": {
+		"description": "The date when this file is last shared. The date string is formatted according to the current locale",
+		"placeholders": {
+			"date": {
+				"example": "Jan 1, 2021"
+			}
+		}
+	},
+	"sharedWithLabel": "Shared with",
+	"@sharedWithLabel": {
+		"description": "A list of users or links where this file is sharing with"
+	},
+	"unshareTooltip": "Unshare",
+	"@unshareTooltip": {
+		"description": "Remove a share"
+	},
+	"unshareSuccessNotification": "Removed share",
+	"@unshareSuccessNotification": {
+		"description": "Removed a share"
+	},
+	"locationLabel": "Location",
+	"@locationLabel": {
+		"description": "Show where the file is located"
+	},
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

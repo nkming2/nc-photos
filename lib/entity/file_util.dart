@@ -3,8 +3,9 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 
-bool isSupportedFormat(File file) =>
-    _supportedFormatMimes.contains(file.contentType);
+bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
+
+bool isSupportedFormat(File file) => isSupportedMime(file.contentType ?? "");
 
 bool isSupportedImageFormat(File file) =>
     isSupportedFormat(file) && file.contentType?.startsWith("image/") == true;

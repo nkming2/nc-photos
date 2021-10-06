@@ -29,6 +29,13 @@ class ShareRemoteDataSource implements ShareDataSource {
   }
 
   @override
+  listAll(Account account) async {
+    _log.info("[listAll] $account");
+    final response = await Api(account).ocs().filesSharing().shares().get();
+    return _onListResult(response);
+  }
+
+  @override
   create(Account account, File file, String shareWith) async {
     _log.info("[create] Share '${file.path}' with '$shareWith'");
     final response = await Api(account).ocs().filesSharing().shares().post(
@@ -116,10 +123,16 @@ class _ShareParser {
 
   Share parseSingle(JsonObj json) {
     final shareType = ShareTypeExtension.fromValue(json["share_type"]);
+    final itemType = ShareItemTypeExtension.fromValue(json["item_type"]);
     return Share(
       id: json["id"],
-      path: json["path"],
       shareType: shareType,
+      stime:
+          DateTime.fromMillisecondsSinceEpoch(json["stime"] * 1000),
+      path: json["path"],
+      itemType: itemType,
+      mimeType: json["mimetype"],
+      itemSource: json["item_source"],
       // when shared with a password protected link, shareWith somehow contains
       // the password, which doesn't make sense. We set it to null instead
       shareWith: shareType == ShareType.publicLink ? null : json["share_with"],
