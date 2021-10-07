@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/person.dart';
@@ -69,6 +70,22 @@ class ListPersonBlocFailure extends ListPersonBlocState {
 /// List all people recognized in an account
 class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
   ListPersonBloc() : super(ListPersonBlocInit());
+
+  static ListPersonBloc of(Account account) {
+    final id =
+        "${account.scheme}://${account.username}@${account.address}?${account.roots.join('&')}";
+    try {
+      _log.fine("[of] Resolving bloc for '$id'");
+      return KiwiContainer().resolve<ListPersonBloc>("ListPersonBloc($id)");
+    } catch (_) {
+      // no created instance for this account, make a new one
+      _log.info("[of] New bloc instance for account: $account");
+      final bloc = ListPersonBloc();
+      KiwiContainer().registerInstance<ListPersonBloc>(bloc,
+          name: "ListPersonBloc($id)");
+      return bloc;
+    }
+  }
 
   @override
   mapEventToState(ListPersonBlocEvent event) async* {

@@ -78,7 +78,16 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   }
 
   void _initBloc() {
-    _log.info("[_initBloc] Initialize bloc");
+    if (_bloc.state is ListPersonBlocInit) {
+      _log.info("[_initBloc] Initialize bloc");
+    } else {
+      // process the current state
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        setState(() {
+          _onStateChange(context, _bloc.state);
+        });
+      });
+    }
     _reqQuery();
   }
 
@@ -212,14 +221,13 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
               onTap: () => _onItemTap(e),
             ))
         .toList();
-    // _items = [];
   }
 
   void _reqQuery() {
     _bloc.add(ListPersonBlocQuery(widget.account));
   }
 
-  final _bloc = ListPersonBloc();
+  late final _bloc = ListPersonBloc.of(widget.account);
 
   var _items = <_ListItem>[];
 
