@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/find_file.dart';
 
 class ListSharingItem {
@@ -175,6 +177,22 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.listAll(ev.account);
     final futures = shares.map((e) async {
+      // include link share dirs
+      if (e.itemType == ShareItemType.folder) {
+        final webdavPath =
+            "${api_util.getWebdavRootUrlRelative(ev.account)}/${e.path}";
+        if (webdavPath.startsWith(
+            remote_storage_util.getRemoteLinkSharesDir(ev.account))) {
+          return ListSharingItem(
+            e,
+            File(
+              path: webdavPath,
+              isCollection: true,
+            ),
+          );
+        }
+      }
+
       if (!file_util.isSupportedMime(e.mimeType)) {
         return null;
       }

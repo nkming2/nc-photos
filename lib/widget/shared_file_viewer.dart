@@ -82,31 +82,32 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
           title: Text(path.withoutExtension(widget.file.filename)),
           pinned: true,
         ),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 256,
-            child: FittedBox(
-              alignment: Alignment.center,
-              fit: BoxFit.cover,
-              clipBehavior: Clip.hardEdge,
-              child: CachedNetworkImage(
-                cacheManager: CoverCacheManager.inst,
-                imageUrl: previewUrl,
-                httpHeaders: {
-                  "Authorization":
-                      Api.getAuthorizationHeaderValue(widget.account),
-                },
-                fadeInDuration: const Duration(),
-                filterQuality: FilterQuality.high,
-                errorWidget: (context, url, error) {
-                  // just leave it empty
-                  return Container();
-                },
-                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        if (widget.file.isCollection != true)
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 256,
+              child: FittedBox(
+                alignment: Alignment.center,
+                fit: BoxFit.cover,
+                clipBehavior: Clip.hardEdge,
+                child: CachedNetworkImage(
+                  cacheManager: CoverCacheManager.inst,
+                  imageUrl: previewUrl,
+                  httpHeaders: {
+                    "Authorization":
+                        Api.getAuthorizationHeaderValue(widget.account),
+                  },
+                  fadeInDuration: const Duration(),
+                  filterQuality: FilterQuality.high,
+                  errorWidget: (context, url, error) {
+                    // just leave it empty
+                    return Container();
+                  },
+                  imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+                ),
               ),
             ),
           ),
-        ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16),
