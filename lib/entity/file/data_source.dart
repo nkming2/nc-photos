@@ -172,6 +172,11 @@ class FileWebdavDataSource implements FileDataSource {
       throw ApiException(
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
+    } else if (response.statusCode == 204) {
+      // conflict
+      throw ApiException(
+          response: response,
+          message: "Failed communicating with server: ${response.statusCode}");
     }
   }
 
