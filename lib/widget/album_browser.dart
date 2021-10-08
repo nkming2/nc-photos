@@ -348,11 +348,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       ));
       return;
     }
-    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
-      setState(() {
-        clearSelectedItems();
-      });
-    });
+    ShareHandler(
+      context: context,
+      clearSelection: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+    ).shareFiles(widget.account, selected);
   }
 
   Future<void> _onSelectionRemovePressed() async {

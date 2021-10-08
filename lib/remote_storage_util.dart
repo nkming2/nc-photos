@@ -10,5 +10,8 @@ String getRemotePendingSharedAlbumsDir(Account account) =>
 String getRemoteTouchDir(Account account) =>
     "${getRemoteStorageDir(account)}/touch";
 
+String getRemoteLinkSharesDir(Account account) =>
+    "${getRemoteStorageDir(account)}/link_shares";
+
 String getRemoteStorageDir(Account account) =>
     "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos";

@@ -6,6 +6,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 
+/// Characters that are not allowed in filename
+const reservedFilenameChars = "<>:\"/\\|?*";
+
 /// Return the preview image URL for [file]. See [getFilePreviewUrlRelative]
 String getFilePreviewUrl(
   Account account,

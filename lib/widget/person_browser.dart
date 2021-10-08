@@ -342,11 +342,14 @@ class _PersonBrowserState extends State<PersonBrowser>
     assert(platform_k.isAndroid);
     final selected =
         selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
-    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
-      setState(() {
-        clearSelectedItems();
-      });
-    });
+    ShareHandler(
+      context: context,
+      clearSelection: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+    ).shareFiles(widget.account, selected);
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) async {

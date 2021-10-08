@@ -435,7 +435,9 @@ class _ViewerState extends State<Viewer>
   void _onSharePressed(BuildContext context) {
     assert(platform_k.isAndroid);
     final file = widget.streamFiles[_viewerController.currentPage];
-    ShareHandler().shareFiles(context, widget.account, [file]);
+    ShareHandler(
+      context: context,
+    ).shareFiles(widget.account, [file]);
   }
 
   void _onDownloadPressed() {

@@ -394,11 +394,14 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    ShareHandler().shareFiles(context, widget.account, selected).then((_) {
-      setState(() {
-        clearSelectedItems();
-      });
-    });
+    ShareHandler(
+      context: context,
+      clearSelection: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+    ).shareFiles(widget.account, selected);
   }
 
   void _onSelectionDeletePressed() async {

@@ -11,7 +11,13 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ],
 
   "de": [
@@ -40,7 +46,13 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ],
 
   "el": [
@@ -124,7 +136,13 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ],
 
   "es": [
@@ -139,7 +157,13 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ],
 
   "fr": [
@@ -203,7 +227,13 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ],
 
   "ru": [
@@ -240,6 +270,12 @@
     "sharedWithLabel",
     "unshareTooltip",
     "unshareSuccessNotification",
-    "locationLabel"
+    "locationLabel",
+    "multipleFilesLinkShareDialogContent",
+    "folderNameInputHint",
+    "folderNameInputInvalidEmpty",
+    "folderNameInputInvalidCharacters",
+    "createShareProgressText",
+    "copyItemsFailureNotification"
   ]
 }
