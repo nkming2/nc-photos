@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path_util;
 
 enum ShareType {
@@ -87,14 +88,14 @@ class Share with EquatableMixin {
     required this.id,
     required this.shareType,
     required this.stime,
-    required this.path,
+    required String path,
     required this.itemType,
     required this.mimeType,
     required this.itemSource,
     required this.shareWith,
     required this.shareWithDisplayName,
     this.url,
-  });
+  }) : path = path.trimAny("/");
 
   @override
   toString() {
