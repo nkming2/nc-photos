@@ -3,6 +3,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
@@ -78,13 +79,9 @@ class Move {
     if (retryCount < 2) {
       return destination;
     }
-    final temp =
-        "${path.dirname(destination)}/${path.basenameWithoutExtension(destination)} ($retryCount)";
-    if (path.extension(destination).isEmpty) {
-      return temp;
-    } else {
-      return "$temp.${path.extension(destination)}";
-    }
+    final newName =
+        file_util.renameConflict(path.basename(destination), retryCount);
+    return "${path.dirname(destination)}/$newName";
   }
 
   final FileRepo fileRepo;
