@@ -18,7 +18,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -248,14 +247,13 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Widget _buildSelectionAppBar(BuildContext context) {
     return buildSelectionAppBar(context, [
-      if (platform_k.isAndroid)
-        IconButton(
-          icon: const Icon(Icons.share),
-          tooltip: L10n.global().shareTooltip,
-          onPressed: () {
-            _onSelectionSharePressed(context);
-          },
-        ),
+      IconButton(
+        icon: const Icon(Icons.share),
+        tooltip: L10n.global().shareTooltip,
+        onPressed: () {
+          _onSelectionSharePressed(context);
+        },
+      ),
       IconButton(
         icon: const Icon(Icons.remove),
         tooltip: L10n.global().removeSelectedFromAlbumTooltip,
@@ -336,7 +334,6 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
-    assert(platform_k.isAndroid);
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)

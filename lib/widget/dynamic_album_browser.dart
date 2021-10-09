@@ -21,7 +21,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -258,14 +257,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Widget _buildSelectionAppBar(BuildContext context) {
     return buildSelectionAppBar(context, [
-      if (platform_k.isAndroid)
-        IconButton(
-          icon: const Icon(Icons.share),
-          tooltip: L10n.global().shareTooltip,
-          onPressed: () {
-            _onSelectionSharePressed(context);
-          },
-        ),
+      IconButton(
+        icon: const Icon(Icons.share),
+        tooltip: L10n.global().shareTooltip,
+        onPressed: () {
+          _onSelectionSharePressed(context);
+        },
+      ),
       PopupMenuButton<_SelectionMenuOption>(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         itemBuilder: (context) => [
@@ -389,7 +387,6 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
-    assert(platform_k.isAndroid);
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)

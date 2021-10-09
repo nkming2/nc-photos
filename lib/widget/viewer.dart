@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -183,15 +182,14 @@ class _ViewerState extends State<Viewer>
               : const Duration(milliseconds: 1),
           child: ViewerBottomAppBar(
             children: [
-              if (platform_k.isAndroid)
-                IconButton(
-                  icon: Icon(
-                    Icons.share_outlined,
-                    color: Colors.white.withOpacity(.87),
-                  ),
-                  tooltip: L10n.global().shareTooltip,
-                  onPressed: () => _onSharePressed(context),
+              IconButton(
+                icon: Icon(
+                  Icons.share_outlined,
+                  color: Colors.white.withOpacity(.87),
                 ),
+                tooltip: L10n.global().shareTooltip,
+                onPressed: () => _onSharePressed(context),
+              ),
               IconButton(
                 icon: Icon(
                   Icons.download_outlined,
@@ -433,7 +431,6 @@ class _ViewerState extends State<Viewer>
   }
 
   void _onSharePressed(BuildContext context) {
-    assert(platform_k.isAndroid);
     final file = widget.streamFiles[_viewerController.currentPage];
     ShareHandler(
       context: context,

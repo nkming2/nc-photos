@@ -37,7 +37,6 @@ class ShareHandler {
   });
 
   Future<void> shareFiles(Account account, List<File> files) async {
-    assert(platform_k.isAndroid);
     try {
       final method = await _askShareMethod();
       if (method == null) {
@@ -69,6 +68,7 @@ class ShareHandler {
   }
 
   Future<void> _shareAsFile(Account account, List<File> files) async {
+    assert(platform_k.isAndroid);
     final controller = StreamController<String>();
     showDialog(
       context: context,

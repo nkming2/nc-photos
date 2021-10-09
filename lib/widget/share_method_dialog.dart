@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 
 enum ShareMethod {
   file,
@@ -18,15 +19,16 @@ class ShareMethodDialog extends StatelessWidget {
     return SimpleDialog(
       title: Text(L10n.global().shareMethodDialogTitle),
       children: [
-        SimpleDialogOption(
-          child: ListTile(
-            title: Text(L10n.global().shareMethodFileTitle),
-            subtitle: Text(L10n.global().shareMethodFileDescription),
+        if (platform_k.isAndroid)
+          SimpleDialogOption(
+            child: ListTile(
+              title: Text(L10n.global().shareMethodFileTitle),
+              subtitle: Text(L10n.global().shareMethodFileDescription),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(ShareMethod.file);
+            },
           ),
-          onPressed: () {
-            Navigator.of(context).pop(ShareMethod.file);
-          },
-        ),
         SimpleDialogOption(
           child: ListTile(
             title: Text(L10n.global().shareMethodPublicLinkTitle),

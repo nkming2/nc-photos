@@ -26,7 +26,6 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/notified_action.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -186,14 +185,13 @@ class _HomePhotosState extends State<HomePhotos>
         });
       },
       actions: [
-        if (platform_k.isAndroid)
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: L10n.global().shareTooltip,
-            onPressed: () {
-              _onSelectionSharePressed(context);
-            },
-          ),
+        IconButton(
+          icon: const Icon(Icons.share),
+          tooltip: L10n.global().shareTooltip,
+          onPressed: () {
+            _onSelectionSharePressed(context);
+          },
+        ),
         IconButton(
           icon: const Icon(Icons.playlist_add),
           tooltip: L10n.global().addToAlbumTooltip,
@@ -387,7 +385,6 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
-    assert(platform_k.isAndroid);
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
