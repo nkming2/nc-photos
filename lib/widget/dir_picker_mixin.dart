@@ -200,7 +200,9 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   /// Fill query results from bloc to our item tree
   bool _fillResult(LsDirBlocItem root, LsDirBlocSuccess state) {
     if (root.file.path == state.root.path) {
-      root.children = state.items;
+      if (root.children?.isNotEmpty != true) {
+        root.children = state.items;
+      }
       return true;
     } else if (state.root.path.startsWith(root.file.path)) {
       for (final child in root.children ?? <LsDirBlocItem>[]) {
