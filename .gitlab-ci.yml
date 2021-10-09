@@ -18,3 +18,4 @@ test:
       - $CI_PROJECT_DIR/coverage
     reports:
       junit: report.xml
+    expire_in: 6 mos
