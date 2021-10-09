@@ -914,6 +914,14 @@
 			}
 		}
 	},
+	"unshareLinkShareDirDialogTitle": "Delete folder?",
+	"@unshareLinkShareDirDialogTitle":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"unshareLinkShareDirDialogContent": "This folder was created by the app to share multiple files as a link. It is now no longer shared with any party, do you want to delete this folder?",
+	"@unshareLinkShareDirDialogContent":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
