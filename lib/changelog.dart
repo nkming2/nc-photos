@@ -113,4 +113,12 @@ Localization (new/update):
   - Czech (by Skyhawk)
   - Spanish (by luckkmaxx)
 """,
+  // v30
+  """31.0
+Features:
+  - Share multiple items using a link
+  - Manage shares in Collections > Sharing
+  - (Web) Now support share links like Android
+  - Group photos by date in albums (enable in Settings > Album)
+""",
 ];
