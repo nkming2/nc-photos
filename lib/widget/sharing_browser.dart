@@ -100,18 +100,34 @@ class _SharingBrowserState extends State<SharingBrowser> {
         state.items.isEmpty) {
       return _buildEmptyContent(context);
     } else {
-      return CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            title: Text(L10n.global().collectionSharingLabel),
-            floating: true,
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildItem(context, _items[index]),
-              childCount: _items.length,
+      return Stack(
+        children: [
+          Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: Theme.of(context).colorScheme.copyWith(
+                    secondary: AppTheme.getOverscrollIndicatorColor(context),
+                  ),
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  title: Text(L10n.global().collectionSharingLabel),
+                  floating: true,
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildItem(context, _items[index]),
+                    childCount: _items.length,
+                  ),
+                ),
+              ],
             ),
           ),
+          if (state is ListSharingBlocLoading)
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: LinearProgressIndicator(),
+            ),
         ],
       );
     }
