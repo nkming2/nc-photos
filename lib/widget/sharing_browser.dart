@@ -157,9 +157,13 @@ class _SharingBrowserState extends State<SharingBrowser> {
         .format(shares.first.share.stime.toLocal());
     return _ListTile(
       leading: shares.first.share.itemType == ShareItemType.folder
-          ? const Icon(
-              Icons.folder_outlined,
-              size: leadingSize,
+          ? const SizedBox(
+              height: leadingSize,
+              width: leadingSize,
+              child: Icon(
+                Icons.folder,
+                size: 32,
+              ),
             )
           : CachedNetworkImage(
               width: leadingSize,
