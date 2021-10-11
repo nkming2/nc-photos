@@ -862,10 +862,11 @@
 	},
 	"fileLastSharedDescription": "Last shared on {date}",
 	"@fileLastSharedDescription": {
-		"description": "The date when this file is last shared. The date string is formatted according to the current locale",
+		"description": "The date when this file was last shared by you",
 		"placeholders": {
 			"date": {
-				"example": "Jan 1, 2021"
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
 			}
 		}
 	},
