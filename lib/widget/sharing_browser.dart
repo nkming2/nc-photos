@@ -201,7 +201,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    L10n.global().fileLastSharedDescription(dateStr),
+                    shares.first.share.uidOwner == widget.account.username
+                        ? L10n.global().fileLastSharedDescription(dateStr)
+                        : L10n.global().fileLastSharedByOthersDescription(
+                            shares.first.share.displaynameOwner, dateStr),
                     style: TextStyle(
                       color: AppTheme.getSecondaryTextColor(context),
                     ),
@@ -238,8 +241,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
     // group shares of the same file
     final map = <String, List<ListSharingItem>>{};
     for (final i in items) {
-      map[i.share.path] ??= <ListSharingItem>[];
-      map[i.share.path]!.add(i);
+      final isSharedByMe = i.share.uidOwner == widget.account.username;
+      final groupKey = "${i.share.path}?$isSharedByMe";
+      map[groupKey] ??= <ListSharingItem>[];
+      map[groupKey]!.add(i);
     }
     // sort the sub-lists
     for (final list in map.values) {

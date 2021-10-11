@@ -538,10 +538,12 @@ class _OcsFilesSharingShares {
   /// Get Shares from a specific file or folder
   ///
   /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#get-shares-from-a-specific-file-or-folder
+  /// See: https://doc.owncloud.com/server/latest/developer_manual/core/apis/ocs-share-api.html#get-all-shares
   Future<Response> get({
     String? path,
     bool? reshares,
     bool? subfiles,
+    bool? sharedWithMe,
   }) async {
     try {
       return await _filesSharing._ocs._api.request(
@@ -555,6 +557,7 @@ class _OcsFilesSharingShares {
           if (path != null) "path": path,
           if (reshares != null) "reshares": reshares.toString(),
           if (subfiles != null) "subfiles": subfiles.toString(),
+          if (sharedWithMe != null) "shared_with_me": sharedWithMe.toString(),
         },
       );
     } catch (e) {

@@ -6,6 +6,7 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 
 class ShareRemoteDataSource implements ShareDataSource {
@@ -32,6 +33,15 @@ class ShareRemoteDataSource implements ShareDataSource {
   listAll(Account account) async {
     _log.info("[listAll] $account");
     final response = await Api(account).ocs().filesSharing().shares().get();
+    return _onListResult(response);
+  }
+
+  @override
+  reverseListAll(Account account) async {
+    _log.info("[reverseListAll] $account");
+    final response = await Api(account).ocs().filesSharing().shares().get(
+          sharedWithMe: true,
+        );
     return _onListResult(response);
   }
 
@@ -127,8 +137,9 @@ class _ShareParser {
     return Share(
       id: json["id"],
       shareType: shareType,
-      stime:
-          DateTime.fromMillisecondsSinceEpoch(json["stime"] * 1000),
+      stime: DateTime.fromMillisecondsSinceEpoch(json["stime"] * 1000),
+      uidOwner: json["uid_owner"],
+      displaynameOwner: json["displayname_owner"],
       path: json["path"],
       itemType: itemType,
       mimeType: json["mimetype"],

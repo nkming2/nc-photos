@@ -127,23 +127,25 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
             title: Text(widget.file.strippedPath),
           ),
         ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              L10n.global().sharedWithLabel,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+        if (widget.shares.first.uidOwner == widget.account.username) ...[
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                L10n.global().sharedWithLabel,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => _buildShareItem(context, _shares[index]),
-            childCount: _shares.length,
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => _buildShareItem(context, _shares[index]),
+              childCount: _shares.length,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

@@ -174,6 +174,15 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
+    return (await Future.wait([
+      _querySharesByMe(ev),
+      _querySharesWithMe(ev),
+    ]))
+        .reduce((value, element) => value + element);
+  }
+
+  Future<List<ListSharingItem>> _querySharesByMe(
+      ListSharingBlocQuery ev) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.listAll(ev.account);
     final futures = shares.map((e) async {
@@ -206,7 +215,32 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         final file = await FindFile()(ev.account, e.itemSource);
         return ListSharingItem(e, file);
       } catch (_) {
-        _log.warning("[_query] File not found: ${e.itemSource}");
+        _log.warning("[_querySharesByMe] File not found: ${e.itemSource}");
+        return null;
+      }
+    });
+    return (await Future.wait(futures)).whereType<ListSharingItem>().toList();
+  }
+
+  Future<List<ListSharingItem>> _querySharesWithMe(
+      ListSharingBlocQuery ev) async {
+    final shareRepo = ShareRepo(ShareRemoteDataSource());
+    final shares = await shareRepo.reverseListAll(ev.account);
+    final futures = shares.map((e) async {
+      if (!file_util.isSupportedMime(e.mimeType)) {
+        return null;
+      }
+      if (ev.account.roots
+          .every((r) => r.isNotEmpty && !e.path.startsWith("/$r/"))) {
+        // ignore files not under root dirs
+        return null;
+      }
+
+      try {
+        final file = await FindFile()(ev.account, e.itemSource);
+        return ListSharingItem(e, file);
+      } catch (_) {
+        _log.warning("[_querySharesWithMe] File not found: ${e.itemSource}");
         return null;
       }
     });

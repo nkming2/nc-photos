@@ -88,6 +88,8 @@ class Share with EquatableMixin {
     required this.id,
     required this.shareType,
     required this.stime,
+    required this.uidOwner,
+    required this.displaynameOwner,
     required String path,
     required this.itemType,
     required this.mimeType,
@@ -103,6 +105,8 @@ class Share with EquatableMixin {
         "id: $id, "
         "shareType: $shareType, "
         "stime: $stime, "
+        "uidOwner: $uidOwner, "
+        "displaynameOwner: $displaynameOwner, "
         "path: $path, "
         "itemType: $itemType, "
         "mimeType: $mimeType, "
@@ -118,6 +122,8 @@ class Share with EquatableMixin {
         id,
         shareType,
         stime,
+        uidOwner,
+        displaynameOwner,
         path,
         itemType,
         mimeType,
@@ -131,6 +137,8 @@ class Share with EquatableMixin {
   final String id;
   final ShareType shareType;
   final DateTime stime;
+  final String uidOwner;
+  final String displaynameOwner;
   final String path;
   final ShareItemType itemType;
   final String mimeType;
@@ -157,6 +165,10 @@ class ShareRepo {
 
   /// See [ShareDataSource.listAll]
   Future<List<Share>> listAll(Account account) => dataSrc.listAll(account);
+
+  /// See [ShareDataSource.reverseListAll]
+  Future<List<Share>> reverseListAll(Account account) =>
+      dataSrc.reverseListAll(account);
 
   /// See [ShareDataSource.create]
   Future<Share> create(Account account, File file, String shareWith) =>
@@ -186,6 +198,9 @@ abstract class ShareDataSource {
 
   /// List all shares from a given user
   Future<List<Share>> listAll(Account account);
+
+  /// List all shares by other users with a given user
+  Future<List<Share>> reverseListAll(Account account);
 
   /// Share a file/folder with a user
   Future<Share> create(Account account, File file, String shareWith);
