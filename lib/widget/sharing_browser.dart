@@ -155,7 +155,35 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY,
             Localizations.localeOf(context).languageCode)
         .format(shares.first.share.stime.toLocal());
-    return InkWell(
+    return _ListTile(
+      leading: shares.first.share.itemType == ShareItemType.folder
+          ? const Icon(
+              Icons.folder_outlined,
+              size: leadingSize,
+            )
+          : CachedNetworkImage(
+              width: leadingSize,
+              height: leadingSize,
+              cacheManager: ThumbnailCacheManager.inst,
+              imageUrl: api_util.getFilePreviewUrl(
+                  widget.account, shares.first.file,
+                  width: k.photoThumbSize, height: k.photoThumbSize),
+              httpHeaders: {
+                "Authorization":
+                    Api.getAuthorizationHeaderValue(widget.account),
+              },
+              fadeInDuration: const Duration(),
+              filterQuality: FilterQuality.high,
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+            ),
+      label: shares.first.share.filename,
+      description: shares.first.share.uidOwner == widget.account.username
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().fileLastSharedByOthersDescription(
+              shares.first.share.displaynameOwner, dateStr),
+      trailing: (shares.any((element) => element.share.url?.isNotEmpty == true))
+          ? const Icon(Icons.link)
+          : null,
       onTap: () {
         Navigator.of(context).pushNamed(SharedFileViewer.routeName,
             arguments: SharedFileViewerArguments(
@@ -164,59 +192,6 @@ class _SharingBrowserState extends State<SharingBrowser> {
               shares.map((e) => e.share).toList(),
             ));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            shares.first.share.itemType == ShareItemType.folder
-                ? const Icon(
-                    Icons.folder_outlined,
-                    size: leadingSize,
-                  )
-                : CachedNetworkImage(
-                    width: leadingSize,
-                    height: leadingSize,
-                    cacheManager: ThumbnailCacheManager.inst,
-                    imageUrl: api_util.getFilePreviewUrl(
-                        widget.account, shares.first.file,
-                        width: k.photoThumbSize, height: k.photoThumbSize),
-                    httpHeaders: {
-                      "Authorization":
-                          Api.getAuthorizationHeaderValue(widget.account),
-                    },
-                    fadeInDuration: const Duration(),
-                    filterQuality: FilterQuality.high,
-                    imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-                  ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    shares.first.share.filename,
-                    style: Theme.of(context).textTheme.subtitle1,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    shares.first.share.uidOwner == widget.account.username
-                        ? L10n.global().fileLastSharedDescription(dateStr)
-                        : L10n.global().fileLastSharedByOthersDescription(
-                            shares.first.share.displaynameOwner, dateStr),
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (shares.any((element) => element.share.url?.isNotEmpty == true))
-              const Icon(Icons.link)
-          ],
-        ),
-      ),
     );
   }
 
@@ -269,4 +244,57 @@ class _SharingBrowserState extends State<SharingBrowser> {
   var _items = <List<ListSharingItem>>[];
 
   static final _log = Logger("widget.sharing_browser._SharingBrowserState");
+}
+
+class _ListTile extends StatelessWidget {
+  const _ListTile({
+    required this.leading,
+    required this.label,
+    required this.description,
+    this.trailing,
+    required this.onTap,
+  });
+
+  @override
+  build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            leading,
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: Theme.of(context).textTheme.subtitle1,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      color: AppTheme.getSecondaryTextColor(context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
+        ),
+      ),
+    );
+  }
+
+  final Widget leading;
+  final String label;
+  final String description;
+  final Widget? trailing;
+  final VoidCallback onTap;
 }
