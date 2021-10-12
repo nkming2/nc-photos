@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -31,7 +30,6 @@ import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/pending_albums.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -251,20 +249,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
     );
   }
 
-  SelectableItem _buildShareItem(BuildContext context) {
-    return _ButtonListItem(
-      icon: Icons.share_outlined,
-      label: "Sharing (Lab)",
-      isShowIndicator: Pref.inst().hasNewSharedAlbumOr(false),
-      onTap: () {
-        if (!isSelectionMode) {
-          Navigator.of(context).pushNamed(PendingAlbums.routeName,
-              arguments: PendingAlbumsArguments(widget.account));
-        }
-      },
-    );
-  }
-
   SelectableItem _buildNewAlbumItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.add,
@@ -459,7 +443,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
     itemStreamListItems = [
       _buildPersonItem(context),
       _buildSharingItem(context),
-      if (Lab().enableSharedAlbum) _buildShareItem(context),
       _buildArchiveItem(context),
       _buildTrashbinItem(context),
       _buildNewAlbumItem(context),
