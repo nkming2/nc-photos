@@ -6,7 +6,6 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 
 class ShareRemoteDataSource implements ShareDataSource {
