@@ -250,5 +250,5 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   late final _shareRemovedListener =
       AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
 
-  static final _log = Logger("bloc.list_share.ListSharingBloc");
+  static final _log = Logger("bloc.list_sharing.ListSharingBloc");
 }
