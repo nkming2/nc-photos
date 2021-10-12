@@ -63,13 +63,6 @@ class _SharingBrowserState extends State<SharingBrowser> {
   initState() {
     super.initState();
     _initBloc();
-    _shareRemovedListener.begin();
-  }
-
-  @override
-  dispose() {
-    _shareRemovedListener.end();
-    super.dispose();
   }
 
   @override
@@ -270,8 +263,6 @@ class _SharingBrowserState extends State<SharingBrowser> {
     }
   }
 
-  void _onShareRemovedEvent(ShareRemovedEvent ev) {}
-
   Future<void> _onAlbumShareItemTap(
       BuildContext context, ListSharingAlbum share) async {
     showDialog(
@@ -329,8 +320,6 @@ class _SharingBrowserState extends State<SharingBrowser> {
   }
 
   late final _bloc = ListSharingBloc.of(widget.account);
-  late final _shareRemovedListener =
-      AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
 
   var _items = <List<ListSharingItem>>[];
 
