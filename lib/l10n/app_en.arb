@@ -883,6 +883,19 @@
 			}
 		}
 	},
+	"albumLastSharedByOthersDescription": "{user} shared an album with you on {date}",
+	"@albumLastSharedByOthersDescription": {
+		"description": "The date when this album was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
 	"sharedWithLabel": "Shared with",
 	"@sharedWithLabel": {
 		"description": "A list of users or links where this file is sharing with"

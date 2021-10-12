@@ -3,19 +3,34 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:path/path.dart' as path;
 
-class ListSharingItem {
-  ListSharingItem(this.share, this.file);
+abstract class ListSharingItem {
+  const ListSharingItem(this.share);
 
   final Share share;
+}
+
+class ListSharingFile extends ListSharingItem {
+  const ListSharingFile(Share share, this.file) : super(share);
+
   final File file;
+}
+
+class ListSharingAlbum extends ListSharingItem {
+  const ListSharingAlbum(Share share, this.album) : super(share);
+
+  // Beware, the albumFile is null
+  final Album album;
 }
 
 abstract class ListSharingBlocEvent {
@@ -192,7 +207,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
             "${api_util.getWebdavRootUrlRelative(ev.account)}/${e.path}";
         if (webdavPath.startsWith(
             remote_storage_util.getRemoteLinkSharesDir(ev.account))) {
-          return ListSharingItem(
+          return ListSharingFile(
             e,
             File(
               path: webdavPath,
@@ -213,7 +228,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
       try {
         final file = await FindFile()(ev.account, e.itemSource);
-        return ListSharingItem(e, file);
+        return ListSharingFile(e, file);
       } catch (_) {
         _log.warning("[_querySharesByMe] File not found: ${e.itemSource}");
         return null;
@@ -227,6 +242,16 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.reverseListAll(ev.account);
     final futures = shares.map((e) async {
+      final webdavPath =
+          "${api_util.getWebdavRootUrlRelative(ev.account)}/${e.path}";
+      if (path.dirname(webdavPath) ==
+          remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account)) {
+        return await _querySharedAlbum(ev, e);
+      }
+      if (path.dirname(webdavPath) ==
+          remote_storage_util.getRemoteAlbumsDir(ev.account)) {
+        return await _querySharedAlbum(ev, e);
+      }
       if (!file_util.isSupportedMime(e.mimeType)) {
         return null;
       }
@@ -238,13 +263,36 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
       try {
         final file = await FindFile()(ev.account, e.itemSource);
-        return ListSharingItem(e, file);
+        return ListSharingFile(e, file);
       } catch (_) {
         _log.warning("[_querySharesWithMe] File not found: ${e.itemSource}");
         return null;
       }
     });
     return (await Future.wait(futures)).whereType<ListSharingItem>().toList();
+  }
+
+  Future<ListSharingItem?> _querySharedAlbum(
+      ListSharingBlocQuery ev, Share share) async {
+    try {
+      // Not doing here to save some bandwidth
+      // const dataSrc = FileWebdavDataSource();
+      // final file = await LsSingleFile(dataSrc)(ev.account,
+      //     "${api_util.getWebdavRootUrlRelative(ev.account)}/${share.path}");
+      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final album = await albumRepo.get(
+        ev.account,
+        File(
+          path:
+              "${api_util.getWebdavRootUrlRelative(ev.account)}/${share.path}",
+        ),
+      );
+      return ListSharingAlbum(share, album.copyWith(albumFile: OrNull(null)));
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_querySharedAlbum] Failed while getting album", e, stackTrace);
+      return null;
+    }
   }
 
   late final _shareRemovedListener =

@@ -10,14 +10,21 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_sharing.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
+import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/empty_list_indicator.dart';
+import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 
 class SharingBrowserArguments {
@@ -150,27 +157,27 @@ class _SharingBrowserState extends State<SharingBrowser> {
     );
   }
 
-  Widget _buildItem(BuildContext context, List<ListSharingItem> shares) {
-    const leadingSize = 56.0;
-    final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY,
-            Localizations.localeOf(context).languageCode)
-        .format(shares.first.share.stime.toLocal());
+  Widget _buildFileItem(BuildContext context, List<ListSharingItem> shares) {
+    assert(shares.first is ListSharingFile);
+    final dateStr =
+        _getDateFormat(context).format(shares.first.share.stime.toLocal());
+    final firstItem = shares.first as ListSharingFile;
     return _ListTile(
       leading: shares.first.share.itemType == ShareItemType.folder
           ? const SizedBox(
-              height: leadingSize,
-              width: leadingSize,
+              height: _leadingSize,
+              width: _leadingSize,
               child: Icon(
                 Icons.folder,
                 size: 32,
               ),
             )
           : CachedNetworkImage(
-              width: leadingSize,
-              height: leadingSize,
+              width: _leadingSize,
+              height: _leadingSize,
               cacheManager: ThumbnailCacheManager.inst,
               imageUrl: api_util.getFilePreviewUrl(
-                  widget.account, shares.first.file,
+                  widget.account, firstItem.file,
                   width: k.photoThumbSize, height: k.photoThumbSize),
               httpHeaders: {
                 "Authorization":
@@ -192,11 +199,60 @@ class _SharingBrowserState extends State<SharingBrowser> {
         Navigator.of(context).pushNamed(SharedFileViewer.routeName,
             arguments: SharedFileViewerArguments(
               widget.account,
-              shares.first.file,
+              firstItem.file,
               shares.map((e) => e.share).toList(),
             ));
       },
     );
+  }
+
+  Widget _buildAlbumItem(BuildContext context, List<ListSharingItem> shares) {
+    assert(shares.first is ListSharingAlbum);
+    final dateStr =
+        _getDateFormat(context).format(shares.first.share.stime.toLocal());
+    final firstItem = shares.first as ListSharingAlbum;
+    final cover = firstItem.album.coverProvider.getCover(firstItem.album);
+    return _ListTile(
+      leading: cover == null
+          ? const Icon(
+              Icons.photo_album_outlined,
+              size: _leadingSize,
+            )
+          : CachedNetworkImage(
+              width: _leadingSize,
+              height: _leadingSize,
+              cacheManager: ThumbnailCacheManager.inst,
+              imageUrl: api_util.getFilePreviewUrl(widget.account, cover,
+                  width: k.photoThumbSize, height: k.photoThumbSize),
+              httpHeaders: {
+                "Authorization":
+                    Api.getAuthorizationHeaderValue(widget.account),
+              },
+              fadeInDuration: const Duration(),
+              filterQuality: FilterQuality.high,
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              errorWidget: (context, url, error) => const Icon(
+                Icons.panorama,
+                size: 32,
+              ),
+            ),
+      label: firstItem.album.name,
+      description: L10n.global().albumLastSharedByOthersDescription(
+          shares.first.share.displaynameOwner, dateStr),
+      trailing: const Icon(Icons.photo_album_outlined),
+      onTap: () =>
+          _onAlbumShareItemTap(context, shares.first as ListSharingAlbum),
+    );
+  }
+
+  Widget _buildItem(BuildContext context, List<ListSharingItem> shares) {
+    if (shares.first is ListSharingFile) {
+      return _buildFileItem(context, shares);
+    } else if (shares.first is ListSharingAlbum) {
+      return _buildAlbumItem(context, shares);
+    } else {
+      throw StateError("");
+    }
   }
 
   void _onStateChange(BuildContext context, ListSharingBlocState state) {
@@ -215,6 +271,37 @@ class _SharingBrowserState extends State<SharingBrowser> {
   }
 
   void _onShareRemovedEvent(ShareRemovedEvent ev) {}
+
+  Future<void> _onAlbumShareItemTap(
+      BuildContext context, ListSharingAlbum share) async {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          ProcessingDialog(text: L10n.global().genericProcessingDialogContent),
+    );
+    final Album album;
+    try {
+      // load the albumFile
+      const dataSrc = FileWebdavDataSource();
+      final file = await LsSingleFile(dataSrc)(widget.account,
+          "${api_util.getWebdavRootUrlRelative(widget.account)}/${share.share.path}");
+      album = share.album.copyWith(albumFile: OrNull(file));
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onAlbumShareItemTap] Failed while LsSingleFile" +
+              (shouldLogFileName ? ": ${share.share.path}" : ""),
+          e,
+          stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+      return;
+    } finally {
+      Navigator.of(context).pop();
+    }
+    await album_browser_util.open(context, widget.account, album);
+  }
 
   void _transformItems(List<ListSharingItem> items) {
     // group shares of the same file
@@ -302,3 +389,9 @@ class _ListTile extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback onTap;
 }
+
+const _leadingSize = 56.0;
+
+DateFormat _getDateFormat(BuildContext context) => DateFormat(
+    DateFormat.YEAR_ABBR_MONTH_DAY,
+    Localizations.localeOf(context).languageCode);

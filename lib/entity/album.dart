@@ -116,7 +116,7 @@ class Album with EquatableMixin {
     AlbumProvider? provider,
     AlbumCoverProvider? coverProvider,
     AlbumSortProvider? sortProvider,
-    File? albumFile,
+    OrNull<File>? albumFile,
   }) {
     return Album(
       lastUpdated:
@@ -125,7 +125,7 @@ class Album with EquatableMixin {
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
       sortProvider: sortProvider ?? this.sortProvider,
-      albumFile: albumFile ?? this.albumFile,
+      albumFile: albumFile == null ? this.albumFile : albumFile.obj,
     );
   }
 
@@ -236,7 +236,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
       )!
           .copyWith(
         lastUpdated: OrNull(null),
-        albumFile: albumFile,
+        albumFile: OrNull(albumFile),
       );
     } catch (e, stacktrace) {
       dynamic d = data;
@@ -261,7 +261,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     // query album file
     final list = await Ls(fileRepo)(account, File(path: filePath),
         shouldExcludeRootDir: false);
-    return album.copyWith(albumFile: list.first);
+    return album.copyWith(albumFile: OrNull(list.first));
   }
 
   @override
