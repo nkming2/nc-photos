@@ -419,7 +419,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     final failures = <_FileListItem>[];
     for (final item in selected) {
       try {
-        await Remove(fileRepo, albumRepo).call(widget.account, item.file);
+        await Remove(fileRepo, albumRepo)(widget.account, item.file);
         successes.add(item);
       } catch (e, stacktrace) {
         _log.shout(

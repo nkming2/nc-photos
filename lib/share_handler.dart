@@ -236,7 +236,7 @@ class ShareHandler {
     var failureCount = 0;
     for (final f in files) {
       try {
-        await Copy(fileRepo).call(account, f, "$dirPath/${f.filename}");
+        await Copy(fileRepo)(account, f, "$dirPath/${f.filename}");
       } catch (e, stackTrace) {
         _log.severe(
             "[_copyFilesToDir] Failed while copying file: $f", e, stackTrace);

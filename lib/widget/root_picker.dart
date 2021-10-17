@@ -63,7 +63,7 @@ class _RootPickerState extends State<RootPicker>
         if (r.isNotEmpty) {
           _isIniting = true;
           _ensureInitDialog();
-          files.add(await LsSingleFile(fileSrc).call(widget.account,
+          files.add(await LsSingleFile(fileSrc)(widget.account,
               "${api_util.getWebdavRootUrlRelative(widget.account)}/$r"));
         }
       }
