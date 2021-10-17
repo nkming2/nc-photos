@@ -128,7 +128,7 @@ class ListSharingBlocFailure extends ListSharingBlocState {
   final dynamic exception;
 }
 
-/// List all shares from a given file
+/// List shares to be shown in [SharingBrowser]
 class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   ListSharingBloc() : super(ListSharingBlocInit()) {
     _shareRemovedListener.begin();
