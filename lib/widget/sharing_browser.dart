@@ -190,6 +190,11 @@ class _SharingBrowserState extends State<SharingBrowser> {
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              errorWidget: (context, url, error) => Icon(
+                Icons.image_not_supported,
+                size: 32,
+                color: AppTheme.getUnfocusedIconColor(context),
+              ),
             ),
       label: shares.first.share.filename,
       description: shares.first.share.uidOwner == widget.account.username
