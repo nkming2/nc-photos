@@ -90,7 +90,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           IconButton(
             onPressed: () => _onAddToCollectionPressed(context, account, album),
             icon: const Icon(Icons.library_add),
-            tooltip: "Add to collection",
+            tooltip: L10n.global().addToCollectionTooltip,
           ),
         ...(actions ?? []),
         if (menuItemBuilder != null || menuItems.isNotEmpty)
@@ -256,8 +256,8 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           const fileRepo = FileRepo(FileWebdavDataSource());
           await ImportPendingSharedAlbum(fileRepo)(account, album.albumFile!);
         },
-        "Adding album '${album.name}' to collection",
-        "Added '${album.name}' to collection successfully",
+        L10n.global().addToCollectionProcessingNotification(album.name),
+        L10n.global().addToCollectionSuccessNotification(album.name),
       )();
     } catch (e, stackTrace) {
       _log.shout(

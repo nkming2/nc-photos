@@ -949,6 +949,28 @@
 	"@unshareLinkShareDirDialogContent":  {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
+	"addToCollectionTooltip": "Add to collection",
+	"@addToCollectionTooltip": {
+		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+	},
+	"addToCollectionProcessingNotification": "Adding {album} to your collection",
+	"@addToCollectionProcessingNotification": {
+		"description": "Adding an album to your collection",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addToCollectionSuccessNotification": "Added {album} to your collection successfully",
+	"@addToCollectionSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

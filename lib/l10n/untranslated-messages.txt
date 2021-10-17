@@ -21,7 +21,10 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ],
 
   "de": [
@@ -60,7 +63,10 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ],
 
   "el": [
@@ -154,7 +160,10 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ],
 
   "es": [
@@ -179,7 +188,10 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ],
 
   "fr": [
@@ -253,7 +265,10 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ],
 
   "ru": [
@@ -300,6 +315,9 @@
     "createShareProgressText",
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
-    "unshareLinkShareDirDialogContent"
+    "unshareLinkShareDirDialogContent",
+    "addToCollectionTooltip",
+    "addToCollectionProcessingNotification",
+    "addToCollectionSuccessNotification"
   ]
 }
