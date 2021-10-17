@@ -251,8 +251,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
               ),
             ),
       label: firstItem.album.name,
-      description: L10n.global().albumLastSharedByOthersDescription(
-          shares.first.share.displaynameOwner, dateStr),
+      description: shares.first.share.uidOwner == widget.account.username
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().albumLastSharedByOthersDescription(
+              shares.first.share.displaynameOwner, dateStr),
       trailing: Icon(
         Icons.photo_album_outlined,
         color: AppTheme.getUnfocusedIconColor(context),
