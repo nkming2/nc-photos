@@ -263,7 +263,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
     } else if (shares.first is ListSharingAlbum) {
       return _buildAlbumItem(context, shares);
     } else {
-      throw StateError("");
+      throw StateError("Unknown item type: ${shares.first.runtimeType}");
     }
   }
 
