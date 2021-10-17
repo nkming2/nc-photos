@@ -29,6 +29,7 @@ import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
+import 'package:nc_photos/widget/unbounded_list_tile.dart';
 
 class SharingBrowserArguments {
   SharingBrowserArguments(this.account);
@@ -379,38 +380,16 @@ class _ListTile extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            leading,
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: Theme.of(context).textTheme.subtitle1,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (trailing != null) trailing!,
-          ],
-        ),
+    return UnboundedListTile(
+      leading: leading,
+      title: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
+      subtitle: Text(description),
+      trailing: trailing,
+      onTap: onTap,
     );
   }
 
