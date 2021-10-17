@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -115,6 +116,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _fileRemovedListener.begin();
     _albumCreatedListener.begin();
     _fileMovedListener.begin();
+    _shareCreatedListener.begin();
+    _shareRemovedListener.begin();
 
     _refreshThrottler = Throttler(
       onTriggered: (_) {
@@ -140,6 +143,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     _fileRemovedListener.end();
     _albumCreatedListener.end();
     _fileMovedListener.end();
+    _shareCreatedListener.end();
+    _shareRemovedListener.end();
     _refreshThrottler.clear();
     return super.close();
   }
@@ -217,6 +222,24 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     add(const _ListAlbumBlocExternalEvent());
   }
 
+  void _onShareCreatedEvent(ShareCreatedEvent ev) =>
+      _onShareChanged(ev.account, ev.share);
+
+  void _onShareRemovedEvent(ShareRemovedEvent ev) =>
+      _onShareChanged(ev.account, ev.share);
+
+  void _onShareChanged(Account account, Share share) {
+    final webdavPath =
+        "${api_util.getWebdavRootUrlRelative(account)}/${share.path}";
+    if (webdavPath
+        .startsWith(remote_storage_util.getRemoteAlbumsDir(account))) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
   Future<ListAlbumBlocState> _queryOffline(ListAlbumBlocQuery ev) =>
       _queryWithAlbumDataSource(
           ev, FileAppDbDataSource(), AlbumAppDbDataSource());
@@ -285,6 +308,10 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   late AppEventListener<AlbumCreatedEvent> _albumCreatedListener;
   late final _fileMovedListener =
       AppEventListener<FileMovedEvent>(_onFileMovedEvent);
+  late final _shareCreatedListener =
+      AppEventListener<ShareCreatedEvent>(_onShareCreatedEvent);
+  late final _shareRemovedListener =
+      AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
 
   late Throttler _refreshThrottler;
 

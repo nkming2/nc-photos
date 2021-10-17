@@ -86,6 +86,13 @@ class FileMovedEvent {
   final String destination;
 }
 
+class ShareCreatedEvent {
+  const ShareCreatedEvent(this.account, this.share);
+
+  final Account account;
+  final Share share;
+}
+
 class ShareRemovedEvent {
   const ShareRemovedEvent(this.account, this.share);
 
