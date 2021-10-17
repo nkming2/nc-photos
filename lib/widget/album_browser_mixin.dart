@@ -10,13 +10,11 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_pending_shared_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_browser_app_bar.dart';
@@ -252,32 +250,21 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
   void _onAddToCollectionPressed(
       BuildContext context, Account account, Album album) async {
     Navigator.of(context).pop();
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text("Adding album '${album.name}' to collection"),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    const fileRepo = FileRepo(FileWebdavDataSource());
     try {
-      await ImportPendingSharedAlbum(fileRepo)(account, album.albumFile!);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("Added '${album.name}' to collection successfully"),
-        duration: k.snackBarDurationNormal,
-      ));
+      await NotifiedAction(
+        () async {
+          const fileRepo = FileRepo(FileWebdavDataSource());
+          await ImportPendingSharedAlbum(fileRepo)(account, album.albumFile!);
+        },
+        "Adding album '${album.name}' to collection",
+        "Added '${album.name}' to collection successfully",
+      )();
     } catch (e, stackTrace) {
       _log.shout(
-          "[_onAddToCollectionPressed] Failed while import pending shared album" +
+          "[_onAddToCollectionPressed] Failed while ImportPendingSharedAlbum" +
               (shouldLogFileName ? ": ${album.albumFile?.path}" : ""),
           e,
           stackTrace);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
     }
   }
 
