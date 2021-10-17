@@ -167,12 +167,13 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final firstItem = shares.first as ListSharingFile;
     return _ListTile(
       leading: shares.first.share.itemType == ShareItemType.folder
-          ? const SizedBox(
+          ? SizedBox(
               height: _leadingSize,
               width: _leadingSize,
               child: Icon(
                 Icons.folder,
                 size: 32,
+                color: AppTheme.getUnfocusedIconColor(context),
               ),
             )
           : CachedNetworkImage(
@@ -196,7 +197,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
           : L10n.global().fileLastSharedByOthersDescription(
               shares.first.share.displaynameOwner, dateStr),
       trailing: (shares.any((element) => element.share.url?.isNotEmpty == true))
-          ? const Icon(Icons.link)
+          ? Icon(
+              Icons.link,
+              color: AppTheme.getUnfocusedIconColor(context),
+            )
           : null,
       onTap: () {
         Navigator.of(context).pushNamed(SharedFileViewer.routeName,
@@ -217,9 +221,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final cover = firstItem.album.coverProvider.getCover(firstItem.album);
     return _ListTile(
       leading: cover == null
-          ? const Icon(
+          ? Icon(
               Icons.photo_album_outlined,
               size: _leadingSize,
+              color: AppTheme.getUnfocusedIconColor(context),
             )
           : CachedNetworkImage(
               width: _leadingSize,
@@ -234,15 +239,19 @@ class _SharingBrowserState extends State<SharingBrowser> {
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              errorWidget: (context, url, error) => const Icon(
+              errorWidget: (context, url, error) => Icon(
                 Icons.panorama,
                 size: 32,
+                color: AppTheme.getUnfocusedIconColor(context),
               ),
             ),
       label: firstItem.album.name,
       description: L10n.global().albumLastSharedByOthersDescription(
           shares.first.share.displaynameOwner, dateStr),
-      trailing: const Icon(Icons.photo_album_outlined),
+      trailing: Icon(
+        Icons.photo_album_outlined,
+        color: AppTheme.getUnfocusedIconColor(context),
+      ),
       onTap: () =>
           _onAlbumShareItemTap(context, shares.first as ListSharingAlbum),
     );

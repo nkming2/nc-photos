@@ -80,6 +80,12 @@ class AppTheme extends StatelessWidget {
         : Colors.white12;
   }
 
+  static Color getUnfocusedIconColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? Colors.black54
+        : Colors.white70;
+  }
+
   static ThemeData _buildLightThemeData(BuildContext context, ThemeData theme) {
     final appBarTheme = theme.appBarTheme.copyWith(
       backgroundColor: theme.scaffoldBackgroundColor,
