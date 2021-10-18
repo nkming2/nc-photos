@@ -24,7 +24,12 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ],
 
   "de": [
@@ -66,7 +71,12 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ],
 
   "el": [
@@ -163,7 +173,12 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ],
 
   "es": [
@@ -191,7 +206,12 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ],
 
   "fr": [
@@ -268,7 +288,12 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ],
 
   "ru": [
@@ -318,6 +343,11 @@
     "unshareLinkShareDirDialogContent",
     "addToCollectionTooltip",
     "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification"
+    "addToCollectionSuccessNotification",
+    "fixSharesTooltip",
+    "fixTooltip",
+    "fixAllTooltip",
+    "missingShareDescription",
+    "extraShareDescription"
   ]
 }

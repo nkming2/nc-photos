@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
@@ -28,6 +29,7 @@ import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
+import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_helper.dart';
@@ -235,6 +237,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         widget.account,
         _album!,
         menuItemBuilder: (_) => [
+          if (_album!.albumFile!.isOwned(widget.account.username) &&
+              Lab().enableSharedAlbum)
+            PopupMenuItem(
+              value: _menuValueFixShares,
+              child: Text(L10n.global().fixSharesTooltip),
+            ),
           PopupMenuItem(
             value: _menuValueDownload,
             child: Text(L10n.global().downloadTooltip),
@@ -307,6 +315,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       case _menuValueDownload:
         _onDownloadPressed();
         break;
+      case _menuValueFixShares:
+        _onFixSharesPressed();
+        break;
       default:
         _log.shout("[_onMenuSelected] Unknown option: $option");
         break;
@@ -318,6 +329,13 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
+    );
+  }
+
+  void _onFixSharesPressed() {
+    Navigator.of(context).pushNamed(
+      AlbumShareOutlierBrowser.routeName,
+      arguments: AlbumShareOutlierBrowserArguments(widget.account, _album!),
     );
   }
 
@@ -716,6 +734,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   static final _log = Logger("widget.album_browser._AlbumBrowserState");
 
   static const _menuValueDownload = 0;
+  static const _menuValueFixShares = 1;
 }
 
 enum _SelectionMenuOption {
