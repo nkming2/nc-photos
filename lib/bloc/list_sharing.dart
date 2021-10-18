@@ -5,13 +5,14 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:nc_photos/use_case/ls.dart';
 import 'package:path/path.dart' as path;
 
 abstract class ListSharingItem {
@@ -29,7 +30,6 @@ class ListSharingFile extends ListSharingItem {
 class ListSharingAlbum extends ListSharingItem {
   const ListSharingAlbum(Share share, this.album) : super(share);
 
-  // Beware, the albumFile is null
   final Album album;
 }
 
@@ -189,9 +189,15 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final sharedAlbumFiles = await Ls(fileRepo)(
+        ev.account,
+        File(
+          path: remote_storage_util.getRemoteAlbumsDir(ev.account),
+        ));
     return (await Future.wait([
       _querySharesByMe(ev),
-      _querySharesWithMe(ev),
+      _querySharesWithMe(ev, sharedAlbumFiles),
     ]))
         .reduce((value, element) => value + element);
   }
@@ -242,40 +248,59 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   Future<List<ListSharingItem>> _querySharesWithMe(
-      ListSharingBlocQuery ev) async {
+      ListSharingBlocQuery ev, List<File> sharedAlbumFiles) async {
+    final fileRepo = FileRepo(FileCachedDataSource());
+    final pendingSharedAlbumFiles = await Ls(fileRepo)(
+        ev.account,
+        File(
+          path: remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account),
+        ));
+
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.reverseListAll(ev.account);
-    final futures = shares.map((e) async {
+    final futures = shares.map((s) async {
       final webdavPath =
-          "${api_util.getWebdavRootUrlRelative(ev.account)}/${e.path}";
+          "${api_util.getWebdavRootUrlRelative(ev.account)}/${s.path}";
+      // include pending shared albums
       if (path.dirname(webdavPath) ==
           remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account)) {
-        return await _querySharedAlbum(ev, e);
+        try {
+          final file = pendingSharedAlbumFiles
+              .firstWhere((element) => element.fileId == s.itemSource);
+          return await _querySharedAlbum(ev, s, file);
+        } catch (e, stackTrace) {
+          _log.severe(
+              "[_querySharesWithMe] Pending shared album not found: ${s.itemSource}",
+              e,
+              stackTrace);
+          return null;
+        }
       }
+      // include shared albums
       if (path.dirname(webdavPath) ==
           remote_storage_util.getRemoteAlbumsDir(ev.account)) {
-        return await _querySharedAlbum(ev, e);
+        try {
+          final file = sharedAlbumFiles
+              .firstWhere((element) => element.fileId == s.itemSource);
+          return await _querySharedAlbum(ev, s, file);
+        } catch (e, stackTrace) {
+          _log.severe(
+              "[_querySharesWithMe] Shared album not found: ${s.itemSource}",
+              e,
+              stackTrace);
+          return null;
+        }
       }
     });
     return (await Future.wait(futures)).whereType<ListSharingItem>().toList();
   }
 
   Future<ListSharingItem?> _querySharedAlbum(
-      ListSharingBlocQuery ev, Share share) async {
+      ListSharingBlocQuery ev, Share share, File albumFile) async {
     try {
-      // Not doing here to save some bandwidth
-      // const dataSrc = FileWebdavDataSource();
-      // final file = await LsSingleFile(dataSrc)(ev.account,
-      //     "${api_util.getWebdavRootUrlRelative(ev.account)}/${share.path}");
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      final album = await albumRepo.get(
-        ev.account,
-        File(
-          path:
-              "${api_util.getWebdavRootUrlRelative(ev.account)}/${share.path}",
-        ),
-      );
-      return ListSharingAlbum(share, album.copyWith(albumFile: OrNull(null)));
+      final album = await albumRepo.get(ev.account, albumFile);
+      return ListSharingAlbum(share, album);
     } catch (e, stackTrace) {
       _log.shout(
           "[_querySharedAlbum] Failed while getting album", e, stackTrace);
