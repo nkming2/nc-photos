@@ -11,6 +11,7 @@ class ImportPotentialSharedAlbum {
   ImportPotentialSharedAlbum(this.fileRepo, this.albumRepo);
 
   Future<List<Album>> call(Account account) async {
+    _log.info("[call] $account");
     final products = <Album>[];
     final files = await ListPotentialSharedAlbum(fileRepo)(account);
     for (final f in files) {
