@@ -117,12 +117,16 @@ class AppTheme extends StatelessWidget {
     final popupMenuTheme = theme.popupMenuTheme.copyWith(
       color: popup,
     );
+    final checkboxTheme = theme.checkboxTheme.copyWith(
+      fillColor: _CheckboxDarkColorProperty(),
+    );
     return theme.copyWith(
       scaffoldBackgroundColor: background,
       appBarTheme: appBarTheme,
       bottomNavigationBarTheme: bottomNavigationBarTheme,
       popupMenuTheme: popupMenuTheme,
       dialogBackgroundColor: popup,
+      checkboxTheme: checkboxTheme,
     );
   }
 
@@ -143,4 +147,15 @@ class AppTheme extends StatelessWidget {
   );
 
   final Widget child;
+}
+
+class _CheckboxDarkColorProperty implements MaterialStateProperty<Color?> {
+  @override
+  resolve(Set<MaterialState> states) {
+    if (states.contains(MaterialState.selected)) {
+      return Colors.cyanAccent[400];
+    } else {
+      return null;
+    }
+  }
 }
