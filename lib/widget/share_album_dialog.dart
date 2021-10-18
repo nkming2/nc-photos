@@ -117,12 +117,14 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
         _processingSharee.any((element) => element == sharee.shareWith);
     final Widget trailing;
     if (isProcessing) {
-      trailing = const Padding(
-        padding: EdgeInsetsDirectional.only(end: 12),
+      trailing = Padding(
+        padding: const EdgeInsetsDirectional.only(end: 12),
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            color: AppTheme.getUnfocusedIconColor(context),
+          ),
         ),
       );
     } else {
