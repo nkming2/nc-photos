@@ -196,25 +196,25 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
           path: remote_storage_util.getRemoteAlbumsDir(ev.account),
         ));
     return (await Future.wait([
-      _querySharesByMe(ev),
+      _querySharesByMe(ev, sharedAlbumFiles),
       _querySharesWithMe(ev, sharedAlbumFiles),
     ]))
         .reduce((value, element) => value + element);
   }
 
   Future<List<ListSharingItem>> _querySharesByMe(
-      ListSharingBlocQuery ev) async {
+      ListSharingBlocQuery ev, List<File> sharedAlbumFiles) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.listAll(ev.account);
-    final futures = shares.map((e) async {
+    final futures = shares.map((s) async {
+      final webdavPath =
+          "${api_util.getWebdavRootUrlRelative(ev.account)}/${s.path}";
       // include link share dirs
-      if (e.itemType == ShareItemType.folder) {
-        final webdavPath =
-            "${api_util.getWebdavRootUrlRelative(ev.account)}/${e.path}";
+      if (s.itemType == ShareItemType.folder) {
         if (webdavPath.startsWith(
             remote_storage_util.getRemoteLinkSharesDir(ev.account))) {
           return ListSharingFile(
-            e,
+            s,
             File(
               path: webdavPath,
               isCollection: true,
@@ -222,8 +222,23 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
           );
         }
       }
+      // include shared albums
+      if (path.dirname(webdavPath) ==
+          remote_storage_util.getRemoteAlbumsDir(ev.account)) {
+        try {
+          final file = sharedAlbumFiles
+              .firstWhere((element) => element.fileId == s.itemSource);
+          return await _querySharedAlbum(ev, s, file);
+        } catch (e, stackTrace) {
+          _log.severe(
+              "[_querySharesWithMe] Shared album not found: ${s.itemSource}",
+              e,
+              stackTrace);
+          return null;
+        }
+      }
 
-      if (!file_util.isSupportedMime(e.mimeType)) {
+      if (!file_util.isSupportedMime(s.mimeType)) {
         return null;
       }
       // show only link shares
@@ -231,14 +246,14 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         return null;
       }
       if (ev.account.roots
-          .every((r) => r.isNotEmpty && !e.path.startsWith("/$r/"))) {
+          .every((r) => r.isNotEmpty && !s.path.startsWith("/$r/"))) {
         // ignore files not under root dirs
         return null;
       }
 
       try {
-        final file = await FindFile()(ev.account, e.itemSource);
-        return ListSharingFile(e, file);
+        final file = await FindFile()(ev.account, s.itemSource);
+        return ListSharingFile(s, file);
       } catch (_) {
         _log.warning("[_querySharesByMe] File not found: ${e.itemSource}");
         return null;
