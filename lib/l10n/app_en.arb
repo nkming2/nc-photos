@@ -971,12 +971,52 @@
 			}
 		}
 	},
+	"shareAlbumSuccessNotification": "Album shared with {user}",
+	"@shareAlbumSuccessNotification": {
+		"description": "Shared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"shareAlbumSuccessWithErrorNotification": "Album shared with {user}, but failed to share some files",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessNotification": "Album unshared with {user}",
+	"@unshareAlbumSuccessNotification": {
+		"description": "Unshared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "Album unshared with {user}, but failed to unshare some files",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
 	"fixSharesTooltip": "Fix shares",
 	"@fixSharesTooltip": {
 		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
 	},
 	"fixTooltip": "Fix",
 	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixButtonLabel": "FIX",
+	"@fixButtonLabel":{
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Fix all",

@@ -325,7 +325,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       context: context,
       builder: (_) => ShareAlbumDialog(
         account: widget.account,
-        file: _album!.albumFile!,
+        album: _album!,
       ),
     );
   }
