@@ -220,6 +220,10 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       if (!file_util.isSupportedMime(e.mimeType)) {
         return null;
       }
+      // show only link shares
+      if (s.url == null) {
+        return null;
+      }
       if (ev.account.roots
           .every((r) => r.isNotEmpty && !e.path.startsWith("/$r/"))) {
         // ignore files not under root dirs
