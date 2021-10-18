@@ -537,6 +537,9 @@ class _OcsFilesSharingShares {
 
   /// Get Shares from a specific file or folder
   ///
+  /// If [sharedWithMe] is not null, [subfiles] and [path] are ignored. This is
+  /// a limitation of the server API.
+  ///
   /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#get-shares-from-a-specific-file-or-folder
   /// See: https://doc.owncloud.com/server/latest/developer_manual/core/apis/ocs-share-api.html#get-all-shares
   Future<Response> get({
