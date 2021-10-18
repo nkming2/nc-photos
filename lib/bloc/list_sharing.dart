@@ -252,22 +252,6 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
           remote_storage_util.getRemoteAlbumsDir(ev.account)) {
         return await _querySharedAlbum(ev, e);
       }
-      if (!file_util.isSupportedMime(e.mimeType)) {
-        return null;
-      }
-      if (ev.account.roots
-          .every((r) => r.isNotEmpty && !e.path.startsWith("/$r/"))) {
-        // ignore files not under root dirs
-        return null;
-      }
-
-      try {
-        final file = await FindFile()(ev.account, e.itemSource);
-        return ListSharingFile(e, file);
-      } catch (_) {
-        _log.warning("[_querySharesWithMe] File not found: ${e.itemSource}");
-        return null;
-      }
     });
     return (await Future.wait(futures)).whereType<ListSharingItem>().toList();
   }
