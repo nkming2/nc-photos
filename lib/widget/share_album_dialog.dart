@@ -97,9 +97,12 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           .map((sharee) => _buildItem(context, shareState, sharee))
           .toList();
     }
-    return SimpleDialog(
-      title: Text(L10n.global().shareAlbumDialogTitle),
-      children: children,
+    return GestureDetector(
+      onTap: () {},
+      child: SimpleDialog(
+        title: Text(L10n.global().shareAlbumDialogTitle),
+        children: children,
+      ),
     );
   }
 
@@ -142,7 +145,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           child: trailing,
         ),
       ),
-      onPressed: () => _onShareePressed(sharee, isShared),
+      onPressed:
+          isProcessing ? () {} : () => _onShareePressed(sharee, isShared),
     );
   }
 
