@@ -98,7 +98,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           .toList();
     }
     return SimpleDialog(
-      title: const Text("Share with user"),
+      title: Text(L10n.global().shareAlbumDialogTitle),
       children: children,
     );
   }

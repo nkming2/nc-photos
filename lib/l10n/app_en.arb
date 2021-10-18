@@ -971,6 +971,10 @@
 			}
 		}
 	},
+	"shareAlbumDialogTitle": "Share with user",
+	"@shareAlbumDialogTitle" : {
+		"description": "Dialog to share an album with another user"
+	},
 	"shareAlbumSuccessNotification": "Album shared with {user}",
 	"@shareAlbumSuccessNotification": {
 		"description": "Shared an album with another user successfully",
