@@ -35,6 +35,7 @@ import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
@@ -236,6 +237,15 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         context,
         widget.account,
         _album!,
+        actions: [
+          if (_album!.albumFile!.isOwned(widget.account.username) &&
+              Lab().enableSharedAlbum)
+            IconButton(
+              onPressed: () => _onSharePressed(context),
+              icon: const Icon(Icons.share),
+              tooltip: L10n.global().shareTooltip,
+            ),
+        ],
         menuItemBuilder: (_) => [
           if (_album!.albumFile!.isOwned(widget.account.username) &&
               Lab().enableSharedAlbum)
@@ -308,6 +318,16 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     Navigator.pushNamed(context, Viewer.routeName,
         arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
             album: _album));
+  }
+
+  void _onSharePressed(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (_) => ShareAlbumDialog(
+        account: widget.account,
+        file: _album!.albumFile!,
+      ),
+    );
   }
 
   void _onMenuSelected(BuildContext context, int option) {

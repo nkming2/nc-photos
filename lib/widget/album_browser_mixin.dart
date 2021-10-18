@@ -11,7 +11,6 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -20,7 +19,6 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_browser_app_bar.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
-import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
 mixin AlbumBrowserMixin<T extends StatefulWidget>
@@ -77,13 +75,6 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
             Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
-        if (album.albumFile!.isOwned(account.username) &&
-            Lab().enableSharedAlbum)
-          IconButton(
-            onPressed: () => _onSharePressed(context, account, album),
-            icon: const Icon(Icons.share),
-            tooltip: L10n.global().shareTooltip,
-          ),
         if (album.albumFile?.path.startsWith(
                 remote_storage_util.getRemotePendingSharedAlbumsDir(account)) ==
             true)
@@ -235,16 +226,6 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
       _log.shout(
           "[_onUnsetCoverPressed] Failed while updating album", e, stackTrace);
     }
-  }
-
-  void _onSharePressed(BuildContext context, Account account, Album album) {
-    showDialog(
-      context: context,
-      builder: (_) => ShareAlbumDialog(
-        account: account,
-        file: album.albumFile!,
-      ),
-    );
   }
 
   void _onAddToCollectionPressed(
