@@ -149,6 +149,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleSharingBrowserRoute(settings);
     route ??= _handleSharedFileViewerRoute(settings);
     route ??= _handleAlbumShareOutlierBrowserRoute(settings);
+    route ??= _handleAccountSettingsRoute(settings);
     return route;
   }
 
@@ -406,6 +407,20 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       _log.severe(
           "[_handleAlbumShareOutlierBrowserRoute] Failed while handling route",
           e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAccountSettingsRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AccountSettingsWidget.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as AccountSettingsWidgetArguments;
+        return AccountSettingsWidget.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleAccountSettingsRoute] Failed while handling route", e);
     }
     return null;
   }

@@ -9,7 +9,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home.dart';
-import 'package:nc_photos/widget/root_picker.dart';
+import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 
 /// A dialog that allows the user to switch between accounts
@@ -87,11 +87,11 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           ),
           trailing: IconButton(
             icon: Icon(
-              Icons.edit,
+              Icons.settings_outlined,
               color: AppTheme.getSecondaryTextColor(context),
             ),
-            tooltip: L10n.global().editTooltip,
-            onPressed: () => _onEditPressed(),
+            tooltip: L10n.global().settingsAccountPageTitle,
+            onPressed: _onEditPressed,
           ),
         ),
         titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
@@ -126,44 +126,11 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     }
   }
 
-  void _onEditPressed() async {
-    try {
-      final result = await Navigator.of(context).pushNamed<Account>(
-          RootPicker.routeName,
-          arguments: RootPickerArguments(widget.account));
-      if (result != null) {
-        // we've got a good account
-        if (result == widget.account) {
-          // no changes, do nothing
-          _log.fine("[_onEditPressed] No changes");
-          Navigator.of(context).pop();
-          return;
-        }
-        final accounts = Pref.inst().getAccounts()!;
-        if (accounts.contains(result)) {
-          // conflict with another account. This normally won't happen because
-          // the app passwords are unique to each entry, but just in case
-          Navigator.of(context).pop();
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(L10n.global().editAccountConflictFailureNotification),
-            duration: k.snackBarDurationNormal,
-          ));
-          return;
-        }
-        accounts[Pref.inst().getCurrentAccountIndex()!] = result;
-        Pref.inst().setAccounts(accounts);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Home.routeName, (route) => false,
-            arguments: HomeArguments(result));
-      }
-    } catch (e, stacktrace) {
-      _log.shout("[_onEditPressed] Exception", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-      Navigator.of(context).pop();
-    }
+  void _onEditPressed() {
+    Navigator.of(context)
+      ..pop()
+      ..pushNamed(AccountSettingsWidget.routeName,
+          arguments: AccountSettingsWidgetArguments(widget.account));
   }
 
   void _removeAccount(PrefAccount account) {

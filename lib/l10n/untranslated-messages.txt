@@ -1,5 +1,8 @@
 {
   "cs": [
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -39,6 +42,9 @@
   ],
 
   "de": [
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -93,6 +99,9 @@
 
   "el": [
     "collectionsTooltip",
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsViewerTitle",
     "settingsViewerDescription",
     "settingsViewerPageTitle",
@@ -200,6 +209,9 @@
   ],
 
   "es": [
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -240,6 +252,9 @@
 
   "fr": [
     "collectionsTooltip",
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsViewerTitle",
     "settingsViewerDescription",
     "settingsViewerPageTitle",
@@ -327,6 +342,9 @@
   ],
 
   "ru": [
+    "settingsAccountTitle",
+    "settingsAccountPageTitle",
+    "settingsIncludedFoldersTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",

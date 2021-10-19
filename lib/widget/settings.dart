@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/android/android_info.dart';
@@ -15,7 +16,9 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/lab_settings.dart';
+import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -91,6 +94,11 @@ class _SettingsState extends State<Settings> {
                     : null,
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
+              ),
+              _buildSubSettings(
+                context,
+                label: L10n.global().settingsAccountTitle,
+                builder: () => AccountSettingsWidget(account: widget.account),
               ),
               if (platform_k.isMobile)
                 _buildSubSettings(
@@ -179,18 +187,6 @@ class _SettingsState extends State<Settings> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildCaption(BuildContext context, String label) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-      ),
     );
   }
 
@@ -350,6 +346,166 @@ class _SettingsState extends State<Settings> {
       "https://gitlab.com/nkming2/nc-photos/-/issues";
   static const String _translationUrl =
       "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
+}
+
+class AccountSettingsWidgetArguments {
+  const AccountSettingsWidgetArguments(this.account);
+
+  final Account account;
+}
+
+class AccountSettingsWidget extends StatefulWidget {
+  static const routeName = "/account-settings";
+
+  static Route buildRoute(AccountSettingsWidgetArguments args) =>
+      MaterialPageRoute(
+        builder: (context) => AccountSettingsWidget.fromArgs(args),
+      );
+
+  const AccountSettingsWidget({
+    Key? key,
+    required this.account,
+  }) : super(key: key);
+
+  AccountSettingsWidget.fromArgs(AccountSettingsWidgetArguments args,
+      {Key? key})
+      : this(
+          key: key,
+          account: args.account,
+        );
+
+  @override
+  createState() => _AccountSettingsState();
+
+  final Account account;
+}
+
+class _AccountSettingsState extends State<AccountSettingsWidget> {
+  @override
+  initState() {
+    super.initState();
+    _account = widget.account;
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsAccountPageTitle),
+          leading: _hasModified
+              ? IconButton(
+                  icon: const Icon(Icons.check),
+                  tooltip: L10n.global().doneButtonTooltip,
+                  onPressed: () => _onDonePressed(context),
+                )
+              : null,
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              ListTile(
+                title: Text(L10n.global().settingsIncludedFoldersTitle),
+                subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
+                onTap: _onIncludedFoldersPressed,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onDonePressed(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Home.routeName,
+      (route) => false,
+      arguments: HomeArguments(_account),
+    );
+  }
+
+  Future<void> _onIncludedFoldersPressed() async {
+    try {
+      final result = await Navigator.of(context).pushNamed<Account>(
+          RootPicker.routeName,
+          arguments: RootPickerArguments(_account));
+      if (result == null) {
+        // user canceled
+        return;
+      }
+      // we've got a good account
+      if (result == _account) {
+        // no changes, do nothing
+        _log.fine("[_onIncludedFoldersPressed] No changes");
+        return;
+      }
+      final accounts = Pref.inst().getAccounts2()!;
+      if (accounts.any((element) => element.account == result)) {
+        // conflict with another account. This normally won't happen because
+        // the app passwords are unique to each entry, but just in case
+        Navigator.of(context).pop();
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().editAccountConflictFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        return;
+      }
+
+      final index = _findAccount(_account, accounts);
+      if (index < 0) {
+        _log.shout("[_onIncludedFoldersPressed] Account not found: $_account");
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().writePreferenceFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        return;
+      }
+
+      final newAccount = accounts[index].copyWith(
+        account: result,
+      );
+      accounts[index] = newAccount;
+      if (!await Pref.inst().setAccounts2(accounts)) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().writePreferenceFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+        return;
+      }
+      setState(() {
+        _account = result;
+        _hasModified = true;
+      });
+    } catch (e, stackTrace) {
+      _log.shout("[_onIncludedFoldersPressed] Exception", e, stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
+  }
+
+  /// Return the index of [account] in [Pref.getAccounts2]
+  static int _findAccount(Account account, [List<PrefAccount>? accounts]) {
+    final from = accounts ?? Pref.inst().getAccounts2Or([]);
+    return from.indexWhere((element) => element.account == account);
+  }
+
+  bool _hasModified = false;
+  late Account _account;
+
+  static final _log = Logger("widget.settings._AccountSettingsState");
 }
 
 class _ViewerSettings extends StatefulWidget {
@@ -688,4 +844,16 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
   late bool _isUseBlackInDarkTheme;
 
   static final _log = Logger("widget.settings._ThemeSettingsState");
+}
+
+Widget _buildCaption(BuildContext context, String label) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+    child: Text(
+      label,
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+    ),
+  );
 }

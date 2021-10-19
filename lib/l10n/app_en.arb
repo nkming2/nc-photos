@@ -313,6 +313,15 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsAccountTitle": "Account",
+	"settingsAccountPageTitle": "Account settings",
+	"@settingsAccountPageTitle": {
+		"description": "Dedicated page for account settings"
+	},
+	"settingsIncludedFoldersTitle": "Included folders",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
 	"settingsViewerPageTitle": "Viewer settings",
