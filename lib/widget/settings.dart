@@ -97,24 +97,40 @@ class _SettingsState extends State<Settings> {
               ),
               _buildSubSettings(
                 context,
+                leading: Icon(
+                  Icons.manage_accounts_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
                 label: L10n.global().settingsAccountTitle,
                 builder: () => AccountSettingsWidget(account: widget.account),
               ),
               if (platform_k.isMobile)
                 _buildSubSettings(
                   context,
+                  leading: Icon(
+                    Icons.view_carousel_outlined,
+                    color: AppTheme.getUnfocusedIconColor(context),
+                  ),
                   label: L10n.global().settingsViewerTitle,
                   description: L10n.global().settingsViewerDescription,
                   builder: () => _ViewerSettings(),
                 ),
               _buildSubSettings(
                 context,
+                leading: Icon(
+                  Icons.photo_album_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
                 label: L10n.global().settingsAlbumTitle,
                 description: L10n.global().settingsAlbumDescription,
                 builder: () => _AlbumSettings(),
               ),
               _buildSubSettings(
                 context,
+                leading: Icon(
+                  Icons.palette_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
                 label: L10n.global().settingsThemeTitle,
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
@@ -169,17 +185,20 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildSubSettings(
     BuildContext context, {
+    Widget? leading,
     required String label,
     String? description,
     required Widget Function() builder,
   }) {
     return ListTile(
+      leading: leading == null
+          ? null
+          : SizedBox(
+              height: double.infinity,
+              child: leading,
+            ),
       title: Text(label),
       subtitle: description == null ? null : Text(description),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: AppTheme.getSecondaryTextColor(context),
-      ),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
