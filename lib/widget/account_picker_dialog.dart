@@ -29,20 +29,20 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   @override
   initState() {
     super.initState();
-    _accounts = Pref.inst().getAccountsOr([]);
+    _accounts = Pref.inst().getAccounts2Or([]);
   }
 
   @override
   build(BuildContext context) {
     final otherAccountOptions = _accounts
-        .where((a) => a != widget.account)
+        .where((a) => a.account != widget.account)
         .map((a) => SimpleDialogOption(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               onPressed: () => _onItemPressed(a),
               child: ListTile(
                 dense: true,
-                title: Text(a.url),
-                subtitle: Text(a.username),
+                title: Text(a.account.url),
+                subtitle: Text(a.account.username),
                 trailing: IconButton(
                   icon: Icon(
                     Icons.close,
@@ -101,21 +101,21 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     );
   }
 
-  void _onItemPressed(Account account) {
+  void _onItemPressed(PrefAccount account) {
     Pref.inst().setCurrentAccountIndex(_accounts.indexOf(account));
     Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (_) => false,
-        arguments: HomeArguments(account));
+        arguments: HomeArguments(account.account));
   }
 
-  void _onRemoveItemPressed(Account account) {
+  void _onRemoveItemPressed(PrefAccount account) {
     try {
       _removeAccount(account);
       setState(() {
-        _accounts = Pref.inst().getAccounts()!;
+        _accounts = Pref.inst().getAccounts2()!;
       });
       SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text(L10n.global().removeServerSuccessNotification(account.url)),
+        content: Text(
+            L10n.global().removeServerSuccessNotification(account.account.url)),
         duration: k.snackBarDurationNormal,
       ));
     } catch (e) {
@@ -166,22 +166,24 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     }
   }
 
-  void _removeAccount(Account account) {
-    final currentAccounts = Pref.inst().getAccounts()!;
+  void _removeAccount(PrefAccount account) {
+    _log.info("[_removeAccount] Remove account: ${account.account}");
+    final currentAccounts = Pref.inst().getAccounts2()!;
     final currentAccount =
         currentAccounts[Pref.inst().getCurrentAccountIndex()!];
-    final newAccounts =
-        currentAccounts.where((element) => element != account).toList();
+    final newAccounts = currentAccounts
+        .where((element) => element.account != account.account)
+        .toList();
     final newAccountIndex = newAccounts.indexOf(currentAccount);
     if (newAccountIndex == -1) {
       throw StateError("Active account not found in resulting account list");
     }
     Pref.inst()
-      ..setAccounts(newAccounts)
+      ..setAccounts2(newAccounts)
       ..setCurrentAccountIndex(newAccountIndex);
   }
 
-  late List<Account> _accounts;
+  late List<PrefAccount> _accounts;
 
   static final _log =
       Logger("widget.account_picker_dialog._AccountPickerDialogState");

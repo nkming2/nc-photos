@@ -72,6 +72,29 @@ class Account with EquatableMixin {
   final List<String> _roots;
 }
 
+class AccountSettings with EquatableMixin {
+  const AccountSettings();
+
+  factory AccountSettings.fromJson(JsonObj json) {
+    return AccountSettings();
+  }
+
+  JsonObj toJson() => {};
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "}";
+  }
+
+  AccountSettings copyWith() {
+    return AccountSettings();
+  }
+
+  @override
+  get props => [];
+}
+
 extension AccountExtension on Account {
   String get url => "$scheme://$address";
 }

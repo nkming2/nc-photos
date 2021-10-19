@@ -4,10 +4,15 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/type.dart';
+import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Pref {
   static Future<void> init() async {
+    if (await CompatV32.isPrefNeedMigration()) {
+      await CompatV32.migratePref();
+    }
     return SharedPreferences.getInstance().then((pref) {
       _inst._pref = pref;
     });
@@ -15,15 +20,16 @@ class Pref {
 
   factory Pref.inst() => _inst;
 
-  List<Account>? getAccounts() {
-    final jsonObjs = _pref.getStringList(_toKey(PrefKey.accounts));
-    return jsonObjs?.map((e) => Account.fromJson(jsonDecode(e))).toList();
+  List<PrefAccount>? getAccounts2() {
+    final jsonObjs = _pref.getStringList(_toKey(PrefKey.accounts2));
+    return jsonObjs?.map((e) => PrefAccount.fromJson(jsonDecode(e))).toList();
   }
 
-  List<Account> getAccountsOr(List<Account> def) => getAccounts() ?? def;
-  Future<bool> setAccounts(List<Account> value) {
+  List<PrefAccount> getAccounts2Or(List<PrefAccount> def) =>
+      getAccounts2() ?? def;
+  Future<bool> setAccounts2(List<PrefAccount> value) {
     final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
-    return _setStringList(PrefKey.accounts, jsons);
+    return _setStringList(PrefKey.accounts2, jsons);
   }
 
   int? getCurrentAccountIndex() =>
@@ -158,8 +164,8 @@ class Pref {
 
   String _toKey(PrefKey key) {
     switch (key) {
-      case PrefKey.accounts:
-        return "accounts";
+      case PrefKey.accounts2:
+        return "accounts2";
       case PrefKey.currentAccountIndex:
         return "currentAccountIndex";
       case PrefKey.homePhotosZoomLevel:
@@ -205,8 +211,48 @@ class Pref {
   late SharedPreferences _pref;
 }
 
+class PrefAccount {
+  const PrefAccount(
+    this.account, [
+    this.settings = const AccountSettings(),
+  ]);
+
+  factory PrefAccount.fromJson(JsonObj json) {
+    return PrefAccount(
+      Account.fromJson(json["account"].cast<String, dynamic>()),
+      AccountSettings.fromJson(json["settings"].cast<String, dynamic>()),
+    );
+  }
+
+  JsonObj toJson() => {
+        "account": account.toJson(),
+        "settings": settings.toJson(),
+      };
+
+  PrefAccount copyWith({
+    Account? account,
+    AccountSettings? settings,
+  }) {
+    return PrefAccount(
+      account ?? this.account,
+      settings ?? this.settings,
+    );
+  }
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "account: $account, "
+        "settings: $settings, "
+        "}";
+  }
+
+  final Account account;
+  final AccountSettings settings;
+}
+
 enum PrefKey {
-  accounts,
+  accounts2,
   currentAccountIndex,
   homePhotosZoomLevel,
   albumBrowserZoomLevel,
@@ -231,7 +277,9 @@ enum PrefKey {
 extension PrefExtension on Pref {
   Account? getCurrentAccount() {
     try {
-      return Pref.inst().getAccounts()![Pref.inst().getCurrentAccountIndex()!];
+      return Pref.inst()
+          .getAccounts2()![Pref.inst().getCurrentAccountIndex()!]
+          .account;
     } catch (_) {
       return null;
     }
