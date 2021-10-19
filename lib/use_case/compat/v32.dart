@@ -22,7 +22,9 @@ class CompatV32 {
     for (final j in jsons) {
       newJsons.add(<String, dynamic>{
         "account": jsonDecode(j),
-        "settings": <String, dynamic>{},
+        "settings": <String, dynamic>{
+          "isEnableFaceRecognitionApp": true,
+        },
       });
     }
     if (await pref.setStringList(

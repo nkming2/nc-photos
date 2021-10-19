@@ -73,26 +73,42 @@ class Account with EquatableMixin {
 }
 
 class AccountSettings with EquatableMixin {
-  const AccountSettings();
+  const AccountSettings({
+    this.isEnableFaceRecognitionApp = true,
+  });
 
   factory AccountSettings.fromJson(JsonObj json) {
-    return AccountSettings();
+    return AccountSettings(
+      isEnableFaceRecognitionApp: json["isEnableFaceRecognitionApp"] ?? true,
+    );
   }
 
-  JsonObj toJson() => {};
+  JsonObj toJson() => {
+        "isEnableFaceRecognitionApp": isEnableFaceRecognitionApp,
+      };
 
   @override
   toString() {
     return "$runtimeType {"
+        "isEnableFaceRecognitionApp: $isEnableFaceRecognitionApp, "
         "}";
   }
 
-  AccountSettings copyWith() {
-    return AccountSettings();
+  AccountSettings copyWith({
+    bool? isEnableFaceRecognitionApp,
+  }) {
+    return AccountSettings(
+      isEnableFaceRecognitionApp:
+          isEnableFaceRecognitionApp ?? this.isEnableFaceRecognitionApp,
+    );
   }
 
   @override
-  get props => [];
+  get props => [
+        isEnableFaceRecognitionApp,
+      ];
+
+  final bool isEnableFaceRecognitionApp;
 }
 
 extension AccountExtension on Account {

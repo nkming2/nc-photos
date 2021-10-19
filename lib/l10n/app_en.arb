@@ -322,6 +322,10 @@
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
+	"settingsServerAppSectionTitle": "Server app support",
+	"@settingsServerAppSectionTitle": {
+		"description": "Enable/disable various server apps"
+	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
 	"settingsViewerPageTitle": "Viewer settings",

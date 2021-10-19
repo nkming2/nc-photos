@@ -385,6 +385,9 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   initState() {
     super.initState();
     _account = widget.account;
+
+    final settings = Pref.inst().getAccountSettings(_account);
+    _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionApp;
   }
 
   @override
@@ -419,6 +422,13 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
                 title: Text(L10n.global().settingsIncludedFoldersTitle),
                 subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
                 onTap: _onIncludedFoldersPressed,
+              ),
+              _buildCaption(
+                  context, L10n.global().settingsServerAppSectionTitle),
+              SwitchListTile(
+                title: const Text("Face Recognition"),
+                value: _isEnableFaceRecognitionApp,
+                onChanged: _onEnableFaceRecognitionAppChanged,
               ),
             ],
           ),
@@ -496,6 +506,52 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     }
   }
 
+  Future<void> _onEnableFaceRecognitionAppChanged(bool value) async {
+    final oldValue = _isEnableFaceRecognitionApp;
+    setState(() {
+      _isEnableFaceRecognitionApp = value;
+    });
+    if (!await _modifyAccountSettings(
+      _account,
+      isEnableFaceRecognitionApp: value,
+    )) {
+      _log.severe("[_onEnableFaceRecognitionAppChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableFaceRecognitionApp = oldValue;
+      });
+    } else {
+      setState(() {
+        _hasModified = true;
+      });
+    }
+  }
+
+  static Future<bool> _modifyAccountSettings(
+    Account account, {
+    bool? isEnableFaceRecognitionApp,
+  }) {
+    try {
+      final accounts = Pref.inst().getAccounts2()!;
+      final index = _findAccount(account, accounts);
+      accounts[index] = accounts[index].copyWith(
+        settings: accounts[index].settings.copyWith(
+              isEnableFaceRecognitionApp: isEnableFaceRecognitionApp,
+            ),
+      );
+      return Pref.inst().setAccounts2(accounts);
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[_modifyAccountSettings] Failed while setting account settings",
+          e,
+          stackTrace);
+      return Future.value(false);
+    }
+  }
+
   /// Return the index of [account] in [Pref.getAccounts2]
   static int _findAccount(Account account, [List<PrefAccount>? accounts]) {
     final from = accounts ?? Pref.inst().getAccounts2Or([]);
@@ -504,6 +560,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
 
   bool _hasModified = false;
   late Account _account;
+  late bool _isEnableFaceRecognitionApp;
 
   static final _log = Logger("widget.settings._AccountSettingsState");
 }

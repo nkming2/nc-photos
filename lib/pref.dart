@@ -284,4 +284,11 @@ extension PrefExtension on Pref {
       return null;
     }
   }
+
+  AccountSettings getAccountSettings(Account account) {
+    return Pref.inst()
+        .getAccounts2()!
+        .firstWhere((element) => element.account == account)
+        .settings;
+  }
 }

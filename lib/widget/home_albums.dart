@@ -442,7 +442,11 @@ class _HomeAlbumsState extends State<HomeAlbums>
       }
     }).map((e) => e.item2);
     itemStreamListItems = [
-      _buildPersonItem(context),
+      if (Pref.inst()
+              .getAccountSettings(widget.account)
+              .isEnableFaceRecognitionApp ==
+          true)
+        _buildPersonItem(context),
       _buildSharingItem(context),
       _buildArchiveItem(context),
       _buildTrashbinItem(context),
