@@ -46,7 +46,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
                 trailing: IconButton(
                   icon: Icon(
                     Icons.close,
-                    color: AppTheme.getSecondaryTextColor(context),
+                    color: AppTheme.getUnfocusedIconColor(context),
                   ),
                   tooltip: L10n.global().deleteTooltip,
                   onPressed: () => _onRemoveItemPressed(a),
@@ -88,7 +88,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           trailing: IconButton(
             icon: Icon(
               Icons.settings_outlined,
-              color: AppTheme.getSecondaryTextColor(context),
+              color: AppTheme.getUnfocusedIconColor(context),
             ),
             tooltip: L10n.global().settingsAccountPageTitle,
             onPressed: _onEditPressed,
