@@ -538,7 +538,7 @@
 	"@createAlbumDialogBasicDescription": {
 		"description": "Describe what a simple album is"
 	},
-	"createAlbumDialogFolderBasedLabel": "Folder based",
+	"createAlbumDialogFolderBasedLabel": "Folder",
 	"@createAlbumDialogFolderBasedLabel": {
 		"description": "Folder based album"
 	},
