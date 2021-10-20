@@ -10,7 +10,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/dir_picker_mixin.dart';
+import 'package:nc_photos/widget/dir_picker.dart';
 
 class AlbumDirPickerArguments {
   AlbumDirPickerArguments(this.account);
@@ -43,8 +43,7 @@ class AlbumDirPicker extends StatefulWidget {
   final Account account;
 }
 
-class _AlbumDirPickerState extends State<AlbumDirPicker>
-    with DirPickerMixin<AlbumDirPicker> {
+class _AlbumDirPickerState extends State<AlbumDirPicker> {
   @override
   build(BuildContext context) {
     return AppTheme(
@@ -52,30 +51,6 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
         body: _buildContent(context),
       ),
     );
-  }
-
-  @override
-  getPickerRoot() {
-    final root = api_util.getWebdavRootUrlRelative(widget.account);
-    if (widget.account.roots.length == 1 &&
-        widget.account.roots.first.isNotEmpty) {
-      return "$root/${widget.account.roots.first}";
-    } else {
-      return root;
-    }
-  }
-
-  @override
-  getAccount() => widget.account;
-
-  @override
-  canPickDir(File dir) {
-    if (widget.account.roots.contains("")) {
-      return true;
-    }
-    final root = api_util.getWebdavRootUrlRelative(widget.account);
-    return widget.account.roots
-        .any((r) => dir.path == "$root/$r" || dir.path.startsWith("$root/$r/"));
   }
 
   Widget _buildContent(BuildContext context) {
@@ -102,7 +77,20 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
             ),
           ),
           Expanded(
-            child: buildDirPicker(context),
+            child: DirPicker(
+              key: _pickerKey,
+              account: widget.account,
+              rootDir: _rootDir,
+              validator: (dir) {
+                if (widget.account.roots.contains("")) {
+                  return true;
+                }
+                final root = api_util.getWebdavRootUrlRelative(widget.account);
+                return widget.account.roots.any((r) =>
+                    dir.path == "$root/$r" || dir.path.startsWith("$root/$r/"));
+              },
+              onConfirmed: (picks) => _onPickerConfirmed(context, picks),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -117,7 +105,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
                       Text(MaterialLocalizations.of(context).cancelButtonLabel),
                 ),
                 ElevatedButton(
-                  onPressed: () => _onConfirmPressed(context),
+                  onPressed: _onConfirmPressed,
                   child: Text(L10n.global().confirmButtonLabel),
                 ),
               ],
@@ -128,19 +116,35 @@ class _AlbumDirPickerState extends State<AlbumDirPicker>
     );
   }
 
-  void _onConfirmPressed(BuildContext context) {
-    final picked = getPickedDirs();
-    if (picked.isEmpty) {
+  void _onConfirmPressed() {
+    _pickerKey.currentState?.confirm();
+  }
+
+  void _onPickerConfirmed(BuildContext context, List<File> picks) {
+    if (picks.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().albumDirPickerListEmptyNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       _log.info(
-          "[_onConfirmPressed] Picked: ${picked.map((e) => e.strippedPath).toReadableString()}");
-      Navigator.of(context).pop(picked);
+          "[_onPickerConfirmed] Picked: ${picks.map((e) => e.strippedPath).toReadableString()}");
+      Navigator.of(context).pop(picks);
     }
   }
+
+  String _getPickerRoot() {
+    final root = api_util.getWebdavRootUrlRelative(widget.account);
+    if (widget.account.roots.length == 1 &&
+        widget.account.roots.first.isNotEmpty) {
+      return "$root/${widget.account.roots.first}";
+    } else {
+      return root;
+    }
+  }
+
+  final _pickerKey = GlobalKey<DirPickerState>();
+  late final _rootDir = _getPickerRoot();
 
   static final _log = Logger("widget.album_dir_picker._AlbumDirPickerState");
 }

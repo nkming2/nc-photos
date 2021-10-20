@@ -13,7 +13,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
-import 'package:nc_photos/widget/dir_picker_mixin.dart';
+import 'package:nc_photos/widget/dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 
 class RootPickerArguments {
@@ -47,8 +47,7 @@ class RootPicker extends StatefulWidget {
   final Account account;
 }
 
-class _RootPickerState extends State<RootPicker>
-    with DirPickerMixin<RootPicker> {
+class _RootPickerState extends State<RootPicker> {
   @override
   initState() {
     super.initState();
@@ -61,15 +60,13 @@ class _RootPickerState extends State<RootPicker>
       final files = <File>[];
       for (final r in widget.account.roots) {
         if (r.isNotEmpty) {
-          _isIniting = true;
           _ensureInitDialog();
           files.add(await LsSingleFile(fileSrc)(widget.account,
               "${api_util.getWebdavRootUrlRelative(widget.account)}/$r"));
         }
       }
       setState(() {
-        _isIniting = false;
-        pickAll(files);
+        _initialPicks = files;
       });
     } catch (e) {
       SnackBarManager().showSnackBar(SnackBar(
@@ -89,12 +86,6 @@ class _RootPickerState extends State<RootPicker>
       ),
     );
   }
-
-  @override
-  getPickerRoot() => api_util.getWebdavRootUrlRelative(widget.account);
-
-  @override
-  getAccount() => widget.account;
 
   Widget _buildContent(BuildContext context) {
     return SafeArea(
@@ -120,10 +111,15 @@ class _RootPickerState extends State<RootPicker>
             ),
           ),
           Expanded(
-            child: IgnorePointer(
-              ignoring: _isIniting,
-              child: buildDirPicker(context),
-            ),
+            child: _initialPicks == null
+                ? Container()
+                : DirPicker(
+                    key: _pickerKey,
+                    account: widget.account,
+                    rootDir: api_util.getWebdavRootUrlRelative(widget.account),
+                    initialPicks: _initialPicks,
+                    onConfirmed: (picks) => _onPickerConfirmed(context, picks),
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -135,7 +131,7 @@ class _RootPickerState extends State<RootPicker>
                   child: Text(L10n.global().skipButtonLabel),
                 ),
                 ElevatedButton(
-                  onPressed: () => _onConfirmPressed(context),
+                  onPressed: _onConfirmPressed,
                   child: Text(L10n.global().confirmButtonLabel),
                 ),
               ],
@@ -174,8 +170,12 @@ class _RootPickerState extends State<RootPicker>
     });
   }
 
-  void _onConfirmPressed(BuildContext context) {
-    final roots = getPickedDirs().map((e) => e.strippedPath).toList();
+  void _onConfirmPressed() {
+    _pickerKey.currentState?.confirm();
+  }
+
+  void _onPickerConfirmed(BuildContext context, List<File> picks) {
+    final roots = picks.map((e) => e.strippedPath).toList();
     if (roots.isEmpty) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().rootPickerListEmptyNotification),
@@ -184,7 +184,7 @@ class _RootPickerState extends State<RootPicker>
       return;
     }
     final newAccount = widget.account.copyWith(roots: roots);
-    _log.info("[_onConfirmPressed] Account is good: $newAccount");
+    _log.info("[_onPickerConfirmed] Account is good: $newAccount");
     Navigator.of(context).pop(newAccount);
   }
 
@@ -210,7 +210,9 @@ class _RootPickerState extends State<RootPicker>
     Navigator.of(context).pop();
   }
 
-  bool _isIniting = false;
+  final _pickerKey = GlobalKey<DirPickerState>();
+  List<File>? _initialPicks;
+
   bool _isInitDialogShown = false;
 
   static final _log = Logger("widget.root_picker._RootPickerState");

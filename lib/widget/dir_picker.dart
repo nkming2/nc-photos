@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -14,16 +12,41 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:path/path.dart' as path;
 
-mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
+class DirPicker extends StatefulWidget {
+  const DirPicker({
+    Key? key,
+    required this.account,
+    required this.rootDir,
+    this.initialPicks,
+    this.validator,
+    this.onConfirmed,
+  }) : super(key: key);
+
+  @override
+  createState() => DirPickerState();
+
+  final Account account;
+  final String rootDir;
+  final List<File>? initialPicks;
+
+  /// Return whether [dir] is a valid target to be picked
+  final bool Function(File dir)? validator;
+  final ValueChanged<List<File>>? onConfirmed;
+}
+
+class DirPickerState extends State<DirPicker> {
   @override
   initState() {
     super.initState();
-    _root = LsDirBlocItem(File(path: getPickerRoot()), []);
+    _root = LsDirBlocItem(File(path: widget.rootDir), []);
     _initBloc();
+    if (widget.initialPicks != null) {
+      _picks.addAll(widget.initialPicks!);
+    }
   }
 
-  @protected
-  Widget buildDirPicker(BuildContext context) {
+  @override
+  build(BuildContext context) {
     return BlocListener<LsDirBloc, LsDirBlocState>(
       bloc: _bloc,
       listener: (context, state) => _onStateChange(context, state),
@@ -34,27 +57,14 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  @protected
-  String getPickerRoot();
-
-  @protected
-  Account getAccount();
-
-  @protected
-  List<File> getPickedDirs() => UnmodifiableListView(_picks);
-
-  @protected
-  bool canPickDir(File file) => true;
-
-  @protected
-  void pickAll(List<File> dirs) {
-    _picks.addAll(dirs);
+  /// Calls the onConfirmed method with the current picked dirs
+  void confirm() {
+    widget.onConfirmed?.call(_picks);
   }
 
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
-    _bloc = LsDirBloc();
-    _navigateInto(File(path: getPickerRoot()));
+    _navigateInto(File(path: widget.rootDir));
   }
 
   Widget _buildContent(BuildContext context, LsDirBlocState state) {
@@ -76,7 +86,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   }
 
   Widget _buildList(BuildContext context, LsDirBlocState state) {
-    final isTopLevel = _currentPath == getPickerRoot();
+    final isTopLevel = _currentPath == widget.rootDir;
     return AnimatedSwitcher(
       duration: k.animationDurationNormal,
       // see AnimatedSwitcher.defaultLayoutBuilder
@@ -118,7 +128,7 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
   }
 
   Widget _buildItem(BuildContext context, LsDirBlocItem item) {
-    final canPick = canPickDir(item.file);
+    final canPick = widget.validator?.call(item.file) != false;
     final pickState = _isItemPicked(item);
 
     IconData? iconData;
@@ -359,17 +369,16 @@ mixin DirPickerMixin<T extends StatefulWidget> on State<T> {
 
   void _navigateInto(File file) {
     _currentPath = file.path;
-    _bloc.add(LsDirBlocQuery(getAccount(), file, depth: 2));
+    _bloc.add(LsDirBlocQuery(widget.account, file, depth: 2));
   }
 
-  late LsDirBloc _bloc;
+  final _bloc = LsDirBloc();
   late LsDirBlocItem _root;
 
-  /// Track where the user is navigating in [_backingFiles]
-  late String _currentPath;
+  var _currentPath = "";
   var _picks = <File>[];
 
-  static final _log = Logger("widget.dir_picker_mixin.DirPickerMixin");
+  static final _log = Logger("widget.dir_picker.DirPickerState");
 }
 
 enum _PickState {
