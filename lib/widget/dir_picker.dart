@@ -18,6 +18,7 @@ class DirPicker extends StatefulWidget {
     required this.account,
     required this.rootDir,
     this.initialPicks,
+    this.isMultipleSelections = true,
     this.validator,
     this.onConfirmed,
   }) : super(key: key);
@@ -27,6 +28,7 @@ class DirPicker extends StatefulWidget {
 
   final Account account;
   final String rootDir;
+  final bool isMultipleSelections;
   final List<File>? initialPicks;
 
   /// Return whether [dir] is a valid target to be picked
@@ -135,14 +137,20 @@ class DirPickerState extends State<DirPicker> {
     if (canPick) {
       switch (pickState) {
         case _PickState.picked:
-          iconData = Icons.check_box;
+          iconData = widget.isMultipleSelections
+              ? Icons.check_box
+              : Icons.radio_button_checked;
           break;
         case _PickState.childPicked:
-          iconData = Icons.indeterminate_check_box;
+          iconData = widget.isMultipleSelections
+              ? Icons.indeterminate_check_box
+              : Icons.remove_circle_outline;
           break;
         case _PickState.notPicked:
         default:
-          iconData = Icons.check_box_outline_blank;
+          iconData = widget.isMultipleSelections
+              ? Icons.check_box_outline_blank
+              : Icons.radio_button_unchecked;
           break;
       }
     }
@@ -230,6 +238,9 @@ class DirPickerState extends State<DirPicker> {
   /// Pick an item
   void _pick(LsDirBlocItem item) {
     setState(() {
+      if (!widget.isMultipleSelections) {
+        _picks.clear();
+      }
       _picks.add(item.file);
       _picks = _optimizePicks(_root);
     });
