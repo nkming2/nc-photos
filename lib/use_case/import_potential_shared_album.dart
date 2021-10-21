@@ -10,10 +10,10 @@ import 'package:nc_photos/use_case/move.dart';
 class ImportPotentialSharedAlbum {
   ImportPotentialSharedAlbum(this.fileRepo, this.albumRepo);
 
-  Future<List<Album>> call(Account account) async {
+  Future<List<Album>> call(Account account, AccountSettings settings) async {
     _log.info("[call] $account");
     final products = <Album>[];
-    final files = await ListPotentialSharedAlbum(fileRepo)(account);
+    final files = await ListPotentialSharedAlbum(fileRepo)(account, settings);
     for (final f in files) {
       // check if the file is actually an album
       try {

@@ -19,6 +19,7 @@ import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/lab_settings.dart';
 import 'package:nc_photos/widget/root_picker.dart';
+import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -407,6 +408,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
 
     final settings = Pref.inst().getAccountSettings(_account);
     _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionApp;
+    _shareFolder = settings.shareFolder;
   }
 
   @override
@@ -441,6 +443,11 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
                 title: Text(L10n.global().settingsIncludedFoldersTitle),
                 subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
                 onTap: _onIncludedFoldersPressed,
+              ),
+              ListTile(
+                title: Text(L10n.global().settingsShareFolderTitle),
+                subtitle: Text("/$_shareFolder"),
+                onTap: () => _onShareFolderPressed(context),
               ),
               _buildCaption(
                   context, L10n.global().settingsServerAppSectionTitle),
@@ -525,6 +532,20 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     }
   }
 
+  Future<void> _onShareFolderPressed(BuildContext context) async {
+    final path = await showDialog<String>(
+      context: context,
+      builder: (_) => _ShareFolderDialog(
+        account: widget.account,
+        initialValue: _shareFolder,
+      ),
+    );
+    if (path == null || path == _shareFolder) {
+      return;
+    }
+    return _setShareFolder(path);
+  }
+
   Future<void> _onEnableFaceRecognitionAppChanged(bool value) async {
     final oldValue = _isEnableFaceRecognitionApp;
     setState(() {
@@ -549,9 +570,35 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     }
   }
 
+  Future<void> _setShareFolder(String value) async {
+    _log.info("[_setShareFolder] New value: $value");
+    final oldValue = _shareFolder;
+    setState(() {
+      _shareFolder = value;
+    });
+    if (!await _modifyAccountSettings(
+      _account,
+      shareFolder: value,
+    )) {
+      _log.severe("[_setShareFolder] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _shareFolder = oldValue;
+      });
+    } else {
+      setState(() {
+        _hasModified = true;
+      });
+    }
+  }
+
   static Future<bool> _modifyAccountSettings(
     Account account, {
     bool? isEnableFaceRecognitionApp,
+    String? shareFolder,
   }) {
     try {
       final accounts = Pref.inst().getAccounts2()!;
@@ -559,6 +606,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       accounts[index] = accounts[index].copyWith(
         settings: accounts[index].settings.copyWith(
               isEnableFaceRecognitionApp: isEnableFaceRecognitionApp,
+              shareFolder: shareFolder,
             ),
       );
       return Pref.inst().setAccounts2(accounts);
@@ -580,8 +628,74 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   bool _hasModified = false;
   late Account _account;
   late bool _isEnableFaceRecognitionApp;
+  late String _shareFolder;
 
   static final _log = Logger("widget.settings._AccountSettingsState");
+}
+
+class _ShareFolderDialog extends StatefulWidget {
+  const _ShareFolderDialog({
+    Key? key,
+    required this.account,
+    required this.initialValue,
+  }) : super(key: key);
+
+  @override
+  createState() => _ShareFolderDialogState();
+
+  final Account account;
+  final String initialValue;
+}
+
+class _ShareFolderDialogState extends State<_ShareFolderDialog> {
+  @override
+  build(BuildContext context) {
+    return AlertDialog(
+      title: Text(L10n.global().settingsShareFolderDialogTitle),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(L10n.global().settingsShareFolderDialogDescription),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: _onTextFieldPressed,
+              child: TextFormField(
+                enabled: false,
+                controller: _controller,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _onOkPressed,
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onTextFieldPressed() async {
+    final pick = await Navigator.of(context).pushNamed<String>(
+        ShareFolderPicker.routeName,
+        arguments: ShareFolderPickerArguments(widget.account, _path));
+    if (pick != null) {
+      _path = pick;
+      _controller.text = "/$pick";
+    }
+  }
+
+  void _onOkPressed() {
+    Navigator.of(context).pop(_path);
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  late final _controller =
+      TextEditingController(text: "/${widget.initialValue}");
+  late String _path = widget.initialValue;
 }
 
 class _ViewerSettings extends StatefulWidget {

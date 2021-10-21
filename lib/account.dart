@@ -75,40 +75,53 @@ class Account with EquatableMixin {
 class AccountSettings with EquatableMixin {
   const AccountSettings({
     this.isEnableFaceRecognitionApp = true,
+    this.shareFolder = "",
   });
 
   factory AccountSettings.fromJson(JsonObj json) {
     return AccountSettings(
       isEnableFaceRecognitionApp: json["isEnableFaceRecognitionApp"] ?? true,
+      shareFolder: json["shareFolder"] ?? "",
     );
   }
 
   JsonObj toJson() => {
         "isEnableFaceRecognitionApp": isEnableFaceRecognitionApp,
+        "shareFolder": shareFolder,
       };
 
   @override
   toString() {
     return "$runtimeType {"
         "isEnableFaceRecognitionApp: $isEnableFaceRecognitionApp, "
+        "shareFolder: $shareFolder, "
         "}";
   }
 
   AccountSettings copyWith({
     bool? isEnableFaceRecognitionApp,
+    String? shareFolder,
   }) {
     return AccountSettings(
       isEnableFaceRecognitionApp:
           isEnableFaceRecognitionApp ?? this.isEnableFaceRecognitionApp,
+      shareFolder: shareFolder ?? this.shareFolder,
     );
   }
 
   @override
   get props => [
         isEnableFaceRecognitionApp,
+        shareFolder,
       ];
 
   final bool isEnableFaceRecognitionApp;
+
+  /// Path of the share folder
+  ///
+  /// Share folder is where files shared with you are initially placed. Must
+  /// match the value of share_folder in config.php
+  final String shareFolder;
 }
 
 extension AccountExtension on Account {

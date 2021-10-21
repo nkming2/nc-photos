@@ -3,6 +3,10 @@
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
@@ -39,13 +43,18 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ],
 
   "de": [
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
@@ -96,7 +105,8 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ],
 
   "el": [
@@ -104,6 +114,10 @@
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsViewerTitle",
     "settingsViewerDescription",
@@ -208,13 +222,18 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ],
 
   "es": [
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
@@ -251,7 +270,8 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ],
 
   "fr": [
@@ -259,6 +279,10 @@
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsViewerTitle",
     "settingsViewerDescription",
@@ -343,13 +367,18 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ],
 
   "ru": [
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
+    "settingsShareFolderTitle",
+    "settingsShareFolderDialogTitle",
+    "settingsShareFolderDialogDescription",
+    "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
@@ -408,6 +437,7 @@
     "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
-    "extraShareDescription"
+    "extraShareDescription",
+    "defaultButtonLabel"
   ]
 }

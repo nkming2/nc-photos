@@ -22,6 +22,7 @@ import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
+import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/sign_in.dart';
@@ -150,6 +151,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleSharedFileViewerRoute(settings);
     route ??= _handleAlbumShareOutlierBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
+    route ??= _handleShareFolderPickerRoute(settings);
     return route;
   }
 
@@ -421,6 +423,20 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleAccountSettingsRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleShareFolderPickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == ShareFolderPicker.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as ShareFolderPickerArguments;
+        return ShareFolderPicker.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleShareFolderPickerRoute] Failed while handling route", e);
     }
     return null;
   }

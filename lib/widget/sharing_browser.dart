@@ -322,7 +322,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {
       return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
-          widget.account);
+          widget.account, Pref.inst().getAccountSettings(widget.account));
     } catch (e, stackTrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

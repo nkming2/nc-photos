@@ -132,7 +132,7 @@ class _HomeState extends State<Home> {
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {
       return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
-          widget.account);
+          widget.account, Pref.inst().getAccountSettings(widget.account));
     } catch (e, stacktrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

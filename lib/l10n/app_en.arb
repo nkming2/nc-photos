@@ -322,6 +322,22 @@
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
+	"settingsShareFolderTitle": "Share folder",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Locate the share folder",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "This setting corresponds to the share_folder parameter in config.php. The two values MUST be identical.\n\nPlease locate the same folder as the one set in config.php.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "Please locate the same folder as the one set in config.php. Press default if you did not set the parameter.",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
 	"settingsServerAppSectionTitle": "Server app support",
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
@@ -1058,6 +1074,7 @@
 			}
 		}
 	},
+	"defaultButtonLabel": "DEFAULT",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

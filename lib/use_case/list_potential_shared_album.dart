@@ -10,10 +10,15 @@ import 'package:nc_photos/use_case/ls.dart';
 class ListPotentialSharedAlbum {
   ListPotentialSharedAlbum(this.fileRepo);
 
-  Future<List<File>> call(Account account) async {
+  Future<List<File>> call(Account account, AccountSettings settings) async {
     final results = <File>[];
     final ls = await Ls(fileRepo)(
-        account, File(path: api_util.getWebdavRootUrlRelative(account)));
+      account,
+      File(
+        path:
+            "${api_util.getWebdavRootUrlRelative(account)}/${settings.shareFolder}",
+      ),
+    );
     for (final f in ls) {
       // check owner
       if (_checkOwner(account, f) && _checkFileName(f)) {
