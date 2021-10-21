@@ -547,6 +547,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   }
 
   Future<void> _onEnableFaceRecognitionAppChanged(bool value) async {
+    _log.info("[_onEnableFaceRecognitionAppChanged] New value: $value");
     final oldValue = _isEnableFaceRecognitionApp;
     setState(() {
       _isEnableFaceRecognitionApp = value;
