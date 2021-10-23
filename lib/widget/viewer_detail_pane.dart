@@ -17,6 +17,8 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -487,6 +489,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     assert(album.provider is AlbumStaticProvider);
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final shareRepo = ShareRepo(ShareRemoteDataSource());
       final newItem = AlbumFileItem(file: widget.file);
       if (AlbumStaticProvider.of(album)
           .items
@@ -501,7 +504,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         ));
         return Future.error(ArgumentError("File already in album"));
       }
-      await AddToAlbum(albumRepo)(
+      await AddToAlbum(albumRepo, shareRepo)(
           widget.account, album, [AlbumFileItem(file: widget.file)]);
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);

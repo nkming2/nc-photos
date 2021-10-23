@@ -20,6 +20,8 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
@@ -421,7 +423,9 @@ class _HomePhotosState extends State<HomePhotos>
               .map((e) => AlbumFileItem(file: e.file))
               .toList();
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
-          await AddToAlbum(albumRepo)(widget.account, value, selected);
+          final shareRepo = ShareRepo(ShareRemoteDataSource());
+          await AddToAlbum(albumRepo, shareRepo)(
+              widget.account, value, selected);
           setState(() {
             clearSelectedItems();
           });
