@@ -40,6 +40,6 @@ class LogCapturer {
   static LogCapturer? _inst;
 }
 
-String logFilename(String filename) => shouldLogFileName ? filename : "***";
+String logFilename(String? filename) => shouldLogFileName ? "$filename" : "***";
 
 const bool shouldLogFileName = kDebugMode;
