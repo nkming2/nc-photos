@@ -3,6 +3,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/use_case/list_dir_share.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class ListSharedAlbumItem {
@@ -23,28 +24,23 @@ class ListSharedAlbum {
     Account account, {
     String? whereShareWith,
   }) async {
-    final shares = await shareRepo.listDir(
+    final shareItems = await ListDirShare(shareRepo)(
         account, File(path: remote_storage_util.getRemoteAlbumsDir(account)));
-    final shareGroups = <String, List<Share>>{};
-    for (final s in shares) {
-      shareGroups[s.path] ??= <Share>[];
-      shareGroups[s.path]!.add(s);
-    }
     final files = await Ls(fileRepo)(
       account,
       File(path: remote_storage_util.getRemoteAlbumsDir(account)),
     );
 
     final products = <ListSharedAlbumItem>[];
-    for (final sg in shareGroups.entries) {
+    for (final si in shareItems) {
       // find the file
       final albumFile =
-          files.firstWhere((element) => element.strippedPath == sg.key);
+          files.firstWhere((element) => element.compareServerIdentity(si.file));
       final album = await albumRepo.get(
         account,
         albumFile,
       );
-      for (final s in sg.value) {
+      for (final s in si.shares) {
         if (whereShareWith != null && s.shareWith != whereShareWith) {
           continue;
         }
