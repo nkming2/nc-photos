@@ -8,11 +8,13 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
 
 List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
-    items.distinctIf(
-        (a, b) =>
-            a is AlbumFileItem &&
-            b is AlbumFileItem &&
-            a.file.path == b.file.path, (a) {
+    items.distinctIf((a, b) {
+      if (a is! AlbumFileItem || b is! AlbumFileItem) {
+        return false;
+      } else {
+        return a.file.compareServerIdentity(b.file);
+      }
+    }, (a) {
       if (a is AlbumFileItem) {
         return a.file.path.hashCode;
       } else {

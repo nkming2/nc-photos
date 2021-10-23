@@ -469,6 +469,18 @@ extension FileExtension on File {
 
   String get filename => path_util.basename(path);
 
+  /// Compare the server identity of two Files
+  ///
+  /// Return true if two Files point to the same file on server. Be careful that
+  /// this does NOT mean that the two Files are identical
+  bool compareServerIdentity(File other) {
+    if (fileId != null && other.fileId != null) {
+      return fileId == other.fileId;
+    } else {
+      return path == other.path;
+    }
+  }
+
   static final _log = Logger("entity.file.FileExtension");
 }
 

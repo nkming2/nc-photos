@@ -491,7 +491,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       if (AlbumStaticProvider.of(album)
           .items
           .whereType<AlbumFileItem>()
-          .containsIf(newItem, (a, b) => a.file.path == b.file.path)) {
+          .containsIf(
+              newItem, (a, b) => a.file.compareServerIdentity(b.file))) {
         // already added, do nothing
         _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
         SnackBarManager().showSnackBar(SnackBar(
