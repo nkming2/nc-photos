@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -38,6 +39,7 @@ void main() {
               upgraderV2: null,
               upgraderV3: null,
               upgraderV4: null,
+              upgraderV5: null,
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -77,6 +79,7 @@ void main() {
               upgraderV2: null,
               upgraderV3: null,
               upgraderV4: null,
+              upgraderV5: null,
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -106,6 +109,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test1.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                   <String, dynamic>{
                     "type": "file",
@@ -114,6 +119,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test2.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -134,6 +141,7 @@ void main() {
                 upgraderV2: null,
                 upgraderV3: null,
                 upgraderV4: null,
+                upgraderV5: null,
               ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -141,9 +149,13 @@ void main() {
                 provider: AlbumStaticProvider(
                   items: [
                     AlbumFileItem(
+                      addedBy: "admin",
+                      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                     ),
                     AlbumFileItem(
+                      addedBy: "admin",
+                      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                     ),
                   ],
@@ -167,6 +179,8 @@ void main() {
                     "content": <String, dynamic>{
                       "text": "Testing",
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -187,6 +201,7 @@ void main() {
                 upgraderV2: null,
                 upgraderV3: null,
                 upgraderV4: null,
+                upgraderV5: null,
               ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -194,6 +209,8 @@ void main() {
                 provider: AlbumStaticProvider(
                   items: [
                     AlbumLabelItem(
+                      addedBy: "admin",
+                      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       text: "Testing",
                     ),
                   ],
@@ -235,6 +252,7 @@ void main() {
               upgraderV2: null,
               upgraderV3: null,
               upgraderV4: null,
+              upgraderV5: null,
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -280,6 +298,7 @@ void main() {
               upgraderV2: null,
               upgraderV3: null,
               upgraderV4: null,
+              upgraderV5: null,
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -324,6 +343,7 @@ void main() {
               upgraderV2: null,
               upgraderV3: null,
               upgraderV4: null,
+              upgraderV5: null,
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -409,9 +429,13 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumFileItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
               ],
@@ -434,6 +458,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test1.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                   <String, dynamic>{
                     "type": "file",
@@ -442,6 +468,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test2.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -464,6 +492,8 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumLabelItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   text: "Testing",
                 ),
               ],
@@ -484,6 +514,8 @@ void main() {
                     "content": <String, dynamic>{
                       "text": "Testing",
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -643,9 +675,13 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumFileItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
               ],
@@ -668,6 +704,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test1.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                   <String, dynamic>{
                     "type": "file",
@@ -676,6 +714,8 @@ void main() {
                         "path": "remote.php/dav/files/admin/test2.jpg",
                       },
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -698,6 +738,8 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumLabelItem(
+                  addedBy: "admin",
+                  addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   text: "Testing",
                 ),
               ],
@@ -718,6 +760,8 @@ void main() {
                     "content": <String, dynamic>{
                       "text": "Testing",
                     },
+                    "addedBy": "admin",
+                    "addedAt": "2020-01-02T03:04:05.678901Z",
                   },
                 ],
               },
@@ -1344,6 +1388,150 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           });
+        });
+      });
+    });
+
+    group("AlbumUpgraderV5", () {
+      final account = Account("http", "example.com", "user1", "123", [""]);
+
+      test("w/ ownerId", () {
+        final json = <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+            "ownerId": "admin",
+          },
+        };
+        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                  "addedBy": "admin",
+                  "addedAt": "2020-01-02T03:04:05.678901Z",
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+            "ownerId": "admin",
+          },
+        });
+      });
+
+      test("w/o ownerId", () {
+        final json = <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+          },
+        };
+        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                  "addedBy": "user1",
+                  "addedAt": "2020-01-02T03:04:05.678901Z",
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+          "albumFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.json",
+          },
         });
       });
     });

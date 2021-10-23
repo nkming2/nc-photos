@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
@@ -156,4 +157,39 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
   final String? logFilePath;
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV4");
+}
+
+/// Upgrade v5 Album to v6
+class AlbumUpgraderV5 implements AlbumUpgrader {
+  const AlbumUpgraderV5(
+    this.account, {
+    this.logFilePath,
+  });
+
+  @override
+  call(JsonObj json) {
+    _log.fine("[call] Upgrade v5 Album for file: $logFilePath");
+    final result = JsonObj.from(json);
+    try {
+      if (result["provider"]["type"] != "static") {
+        return result;
+      }
+      for (final item in (result["provider"]["content"]["items"] as List)) {
+        item["addedBy"] = result["albumFile"]["ownerId"] ?? account.username;
+        item["addedAt"] = result["lastUpdated"];
+      }
+    } catch (e, stackTrace) {
+      // this upgrade is not a must, if it failed then just leave it and it'll
+      // be upgraded the next time the album is saved
+      _log.shout("[call] Failed while upgrade", e, stackTrace);
+    }
+    return result;
+  }
+
+  final Account account;
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV5");
 }

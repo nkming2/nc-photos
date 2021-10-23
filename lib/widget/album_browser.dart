@@ -569,7 +569,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       _editAlbum = _editAlbum!.copyWith(
         provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
           items: [
-            AlbumLabelItem(text: value),
+            AlbumLabelItem(
+              addedBy: widget.account.username,
+              addedAt: DateTime.now(),
+              text: value,
+            ),
             ..._sortedItems,
           ],
         ),
@@ -591,7 +595,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (value == null) {
         return;
       }
-      _sortedItems[index] = AlbumLabelItem(text: value);
+      _sortedItems[index] = item.copyWith(
+        text: value,
+      );
       _editAlbum = _editAlbum!.copyWith(
         provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
           items: _sortedItems,

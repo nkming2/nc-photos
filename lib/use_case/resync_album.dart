@@ -67,7 +67,9 @@ class ResyncAlbum {
       return item;
     }
     final dbEntry = AppDbFileDbEntry.fromJson(dbItem.cast<String, dynamic>());
-    return AlbumFileItem(file: dbEntry.file);
+    return item.copyWith(
+      file: dbEntry.file,
+    );
   }
 
   static final _log = Logger("use_case.resync_album.ResyncAlbum");

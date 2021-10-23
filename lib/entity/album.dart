@@ -45,6 +45,7 @@ class Album with EquatableMixin {
     required AlbumUpgraderV2? upgraderV2,
     required AlbumUpgraderV3? upgraderV3,
     required AlbumUpgraderV4? upgraderV4,
+    required AlbumUpgraderV5? upgraderV5,
   }) {
     final jsonVersion = json["version"];
     JsonObj? result = json;
@@ -71,6 +72,13 @@ class Album with EquatableMixin {
     }
     if (jsonVersion < 5) {
       result = upgraderV4?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 6) {
+      result = upgraderV5?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -176,7 +184,7 @@ class Album with EquatableMixin {
   final File? albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 5;
+  static const version = 6;
 }
 
 class AlbumRepo {
@@ -233,6 +241,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         upgraderV2: AlbumUpgraderV2(logFilePath: albumFile.path),
         upgraderV3: AlbumUpgraderV3(logFilePath: albumFile.path),
         upgraderV4: AlbumUpgraderV4(logFilePath: albumFile.path),
+        upgraderV5: AlbumUpgraderV5(account, logFilePath: albumFile.path),
       )!
           .copyWith(
         lastUpdated: OrNull(null),
@@ -297,8 +306,8 @@ class AlbumAppDbDataSource implements AlbumDataSource {
       final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
       final List results = await index.getAll(range);
       if (results.isNotEmpty == true) {
-        final entries = results
-            .map((e) => AppDbAlbumEntry.fromJson(e.cast<String, dynamic>()));
+        final entries = results.map((e) =>
+            AppDbAlbumEntry.fromJson(e.cast<String, dynamic>(), account));
         if (entries.length > 1) {
           final items = entries.map((e) {
             _log.info("[get] ${e.path}[${e.index}]");

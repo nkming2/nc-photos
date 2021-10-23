@@ -370,7 +370,11 @@ class _PersonBrowserState extends State<PersonBrowser>
           assert(value.provider is AlbumStaticProvider);
           final selected = selectedListItems
               .whereType<_ListItem>()
-              .map((e) => AlbumFileItem(file: e.file))
+              .map((e) => AlbumFileItem(
+                    addedBy: widget.account.username,
+                    addedAt: DateTime.now(),
+                    file: e.file,
+                  ))
               .toList();
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
           final shareRepo = ShareRepo(ShareRemoteDataSource());

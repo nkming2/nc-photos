@@ -420,7 +420,11 @@ class _HomePhotosState extends State<HomePhotos>
           assert(value.provider is AlbumStaticProvider);
           final selected = selectedListItems
               .whereType<_FileListItem>()
-              .map((e) => AlbumFileItem(file: e.file))
+              .map((e) => AlbumFileItem(
+                    addedBy: widget.account.username,
+                    addedAt: DateTime.now(),
+                    file: e.file,
+                  ))
               .toList();
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
           final shareRepo = ShareRepo(ShareRemoteDataSource());

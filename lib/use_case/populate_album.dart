@@ -38,8 +38,11 @@ class PopulateAlbum {
               result);
           continue;
         }
-        products.addAll(
-            (result as List).cast<File>().map((f) => AlbumFileItem(file: f)));
+        products.addAll((result as List).cast<File>().map((f) => AlbumFileItem(
+              addedBy: account.username,
+              addedAt: DateTime.now(),
+              file: f,
+            )));
       }
     }
     return products;

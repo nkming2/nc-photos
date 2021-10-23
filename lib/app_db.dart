@@ -131,7 +131,7 @@ class AppDbAlbumEntry {
     };
   }
 
-  factory AppDbAlbumEntry.fromJson(JsonObj json) {
+  factory AppDbAlbumEntry.fromJson(JsonObj json, Account account) {
     return AppDbAlbumEntry(
       json["path"],
       json["index"],
@@ -141,6 +141,7 @@ class AppDbAlbumEntry {
         upgraderV2: AlbumUpgraderV2(logFilePath: json["path"]),
         upgraderV3: AlbumUpgraderV3(logFilePath: json["path"]),
         upgraderV4: AlbumUpgraderV4(logFilePath: json["path"]),
+        upgraderV5: AlbumUpgraderV5(account, logFilePath: json["path"]),
       )!,
     );
   }

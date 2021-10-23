@@ -22,17 +22,24 @@ List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
       }
     });
 
-abstract class AlbumItem {
-  AlbumItem();
+abstract class AlbumItem with EquatableMixin {
+  AlbumItem({
+    required this.addedBy,
+    required DateTime addedAt,
+  }) : addedAt = addedAt.toUtc();
 
   factory AlbumItem.fromJson(JsonObj json) {
+    final addedBy = json["addedBy"];
+    final addedAt = DateTime.parse(json["addedAt"]);
     final type = json["type"];
     final content = json["content"];
     switch (type) {
       case AlbumFileItem._type:
-        return AlbumFileItem.fromJson(content.cast<String, dynamic>());
+        return AlbumFileItem.fromJson(
+            content.cast<String, dynamic>(), addedBy, addedAt);
       case AlbumLabelItem._type:
-        return AlbumLabelItem.fromJson(content.cast<String, dynamic>());
+        return AlbumLabelItem.fromJson(
+            content.cast<String, dynamic>(), addedBy, addedAt);
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -53,18 +60,39 @@ abstract class AlbumItem {
     return {
       "type": getType(),
       "content": toContentJson(),
+      "addedBy": addedBy,
+      "addedAt": addedAt.toIso8601String(),
     };
   }
 
   JsonObj toContentJson();
 
+  @override
+  toString() {
+    return "$runtimeType {"
+        "addedBy: '$addedBy', "
+        "addedAt: $addedAt, "
+        "}";
+  }
+
+  @override
+  get props => [
+        addedBy,
+        addedAt,
+      ];
+
+  final String addedBy;
+  final DateTime addedAt;
+
   static final _log = Logger("entity.album.AlbumItem");
 }
 
-class AlbumFileItem extends AlbumItem with EquatableMixin {
+class AlbumFileItem extends AlbumItem {
   AlbumFileItem({
+    required String addedBy,
+    required DateTime addedAt,
     required this.file,
-  });
+  }) : super(addedBy: addedBy, addedAt: addedAt);
 
   @override
   // ignore: hash_and_equals
@@ -78,8 +106,11 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
     }
   }
 
-  factory AlbumFileItem.fromJson(JsonObj json) {
+  factory AlbumFileItem.fromJson(
+      JsonObj json, String addedBy, DateTime addedAt) {
     return AlbumFileItem(
+      addedBy: addedBy,
+      addedAt: addedAt,
       file: File.fromJson(json["file"].cast<String, dynamic>()),
     );
   }
@@ -87,7 +118,8 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
   @override
   toString() {
     return "$runtimeType {"
-        "file: $file"
+        "super: ${super.toString()}, "
+        "file: $file, "
         "}";
   }
 
@@ -98,12 +130,27 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
     };
   }
 
+  AlbumFileItem copyWith({
+    String? addedBy,
+    DateTime? addedAt,
+    File? file,
+  }) {
+    return AlbumFileItem(
+      addedBy: addedBy ?? this.addedBy,
+      addedAt: addedAt ?? this.addedAt,
+      file: file ?? this.file,
+    );
+  }
+
   AlbumFileItem minimize() => AlbumFileItem(
+        addedBy: addedBy,
+        addedAt: addedAt,
         file: file.copyWith(metadata: OrNull(null)),
       );
 
   @override
   get props => [
+        ...super.props,
         // file is handled separately, see [equals]
       ];
 
@@ -112,13 +159,18 @@ class AlbumFileItem extends AlbumItem with EquatableMixin {
   static const _type = "file";
 }
 
-class AlbumLabelItem extends AlbumItem with EquatableMixin {
+class AlbumLabelItem extends AlbumItem {
   AlbumLabelItem({
+    required String addedBy,
+    required DateTime addedAt,
     required this.text,
-  });
+  }) : super(addedBy: addedBy, addedAt: addedAt);
 
-  factory AlbumLabelItem.fromJson(JsonObj json) {
+  factory AlbumLabelItem.fromJson(
+      JsonObj json, String addedBy, DateTime addedAt) {
     return AlbumLabelItem(
+      addedBy: addedBy,
+      addedAt: addedAt,
       text: json["text"],
     );
   }
@@ -126,6 +178,7 @@ class AlbumLabelItem extends AlbumItem with EquatableMixin {
   @override
   toString() {
     return "$runtimeType {"
+        "super: ${super.toString()}, "
         "text: '$text', "
         "}";
   }
@@ -137,8 +190,21 @@ class AlbumLabelItem extends AlbumItem with EquatableMixin {
     };
   }
 
+  AlbumLabelItem copyWith({
+    String? addedBy,
+    DateTime? addedAt,
+    String? text,
+  }) {
+    return AlbumLabelItem(
+      addedBy: addedBy ?? this.addedBy,
+      addedAt: addedAt ?? this.addedAt,
+      text: text ?? this.text,
+    );
+  }
+
   @override
   get props => [
+        ...super.props,
         text,
       ];
 

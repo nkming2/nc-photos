@@ -492,7 +492,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
       final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final newItem = AlbumFileItem(file: widget.file);
+      final newItem = AlbumFileItem(
+        addedBy: widget.account.username,
+        addedAt: DateTime.now(),
+        file: widget.file,
+      );
       if (AlbumStaticProvider.of(album)
           .items
           .whereType<AlbumFileItem>()
@@ -506,8 +510,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         ));
         return Future.error(ArgumentError("File already in album"));
       }
-      await AddToAlbum(albumRepo, shareRepo)(
-          widget.account, album, [AlbumFileItem(file: widget.file)]);
+      await AddToAlbum(albumRepo, shareRepo)(widget.account, album, [newItem]);
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
