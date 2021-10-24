@@ -4,13 +4,16 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
+import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
-  RemoveFromAlbum(this.albumRepo);
+  const RemoveFromAlbum(this.albumRepo, this.shareRepo, this.fileRepo);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -42,10 +45,27 @@ class RemoveFromAlbum {
       );
     }
     await UpdateAlbum(albumRepo)(account, newAlbum);
+
+    final removeFiles =
+        items.whereType<AlbumFileItem>().map((e) => e.file).toList();
+    if (removeFiles.isNotEmpty) {
+      final albumShares =
+          (await ListShare(shareRepo)(account, newAlbum.albumFile!))
+              .where((element) => element.shareType == ShareType.user)
+              .map((e) => e.shareWith!)
+              .toList();
+      if (albumShares.isNotEmpty) {
+        await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
+            account, newAlbum, removeFiles, albumShares);
+      }
+    }
+
     return newAlbum;
   }
 
   final AlbumRepo albumRepo;
+  final ShareRepo shareRepo;
+  final FileRepo fileRepo;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

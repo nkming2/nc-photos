@@ -300,11 +300,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       await NotifiedAction(
         () async {
           final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          final shareRepo = ShareRepo(ShareRemoteDataSource());
+          final fileRepo = FileRepo(FileCachedDataSource());
           final thisItem = AlbumStaticProvider.of(widget.album!)
               .items
               .whereType<AlbumFileItem>()
               .firstWhere((element) => element.file.path == widget.file.path);
-          await RemoveFromAlbum(albumRepo)(
+          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo)(
               widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();

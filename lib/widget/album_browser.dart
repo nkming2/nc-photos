@@ -12,7 +12,10 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -403,7 +406,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
     try {
       final albumRepo = AlbumRepo(AlbumCachedDataSource());
-      await RemoveFromAlbum(albumRepo)(widget.account, _album!, selectedItems);
+      final shareRepo = ShareRepo(ShareRemoteDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource());
+      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo)(
+          widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
             selectedIndexes.length)),
