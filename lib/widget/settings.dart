@@ -17,7 +17,6 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home.dart';
-import 'package:nc_photos/widget/lab_settings.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -136,11 +135,20 @@ class _SettingsState extends State<Settings> {
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
               ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.science_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().settingsExperimentalTitle,
+                description: L10n.global().settingsExperimentalDescription,
+                builder: () => _ExperimentalSettings(),
+              ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
                 title: Text(L10n.global().settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
-                onTap: () => _onVersionTap(context),
               ),
               ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
@@ -274,13 +282,6 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _onVersionTap(BuildContext context) {
-    if (++_labUnlockCount >= 10) {
-      Navigator.of(context).pushNamed(LabSettings.routeName);
-      _labUnlockCount = 0;
-    }
-  }
-
   void _onCaptureLogChanged(BuildContext context, bool value) async {
     if (value) {
       final result = await showDialog<bool>(
@@ -357,7 +358,6 @@ class _SettingsState extends State<Settings> {
   }
 
   late bool _isEnableExif;
-  int _labUnlockCount = 0;
 
   static final _log = Logger("widget.settings._SettingsState");
 
@@ -1035,6 +1035,75 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
   late bool _isUseBlackInDarkTheme;
 
   static final _log = Logger("widget.settings._ThemeSettingsState");
+}
+
+class _ExperimentalSettings extends StatefulWidget {
+  @override
+  createState() => _ExperimentalSettingsState();
+}
+
+class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
+  @override
+  initState() {
+    super.initState();
+    _isEnableSharedAlbum = Pref.inst().isLabEnableSharedAlbumOr(false);
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsExperimentalPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SwitchListTile(
+                title: const Text("Shared album"),
+                subtitle:
+                    const Text("Share albums with users on the same server"),
+                value: _isEnableSharedAlbum,
+                onChanged: (value) => _onEnableSharedAlbumChanged(value),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onEnableSharedAlbumChanged(bool value) async {
+    final oldValue = _isEnableSharedAlbum;
+    setState(() {
+      _isEnableSharedAlbum = value;
+    });
+    if (!await Pref.inst().setLabEnableSharedAlbum(value)) {
+      _log.severe("[_onEnableSharedAlbumChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableSharedAlbum = oldValue;
+      });
+    }
+  }
+
+  late bool _isEnableSharedAlbum;
+
+  static final _log = Logger("widget.settings._ExperimentalSettingsState");
 }
 
 Widget _buildCaption(BuildContext context, String label) {

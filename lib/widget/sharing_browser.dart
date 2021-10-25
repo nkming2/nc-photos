@@ -17,7 +17,6 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -62,7 +61,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
   @override
   initState() {
     super.initState();
-    if (Lab().enableSharedAlbum) {
+    if (Pref.inst().isLabEnableSharedAlbumOr(false)) {
       _importPotentialSharedAlbum().whenComplete(() {
         _initBloc();
       });

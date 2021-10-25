@@ -382,6 +382,9 @@
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
+	"settingsExperimentalTitle": "Experimental",
+	"settingsExperimentalDescription": "Features that are not ready for everyday use",
+	"settingsExperimentalPageTitle": "Experimental settings",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"

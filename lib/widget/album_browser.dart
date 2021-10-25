@@ -19,7 +19,6 @@ import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
@@ -242,7 +241,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         _album!,
         actions: [
           if (_album!.albumFile!.isOwned(widget.account.username) &&
-              Lab().enableSharedAlbum)
+              Pref.inst().isLabEnableSharedAlbumOr(false))
             IconButton(
               onPressed: () => _onSharePressed(context),
               icon: const Icon(Icons.share),
@@ -251,7 +250,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         ],
         menuItemBuilder: (_) => [
           if (_album!.albumFile!.isOwned(widget.account.username) &&
-              Lab().enableSharedAlbum)
+              Pref.inst().isLabEnableSharedAlbumOr(false))
             PopupMenuItem(
               value: _menuValueFixShares,
               child: Text(L10n.global().fixSharesTooltip),

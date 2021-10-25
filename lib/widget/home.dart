@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/lab.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
@@ -48,7 +47,7 @@ class _HomeState extends State<Home> {
   @override
   initState() {
     super.initState();
-    if (Lab().enableSharedAlbum) {
+    if (Pref.inst().isLabEnableSharedAlbumOr(false)) {
       _importPotentialSharedAlbum().then((value) {
         if (value.isNotEmpty) {
           Pref.inst().setNewSharedAlbum(true);

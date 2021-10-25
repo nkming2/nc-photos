@@ -16,7 +16,6 @@ import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/home.dart';
-import 'package:nc_photos/widget/lab_settings.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -125,7 +124,6 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         Setup.routeName: (context) => const Setup(),
         SignIn.routeName: (context) => const SignIn(),
         Splash.routeName: (context) => const Splash(),
-        LabSettings.routeName: (context) => const LabSettings(),
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
