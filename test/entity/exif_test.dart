@@ -111,6 +111,13 @@ void main() {
         });
         expect(exif.toJson(), <String, dynamic>{});
       });
+
+      test("UserComment", () {
+        final exif = Exif(<String, dynamic>{
+          "UserComment": Uint8List.fromList([0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF]),
+        });
+        expect(exif.toJson(), <String, dynamic>{});
+      });
     });
 
     group("fromJson", () {
@@ -172,6 +179,13 @@ void main() {
       test("MakerNote", () {
         final json = <String, dynamic>{
           "MakerNote": "ADNmmcz_",
+        };
+        expect(Exif.fromJson(json), Exif(<String, dynamic>{}));
+      });
+
+      test("UserComment", () {
+        final json = <String, dynamic>{
+          "UserComment": [1],
         };
         expect(Exif.fromJson(json), Exif(<String, dynamic>{}));
       });
