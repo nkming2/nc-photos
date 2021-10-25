@@ -430,9 +430,11 @@ class _HomePhotosState extends State<HomePhotos>
           final shareRepo = ShareRepo(ShareRemoteDataSource());
           await AddToAlbum(albumRepo, shareRepo)(
               widget.account, value, selected);
-          setState(() {
-            clearSelectedItems();
-          });
+          if (mounted) {
+            setState(() {
+              clearSelectedItems();
+            });
+          }
         },
         null,
         L10n.global().addSelectedToAlbumSuccessNotification(value.name),
