@@ -423,43 +423,46 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsAccountPageTitle),
-          leading: _hasModified
-              ? IconButton(
-                  icon: const Icon(Icons.check),
-                  tooltip: L10n.global().doneButtonTooltip,
-                  onPressed: () => _onDonePressed(context),
-                )
-              : null,
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              ListTile(
-                title: Text(L10n.global().settingsIncludedFoldersTitle),
-                subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
-                onTap: _onIncludedFoldersPressed,
-              ),
-              ListTile(
-                title: Text(L10n.global().settingsShareFolderTitle),
-                subtitle: Text("/$_shareFolder"),
-                onTap: () => _onShareFolderPressed(context),
-              ),
-              _buildCaption(
-                  context, L10n.global().settingsServerAppSectionTitle),
-              SwitchListTile(
-                title: const Text("Face Recognition"),
-                value: _isEnableFaceRecognitionApp,
-                onChanged: _onEnableFaceRecognitionAppChanged,
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: () async => !_hasModified,
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            title: Text(L10n.global().settingsAccountPageTitle),
+            leading: _hasModified
+                ? IconButton(
+                    icon: const Icon(Icons.check),
+                    tooltip: L10n.global().doneButtonTooltip,
+                    onPressed: () => _onDonePressed(context),
+                  )
+                : null,
           ),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                ListTile(
+                  title: Text(L10n.global().settingsIncludedFoldersTitle),
+                  subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
+                  onTap: _onIncludedFoldersPressed,
+                ),
+                ListTile(
+                  title: Text(L10n.global().settingsShareFolderTitle),
+                  subtitle: Text("/$_shareFolder"),
+                  onTap: () => _onShareFolderPressed(context),
+                ),
+                _buildCaption(
+                    context, L10n.global().settingsServerAppSectionTitle),
+                SwitchListTile(
+                  title: const Text("Face Recognition"),
+                  value: _isEnableFaceRecognitionApp,
+                  onChanged: _onEnableFaceRecognitionAppChanged,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
