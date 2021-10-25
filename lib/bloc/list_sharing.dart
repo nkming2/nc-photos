@@ -10,7 +10,9 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:path/path.dart' as path;
@@ -51,16 +53,16 @@ class ListSharingBlocQuery extends ListSharingBlocEvent {
 }
 
 class _ListSharingBlocShareRemoved extends ListSharingBlocEvent {
-  const _ListSharingBlocShareRemoved(this.share);
+  const _ListSharingBlocShareRemoved(this.shares);
 
   @override
   toString() {
     return "$runtimeType {"
-        "share: $share, "
+        "shares: ${shares.toReadableString()}, "
         "}";
   }
 
-  final Share share;
+  final List<Share> shares;
 }
 
 abstract class ListSharingBlocState {
@@ -132,6 +134,13 @@ class ListSharingBlocFailure extends ListSharingBlocState {
 class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   ListSharingBloc() : super(ListSharingBlocInit()) {
     _shareRemovedListener.begin();
+
+    _refreshThrottler = Throttler<Share>(
+      onTriggered: (shares) {
+        add(_ListSharingBlocShareRemoved(shares));
+      },
+      logTag: "ListSharingBloc.refresh",
+    );
   }
 
   static ListSharingBloc of(Account account) {
@@ -176,7 +185,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       return;
     }
     final newItems = List.of(state.items)
-        .where((element) => !identical(element.share, ev.share))
+        .where((element) => !ev.shares.containsIdentical(element.share))
         .toList();
     // i love hacks :)
     yield (state as dynamic).copyWith(
@@ -185,7 +194,11 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   void _onShareRemovedEvent(ShareRemovedEvent ev) {
-    add(_ListSharingBlocShareRemoved(ev.share));
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+      data: ev.share,
+    );
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
@@ -326,6 +339,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   late final _shareRemovedListener =
       AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
+
+  late Throttler _refreshThrottler;
 
   static final _log = Logger("bloc.list_sharing.ListSharingBloc");
 }
