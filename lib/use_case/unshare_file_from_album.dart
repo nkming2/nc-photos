@@ -25,6 +25,8 @@ class UnshareFileFromAlbum {
     List<ListSharedAlbumItem>? listSharedAlbumResults,
     void Function(Share)? onUnshareFileFailed,
   }) async {
+    _log.info(
+        "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
     // list albums with shares identical to one of [unshareWith]
     final otherAlbums = (listSharedAlbumResults ??
             await ListSharedAlbum(shareRepo, fileRepo, albumRepo)(account))
