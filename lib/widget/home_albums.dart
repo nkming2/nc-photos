@@ -8,18 +8,19 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
@@ -382,23 +383,23 @@ class _HomeAlbumsState extends State<HomeAlbums>
           L10n.global().deleteSelectedProcessingNotification(selected.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles = selected.map((e) => e.albumFile!).toList();
+    final selectedAlbums = List.of(selected);
     setState(() {
       clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource());
-    final failures = <File>[];
-    for (final f in selectedFiles) {
+    final shareRepo = ShareRepo(ShareRemoteDataSource());
+    final failures = <Album>[];
+    for (final a in selectedAlbums) {
       try {
-        await Remove(fileRepo, albumRepo)(widget.account, f);
-      } catch (e, stacktrace) {
+        await RemoveAlbum(fileRepo, albumRepo, shareRepo)(widget.account, a);
+      } catch (e, stackTrace) {
         _log.shout(
-            "[_onSelectionDeletePressed] Failed while removing file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
+            "[_onSelectionDeletePressed] Failed while removing album: '${a.name}'",
             e,
-            stacktrace);
-        failures.add(f);
+            stackTrace);
+        failures.add(a);
       }
     }
     if (failures.isEmpty) {
