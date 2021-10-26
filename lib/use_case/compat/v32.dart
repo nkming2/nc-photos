@@ -17,7 +17,7 @@ class CompatV32 {
     if (jsons == null) {
       return;
     }
-    _log.info("[call] Migrate Pref.accounts");
+    _log.info("[migratePref] Migrate Pref.accounts");
     final newJsons = <JsonObj>[];
     for (final j in jsons) {
       newJsons.add(<String, dynamic>{
@@ -29,10 +29,10 @@ class CompatV32 {
     }
     if (await pref.setStringList(
         "accounts2", newJsons.map((e) => jsonEncode(e)).toList())) {
-      _log.info("[call] Migrated ${newJsons.length} accounts");
+      _log.info("[migratePref] Migrated ${newJsons.length} accounts");
       await pref.remove("accounts");
     } else {
-      _log.severe("[call] Failed while writing pref");
+      _log.severe("[migratePref] Failed while writing pref");
     }
   }
 
