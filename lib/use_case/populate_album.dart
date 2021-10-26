@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
 class PopulateAlbum {
@@ -31,11 +32,12 @@ class PopulateAlbum {
     for (final d in provider.dirs) {
       final stream = ScanDir(FileRepo(FileCachedDataSource()))(account, d);
       await for (final result in stream) {
-        if (result is Exception || result is Error) {
+        if (result is ExceptionEvent) {
           _log.shout(
               "[_populateDirAlbum] Failed while scanning dir" +
                   (shouldLogFileName ? ": $d" : ""),
-              result);
+              result.error,
+              result.stackTrace);
           continue;
         }
         products.addAll((result as List).cast<File>().map((f) => AlbumFileItem(

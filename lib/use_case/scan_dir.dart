@@ -3,6 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls.dart';
 
@@ -26,18 +27,18 @@ class ScanDir {
               .endsWith(remote_storage_util.getRemoteStorageDir(account)))) {
         yield* this(account, i);
       }
-    } on CacheNotFoundException catch (e) {
+    } on CacheNotFoundException catch (e, stackTrace) {
       _log.info("[call] Cache not found");
-      yield e;
-    } catch (e, stacktrace) {
+      yield ExceptionEvent(e, stackTrace);
+    } catch (e, stackTrace) {
       _log.shout(
           "[call] Failed while listing dir" +
               (shouldLogFileName ? ": ${root.path}" : ""),
           e,
-          stacktrace);
+          stackTrace);
       // for some reason exception thrown here can't be caught outside
       // rethrow;
-      yield e;
+      yield ExceptionEvent(e, stackTrace);
     }
   }
 

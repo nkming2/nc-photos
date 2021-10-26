@@ -1,6 +1,7 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
 class ScanMissingMetadata {
@@ -10,11 +11,11 @@ class ScanMissingMetadata {
   /// recursively
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either File data or an exception
+  /// would emit either File data or ExceptionEvent
   Stream<dynamic> call(Account account, File root) async* {
     final dataStream = ScanDir(fileRepo)(account, root);
     await for (final d in dataStream) {
-      if (d is Exception || d is Error) {
+      if (d is ExceptionEvent) {
         yield d;
         continue;
       }

@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
@@ -304,8 +305,8 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
       for (final r in ev.roots) {
         final dataStream = ScanDir(FileRepo(dataSrc))(ev.account, r);
         await for (final d in dataStream) {
-          if (d is Exception || d is Error) {
-            throw d;
+          if (d is ExceptionEvent) {
+            throw d.error;
           }
           yield ScanDirBlocLoading(ev.account, getState().files + d);
         }

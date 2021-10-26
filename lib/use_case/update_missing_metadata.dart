@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
@@ -20,11 +21,11 @@ class UpdateMissingMetadata {
   /// Update metadata for all files that support one under a dir recursively
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either File data (for each updated files) or an exception
+  /// would emit either File data (for each updated files) or ExceptionEvent
   Stream<dynamic> call(Account account, File root) async* {
     final dataStream = ScanMissingMetadata(fileRepo)(account, root);
     await for (final d in dataStream) {
-      if (d is Exception || d is Error) {
+      if (d is ExceptionEvent) {
         yield d;
         continue;
       }
@@ -73,10 +74,10 @@ class UpdateMissingMetadata {
           metadata: OrNull(metadataObj),
         );
         yield file;
-      } catch (e, stacktrace) {
+      } catch (e, stackTrace) {
         _log.severe("[call] Failed while updating metadata: ${file.path}", e,
-            stacktrace);
-        yield e;
+            stackTrace);
+        yield ExceptionEvent(e, stackTrace);
       }
     }
   }
