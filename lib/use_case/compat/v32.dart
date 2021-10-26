@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
+import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +35,18 @@ class CompatV32 {
     } else {
       _log.severe("[migratePref] Failed while writing pref");
     }
+  }
+
+  static bool isExifNeedMigration(Exif exif) =>
+      exif.data.containsKey("UserComment") ||
+      exif.data.containsKey("MakerNote");
+
+  static Exif migrateExif(Exif exif, String logFilename) {
+    _log.info("[migrateExif] Migrate EXIF for file: $logFilename");
+    final newData = Map.of(exif.data);
+    newData.removeWhere(
+        (key, value) => key == "UserComment" || key == "MakerNote");
+    return Exif(newData);
   }
 
   static final _log = Logger("use_case.compat.v32.CompatV32");

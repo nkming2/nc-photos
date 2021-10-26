@@ -15,6 +15,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/touch_token_manager.dart';
+import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
@@ -62,9 +63,9 @@ class FileWebdavDataSource implements FileDataSource {
     }
 
     final xml = XmlDocument.parse(response.body);
-    final files = WebdavFileParser()(xml);
+    var files = WebdavFileParser()(xml);
     // _log.fine("[list] Parsed files: [$files]");
-    return files.where((element) => _validateFile(element)).map((e) {
+    files = files.where((element) => _validateFile(element)).map((e) {
       if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
         return e;
       } else {
@@ -72,6 +73,9 @@ class FileWebdavDataSource implements FileDataSource {
         return e.copyWith(metadata: OrNull(null));
       }
     }).toList();
+
+    await _compatUpgrade(account, files);
+    return files;
   }
 
   @override
@@ -212,6 +216,21 @@ class FileWebdavDataSource implements FileDataSource {
       throw ApiException(
           response: response,
           message: "Failed communicating with server: ${response.statusCode}");
+    }
+  }
+
+  Future<void> _compatUpgrade(Account account, List<File> files) async {
+    for (final f in files.where((element) => element.metadata?.exif != null)) {
+      if (CompatV32.isExifNeedMigration(f.metadata!.exif!)) {
+        final newExif = CompatV32.migrateExif(f.metadata!.exif!, f.path);
+        await updateProperty(
+          account,
+          f,
+          metadata: OrNull(f.metadata!.copyWith(
+            exif: newExif,
+          )),
+        );
+      }
     }
   }
 

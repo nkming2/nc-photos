@@ -30,6 +30,10 @@ class Exif with EquatableMixin {
 
   JsonObj toJson() {
     return Map.fromEntries(
+      // we are filtering out MakerNote here because it's generally very large
+      // and could exceed the 1MB cursor size limit on Android. Second, the
+      // content is proprietary and thus useless to us anyway
+      // UserComment is now also ignored as its size could be very large
       data.entries
           .where((e) => e.key != "MakerNote" && e.key != "UserComment")
           .map((e) {
@@ -54,13 +58,7 @@ class Exif with EquatableMixin {
 
   factory Exif.fromJson(JsonObj json) {
     return Exif(Map.fromEntries(
-      // we are filtering out MakerNote here because it's generally very large
-      // and could exceed the 1MB cursor size limit on Android. Second, the
-      // content is proprietary and thus useless to us anyway
-      // UserComment is now also ignored as its size could be very large
-      json.entries
-          .where((e) => e.key != "MakerNote" && e.key != "UserComment")
-          .map((e) {
+      json.entries.map((e) {
         dynamic exifValue;
         if (e.value is Map) {
           exifValue = Rational.fromJson(e.value.cast<String, dynamic>());

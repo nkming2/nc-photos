@@ -95,6 +95,23 @@ class Metadata with EquatableMixin {
     };
   }
 
+  Metadata copyWith({
+    OrNull<DateTime>? lastUpdated,
+    String? fileEtag,
+    int? imageWidth,
+    int? imageHeight,
+    Exif? exif,
+  }) {
+    return Metadata(
+      lastUpdated:
+          lastUpdated == null ? null : (lastUpdated.obj ?? this.lastUpdated),
+      fileEtag: fileEtag ?? this.fileEtag,
+      imageWidth: imageWidth ?? this.imageWidth,
+      imageHeight: imageHeight ?? this.imageHeight,
+      exif: exif ?? this.exif,
+    );
+  }
+
   @override
   toString() {
     var product = "$runtimeType {"
