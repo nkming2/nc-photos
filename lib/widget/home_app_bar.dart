@@ -79,7 +79,7 @@ class HomeSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       actions: (actions ?? []) +
           [
-            if (!Pref.inst().isFollowSystemThemeOr(false))
+            if (!Pref().isFollowSystemThemeOr(false))
               Switch(
                 value: Theme.of(context).brightness == Brightness.dark,
                 onChanged: _onDarkModeChanged,
@@ -125,7 +125,7 @@ class HomeSliverAppBar extends StatelessWidget {
   }
 
   void _onDarkModeChanged(bool value) {
-    Pref.inst().setDarkTheme(value).then((_) {
+    Pref().setDarkTheme(value).then((_) {
       KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
     });
   }

@@ -74,7 +74,7 @@ class _SplashState extends State<Splash> {
 
   void _initTimedExit() {
     Future.delayed(const Duration(seconds: 1)).then((_) {
-      final account = Pref.inst().getCurrentAccount();
+      final account = Pref().getCurrentAccount();
       if (isNeedSetup()) {
         Navigator.pushReplacementNamed(context, Setup.routeName);
       } else if (account == null) {
@@ -87,13 +87,13 @@ class _SplashState extends State<Splash> {
   }
 
   bool _shouldUpgrade() {
-    final lastVersion = Pref.inst().getLastVersionOr(k.version);
+    final lastVersion = Pref().getLastVersionOr(k.version);
     return lastVersion < k.version;
   }
 
   void _handleUpgrade() async {
     try {
-      final lastVersion = Pref.inst().getLastVersionOr(k.version);
+      final lastVersion = Pref().getLastVersionOr(k.version);
       await _upgrade(lastVersion);
 
       final change = _gatherChangelog(lastVersion);
@@ -118,7 +118,7 @@ class _SplashState extends State<Splash> {
       }
     } finally {
       _initTimedExit();
-      Pref.inst().setLastVersion(k.version);
+      Pref().setLastVersion(k.version);
     }
   }
 

@@ -29,7 +29,7 @@ class MetadataTask {
         final op = UpdateMissingMetadata(fileRepo);
         await for (final _ in op(account,
             File(path: "${api_util.getWebdavRootUrlRelative(account)}/$r"))) {
-          if (!Pref.inst().isEnableExifOr()) {
+          if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
             op.stop();
             return;
@@ -76,7 +76,7 @@ class MetadataTaskManager {
 
   void _handleStream() async {
     await for (final task in _streamController.stream) {
-      if (Pref.inst().isEnableExifOr()) {
+      if (Pref().isEnableExifOr()) {
         _log.info("[_doTask] Executing task: $task");
         await task();
       } else {

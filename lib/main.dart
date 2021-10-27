@@ -75,14 +75,14 @@ void _initLog() {
 }
 
 Future<void> _initPref() async {
-  await Pref.init();
-  if (Pref.inst().getLastVersion() == null) {
-    if (Pref.inst().getSetupProgress() == null) {
+  await Pref().init();
+  if (Pref().getLastVersion() == null) {
+    if (Pref().getSetupProgress() == null) {
       // new install
-      await Pref.inst().setLastVersion(k.version);
+      await Pref().setLastVersion(k.version);
     } else {
       // v6 is the last version without saving the version number in pref
-      await Pref.inst().setLastVersion(6);
+      await Pref().setLastVersion(6);
     }
   }
 }

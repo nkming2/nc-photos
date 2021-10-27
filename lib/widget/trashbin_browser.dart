@@ -63,7 +63,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   initState() {
     super.initState();
     _initBloc();
-    _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
+    _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
   }
 
   @override
@@ -209,7 +209,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
             setState(() {
               _thumbZoomLevel = value.round();
             });
-            Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
+            Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
         PopupMenuButton<_AppBarMenuOption>(

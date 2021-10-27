@@ -26,7 +26,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
   @override
   initState() {
     super.initState();
-    _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
+    _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
   }
 
   @protected
@@ -72,7 +72,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
             setState(() {
               _thumbZoomLevel = value.round();
             });
-            Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
+            Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
         if (album.albumFile?.path.startsWith(

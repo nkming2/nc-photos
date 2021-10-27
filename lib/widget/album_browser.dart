@@ -241,7 +241,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         _album!,
         actions: [
           if (_album!.albumFile!.isOwned(widget.account.username) &&
-              Pref.inst().isLabEnableSharedAlbumOr(false))
+              Pref().isLabEnableSharedAlbumOr(false))
             IconButton(
               onPressed: () => _onSharePressed(context),
               icon: const Icon(Icons.share),
@@ -250,7 +250,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         ],
         menuItemBuilder: (_) => [
           if (_album!.albumFile!.isOwned(widget.account.username) &&
-              Pref.inst().isLabEnableSharedAlbumOr(false))
+              Pref().isLabEnableSharedAlbumOr(false))
             PopupMenuItem(
               value: _menuValueFixShares,
               child: Text(L10n.global().fixSharesTooltip),
@@ -642,7 +642,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             height: k.photoThumbSize,
           );
           if ((_editAlbum ?? _album)?.sortProvider is AlbumTimeSortProvider &&
-              Pref.inst().isAlbumBrowserShowDateOr()) {
+              Pref().isAlbumBrowserShowDateOr()) {
             final date = dateHelper.onFile(item.file);
             if (date != null) {
               yield _DateListItem(date: date);

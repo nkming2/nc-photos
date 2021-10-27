@@ -228,11 +228,11 @@ class _SignInState extends State<SignIn> {
         // we've got a good account
         final pa = PrefAccount(result);
         // only signing in with app password would trigger distinct
-        final accounts = (Pref.inst().getAccounts2Or([])..add(pa)).distinctIf(
+        final accounts = (Pref().getAccounts2Or([])..add(pa)).distinctIf(
           (a, b) => a.account == b.account,
           (a) => a.account.hashCode,
         );
-        Pref.inst()
+        Pref()
           ..setAccounts2(accounts)
           ..setCurrentAccountIndex(
               accounts.indexWhere((element) => element.account == result));

@@ -47,7 +47,7 @@ enum _AppLanguageEnum {
 
 AppLanguage _getSelectedLanguage() {
   try {
-    final lang = Pref.inst().getLanguageOr(0);
+    final lang = Pref().getLanguageOr(0);
     return supportedLanguages[lang]!;
   } catch (_) {
     return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;

@@ -61,11 +61,11 @@ class _SharingBrowserState extends State<SharingBrowser> {
   @override
   initState() {
     super.initState();
-    if (Pref.inst().isLabEnableSharedAlbumOr(false)) {
+    if (Pref().isLabEnableSharedAlbumOr(false)) {
       _importPotentialSharedAlbum().whenComplete(() {
         _initBloc();
       });
-      Pref.inst().setNewSharedAlbum(false);
+      Pref().setNewSharedAlbum(false);
     } else {
       _initBloc();
     }
@@ -321,7 +321,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {
       return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
-          widget.account, Pref.inst().getAccountSettings(widget.account));
+          widget.account, Pref().getAccountSettings(widget.account));
     } catch (e, stackTrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

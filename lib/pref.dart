@@ -9,7 +9,11 @@ import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Pref {
-  static Future<void> init() async {
+  factory Pref() => _inst;
+
+  Pref._();
+
+  Future<void> init() async {
     if (await CompatV32.isPrefNeedMigration()) {
       await CompatV32.migratePref();
     }
@@ -17,8 +21,6 @@ class Pref {
       _inst._pref = pref;
     });
   }
-
-  factory Pref.inst() => _inst;
 
   List<PrefAccount>? getAccounts2() {
     final jsonObjs = _pref.getStringList(_toKey(PrefKey.accounts2));
@@ -138,8 +140,6 @@ class Pref {
   Future<bool> setLabEnableSharedAlbum(bool value) =>
       _setBool(PrefKey.labEnableSharedAlbum, value);
 
-  Pref._();
-
   Future<bool> _setBool(PrefKey key, bool value) async {
     return _onPostSet(await _pref.setBool(_toKey(key), value), key, value);
   }
@@ -207,7 +207,7 @@ class Pref {
     }
   }
 
-  static final _inst = Pref._();
+  static late final _inst = Pref._();
   late SharedPreferences _pref;
 }
 
@@ -277,16 +277,14 @@ enum PrefKey {
 extension PrefExtension on Pref {
   Account? getCurrentAccount() {
     try {
-      return Pref.inst()
-          .getAccounts2()![Pref.inst().getCurrentAccountIndex()!]
-          .account;
+      return Pref().getAccounts2()![Pref().getCurrentAccountIndex()!].account;
     } catch (_) {
       return null;
     }
   }
 
   AccountSettings getAccountSettings(Account account) {
-    return Pref.inst()
+    return Pref()
         .getAccounts2()!
         .firstWhere((element) => element.account == account)
         .settings;

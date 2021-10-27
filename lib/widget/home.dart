@@ -47,10 +47,10 @@ class _HomeState extends State<Home> {
   @override
   initState() {
     super.initState();
-    if (Pref.inst().isLabEnableSharedAlbumOr(false)) {
+    if (Pref().isLabEnableSharedAlbumOr(false)) {
       _importPotentialSharedAlbum().then((value) {
         if (value.isNotEmpty) {
-          Pref.inst().setNewSharedAlbum(true);
+          Pref().setNewSharedAlbum(true);
         }
       });
     }
@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
     final albumRepo = AlbumRepo(AlbumRemoteDataSource());
     try {
       return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
-          widget.account, Pref.inst().getAccountSettings(widget.account));
+          widget.account, Pref().getAccountSettings(widget.account));
     } catch (e, stacktrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

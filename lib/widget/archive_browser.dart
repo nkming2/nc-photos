@@ -62,7 +62,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   initState() {
     super.initState();
     _initBloc();
-    _thumbZoomLevel = Pref.inst().getAlbumBrowserZoomLevelOr(0);
+    _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
   }
 
   @override
@@ -187,7 +187,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
             setState(() {
               _thumbZoomLevel = value.round();
             });
-            Pref.inst().setAlbumBrowserZoomLevel(_thumbZoomLevel);
+            Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
         ),
       ],

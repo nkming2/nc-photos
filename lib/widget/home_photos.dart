@@ -69,7 +69,7 @@ class _HomePhotosState extends State<HomePhotos>
   @override
   initState() {
     super.initState();
-    _thumbZoomLevel = Pref.inst().getHomePhotosZoomLevelOr(0);
+    _thumbZoomLevel = Pref().getHomePhotosZoomLevelOr(0);
     _initBloc();
     _metadataTaskStateChangedListener.begin();
     _prefUpdatedListener.begin();
@@ -241,7 +241,7 @@ class _HomePhotosState extends State<HomePhotos>
               setState(() {
                 _setThumbZoomLevel(value.round());
               });
-              Pref.inst().setHomePhotosZoomLevel(_thumbZoomLevel);
+              Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
             },
           ),
         ],
@@ -546,7 +546,7 @@ class _HomePhotosState extends State<HomePhotos>
     bool ignoreFired = false,
   }) {
     if (_bloc.state is ScanDirBlocSuccess &&
-        Pref.inst().isEnableExifOr() &&
+        Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       MetadataTaskManager().addTask(MetadataTask(widget.account));
       _metadataTaskProcessTotalCount = _backingFiles

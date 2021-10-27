@@ -17,7 +17,7 @@ mixin ViewerControllersMixin<T extends StatefulWidget>
       ...super.initDisposables(),
       if (platform_k.isMobile) _ViewerBrightnessController(),
       _ViewerSystemUiResetter(),
-      if (platform_k.isMobile && Pref.inst().isViewerForceRotationOr(false))
+      if (platform_k.isMobile && Pref().isViewerForceRotationOr(false))
         _ViewerOrientationController(
           onChanged: _onOrientationChanged,
         ),
@@ -57,7 +57,7 @@ mixin ViewerControllersMixin<T extends StatefulWidget>
 class _ViewerBrightnessController implements Disposable {
   @override
   init(State state) {
-    final brightness = Pref.inst().getViewerScreenBrightness();
+    final brightness = Pref().getViewerScreenBrightness();
     if (brightness != null && brightness >= 0) {
       ScreenBrightness.setScreenBrightness(brightness / 100.0);
     }

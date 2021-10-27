@@ -97,7 +97,7 @@ class AppTheme extends StatelessWidget {
   static ThemeData _buildDarkThemeData(BuildContext context, ThemeData theme) {
     final Color background;
     final Color popup;
-    if (Pref.inst().isUseBlackInDarkThemeOr(false)) {
+    if (Pref().isUseBlackInDarkThemeOr(false)) {
       background = Colors.black;
       popup = Colors.grey[900]!;
     } else {

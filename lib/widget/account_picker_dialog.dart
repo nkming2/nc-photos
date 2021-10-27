@@ -29,7 +29,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   @override
   initState() {
     super.initState();
-    _accounts = Pref.inst().getAccounts2Or([]);
+    _accounts = Pref().getAccounts2Or([]);
   }
 
   @override
@@ -102,7 +102,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   }
 
   void _onItemPressed(PrefAccount account) {
-    Pref.inst().setCurrentAccountIndex(_accounts.indexOf(account));
+    Pref().setCurrentAccountIndex(_accounts.indexOf(account));
     Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (_) => false,
         arguments: HomeArguments(account.account));
   }
@@ -111,7 +111,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     try {
       _removeAccount(account);
       setState(() {
-        _accounts = Pref.inst().getAccounts2()!;
+        _accounts = Pref().getAccounts2()!;
       });
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
@@ -135,9 +135,9 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
 
   void _removeAccount(PrefAccount account) {
     _log.info("[_removeAccount] Remove account: ${account.account}");
-    final currentAccounts = Pref.inst().getAccounts2()!;
+    final currentAccounts = Pref().getAccounts2()!;
     final currentAccount =
-        currentAccounts[Pref.inst().getCurrentAccountIndex()!];
+        currentAccounts[Pref().getCurrentAccountIndex()!];
     final newAccounts = currentAccounts
         .where((element) => element.account != account.account)
         .toList();
@@ -145,7 +145,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     if (newAccountIndex == -1) {
       throw StateError("Active account not found in resulting account list");
     }
-    Pref.inst()
+    Pref()
       ..setAccounts2(newAccounts)
       ..setCurrentAccountIndex(newAccountIndex);
   }

@@ -549,7 +549,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             height: k.photoThumbSize,
           );
           if ((_editAlbum ?? _album)?.sortProvider is AlbumTimeSortProvider &&
-              Pref.inst().isAlbumBrowserShowDateOr()) {
+              Pref().isAlbumBrowserShowDateOr()) {
             final date = dateHelper.onFile(item.file);
             if (date != null) {
               yield _DateListItem(date: date);

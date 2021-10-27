@@ -61,11 +61,11 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   @override
   build(BuildContext context) {
     final ThemeMode themeMode;
-    if (Pref.inst().isFollowSystemThemeOr(false)) {
+    if (Pref().isFollowSystemThemeOr(false)) {
       themeMode = ThemeMode.system;
     } else {
       themeMode =
-          Pref.inst().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light;
+          Pref().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light;
     }
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,

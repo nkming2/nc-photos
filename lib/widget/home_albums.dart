@@ -241,7 +241,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     return _ButtonListItem(
       icon: Icons.share_outlined,
       label: L10n.global().collectionSharingLabel,
-      isShowIndicator: Pref.inst().hasNewSharedAlbumOr(false),
+      isShowIndicator: Pref().hasNewSharedAlbumOr(false),
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(SharingBrowser.routeName,
@@ -362,7 +362,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   void _onSortSelected(_Sort sort) async {
-    await Pref.inst().setHomeAlbumsSort(sort.index);
+    await Pref().setHomeAlbumsSort(sort.index);
     setState(() {
       _transformItems(_bloc.state.items);
     });
@@ -443,7 +443,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       }
     }).map((e) => e.item2);
     itemStreamListItems = [
-      if (Pref.inst()
+      if (Pref()
               .getAccountSettings(widget.account)
               .isEnableFaceRecognitionApp ==
           true)
@@ -616,7 +616,7 @@ enum _Sort {
 
 _Sort _getSortFromPref() {
   try {
-    return _Sort.values[Pref.inst().getHomeAlbumsSort()!];
+    return _Sort.values[Pref().getHomeAlbumsSort()!];
   } catch (_) {
     // default
     return _Sort.dateDescending;

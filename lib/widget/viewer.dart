@@ -481,15 +481,15 @@ class _ViewerState extends State<Viewer>
     final result = await showDialog<SlideshowConfig>(
       context: context,
       builder: (_) => SlideshowDialog(
-        duration: Duration(seconds: Pref.inst().getSlideshowDurationOr(5)),
-        isShuffle: Pref.inst().isSlideshowShuffleOr(false),
-        isRepeat: Pref.inst().isSlideshowRepeatOr(false),
+        duration: Duration(seconds: Pref().getSlideshowDurationOr(5)),
+        isShuffle: Pref().isSlideshowShuffleOr(false),
+        isRepeat: Pref().isSlideshowRepeatOr(false),
       ),
     );
     if (result == null) {
       return;
     }
-    Pref.inst()
+    Pref()
       ..setSlideshowDuration(result.duration.inSeconds)
       ..setSlideshowShuffle(result.isShuffle)
       ..setSlideshowRepeat(result.isRepeat);

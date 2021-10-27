@@ -8,8 +8,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
 
-bool isNeedSetup() =>
-    Pref.inst().getSetupProgressOr() & _PageId.all != _PageId.all;
+bool isNeedSetup() => Pref().getSetupProgressOr() & _PageId.all != _PageId.all;
 
 class Setup extends StatefulWidget {
   static const routeName = "/setup";
@@ -102,9 +101,9 @@ class _SetupState extends State<Setup> {
   }
 
   void _onDonePressed() {
-    Pref.inst().setSetupProgress(_PageId.all);
+    Pref().setSetupProgress(_PageId.all);
 
-    final account = Pref.inst().getCurrentAccount();
+    final account = Pref().getCurrentAccount();
     if (account == null) {
       Navigator.pushReplacementNamed(context, SignIn.routeName);
     } else {
@@ -114,12 +113,12 @@ class _SetupState extends State<Setup> {
   }
 
   void _onNextPressed(int pageId) {
-    Pref.inst().setSetupProgress(Pref.inst().getSetupProgressOr() | pageId);
+    Pref().setSetupProgress(Pref().getSetupProgressOr() | pageId);
     _pageController.nextPage(
         duration: k.animationDurationNormal, curve: Curves.easeInOut);
   }
 
-  final _initialProgress = Pref.inst().getSetupProgressOr();
+  final _initialProgress = Pref().getSetupProgressOr();
   final _pageController = PageController();
   final _currentPageNotifier = ValueNotifier<int>(0);
 }
@@ -178,7 +177,7 @@ class _ExifState extends State<_Exif> {
   dispose() {
     super.dispose();
     // persist user's choice
-    Pref.inst().setEnableExif(_isEnableExif);
+    Pref().setEnableExif(_isEnableExif);
   }
 
   void _onValueChanged(bool value) {
@@ -187,7 +186,7 @@ class _ExifState extends State<_Exif> {
     });
   }
 
-  bool _isEnableExif = Pref.inst().isEnableExifOr();
+  bool _isEnableExif = Pref().isEnableExifOr();
 }
 
 class _HiddenPrefDirNotice extends StatefulWidget implements _Page {

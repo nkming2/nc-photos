@@ -57,7 +57,7 @@ class _SettingsState extends State<Settings> {
   @override
   initState() {
     super.initState();
-    _isEnableExif = Pref.inst().isEnableExifOr();
+    _isEnableExif = Pref().isEnableExifOr();
   }
 
   @override
@@ -220,7 +220,7 @@ class _SettingsState extends State<Settings> {
 
   void _onLanguageTap(BuildContext context) {
     final selected =
-        Pref.inst().getLanguageOr(language_util.supportedLanguages[0]!.langId);
+        Pref().getLanguageOr(language_util.supportedLanguages[0]!.langId);
     showDialog(
       context: context,
       builder: (context) => FancyOptionPicker(
@@ -240,7 +240,7 @@ class _SettingsState extends State<Settings> {
       ),
     ).then((value) {
       if (value != null) {
-        Pref.inst().setLanguage(value).then((_) {
+        Pref().setLanguage(value).then((_) {
           KiwiContainer().resolve<EventBus>().fire(LanguageChangedEvent());
         });
       }
@@ -345,7 +345,7 @@ class _SettingsState extends State<Settings> {
     setState(() {
       _isEnableExif = value;
     });
-    if (!await Pref.inst().setEnableExif(value)) {
+    if (!await Pref().setEnableExif(value)) {
       _log.severe("[_setExifSupport] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -406,7 +406,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     super.initState();
     _account = widget.account;
 
-    final settings = Pref.inst().getAccountSettings(_account);
+    final settings = Pref().getAccountSettings(_account);
     _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionApp;
     _shareFolder = settings.shareFolder;
   }
@@ -489,7 +489,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         _log.fine("[_onIncludedFoldersPressed] No changes");
         return;
       }
-      final accounts = Pref.inst().getAccounts2()!;
+      final accounts = Pref().getAccounts2()!;
       if (accounts.any((element) => element.account == result)) {
         // conflict with another account. This normally won't happen because
         // the app passwords are unique to each entry, but just in case
@@ -515,7 +515,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         account: result,
       );
       accounts[index] = newAccount;
-      if (!await Pref.inst().setAccounts2(accounts)) {
+      if (!await Pref().setAccounts2(accounts)) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(L10n.global().writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
@@ -605,7 +605,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     String? shareFolder,
   }) {
     try {
-      final accounts = Pref.inst().getAccounts2()!;
+      final accounts = Pref().getAccounts2()!;
       final index = _findAccount(account, accounts);
       accounts[index] = accounts[index].copyWith(
         settings: accounts[index].settings.copyWith(
@@ -613,7 +613,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
               shareFolder: shareFolder,
             ),
       );
-      return Pref.inst().setAccounts2(accounts);
+      return Pref().setAccounts2(accounts);
     } catch (e, stackTrace) {
       _log.severe(
           "[_modifyAccountSettings] Failed while setting account settings",
@@ -625,7 +625,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
 
   /// Return the index of [account] in [Pref.getAccounts2]
   static int _findAccount(Account account, [List<PrefAccount>? accounts]) {
-    final from = accounts ?? Pref.inst().getAccounts2Or([]);
+    final from = accounts ?? Pref().getAccounts2Or([]);
     return from.indexWhere((element) => element.account == account);
   }
 
@@ -711,8 +711,8 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
   @override
   initState() {
     super.initState();
-    _screenBrightness = Pref.inst().getViewerScreenBrightnessOr(-1);
-    _isForceRotation = Pref.inst().isViewerForceRotationOr(false);
+    _screenBrightness = Pref().getViewerScreenBrightnessOr(-1);
+    _isForceRotation = Pref().isViewerForceRotationOr(false);
   }
 
   @override
@@ -833,7 +833,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     setState(() {
       _screenBrightness = value;
     });
-    if (!await Pref.inst().setViewerScreenBrightness(value)) {
+    if (!await Pref().setViewerScreenBrightness(value)) {
       _log.severe("[_setScreenBrightness] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -850,7 +850,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     setState(() {
       _isForceRotation = value;
     });
-    if (!await Pref.inst().setViewerForceRotation(value)) {
+    if (!await Pref().setViewerForceRotation(value)) {
       _log.severe("[_setForceRotation] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -877,7 +877,7 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
   @override
   initState() {
     super.initState();
-    _isBrowserShowDate = Pref.inst().isAlbumBrowserShowDateOr();
+    _isBrowserShowDate = Pref().isAlbumBrowserShowDateOr();
   }
 
   @override
@@ -920,7 +920,7 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
     setState(() {
       _isBrowserShowDate = value;
     });
-    if (!await Pref.inst().setAlbumBrowserShowDate(value)) {
+    if (!await Pref().setAlbumBrowserShowDate(value)) {
       _log.severe("[_onBrowserShowDateChanged] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -946,8 +946,8 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
   @override
   initState() {
     super.initState();
-    _isFollowSystemTheme = Pref.inst().isFollowSystemThemeOr(false);
-    _isUseBlackInDarkTheme = Pref.inst().isUseBlackInDarkThemeOr(false);
+    _isFollowSystemTheme = Pref().isFollowSystemThemeOr(false);
+    _isUseBlackInDarkTheme = Pref().isUseBlackInDarkThemeOr(false);
   }
 
   @override
@@ -999,7 +999,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     setState(() {
       _isFollowSystemTheme = value;
     });
-    if (await Pref.inst().setFollowSystemTheme(value)) {
+    if (await Pref().setFollowSystemTheme(value)) {
       KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
     } else {
       _log.severe("[_onFollowSystemThemeChanged] Failed writing pref");
@@ -1018,7 +1018,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     setState(() {
       _isUseBlackInDarkTheme = value;
     });
-    if (await Pref.inst().setUseBlackInDarkTheme(value)) {
+    if (await Pref().setUseBlackInDarkTheme(value)) {
       if (Theme.of(context).brightness == Brightness.dark) {
         KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
       }
@@ -1049,7 +1049,7 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
   @override
   initState() {
     super.initState();
-    _isEnableSharedAlbum = Pref.inst().isLabEnableSharedAlbumOr(false);
+    _isEnableSharedAlbum = Pref().isLabEnableSharedAlbumOr(false);
   }
 
   @override
@@ -1092,7 +1092,7 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
     setState(() {
       _isEnableSharedAlbum = value;
     });
-    if (!await Pref.inst().setLabEnableSharedAlbum(value)) {
+    if (!await Pref().setLabEnableSharedAlbum(value)) {
       _log.severe("[_onEnableSharedAlbumChanged] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
