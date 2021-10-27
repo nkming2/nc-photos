@@ -175,20 +175,6 @@ void main() {
         expect(exif.map((e) => e.makeComparable()).toList(),
             [_Rational(2, 1), _Rational(3, 1), _Rational(4, 100)]);
       });
-
-      test("MakerNote", () {
-        final json = <String, dynamic>{
-          "MakerNote": "ADNmmcz_",
-        };
-        expect(Exif.fromJson(json), Exif(<String, dynamic>{}));
-      });
-
-      test("UserComment", () {
-        final json = <String, dynamic>{
-          "UserComment": [1],
-        };
-        expect(Exif.fromJson(json), Exif(<String, dynamic>{}));
-      });
     });
   });
 }
