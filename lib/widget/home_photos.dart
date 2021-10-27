@@ -550,7 +550,8 @@ class _HomePhotosState extends State<HomePhotos>
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       MetadataTaskManager().addTask(MetadataTask(widget.account));
       _metadataTaskProcessTotalCount = _backingFiles
-          .where((f) => file_util.isSupportedFormat(f) && f.metadata == null)
+          .where(
+              (f) => file_util.isSupportedImageFormat(f) && f.metadata == null)
           .length;
       _hasFiredMetadataTask.value = true;
     }
