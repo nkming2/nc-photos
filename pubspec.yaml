@@ -57,7 +57,7 @@ dependencies:
   image_size_getter:
     git:
       url: https://gitlab.com/nkming2/dart_image_size_getter
-      ref: 1.0.0-nc-photos-1
+      ref: 1.0.0-nc-photos-2
       path: library
   intl: ^0.17.0
   kiwi: ^3.0.0

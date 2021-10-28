@@ -402,8 +402,8 @@ packages:
     dependency: "direct main"
     description:
       path: library
-      ref: "1.0.0-nc-photos-1"
-      resolved-ref: "16fb557ff338cdaa26f408ffe2f7262f235fbf59"
+      ref: "1.0.0-nc-photos-2"
+      resolved-ref: "57af58e04b7501337b4c56e741834a866ba8ac42"
       url: "https://gitlab.com/nkming2/dart_image_size_getter"
     source: git
     version: "1.0.0"
