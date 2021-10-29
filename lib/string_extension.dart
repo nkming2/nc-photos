@@ -23,4 +23,6 @@ extension StringExtension on String {
   String trimAny(String characters) {
     return trimLeftAny(characters).trimRightAny(characters);
   }
+
+  bool equalsIgnoreCase(String other) => toLowerCase() == other.toLowerCase();
 }

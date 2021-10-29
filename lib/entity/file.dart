@@ -465,7 +465,7 @@ extension FileExtension on File {
   }
 
   bool isOwned(String username) =>
-      ownerId == null || ownerId?.toLowerCase() == username.toLowerCase();
+      ownerId == null || ownerId!.equalsIgnoreCase(username.toLowerCase());
 
   /// Return the path of this file with the DAV part stripped
   ///

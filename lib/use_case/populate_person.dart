@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/string_extension.dart';
 
 class PopulatePerson {
   /// Return a list of files of the faces
@@ -37,7 +38,9 @@ class PopulatePerson {
     try {
       dbItem = dbItems.firstWhere((element) {
         final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-        return file_util.getUserDirName(e.file) == account.username;
+        return file_util
+            .getUserDirName(e.file)
+            .equalsIgnoreCase(account.username);
       });
     } on StateError catch (_) {
       // not found
