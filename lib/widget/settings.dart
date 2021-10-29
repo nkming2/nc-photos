@@ -1,4 +1,5 @@
 import 'package:event_bus/event_bus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -135,16 +136,17 @@ class _SettingsState extends State<Settings> {
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
               ),
-              _buildSubSettings(
-                context,
-                leading: Icon(
-                  Icons.science_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
+              if (_enabledExperiments.isNotEmpty)
+                _buildSubSettings(
+                  context,
+                  leading: Icon(
+                    Icons.science_outlined,
+                    color: AppTheme.getUnfocusedIconColor(context),
+                  ),
+                  label: L10n.global().settingsExperimentalTitle,
+                  description: L10n.global().settingsExperimentalDescription,
+                  builder: () => _ExperimentalSettings(),
                 ),
-                label: L10n.global().settingsExperimentalTitle,
-                description: L10n.global().settingsExperimentalDescription,
-                builder: () => _ExperimentalSettings(),
-              ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
                 title: Text(L10n.global().settingsVersionTitle),
@@ -1073,13 +1075,14 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              SwitchListTile(
-                title: const Text("Shared album"),
-                subtitle:
-                    const Text("Share albums with users on the same server"),
-                value: _isEnableSharedAlbum,
-                onChanged: (value) => _onEnableSharedAlbumChanged(value),
-              ),
+              if (_enabledExperiments.contains(_Experiment.sharedAlbum))
+                SwitchListTile(
+                  title: const Text("Shared album"),
+                  subtitle:
+                      const Text("Share albums with users on the same server"),
+                  value: _isEnableSharedAlbum,
+                  onChanged: (value) => _onEnableSharedAlbumChanged(value),
+                ),
             ],
           ),
         ),
@@ -1120,3 +1123,11 @@ Widget _buildCaption(BuildContext context, String label) {
     ),
   );
 }
+
+enum _Experiment {
+  sharedAlbum,
+}
+
+late final _enabledExperiments = [
+  if (kDebugMode) _Experiment.sharedAlbum,
+];
