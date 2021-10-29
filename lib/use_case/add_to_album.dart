@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
@@ -40,10 +41,12 @@ class AddToAlbum {
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    final newFiles =
-        items.whereType<AlbumFileItem>().map((e) => e.file).toList();
-    if (newFiles.isNotEmpty) {
-      await _shareFiles(account, newAlbum, newFiles);
+    if (Pref().isLabEnableSharedAlbumOr(false)) {
+      final newFiles =
+          items.whereType<AlbumFileItem>().map((e) => e.file).toList();
+      if (newFiles.isNotEmpty) {
+        await _shareFiles(account, newAlbum, newFiles);
+      }
     }
 
     return newAlbum;

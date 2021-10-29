@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
@@ -46,17 +47,19 @@ class RemoveFromAlbum {
     }
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    final removeFiles =
-        items.whereType<AlbumFileItem>().map((e) => e.file).toList();
-    if (removeFiles.isNotEmpty) {
-      final albumShares =
-          (await ListShare(shareRepo)(account, newAlbum.albumFile!))
-              .where((element) => element.shareType == ShareType.user)
-              .map((e) => e.shareWith!)
-              .toList();
-      if (albumShares.isNotEmpty) {
-        await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
-            account, newAlbum, removeFiles, albumShares);
+    if (Pref().isLabEnableSharedAlbumOr(false)) {
+      final removeFiles =
+          items.whereType<AlbumFileItem>().map((e) => e.file).toList();
+      if (removeFiles.isNotEmpty) {
+        final albumShares =
+            (await ListShare(shareRepo)(account, newAlbum.albumFile!))
+                .where((element) => element.shareType == ShareType.user)
+                .map((e) => e.shareWith!)
+                .toList();
+        if (albumShares.isNotEmpty) {
+          await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
+              account, newAlbum, removeFiles, albumShares);
+        }
       }
     }
 
