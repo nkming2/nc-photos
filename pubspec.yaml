@@ -27,11 +27,11 @@ dependencies:
     sdk: flutter
 
   # android only
-  android_intent_plus: ^1.0.2
+  android_intent_plus: ^3.0.1
   bloc: ^7.0.0
   cached_network_image: ^3.0.0
   connectivity_plus: 1.0.3
-  device_info_plus: ^2.1.0
+  device_info_plus: ^3.1.0
   draggable_scrollbar:
     git:
       url: https://gitlab.com/nkming2/flutter-draggable-scrollbar
@@ -48,8 +48,7 @@ dependencies:
       url: https://gitlab.com/nkming2/flutter_staggered_grid_view
       ref: v0.4.0-nc-photos-1
   # android/ios only
-  # 2.0.3+ require Android SDK20, we don't want that for now
-  google_maps_flutter: ^2.0.6
+  google_maps_flutter: ^2.1.0
   http: ^0.13.1
   idb_shim: ^2.0.0
   # android/ios only
@@ -65,10 +64,10 @@ dependencies:
   native_device_orientation: ^1.0.0
   page_view_indicators: ^2.0.0
   path: ^1.8.0
-  path_provider: ^2.0.1
+  path_provider: ^2.0.6
   rxdart: ^0.26.0
   screen_brightness:  ^0.0.4
-  shared_preferences: ^2.0.5
+  shared_preferences: ^2.0.8
   # android/ios only
   sqflite: ^2.0.0
   synchronized: ^3.0.0
