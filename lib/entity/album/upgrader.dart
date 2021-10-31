@@ -1,6 +1,7 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:tuple/tuple.dart';
@@ -163,6 +164,7 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
 class AlbumUpgraderV5 implements AlbumUpgrader {
   const AlbumUpgraderV5(
     this.account, {
+    this.albumFile,
     this.logFilePath,
   });
 
@@ -175,7 +177,13 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
         return result;
       }
       for (final item in (result["provider"]["content"]["items"] as List)) {
-        item["addedBy"] = result["albumFile"]["ownerId"] ?? account.username;
+        final String addedBy;
+        if (result.containsKey("albumFile")) {
+          addedBy = result["albumFile"]["ownerId"] ?? account.username;
+        } else {
+          addedBy = albumFile?.ownerId ?? account.username;
+        }
+        item["addedBy"] = addedBy;
         item["addedAt"] = result["lastUpdated"];
       }
     } catch (e, stackTrace) {
@@ -187,6 +195,7 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
   }
 
   final Account account;
+  final File? albumFile;
 
   /// File path for logging only
   final String? logFilePath;

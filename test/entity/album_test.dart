@@ -1534,6 +1534,138 @@ void main() {
           },
         });
       });
+
+      test("w/o albumFile", () {
+        final json = <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+        };
+        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                  "addedBy": "user1",
+                  "addedAt": "2020-01-02T03:04:05.678901Z",
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+        });
+      });
+
+      test("w/ external albumFile", () {
+        final json = <String, dynamic>{
+          "version": 5,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [
+                <String, dynamic>{
+                  "type": "file",
+                  "content": <String, dynamic>{
+                    "file": <String, dynamic>{
+                      "path": "remote.php/dav/files/admin/test1.jpg",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": false,
+            },
+          },
+        };
+        final albumFile = File(
+          path: "remote.php/dav/files/admin/test1.json",
+          ownerId: "admin",
+        );
+        expect(
+            AlbumUpgraderV5(account, albumFile: albumFile)(json),
+            <String, dynamic>{
+              "version": 5,
+              "lastUpdated": "2020-01-02T03:04:05.678901Z",
+              "provider": <String, dynamic>{
+                "type": "static",
+                "content": <String, dynamic>{
+                  "items": [
+                    <String, dynamic>{
+                      "type": "file",
+                      "content": <String, dynamic>{
+                        "file": <String, dynamic>{
+                          "path": "remote.php/dav/files/admin/test1.jpg",
+                        },
+                      },
+                      "addedBy": "admin",
+                      "addedAt": "2020-01-02T03:04:05.678901Z",
+                    },
+                  ],
+                },
+              },
+              "coverProvider": <String, dynamic>{
+                "type": "auto",
+                "content": <String, dynamic>{},
+              },
+              "sortProvider": <String, dynamic>{
+                "type": "time",
+                "content": <String, dynamic>{
+                  "isAscending": false,
+                },
+              },
+            });
+      });
     });
   });
 }

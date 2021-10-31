@@ -241,7 +241,8 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         upgraderV2: AlbumUpgraderV2(logFilePath: albumFile.path),
         upgraderV3: AlbumUpgraderV3(logFilePath: albumFile.path),
         upgraderV4: AlbumUpgraderV4(logFilePath: albumFile.path),
-        upgraderV5: AlbumUpgraderV5(account, logFilePath: albumFile.path),
+        upgraderV5: AlbumUpgraderV5(account,
+            albumFile: albumFile, logFilePath: albumFile.path),
       )!
           .copyWith(
         lastUpdated: OrNull(null),
