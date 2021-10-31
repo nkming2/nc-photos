@@ -83,7 +83,7 @@ class ShareHandler {
     final results = <Tuple2<File, dynamic>>[];
     for (final pair in files.withIndex()) {
       final i = pair.item1, f = pair.item2;
-      controller.add("(${i + 1}/${files.length})");
+      controller.add("($i/${files.length})");
       try {
         results.add(Tuple2(
             f,
