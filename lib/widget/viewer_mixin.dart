@@ -59,13 +59,13 @@ class _ViewerBrightnessController implements Disposable {
   init(State state) {
     final brightness = Pref().getViewerScreenBrightness();
     if (brightness != null && brightness >= 0) {
-      ScreenBrightness.setScreenBrightness(brightness / 100.0);
+      ScreenBrightness().setScreenBrightness(brightness / 100.0);
     }
   }
 
   @override
   dispose(State state) {
-    ScreenBrightness.resetScreenBrightness();
+    ScreenBrightness().resetScreenBrightness();
   }
 }
 

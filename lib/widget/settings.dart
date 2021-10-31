@@ -763,7 +763,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     if (value) {
       var brightness = 0.5;
       try {
-        await ScreenBrightness.setScreenBrightness(brightness);
+        await ScreenBrightness().setScreenBrightness(brightness);
         final value = await showDialog<int>(
           context: context,
           builder: (_) => AppTheme(
@@ -789,7 +789,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
                           onChangeEnd: (value) async {
                             brightness = value;
                             try {
-                              await ScreenBrightness.setScreenBrightness(value);
+                              await ScreenBrightness().setScreenBrightness(value);
                             } catch (e, stackTrace) {
                               _log.severe("Failed while setScreenBrightness", e,
                                   stackTrace);
@@ -821,7 +821,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
           _setScreenBrightness(value);
         }
       } finally {
-        ScreenBrightness.resetScreenBrightness();
+        ScreenBrightness().resetScreenBrightness();
       }
     } else {
       _setScreenBrightness(-1);
