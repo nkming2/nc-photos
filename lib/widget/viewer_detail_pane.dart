@@ -28,6 +28,7 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
@@ -307,7 +308,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               .items
               .whereType<AlbumFileItem>()
               .firstWhere((element) => element.file.path == widget.file.path);
-          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
+          await RemoveFromAlbum(
+                  albumRepo, shareRepo, fileRepo, AppDb(), Pref())(
               widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();
@@ -511,7 +513,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         ));
         return Future.error(ArgumentError("File already in album"));
       }
-      await AddToAlbum(albumRepo, shareRepo, AppDb())(
+      await AddToAlbum(albumRepo, shareRepo, AppDb(), Pref())(
           widget.account, album, [newItem]);
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);

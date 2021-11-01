@@ -12,12 +12,12 @@ import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 
 class RemoveAlbum {
-  const RemoveAlbum(this.fileRepo, this.albumRepo, this.shareRepo);
+  const RemoveAlbum(this.fileRepo, this.albumRepo, this.shareRepo, this.pref);
 
   /// Remove an album
   Future<void> call(Account account, Album album) async {
     _log.info("[call] Remove album: $album");
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
+    if (pref.isLabEnableSharedAlbumOr(false)) {
       final files = <File>[];
       if (album.provider is AlbumStaticProvider) {
         files.addAll(AlbumStaticProvider.of(album)
@@ -59,6 +59,7 @@ class RemoveAlbum {
   final FileRepo fileRepo;
   final AlbumRepo albumRepo;
   final ShareRepo shareRepo;
+  final Pref pref;
 
   static final _log = Logger("use_case.remove_album.RemoveAlbum");
 }

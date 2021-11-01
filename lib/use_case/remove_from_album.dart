@@ -16,7 +16,7 @@ import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
   const RemoveFromAlbum(
-      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb);
+      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb, this.pref);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -49,7 +49,7 @@ class RemoveFromAlbum {
     }
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
+    if (pref.isLabEnableSharedAlbumOr(false)) {
       final removeFiles =
           items.whereType<AlbumFileItem>().map((e) => e.file).toList();
       if (removeFiles.isNotEmpty) {
@@ -72,6 +72,7 @@ class RemoveFromAlbum {
   final ShareRepo shareRepo;
   final FileRepo fileRepo;
   final AppDb appDb;
+  final Pref pref;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

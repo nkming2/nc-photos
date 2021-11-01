@@ -394,7 +394,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
     final failures = <Album>[];
     for (final a in selectedAlbums) {
       try {
-        await RemoveAlbum(fileRepo, albumRepo, shareRepo)(widget.account, a);
+        await RemoveAlbum(fileRepo, albumRepo, shareRepo, Pref())(
+            widget.account, a);
       } catch (e, stackTrace) {
         _log.shout(
             "[_onSelectionDeletePressed] Failed while removing album: '${a.name}'",

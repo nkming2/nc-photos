@@ -11,14 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Pref {
   factory Pref() => _inst;
 
-  Pref._();
+  Pref.scoped();
 
   Future<void> init() async {
     if (await CompatV32.isPrefNeedMigration()) {
       await CompatV32.migratePref();
     }
     return SharedPreferences.getInstance().then((pref) {
-      _inst._pref = pref;
+      _pref = pref;
     });
   }
 
@@ -207,7 +207,7 @@ class Pref {
     }
   }
 
-  static late final _inst = Pref._();
+  static late final _inst = Pref.scoped();
   late SharedPreferences _pref;
 }
 

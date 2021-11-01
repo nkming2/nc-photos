@@ -15,7 +15,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class AddToAlbum {
-  const AddToAlbum(this.albumRepo, this.shareRepo, this.appDb);
+  const AddToAlbum(this.albumRepo, this.shareRepo, this.appDb, this.pref);
 
   /// Add a list of AlbumItems to [album]
   Future<Album> call(
@@ -42,7 +42,7 @@ class AddToAlbum {
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
+    if (pref.isLabEnableSharedAlbumOr(false)) {
       final newFiles =
           items.whereType<AlbumFileItem>().map((e) => e.file).toList();
       if (newFiles.isNotEmpty) {
@@ -99,6 +99,7 @@ class AddToAlbum {
   final AlbumRepo albumRepo;
   final ShareRepo shareRepo;
   final AppDb appDb;
+  final Pref pref;
 
   static final _log = Logger("use_case.add_to_album.AddToAlbum");
 }

@@ -429,7 +429,7 @@ class _HomePhotosState extends State<HomePhotos>
               .toList();
           final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           final shareRepo = ShareRepo(ShareRemoteDataSource());
-          await AddToAlbum(albumRepo, shareRepo, AppDb())(
+          await AddToAlbum(albumRepo, shareRepo, AppDb(), Pref())(
               widget.account, value, selected);
           if (mounted) {
             setState(() {
