@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -242,11 +243,11 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   Future<ListAlbumBlocState> _queryOffline(ListAlbumBlocQuery ev) =>
       _queryWithAlbumDataSource(
-          ev, FileAppDbDataSource(), AlbumAppDbDataSource());
+          ev, FileAppDbDataSource(AppDb()), AlbumAppDbDataSource(AppDb()));
 
   Future<ListAlbumBlocState> _queryOnline(ListAlbumBlocQuery ev) =>
       _queryWithAlbumDataSource(
-          ev, FileCachedDataSource(), AlbumCachedDataSource());
+          ev, FileCachedDataSource(AppDb()), AlbumCachedDataSource(AppDb()));
 
   Future<ListAlbumBlocState> _queryWithAlbumDataSource(ListAlbumBlocQuery ev,
       FileDataSource fileDataSource, AlbumDataSource albumDataSrc) async {

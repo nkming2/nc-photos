@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_share.dart';
 import 'package:nc_photos/bloc/list_sharee.dart';
@@ -221,8 +222,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   Future<void> _removeShare(Sharee sharee) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
-    final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
       await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -125,7 +126,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
       sortProvider: const AlbumTimeSortProvider(isAscending: false),
     );
     _log.info("[_onOkPressed] Creating static album: $album");
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     final newAlbum = CreateAlbum(albumRepo)(widget.account, album);
     // let previous route to handle this future
     Navigator.of(context).pop(newAlbum);
@@ -153,7 +154,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
       );
       _log.info("[_onOkPressed] Creating dir album: $album");
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final newAlbum = CreateAlbum(albumRepo)(widget.account, album);
       // let previous route to handle this future
       Navigator.of(context).pop(newAlbum);

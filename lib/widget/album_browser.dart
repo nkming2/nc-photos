@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -149,7 +150,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
         setState(() {
           _album = newAlbum;
         });
@@ -177,7 +178,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Future<void> _initAlbum() async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     final album = await albumRepo.get(widget.account, widget.album.albumFile!);
     await _setAlbum(album);
   }
@@ -404,10 +405,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
 
     try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final fileRepo = FileRepo(FileCachedDataSource());
-      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo)(
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
           widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
@@ -722,7 +723,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<void> _setAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
-    final items = await PreProcessAlbum()(widget.account, album);
+    final items = await PreProcessAlbum(AppDb())(widget.account, album);
     album = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
         items: items,
@@ -740,7 +741,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<Album> _updateAlbumPostResync(
       Album album, List<AlbumItem> items) async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     return await UpdateAlbumWithActualItems(albumRepo)(
         widget.account, album, items);
   }

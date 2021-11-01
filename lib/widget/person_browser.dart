@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_face.dart';
 import 'package:nc_photos/cache_manager_util.dart';
@@ -376,9 +377,9 @@ class _PersonBrowserState extends State<PersonBrowser>
                     file: e.file,
                   ))
               .toList();
-          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           final shareRepo = ShareRepo(ShareRemoteDataSource());
-          await AddToAlbum(albumRepo, shareRepo)(
+          await AddToAlbum(albumRepo, shareRepo, AppDb())(
               widget.account, value, selected);
           setState(() {
             clearSelectedItems();
@@ -408,7 +409,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     await NotifiedListAction<File>(
       list: selectedFiles,
       action: (file) async {
@@ -436,8 +437,8 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     await NotifiedListAction<File>(
       list: selectedFiles,
       action: (file) async {
@@ -470,7 +471,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _transformItems(List<Face> items) async {
-    final files = await PopulatePerson()(widget.account, items);
+    final files = await PopulatePerson(AppDb())(widget.account, items);
     _backingFiles = files
         .sorted(compareFileDateTimeDescending)
         .where((element) =>

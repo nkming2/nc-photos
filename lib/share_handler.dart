@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -148,7 +149,7 @@ class ShareHandler {
       clearSelection?.call();
       isSelectionCleared = true;
 
-      final fileRepo = FileRepo(FileCachedDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       final path = await _createDir(fileRepo, account, result.albumName);
       await _copyFilesToDir(fileRepo, account, files, path);
       controller?.close();

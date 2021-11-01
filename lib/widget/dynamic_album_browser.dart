@@ -5,6 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -133,7 +134,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
         setState(() {
           _album = newAlbum;
         });
@@ -162,7 +163,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Future<void> _initAlbum() async {
     assert(widget.album.provider is AlbumDynamicProvider);
-    final items = await PreProcessAlbum()(widget.account, widget.album);
+    final items = await PreProcessAlbum(AppDb())(widget.account, widget.album);
     final album = await _updateAlbumPostPopulate(widget.album, items);
     if (mounted) {
       setState(() {
@@ -333,7 +334,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
     _log.info(
         "[_onConvertBasicPressed] Converting album '${_album!.name}' to static");
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     try {
       await UpdateAlbum(albumRepo)(
           widget.account,
@@ -413,8 +414,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       clearSelectedItems();
     });
 
-    final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     final successes = <_FileListItem>[];
     final failures = <_FileListItem>[];
     for (final item in selected) {
@@ -581,7 +582,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Future<Album> _updateAlbumPostPopulate(
       Album album, List<AlbumItem> items) async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     return await UpdateAlbumWithActualItems(albumRepo)(
         widget.account, album, items);
   }

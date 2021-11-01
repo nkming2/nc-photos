@@ -9,9 +9,11 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/string_extension.dart';
 
 class PopulatePerson {
+  const PopulatePerson(this.appDb);
+
   /// Return a list of files of the faces
   Future<List<File>> call(Account account, List<Face> faces) async {
-    return await AppDb.use((db) async {
+    return await appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
@@ -53,6 +55,8 @@ class PopulatePerson {
     final dbEntry = AppDbFileDbEntry.fromJson(dbItem.cast<String, dynamic>());
     return dbEntry.file;
   }
+
+  final AppDb appDb;
 
   static final _log = Logger("use_case.populate_album.PopulatePerson");
 }

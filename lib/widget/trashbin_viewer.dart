@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -165,7 +166,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     controller?.closed.whenComplete(() {
       controller = null;
     });
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     try {
       await RestoreTrashbin(fileRepo)(widget.account, file);
       controller?.close();
@@ -320,7 +321,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       controller = null;
     });
     try {
-      final fileRepo = FileRepo(FileCachedDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       await Remove(fileRepo, null)(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(

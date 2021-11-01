@@ -3,6 +3,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -202,7 +203,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final sharedAlbumFiles = await Ls(fileRepo)(
         ev.account,
         File(
@@ -265,7 +266,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       }
 
       try {
-        final file = await FindFile()(ev.account, s.itemSource);
+        final file = await FindFile(AppDb())(ev.account, s.itemSource);
         return ListSharingFile(s, file);
       } catch (e, stackTrace) {
         _log.severe("[_querySharesByMe] File not found: ${s.itemSource}", e,
@@ -278,7 +279,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   Future<List<ListSharingItem>> _querySharesWithMe(
       ListSharingBlocQuery ev, List<File> sharedAlbumFiles) async {
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final pendingSharedAlbumFiles = await Ls(fileRepo)(
         ev.account,
         File(
@@ -327,7 +328,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   Future<ListSharingItem?> _querySharedAlbum(
       ListSharingBlocQuery ev, Share share, File albumFile) async {
     try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final album = await albumRepo.get(ev.account, albumFile);
       return ListSharingAlbum(share, album);
     } catch (e, stackTrace) {

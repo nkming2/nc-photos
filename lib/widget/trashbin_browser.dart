@@ -6,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -400,7 +401,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
           L10n.global().deleteSelectedProcessingNotification(files.length)),
       duration: k.snackBarDurationShort,
     ));
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final failures = <File>[];
     for (final f in files) {
       try {

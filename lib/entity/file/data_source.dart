@@ -238,10 +238,12 @@ class FileWebdavDataSource implements FileDataSource {
 }
 
 class FileAppDbDataSource implements FileDataSource {
+  const FileAppDbDataSource(this.appDb);
+
   @override
   list(Account account, File f) {
     _log.info("[list] ${f.path}");
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileStoreName);
       return await _doList(store, account, f);
@@ -251,7 +253,7 @@ class FileAppDbDataSource implements FileDataSource {
   @override
   remove(Account account, File f) {
     _log.info("[remove] ${f.path}");
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
       final index = store.index(AppDbFileEntry.indexName);
@@ -289,7 +291,7 @@ class FileAppDbDataSource implements FileDataSource {
     OrNull<DateTime>? overrideDateTime,
   }) {
     _log.info("[updateProperty] ${f.path}");
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction = db.transaction(
           [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
 
@@ -369,17 +371,21 @@ class FileAppDbDataSource implements FileDataSource {
     }
   }
 
+  final AppDb appDb;
+
   static final _log = Logger("entity.file.data_source.FileAppDbDataSource");
 }
 
 class FileCachedDataSource implements FileDataSource {
-  FileCachedDataSource({
+  FileCachedDataSource(
+    this.appDb, {
     this.shouldCheckCache = false,
-  });
+  }) : _appDbSrc = FileAppDbDataSource(appDb);
 
   @override
   list(Account account, File f) async {
     final cacheManager = _CacheManager(
+      appDb: appDb,
       appDbSrc: _appDbSrc,
       remoteSrc: _remoteSrc,
       shouldCheckCache: shouldCheckCache,
@@ -408,7 +414,7 @@ class FileCachedDataSource implements FileDataSource {
       if (cache != null) {
         _syncCacheWithRemote(account, remote, cache);
       } else {
-        AppDb.use((db) async {
+        appDb.use((db) async {
           final transaction =
               db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
           final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
@@ -513,7 +519,7 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   Future<void> _cacheResult(Account account, File f, List<File> result) {
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.fileStoreName);
       await _cacheListResults(store, account, f, result);
@@ -528,7 +534,7 @@ class FileCachedDataSource implements FileDataSource {
     _log.info(
         "[_syncCacheWithRemote] Removed: ${removed.map((f) => f.path).toReadableString()}");
 
-    AppDb.use((db) async {
+    appDb.use((db) async {
       final transaction = db.transaction(
           [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
       final fileStore = transaction.objectStore(AppDb.fileStoreName);
@@ -617,16 +623,18 @@ class FileCachedDataSource implements FileDataSource {
     }
   }
 
+  final AppDb appDb;
   final bool shouldCheckCache;
 
   final _remoteSrc = const FileWebdavDataSource();
-  final _appDbSrc = FileAppDbDataSource();
+  final FileAppDbDataSource _appDbSrc;
 
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
 }
 
 class _CacheManager {
   _CacheManager({
+    required this.appDb,
     required this.appDbSrc,
     required this.remoteSrc,
     this.shouldCheckCache = false,
@@ -677,7 +685,7 @@ class _CacheManager {
       Account account, File f, List<File> cache) async {
     final touchPath =
         "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(appDb));
     final tokenManager = TouchTokenManager();
     String? remoteToken;
     try {
@@ -708,6 +716,7 @@ class _CacheManager {
     }
   }
 
+  final AppDb appDb;
   final FileWebdavDataSource remoteSrc;
   final FileAppDbDataSource appDbSrc;
   final bool shouldCheckCache;

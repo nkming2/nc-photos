@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -278,7 +279,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
       dirPath = widget.file.path;
     }
 
-    final fileRepo = FileRepo(FileCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     return Remove(fileRepo, null)(
       widget.account,
       widget.file.copyWith(

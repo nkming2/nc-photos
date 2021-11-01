@@ -6,9 +6,11 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/string_extension.dart';
 
 class FindFile {
+  const FindFile(this.appDb);
+
   /// Find the [File] in the DB by [fileId]
   Future<File> call(Account account, int fileId) async {
-    return await AppDb.use((db) async {
+    return await appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
@@ -27,4 +29,6 @@ class FindFile {
       return dbEntry.file;
     });
   }
+
+  final AppDb appDb;
 }

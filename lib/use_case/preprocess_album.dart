@@ -1,4 +1,5 @@
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -11,14 +12,18 @@ import 'package:nc_photos/use_case/resync_album.dart';
 /// - with AlbumStaticProvider: [ResyncAlbum]
 /// - with AlbumDirProvider: [PopulateAlbum]
 class PreProcessAlbum {
+  const PreProcessAlbum(this.appDb);
+
   Future<List<AlbumItem>> call(Account account, Album album) {
     if (album.provider is AlbumStaticProvider) {
-      return ResyncAlbum()(account, album);
+      return ResyncAlbum(appDb)(account, album);
     } else if (album.provider is AlbumDynamicProvider) {
-      return PopulateAlbum()(account, album);
+      return PopulateAlbum(appDb)(account, album);
     } else {
       throw ArgumentError(
           "Unknown album provider: ${album.provider.runtimeType}");
     }
   }
+
+  final AppDb appDb;
 }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -234,11 +235,11 @@ class _AlbumImporterState extends State<AlbumImporter> {
         );
         _log.info("[_createAllAlbums] Creating dir album: $album");
 
-        final items = await PreProcessAlbum()(widget.account, album);
+        final items = await PreProcessAlbum(AppDb())(widget.account, album);
         album = await UpdateAlbumWithActualItems(null)(
             widget.account, album, items);
 
-        final albumRepo = AlbumRepo(AlbumCachedDataSource());
+        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
         await CreateAlbum(albumRepo)(widget.account, album);
       } catch (e, stacktrace) {
         _log.shout(

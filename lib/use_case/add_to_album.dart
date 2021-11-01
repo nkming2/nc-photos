@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -14,7 +15,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class AddToAlbum {
-  const AddToAlbum(this.albumRepo, this.shareRepo);
+  const AddToAlbum(this.albumRepo, this.shareRepo, this.appDb);
 
   /// Add a list of AlbumItems to [album]
   Future<Album> call(
@@ -22,7 +23,7 @@ class AddToAlbum {
     _log.info("[call] Add ${items.length} items to album '${album.name}'");
     assert(album.provider is AlbumStaticProvider);
     // resync is needed to work out album cover and latest item
-    final oldItems = await PreProcessAlbum()(account, album);
+    final oldItems = await PreProcessAlbum(appDb)(account, album);
     final newItems = makeDistinctAlbumItems([
       ...items,
       ...oldItems,
@@ -97,6 +98,7 @@ class AddToAlbum {
 
   final AlbumRepo albumRepo;
   final ShareRepo shareRepo;
+  final AppDb appDb;
 
   static final _log = Logger("use_case.add_to_album.AddToAlbum");
 }

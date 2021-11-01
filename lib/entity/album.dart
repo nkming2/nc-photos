@@ -296,10 +296,12 @@ class AlbumRemoteDataSource implements AlbumDataSource {
 }
 
 class AlbumAppDbDataSource implements AlbumDataSource {
+  const AlbumAppDbDataSource(this.appDb);
+
   @override
   get(Account account, File albumFile) {
     _log.info("[get] ${albumFile.path}");
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction = db.transaction(AppDb.albumStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.albumStoreName);
       final index = store.index(AppDbAlbumEntry.indexName);
@@ -338,7 +340,7 @@ class AlbumAppDbDataSource implements AlbumDataSource {
   @override
   update(Account account, Album album) {
     _log.info("[update] ${album.albumFile!.path}");
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
@@ -349,10 +351,14 @@ class AlbumAppDbDataSource implements AlbumDataSource {
   @override
   cleanUp(Account account, String rootDir, List<File> albumFiles) async {}
 
+  final AppDb appDb;
+
   static final _log = Logger("entity.album.AlbumAppDbDataSource");
 }
 
 class AlbumCachedDataSource implements AlbumDataSource {
+  AlbumCachedDataSource(this.appDb) : _appDbSrc = AlbumAppDbDataSource(appDb);
+
   @override
   get(Account account, File albumFile) async {
     try {
@@ -389,7 +395,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
 
   @override
   cleanUp(Account account, String rootDir, List<File> albumFiles) async {
-    AppDb.use((db) async {
+    appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
@@ -415,7 +421,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
   }
 
   Future<void> _cacheResult(Account account, Album result) {
-    return AppDb.use((db) async {
+    return appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.albumStoreName, idbModeReadWrite);
       final store = transaction.objectStore(AppDb.albumStoreName);
@@ -423,8 +429,9 @@ class AlbumCachedDataSource implements AlbumDataSource {
     });
   }
 
+  final AppDb appDb;
   final _remoteSrc = AlbumRemoteDataSource();
-  final _appDbSrc = AlbumAppDbDataSource();
+  final AlbumAppDbDataSource _appDbSrc;
 
   static final _log = Logger("entity.album.AlbumCachedDataSource");
 }

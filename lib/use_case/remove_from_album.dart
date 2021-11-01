@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -14,7 +15,8 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
-  const RemoveFromAlbum(this.albumRepo, this.shareRepo, this.fileRepo);
+  const RemoveFromAlbum(
+      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -38,7 +40,7 @@ class RemoveFromAlbum {
         element.file.bestDateTime == album.provider.latestItemTime)) {
       _log.info("[call] Resync as latest item is being removed");
       // need to update the album properties
-      final newItemsSynced = await PreProcessAlbum()(account, newAlbum);
+      final newItemsSynced = await PreProcessAlbum(appDb)(account, newAlbum);
       newAlbum = await UpdateAlbumWithActualItems(null)(
         account,
         newAlbum,
@@ -69,6 +71,7 @@ class RemoveFromAlbum {
   final AlbumRepo albumRepo;
   final ShareRepo shareRepo;
   final FileRepo fileRepo;
+  final AppDb appDb;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

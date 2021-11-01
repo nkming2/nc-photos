@@ -11,13 +11,15 @@ import 'package:nc_photos/string_extension.dart';
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
+  const ResyncAlbum(this.appDb);
+
   Future<List<AlbumItem>> call(Account account, Album album) async {
     _log.info("[call] Resync album: ${album.name}");
     if (album.provider is! AlbumStaticProvider) {
       throw ArgumentError(
           "Resync only make sense for static albums: ${album.name}");
     }
-    return await AppDb.use((db) async {
+    return await appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
@@ -74,6 +76,8 @@ class ResyncAlbum {
       file: dbEntry.file,
     );
   }
+
+  final AppDb appDb;
 
   static final _log = Logger("use_case.resync_album.ResyncAlbum");
 }

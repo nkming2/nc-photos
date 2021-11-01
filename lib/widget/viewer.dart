@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -454,8 +455,8 @@ class _ViewerState extends State<Viewer>
       controller = null;
     });
     try {
-      await Remove(FileRepo(FileCachedDataSource()),
-          AlbumRepo(AlbumCachedDataSource()))(widget.account, file);
+      await Remove(FileRepo(FileCachedDataSource(AppDb())),
+          AlbumRepo(AlbumCachedDataSource(AppDb())))(widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().deleteSuccessNotification),

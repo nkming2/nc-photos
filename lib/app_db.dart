@@ -20,12 +20,16 @@ class AppDb {
   /// this is a stupid name but 'files' is already being used so...
   static const fileDbStoreName = "filesDb";
 
+  factory AppDb() => _inst;
+
+  AppDb._();
+
   /// Run [fn] with an opened database instance
   ///
   /// This function guarantees that:
   /// 1) Database is always closed after [fn] exits, even with an error
   /// 2) Only at most 1 database instance being opened at any time
-  static Future<T> use<T>(FutureOr<T> Function(Database) fn) async {
+  Future<T> use<T>(FutureOr<T> Function(Database) fn) async {
     // make sure only one client is opening the db
     return await _lock.synchronized(() async {
       final db = await _open();
@@ -38,7 +42,7 @@ class AppDb {
   }
 
   /// Open the database
-  static Future<Database> _open() async {
+  Future<Database> _open() async {
     final dbFactory = platform.getDbFactory();
     return dbFactory.open(dbName, version: dbVersion,
         onUpgradeNeeded: (event) async {
@@ -75,8 +79,10 @@ class AppDb {
     });
   }
 
+  static late final _inst = AppDb._();
+  final _lock = Lock(reentrant: true);
+
   static final _log = Logger("app_db.AppDb");
-  static final _lock = Lock(reentrant: true);
 }
 
 class AppDbFileEntry {

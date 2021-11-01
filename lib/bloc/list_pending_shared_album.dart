@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -130,8 +131,8 @@ class ListPendingSharedAlbumBloc extends Bloc<ListPendingSharedAlbumBlocEvent,
       ListPendingSharedAlbumBlocQuery ev) async* {
     yield const ListPendingSharedAlbumBlocLoading([]);
     try {
-      final fileRepo = FileRepo(FileCachedDataSource());
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final albums = <Album>[];
       final errors = <dynamic>[];
       await for (final result

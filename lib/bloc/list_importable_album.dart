@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -100,8 +101,8 @@ class ListImportableAlbumBloc
       ListImportableAlbumBlocQuery ev) async* {
     yield const ListImportableAlbumBlocLoading([]);
     try {
-      final fileRepo = FileRepo(FileCachedDataSource());
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final albums = (await ListAlbum(fileRepo, albumRepo)(ev.account)
               .where((event) => event is Album)
               .toList())

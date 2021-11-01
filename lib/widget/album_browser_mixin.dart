@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -211,7 +212,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     try {
       await NotifiedAction(
         () async {
-          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           await UpdateAlbum(albumRepo)(
               account,
               album.copyWith(

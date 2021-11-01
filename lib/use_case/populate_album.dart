@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -10,6 +11,8 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
 class PopulateAlbum {
+  const PopulateAlbum(this.appDb);
+
   Future<List<AlbumItem>> call(Account account, Album album) async {
     if (album.provider is AlbumStaticProvider) {
       _log.warning(
@@ -30,7 +33,7 @@ class PopulateAlbum {
     final provider = album.provider as AlbumDirProvider;
     final products = <AlbumItem>[];
     for (final d in provider.dirs) {
-      final stream = ScanDir(FileRepo(FileCachedDataSource()))(account, d);
+      final stream = ScanDir(FileRepo(FileCachedDataSource(appDb)))(account, d);
       await for (final result in stream) {
         if (result is ExceptionEvent) {
           _log.shout(
@@ -49,6 +52,8 @@ class PopulateAlbum {
     }
     return products;
   }
+
+  final AppDb appDb;
 
   static final _log = Logger("use_case.populate_album.PopulateAlbum");
 }

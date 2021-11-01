@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -289,12 +290,12 @@ class ScanDirBloc extends Bloc<ScanDirBlocEvent, ScanDirBlocState> {
 
   Stream<ScanDirBlocState> _queryOffline(
           ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) =>
-      _queryWithFileDataSource(ev, getState, FileAppDbDataSource());
+      _queryWithFileDataSource(ev, getState, FileAppDbDataSource(AppDb()));
 
   Stream<ScanDirBlocState> _queryOnline(
       ScanDirBlocQueryBase ev, ScanDirBlocState Function() getState) {
     final stream = _queryWithFileDataSource(ev, getState,
-        FileCachedDataSource(shouldCheckCache: _shouldCheckCache));
+        FileCachedDataSource(AppDb(), shouldCheckCache: _shouldCheckCache));
     _shouldCheckCache = false;
     return stream;
   }

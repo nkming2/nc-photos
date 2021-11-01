@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/double_extension.dart';
@@ -299,14 +300,14 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           final shareRepo = ShareRepo(ShareRemoteDataSource());
-          final fileRepo = FileRepo(FileCachedDataSource());
+          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
           final thisItem = AlbumStaticProvider.of(widget.album!)
               .items
               .whereType<AlbumFileItem>()
               .firstWhere((element) => element.file.path == widget.file.path);
-          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo)(
+          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
               widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();
@@ -329,7 +330,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final albumRepo = AlbumRepo(AlbumCachedDataSource());
+          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           await UpdateAlbum(albumRepo)(
               widget.account,
               widget.album!.copyWith(
@@ -388,7 +389,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final fileRepo = FileRepo(FileCachedDataSource());
+          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, true);
           if (mounted) {
@@ -413,7 +414,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final fileRepo = FileRepo(FileCachedDataSource());
+          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
           await UpdateProperty(fileRepo)
               .updateIsArchived(widget.account, widget.file, false);
           if (mounted) {
@@ -451,7 +452,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       if (value == null || value is! DateTime) {
         return;
       }
-      final fileRepo = FileRepo(FileCachedDataSource());
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       try {
         await UpdateProperty(fileRepo)
             .updateOverrideDateTime(widget.account, widget.file, value);
@@ -490,7 +491,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   Future<void> _addToAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
     try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource());
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final shareRepo = ShareRepo(ShareRemoteDataSource());
       final newItem = AlbumFileItem(
         addedBy: widget.account.username,
@@ -510,7 +511,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         ));
         return Future.error(ArgumentError("File already in album"));
       }
-      await AddToAlbum(albumRepo, shareRepo)(widget.account, album, [newItem]);
+      await AddToAlbum(albumRepo, shareRepo, AppDb())(
+          widget.account, album, [newItem]);
     } catch (e, stacktrace) {
       _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(

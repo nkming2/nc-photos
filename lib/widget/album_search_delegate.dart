@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/album_search.dart';
 import 'package:nc_photos/bloc/album_search_suggestion.dart';
@@ -20,8 +21,8 @@ class AlbumSearchDelegate extends SearchDelegate {
       : super(
           searchFieldLabel: L10n.global().albumSearchTextFieldHint,
         ) {
-    final fileRepo = FileRepo(FileCachedDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource());
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     ListAlbum(fileRepo, albumRepo)(account).toList().then((value) {
       final albums = value.whereType<Album>().toList();
       _searchBloc.add(AlbumSearchBlocUpdateItemsEvent(albums));
