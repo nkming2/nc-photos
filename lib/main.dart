@@ -75,7 +75,11 @@ void _initLog() {
 }
 
 Future<void> _initPref() async {
-  await Pref().init();
+  final provider = PrefSharedPreferencesProvider();
+  await provider.init();
+  final pref = Pref.scoped(provider);
+  Pref.setGlobalInstance(pref);
+
   if (Pref().getLastVersion() == null) {
     if (Pref().getSetupProgress() == null) {
       // new install
