@@ -237,7 +237,7 @@
 	"@signInHeaderText": {
 		"description": "Inform user what to do in sign in widget"
 	},
-	"signIn2faHintText": "*Utilisez un mot de passe d'application si vous avez activé l'authentification à deux facteurs sur le serveur",
+	"signIn2faHintText": "Utilisez un mot de passe d'application si vous avez activé l'authentification à deux facteurs sur le serveur",
 	"@signIn2faHintText": {
 		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
 	},

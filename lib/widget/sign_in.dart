@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
@@ -12,6 +13,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in";
@@ -69,11 +71,26 @@ class _SignInState extends State<SignIn> {
                         alignment: AlignmentDirectional.centerStart,
                         constraints: const BoxConstraints(
                             maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: InkWell(
+                          onTap: () {
+                            launch(help_utils.twoFactorAuthUrl);
+                          },
+                          child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        child: Text(
-                          L10n.global().signIn2faHintText,
-                          style: const TextStyle(fontStyle: FontStyle.italic),
+                                horizontal: 16, vertical: 16),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.help_outline, size: 16),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(L10n.global().signIn2faHintText),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       if (!platform_k.isWeb) Expanded(child: Container()),

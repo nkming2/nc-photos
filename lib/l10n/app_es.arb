@@ -237,7 +237,7 @@
 	"@signInHeaderText": {
 		"description": "Inform user what to do in sign in widget"
 	},
-	"signIn2faHintText": "*Usa una contraseña de aplicación si tienes activada en el servidor la autentificación en dos pasos.",
+	"signIn2faHintText": "Usa una contraseña de aplicación si tienes activada en el servidor la autentificación en dos pasos.",
 	"@signIn2faHintText": {
 		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
 	},
@@ -711,7 +711,7 @@
 	"removeFromAlbumTooltip": "Quitar del álbum",
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
-	},	
+	},
 	"changelogTitle": "Registro de cambios",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

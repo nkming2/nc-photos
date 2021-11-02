@@ -237,7 +237,7 @@
 	"@signInHeaderText": {
 		"description": "Inform user what to do in sign in widget"
 	},
-	"signIn2faHintText": "*Pokud máte zapnuté dvou fázové přihlášení, použijte prosím heslo",
+	"signIn2faHintText": "Pokud máte zapnuté dvou fázové přihlášení, použijte prosím heslo",
 	"@signIn2faHintText": {
 		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
 	},
