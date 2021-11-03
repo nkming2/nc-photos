@@ -14,5 +14,14 @@ class MediaStore {
     }))!;
   }
 
+  static Future<String> copyFileToDownload(
+      String toFileName, String fromFilePath) async {
+    return (await _channel
+        .invokeMethod<String>("copyFileToDownload", <String, dynamic>{
+      "toFileName": toFileName,
+      "fromFilePath": fromFilePath,
+    }))!;
+  }
+
   static const _channel = MethodChannel("com.nkming.nc_photos/media_store");
 }

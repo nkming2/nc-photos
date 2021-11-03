@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/mobile/android/download.dart' as android;
 import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class DownloadBuilder extends itf.DownloadBuilder {
   @override
@@ -45,77 +47,99 @@ class _AndroidDownload extends itf.Download {
 
   @override
   call() async {
-    final String path;
-    if (parentDir?.isNotEmpty == true) {
-      path = "$parentDir/$filename";
-    } else {
-      path = filename;
+    if (_isInitialDownload) {
+      await _cleanUp();
+      _isInitialDownload = false;
     }
-
+    final file = await _createTempFile();
     try {
-      _log.info("[call] Start downloading '$url'");
-      _downloadId = await android.Download.downloadUrl(
-        url: url,
-        headers: headers,
-        mimeType: mimeType,
-        filename: path,
-        shouldNotify: shouldNotify,
-      );
-      _log.info("[call] #$_downloadId -> '$url'");
-      late final String uri;
-      final completer = Completer();
-      onDownloadComplete(android.DownloadCompleteEvent ev) {
-        if (ev.downloadId == _downloadId) {
-          _log.info("[call] Finished downloading '$url' to '${ev.uri}'");
-          uri = ev.uri;
-          completer.complete();
-        }
-      }
-
-      StreamSubscription<android.DownloadCompleteEvent>? subscription;
+      // download file to a temp dir
+      final fileWrite = file.openWrite();
       try {
-        subscription = android.DownloadEvent.listenDownloadComplete()
-          ..onData(onDownloadComplete)
-          ..onError((e, stackTrace) {
-            if (e is android.AndroidDownloadError) {
-              if (e.downloadId != _downloadId) {
-                // not us, ignore
-                return;
-              }
-              completer.completeError(e.error, e.stackTrace);
-            } else {
-              completer.completeError(e, stackTrace);
-            }
-          });
-        await completer.future;
+        final uri = Uri.parse(url);
+        final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
+        final response = await http.Client().send(req);
+        bool isEnd = false;
+        Object? error;
+        final subscription = response.stream.listen(
+          fileWrite.add,
+          onDone: () {
+            isEnd = true;
+          },
+          onError: (e, stackTrace) {
+            _log.severe("Failed while request", e, stackTrace);
+            isEnd = true;
+            error = e;
+          },
+          cancelOnError: true,
+        );
+        // wait until download finished
+        while (!isEnd) {
+          if (shouldInterrupt) {
+            await subscription.cancel();
+            break;
+          }
+          await Future.delayed(const Duration(seconds: 1));
+        }
+        if (error != null) {
+          throw error!;
+        }
       } finally {
-        subscription?.cancel();
+        fileWrite.close();
       }
-      return uri;
-    } on PlatformException catch (e) {
-      switch (e.code) {
-        case MediaStore.exceptionCodePermissionError:
-          throw PermissionException();
-
-        case android.Download.exceptionCodeDownloadError:
-          throw DownloadException(e.message);
-
-        case android.DownloadEvent.exceptionCodeUserCanceled:
-          throw JobCanceledException(e.message);
-
-        default:
-          rethrow;
+      if (shouldInterrupt) {
+        throw JobCanceledException();
       }
+
+      // copy the file to the actual dir
+      final String path;
+      if (parentDir?.isNotEmpty == true) {
+        path = "$parentDir/$filename";
+      } else {
+        path = filename;
+      }
+      return await MediaStore.copyFileToDownload(path, file.path);
+    } finally {
+      file.delete();
     }
   }
 
   @override
-  cancel() async {
-    if (_downloadId != null) {
-      _log.info("[cancel] Cancel #$_downloadId");
-      return await android.Download.cancel(id: _downloadId!);
+  cancel() {
+    shouldInterrupt = true;
+    return true;
+  }
+
+  Future<Directory> _openDownloadDir() async {
+    final tempDir = await getTemporaryDirectory();
+    final downloadDir = Directory("${tempDir.path}/downloads");
+    if (!await downloadDir.exists()) {
+      return downloadDir.create();
     } else {
-      return false;
+      return downloadDir;
+    }
+  }
+
+  Future<File> _createTempFile() async {
+    final downloadDir = await _openDownloadDir();
+    while (true) {
+      final fileName = const Uuid().v4();
+      final file = File("${downloadDir.path}/$fileName");
+      if (await file.exists()) {
+        continue;
+      }
+      return file;
+    }
+  }
+
+  /// Clean up remaining cache files from previous runs
+  ///
+  /// Normally the files will be deleted automatically
+  Future<void> _cleanUp() async {
+    final downloadDir = await _openDownloadDir();
+    await for (final f in downloadDir.list(followLinks: false)) {
+      _log.warning("[_cleanUp] Deleting file: ${f.path}");
+      await f.delete();
     }
   }
 
@@ -125,7 +149,10 @@ class _AndroidDownload extends itf.Download {
   final String filename;
   final String? parentDir;
   final bool? shouldNotify;
-  int? _downloadId;
+
+  bool shouldInterrupt = false;
+
+  static bool _isInitialDownload = true;
 
   static final _log = Logger("mobile.download._AndroidDownload");
 }

@@ -43,7 +43,7 @@ class _WebDownload extends itf.Download {
   }
 
   @override
-  cancel() => Future.value(false);
+  cancel() => false;
 
   final String url;
   final Map<String, String>? headers;

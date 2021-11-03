@@ -8,8 +8,11 @@ abstract class Download {
 
   /// Cancel a download
   ///
-  /// Not all platforms support canceling an ongoing download
-  Future<bool> cancel();
+  /// Not all platforms support canceling an ongoing download. Return true if
+  /// the current platform supports it, however there's no guarantee if and when
+  /// the download task would be canceled. After a download is canceled
+  /// successfully, [JobCanceledException] will be thrown in [call]
+  bool cancel();
 }
 
 abstract class DownloadBuilder {

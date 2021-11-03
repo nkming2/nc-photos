@@ -11,9 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 
 /*
  * Save downloaded item on device
@@ -31,8 +29,8 @@ class MediaStoreChannelHandler(activity: Activity) :
 	}
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-		if (call.method == "saveFileToDownload") {
-			try {
+		when (call.method) {
+			"saveFileToDownload" -> try {
 				saveFileToDownload(
 					call.argument("fileName")!!,
 					call.argument("content")!!,
@@ -41,24 +39,47 @@ class MediaStoreChannelHandler(activity: Activity) :
 			} catch (e: Throwable) {
 				result.error("systemException", e.message, null)
 			}
-		} else {
-			result.notImplemented()
+			"copyFileToDownload" -> try {
+				copyFileToDownload(
+					call.argument("toFileName")!!,
+					call.argument("fromFilePath")!!,
+					result
+				)
+			} catch (e: Throwable) {
+				result.error("systemException", e.message, null)
+			}
+			else -> result.notImplemented()
 		}
 	}
 
 	private fun saveFileToDownload(
 		fileName: String, content: ByteArray, result: MethodChannel.Result
 	) {
+		val stream = ByteArrayInputStream(content)
+		writeFileToDownload(fileName, stream, result)
+	}
+
+	private fun copyFileToDownload(
+		toFileName: String, fromFilePath: String, result: MethodChannel.Result
+	) {
+		val file = File(fromFilePath)
+		val stream = file.inputStream()
+		writeFileToDownload(toFileName, stream, result)
+	}
+
+	private fun writeFileToDownload(
+		fileName: String, data: InputStream, result: MethodChannel.Result
+	) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			saveFileToDownload29(fileName, content, result)
+			writeFileToDownload29(fileName, data, result)
 		} else {
-			saveFileToDownload0(fileName, content, result)
+			writeFileToDownload0(fileName, data, result)
 		}
 	}
 
 	@RequiresApi(Build.VERSION_CODES.Q)
-	private fun saveFileToDownload29(
-		fileName: String, content: ByteArray, result: MethodChannel.Result
+	private fun writeFileToDownload29(
+		fileName: String, data: InputStream, result: MethodChannel.Result
 	) {
 		// Add a media item that other apps shouldn't see until the item is
 		// fully written to the media store.
@@ -77,14 +98,14 @@ class MediaStoreChannelHandler(activity: Activity) :
 		resolver.openFileDescriptor(contentUri!!, "w", null).use { pfd ->
 			// Write data into the pending audio file.
 			BufferedOutputStream(FileOutputStream(pfd!!.fileDescriptor)).use { stream ->
-				stream.write(content)
+				data.copyTo(stream)
 			}
 		}
 		result.success(contentUri.toString())
 	}
 
-	private fun saveFileToDownload0(
-		fileName: String, content: ByteArray, result: MethodChannel.Result
+	private fun writeFileToDownload0(
+		fileName: String, data: InputStream, result: MethodChannel.Result
 	) {
 		if (!PermissionHandler.ensureWriteExternalStorage(_activity)) {
 			result.error("permissionError", "Permission not granted", null)
@@ -103,7 +124,7 @@ class MediaStoreChannelHandler(activity: Activity) :
 			++count
 		}
 		BufferedOutputStream(FileOutputStream(file)).use { stream ->
-			stream.write(content)
+			data.copyTo(stream)
 		}
 
 		val fileUri = Uri.fromFile(file)

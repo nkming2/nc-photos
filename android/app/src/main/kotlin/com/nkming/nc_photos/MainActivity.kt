@@ -10,9 +10,6 @@ class MainActivity : FlutterActivity() {
 	override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
 		super.configureFlutterEngine(flutterEngine)
 		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
-				DownloadChannelHandler.CHANNEL).setMethodCallHandler(
-				DownloadChannelHandler(this))
-		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
 				MediaStoreChannelHandler.CHANNEL).setMethodCallHandler(
 				MediaStoreChannelHandler(this))
 		MethodChannel(flutterEngine.dartExecutor.binaryMessenger,
@@ -25,9 +22,6 @@ class MainActivity : FlutterActivity() {
 				ShareChannelHandler.CHANNEL).setMethodCallHandler(
 				ShareChannelHandler(this))
 
-		EventChannel(flutterEngine.dartExecutor.binaryMessenger,
-				DownloadEventCompleteChannelHandler.CHANNEL).setStreamHandler(
-				DownloadEventCompleteChannelHandler(this))
 		EventChannel(flutterEngine.dartExecutor.binaryMessenger,
 				DownloadEventCancelChannelHandler.CHANNEL).setStreamHandler(
 				DownloadEventCancelChannelHandler(this))
