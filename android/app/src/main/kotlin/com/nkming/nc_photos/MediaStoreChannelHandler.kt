@@ -1,17 +1,13 @@
 package com.nkming.nc_photos
 
-import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -27,8 +23,8 @@ import java.io.FileOutputStream
  * the file
  * fun saveFileToDownload(fileName: String, content: ByteArray): String
  */
-class MediaStoreChannelHandler(activity: Activity)
-		: MethodChannel.MethodCallHandler {
+class MediaStoreChannelHandler(activity: Activity) :
+	MethodChannel.MethodCallHandler {
 	companion object {
 		@JvmStatic
 		val CHANNEL = "com.nkming.nc_photos/media_store"
@@ -37,8 +33,11 @@ class MediaStoreChannelHandler(activity: Activity)
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 		if (call.method == "saveFileToDownload") {
 			try {
-				saveFileToDownload(call.argument<String>("fileName")!!,
-						call.argument<ByteArray>("content")!!, result)
+				saveFileToDownload(
+					call.argument("fileName")!!,
+					call.argument("content")!!,
+					result
+				)
 			} catch (e: Throwable) {
 				result.error("systemException", e.message, null)
 			}
@@ -47,8 +46,9 @@ class MediaStoreChannelHandler(activity: Activity)
 		}
 	}
 
-	private fun saveFileToDownload(fileName: String, content: ByteArray,
-			result: MethodChannel.Result) {
+	private fun saveFileToDownload(
+		fileName: String, content: ByteArray, result: MethodChannel.Result
+	) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 			saveFileToDownload29(fileName, content, result)
 		} else {
@@ -57,15 +57,17 @@ class MediaStoreChannelHandler(activity: Activity)
 	}
 
 	@RequiresApi(Build.VERSION_CODES.Q)
-	private fun saveFileToDownload29(fileName: String, content: ByteArray,
-			result: MethodChannel.Result) {
+	private fun saveFileToDownload29(
+		fileName: String, content: ByteArray, result: MethodChannel.Result
+	) {
 		// Add a media item that other apps shouldn't see until the item is
 		// fully written to the media store.
 		val resolver = _context.applicationContext.contentResolver
 
 		// Find all audio files on the primary external storage device.
 		val collection = MediaStore.Downloads.getContentUri(
-				MediaStore.VOLUME_EXTERNAL_PRIMARY)
+			MediaStore.VOLUME_EXTERNAL_PRIMARY
+		)
 		val details = ContentValues().apply {
 			put(MediaStore.Downloads.DISPLAY_NAME, fileName)
 		}
@@ -74,37 +76,41 @@ class MediaStoreChannelHandler(activity: Activity)
 
 		resolver.openFileDescriptor(contentUri!!, "w", null).use { pfd ->
 			// Write data into the pending audio file.
-			BufferedOutputStream(FileOutputStream(pfd!!.fileDescriptor)).use {
-				stream -> stream.write(content)
+			BufferedOutputStream(FileOutputStream(pfd!!.fileDescriptor)).use { stream ->
+				stream.write(content)
 			}
 		}
 		result.success(contentUri.toString())
 	}
 
-	private fun saveFileToDownload0(fileName: String, content: ByteArray,
-			result: MethodChannel.Result) {
+	private fun saveFileToDownload0(
+		fileName: String, content: ByteArray, result: MethodChannel.Result
+	) {
 		if (!PermissionHandler.ensureWriteExternalStorage(_activity)) {
 			result.error("permissionError", "Permission not granted", null)
 			return
 		}
 
 		val path = Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_DOWNLOADS)
+			Environment.DIRECTORY_DOWNLOADS
+		)
 		var file = File(path, fileName)
 		var count = 1
 		while (file.exists()) {
 			val f = File(fileName)
-			file = File(path, "${f.nameWithoutExtension} ($count).${f.extension}")
+			file =
+				File(path, "${f.nameWithoutExtension} ($count).${f.extension}")
 			++count
 		}
-		BufferedOutputStream(FileOutputStream(file)).use {
-			stream -> stream.write(content)
+		BufferedOutputStream(FileOutputStream(file)).use { stream ->
+			stream.write(content)
 		}
 
 		val fileUri = Uri.fromFile(file)
 		triggerMediaScan(fileUri)
-		val contentUri = FileProvider.getUriForFile(_context,
-				"${BuildConfig.APPLICATION_ID}.fileprovider", file)
+		val contentUri = FileProvider.getUriForFile(
+			_context, "${BuildConfig.APPLICATION_ID}.fileprovider", file
+		)
 		result.success(contentUri.toString())
 	}
 
