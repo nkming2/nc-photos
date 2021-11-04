@@ -32,6 +32,14 @@ class UpdateAutoAlbumCover {
   }
 
   Album _updateWithSortedItems(Album album, List<AlbumItem> sortedItems) {
+    if (sortedItems.isEmpty) {
+      if (album.coverProvider != AlbumAutoCoverProvider()) {
+        return album.copyWith(coverProvider: AlbumAutoCoverProvider());
+      } else {
+        return album;
+      }
+    }
+
     try {
       final coverFile = sortedItems
           .whereType<AlbumFileItem>()
