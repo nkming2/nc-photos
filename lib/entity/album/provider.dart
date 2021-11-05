@@ -58,9 +58,9 @@ abstract class AlbumProvider with EquatableMixin {
 }
 
 abstract class AlbumProviderBase extends AlbumProvider {
-  const AlbumProviderBase({
-    this.latestItemTime,
-  });
+  AlbumProviderBase({
+    DateTime? latestItemTime,
+  }) : latestItemTime = latestItemTime?.toUtc();
 
   @override
   toString({bool isDeep = false}) {
@@ -156,13 +156,13 @@ class AlbumStaticProvider extends AlbumProviderBase {
 }
 
 abstract class AlbumDynamicProvider extends AlbumProviderBase {
-  const AlbumDynamicProvider({
+  AlbumDynamicProvider({
     DateTime? latestItemTime,
   }) : super(latestItemTime: latestItemTime);
 }
 
 class AlbumDirProvider extends AlbumDynamicProvider {
-  const AlbumDirProvider({
+  AlbumDirProvider({
     required this.dirs,
     DateTime? latestItemTime,
   }) : super(
