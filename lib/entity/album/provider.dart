@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
 
 abstract class AlbumProvider with EquatableMixin {
@@ -79,7 +80,7 @@ abstract class AlbumProviderBase extends AlbumProvider {
 
   @override
   AlbumProviderBase copyWith({
-    DateTime? latestItemTime,
+    OrNull<DateTime>? latestItemTime,
   });
 
   @override
@@ -134,11 +135,12 @@ class AlbumStaticProvider extends AlbumProviderBase {
 
   @override
   AlbumStaticProvider copyWith({
-    DateTime? latestItemTime,
+    OrNull<DateTime>? latestItemTime,
     List<AlbumItem>? items,
   }) {
     return AlbumStaticProvider(
-      latestItemTime: latestItemTime ?? this.latestItemTime,
+      latestItemTime:
+          latestItemTime == null ? this.latestItemTime : latestItemTime.obj,
       items: items ?? this.items,
     );
   }
@@ -198,11 +200,12 @@ class AlbumDirProvider extends AlbumDynamicProvider {
 
   @override
   AlbumDirProvider copyWith({
-    DateTime? latestItemTime,
+    OrNull<DateTime>? latestItemTime,
     List<File>? dirs,
   }) {
     return AlbumDirProvider(
-      latestItemTime: latestItemTime ?? this.latestItemTime,
+      latestItemTime:
+          latestItemTime == null ? this.latestItemTime : latestItemTime.obj,
       dirs: dirs ?? this.dirs,
     );
   }
