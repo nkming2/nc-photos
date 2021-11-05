@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -35,18 +36,7 @@ class RemoveFromAlbum {
         items: newItems,
       ),
     );
-    // check if any of the removed items was the latest item
-    if (items.whereType<AlbumFileItem>().any((element) =>
-        element.file.bestDateTime == album.provider.latestItemTime)) {
-      _log.info("[call] Resync as latest item is being removed");
-      // need to update the album properties
-      final newItemsSynced = await PreProcessAlbum(appDb)(account, newAlbum);
-      newAlbum = await UpdateAlbumWithActualItems(null)(
-        account,
-        newAlbum,
-        newItemsSynced,
-      );
-    }
+    newAlbum = await _fixAlbumPostRemove(account, newAlbum, items);
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
     if (pref.isLabEnableSharedAlbumOr(false)) {
@@ -65,6 +55,44 @@ class RemoveFromAlbum {
       }
     }
 
+    return newAlbum;
+  }
+
+  /// Update the album accordingly if any of the removed items is interesting
+  /// (e.g., cover, latest item, etc)
+  Future<Album> _fixAlbumPostRemove(
+      Account account, Album newAlbum, List<AlbumItem> items) async {
+    bool isNeedUpdate = false;
+    for (final fileItem in items.whereType<AlbumFileItem>()) {
+      if (newAlbum.coverProvider
+              .getCover(newAlbum)
+              ?.compareServerIdentity(fileItem.file) ==
+          true) {
+        // revert to auto cover so [UpdateAutoAlbumCover] can do its work
+        newAlbum = newAlbum.copyWith(
+          coverProvider: AlbumAutoCoverProvider(),
+        );
+        isNeedUpdate = true;
+        break;
+      }
+      if (fileItem.file.bestDateTime == newAlbum.provider.latestItemTime) {
+        isNeedUpdate = true;
+        break;
+      }
+    }
+    if (!isNeedUpdate) {
+      return newAlbum;
+    }
+
+    _log.info(
+        "[_fixAlbumPostRemove] Resync as interesting item is being removed");
+    // need to update the album properties
+    final newItemsSynced = await PreProcessAlbum(appDb)(account, newAlbum);
+    newAlbum = await UpdateAlbumWithActualItems(null)(
+      account,
+      newAlbum,
+      newItemsSynced,
+    );
     return newAlbum;
   }
 
