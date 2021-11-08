@@ -14,8 +14,7 @@ class ListAlbum {
 
   /// List all albums associated with [account]
   ///
-  /// The returned stream would emit either Album data or a tuple of exception
-  /// and stacktrace
+  /// The returned stream would emit either [Album] or [ExceptionEvent]
   Stream<dynamic> call(Account account) async* {
     bool hasAlbum = false;
     await for (final result in _call(account)) {
