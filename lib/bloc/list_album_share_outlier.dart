@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 
@@ -96,7 +95,8 @@ class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
 /// belongs, e.g., an unshared item in a shared album, or vice versa
 class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     ListAlbumShareOutlierBlocState> {
-  ListAlbumShareOutlierBloc() : super(ListAlbumShareOutlierBlocInit());
+  ListAlbumShareOutlierBloc(this.shareRepo)
+      : super(ListAlbumShareOutlierBlocInit());
 
   @override
   mapEventToState(ListAlbumShareOutlierBlocEvent event) async* {
@@ -113,7 +113,6 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
       yield ListAlbumShareOutlierBlocLoading(
           ev.account, state.albumShares, state.items);
 
-      final shareRepo = ShareRepo(ShareRemoteDataSource());
       final albumShares =
           (await ListShare(shareRepo)(ev.account, ev.album.albumFile!))
               .where((element) => element.shareWith != null)
@@ -157,6 +156,8 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
           ev.account, state.albumShares, state.items, e);
     }
   }
+
+  final ShareRepo shareRepo;
 
   static final _log =
       Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");
