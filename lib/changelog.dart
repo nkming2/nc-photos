@@ -126,4 +126,6 @@ Features:
 Features:
   - Enable/disable server app integrations in Settings > Account
 """,
+  // v33
+  null,
 ];
