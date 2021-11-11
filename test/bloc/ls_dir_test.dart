@@ -8,10 +8,10 @@ import 'package:test/test.dart';
 import '../mock_type.dart';
 
 void main() {
-  _buildBloc() => LsDirBloc(fileRepo: _MockFileRepo());
+  _buildBloc() => LsDirBloc(_MockFileRepo());
   _buildAccount() => Account("http", "example.com", "admin", "pass", [""]);
 
-  group("ListDir", () {
+  group("LsDirBloc", () {
     group("LsDirBlocQuery", () {
       test("initial state", () {
         final bloc = _buildBloc();

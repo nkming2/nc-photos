@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -383,7 +384,7 @@ class DirPickerState extends State<DirPicker> {
     _bloc.add(LsDirBlocQuery(widget.account, file, depth: 2));
   }
 
-  final _bloc = LsDirBloc();
+  final _bloc = LsDirBloc(const FileRepo(FileWebdavDataSource()));
   late LsDirBlocItem _root;
 
   var _currentPath = "";

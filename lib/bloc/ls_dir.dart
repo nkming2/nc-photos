@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class LsDirBlocItem with EquatableMixin {
@@ -146,9 +145,7 @@ class LsDirBlocFailure extends LsDirBlocState {
 
 /// A bloc that return all directories under a dir recursively
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
-  LsDirBloc({
-    this.fileRepo = const FileRepo(FileWebdavDataSource()),
-  }) : super(LsDirBlocInit());
+  LsDirBloc(this.fileRepo) : super(LsDirBlocInit());
 
   @override
   mapEventToState(LsDirBlocEvent event) async* {
