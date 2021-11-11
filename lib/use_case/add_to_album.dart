@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
@@ -55,44 +56,39 @@ class AddToAlbum {
 
   Future<void> _shareFiles(
       Account account, Album album, List<File> files) async {
-    try {
-      final albumShares =
-          (await ListShare(shareRepo)(account, album.albumFile!))
-              .where((element) => element.shareType == ShareType.user)
-              .map((e) => e.shareWith!)
-              .toSet();
-      if (albumShares.isEmpty) {
-        return;
-      }
-      for (final f in files) {
-        try {
-          final fileShares = (await ListShare(shareRepo)(account, f))
-              .where((element) => element.shareType == ShareType.user)
-              .map((e) => e.shareWith!)
-              .toSet();
-          final diffShares = albumShares.difference(fileShares);
-          for (final s in diffShares) {
-            try {
-              await CreateUserShare(shareRepo)(account, f, s);
-            } catch (e, stackTrace) {
-              _log.shout(
-                  "[_shareFiles] Failed while CreateUserShare: ${logFilename(f.path)}",
-                  e,
-                  stackTrace);
-            }
+    if (album.shares?.isNotEmpty != true) {
+      return;
+    }
+    final albumShares = (album.shares!.map((e) => e.userId).toList()
+          ..add(album.albumFile!.ownerId ?? account.username))
+        .where((element) => !element.equalsIgnoreCase(account.username))
+        .toSet();
+    if (albumShares.isEmpty) {
+      return;
+    }
+    for (final f in files) {
+      try {
+        final fileShares = (await ListShare(shareRepo)(account, f))
+            .where((element) => element.shareType == ShareType.user)
+            .map((e) => e.shareWith!)
+            .toSet();
+        final diffShares = albumShares.difference(fileShares);
+        for (final s in diffShares) {
+          try {
+            await CreateUserShare(shareRepo)(account, f, s);
+          } catch (e, stackTrace) {
+            _log.shout(
+                "[_shareFiles] Failed while CreateUserShare: ${logFilename(f.path)}",
+                e,
+                stackTrace);
           }
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[_shareFiles] Failed while listing shares: ${logFilename(f.path)}",
-              e,
-              stackTrace);
         }
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_shareFiles] Failed while listing shares: ${logFilename(f.path)}",
+            e,
+            stackTrace);
       }
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_shareFiles] Failed while listing album shares: ${logFilename(album.albumFile?.path)}",
-          e,
-          stackTrace);
     }
   }
 

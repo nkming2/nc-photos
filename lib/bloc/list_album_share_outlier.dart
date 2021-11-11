@@ -1,20 +1,85 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
+import 'package:nc_photos/use_case/list_sharee.dart';
 
-class ListAlbumShareOutlierItem {
-  const ListAlbumShareOutlierItem(this.file, this.shares);
+class ListAlbumShareOutlierItem with EquatableMixin {
+  const ListAlbumShareOutlierItem(this.file, this.shareItems);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "file: '${file.path}', "
+        "shareItems: ${shareItems.toReadableString()}, "
+        "}";
+  }
+
+  @override
+  get props => [
+        file,
+        shareItems,
+      ];
 
   final File file;
-  final List<Share> shares;
+  final List<ListAlbumShareOutlierShareItem> shareItems;
+}
+
+abstract class ListAlbumShareOutlierShareItem with EquatableMixin {
+  const ListAlbumShareOutlierShareItem();
+}
+
+class ListAlbumShareOutlierExtraShareItem
+    extends ListAlbumShareOutlierShareItem {
+  const ListAlbumShareOutlierExtraShareItem(this.share);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "share: $share, "
+        "}";
+  }
+
+  @override
+  get props => [
+        share,
+      ];
+
+  final Share share;
+}
+
+class ListAlbumShareOutlierMissingShareItem
+    extends ListAlbumShareOutlierShareItem {
+  const ListAlbumShareOutlierMissingShareItem(
+      this.shareWith, this.shareWithDisplayName);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "shareWith: $shareWith, "
+        "shareWithDisplayName: $shareWithDisplayName, "
+        "}";
+  }
+
+  @override
+  get props => [
+        shareWith,
+        shareWithDisplayName,
+      ];
+
+  final String shareWith;
+  final String? shareWithDisplayName;
 }
 
 abstract class ListAlbumShareOutlierBlocEvent {
@@ -36,47 +101,47 @@ class ListAlbumShareOutlierBlocQuery extends ListAlbumShareOutlierBlocEvent {
   final Album album;
 }
 
-abstract class ListAlbumShareOutlierBlocState {
-  const ListAlbumShareOutlierBlocState(
-      this.account, this.albumShares, this.items);
+abstract class ListAlbumShareOutlierBlocState with EquatableMixin {
+  const ListAlbumShareOutlierBlocState(this.account, this.items);
 
   @override
   toString() {
     return "$runtimeType {"
         "account: $account, "
-        "albumShares: List {length: ${albumShares.length}}, "
-        "items: List {length: ${items.length}}, "
+        "items: ${items.toReadableString()}, "
         "}";
   }
 
+  @override
+  get props => [
+        account,
+        items,
+      ];
+
   final Account? account;
-  final List<Share> albumShares;
   final List<ListAlbumShareOutlierItem> items;
 }
 
 class ListAlbumShareOutlierBlocInit extends ListAlbumShareOutlierBlocState {
-  ListAlbumShareOutlierBlocInit() : super(null, const [], const []);
+  ListAlbumShareOutlierBlocInit() : super(null, const []);
 }
 
 class ListAlbumShareOutlierBlocLoading extends ListAlbumShareOutlierBlocState {
-  const ListAlbumShareOutlierBlocLoading(Account? account,
-      List<Share> albumShares, List<ListAlbumShareOutlierItem> items)
-      : super(account, albumShares, items);
+  const ListAlbumShareOutlierBlocLoading(
+      Account? account, List<ListAlbumShareOutlierItem> items)
+      : super(account, items);
 }
 
 class ListAlbumShareOutlierBlocSuccess extends ListAlbumShareOutlierBlocState {
-  const ListAlbumShareOutlierBlocSuccess(Account? account,
-      List<Share> albumShares, List<ListAlbumShareOutlierItem> items)
-      : super(account, albumShares, items);
+  const ListAlbumShareOutlierBlocSuccess(
+      Account? account, List<ListAlbumShareOutlierItem> items)
+      : super(account, items);
 }
 
 class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
   const ListAlbumShareOutlierBlocFailure(
-      Account? account,
-      List<Share> albumShares,
-      List<ListAlbumShareOutlierItem> items,
-      this.exception)
-      : super(account, albumShares, items);
+      Account? account, List<ListAlbumShareOutlierItem> items, this.exception)
+      : super(account, items);
 
   @override
   toString() {
@@ -85,6 +150,12 @@ class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
         "exception: $exception, "
         "}";
   }
+
+  @override
+  get props => [
+        ...super.props,
+        exception,
+      ];
 
   final dynamic exception;
 }
@@ -95,7 +166,7 @@ class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
 /// belongs, e.g., an unshared item in a shared album, or vice versa
 class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     ListAlbumShareOutlierBlocState> {
-  ListAlbumShareOutlierBloc(this.shareRepo)
+  ListAlbumShareOutlierBloc(this.shareRepo, this.shareeRepo)
       : super(ListAlbumShareOutlierBlocInit());
 
   @override
@@ -110,54 +181,150 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
       ListAlbumShareOutlierBlocQuery ev) async* {
     try {
       assert(ev.album.provider is AlbumStaticProvider);
-      yield ListAlbumShareOutlierBlocLoading(
-          ev.account, state.albumShares, state.items);
+      yield ListAlbumShareOutlierBlocLoading(ev.account, state.items);
 
-      final albumShares =
-          (await ListShare(shareRepo)(ev.account, ev.album.albumFile!))
-              .where((element) => element.shareWith != null)
-              .sorted((a, b) => a.shareWith!.compareTo(b.shareWith!));
-      final albumSharees = albumShares
-          .where((element) => element.shareType == ShareType.user)
-          .map((e) => e.shareWith!)
-          .sorted();
-      final files = AlbumStaticProvider.of(ev.album)
-          .items
-          .whereType<AlbumFileItem>()
-          .map((e) => e.file)
-          .toList();
-      final products = <ListAlbumShareOutlierItem>[];
-      Object? error;
-      for (final f in files) {
-        try {
-          final shares = (await ListShare(shareRepo)(ev.account, f))
-              .where((element) => element.shareType == ShareType.user)
-              .toList();
-          final sharees = shares.map((e) => e.shareWith!).sorted();
-          if (!listEquals(sharees, albumSharees)) {
-            products.add(ListAlbumShareOutlierItem(f, shares));
-          }
-        } catch (e, stackTrace) {
-          _log.severe("[_query] Failed while listing share for file: ${f.path}",
-              e, stackTrace);
-          error = e;
+      final albumShares = await () async {
+        var temp = (ev.album.shares ?? [])
+            .where((s) => !s.userId.equalsIgnoreCase(ev.account.username))
+            .toList();
+        if (ev.album.albumFile!.ownerId != ev.account.username) {
+          // add owner if the album is not owned by this account
+          final ownerSharee = (await ListSharee(shareeRepo)(ev.account))
+              .firstWhere((s) => s.shareWith == ev.album.albumFile!.ownerId);
+          temp.add(AlbumShare(
+            userId: ownerSharee.shareWith,
+            displayName: ownerSharee.shareWithDisplayNameUnique,
+          ));
         }
-      }
-      if (error == null) {
-        yield ListAlbumShareOutlierBlocSuccess(
-            ev.account, albumShares, products);
+        return Map.fromEntries(
+            temp.map((as) => MapEntry(as.userId.toLowerCase(), as)));
+      }();
+      final albumSharees =
+          albumShares.values.map((s) => s.userId.toLowerCase()).toSet();
+
+      final products = <ListAlbumShareOutlierItem>[];
+      final errors = <Object>[];
+      products.addAll(await _processAlbumFile(
+          ev.account, ev.album, albumShares, albumSharees, errors));
+      products.addAll(await _processAlbumItems(
+          ev.account, ev.album, albumShares, albumSharees, errors));
+
+      if (errors.isEmpty) {
+        yield ListAlbumShareOutlierBlocSuccess(ev.account, products);
       } else {
         yield ListAlbumShareOutlierBlocFailure(
-            ev.account, albumShares, products, error);
+            ev.account, products, errors.first);
       }
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListAlbumShareOutlierBlocFailure(
-          ev.account, state.albumShares, state.items, e);
+      yield ListAlbumShareOutlierBlocFailure(ev.account, state.items, e);
+    }
+  }
+
+  Future<List<ListAlbumShareOutlierItem>> _processAlbumFile(
+    Account account,
+    Album album,
+    Map<String, AlbumShare> albumShares,
+    Set<String> albumSharees,
+    List<Object> errors,
+  ) async {
+    try {
+      final item = await _processSingleFile(
+          account, album.albumFile!, albumShares, albumSharees, errors);
+      return item == null ? [] : [item];
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[_processAlbumFile] Failed while _processSingleFile: ${logFilename(album.albumFile?.path)}",
+          e,
+          stackTrace);
+      errors.add(e);
+      return [];
+    }
+  }
+
+  Future<List<ListAlbumShareOutlierItem>> _processAlbumItems(
+    Account account,
+    Album album,
+    Map<String, AlbumShare> albumShares,
+    Set<String> albumSharees,
+    List<Object> errors,
+  ) async {
+    final products = <ListAlbumShareOutlierItem>[];
+    final files = AlbumStaticProvider.of(album)
+        .items
+        .whereType<AlbumFileItem>()
+        .map((e) => e.file)
+        .toList();
+    for (final f in files) {
+      try {
+        (await _processSingleFile(
+                account, f, albumShares, albumSharees, errors))
+            ?.apply((item) {
+          products.add(item);
+        });
+      } catch (e, stackTrace) {
+        _log.severe(
+            "[_processAlbumItems] Failed while _processSingleFile: ${logFilename(f.path)}",
+            e,
+            stackTrace);
+        errors.add(e);
+      }
+    }
+    return products;
+  }
+
+  Future<ListAlbumShareOutlierItem?> _processSingleFile(
+    Account account,
+    File file,
+    Map<String, AlbumShare> albumShares,
+    Set<String> albumSharees,
+    List<Object> errors,
+  ) async {
+    final shareItems = <ListAlbumShareOutlierShareItem>[];
+    final shares = (await ListShare(shareRepo)(account, file))
+        .where((element) => element.shareType == ShareType.user)
+        .toList();
+    final sharees = shares.map((s) => s.shareWith!.toLowerCase()).toSet();
+    final missings = albumSharees.difference(sharees);
+    _log.info(
+        "Missing shares: ${missings.toReadableString()} for file: ${logFilename(file.path)}");
+    for (final m in missings) {
+      try {
+        final as = albumShares[m.toLowerCase()]!;
+        shareItems.add(
+            ListAlbumShareOutlierMissingShareItem(as.userId, as.displayName));
+      } catch (e, stackTrace) {
+        _log.severe(
+            "[_processSingleFile] Failed while processing missing share for file: ${logFilename(file.path)}",
+            e,
+            stackTrace);
+        errors.add(e);
+      }
+    }
+    final extras = sharees.difference(albumSharees);
+    _log.info(
+        "Extra shares: ${extras.toReadableString()} for file: ${logFilename(file.path)}");
+    for (final e in extras) {
+      try {
+        shareItems.add(ListAlbumShareOutlierExtraShareItem(shares
+            .firstWhere((s) => s.shareWith?.equalsIgnoreCase(e) == true)));
+      } catch (e, stackTrace) {
+        _log.severe(
+            "[_processSingleFile] Failed while processing extra share for file: ${logFilename(file.path)}",
+            e,
+            stackTrace);
+        errors.add(e);
+      }
+    }
+    if (shareItems.isNotEmpty) {
+      return ListAlbumShareOutlierItem(file, shareItems);
+    } else {
+      return null;
     }
   }
 
   final ShareRepo shareRepo;
+  final ShareeRepo shareeRepo;
 
   static final _log =
       Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");

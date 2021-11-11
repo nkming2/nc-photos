@@ -9,7 +9,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/use_case/list_share.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -43,15 +43,7 @@ class RemoveFromAlbum {
       final removeFiles =
           items.whereType<AlbumFileItem>().map((e) => e.file).toList();
       if (removeFiles.isNotEmpty) {
-        final albumShares =
-            (await ListShare(shareRepo)(account, newAlbum.albumFile!))
-                .where((element) => element.shareType == ShareType.user)
-                .map((e) => e.shareWith!)
-                .toList();
-        if (albumShares.isNotEmpty) {
-          await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
-              account, newAlbum, removeFiles, albumShares);
-        }
+        await _unshareFiles(account, newAlbum, removeFiles);
       }
     }
 
@@ -94,6 +86,21 @@ class RemoveFromAlbum {
       newItemsSynced,
     );
     return newAlbum;
+  }
+
+  Future<void> _unshareFiles(
+      Account account, Album album, List<File> files) async {
+    if (album.shares?.isNotEmpty != true) {
+      return;
+    }
+    final albumShares = (album.shares!.map((e) => e.userId).toList()
+          ..add(album.albumFile!.ownerId ?? account.username))
+        .where((element) => !element.equalsIgnoreCase(account.username))
+        .toList();
+    if (albumShares.isNotEmpty) {
+      await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
+          account, album, files, albumShares);
+    }
   }
 
   final AlbumRepo albumRepo;

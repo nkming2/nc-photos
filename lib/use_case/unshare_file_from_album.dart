@@ -6,8 +6,8 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
-import 'package:nc_photos/use_case/list_shared_album.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 
 class UnshareFileFromAlbum {
@@ -22,19 +22,19 @@ class UnshareFileFromAlbum {
     Album album,
     List<File> files,
     List<String> unshareWith, {
-    List<ListSharedAlbumItem>? listSharedAlbumResults,
     void Function(Share)? onUnshareFileFailed,
   }) async {
     _log.info(
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
-    // list albums with shares identical to one of [unshareWith]
-    final otherAlbums = (listSharedAlbumResults ??
-            await ListSharedAlbum(shareRepo, fileRepo, albumRepo)(account))
-        .where((element) =>
-            !element.album.albumFile!.compareServerIdentity(album.albumFile!) &&
-            element.album.provider is AlbumStaticProvider &&
-            unshareWith.contains(element.share.shareWith))
-        .toList();
+    // list albums with shares identical to any element in [unshareWith]
+    final otherAlbums = (await ListAlbum(fileRepo, albumRepo)(account)
+        .where((event) => event is Album)
+        .cast<Album>()
+        .where((album) =>
+            !album.albumFile!.compareServerIdentity(album.albumFile!) &&
+            album.provider is AlbumStaticProvider &&
+            album.shares?.any((s) => unshareWith.contains(s.userId)) == true)
+        .toList());
 
     // look for shares that are exclusive to this album
     final exclusiveShares = <Share>[];
@@ -49,14 +49,18 @@ class UnshareFileFromAlbum {
       }
     }
     for (final a in otherAlbums) {
-      final albumFiles = AlbumStaticProvider.of(a.album)
+      // check if the album is shared with the same users
+      if (!a.shares!
+          .any((as) => exclusiveShares.any((s) => s.shareWith == as.userId))) {
+        continue;
+      }
+      final albumFiles = AlbumStaticProvider.of(a)
           .items
           .whereType<AlbumFileItem>()
           .map((e) => e.file)
           .toList();
-      exclusiveShares.removeWhere((s) =>
-          a.share.shareWith == s.shareWith &&
-          albumFiles.any((element) => element.fileId == s.itemSource));
+      exclusiveShares.removeWhere(
+          (s) => albumFiles.any((element) => element.fileId == s.itemSource));
     }
 
     // unshare them

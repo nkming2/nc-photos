@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/list_share.dart';
 import 'package:nc_photos/bloc/list_sharee.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -42,7 +41,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   initState() {
     super.initState();
     _shareeBloc.add(ListShareeBlocQuery(widget.account));
-    _shareBloc.add(ListShareBlocQuery(widget.account, widget.album.albumFile!));
   }
 
   @override
@@ -60,12 +58,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
                 _onListShareeBlocStateChanged(context, shareeState),
             child: BlocBuilder<ListShareeBloc, ListShareeBlocState>(
               bloc: _shareeBloc,
-              builder: (_, shareeState) =>
-                  BlocBuilder<ListShareBloc, ListShareBlocState>(
-                bloc: _shareBloc,
-                builder: (context, shareState) =>
-                    _buildContent(context, shareeState, shareState),
-              ),
+              builder: (_, shareeState) => _buildContent(context, shareeState),
             ),
           ),
         ),
@@ -73,11 +66,9 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     );
   }
 
-  Widget _buildContent(BuildContext context, ListShareeBlocState shareeState,
-      ListShareBlocState shareState) {
+  Widget _buildContent(BuildContext context, ListShareeBlocState shareeState) {
     final List<Widget> children;
-    if (shareeState is ListShareeBlocLoading ||
-        shareState is ListShareBlocLoading) {
+    if (shareeState is ListShareeBlocLoading) {
       children = [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
@@ -95,7 +86,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       children = shareeState.items
           .where((element) => element.type == ShareeType.user)
           .sorted((a, b) => a.label.compareTo(b.label))
-          .map((sharee) => _buildItem(context, shareState, sharee))
+          .map((sharee) => _buildItem(context, sharee))
           .toList();
     }
     return GestureDetector(
@@ -107,14 +98,15 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     );
   }
 
-  Widget _buildItem(
-      BuildContext context, ListShareBlocState shareState, Sharee sharee) {
+  Widget _buildItem(BuildContext context, Sharee sharee) {
     final bool isShared;
     if (_overrideSharee.containsKey(sharee.shareWith)) {
       isShared = _overrideSharee[sharee.shareWith]!;
     } else {
-      isShared = shareState.items
-          .any((element) => element.shareWith == sharee.shareWith);
+      isShared = widget.album.shares
+              ?.map((e) => e.userId)
+              .contains(sharee.shareWith) ??
+          false;
     }
 
     final isProcessing =
@@ -185,12 +177,13 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   Future<void> _createShare(Sharee sharee) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
+    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
-      await ShareAlbumWithUser(shareRepo)(
+      await ShareAlbumWithUser(shareRepo, albumRepo)(
         widget.account,
         widget.album,
-        sharee.shareWith,
+        sharee,
         onShareFileFailed: (_) {
           hasFailure = true;
         },
@@ -260,7 +253,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   }
 
   final _shareeBloc = ListShareeBloc();
-  final _shareBloc = ListShareBloc();
   final _processingSharee = <String>[];
 
   /// Store the modified value of each sharee

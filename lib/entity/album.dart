@@ -18,6 +18,7 @@ import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -36,6 +37,7 @@ class Album with EquatableMixin {
     required this.provider,
     required this.coverProvider,
     required this.sortProvider,
+    this.shares,
     this.albumFile,
   }) : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
 
@@ -95,6 +97,9 @@ class Album with EquatableMixin {
           result["coverProvider"].cast<String, dynamic>()),
       sortProvider: AlbumSortProvider.fromJson(
           result["sortProvider"].cast<String, dynamic>()),
+      shares: (result["shares"] as List?)
+          ?.map((e) => AlbumShare.fromJson(e.cast<String, dynamic>()))
+          .toList(),
       albumFile: result["albumFile"] == null
           ? null
           : File.fromJson(result["albumFile"].cast<String, dynamic>()),
@@ -109,6 +114,7 @@ class Album with EquatableMixin {
         "provider: ${provider.toString(isDeep: isDeep)}, "
         "coverProvider: $coverProvider, "
         "sortProvider: $sortProvider, "
+        "shares: ${shares?.toReadableString()}, "
         "albumFile: $albumFile, "
         "}";
   }
@@ -124,6 +130,7 @@ class Album with EquatableMixin {
     AlbumProvider? provider,
     AlbumCoverProvider? coverProvider,
     AlbumSortProvider? sortProvider,
+    OrNull<List<AlbumShare>>? shares,
     OrNull<File>? albumFile,
   }) {
     return Album(
@@ -133,6 +140,7 @@ class Album with EquatableMixin {
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
       sortProvider: sortProvider ?? this.sortProvider,
+      shares: shares == null ? this.shares : shares.obj,
       albumFile: albumFile == null ? this.albumFile : albumFile.obj,
     );
   }
@@ -145,6 +153,7 @@ class Album with EquatableMixin {
       "provider": provider.toJson(),
       "coverProvider": coverProvider.toJson(),
       "sortProvider": sortProvider.toJson(),
+      if (shares != null) "shares": shares!.map((e) => e.toJson()).toList(),
       // ignore albumFile
     };
   }
@@ -157,6 +166,7 @@ class Album with EquatableMixin {
       "provider": provider.toJson(),
       "coverProvider": coverProvider.toJson(),
       "sortProvider": sortProvider.toJson(),
+      if (shares != null) "shares": shares!.map((e) => e.toJson()).toList(),
       if (albumFile != null) "albumFile": albumFile!.toJson(),
     };
   }
@@ -168,6 +178,7 @@ class Album with EquatableMixin {
         provider,
         coverProvider,
         sortProvider,
+        shares,
         albumFile,
       ];
 
@@ -177,6 +188,7 @@ class Album with EquatableMixin {
   final AlbumProvider provider;
   final AlbumCoverProvider coverProvider;
   final AlbumSortProvider sortProvider;
+  final List<AlbumShare>? shares;
 
   /// How is this album stored on server
   ///
@@ -185,6 +197,50 @@ class Album with EquatableMixin {
 
   /// versioning of this class, use to upgrade old persisted album
   static const version = 6;
+}
+
+class AlbumShare {
+  const AlbumShare({
+    required this.userId,
+    this.displayName,
+  });
+
+  factory AlbumShare.fromJson(JsonObj json) {
+    return AlbumShare(
+      userId: json["userId"],
+      displayName: json["displayName"],
+    );
+  }
+
+  JsonObj toJson() {
+    return {
+      "userId": userId,
+      if (displayName != null) "displayName": displayName,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is AlbumShare &&
+            runtimeType == other.runtimeType &&
+            userId.equalsIgnoreCase(other.userId);
+  }
+
+  @override
+  get hashCode => userId.toLowerCase().hashCode;
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "userId: $userId, "
+        "displayName: $displayName, "
+        "}";
+  }
+
+  /// User ID or username, case insensitive
+  final String userId;
+  final String? displayName;
 }
 
 class AlbumRepo {

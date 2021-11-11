@@ -13,8 +13,9 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
+import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/entity/sharee/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -219,8 +220,8 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: Text(
-          L10n.global().missingShareDescription(item.shareWithDisplayName)),
+      subtitle: Text(L10n.global().missingShareDescription(
+          item.shareWithDisplayName ?? item.shareWith)),
       trailing: trailing,
     );
   }
@@ -321,9 +322,9 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       _items = [];
     } else if (state is ListAlbumShareOutlierBlocSuccess ||
         state is ListAlbumShareOutlierBlocLoading) {
-      _transformItems(state.albumShares, state.items);
+      _transformItems(state.items);
     } else if (state is ListAlbumShareOutlierBlocFailure) {
-      _transformItems(state.albumShares, state.items);
+      _transformItems(state.items);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
@@ -362,48 +363,20 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     }
   }
 
-  void _transformItems(
-      List<Share> albumShares, List<ListAlbumShareOutlierItem> items) {
-    final to =
-        albumShares.sorted((a, b) => a.shareWith!.compareTo(b.shareWith!));
-    for (final i in items) {
-      _transformItem(to, i);
-    }
-  }
-
-  void _transformItem(List<Share> albumShares, ListAlbumShareOutlierItem item) {
-    final from =
-        item.shares.sorted((a, b) => a.shareWith!.compareTo(b.shareWith!));
-    final to = albumShares;
-    var fromI = 0, toI = 0;
-    while (fromI < from.length && toI < to.length) {
-      final fromShare = from[fromI];
-      final toShare = to[toI];
-      if (fromShare.shareWith == toShare.shareWith) {
-        ++fromI;
-        ++toI;
-      } else {
-        final diff = fromShare.shareWith!.compareTo(toShare.shareWith!);
-        if (diff < 0) {
-          // extra element in from
-          _items.add(_ExtraShareItem(item.file, fromShare));
-          ++fromI;
-        } else {
-          // extra element in to
-          _items.add(_MissingShareeItem(
-              item.file, toShare.shareWith!, toShare.shareWithDisplayName));
-          ++toI;
+  void _transformItems(List<ListAlbumShareOutlierItem> items) {
+    _items = () sync* {
+      for (final item in items) {
+        for (final si in item.shareItems) {
+          if (si is ListAlbumShareOutlierMissingShareItem) {
+            yield _MissingShareeItem(
+                item.file, si.shareWith, si.shareWithDisplayName);
+          } else if (si is ListAlbumShareOutlierExtraShareItem) {
+            yield _ExtraShareItem(item.file, si.share);
+          }
         }
       }
-    }
-
-    for (var i = fromI; i < from.length; ++i) {
-      _items.add(_ExtraShareItem(item.file, from[i]));
-    }
-    for (var i = toI; i < to.length; ++i) {
-      _items.add(_MissingShareeItem(
-          item.file, to[i].shareWith!, to[i].shareWithDisplayName));
-    }
+    }()
+        .toList();
   }
 
   Future<void> _fixMissingSharee(_MissingShareeItem item) async {
@@ -489,7 +462,8 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     _itemStatuses[fileKey]!.remove(shareeKey);
   }
 
-  late final _bloc = ListAlbumShareOutlierBloc();
+  late final _bloc = ListAlbumShareOutlierBloc(
+      ShareRepo(ShareRemoteDataSource()), ShareeRepo(ShareeRemoteDataSource()));
 
   var _items = <_ListItem>[];
   final _itemStatuses = <String, Map<String, _ItemStatus>>{};
@@ -515,7 +489,7 @@ class _MissingShareeItem extends _ListItem {
 
   final File file;
   final String shareWith;
-  final String shareWithDisplayName;
+  final String? shareWithDisplayName;
 }
 
 enum _ItemStatus {

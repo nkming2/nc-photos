@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/type.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -313,6 +314,8 @@ void main() {
             ));
       });
 
+      test("shares", _fromJsonShares);
+
       test("albumFile", () {
         final json = <String, dynamic>{
           "version": Album.version,
@@ -602,6 +605,8 @@ void main() {
           },
         });
       });
+
+      test("shares", _toRemoteJsonShares);
     });
 
     group("toAppDbJson", () {
@@ -851,6 +856,8 @@ void main() {
           },
         });
       });
+
+      test("shares", _toAppDbJsonShares);
 
       test("albumFile", () {
         final album = Album(
@@ -1667,5 +1674,123 @@ void main() {
             });
       });
     });
+  });
+}
+
+void _fromJsonShares() {
+  final json = <String, dynamic>{
+    "version": Album.version,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "name": "",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "auto",
+      "content": <String, dynamic>{},
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "shares": <JsonObj>[
+      {"userId": "admin"},
+    ],
+  };
+  expect(
+      Album.fromJson(
+        json,
+        upgraderV1: null,
+        upgraderV2: null,
+        upgraderV3: null,
+        upgraderV4: null,
+        upgraderV5: null,
+      ),
+      Album(
+        lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+        name: "",
+        provider: AlbumStaticProvider(
+          items: [],
+        ),
+        coverProvider: AlbumAutoCoverProvider(),
+        sortProvider: const AlbumNullSortProvider(),
+        shares: [AlbumShare(userId: "admin".toCi())],
+      ));
+}
+
+void _toRemoteJsonShares() {
+  final album = Album(
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+    name: "",
+    provider: AlbumStaticProvider(
+      items: [],
+    ),
+    coverProvider: AlbumAutoCoverProvider(),
+    sortProvider: const AlbumNullSortProvider(),
+    shares: [AlbumShare(userId: "admin".toCi())],
+  );
+  expect(album.toRemoteJson(), <String, dynamic>{
+    "version": Album.version,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "name": "",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "auto",
+      "content": <String, dynamic>{},
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "shares": [
+      <String, dynamic>{
+        "userId": "admin",
+      },
+    ],
+  });
+}
+
+void _toAppDbJsonShares() {
+  final album = Album(
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+    name: "",
+    provider: AlbumStaticProvider(
+      items: [],
+    ),
+    coverProvider: AlbumAutoCoverProvider(),
+    sortProvider: const AlbumNullSortProvider(),
+    shares: [AlbumShare(userId: "admin".toCi())],
+  );
+  expect(album.toAppDbJson(), <String, dynamic>{
+    "version": Album.version,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "name": "",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "auto",
+      "content": <String, dynamic>{},
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "shares": [
+      <String, dynamic>{
+        "userId": "admin",
+      },
+    ],
   });
 }
