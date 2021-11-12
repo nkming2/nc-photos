@@ -2,6 +2,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:path/path.dart' as path;
 
 bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
@@ -19,6 +20,9 @@ bool isMetadataSupportedFormat(File file) =>
 
 bool isTrash(Account account, File file) =>
     file.path.startsWith(api_util.getTrashbinPath(account));
+
+bool isAlbumFile(Account account, File file) =>
+    file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
 
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
 String getUserDirName(File file) {

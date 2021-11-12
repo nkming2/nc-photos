@@ -26,9 +26,6 @@ import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
 
-bool isAlbumFile(Account account, File file) =>
-    file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
-
 /// Immutable object that represents an album
 class Album with EquatableMixin {
   Album({
