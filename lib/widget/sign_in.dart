@@ -78,7 +78,7 @@ class _SignInState extends State<SignIn> {
                             launch(help_utils.twoFactorAuthUrl);
                           },
                           child: Padding(
-                        padding: const EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 16),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
