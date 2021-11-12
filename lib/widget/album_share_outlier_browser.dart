@@ -11,6 +11,7 @@ import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -18,6 +19,7 @@ import 'package:nc_photos/entity/sharee/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
@@ -216,7 +218,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     return UnboundedListTile(
       leading: _buildFileThumbnail(item.file),
       title: Text(
-        item.file.filename,
+        _buildFilename(item.file),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -249,7 +251,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     return UnboundedListTile(
       leading: _buildFileThumbnail(item.file),
       title: Text(
-        item.file.filename,
+        _buildFilename(item.file),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
@@ -260,24 +262,44 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   }
 
   Widget _buildFileThumbnail(File file) {
-    return CachedNetworkImage(
-      width: 56,
-      height: 56,
-      cacheManager: ThumbnailCacheManager.inst,
-      imageUrl: api_util.getFilePreviewUrl(widget.account, file,
-          width: k.photoThumbSize, height: k.photoThumbSize),
-      httpHeaders: {
-        "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-      },
-      fadeInDuration: const Duration(),
-      filterQuality: FilterQuality.high,
-      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-      errorWidget: (context, url, error) => Icon(
-        Icons.image_not_supported,
-        size: 32,
-        color: AppTheme.getUnfocusedIconColor(context),
-      ),
-    );
+    if (file_util.isAlbumFile(widget.account, file)) {
+      return SizedBox(
+        width: 56,
+        height: 56,
+        child: Icon(
+          Icons.photo_album,
+          size: 32,
+          color: AppTheme.getUnfocusedIconColor(context),
+        ),
+      );
+    } else {
+      return CachedNetworkImage(
+        width: 56,
+        height: 56,
+        cacheManager: ThumbnailCacheManager.inst,
+        imageUrl: api_util.getFilePreviewUrl(widget.account, file,
+            width: k.photoThumbSize, height: k.photoThumbSize),
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+        },
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        errorWidget: (context, url, error) => Icon(
+          Icons.image_not_supported,
+          size: 32,
+          color: AppTheme.getUnfocusedIconColor(context),
+        ),
+      );
+    }
+  }
+
+  String _buildFilename(File file) {
+    if (widget.album.albumFile?.path.equalsIgnoreCase(file.path) == true) {
+      return widget.album.name;
+    } else {
+      return file.filename;
+    }
   }
 
   Widget _buildFixButton({
