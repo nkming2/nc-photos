@@ -1,5 +1,6 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -25,12 +26,12 @@ bool isAlbumFile(Account account, File file) =>
     file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
 
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
-String getUserDirName(File file) {
+CiString getUserDirName(File file) {
   if (file.path.startsWith("remote.php/dav/files/")) {
     const beg = "remote.php/dav/files/".length;
     final end = file.path.indexOf("/", beg);
     if (end != -1) {
-      return file.path.substring(beg, end);
+      return file.path.substring(beg, end).toCi();
     }
   }
   throw ArgumentError("Invalid path: ${file.path}");

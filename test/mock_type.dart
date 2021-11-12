@@ -7,12 +7,12 @@ import 'package:idb_shim/idb.dart';
 import 'package:idb_shim/idb_client_memory.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/string_extension.dart';
 
 /// Mock of [AlbumRepo] where all methods will throw UnimplementedError
 class MockAlbumRepo implements AlbumRepo {
@@ -243,7 +243,7 @@ class MockShareMemoryRepo extends MockShareRepo {
     return shares
         .where((element) =>
             element.path == file.strippedPath &&
-            element.uidOwner.equalsIgnoreCase(account.username))
+            element.uidOwner == account.username)
         .toList();
   }
 
@@ -254,12 +254,12 @@ class MockShareMemoryRepo extends MockShareRepo {
       shareType: ShareType.user,
       stime: DateTime.utc(2020, 1, 2, 3, 4, 5),
       uidOwner: account.username,
-      displaynameOwner: account.username,
+      displaynameOwner: account.username.toString(),
       path: file.strippedPath,
       itemType: ShareItemType.file,
       mimeType: file.contentType ?? "",
       itemSource: file.fileId!,
-      shareWith: shareWith,
+      shareWith: shareWith.toCi(),
       shareWithDisplayName: shareWith,
     );
     shares.add(share);
@@ -293,9 +293,7 @@ class MockShareeMemoryRepo extends MockShareeRepo {
 
   @override
   list(Account account) async {
-    return sharees
-        .where((s) => !s.shareWith.equalsIgnoreCase(account.username))
-        .toList();
+    return sharees.where((s) => s.shareWith != account.username).toList();
   }
 
   final List<Sharee> sharees;

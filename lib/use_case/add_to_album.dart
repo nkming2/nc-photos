@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
@@ -61,7 +60,7 @@ class AddToAlbum {
     }
     final albumShares = (album.shares!.map((e) => e.userId).toList()
           ..add(album.albumFile!.ownerId ?? account.username))
-        .where((element) => !element.equalsIgnoreCase(account.username))
+        .where((element) => element != account.username)
         .toSet();
     if (albumShares.isEmpty) {
       return;
@@ -75,7 +74,7 @@ class AddToAlbum {
         final diffShares = albumShares.difference(fileShares);
         for (final s in diffShares) {
           try {
-            await CreateUserShare(shareRepo)(account, f, s);
+            await CreateUserShare(shareRepo)(account, f, s.raw);
           } catch (e, stackTrace) {
             _log.shout(
                 "[_shareFiles] Failed while CreateUserShare: ${logFilename(f.path)}",

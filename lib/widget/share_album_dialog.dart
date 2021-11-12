@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_sharee.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -253,10 +254,10 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   }
 
   final _shareeBloc = ListShareeBloc();
-  final _processingSharee = <String>[];
+  final _processingSharee = <CiString>[];
 
   /// Store the modified value of each sharee
-  final _overrideSharee = <String, bool>{};
+  final _overrideSharee = <CiString, bool>{};
 
   static final _log =
       Logger("widget.share_album_dialog._ShareAlbumDialogState");

@@ -2,6 +2,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -49,7 +50,7 @@ Future<void> _removeLastFile() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final appDb = MockAppDb();
@@ -114,7 +115,7 @@ Future<void> _remove1OfNFiles() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final file2 = test_util.buildJpegFile(
@@ -124,7 +125,7 @@ Future<void> _remove1OfNFiles() async {
   );
   final fileItem2 = AlbumFileItem(
     file: file2,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
   );
   final file3 = test_util.buildJpegFile(
@@ -134,7 +135,7 @@ Future<void> _remove1OfNFiles() async {
   );
   final fileItem3 = AlbumFileItem(
     file: file3,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
   );
   final appDb = MockAppDb();
@@ -206,7 +207,7 @@ Future<void> _removeLatestOfNFiles() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 8),
   );
   final file2 = test_util.buildJpegFile(
@@ -216,7 +217,7 @@ Future<void> _removeLatestOfNFiles() async {
   );
   final fileItem2 = AlbumFileItem(
     file: file2,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
   );
   final file3 = test_util.buildJpegFile(
@@ -226,7 +227,7 @@ Future<void> _removeLatestOfNFiles() async {
   );
   final fileItem3 = AlbumFileItem(
     file: file3,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
   );
   final appDb = MockAppDb();
@@ -298,7 +299,7 @@ Future<void> _removeManualCoverFile() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final file2 = test_util.buildJpegFile(
@@ -308,7 +309,7 @@ Future<void> _removeManualCoverFile() async {
   );
   final fileItem2 = AlbumFileItem(
     file: file2,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
   );
   final file3 = test_util.buildJpegFile(
@@ -318,7 +319,7 @@ Future<void> _removeManualCoverFile() async {
   );
   final fileItem3 = AlbumFileItem(
     file: file3,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
   );
   final appDb = MockAppDb();
@@ -392,7 +393,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final appDb = MockAppDb();
@@ -412,7 +413,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
       ),
       coverProvider: AlbumAutoCoverProvider(coverFile: file1),
       sortProvider: const AlbumNullSortProvider(),
-      shares: [const AlbumShare(userId: "user1")],
+      shares: [AlbumShare(userId: "user1".toCi())],
       albumFile: albumFile,
     ),
   ]);
@@ -450,7 +451,7 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final appDb = MockAppDb();
@@ -471,8 +472,8 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
       coverProvider: AlbumAutoCoverProvider(coverFile: file1),
       sortProvider: const AlbumNullSortProvider(),
       shares: [
-        const AlbumShare(userId: "admin"),
-        const AlbumShare(userId: "user2"),
+        AlbumShare(userId: "admin".toCi()),
+        AlbumShare(userId: "user2".toCi()),
       ],
       albumFile: albumFile,
     ),
@@ -522,7 +523,7 @@ Future<void> _removeFromSharedAlbumLeaveExtraShare() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final appDb = MockAppDb();
@@ -542,7 +543,7 @@ Future<void> _removeFromSharedAlbumLeaveExtraShare() async {
       ),
       coverProvider: AlbumAutoCoverProvider(coverFile: file1),
       sortProvider: const AlbumNullSortProvider(),
-      shares: [const AlbumShare(userId: "admin")],
+      shares: [AlbumShare(userId: "admin".toCi())],
       albumFile: albumFile,
     ),
   ]);

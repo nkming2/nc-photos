@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
@@ -64,7 +65,7 @@ class WebdavFileParser {
     int? usedBytes;
     bool? hasPreview;
     int? fileId;
-    String? ownerId;
+    CiString? ownerId;
     Metadata? metadata;
     bool? isArchived;
     DateTime? overrideDateTime;
@@ -185,7 +186,7 @@ class _PropParser {
         _fileId = int.parse(child.innerText);
       } else if (child.matchQualifiedName("owner-id",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
-        _ownerId = child.innerText;
+        _ownerId = child.innerText.toCi();
       } else if (child.matchQualifiedName("trashbin-filename",
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _trashbinFilename = child.innerText;
@@ -231,7 +232,7 @@ class _PropParser {
   bool? get isCollection => _isCollection;
   bool? get hasPreview => _hasPreview;
   int? get fileId => _fileId;
-  String? get ownerId => _ownerId;
+  CiString? get ownerId => _ownerId;
   Metadata? get metadata => _metadata;
   bool? get isArchived => _isArchived;
   DateTime? get overrideDateTime => _overrideDateTime;
@@ -252,7 +253,7 @@ class _PropParser {
   bool? _isCollection;
   bool? _hasPreview;
   int? _fileId;
-  String? _ownerId;
+  CiString? _ownerId;
   Metadata? _metadata;
   bool? _isArchived;
   DateTime? _overrideDateTime;

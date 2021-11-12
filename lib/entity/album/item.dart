@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
@@ -29,7 +30,7 @@ abstract class AlbumItem with EquatableMixin {
   }) : addedAt = addedAt.toUtc();
 
   factory AlbumItem.fromJson(JsonObj json) {
-    final addedBy = json["addedBy"];
+    final addedBy = CiString(json["addedBy"]);
     final addedAt = DateTime.parse(json["addedAt"]);
     final type = json["type"];
     final content = json["content"];
@@ -60,7 +61,7 @@ abstract class AlbumItem with EquatableMixin {
     return {
       "type": getType(),
       "content": toContentJson(),
-      "addedBy": addedBy,
+      "addedBy": addedBy.toString(),
       "addedAt": addedAt.toIso8601String(),
     };
   }
@@ -81,7 +82,7 @@ abstract class AlbumItem with EquatableMixin {
         addedAt,
       ];
 
-  final String addedBy;
+  final CiString addedBy;
   final DateTime addedAt;
 
   static final _log = Logger("entity.album.AlbumItem");
@@ -89,7 +90,7 @@ abstract class AlbumItem with EquatableMixin {
 
 class AlbumFileItem extends AlbumItem {
   AlbumFileItem({
-    required String addedBy,
+    required CiString addedBy,
     required DateTime addedAt,
     required this.file,
   }) : super(addedBy: addedBy, addedAt: addedAt);
@@ -107,7 +108,7 @@ class AlbumFileItem extends AlbumItem {
   }
 
   factory AlbumFileItem.fromJson(
-      JsonObj json, String addedBy, DateTime addedAt) {
+      JsonObj json, CiString addedBy, DateTime addedAt) {
     return AlbumFileItem(
       addedBy: addedBy,
       addedAt: addedAt,
@@ -131,7 +132,7 @@ class AlbumFileItem extends AlbumItem {
   }
 
   AlbumFileItem copyWith({
-    String? addedBy,
+    CiString? addedBy,
     DateTime? addedAt,
     File? file,
   }) {
@@ -161,13 +162,13 @@ class AlbumFileItem extends AlbumItem {
 
 class AlbumLabelItem extends AlbumItem {
   AlbumLabelItem({
-    required String addedBy,
+    required CiString addedBy,
     required DateTime addedAt,
     required this.text,
   }) : super(addedBy: addedBy, addedAt: addedAt);
 
   factory AlbumLabelItem.fromJson(
-      JsonObj json, String addedBy, DateTime addedAt) {
+      JsonObj json, CiString addedBy, DateTime addedAt) {
     return AlbumLabelItem(
       addedBy: addedBy,
       addedAt: addedAt,
@@ -191,7 +192,7 @@ class AlbumLabelItem extends AlbumItem {
   }
 
   AlbumLabelItem copyWith({
-    String? addedBy,
+    CiString? addedBy,
     DateTime? addedAt,
     String? text,
   }) {

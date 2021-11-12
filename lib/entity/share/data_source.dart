@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception.dart';
@@ -137,7 +138,7 @@ class _ShareParser {
       id: json["id"],
       shareType: shareType,
       stime: DateTime.fromMillisecondsSinceEpoch(json["stime"] * 1000),
-      uidOwner: json["uid_owner"],
+      uidOwner: CiString(json["uid_owner"]),
       displaynameOwner: json["displayname_owner"],
       path: json["path"],
       itemType: itemType,
@@ -145,7 +146,9 @@ class _ShareParser {
       itemSource: json["item_source"],
       // when shared with a password protected link, shareWith somehow contains
       // the password, which doesn't make sense. We set it to null instead
-      shareWith: shareType == ShareType.publicLink ? null : json["share_with"],
+      shareWith: shareType == ShareType.publicLink
+          ? null
+          : (json["share_with"] as String?)?.toCi(),
       shareWithDisplayName: json["share_with_displayname"],
       url: json["url"],
     );

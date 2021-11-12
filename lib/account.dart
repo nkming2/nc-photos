@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
 
@@ -21,7 +22,7 @@ class Account with EquatableMixin {
   Account copyWith({
     String? scheme,
     String? address,
-    String? username,
+    CiString? username,
     String? password,
     List<String>? roots,
   }) {
@@ -48,14 +49,14 @@ class Account with EquatableMixin {
   Account.fromJson(JsonObj json)
       : scheme = json["scheme"],
         address = json["address"],
-        username = json["username"],
+        username = CiString(json["username"]),
         password = json["password"],
         _roots = json["roots"].cast<String>();
 
   JsonObj toJson() => {
         "scheme": scheme,
         "address": address,
-        "username": username,
+        "username": username.toString(),
         "password": password,
         "roots": _roots,
       };
@@ -67,7 +68,7 @@ class Account with EquatableMixin {
 
   final String scheme;
   final String address;
-  final String username;
+  final CiString username;
   final String password;
   final List<String> _roots;
 }

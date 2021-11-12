@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 
 enum ShareeType {
   user,
@@ -47,7 +48,7 @@ class Sharee with EquatableMixin {
   final ShareeType type;
   final String label;
   final int shareType;
-  final String shareWith;
+  final CiString shareWith;
   final String? shareWithDisplayNameUnique;
 }
 

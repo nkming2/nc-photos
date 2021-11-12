@@ -42,7 +42,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
               child: ListTile(
                 dense: true,
                 title: Text(a.account.url),
-                subtitle: Text(a.account.username),
+                subtitle: Text(a.account.username.toString()),
                 trailing: IconButton(
                   icon: Icon(
                     Icons.close,
@@ -82,7 +82,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            widget.account.username,
+            widget.account.username.toString(),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: IconButton(

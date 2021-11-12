@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -50,7 +51,7 @@ void _testQueryUnsharedAlbumExtraFileShare() {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final album = Album(
@@ -68,7 +69,7 @@ void _testQueryUnsharedAlbumExtraFileShare() {
     test_util.buildShare(id: "0", file: file1, shareWith: "user1"),
   ]);
   final shareeRepo = MockShareeMemoryRepo([
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   ]);
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     "extra file share",
@@ -109,7 +110,7 @@ void _testQueryUnsharedAlbumExtraJsonShare() {
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
   final shareeRepo = MockShareeMemoryRepo([
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   ]);
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     "extra json share",
@@ -144,7 +145,7 @@ void _testQuerySharedAlbumMissingFileShare() {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final album = Album(
@@ -156,14 +157,14 @@ void _testQuerySharedAlbumMissingFileShare() {
     ),
     coverProvider: AlbumAutoCoverProvider(coverFile: file1),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [const AlbumShare(userId: "user1")],
+    shares: [AlbumShare(userId: "user1".toCi())],
     albumFile: albumFile,
   );
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
   final shareeRepo = MockShareeMemoryRepo([
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   ]);
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     "missing file share",
@@ -174,7 +175,7 @@ void _testQuerySharedAlbumMissingFileShare() {
       ListAlbumShareOutlierBlocLoading(account, []),
       ListAlbumShareOutlierBlocSuccess(account, [
         ListAlbumShareOutlierItem(file1, [
-          const ListAlbumShareOutlierMissingShareItem("user1", null),
+          ListAlbumShareOutlierMissingShareItem("user1".toCi(), null),
         ]),
       ]),
     ],
@@ -196,12 +197,12 @@ void _testQuerySharedAlbumMissingJsonShare() {
     provider: AlbumStaticProvider(items: []),
     coverProvider: AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [const AlbumShare(userId: "user1")],
+    shares: [AlbumShare(userId: "user1".toCi())],
     albumFile: albumFile,
   );
   final shareRepo = MockShareMemoryRepo();
   final shareeRepo = MockShareeMemoryRepo([
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   ]);
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     "missing json share",
@@ -212,7 +213,7 @@ void _testQuerySharedAlbumMissingJsonShare() {
       ListAlbumShareOutlierBlocLoading(account, []),
       ListAlbumShareOutlierBlocSuccess(account, [
         ListAlbumShareOutlierItem(albumFile, [
-          const ListAlbumShareOutlierMissingShareItem("user1", null),
+          ListAlbumShareOutlierMissingShareItem("user1".toCi(), null),
         ]),
       ]),
     ],

@@ -18,7 +18,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
@@ -129,8 +128,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
             title: Text(widget.file.strippedPath),
           ),
         ),
-        if (widget.shares.first.uidOwner
-            .equalsIgnoreCase(widget.account.username)) ...[
+        if (widget.shares.first.uidOwner == widget.account.username) ...[
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),

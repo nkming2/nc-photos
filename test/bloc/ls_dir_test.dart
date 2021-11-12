@@ -6,10 +6,10 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
+import '../test_util.dart' as test_util;
 
 void main() {
   _buildBloc() => LsDirBloc(_MockFileRepo());
-  _buildAccount() => Account("http", "example.com", "admin", "pass", [""]);
 
   group("LsDirBloc", () {
     group("LsDirBlocQuery", () {
@@ -29,13 +29,13 @@ void main() {
       blocTest<LsDirBloc, LsDirBlocState>(
         "query 1 subdir",
         build: _buildBloc,
-        act: (bloc) => bloc.add(LsDirBlocQuery(
-            _buildAccount(), File(path: "remote.php/dav/files/admin"))),
+        act: (bloc) => bloc.add(LsDirBlocQuery(test_util.buildAccount(),
+            File(path: "remote.php/dav/files/admin"))),
         expect: () => [
-          LsDirBlocLoading(
-              _buildAccount(), File(path: "remote.php/dav/files/admin"), []),
-          LsDirBlocSuccess(
-              _buildAccount(), File(path: "remote.php/dav/files/admin"), [
+          LsDirBlocLoading(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin"), []),
+          LsDirBlocSuccess(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin"), [
             LsDirBlocItem(
               File(
                 path: "remote.php/dav/files/admin/d1",
@@ -50,13 +50,13 @@ void main() {
       blocTest<LsDirBloc, LsDirBlocState>(
         "query n subdir",
         build: _buildBloc,
-        act: (bloc) => bloc.add(LsDirBlocQuery(
-            _buildAccount(), File(path: "remote.php/dav/files/admin/d1"))),
+        act: (bloc) => bloc.add(LsDirBlocQuery(test_util.buildAccount(),
+            File(path: "remote.php/dav/files/admin/d1"))),
         expect: () => [
-          LsDirBlocLoading(
-              _buildAccount(), File(path: "remote.php/dav/files/admin/d1"), []),
-          LsDirBlocSuccess(
-              _buildAccount(), File(path: "remote.php/dav/files/admin/d1"), [
+          LsDirBlocLoading(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin/d1"), []),
+          LsDirBlocSuccess(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin/d1"), [
             LsDirBlocItem(
               File(
                 path: "remote.php/dav/files/admin/d1/d2-1",
@@ -78,12 +78,12 @@ void main() {
       blocTest<LsDirBloc, LsDirBlocState>(
         "query 0 subdir",
         build: _buildBloc,
-        act: (bloc) => bloc.add(LsDirBlocQuery(
-            _buildAccount(), File(path: "remote.php/dav/files/admin/d1/d2-2"))),
+        act: (bloc) => bloc.add(LsDirBlocQuery(test_util.buildAccount(),
+            File(path: "remote.php/dav/files/admin/d1/d2-2"))),
         expect: () => [
-          LsDirBlocLoading(_buildAccount(),
+          LsDirBlocLoading(test_util.buildAccount(),
               File(path: "remote.php/dav/files/admin/d1/d2-2"), []),
-          LsDirBlocSuccess(_buildAccount(),
+          LsDirBlocSuccess(test_util.buildAccount(),
               File(path: "remote.php/dav/files/admin/d1/d2-2"), []),
         ],
       );
@@ -92,13 +92,13 @@ void main() {
         "query depth 2",
         build: _buildBloc,
         act: (bloc) => bloc.add(LsDirBlocQuery(
-            _buildAccount(), File(path: "remote.php/dav/files/admin"),
+            test_util.buildAccount(), File(path: "remote.php/dav/files/admin"),
             depth: 2)),
         expect: () => [
-          LsDirBlocLoading(
-              _buildAccount(), File(path: "remote.php/dav/files/admin"), []),
-          LsDirBlocSuccess(
-              _buildAccount(), File(path: "remote.php/dav/files/admin"), [
+          LsDirBlocLoading(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin"), []),
+          LsDirBlocSuccess(test_util.buildAccount(),
+              File(path: "remote.php/dav/files/admin"), [
             LsDirBlocItem(
               File(
                 path: "remote.php/dav/files/admin/d1",

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -11,7 +12,6 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/list_sharee.dart';
 
@@ -78,7 +78,7 @@ class ListAlbumShareOutlierMissingShareItem
         shareWithDisplayName,
       ];
 
-  final String shareWith;
+  final CiString shareWith;
   final String? shareWithDisplayName;
 }
 
@@ -185,7 +185,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
 
       final albumShares = await () async {
         var temp = (ev.album.shares ?? [])
-            .where((s) => !s.userId.equalsIgnoreCase(ev.account.username))
+            .where((s) => s.userId != ev.account.username)
             .toList();
         if (ev.album.albumFile!.ownerId != ev.account.username) {
           // add owner if the album is not owned by this account
@@ -196,11 +196,9 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
             displayName: ownerSharee.shareWithDisplayNameUnique,
           ));
         }
-        return Map.fromEntries(
-            temp.map((as) => MapEntry(as.userId.toLowerCase(), as)));
+        return Map.fromEntries(temp.map((as) => MapEntry(as.userId, as)));
       }();
-      final albumSharees =
-          albumShares.values.map((s) => s.userId.toLowerCase()).toSet();
+      final albumSharees = albumShares.values.map((s) => s.userId).toSet();
 
       final products = <ListAlbumShareOutlierItem>[];
       final errors = <Object>[];
@@ -224,8 +222,8 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
   Future<List<ListAlbumShareOutlierItem>> _processAlbumFile(
     Account account,
     Album album,
-    Map<String, AlbumShare> albumShares,
-    Set<String> albumSharees,
+    Map<CiString, AlbumShare> albumShares,
+    Set<CiString> albumSharees,
     List<Object> errors,
   ) async {
     try {
@@ -245,8 +243,8 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
   Future<List<ListAlbumShareOutlierItem>> _processAlbumItems(
     Account account,
     Album album,
-    Map<String, AlbumShare> albumShares,
-    Set<String> albumSharees,
+    Map<CiString, AlbumShare> albumShares,
+    Set<CiString> albumSharees,
     List<Object> errors,
   ) async {
     final products = <ListAlbumShareOutlierItem>[];
@@ -276,21 +274,21 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
   Future<ListAlbumShareOutlierItem?> _processSingleFile(
     Account account,
     File file,
-    Map<String, AlbumShare> albumShares,
-    Set<String> albumSharees,
+    Map<CiString, AlbumShare> albumShares,
+    Set<CiString> albumSharees,
     List<Object> errors,
   ) async {
     final shareItems = <ListAlbumShareOutlierShareItem>[];
     final shares = (await ListShare(shareRepo)(account, file))
         .where((element) => element.shareType == ShareType.user)
         .toList();
-    final sharees = shares.map((s) => s.shareWith!.toLowerCase()).toSet();
+    final sharees = shares.map((s) => s.shareWith!).toSet();
     final missings = albumSharees.difference(sharees);
     _log.info(
         "Missing shares: ${missings.toReadableString()} for file: ${logFilename(file.path)}");
     for (final m in missings) {
       try {
-        final as = albumShares[m.toLowerCase()]!;
+        final as = albumShares[m]!;
         shareItems.add(
             ListAlbumShareOutlierMissingShareItem(as.userId, as.displayName));
       } catch (e, stackTrace) {
@@ -306,8 +304,8 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
         "Extra shares: ${extras.toReadableString()} for file: ${logFilename(file.path)}");
     for (final e in extras) {
       try {
-        shareItems.add(ListAlbumShareOutlierExtraShareItem(shares
-            .firstWhere((s) => s.shareWith?.equalsIgnoreCase(e) == true)));
+        shareItems.add(ListAlbumShareOutlierExtraShareItem(
+            shares.firstWhere((s) => s.shareWith == e)));
       } catch (e, stackTrace) {
         _log.severe(
             "[_processSingleFile] Failed while processing extra share for file: ${logFilename(file.path)}",

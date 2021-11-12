@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -42,7 +43,7 @@ class ShareAlbumWithUser {
   Future<void> _createFileShares(
     Account account,
     Album album,
-    String shareWith, {
+    CiString shareWith, {
     void Function(File)? onShareFileFailed,
   }) async {
     final files = AlbumStaticProvider.of(album)
@@ -50,7 +51,8 @@ class ShareAlbumWithUser {
         .whereType<AlbumFileItem>()
         .map((e) => e.file);
     try {
-      await CreateUserShare(shareRepo)(account, album.albumFile!, shareWith);
+      await CreateUserShare(shareRepo)(
+          account, album.albumFile!, shareWith.raw);
     } catch (e, stackTrace) {
       _log.severe(
           "[_createFileShares] Failed sharing album file '${logFilename(album.albumFile?.path)}' with '$shareWith'",
@@ -61,7 +63,7 @@ class ShareAlbumWithUser {
     for (final f in files) {
       _log.info("[_createFileShares] Sharing '${f.path}' with '$shareWith'");
       try {
-        await CreateUserShare(shareRepo)(account, f, shareWith);
+        await CreateUserShare(shareRepo)(account, f, shareWith.raw);
       } catch (e, stackTrace) {
         _log.severe(
             "[_createFileShares] Failed sharing file '${logFilename(f.path)}' with '$shareWith'",

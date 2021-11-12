@@ -1,5 +1,6 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -39,8 +40,8 @@ Future<void> _unshareWithoutFile() async {
       coverProvider: AlbumAutoCoverProvider(),
       sortProvider: const AlbumNullSortProvider(),
       shares: [
-        const AlbumShare(userId: "user1"),
-        const AlbumShare(userId: "user2"),
+        AlbumShare(userId: "user1".toCi()),
+        AlbumShare(userId: "user2".toCi()),
       ],
       albumFile: albumFile,
     ),
@@ -52,9 +53,9 @@ Future<void> _unshareWithoutFile() async {
   ]);
 
   await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1");
+      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
   expect(albumRepo.findAlbumByPath(albumFile.path).shares,
-      [const AlbumShare(userId: "user2")]);
+      [AlbumShare(userId: "user2".toCi())]);
   expect(
     shareRepo.shares,
     [test_util.buildShare(id: "1", file: albumFile, shareWith: "user2")],
@@ -79,7 +80,7 @@ Future<void> _unshareWithFile() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final albumRepo = MockAlbumMemoryRepo([
@@ -93,8 +94,8 @@ Future<void> _unshareWithFile() async {
       coverProvider: AlbumAutoCoverProvider(coverFile: file1),
       sortProvider: const AlbumNullSortProvider(),
       shares: [
-        const AlbumShare(userId: "user1"),
-        const AlbumShare(userId: "user2"),
+        AlbumShare(userId: "user1".toCi()),
+        AlbumShare(userId: "user2".toCi()),
       ],
       albumFile: albumFile,
     ),
@@ -108,9 +109,9 @@ Future<void> _unshareWithFile() async {
   ]);
 
   await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1");
+      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
   expect(albumRepo.findAlbumByPath(albumFile.path).shares,
-      [const AlbumShare(userId: "user2")]);
+      [AlbumShare(userId: "user2".toCi())]);
   expect(
     shareRepo.shares,
     [
@@ -140,7 +141,7 @@ Future<void> _unshareWithFileNotOwned() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final file2 = test_util.buildJpegFile(
@@ -151,7 +152,7 @@ Future<void> _unshareWithFileNotOwned() async {
   );
   final fileItem2 = AlbumFileItem(
     file: file2,
-    addedBy: "user2",
+    addedBy: "user2".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
   );
   final albumRepo = MockAlbumMemoryRepo([
@@ -165,8 +166,8 @@ Future<void> _unshareWithFileNotOwned() async {
       coverProvider: AlbumAutoCoverProvider(coverFile: file2),
       sortProvider: const AlbumNullSortProvider(),
       shares: [
-        const AlbumShare(userId: "user1"),
-        const AlbumShare(userId: "user2"),
+        AlbumShare(userId: "user1".toCi()),
+        AlbumShare(userId: "user2".toCi()),
       ],
       albumFile: albumFile,
     ),
@@ -184,9 +185,9 @@ Future<void> _unshareWithFileNotOwned() async {
   ]);
 
   await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1");
+      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
   expect(albumRepo.findAlbumByPath(albumFile.path).shares,
-      [const AlbumShare(userId: "user2")]);
+      [AlbumShare(userId: "user2".toCi())]);
   expect(
     shareRepo.shares,
     [

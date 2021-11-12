@@ -2,6 +2,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -68,7 +69,7 @@ Future<void> _addFile() async {
     albumRepo.findAlbumByPath(albumFile.path),
     [
       AlbumFileItem(
-        addedBy: "admin",
+        addedBy: "admin".toCi(),
         addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
         file: file,
       ),
@@ -88,7 +89,7 @@ Future<void> _addFile() async {
         provider: AlbumStaticProvider(
           items: [
             AlbumFileItem(
-              addedBy: "admin",
+              addedBy: "admin".toCi(),
               addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
               file: file,
             ),
@@ -136,11 +137,7 @@ Future<void> _addFileToSharedAlbumOwned() async {
       provider: AlbumStaticProvider(items: []),
       coverProvider: AlbumAutoCoverProvider(),
       sortProvider: const AlbumNullSortProvider(),
-      shares: [
-        const AlbumShare(
-          userId: "user1",
-        ),
-      ],
+      shares: [AlbumShare(userId: "user1".toCi())],
       albumFile: albumFile,
     ),
   ]);
@@ -153,7 +150,7 @@ Future<void> _addFileToSharedAlbumOwned() async {
     albumRepo.findAlbumByPath(albumFile.path),
     [
       AlbumFileItem(
-        addedBy: "admin",
+        addedBy: "admin".toCi(),
         addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
         file: file,
       ),
@@ -202,12 +199,8 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
       coverProvider: AlbumAutoCoverProvider(),
       sortProvider: const AlbumNullSortProvider(),
       shares: [
-        const AlbumShare(
-          userId: "admin",
-        ),
-        const AlbumShare(
-          userId: "user2",
-        ),
+        AlbumShare(userId: "admin".toCi()),
+        AlbumShare(userId: "user2".toCi()),
       ],
       albumFile: albumFile,
     ),
@@ -224,7 +217,7 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
     albumRepo.findAlbumByPath(albumFile.path),
     [
       AlbumFileItem(
-        addedBy: "admin",
+        addedBy: "admin".toCi(),
         addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
         file: file,
       ),

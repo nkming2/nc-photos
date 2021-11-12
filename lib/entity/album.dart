@@ -6,6 +6,7 @@ import 'package:idb_sqflite/idb_sqflite.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -18,7 +19,6 @@ import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -196,7 +196,7 @@ class Album with EquatableMixin {
   static const version = 6;
 }
 
-class AlbumShare {
+class AlbumShare with EquatableMixin {
   const AlbumShare({
     required this.userId,
     this.displayName,
@@ -204,28 +204,17 @@ class AlbumShare {
 
   factory AlbumShare.fromJson(JsonObj json) {
     return AlbumShare(
-      userId: json["userId"],
+      userId: CiString(json["userId"]),
       displayName: json["displayName"],
     );
   }
 
   JsonObj toJson() {
     return {
-      "userId": userId,
+      "userId": userId.toString(),
       if (displayName != null) "displayName": displayName,
     };
   }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is AlbumShare &&
-            runtimeType == other.runtimeType &&
-            userId.equalsIgnoreCase(other.userId);
-  }
-
-  @override
-  get hashCode => userId.toLowerCase().hashCode;
 
   @override
   toString() {
@@ -235,8 +224,13 @@ class AlbumShare {
         "}";
   }
 
+  @override
+  get props => [
+        userId,
+      ];
+
   /// User ID or username, case insensitive
-  final String userId;
+  final CiString userId;
   final String? displayName;
 }
 

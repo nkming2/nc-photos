@@ -9,6 +9,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -408,7 +409,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     });
     try {
       await CreateUserShare(shareRepo)(
-          widget.account, item.file, item.shareWith);
+          widget.account, item.file, item.shareWith.raw);
       if (mounted) {
         setState(() {
           _setItemStatus(item.file.path, item.shareWith, _ItemStatus.fixed);
@@ -461,7 +462,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     _bloc.add(ListAlbumShareOutlierBlocQuery(widget.account, widget.album));
   }
 
-  _ItemStatus? _getItemStatus(String fileKey, String shareeKey) {
+  _ItemStatus? _getItemStatus(String fileKey, CiString shareeKey) {
     final temp = _itemStatuses[fileKey];
     if (temp == null) {
       return null;
@@ -470,14 +471,14 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     }
   }
 
-  void _setItemStatus(String fileKey, String shareeKey, _ItemStatus value) {
+  void _setItemStatus(String fileKey, CiString shareeKey, _ItemStatus value) {
     if (!_itemStatuses.containsKey(fileKey)) {
       _itemStatuses[fileKey] = {};
     }
     _itemStatuses[fileKey]![shareeKey] = value;
   }
 
-  void _removeItemStatus(String fileKey, String shareeKey) {
+  void _removeItemStatus(String fileKey, CiString shareeKey) {
     if (!_itemStatuses.containsKey(fileKey)) {
       return;
     }
@@ -488,7 +489,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       ShareRepo(ShareRemoteDataSource()), ShareeRepo(ShareeRemoteDataSource()));
 
   var _items = <_ListItem>[];
-  final _itemStatuses = <String, Map<String, _ItemStatus>>{};
+  final _itemStatuses = <String, Map<CiString, _ItemStatus>>{};
 
   static final _log = Logger(
       "widget.album_share_outlier_browser._AlbumShareOutlierBrowserState");
@@ -510,7 +511,7 @@ class _MissingShareeItem extends _ListItem {
       this.file, this.shareWith, this.shareWithDisplayName);
 
   final File file;
-  final String shareWith;
+  final CiString shareWith;
   final String? shareWithDisplayName;
 }
 

@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/string_extension.dart';
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
@@ -55,9 +54,7 @@ class ResyncAlbum {
       try {
         dbItem = dbItems.firstWhere((element) {
           final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-          return file_util
-              .getUserDirName(e.file)
-              .equalsIgnoreCase(account.username);
+          return file_util.getUserDirName(e.file) == account.username;
         });
       } on StateError catch (_) {
         // not found

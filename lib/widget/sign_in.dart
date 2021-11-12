@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -231,7 +232,7 @@ class _SignInState extends State<SignIn> {
   void _connect() {
     _formKey.currentState!.save();
     final account = Account(_formValue.scheme, _formValue.address,
-        _formValue.username, _formValue.password, [""]);
+        _formValue.username.toCi(), _formValue.password, [""]);
     _log.info("[_connect] Try connecting with account: $account");
     Navigator.pushNamed<Account>(context, Connect.routeName,
             arguments: ConnectArguments(account))

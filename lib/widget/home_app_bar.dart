@@ -62,7 +62,7 @@ class HomeSliverAppBar extends StatelessWidget {
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
-                      account.username,
+                      account.username.toString(),
                       style: TextStyle(
                         fontSize: 14,
                         color: AppTheme.getSecondaryTextColor(context),

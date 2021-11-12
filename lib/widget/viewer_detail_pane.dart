@@ -192,7 +192,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   color: AppTheme.getSecondaryTextColor(context),
                 ),
               ),
-              title: Text(widget.file.ownerId!),
+              title: Text(widget.file.ownerId!.toString()),
               subtitle: Text(L10n.global().fileSharedByDescription),
             ),
           ListTile(

@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -9,6 +9,8 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/type.dart';
 import 'package:test/test.dart';
+
+import '../test_util.dart' as test_util;
 
 void main() {
   group("Album", () {
@@ -150,12 +152,12 @@ void main() {
                 provider: AlbumStaticProvider(
                   items: [
                     AlbumFileItem(
-                      addedBy: "admin",
+                      addedBy: "admin".toCi(),
                       addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                     ),
                     AlbumFileItem(
-                      addedBy: "admin",
+                      addedBy: "admin".toCi(),
                       addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                     ),
@@ -210,7 +212,7 @@ void main() {
                 provider: AlbumStaticProvider(
                   items: [
                     AlbumLabelItem(
-                      addedBy: "admin",
+                      addedBy: "admin".toCi(),
                       addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                       text: "Testing",
                     ),
@@ -432,12 +434,12 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumFileItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
@@ -495,7 +497,7 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumLabelItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   text: "Testing",
                 ),
@@ -680,12 +682,12 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumFileItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test1.jpg"),
                 ),
                 AlbumFileItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   file: File(path: "remote.php/dav/files/admin/test2.jpg"),
                 ),
@@ -743,7 +745,7 @@ void main() {
             provider: AlbumStaticProvider(
               items: [
                 AlbumLabelItem(
-                  addedBy: "admin",
+                  addedBy: "admin".toCi(),
                   addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
                   text: "Testing",
                 ),
@@ -1400,7 +1402,7 @@ void main() {
     });
 
     group("AlbumUpgraderV5", () {
-      final account = Account("http", "example.com", "user1", "123", [""]);
+      final account = test_util.buildAccount(username: "user1");
 
       test("w/ ownerId", () {
         final json = <String, dynamic>{
@@ -1637,7 +1639,7 @@ void main() {
         };
         final albumFile = File(
           path: "remote.php/dav/files/admin/test1.json",
-          ownerId: "admin",
+          ownerId: "admin".toCi(),
         );
         expect(
             AlbumUpgraderV5(account, albumFile: albumFile)(json),

@@ -1,5 +1,6 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -46,11 +47,11 @@ Future<void> _shareWithoutFile() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [const AlbumShare(userId: "user1")],
+    [AlbumShare(userId: "user1".toCi())],
   );
   expect(
     shareRepo.shares,
@@ -76,7 +77,7 @@ Future<void> _shareWithFile() async {
   );
   final fileItem1 = AlbumFileItem(
     file: file1,
-    addedBy: "admin",
+    addedBy: "admin".toCi(),
     addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
   );
   final albumRepo = MockAlbumMemoryRepo([
@@ -97,11 +98,11 @@ Future<void> _shareWithFile() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user1"),
+    test_util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [const AlbumShare(userId: "user1")],
+    [AlbumShare(userId: "user1".toCi())],
   );
   expect(
     shareRepo.shares,
@@ -129,7 +130,7 @@ Future<void> _shareSharedAlbum() async {
       provider: AlbumStaticProvider(items: []),
       coverProvider: AlbumAutoCoverProvider(),
       sortProvider: const AlbumNullSortProvider(),
-      shares: [const AlbumShare(userId: "user1")],
+      shares: [AlbumShare(userId: "user1".toCi())],
       albumFile: albumFile,
     ),
   ]);
@@ -140,13 +141,13 @@ Future<void> _shareSharedAlbum() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user2"),
+    test_util.buildSharee(shareWith: "user2".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
     [
-      const AlbumShare(userId: "user1"),
-      const AlbumShare(userId: "user2"),
+      AlbumShare(userId: "user1".toCi()),
+      AlbumShare(userId: "user2".toCi()),
     ],
   );
   expect(

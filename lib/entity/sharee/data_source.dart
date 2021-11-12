@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
@@ -42,7 +43,7 @@ class _ShareeParser {
             type: kt.value,
             label: u["label"],
             shareType: u["value"]["shareType"],
-            shareWith: u["value"]["shareWith"],
+            shareWith: CiString(u["value"]["shareWith"]),
             shareWithDisplayNameUnique: u["shareWithDisplayNameUnique"],
           ));
         } catch (e) {

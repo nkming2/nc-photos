@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -18,7 +19,7 @@ class UnshareAlbumWithUser {
   Future<void> call(
     Account account,
     Album album,
-    String shareWith, {
+    CiString shareWith, {
     void Function(Share)? onUnshareFileFailed,
   }) async {
     assert(album.provider is AlbumStaticProvider);
@@ -41,7 +42,7 @@ class UnshareAlbumWithUser {
   Future<void> _deleteFileShares(
     Account account,
     Album album,
-    String shareWith, {
+    CiString shareWith, {
     void Function(Share)? onUnshareFileFailed,
   }) async {
     // remove share from the album file

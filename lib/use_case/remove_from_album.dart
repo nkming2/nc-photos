@@ -9,7 +9,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -95,7 +94,7 @@ class RemoveFromAlbum {
     }
     final albumShares = (album.shares!.map((e) => e.userId).toList()
           ..add(album.albumFile!.ownerId ?? account.username))
-        .where((element) => !element.equalsIgnoreCase(account.username))
+        .where((element) => element != account.username)
         .toList();
     if (albumShares.isNotEmpty) {
       await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(

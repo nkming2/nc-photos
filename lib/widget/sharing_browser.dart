@@ -19,7 +19,6 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
@@ -194,11 +193,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
               ),
             ),
       label: shares.first.share.filename,
-      description:
-          shares.first.share.uidOwner.equalsIgnoreCase(widget.account.username)
-              ? L10n.global().fileLastSharedDescription(dateStr)
-              : L10n.global().fileLastSharedByOthersDescription(
-                  shares.first.share.displaynameOwner, dateStr),
+      description: shares.first.share.uidOwner == widget.account.username
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().fileLastSharedByOthersDescription(
+              shares.first.share.displaynameOwner, dateStr),
       trailing: (shares.any((element) => element.share.url?.isNotEmpty == true))
           ? Icon(
               Icons.link,
@@ -249,11 +247,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
               ),
             ),
       label: firstItem.album.name,
-      description:
-          shares.first.share.uidOwner.equalsIgnoreCase(widget.account.username)
-              ? L10n.global().fileLastSharedDescription(dateStr)
-              : L10n.global().albumLastSharedByOthersDescription(
-                  shares.first.share.displaynameOwner, dateStr),
+      description: shares.first.share.uidOwner == widget.account.username
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().albumLastSharedByOthersDescription(
+              shares.first.share.displaynameOwner, dateStr),
       trailing: Icon(
         Icons.photo_album_outlined,
         color: AppTheme.getUnfocusedIconColor(context),
@@ -297,8 +294,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
     // group shares of the same file
     final map = <String, List<ListSharingItem>>{};
     for (final i in items) {
-      final isSharedByMe =
-          i.share.uidOwner.equalsIgnoreCase(widget.account.username);
+      final isSharedByMe = (i.share.uidOwner == widget.account.username);
       final groupKey = "${i.share.path}?$isSharedByMe";
       map[groupKey] ??= <ListSharingItem>[];
       map[groupKey]!.add(i);

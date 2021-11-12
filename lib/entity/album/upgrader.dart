@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
@@ -177,13 +178,15 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
         return result;
       }
       for (final item in (result["provider"]["content"]["items"] as List)) {
-        final String addedBy;
+        final CiString addedBy;
         if (result.containsKey("albumFile")) {
-          addedBy = result["albumFile"]["ownerId"] ?? account.username;
+          addedBy = result["albumFile"]["ownerId"] == null
+              ? account.username
+              : CiString(result["albumFile"]["ownerId"]);
         } else {
           addedBy = albumFile?.ownerId ?? account.username;
         }
-        item["addedBy"] = addedBy;
+        item["addedBy"] = addedBy.toString();
         item["addedAt"] = result["lastUpdated"];
       }
     } catch (e, stackTrace) {

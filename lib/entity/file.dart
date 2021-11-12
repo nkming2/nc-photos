@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/or_null.dart';
@@ -264,7 +265,7 @@ class File with EquatableMixin {
       usedBytes: json["usedBytes"],
       hasPreview: json["hasPreview"],
       fileId: json["fileId"],
-      ownerId: json["ownerId"],
+      ownerId: json["ownerId"] == null ? null : CiString(json["ownerId"]),
       trashbinFilename: json["trashbinFilename"],
       trashbinOriginalLocation: json["trashbinOriginalLocation"],
       trashbinDeletionTime: json["trashbinDeletionTime"] == null
@@ -354,7 +355,7 @@ class File with EquatableMixin {
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
-      if (ownerId != null) "ownerId": ownerId,
+      if (ownerId != null) "ownerId": ownerId.toString(),
       if (trashbinFilename != null) "trashbinFilename": trashbinFilename,
       if (trashbinOriginalLocation != null)
         "trashbinOriginalLocation": trashbinOriginalLocation,
@@ -377,7 +378,7 @@ class File with EquatableMixin {
     int? usedBytes,
     bool? hasPreview,
     int? fileId,
-    String? ownerId,
+    CiString? ownerId,
     String? trashbinFilename,
     String? trashbinOriginalLocation,
     DateTime? trashbinDeletionTime,
@@ -438,7 +439,7 @@ class File with EquatableMixin {
   final bool? hasPreview;
   // maybe null when loaded from old cache
   final int? fileId;
-  final String? ownerId;
+  final CiString? ownerId;
   final String? trashbinFilename;
   final String? trashbinOriginalLocation;
   final DateTime? trashbinDeletionTime;
@@ -464,8 +465,7 @@ extension FileExtension on File {
     }
   }
 
-  bool isOwned(String username) =>
-      ownerId == null || ownerId!.equalsIgnoreCase(username.toLowerCase());
+  bool isOwned(CiString username) => ownerId == null || ownerId == username;
 
   /// Return the path of this file with the DAV part stripped
   ///

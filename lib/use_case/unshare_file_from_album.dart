@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -21,7 +22,7 @@ class UnshareFileFromAlbum {
     Account account,
     Album album,
     List<File> files,
-    List<String> unshareWith, {
+    List<CiString> unshareWith, {
     void Function(Share)? onUnshareFileFailed,
   }) async {
     _log.info(

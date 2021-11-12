@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path_util;
@@ -137,13 +138,13 @@ class Share with EquatableMixin {
   final String id;
   final ShareType shareType;
   final DateTime stime;
-  final String uidOwner;
+  final CiString uidOwner;
   final String displaynameOwner;
   final String path;
   final ShareItemType itemType;
   final String mimeType;
   final int itemSource;
-  final String? shareWith;
+  final CiString? shareWith;
   final String shareWithDisplayName;
   final String? url;
 }

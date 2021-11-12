@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -20,7 +21,7 @@ Account buildAccount({
   String password = "pass",
   List<String> roots = const [""],
 }) =>
-    Account(scheme, address, username, password, roots);
+    Account(scheme, address, username.toCi(), password, roots);
 
 /// Build a mock [File] pointing to a album JSON file
 ///
@@ -40,7 +41,7 @@ File buildAlbumFile({
       isCollection: false,
       hasPreview: false,
       fileId: fileId,
-      ownerId: ownerId,
+      ownerId: ownerId.toCi(),
     );
 
 String buildAlbumFilePath(
@@ -68,7 +69,7 @@ File buildJpegFile({
       isCollection: false,
       hasPreview: hasPreview,
       fileId: fileId,
-      ownerId: ownerId,
+      ownerId: ownerId.toCi(),
     );
 
 Share buildShare({
@@ -83,13 +84,13 @@ Share buildShare({
       id: id,
       shareType: ShareType.user,
       stime: stime ?? DateTime.utc(2020, 1, 2, 3, 4, 5),
-      uidOwner: uidOwner,
+      uidOwner: uidOwner.toCi(),
       displaynameOwner: displaynameOwner ?? uidOwner,
       path: file.strippedPath,
       itemType: ShareItemType.file,
       mimeType: file.contentType ?? "",
       itemSource: file.fileId!,
-      shareWith: shareWith,
+      shareWith: shareWith.toCi(),
       shareWithDisplayName: shareWith,
     );
 
@@ -97,7 +98,7 @@ Sharee buildSharee({
   ShareeType type = ShareeType.user,
   String label = "admin",
   int shareType = 0,
-  required String shareWith,
+  required CiString shareWith,
   String? shareWithDisplayNameUnique,
 }) =>
     Sharee(

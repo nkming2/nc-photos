@@ -1,3 +1,4 @@
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/or_null.dart';
@@ -431,7 +432,7 @@ void main() {
           "ownerId": "admin",
         };
         final file = File.fromJson(json);
-        expect(file, File(path: "", ownerId: "admin"));
+        expect(file, File(path: "", ownerId: "admin".toCi()));
       });
 
       test("trashbinFilename", () {
@@ -591,8 +592,9 @@ void main() {
       });
 
       test("ownerId", () {
-        final file =
-            File(path: "remote.php/dav/files/admin/test.jpg", ownerId: "admin");
+        final file = File(
+            path: "remote.php/dav/files/admin/test.jpg",
+            ownerId: "admin".toCi());
         expect(file.toJson(), <String, dynamic>{
           "path": "remote.php/dav/files/admin/test.jpg",
           "ownerId": "admin",
@@ -671,7 +673,7 @@ void main() {
         usedBytes: 123456,
         hasPreview: true,
         fileId: 123,
-        ownerId: "admin",
+        ownerId: "admin".toCi(),
         trashbinFilename: "test.jpg",
         trashbinOriginalLocation: "Photos/test.jpg",
         trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -694,7 +696,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -717,7 +719,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -740,7 +742,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -763,7 +765,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -787,7 +789,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -810,7 +812,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -833,7 +835,7 @@ void main() {
               usedBytes: 999999,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -856,7 +858,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: false,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -879,7 +881,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 321,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -889,7 +891,7 @@ void main() {
       });
 
       test("ownerId", () {
-        final file = src.copyWith(ownerId: "user");
+        final file = src.copyWith(ownerId: "user".toCi());
         expect(
             file,
             File(
@@ -902,7 +904,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "user",
+              ownerId: "user".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -925,7 +927,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test2.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -948,7 +950,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos2/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -972,7 +974,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: now,
@@ -996,7 +998,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1017,7 +1019,7 @@ void main() {
           usedBytes: 123456,
           hasPreview: true,
           fileId: 123,
-          ownerId: "admin",
+          ownerId: "admin".toCi(),
           trashbinFilename: "test.jpg",
           trashbinOriginalLocation: "Photos/test.jpg",
           trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1038,7 +1040,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1061,7 +1063,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1084,7 +1086,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1107,7 +1109,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
@@ -1130,7 +1132,7 @@ void main() {
               usedBytes: 123456,
               hasPreview: true,
               fileId: 123,
-              ownerId: "admin",
+              ownerId: "admin".toCi(),
               trashbinFilename: "test.jpg",
               trashbinOriginalLocation: "Photos/test.jpg",
               trashbinDeletionTime: DateTime.utc(2022, 1, 2, 3, 4, 5),
