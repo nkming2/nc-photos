@@ -10,6 +10,7 @@ import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/or_null.dart';
@@ -180,9 +181,7 @@ class MockFileMemoryRepo extends MockFileRepo {
 
   @override
   list(Account account, File root) async {
-    return files
-        .where((f) => f.path == root.path || f.path.startsWith("${root.path}/"))
-        .toList();
+    return files.where((f) => file_util.isOrUnderDir(f, root)).toList();
   }
 
   final List<File> files;

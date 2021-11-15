@@ -8,6 +8,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -331,8 +332,7 @@ class DirPickerState extends State<DirPicker> {
         "[_pickedAllExclude] Unpicking '${item.file.path}' and picking children");
     final products = <LsDirBlocItem>[];
     for (final i in item.children ?? []) {
-      if (exclude.file.path == i.file.path ||
-          exclude.file.path.startsWith("${i.file.path}/")) {
+      if (file_util.isOrUnderDir(exclude.file, i.file)) {
         // [i] is a parent of exclude
         products.addAll(_pickedAllExclude(item: i, exclude: exclude));
       } else {
@@ -362,12 +362,12 @@ class DirPickerState extends State<DirPicker> {
     var product = _PickState.notPicked;
     for (final p in _picks) {
       // exact match, or parent is picked
-      if (p.path == item.file.path || item.file.path.startsWith("${p.path}/")) {
+      if (file_util.isOrUnderDir(item.file, p)) {
         product = _PickState.picked;
         // no need to check the remaining ones
         break;
       }
-      if (p.path.startsWith("${item.file.path}/")) {
+      if (file_util.isUnderDir(p, item.file)) {
         product = _PickState.childPicked;
       }
     }

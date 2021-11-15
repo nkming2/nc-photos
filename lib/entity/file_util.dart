@@ -25,6 +25,19 @@ bool isTrash(Account account, File file) =>
 bool isAlbumFile(Account account, File file) =>
     file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
 
+/// Return if [file] is located under [dir]
+///
+/// Return false if [file] is [dir] itself (since it's not "under")
+///
+/// See [isOrUnderDir]
+bool isUnderDir(File file, File dir) => file.path.startsWith("${dir.path}/");
+
+/// Return if [file] is [dir] or located under [dir]
+///
+/// See [isUnderDir]
+bool isOrUnderDir(File file, File dir) =>
+    file.path == dir.path || isUnderDir(file, dir);
+
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
 CiString getUserDirName(File file) {
   if (file.path.startsWith("remote.php/dav/files/")) {
