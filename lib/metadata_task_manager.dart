@@ -4,10 +4,10 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
@@ -28,8 +28,8 @@ class MetadataTask {
       final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       for (final r in account.roots) {
         final op = UpdateMissingMetadata(fileRepo);
-        await for (final _ in op(account,
-            File(path: "${api_util.getWebdavRootUrlRelative(account)}/$r"))) {
+        await for (final _
+            in op(account, File(path: file_util.unstripPath(account, r)))) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
             op.stop();

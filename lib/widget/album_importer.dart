@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
@@ -12,6 +11,7 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -83,9 +83,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
     _bloc.add(ListImportableAlbumBlocQuery(
         widget.account,
         widget.account.roots
-            .map((e) => File(
-                path:
-                    "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
+            .map((e) => File(path: file_util.unstripPath(widget.account, e)))
             .toList()));
   }
 

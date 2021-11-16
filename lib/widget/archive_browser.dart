@@ -297,9 +297,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     _bloc.add(ScanDirBlocQuery(
         widget.account,
         widget.account.roots
-            .map((e) => File(
-                path:
-                    "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
+            .map((e) => File(path: file_util.unstripPath(widget.account, e)))
             .toList()));
   }
 

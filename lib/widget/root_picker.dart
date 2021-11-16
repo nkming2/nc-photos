@@ -8,6 +8,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -61,8 +62,8 @@ class _RootPickerState extends State<RootPicker> {
       for (final r in widget.account.roots) {
         if (r.isNotEmpty) {
           _ensureInitDialog();
-          files.add(await LsSingleFile(fileSrc)(widget.account,
-              "${api_util.getWebdavRootUrlRelative(widget.account)}/$r"));
+          files.add(await LsSingleFile(fileSrc)(
+              widget.account, file_util.unstripPath(widget.account, r)));
         }
       }
       setState(() {

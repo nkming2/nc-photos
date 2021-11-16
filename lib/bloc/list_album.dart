@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -231,8 +230,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       _onShareChanged(ev.account, ev.share);
 
   void _onShareChanged(Account account, Share share) {
-    final webdavPath =
-        "${api_util.getWebdavRootUrlRelative(account)}/${share.path}";
+    final webdavPath = file_util.unstripPath(account, share.path);
     if (webdavPath
         .startsWith(remote_storage_util.getRemoteAlbumsDir(account))) {
       _refreshThrottler.trigger(

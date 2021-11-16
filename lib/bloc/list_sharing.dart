@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -221,8 +220,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.listAll(ev.account);
     final futures = shares.map((s) async {
-      final webdavPath =
-          "${api_util.getWebdavRootUrlRelative(ev.account)}/${s.path}";
+      final webdavPath = file_util.unstripPath(ev.account, s.path);
       // include link share dirs
       if (s.itemType == ShareItemType.folder) {
         if (webdavPath.startsWith(
@@ -289,8 +287,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final shares = await shareRepo.reverseListAll(ev.account);
     final futures = shares.map((s) async {
-      final webdavPath =
-          "${api_util.getWebdavRootUrlRelative(ev.account)}/${s.path}";
+      final webdavPath = file_util.unstripPath(ev.account, s.path);
       // include pending shared albums
       if (path.dirname(webdavPath) ==
           remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account)) {

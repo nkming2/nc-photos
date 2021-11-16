@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -86,8 +87,8 @@ class _ShareFolderPickerState extends State<ShareFolderPicker> {
               initialPicks: [
                 if (widget.initialValue.isNotEmpty)
                   File(
-                    path:
-                        "${api_util.getWebdavRootUrlRelative(widget.account)}/${widget.initialValue}",
+                    path: file_util.unstripPath(
+                        widget.account, widget.initialValue),
                   ),
               ],
               isMultipleSelections: false,

@@ -4,6 +4,7 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path;
 
 bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
@@ -37,6 +38,13 @@ bool isUnderDir(File file, File dir) => file.path.startsWith("${dir.path}/");
 /// See [isUnderDir]
 bool isOrUnderDir(File file, File dir) =>
     file.path == dir.path || isUnderDir(file, dir);
+
+/// Convert a stripped path to a full path
+///
+/// See [File.strippedPath]
+String unstripPath(Account account, String strippedPath) =>
+    "${api_util.getWebdavRootUrlRelative(account)}/$strippedPath"
+        .trimRightAny("/");
 
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
 CiString getUserDirName(File file) {
