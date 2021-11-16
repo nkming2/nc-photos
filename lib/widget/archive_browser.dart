@@ -8,7 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/scan_dir.dart';
+import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -70,10 +70,10 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: BlocListener<ScanDirBloc, ScanDirBlocState>(
+        body: BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
           bloc: _bloc,
           listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ScanDirBloc, ScanDirBlocState>(
+          child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
             bloc: _bloc,
             builder: (context, state) => _buildContent(context, state),
           ),
@@ -83,8 +83,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   }
 
   void _initBloc() {
-    _bloc = ScanDirBloc.of(widget.account);
-    if (_bloc.state is ScanDirBlocInit) {
+    if (_bloc.state is ScanAccountDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
       _reqQuery();
     } else {
@@ -97,8 +96,8 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     }
   }
 
-  Widget _buildContent(BuildContext context, ScanDirBlocState state) {
-    if (state is ScanDirBlocSuccess && itemStreamListItems.isEmpty) {
+  Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
+    if (state is ScanAccountDirBlocSuccess && itemStreamListItems.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -137,7 +136,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
               ),
             ),
           ),
-          if (state is ScanDirBlocLoading)
+          if (state is ScanAccountDirBlocLoading)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -195,18 +194,19 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     );
   }
 
-  void _onStateChange(BuildContext context, ScanDirBlocState state) {
-    if (state is ScanDirBlocInit) {
+  void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
+    if (state is ScanAccountDirBlocInit) {
       itemStreamListItems = [];
-    } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
+    } else if (state is ScanAccountDirBlocSuccess ||
+        state is ScanAccountDirBlocLoading) {
       _transformItems(state.files);
-    } else if (state is ScanDirBlocFailure) {
+    } else if (state is ScanAccountDirBlocFailure) {
       _transformItems(state.files);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
-    } else if (state is ScanDirBlocInconsistent) {
+    } else if (state is ScanAccountDirBlocInconsistent) {
       _reqQuery();
     }
   }
@@ -294,11 +294,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   }
 
   void _reqQuery() {
-    _bloc.add(ScanDirBlocQuery(
-        widget.account,
-        widget.account.roots
-            .map((e) => File(path: file_util.unstripPath(widget.account, e)))
-            .toList()));
+    _bloc.add(const ScanAccountDirBlocQuery());
   }
 
   int get _thumbSize {
@@ -315,7 +311,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     }
   }
 
-  late ScanDirBloc _bloc;
+  late final _bloc = ScanAccountDirBloc.of(widget.account);
 
   var _backingFiles = <File>[];
 

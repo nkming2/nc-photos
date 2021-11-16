@@ -12,7 +12,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/scan_dir.dart';
+import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -88,10 +88,10 @@ class _HomePhotosState extends State<HomePhotos>
 
   @override
   build(BuildContext context) {
-    return BlocListener<ScanDirBloc, ScanDirBlocState>(
+    return BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
       bloc: _bloc,
       listener: (context, state) => _onStateChange(context, state),
-      child: BlocBuilder<ScanDirBloc, ScanDirBlocState>(
+      child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
         bloc: _bloc,
         builder: (context, state) => _buildContent(context, state),
       ),
@@ -99,8 +99,7 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _initBloc() {
-    _bloc = ScanDirBloc.of(widget.account);
-    if (_bloc.state is ScanDirBlocInit) {
+    if (_bloc.state is ScanAccountDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
       _reqQuery();
     } else {
@@ -113,7 +112,7 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  Widget _buildContent(BuildContext context, ScanDirBlocState state) {
+  Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
     return LayoutBuilder(builder: (context, constraints) {
       final scrollExtent = _getScrollViewExtent(constraints);
       return Stack(
@@ -161,7 +160,7 @@ class _HomePhotosState extends State<HomePhotos>
               ),
             ),
           ),
-          if (state is ScanDirBlocLoading)
+          if (state is ScanAccountDirBlocLoading)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -338,15 +337,16 @@ class _HomePhotosState extends State<HomePhotos>
     );
   }
 
-  void _onStateChange(BuildContext context, ScanDirBlocState state) {
-    if (state is ScanDirBlocInit) {
+  void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
+    if (state is ScanAccountDirBlocInit) {
       itemStreamListItems = [];
-    } else if (state is ScanDirBlocSuccess || state is ScanDirBlocLoading) {
+    } else if (state is ScanAccountDirBlocSuccess ||
+        state is ScanAccountDirBlocLoading) {
       _transformItems(state.files);
-      if (state is ScanDirBlocSuccess) {
+      if (state is ScanAccountDirBlocSuccess) {
         _tryStartMetadataTask();
       }
-    } else if (state is ScanDirBlocFailure) {
+    } else if (state is ScanAccountDirBlocFailure) {
       _transformItems(state.files);
       if (isPageVisible()) {
         SnackBarManager().showSnackBar(SnackBar(
@@ -354,7 +354,7 @@ class _HomePhotosState extends State<HomePhotos>
           duration: k.snackBarDurationNormal,
         ));
       }
-    } else if (state is ScanDirBlocInconsistent) {
+    } else if (state is ScanAccountDirBlocInconsistent) {
       _reqQuery();
     }
   }
@@ -546,7 +546,7 @@ class _HomePhotosState extends State<HomePhotos>
   void _tryStartMetadataTask({
     bool ignoreFired = false,
   }) {
-    if (_bloc.state is ScanDirBlocSuccess &&
+    if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       MetadataTaskManager().addTask(MetadataTask(widget.account));
@@ -603,23 +603,11 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _reqQuery() {
-    _bloc.add(ScanDirBlocQuery(
-        widget.account,
-        widget.account.roots
-            .map((e) => File(
-                path:
-                    "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
-            .toList()));
+    _bloc.add(const ScanAccountDirBlocQuery());
   }
 
   void _reqRefresh() {
-    _bloc.add(ScanDirBlocRefresh(
-        widget.account,
-        widget.account.roots
-            .map((e) => File(
-                path:
-                    "${api_util.getWebdavRootUrlRelative(widget.account)}/$e"))
-            .toList()));
+    _bloc.add(const ScanAccountDirBlocRefresh());
   }
 
   void _setThumbZoomLevel(int level) {
@@ -696,7 +684,7 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  late ScanDirBloc _bloc;
+  late final _bloc = ScanAccountDirBloc.of(widget.account);
 
   var _backingFiles = <File>[];
 
