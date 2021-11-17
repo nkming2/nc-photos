@@ -8,6 +8,7 @@
     "settingsShareFolderDialogDescription",
     "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
+    "settingsMapProviderTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -59,6 +60,7 @@
     "settingsShareFolderDialogDescription",
     "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
+    "settingsMapProviderTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -132,6 +134,7 @@
     "settingsScreenBrightnessDescription",
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
+    "settingsMapProviderTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -235,6 +238,10 @@
     "defaultButtonLabel"
   ],
 
+  "es": [
+    "settingsMapProviderTitle"
+  ],
+
   "fr": [
     "collectionsTooltip",
     "settingsAccountTitle",
@@ -252,6 +259,7 @@
     "settingsScreenBrightnessDescription",
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
+    "settingsMapProviderTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",
@@ -344,6 +352,7 @@
     "settingsShareFolderDialogDescription",
     "settingsShareFolderPickerDescription",
     "settingsServerAppSectionTitle",
+    "settingsMapProviderTitle",
     "settingsAlbumTitle",
     "settingsAlbumDescription",
     "settingsAlbumPageTitle",

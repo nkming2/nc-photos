@@ -133,6 +133,11 @@ class Pref {
   Future<bool> setNewSharedAlbum(bool value) =>
       provider.setBool(PrefKey.newSharedAlbum, value);
 
+  int? getGpsMapProvider() => provider.getInt(PrefKey.gpsMapProvider);
+  int getGpsMapProviderOr(int def) => getGpsMapProvider() ?? def;
+  Future<bool> setGpsMapProvider(int value) =>
+      provider.setInt(PrefKey.gpsMapProvider, value);
+
   bool? isLabEnableSharedAlbum() =>
       provider.getBool(PrefKey.labEnableSharedAlbum);
   bool isLabEnableSharedAlbumOr(bool def) => isLabEnableSharedAlbum() ?? def;
@@ -308,6 +313,7 @@ enum PrefKey {
   isSlideshowShuffle,
   isSlideshowRepeat,
   isAlbumBrowserShowDate,
+  gpsMapProvider,
 }
 
 extension on PrefKey {
@@ -353,6 +359,8 @@ extension on PrefKey {
         return "isSlideshowRepeat";
       case PrefKey.isAlbumBrowserShowDate:
         return "isAlbumBrowserShowDate";
+      case PrefKey.gpsMapProvider:
+        return "gpsMapProvider";
     }
   }
 }

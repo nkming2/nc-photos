@@ -352,6 +352,7 @@
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ignore rotation lock",
 	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
+	"settingsMapProviderTitle": "Map provider",
 	"settingsAlbumTitle": "Album",
 	"settingsAlbumDescription": "Customize albums",
 	"settingsAlbumPageTitle": "Album settings",

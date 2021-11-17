@@ -23,8 +23,6 @@ import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -36,6 +34,7 @@ import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -248,7 +247,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (features.isSupportMapView && _gps != null)
             SizedBox(
               height: 256,
-              child: platform.GpsMap(
+              child: GpsMap(
                 center: _gps!,
                 zoom: 16,
                 onTap: _onMapTap,

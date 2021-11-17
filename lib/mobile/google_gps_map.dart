@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tuple/tuple.dart';
 
-class GpsMap extends StatelessWidget {
-  const GpsMap({
+class GoogleGpsMap extends StatelessWidget {
+  const GoogleGpsMap({
     Key? key,
     required this.center,
     required this.zoom,
@@ -41,7 +41,6 @@ class GpsMap extends StatelessWidget {
     );
   }
 
-  /// A pair of latitude and longitude coordinates, stored as degrees
   final Tuple2<double, double> center;
   final double zoom;
   final VoidCallback? onTap;

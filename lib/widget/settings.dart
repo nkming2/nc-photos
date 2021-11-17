@@ -17,6 +17,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
@@ -105,17 +106,16 @@ class _SettingsState extends State<Settings> {
                 label: L10n.global().settingsAccountTitle,
                 builder: () => AccountSettingsWidget(account: widget.account),
               ),
-              if (platform_k.isMobile)
-                _buildSubSettings(
-                  context,
-                  leading: Icon(
-                    Icons.view_carousel_outlined,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
-                  label: L10n.global().settingsViewerTitle,
-                  description: L10n.global().settingsViewerDescription,
-                  builder: () => _ViewerSettings(),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.view_carousel_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
                 ),
+                label: L10n.global().settingsViewerTitle,
+                description: L10n.global().settingsViewerDescription,
+                builder: () => _ViewerSettings(),
+              ),
               _buildSubSettings(
                 context,
                 leading: Icon(
@@ -715,6 +715,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     super.initState();
     _screenBrightness = Pref().getViewerScreenBrightnessOr(-1);
     _isForceRotation = Pref().isViewerForceRotationOr(false);
+    _gpsMapProvider = GpsMapProvider.values[Pref().getGpsMapProviderOr(0)];
   }
 
   @override
@@ -738,19 +739,27 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              SwitchListTile(
-                title: Text(L10n.global().settingsScreenBrightnessTitle),
-                subtitle:
-                    Text(L10n.global().settingsScreenBrightnessDescription),
-                value: _screenBrightness >= 0,
-                onChanged: (value) =>
-                    _onScreenBrightnessChanged(context, value),
-              ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsForceRotationTitle),
-                subtitle: Text(L10n.global().settingsForceRotationDescription),
-                value: _isForceRotation,
-                onChanged: (value) => _onForceRotationChanged(value),
+              if (platform_k.isMobile)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsScreenBrightnessTitle),
+                  subtitle:
+                      Text(L10n.global().settingsScreenBrightnessDescription),
+                  value: _screenBrightness >= 0,
+                  onChanged: (value) =>
+                      _onScreenBrightnessChanged(context, value),
+                ),
+              if (platform_k.isMobile)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsForceRotationTitle),
+                  subtitle:
+                      Text(L10n.global().settingsForceRotationDescription),
+                  value: _isForceRotation,
+                  onChanged: (value) => _onForceRotationChanged(value),
+                ),
+              ListTile(
+                title: Text(L10n.global().settingsMapProviderTitle),
+                subtitle: Text(_gpsMapProvider.toUserString()),
+                onTap: () => _onMapProviderTap(context),
               ),
             ],
           ),
@@ -789,7 +798,8 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
                           onChangeEnd: (value) async {
                             brightness = value;
                             try {
-                              await ScreenBrightness().setScreenBrightness(value);
+                              await ScreenBrightness()
+                                  .setScreenBrightness(value);
                             } catch (e, stackTrace) {
                               _log.severe("Failed while setScreenBrightness", e,
                                   stackTrace);
@@ -830,6 +840,44 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
 
   void _onForceRotationChanged(bool value) => _setForceRotation(value);
 
+  Future<void> _onMapProviderTap(BuildContext context) async {
+    final oldValue = _gpsMapProvider;
+    final newValue = await showDialog<GpsMapProvider>(
+      context: context,
+      builder: (context) => FancyOptionPicker(
+        items: GpsMapProvider.values
+            .map((provider) => FancyOptionPickerItem(
+                  label: provider.toUserString(),
+                  isSelected: provider == oldValue,
+                  onSelect: () {
+                    _log.info(
+                        "[_onMapProviderTap] Set map provider: ${provider.toUserString()}");
+                    Navigator.of(context).pop(provider);
+                  },
+                ))
+            .toList(),
+      ),
+    );
+    if (newValue == null || newValue == oldValue) {
+      return;
+    }
+    setState(() {
+      _gpsMapProvider = newValue;
+    });
+    try {
+      await Pref().setGpsMapProvider(newValue.index);
+    } catch (e, stackTrace) {
+      _log.severe("[_onMapProviderTap] Failed writing pref", e, stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _gpsMapProvider = oldValue;
+      });
+    }
+  }
+
   Future<void> _setScreenBrightness(int value) async {
     final oldValue = _screenBrightness;
     setState(() {
@@ -866,6 +914,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
 
   late int _screenBrightness;
   late bool _isForceRotation;
+  late GpsMapProvider _gpsMapProvider;
 
   static final _log = Logger("widget.settings._ViewerSettingsState");
 }
