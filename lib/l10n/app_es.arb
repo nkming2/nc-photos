@@ -313,9 +313,38 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsViewerTitle": "Visualizador",
-	"settingsViewerDescription": "Personalizar el visualizador de imágenes/vídeos",
-	"settingsViewerPageTitle": "Ajustes de visualizador",
+	"settingsAccountTitle": "Cuenta",
+	"settingsAccountPageTitle": "Configuraciones de la cuenta",
+	"@settingsAccountPageTitle": {
+		"description": "Dedicated page for account settings"
+	},
+	"settingsIncludedFoldersTitle": "Carpetas incluídas",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
+	"settingsShareFolderTitle": "Carpeta compartida",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Ubicación de la carpeta compartida",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "Ésta configuración corresponde al parametro share_folder en config.php. Ambos valores DEBEN ser idénticos.\n\nPor favor, utiliza la misma carpeta que la configurada en config.php.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "Por favor, utiliza la misma carpeta que la configurada en config.php. Toca en predeterminado si no tienes configurado éste parámetro",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsServerAppSectionTitle": "Soporte para aplicaciones del servidor",
+	"@settingsServerAppSectionTitle": {
+		"description": "Habilita/Deshabilita varias aplicaciones del servidor"
+	},
+	"settingsViewerTitle": "Visualización",
+	"settingsViewerDescription": "Personalizar la visualización de imágenes/vídeos",
+	"settingsViewerPageTitle": "Ajustes de visualización",
 	"@settingsViewerPageTitle": {
 		"description": "Dedicated page for viewer settings"
 	},
@@ -323,6 +352,14 @@
 	"settingsScreenBrightnessDescription": "Invalidar nivel de brillo del sistema",
 	"settingsForceRotationTitle": "Ignorar autorotación desactivada",
 	"settingsForceRotationDescription": "Rotar la pantalla incluso si la autorotación está desactivada",
+	"settingsAlbumTitle": "Álbumes",
+	"settingsAlbumDescription": "Personalizar álbumes",
+	"settingsAlbumPageTitle": "Ajustes de álbum",
+	"@settingsAlbumPageTitle": {
+		"description": "Dedicated page for album settings"
+	},
+	"settingsShowDateInAlbumTitle": "Agrupar fotos por fecha",
+	"settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado por fecha",
 	"settingsThemeTitle": "Tema",
 	"settingsThemeDescription": "Personaliza la apariencia de la aplicación",
 	"settingsThemePageTitle": "Ajustes de tema",
@@ -345,6 +382,9 @@
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
+	"settingsExperimentalTitle": "Experimental",
+	"settingsExperimentalDescription": "Características que no están listas para uso diario",
+	"settingsExperimentalPageTitle": "Configuración Experimental",
 	"settingsAboutSectionTitle": "Acerca de",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -592,6 +632,10 @@
 	"sortOptionAlbumNameDescendingLabel": "Nombre del álbum (inverso)",
 	"@sortOptionAlbumNameDescendingLabel": {
 		"description": "Sort by album name, in descending order"
+	},
+	"sortOptionManualLabel": "Manual",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
 	},
 	"albumEditDragRearrangeNotification": "Mantén presionado y arrastra un elemento para reordenarlo manualmente",
 	"@albumEditDragRearrangeNotification": {
@@ -844,6 +888,196 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Crea en el servidor un nuevo enlace protegido con contraseña",
+	"collectionSharingLabel": "Compartido",
+	"@collectionSharingLabel": {
+		"description": "List items being shared by the current account"
+	},
+	"fileLastSharedDescription": "Compartido por última vez el {date}",
+	"@fileLastSharedDescription": {
+		"description": "The date when this file was last shared by you",
+		"placeholders": {
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"fileLastSharedByOthersDescription": "{user} lo compartió contigo el {date}",
+	"@fileLastSharedByOthersDescription": {
+		"description": "The date when this file was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"albumLastSharedByOthersDescription": "{user} compartió el álbum contigo el {date}",
+	"@albumLastSharedByOthersDescription": {
+		"description": "The date when this album was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"sharedWithLabel": "Compartido con",
+	"@sharedWithLabel": {
+		"description": "A list of users or links where this file is sharing with"
+	},
+	"unshareTooltip": "Dejar de compartir",
+	"@unshareTooltip": {
+		"description": "Remove a share"
+	},
+	"unshareSuccessNotification": "Has dejado de compartirlo",
+	"@unshareSuccessNotification": {
+		"description": "Removed a share"
+	},
+	"locationLabel": "Ubicación",
+	"@locationLabel": {
+		"description": "Show where the file is located"
+	},
+	"multipleFilesLinkShareDialogContent": "Nextcloud no soporta compartir enlaces para múltiples archivos. La aplicación en su lugar COPIARÁ los archivos a una nueva carpeta y compartirá la capeta.",
+	"@multipleFilesLinkShareDialogContent": {
+		"description": "Dialog shown when sharing multiple files as link"
+	},
+	"folderNameInputHint": "Nombre de la carpeta",
+	"@folderNameInputHint": {
+		"description": "Input field for folder name"
+	},
+	"folderNameInputInvalidEmpty": "Introduce un nombre para la carpeta",
+	"@folderNameInputInvalidEmpty": {
+		"description": "Folder name cannot be left empty"
+	},
+	"folderNameInputInvalidCharacters": "Contiene caracteres inválidos",
+	"@folderNameInputInvalidCharacters": {
+		"description": "Folder name contains characters that are not allowed"
+	},
+	"createShareProgressText": "Compartiendo",
+	"@createShareProgressText": {
+		"description": "Message shown when sharing files"
+	},
+	"copyItemsFailureNotification": "{count, plural, =1{Fallo al copiar 1 item} other{Fallo al copiar {count} items}}",
+	"@copyItemsFailureNotification": {
+		"description": "Error message shown when some files cannot be copied",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unshareLinkShareDirDialogTitle": "Borrar carpeta?",
+	"@unshareLinkShareDirDialogTitle":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"unshareLinkShareDirDialogContent": "Ésta carpeta fue creada por la app para compartir múltiples archivos en un enlace. Ya no se comparte con nadie, ¿quieres borrarla?",
+	"@unshareLinkShareDirDialogContent":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"addToCollectionTooltip": "Añadir a colección",
+	"@addToCollectionTooltip": {
+		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+	},
+	"addToCollectionProcessingNotification": "Añadiendo {album} a tu colección",
+	"@addToCollectionProcessingNotification": {
+		"description": "Adding an album to your collection",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addToCollectionSuccessNotification": "Añadido {album} a tu colección con éxito",
+	"@addToCollectionSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"shareAlbumDialogTitle": "Compartir con un usuario",
+	"@shareAlbumDialogTitle" : {
+		"description": "Dialog to share an album with another user"
+	},
+	"shareAlbumSuccessNotification": "Álbum compartido con {user}",
+	"@shareAlbumSuccessNotification": {
+		"description": "Shared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"shareAlbumSuccessWithErrorNotification": "Álbum compartido con  {user}, pero algunos archivos fallaron al comnpartirlos",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessNotification": "Álbum no compartido con {user}",
+	"@unshareAlbumSuccessNotification": {
+		"description": "Unshared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "Álbum no compartido con {user}, pero algunos archivos fallaron al dejar de compartirlos",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"fixSharesTooltip": "Reparar compartidos",
+	"@fixSharesTooltip": {
+		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+	},
+	"fixTooltip": "Reparar",
+	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixButtonLabel": "REPARAR",
+	"@fixButtonLabel":{
+		"description": "Fix an issue"
+	},
+	"fixAllTooltip": "Reparar todo",
+	"@fixAllTooltip": {
+		"description": "Fix all listed issues"
+	},
+	"missingShareDescription": "No compartido con {user}",
+	"@missingShareDescription": {
+		"description": "The album is shared with user but a file is NOT",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"extraShareDescription": "Compartido con {user}",
+	"@extraShareDescription": {
+		"description": "The album is NOT shared with user but a file is",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"defaultButtonLabel": "PREDETERMIADO",
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
