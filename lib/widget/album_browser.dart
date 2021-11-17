@@ -35,6 +35,7 @@ import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -276,13 +277,17 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         },
       ),
       IconButton(
-        icon: const Icon(Icons.remove),
-        tooltip: L10n.global().removeSelectedFromAlbumTooltip,
-        onPressed: _onSelectionRemovePressed,
+        icon: const Icon(Icons.add),
+        tooltip: L10n.global().addToAlbumTooltip,
+        onPressed: () => _onSelectionAddPressed(context),
       ),
       PopupMenuButton<_SelectionMenuOption>(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         itemBuilder: (context) => [
+          PopupMenuItem(
+            value: _SelectionMenuOption.removeFromAlbum,
+            child: Text(L10n.global().removeFromAlbumTooltip),
+          ),
           PopupMenuItem(
             value: _SelectionMenuOption.download,
             child: Text(L10n.global().downloadTooltip),
@@ -368,6 +373,9 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       case _SelectionMenuOption.download:
         _onSelectionDownloadPressed();
         break;
+      case _SelectionMenuOption.removeFromAlbum:
+        _onSelectionRemovePressed();
+        break;
       default:
         _log.shout("[_onSelectionMenuSelected] Unknown option: $option");
         break;
@@ -394,6 +402,24 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         });
       },
     ).shareFiles(widget.account, selected);
+  }
+
+  Future<void> _onSelectionAddPressed(BuildContext context) async {
+    return AddSelectionToAlbumHandler()(
+      context: context,
+      account: widget.account,
+      selectedFiles: selectedListItems
+          .whereType<_FileListItem>()
+          .map((e) => e.file)
+          .toList(),
+      clearSelection: () {
+        if (mounted) {
+          setState(() {
+            clearSelectedItems();
+          });
+        }
+      },
+    );
   }
 
   Future<void> _onSelectionRemovePressed() async {
@@ -771,6 +797,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
 enum _SelectionMenuOption {
   download,
+  removeFromAlbum,
 }
 
 abstract class _ListItem implements SelectableItem, DraggableItem {
