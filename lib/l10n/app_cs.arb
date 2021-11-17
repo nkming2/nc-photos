@@ -63,10 +63,6 @@
 	"@addToAlbumFailureNotification": {
 		"description": "Inform user that the item cannot be added to an album"
 	},
-	"addToAlbumAlreadyAddedNotification": "Položka již existuje v albu",
-	"@addToAlbumAlreadyAddedNotification": {
-		"description": "Inform user that the item is already in the album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Mazání 1 položky} other{Mazání {count} položek}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",

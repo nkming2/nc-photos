@@ -20,8 +20,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -29,12 +27,11 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
-import 'package:nc_photos/widget/album_picker_dialog.dart';
 import 'package:nc_photos/widget/gps_map.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -350,39 +347,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
-  void _onAddToAlbumPressed(BuildContext context) {
-    showDialog(
+  Future<void> _onAddToAlbumPressed(BuildContext context) {
+    return AddSelectionToAlbumHandler()(
       context: context,
-      builder: (_) => AlbumPickerDialog(
-        account: widget.account,
-      ),
-    ).then((value) {
-      if (value == null) {
-        // user cancelled the dialog
-      } else if (value is Album) {
-        _log.info("[_onAddToAlbumPressed] Album picked: ${value.name}");
-        _addToAlbum(value).then((_) {
-          SnackBarManager().showSnackBar(SnackBar(
-            content:
-                Text(L10n.global().addToAlbumSuccessNotification(value.name)),
-            duration: k.snackBarDurationNormal,
-          ));
-        }).catchError((_) {});
-      } else {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().addToAlbumFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-      }
-    }).catchError((e, stacktrace) {
-      _log.severe(
-          "[_onAddToAlbumPressed] Failed while showDialog", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().addToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-    });
+      account: widget.account,
+      selectedFiles: [widget.file],
+      clearSelection: () {},
+    );
   }
 
   Future<void> _onArchivePressed(BuildContext context) async {
@@ -487,42 +458,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       product += dms[2].toDouble() / 3600;
     }
     return product;
-  }
-
-  Future<void> _addToAlbum(Album album) async {
-    assert(album.provider is AlbumStaticProvider);
-    try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final newItem = AlbumFileItem(
-        addedBy: widget.account.username,
-        addedAt: DateTime.now(),
-        file: widget.file,
-      );
-      if (AlbumStaticProvider.of(album)
-          .items
-          .whereType<AlbumFileItem>()
-          .containsIf(
-              newItem, (a, b) => a.file.compareServerIdentity(b.file))) {
-        // already added, do nothing
-        _log.info("[_addToAlbum] File already in album: ${widget.file.path}");
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().addToAlbumAlreadyAddedNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        return Future.error(ArgumentError("File already in album"));
-      }
-      await AddToAlbum(albumRepo, shareRepo, AppDb(), Pref())(
-          widget.account, album, [newItem]);
-    } catch (e, stacktrace) {
-      _log.shout("[_addToAlbum] Failed while updating album", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().addToAlbumFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
-      rethrow;
-    }
   }
 
   late DateTime _dateTime;

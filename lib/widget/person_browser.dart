@@ -14,15 +14,11 @@ import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
@@ -33,11 +29,10 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_property.dart';
-import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -352,46 +347,20 @@ class _PersonBrowserState extends State<PersonBrowser>
     ).shareFiles(widget.account, selected);
   }
 
-  Future<void> _onSelectionAddToAlbumPressed(BuildContext context) async {
-    try {
-      final value = await showDialog<Album>(
-        context: context,
-        builder: (_) => AlbumPickerDialog(
-          account: widget.account,
-        ),
-      );
-      if (value == null) {
-        // user cancelled the dialog
-        return;
-      }
-
-      _log.info("[_onSelectionAddToAlbumPressed] Album picked: ${value.name}");
-      await NotifiedAction(
-        () async {
-          assert(value.provider is AlbumStaticProvider);
-          final selected = selectedListItems
-              .whereType<_ListItem>()
-              .map((e) => AlbumFileItem(
-                    addedBy: widget.account.username,
-                    addedAt: DateTime.now(),
-                    file: e.file,
-                  ))
-              .toList();
-          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-          final shareRepo = ShareRepo(ShareRemoteDataSource());
-          await AddToAlbum(albumRepo, shareRepo, AppDb(), Pref())(
-              widget.account, value, selected);
+  Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
+    return AddSelectionToAlbumHandler()(
+      context: context,
+      account: widget.account,
+      selectedFiles:
+          selectedListItems.whereType<_ListItem>().map((e) => e.file).toList(),
+      clearSelection: () {
+        if (mounted) {
           setState(() {
             clearSelectedItems();
           });
-        },
-        null,
-        L10n.global().addSelectedToAlbumSuccessNotification(value.name),
-        failureText: L10n.global().addSelectedToAlbumFailureNotification,
-      )();
-    } catch (e, stackTrace) {
-      _log.shout("[_onSelectionAddToAlbumPressed] Exception", e, stackTrace);
-    }
+        }
+      },
+    );
   }
 
   void _onSelectionDownloadPressed() {

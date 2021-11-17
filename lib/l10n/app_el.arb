@@ -63,10 +63,6 @@
 	"@addToAlbumFailureNotification": {
 		"description": "Inform user that the item cannot be added to an album"
 	},
-	"addToAlbumAlreadyAddedNotification": "Το αντικείμενο βρίσκεται ήδη στη συλλογή",
-	"@addToAlbumAlreadyAddedNotification": {
-		"description": "Inform user that the item is already in the album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Διαγραφή 1 αντικειμένου} other{Διαγραφή {count} αντικειμένων}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",

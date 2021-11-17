@@ -63,10 +63,6 @@
 	"@addToAlbumFailureNotification": {
 		"description": "Inform user that the item cannot be added to an album"
 	},
-	"addToAlbumAlreadyAddedNotification": "Item already in album",
-	"@addToAlbumAlreadyAddedNotification": {
-		"description": "Inform user that the item is already in the album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Deleting 1 item} other{Deleting {count} items}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
