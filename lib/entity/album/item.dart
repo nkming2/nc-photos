@@ -1,27 +1,9 @@
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
-
-List<AlbumItem> makeDistinctAlbumItems(List<AlbumItem> items) =>
-    items.distinctIf((a, b) {
-      if (a is! AlbumFileItem || b is! AlbumFileItem) {
-        return false;
-      } else {
-        return a.file.compareServerIdentity(b.file);
-      }
-    }, (a) {
-      if (a is AlbumFileItem) {
-        return a.file.path.hashCode;
-      } else {
-        return Random().nextInt(0xFFFFFFFF);
-      }
-    });
 
 abstract class AlbumItem with EquatableMixin {
   AlbumItem({

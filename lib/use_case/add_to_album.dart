@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/override_comparator.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/list_share.dart';
@@ -24,10 +25,19 @@ class AddToAlbum {
     assert(album.provider is AlbumStaticProvider);
     // resync is needed to work out album cover and latest item
     final oldItems = await PreProcessAlbum(appDb)(account, album);
-    final newItems = makeDistinctAlbumItems([
-      ...items,
-      ...oldItems,
-    ]);
+    final itemSet = oldItems
+        .map((e) => OverrideComparator<AlbumItem>(
+            e, _isItemFileEqual, _getItemHashCode))
+        .toSet();
+    // find the items that are not having the same file as any existing ones
+    final addItems = items
+        .where((i) => itemSet.add(OverrideComparator<AlbumItem>(
+            i, _isItemFileEqual, _getItemHashCode)))
+        .toList();
+    if (addItems.isEmpty) {
+      return album;
+    }
+    final newItems = <AlbumItem>[...addItems, ...oldItems];
     var newAlbum = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
         items: newItems,
@@ -97,4 +107,20 @@ class AddToAlbum {
   final Pref pref;
 
   static final _log = Logger("use_case.add_to_album.AddToAlbum");
+}
+
+bool _isItemFileEqual(AlbumItem a, AlbumItem b) {
+  if (a is! AlbumFileItem || b is! AlbumFileItem) {
+    return false;
+  } else {
+    return a.file.compareServerIdentity(b.file);
+  }
+}
+
+int _getItemHashCode(AlbumItem a) {
+  if (a is AlbumFileItem) {
+    return a.file.path.hashCode;
+  } else {
+    return a.hashCode;
+  }
 }
