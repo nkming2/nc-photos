@@ -248,7 +248,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (features.isSupportMapView && _gps != null)
             SizedBox(
               height: 256,
-              child: platform.Map(
+              child: platform.GpsMap(
                 center: _gps!,
                 zoom: 16,
                 onTap: _onMapTap,

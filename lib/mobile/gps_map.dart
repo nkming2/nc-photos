@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tuple/tuple.dart';
 
-class Map extends StatelessWidget {
-  const Map({
+class GpsMap extends StatelessWidget {
+  const GpsMap({
     Key? key,
     required this.center,
     required this.zoom,

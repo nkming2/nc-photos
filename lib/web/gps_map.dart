@@ -6,8 +6,8 @@ import 'package:/nc_photos/mobile/ui_hack.dart' if (dart.library.html) 'dart:ui'
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
-class Map extends StatefulWidget {
-  const Map({
+class GpsMap extends StatefulWidget {
+  const GpsMap({
     Key? key,
     required this.center,
     required this.zoom,
@@ -15,7 +15,7 @@ class Map extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  createState() => _MapState();
+  createState() => _GpsMapState();
 
   /// A pair of latitude and longitude coordinates, stored as degrees
   final Tuple2<double, double> center;
@@ -23,7 +23,7 @@ class Map extends StatefulWidget {
   final void Function()? onTap;
 }
 
-class _MapState extends State<Map> {
+class _GpsMapState extends State<GpsMap> {
   @override
   initState() {
     super.initState();
