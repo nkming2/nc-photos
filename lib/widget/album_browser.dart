@@ -284,10 +284,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       PopupMenuButton<_SelectionMenuOption>(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         itemBuilder: (context) => [
-          PopupMenuItem(
-            value: _SelectionMenuOption.removeFromAlbum,
-            child: Text(L10n.global().removeFromAlbumTooltip),
-          ),
+          if (_canRemoveSelection)
+            PopupMenuItem(
+              value: _SelectionMenuOption.removeFromAlbum,
+              child: Text(L10n.global().removeFromAlbumTooltip),
+            ),
           PopupMenuItem(
             value: _SelectionMenuOption.download,
             child: Text(L10n.global().downloadTooltip),
@@ -424,8 +425,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<void> _onSelectionRemovePressed() async {
     final selectedIndexes =
-        selectedListItems.map((e) => (e as _ListItem).index).toList();
-    final selectedItems = _sortedItems.takeIndex(selectedIndexes).toList();
+        selectedListItems.whereType<_ListItem>().map((e) => e.index).toList();
+    final selectedItems = _sortedItems
+        .takeIndex(selectedIndexes)
+        // can only remove owned files
+        .where((element) =>
+            _album!.albumFile!.isOwned(widget.account.username) == true ||
+            element.addedBy == widget.account.username)
+        .toList();
     setState(() {
       clearSelectedItems();
     });
@@ -437,8 +444,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb(), Pref())(
           widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().removeSelectedFromAlbumSuccessNotification(
-            selectedIndexes.length)),
+        content: Text(L10n.global()
+            .removeSelectedFromAlbumSuccessNotification(selectedItems.length)),
         duration: k.snackBarDurationNormal,
       ));
     } catch (e, stackTrace) {
@@ -770,6 +777,17 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     return await UpdateAlbumWithActualItems(albumRepo)(
         widget.account, album, items);
+  }
+
+  bool get _canRemoveSelection {
+    if (_album!.albumFile!.isOwned(widget.account.username) == true) {
+      return true;
+    }
+    final selectedIndexes =
+        selectedListItems.whereType<_ListItem>().map((e) => e.index).toList();
+    final selectedItemsIt = _sortedItems.takeIndex(selectedIndexes);
+    return selectedItemsIt
+        .any((item) => item.addedBy == widget.account.username);
   }
 
   static List<AlbumItem> _getAlbumItemsOf(Album a) =>

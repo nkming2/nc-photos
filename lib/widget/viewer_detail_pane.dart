@@ -123,10 +123,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                if (widget.album != null &&
-                    widget.album!.albumFile?.isOwned(widget.account.username) ==
-                        true &&
-                    widget.album!.provider is AlbumStaticProvider)
+                if (_canRemoveFromAlbum)
                   _DetailPaneButton(
                     icon: Icons.remove_outlined,
                     label: L10n.global().removeFromAlbumTooltip,
@@ -460,6 +457,27 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     return product;
   }
 
+  bool _checkCanRemoveFromAlbum() {
+    if (widget.album == null ||
+        widget.album!.provider is! AlbumStaticProvider) {
+      return false;
+    }
+    if (widget.album!.albumFile?.isOwned(widget.account.username) == true) {
+      return true;
+    }
+    try {
+      final thisItem = AlbumStaticProvider.of(widget.album!)
+          .items
+          .whereType<AlbumFileItem>()
+          .firstWhere(
+              (element) => element.file.compareServerIdentity(widget.file));
+      if (thisItem.addedBy == widget.account.username) {
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
   late DateTime _dateTime;
   // EXIF data
   String? _model;
@@ -468,6 +486,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   double? _focalLength;
   int? _isoSpeedRatings;
   Tuple2<double, double>? _gps;
+
+  late final bool _canRemoveFromAlbum = _checkCanRemoveFromAlbum();
 
   static final _log =
       Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
