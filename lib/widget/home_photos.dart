@@ -123,6 +123,8 @@ class _HomePhotosState extends State<HomePhotos>
               child: DraggableScrollbar.semicircle(
                 controller: _scrollController,
                 overrideMaxScrollExtent: scrollExtent,
+                // status bar + app bar
+                topOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
