@@ -21,6 +21,8 @@ String toUserString(dynamic exception) {
     return L10n.global().errorDisconnected;
   } else if (exception is InvalidBaseUrlException) {
     return L10n.global().errorInvalidBaseUrl;
+  } else if (exception is AlbumDowngradeException) {
+    return L10n.global().errorAlbumDowngrade;
   }
   return exception.toString();
 }

@@ -48,7 +48,8 @@
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
-    "defaultButtonLabel"
+    "defaultButtonLabel",
+    "errorAlbumDowngrade"
   ],
 
   "de": [
@@ -114,7 +115,8 @@
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
-    "defaultButtonLabel"
+    "defaultButtonLabel",
+    "errorAlbumDowngrade"
   ],
 
   "el": [
@@ -235,11 +237,13 @@
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
-    "defaultButtonLabel"
+    "defaultButtonLabel",
+    "errorAlbumDowngrade"
   ],
 
   "es": [
-    "settingsMapProviderTitle"
+    "settingsMapProviderTitle",
+    "errorAlbumDowngrade"
   ],
 
   "fr": [
@@ -340,7 +344,8 @@
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
-    "defaultButtonLabel"
+    "defaultButtonLabel",
+    "errorAlbumDowngrade"
   ],
 
   "ru": [
@@ -414,6 +419,7 @@
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
-    "defaultButtonLabel"
+    "defaultButtonLabel",
+    "errorAlbumDowngrade"
   ]
 }

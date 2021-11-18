@@ -1099,5 +1099,9 @@
 	"errorServerError": "Server error. Please make sure the server is setup correctly",
 	"@errorServerError": {
 		"description": "HTTP 500"
+	},
+	"errorAlbumDowngrade": "Can't modify this album as it was created by a later version of this app. Please update the app and try again",
+	"@errorAlbumDowngrade": {
+		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
 	}
 }

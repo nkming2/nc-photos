@@ -28,6 +28,13 @@ import 'package:tuple/tuple.dart';
 
 /// Immutable object that represents an album
 class Album with EquatableMixin {
+  /// Create a new album
+  ///
+  /// If [lastUpdated] is null, the current time will be used.
+  ///
+  /// [savedVersion] should be null when creating a new album, such that it'll
+  /// be filled with the current version number automatically. You should only
+  /// pass this argument when reading album from storage
   Album({
     DateTime? lastUpdated,
     required this.name,
@@ -36,7 +43,9 @@ class Album with EquatableMixin {
     required this.sortProvider,
     this.shares,
     this.albumFile,
-  }) : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
+    int? savedVersion,
+  })  : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
+        savedVersion = savedVersion ?? version;
 
   static Album? fromJson(
     JsonObj json, {
@@ -79,6 +88,17 @@ class Album with EquatableMixin {
         return null;
       }
     }
+    if (jsonVersion < 7) {
+      result = upgraderFactory?.buildV6()?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion > version) {
+      _log.warning(
+          "[fromJson] Reading album with newer version: $jsonVersion > $version");
+    }
     return Album(
       lastUpdated: result["lastUpdated"] == null
           ? null
@@ -96,6 +116,7 @@ class Album with EquatableMixin {
       albumFile: result["albumFile"] == null
           ? null
           : File.fromJson(result["albumFile"].cast<String, dynamic>()),
+      savedVersion: result["version"],
     );
   }
 
@@ -135,6 +156,7 @@ class Album with EquatableMixin {
       sortProvider: sortProvider ?? this.sortProvider,
       shares: shares == null ? this.shares : shares.obj,
       albumFile: albumFile == null ? this.albumFile : albumFile.obj,
+      savedVersion: savedVersion,
     );
   }
 
@@ -173,6 +195,7 @@ class Album with EquatableMixin {
         sortProvider,
         shares,
         albumFile,
+        savedVersion,
       ];
 
   final DateTime lastUpdated;
@@ -187,6 +210,11 @@ class Album with EquatableMixin {
   ///
   /// This field is typically only meaningful when returned by [AlbumRepo.get]
   final File? albumFile;
+
+  /// The original version of this class when saved
+  ///
+  /// This field only exists in runtime and are not persisted
+  final int savedVersion;
 
   /// versioning of this class, use to upgrade old persisted album
   static const version = 7;

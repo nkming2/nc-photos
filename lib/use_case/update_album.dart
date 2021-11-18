@@ -5,11 +5,17 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception.dart';
 
 class UpdateAlbum {
   UpdateAlbum(this.albumRepo);
 
   Future<void> call(Account account, Album album) async {
+    if (album.savedVersion > Album.version) {
+      // the album is created by a newer version of this app
+      throw AlbumDowngradeException(
+          "Not allowed to downgrade album '${album.name}'");
+    }
     final provider = album.provider;
     if (provider is AlbumStaticProvider) {
       await albumRepo.update(

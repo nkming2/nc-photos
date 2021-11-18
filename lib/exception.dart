@@ -89,3 +89,15 @@ class JobCanceledException implements Exception {
 
   final dynamic message;
 }
+
+/// Trying to downgrade an Album
+class AlbumDowngradeException implements Exception {
+  const AlbumDowngradeException([this.message]);
+
+  @override
+  toString() {
+    return "AlbumDowngradeException: $message";
+  }
+
+  final dynamic message;
+}
