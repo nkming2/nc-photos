@@ -189,7 +189,7 @@ class Album with EquatableMixin {
   final File? albumFile;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 6;
+  static const version = 7;
 }
 
 class AlbumShare with EquatableMixin {

@@ -206,6 +206,24 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV5");
 }
 
+/// Upgrade v6 Album to v7
+class AlbumUpgraderV6 implements AlbumUpgrader {
+  const AlbumUpgraderV6({
+    this.logFilePath,
+  });
+
+  @override
+  call(JsonObj json) {
+    _log.fine("[call] Upgrade v6 Album for file: $logFilePath");
+    return json;
+  }
+
+  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV6");
+
+  /// File path for logging only
+  final String? logFilePath;
+}
+
 abstract class AlbumUpgraderFactory {
   const AlbumUpgraderFactory();
 
@@ -214,6 +232,7 @@ abstract class AlbumUpgraderFactory {
   AlbumUpgraderV3? buildV3();
   AlbumUpgraderV4? buildV4();
   AlbumUpgraderV5? buildV5();
+  AlbumUpgraderV6? buildV6();
 }
 
 class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
@@ -241,6 +260,9 @@ class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
         albumFile: albumFile,
         logFilePath: logFilePath,
       );
+
+  @override
+  buildV6() => AlbumUpgraderV6(logFilePath: logFilePath);
 
   final Account account;
   final File? albumFile;

@@ -1778,4 +1778,6 @@ class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   buildV4() => null;
   @override
   buildV5() => null;
+  @override
+  buildV6() => null;
 }
