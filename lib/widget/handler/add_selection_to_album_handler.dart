@@ -45,11 +45,11 @@ class AddSelectionToAlbumHandler {
                     file: f,
                   ))
               .toList();
+          clearSelection();
           final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
           final shareRepo = ShareRepo(ShareRemoteDataSource());
           await AddToAlbum(albumRepo, shareRepo, AppDb(), Pref())(
               account, value, selected);
-          clearSelection();
         },
         null,
         L10n.global().addSelectedToAlbumSuccessNotification(value.name),
