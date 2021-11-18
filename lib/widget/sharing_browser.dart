@@ -222,10 +222,14 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final cover = firstItem.album.coverProvider.getCover(firstItem.album);
     return _ListTile(
       leading: cover == null
-          ? Icon(
-              Icons.photo_album_outlined,
-              size: _leadingSize,
-              color: AppTheme.getUnfocusedIconColor(context),
+          ? SizedBox(
+              height: _leadingSize,
+              width: _leadingSize,
+              child: Icon(
+                Icons.photo_album_outlined,
+                size: 32,
+                color: AppTheme.getUnfocusedIconColor(context),
+              ),
             )
           : CachedNetworkImage(
               width: _leadingSize,
