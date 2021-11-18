@@ -114,17 +114,24 @@ class _HomeAlbumsState extends State<HomeAlbums>
                     secondary: AppTheme.getOverscrollIndicatorColor(context),
                   ),
             ),
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverPadding(
-                  padding: const EdgeInsets.all(8),
-                  sliver: buildItemStreamList(
-                    maxCrossAxisExtent: 256,
-                    mainAxisSpacing: 8,
+            child: RefreshIndicator(
+              backgroundColor: Colors.grey[100],
+              onRefresh: () async {
+                _onRefreshPressed();
+                await _waitRefresh();
+              },
+              child: CustomScrollView(
+                slivers: [
+                  _buildAppBar(context),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(8),
+                    sliver: buildItemStreamList(
+                      maxCrossAxisExtent: 256,
+                      mainAxisSpacing: 8,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -308,6 +315,10 @@ class _HomeAlbumsState extends State<HomeAlbums>
     });
   }
 
+  void _onRefreshPressed() {
+    _reqQuery();
+  }
+
   void _onSearchPressed(BuildContext context) {
     showSearch(
       context: context,
@@ -473,6 +484,15 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   void _reqQuery() {
     _bloc.add(ListAlbumBlocQuery(widget.account));
+  }
+
+  Future<void> _waitRefresh() async {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (_bloc.state is! ListAlbumBlocLoading) {
+        return;
+      }
+    }
   }
 
   late ListAlbumBloc _bloc;
