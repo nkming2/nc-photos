@@ -130,6 +130,7 @@ class _HomePhotosState extends State<HomePhotos>
                     backgroundColor: Colors.grey[100],
                     onRefresh: () async {
                       _onRefreshSelected();
+                      await _waitRefresh();
                     },
                     child: CustomScrollView(
                       controller: _scrollController,
@@ -577,6 +578,15 @@ class _HomePhotosState extends State<HomePhotos>
 
   void _reqRefresh() {
     _bloc.add(const ScanAccountDirBlocRefresh());
+  }
+
+  Future<void> _waitRefresh() async {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (_bloc.state is! ScanAccountDirBlocLoading) {
+        return;
+      }
+    }
   }
 
   void _setThumbZoomLevel(int level) {
