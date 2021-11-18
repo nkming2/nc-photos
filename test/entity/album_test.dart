@@ -38,11 +38,7 @@ void main() {
         expect(
             Album.fromJson(
               json,
-              upgraderV1: null,
-              upgraderV2: null,
-              upgraderV3: null,
-              upgraderV4: null,
-              upgraderV5: null,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -78,11 +74,7 @@ void main() {
         expect(
             Album.fromJson(
               json,
-              upgraderV1: null,
-              upgraderV2: null,
-              upgraderV3: null,
-              upgraderV4: null,
-              upgraderV5: null,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -140,11 +132,7 @@ void main() {
           expect(
               Album.fromJson(
                 json,
-                upgraderV1: null,
-                upgraderV2: null,
-                upgraderV3: null,
-                upgraderV4: null,
-                upgraderV5: null,
+                upgraderFactory: const _NullAlbumUpgraderFactory(),
               ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -200,11 +188,7 @@ void main() {
           expect(
               Album.fromJson(
                 json,
-                upgraderV1: null,
-                upgraderV2: null,
-                upgraderV3: null,
-                upgraderV4: null,
-                upgraderV5: null,
+                upgraderFactory: const _NullAlbumUpgraderFactory(),
               ),
               Album(
                 lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -251,11 +235,7 @@ void main() {
         expect(
             Album.fromJson(
               json,
-              upgraderV1: null,
-              upgraderV2: null,
-              upgraderV3: null,
-              upgraderV4: null,
-              upgraderV5: null,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -297,11 +277,7 @@ void main() {
         expect(
             Album.fromJson(
               json,
-              upgraderV1: null,
-              upgraderV2: null,
-              upgraderV3: null,
-              upgraderV4: null,
-              upgraderV5: null,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -344,11 +320,7 @@ void main() {
         expect(
             Album.fromJson(
               json,
-              upgraderV1: null,
-              upgraderV2: null,
-              upgraderV3: null,
-              upgraderV4: null,
-              upgraderV5: null,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
             ),
             Album(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -1705,11 +1677,7 @@ void _fromJsonShares() {
   expect(
       Album.fromJson(
         json,
-        upgraderV1: null,
-        upgraderV2: null,
-        upgraderV3: null,
-        upgraderV4: null,
-        upgraderV5: null,
+        upgraderFactory: const _NullAlbumUpgraderFactory(),
       ),
       Album(
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
@@ -1795,4 +1763,19 @@ void _toAppDbJsonShares() {
       },
     ],
   });
+}
+
+class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
+  const _NullAlbumUpgraderFactory();
+
+  @override
+  buildV1() => null;
+  @override
+  buildV2() => null;
+  @override
+  buildV3() => null;
+  @override
+  buildV4() => null;
+  @override
+  buildV5() => null;
 }

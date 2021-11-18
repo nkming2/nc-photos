@@ -205,3 +205,46 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
 
   static final _log = Logger("entity.album.upgrader.AlbumUpgraderV5");
 }
+
+abstract class AlbumUpgraderFactory {
+  const AlbumUpgraderFactory();
+
+  AlbumUpgraderV1? buildV1();
+  AlbumUpgraderV2? buildV2();
+  AlbumUpgraderV3? buildV3();
+  AlbumUpgraderV4? buildV4();
+  AlbumUpgraderV5? buildV5();
+}
+
+class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
+  const DefaultAlbumUpgraderFactory({
+    required this.account,
+    this.albumFile,
+    this.logFilePath,
+  });
+
+  @override
+  buildV1() => AlbumUpgraderV1(logFilePath: logFilePath);
+
+  @override
+  buildV2() => AlbumUpgraderV2(logFilePath: logFilePath);
+
+  @override
+  buildV3() => AlbumUpgraderV3(logFilePath: logFilePath);
+
+  @override
+  buildV4() => AlbumUpgraderV4(logFilePath: logFilePath);
+
+  @override
+  buildV5() => AlbumUpgraderV5(
+        account,
+        albumFile: albumFile,
+        logFilePath: logFilePath,
+      );
+
+  final Account account;
+  final File? albumFile;
+
+  /// File path for logging only
+  final String? logFilePath;
+}

@@ -40,44 +40,40 @@ class Album with EquatableMixin {
 
   static Album? fromJson(
     JsonObj json, {
-    required AlbumUpgraderV1? upgraderV1,
-    required AlbumUpgraderV2? upgraderV2,
-    required AlbumUpgraderV3? upgraderV3,
-    required AlbumUpgraderV4? upgraderV4,
-    required AlbumUpgraderV5? upgraderV5,
+    required AlbumUpgraderFactory? upgraderFactory,
   }) {
     final jsonVersion = json["version"];
     JsonObj? result = json;
     if (jsonVersion < 2) {
-      result = upgraderV1?.call(result);
+      result = upgraderFactory?.buildV1()?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 3) {
-      result = upgraderV2?.call(result);
+      result = upgraderFactory?.buildV2()?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 4) {
-      result = upgraderV3?.call(result);
+      result = upgraderFactory?.buildV3()?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 5) {
-      result = upgraderV4?.call(result);
+      result = upgraderFactory?.buildV4()?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 6) {
-      result = upgraderV5?.call(result);
+      result = upgraderFactory?.buildV5()?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -284,12 +280,11 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     try {
       return Album.fromJson(
         jsonDecode(utf8.decode(data)),
-        upgraderV1: AlbumUpgraderV1(logFilePath: albumFile.path),
-        upgraderV2: AlbumUpgraderV2(logFilePath: albumFile.path),
-        upgraderV3: AlbumUpgraderV3(logFilePath: albumFile.path),
-        upgraderV4: AlbumUpgraderV4(logFilePath: albumFile.path),
-        upgraderV5: AlbumUpgraderV5(account,
-            albumFile: albumFile, logFilePath: albumFile.path),
+        upgraderFactory: DefaultAlbumUpgraderFactory(
+          account: account,
+          albumFile: albumFile,
+          logFilePath: albumFile.path,
+        ),
       )!
           .copyWith(
         lastUpdated: OrNull(null),
