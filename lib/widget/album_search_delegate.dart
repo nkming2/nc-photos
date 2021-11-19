@@ -5,7 +5,8 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/album_search.dart';
-import 'package:nc_photos/bloc/album_search_suggestion.dart';
+import 'package:nc_photos/bloc/search_suggestion.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -26,7 +27,7 @@ class AlbumSearchDelegate extends SearchDelegate {
     ListAlbum(fileRepo, albumRepo)(account).toList().then((value) {
       final albums = value.whereType<Album>().toList();
       _searchBloc.add(AlbumSearchBlocUpdateItemsEvent(albums));
-      _suggestionBloc.add(AlbumSearchSuggestionBlocUpdateItemsEvent(albums));
+      _suggestionBloc.add(SearchSuggestionBlocUpdateItemsEvent<Album>(albums));
     });
   }
 
@@ -67,9 +68,9 @@ class AlbumSearchDelegate extends SearchDelegate {
 
   @override
   buildSuggestions(BuildContext context) {
-    _suggestionBloc.add(AlbumSearchSuggestionBlocSearchEvent(query));
-    return BlocBuilder<AlbumSearchSuggestionBloc,
-        AlbumSearchSuggestionBlocState>(
+    _suggestionBloc.add(SearchSuggestionBlocSearchEvent<Album>(query.toCi()));
+    return BlocBuilder<SearchSuggestionBloc<Album>,
+        SearchSuggestionBlocState<Album>>(
       bloc: _suggestionBloc,
       builder: _buildSuggestionContent,
     );
@@ -116,7 +117,7 @@ class AlbumSearchDelegate extends SearchDelegate {
   }
 
   Widget _buildSuggestionContent(
-      BuildContext context, AlbumSearchSuggestionBlocState state) {
+      BuildContext context, SearchSuggestionBlocState<Album> state) {
     return SingleChildScrollView(
       child: Column(
         children: state.results
@@ -135,5 +136,7 @@ class AlbumSearchDelegate extends SearchDelegate {
   final Account account;
 
   final _searchBloc = AlbumSearchBloc();
-  final _suggestionBloc = AlbumSearchSuggestionBloc();
+  final _suggestionBloc = SearchSuggestionBloc<Album>(
+    itemToKeywords: (item) => [item.name.toCi()],
+  );
 }

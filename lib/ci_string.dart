@@ -79,6 +79,8 @@ class CiString implements Comparable<Object> {
   @override
   toString() => raw;
 
+  String toCaseInsensitiveString() => _lower;
+
   final String raw;
   final String _lower;
 }
