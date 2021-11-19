@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:nc_photos/override_comparator.dart';
 import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
@@ -40,6 +41,20 @@ extension IterableExtension<T> on Iterable<T> {
         (previousValue, element) =>
             previousValue..putIfAbsent(key(element), () => []).add(element));
     return map.entries.map((e) => Tuple2(e.key, e.value));
+  }
+
+  /// Return a new list with only distinct elements
+  List<T> distinct() {
+    final s = <T>{};
+    return where((element) => s.add(element)).toList();
+  }
+
+  /// Return a new list with only distinct elements determined by [equalFn]
+  List<T> distinctIf(
+      bool Function(T a, T b) equalFn, int Function(T a) hashCodeFn) {
+    final s = <OverrideComparator<T>>{};
+    return where((element) =>
+        s.add(OverrideComparator<T>(element, equalFn, hashCodeFn))).toList();
   }
 
   T? get firstOrNull {

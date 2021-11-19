@@ -6,7 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/help_utils.dart' as help_utils;
-import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/string_extension.dart';
