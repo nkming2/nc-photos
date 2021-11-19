@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_sharee.dart';
+import 'package:nc_photos/bloc/search_suggestion.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -14,7 +17,6 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -41,7 +43,12 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   @override
   initState() {
     super.initState();
-    _shareeBloc.add(ListShareeBlocQuery(widget.account));
+    _items = widget.album.shares
+            ?.map((s) =>
+                _ShareItem(s.userId, s.displayName ?? s.userId.toString()))
+            .toList() ??
+        [];
+    _initBloc();
   }
 
   @override
@@ -55,11 +62,9 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           backgroundColor: Colors.transparent,
           body: BlocListener<ListShareeBloc, ListShareeBlocState>(
             bloc: _shareeBloc,
-            listener: (context, shareeState) =>
-                _onListShareeBlocStateChanged(context, shareeState),
-            child: BlocBuilder<ListShareeBloc, ListShareeBlocState>(
-              bloc: _shareeBloc,
-              builder: (_, shareeState) => _buildContent(context, shareeState),
+            listener: _onShareeStateChange,
+            child: Builder(
+              builder: _buildContent,
             ),
           ),
         ),
@@ -67,51 +72,21 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     );
   }
 
-  Widget _buildContent(BuildContext context, ListShareeBlocState shareeState) {
-    final List<Widget> children;
-    if (shareeState is ListShareeBlocLoading) {
-      children = [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(width: 24),
-              Text(L10n.global().genericProcessingDialogContent),
-            ],
-          ),
-        ),
-      ];
-    } else {
-      children = shareeState.items
-          .where((element) => element.type == ShareeType.user)
-          .sorted((a, b) => a.label.compareTo(b.label))
-          .map((sharee) => _buildItem(context, sharee))
-          .toList();
-    }
+  Widget _buildContent(BuildContext context) {
     return GestureDetector(
       onTap: () {},
       child: SimpleDialog(
         title: Text(L10n.global().shareAlbumDialogTitle),
-        children: children,
+        children: [
+          ..._items.map((i) => _buildItem(context, i)),
+          _buildCreateShareItem(context),
+        ],
       ),
     );
   }
 
-  Widget _buildItem(BuildContext context, Sharee sharee) {
-    final bool isShared;
-    if (_overrideSharee.containsKey(sharee.shareWith)) {
-      isShared = _overrideSharee[sharee.shareWith]!;
-    } else {
-      isShared = widget.album.shares
-              ?.map((e) => e.userId)
-              .contains(sharee.shareWith) ??
-          false;
-    }
-
-    final isProcessing =
-        _processingSharee.any((element) => element == sharee.shareWith);
+  Widget _buildItem(BuildContext context, _ShareItem share) {
+    final isProcessing = _processingSharee.any((s) => s == share.shareWith);
     final Widget trailing;
     if (isProcessing) {
       trailing = Padding(
@@ -126,27 +101,50 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       );
     } else {
       trailing = Checkbox(
-        value: isShared,
-        onChanged: (value) {},
+        value: true,
+        onChanged: (_) {},
       );
     }
     return SimpleDialogOption(
       child: ListTile(
-        dense: true,
-        title: Text(sharee.label),
+        title: Text(share.displayName),
+        subtitle: Text(share.shareWith.toString()),
         // pass through the tap event
         trailing: IgnorePointer(
           child: trailing,
         ),
       ),
-      onPressed:
-          isProcessing ? () {} : () => _onShareePressed(sharee, isShared),
+      onPressed: isProcessing ? () {} : () => _onShareItemPressed(share),
     );
   }
 
-  void _onListShareeBlocStateChanged(
-      BuildContext context, ListShareeBlocState state) {
-    if (state is ListShareeBlocFailure) {
+  Widget _buildCreateShareItem(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: TypeAheadField<Sharee>(
+        textFieldConfiguration: TextFieldConfiguration(
+          controller: _searchController,
+          decoration: const InputDecoration(
+            hintText: "Add user",
+          ),
+        ),
+        suggestionsCallback: _onSearch,
+        itemBuilder: (context, suggestion) => ListTile(
+          title: Text(suggestion.label),
+          subtitle: Text(suggestion.shareWith.toString()),
+        ),
+        onSuggestionSelected: _onSearchSuggestionSelected,
+        hideOnEmpty: true,
+        hideOnLoading: true,
+        autoFlipDirection: true,
+      ),
+    );
+  }
+
+  void _onShareeStateChange(BuildContext context, ListShareeBlocState state) {
+    if (state is ListShareeBlocSuccess) {
+      _transformShareeItems(state.items);
+    } else if (state is ListShareeBlocFailure) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
@@ -154,20 +152,68 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     }
   }
 
-  void _onShareePressed(Sharee sharee, bool isShared) async {
+  Future<void> _onShareItemPressed(_ShareItem share) async {
     setState(() {
+      _processingSharee.add(share.shareWith);
+    });
+    try {
+      if (await _removeShare(share)) {
+        if (mounted) {
+          setState(() {
+            _items.remove(share);
+            _onShareItemListUpdated();
+          });
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _processingSharee.remove(share.shareWith);
+        });
+      }
+    }
+  }
+
+  Future<Iterable<Sharee>> _onSearch(String pattern) async {
+    _suggestionBloc.add(SearchSuggestionBlocSearchEvent(pattern.toCi()));
+    await Future.delayed(const Duration(milliseconds: 500));
+    await async_util
+        .wait(() => _suggestionBloc.state is! SearchSuggestionBlocLoading);
+    if (_suggestionBloc.state is SearchSuggestionBlocSuccess) {
+      return _suggestionBloc.state.results;
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> _onSearchSuggestionSelected(Sharee sharee) async {
+    _searchController.clear();
+    final item = _ShareItem(sharee.shareWith, sharee.label);
+    var isGood = false;
+    setState(() {
+      _items.add(item);
+      _onShareItemListUpdated();
       _processingSharee.add(sharee.shareWith);
     });
-    if (!isShared) {
-      // create new share
-      await _createShare(sharee);
-    } else {
-      // remove share
-      await _removeShare(sharee);
+    try {
+      isGood = await _createShare(sharee);
+    } finally {
+      if (mounted) {
+        setState(() {
+          if (!isGood) {
+            _items.remove(item);
+            _onShareItemListUpdated();
+          }
+          _processingSharee.remove(sharee.shareWith);
+        });
+      }
     }
-    setState(() {
-      _processingSharee.remove(sharee.shareWith);
-    });
+  }
+
+  void _onShareItemListUpdated() {
+    if (_shareeBloc.state is ListShareeBlocSuccess) {
+      _transformShareeItems(_shareeBloc.state.items);
+    }
   }
 
   void _onFixPressed() {
@@ -176,7 +222,18 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
             AlbumShareOutlierBrowserArguments(widget.account, widget.album));
   }
 
-  Future<void> _createShare(Sharee sharee) async {
+  void _transformShareeItems(List<Sharee> sharees) {
+    final candidates = sharees
+        .where((s) =>
+            s.shareWith != widget.account.username &&
+            // remove users already shared with
+            !_items.any((i) => i.shareWith == s.shareWith))
+        .toList();
+    _suggestionBloc
+        .add(SearchSuggestionBlocUpdateItemsEvent<Sharee>(candidates));
+  }
+
+  Future<bool> _createShare(Sharee sharee) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
@@ -189,21 +246,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           hasFailure = true;
         },
       );
-      _overrideSharee[sharee.shareWith] = true;
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(hasFailure
-            ? L10n.global()
-                .shareAlbumSuccessWithErrorNotification(sharee.shareWith)
-            : L10n.global().shareAlbumSuccessNotification(sharee.shareWith)),
-        action: hasFailure
-            ? SnackBarAction(
-                label: L10n.global().fixButtonLabel,
-                textColor: Theme.of(context).colorScheme.secondaryVariant,
-                onPressed: _onFixPressed,
-              )
-            : null,
-        duration: k.snackBarDurationNormal,
-      ));
     } catch (e, stackTrace) {
       _log.shout(
           "[_createShare] Failed while ShareAlbumWithUser", e, stackTrace);
@@ -211,10 +253,26 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
+      return false;
     }
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(hasFailure
+          ? L10n.global()
+              .shareAlbumSuccessWithErrorNotification(sharee.shareWith)
+          : L10n.global().shareAlbumSuccessNotification(sharee.shareWith)),
+      action: hasFailure
+          ? SnackBarAction(
+              label: L10n.global().fixButtonLabel,
+              textColor: Theme.of(context).colorScheme.secondaryVariant,
+              onPressed: _onFixPressed,
+            )
+          : null,
+      duration: k.snackBarDurationNormal,
+    ));
+    return true;
   }
 
-  Future<void> _removeShare(Sharee sharee) async {
+  Future<bool> _removeShare(_ShareItem share) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
@@ -223,26 +281,11 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
         widget.account,
         widget.album,
-        sharee.shareWith,
+        share.shareWith,
         onUnshareFileFailed: (_) {
           hasFailure = true;
         },
       );
-      _overrideSharee[sharee.shareWith] = false;
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(hasFailure
-            ? L10n.global()
-                .unshareAlbumSuccessWithErrorNotification(sharee.shareWith)
-            : L10n.global().unshareAlbumSuccessNotification(sharee.shareWith)),
-        action: hasFailure
-            ? SnackBarAction(
-                label: L10n.global().fixButtonLabel,
-                textColor: Theme.of(context).colorScheme.secondaryVariant,
-                onPressed: _onFixPressed,
-              )
-            : null,
-        duration: k.snackBarDurationNormal,
-      ));
     } catch (e, stackTrace) {
       _log.shout(
           "[_removeShare] Failed while UnshareAlbumWithUser", e, stackTrace);
@@ -250,15 +293,54 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
+      return false;
+    }
+    SnackBarManager().showSnackBar(SnackBar(
+      content: Text(hasFailure
+          ? L10n.global()
+              .unshareAlbumSuccessWithErrorNotification(share.shareWith)
+          : L10n.global().unshareAlbumSuccessNotification(share.shareWith)),
+      action: hasFailure
+          ? SnackBarAction(
+              label: L10n.global().fixButtonLabel,
+              textColor: Theme.of(context).colorScheme.secondaryVariant,
+              onPressed: _onFixPressed,
+            )
+          : null,
+      duration: k.snackBarDurationNormal,
+    ));
+    return true;
+  }
+
+  Future<void> _initBloc() async {
+    if (_shareeBloc.state is ListShareeBlocSuccess) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        setState(() {
+          _onShareeStateChange(context, _shareeBloc.state);
+        });
+      });
+    } else {
+      _log.info("[_initBloc] Initialize bloc");
+      _shareeBloc.add(ListShareeBlocQuery(widget.account));
     }
   }
 
-  final _shareeBloc = ListShareeBloc();
-  final _processingSharee = <CiString>[];
+  late final _shareeBloc = ListShareeBloc.of(widget.account);
+  final _suggestionBloc = SearchSuggestionBloc<Sharee>(
+    itemToKeywords: (item) => [item.shareWith, item.label.toCi()],
+  );
 
-  /// Store the modified value of each sharee
-  final _overrideSharee = <CiString, bool>{};
+  late final List<_ShareItem> _items;
+  final _processingSharee = <CiString>[];
+  final _searchController = TextEditingController();
 
   static final _log =
       Logger("widget.share_album_dialog._ShareAlbumDialogState");
+}
+
+class _ShareItem {
+  _ShareItem(this.shareWith, this.displayName);
+
+  final CiString shareWith;
+  final String displayName;
 }

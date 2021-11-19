@@ -48,6 +48,7 @@ dependencies:
     git:
       url: https://gitlab.com/nkming2/flutter_staggered_grid_view
       ref: v0.4.0-nc-photos-1
+  flutter_typeahead: ^3.2.1
   # android/ios only
   google_maps_flutter: ^2.1.0
   http: ^0.13.1

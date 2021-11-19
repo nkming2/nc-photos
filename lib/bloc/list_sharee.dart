@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -69,6 +70,21 @@ class ListShareeBlocFailure extends ListShareeBlocState {
 /// List all sharees of this account
 class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
   ListShareeBloc() : super(ListShareeBlocInit());
+
+  static ListShareeBloc of(Account account) {
+    final id = "${account.scheme}://${account.username}@${account.address}";
+    try {
+      _log.fine("[of] Resolving bloc for '$id'");
+      return KiwiContainer().resolve<ListShareeBloc>("ListShareeBloc($id)");
+    } catch (_) {
+      // no created instance for this account, make a new one
+      _log.info("[of] New bloc instance for account: $account");
+      final bloc = ListShareeBloc();
+      KiwiContainer()
+          .registerInstance<ListShareeBloc>(bloc, name: "ListShareeBloc($id)");
+      return bloc;
+    }
+  }
 
   @override
   mapEventToState(ListShareeBlocEvent event) async* {
