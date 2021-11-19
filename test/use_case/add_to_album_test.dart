@@ -24,6 +24,7 @@ void main() {
     test("file", _addFile);
     group("shared album (owned)", () {
       test("file", _addFileToSharedAlbumOwned);
+      test("file owned by user", _addFileOwnedByUserToSharedAlbumOwned);
     });
     group("shared album (not owned)", () {
       test("file", _addFileToMultiuserSharedAlbumNotOwned);
@@ -162,6 +163,66 @@ Future<void> _addFileToSharedAlbumOwned() async {
     [
       test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       test_util.buildShare(id: "1", file: file, shareWith: "user1"),
+    ],
+  );
+}
+
+/// Add a file owned by user (user1) to a shared album (admin -> user1)
+///
+/// Expect: no shares created
+Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
+  final account = test_util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider({
+    "isLabEnableSharedAlbum": true,
+  }));
+  final albumFile = test_util.buildAlbumFile(
+    path: test_util.buildAlbumFilePath("test1.json"),
+    fileId: 0,
+    ownerId: "admin",
+  );
+  final file = test_util.buildJpegFile(
+    path: "remote.php/dav/files/admin/test1.jpg",
+    fileId: 1,
+    ownerId: "user1",
+  );
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, file));
+  });
+  final albumRepo = MockAlbumMemoryRepo([
+    Album(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test",
+      provider: AlbumStaticProvider(items: []),
+      coverProvider: AlbumAutoCoverProvider(),
+      sortProvider: const AlbumNullSortProvider(),
+      shares: [AlbumShare(userId: "user1".toCi())],
+      albumFile: albumFile,
+    ),
+  ]);
+  final shareRepo = MockShareMemoryRepo([
+    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+  ]);
+
+  await AddToAlbum(albumRepo, shareRepo, appDb, pref)(
+    account,
+    albumRepo.findAlbumByPath(albumFile.path),
+    [
+      AlbumFileItem(
+        addedBy: "admin".toCi(),
+        addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+        file: file,
+      ),
+    ],
+  );
+
+  expect(
+    shareRepo.shares,
+    [
+      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ],
   );
 }

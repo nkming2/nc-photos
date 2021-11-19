@@ -83,6 +83,10 @@ class AddToAlbum {
             .toSet();
         final diffShares = albumShares.difference(fileShares);
         for (final s in diffShares) {
+          if (s == f.ownerId) {
+            // skip files already owned by the target user
+            continue;
+          }
           try {
             await CreateUserShare(shareRepo)(account, f, s.raw);
           } catch (e, stackTrace) {

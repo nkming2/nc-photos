@@ -49,6 +49,7 @@ class ShareAlbumWithUser {
     final files = AlbumStaticProvider.of(album)
         .items
         .whereType<AlbumFileItem>()
+        .where((item) => item.file.ownerId != shareWith)
         .map((e) => e.file);
     try {
       await CreateUserShare(shareRepo)(

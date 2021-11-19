@@ -18,6 +18,7 @@ void main() {
   group("ShareAlbumWithUser", () {
     test("w/o file", _shareWithoutFile);
     test("w/ file", _shareWithFile);
+    test("w/ file owned by user", _shareWithFileOwnedByUser);
     test("shared album", _shareSharedAlbum);
   });
 }
@@ -109,6 +110,59 @@ Future<void> _shareWithFile() async {
     [
       test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
+    ],
+  );
+}
+
+/// Share an album with files owned by user (user1) to that user (user1)
+///
+/// Expect: share (admin -> user1) added to album's shares list;
+/// new shares (admin -> user1) are created for the album json
+Future<void> _shareWithFileOwnedByUser() async {
+  final account = test_util.buildAccount();
+  final albumFile = test_util.buildAlbumFile(
+    path: test_util.buildAlbumFilePath("test1.json"),
+    fileId: 0,
+  );
+  final file1 = test_util.buildJpegFile(
+    path: "remote.php/dav/files/admin/test1.jpg",
+    fileId: 1,
+    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
+    ownerId: "user1"
+  );
+  final fileItem1 = AlbumFileItem(
+    file: file1,
+    addedBy: "admin".toCi(),
+    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+  );
+  final albumRepo = MockAlbumMemoryRepo([
+    Album(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test",
+      provider: AlbumStaticProvider(
+        items: [fileItem1],
+        latestItemTime: file1.lastModified,
+      ),
+      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
+      sortProvider: const AlbumNullSortProvider(),
+      albumFile: albumFile,
+    ),
+  ]);
+  final shareRepo = MockShareMemoryRepo();
+
+  await ShareAlbumWithUser(shareRepo, albumRepo)(
+    account,
+    albumRepo.findAlbumByPath(albumFile.path),
+    test_util.buildSharee(shareWith: "user1".toCi()),
+  );
+  expect(
+    albumRepo.findAlbumByPath(albumFile.path).shares,
+    [AlbumShare(userId: "user1".toCi())],
+  );
+  expect(
+    shareRepo.shares,
+    [
+      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ],
   );
 }
