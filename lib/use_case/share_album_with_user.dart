@@ -27,7 +27,7 @@ class ShareAlbumWithUser {
       shares: OrNull((album.shares ?? [])
         ..add(AlbumShare(
           userId: sharee.shareWith,
-          displayName: sharee.shareWithDisplayNameUnique,
+          displayName: sharee.label,
         ))),
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);

@@ -193,7 +193,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
               .firstWhere((s) => s.shareWith == ev.album.albumFile!.ownerId);
           temp.add(AlbumShare(
             userId: ownerSharee.shareWith,
-            displayName: ownerSharee.shareWithDisplayNameUnique,
+            displayName: ownerSharee.label,
           ));
         }
         return Map.fromEntries(temp.map((as) => MapEntry(as.userId, as)));
