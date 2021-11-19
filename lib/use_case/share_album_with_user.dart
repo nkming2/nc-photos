@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -22,13 +23,14 @@ class ShareAlbumWithUser {
     void Function(File)? onShareFileFailed,
   }) async {
     assert(album.provider is AlbumStaticProvider);
+    final newShares = (album.shares ?? [])
+      ..add(AlbumShare(
+        userId: sharee.shareWith,
+        displayName: sharee.label,
+      ));
     // add the share to album file
     final newAlbum = album.copyWith(
-      shares: OrNull((album.shares ?? [])
-        ..add(AlbumShare(
-          userId: sharee.shareWith,
-          displayName: sharee.label,
-        ))),
+      shares: OrNull(newShares.distinct()),
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
