@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 
 Future<void> waitUntilWifi({VoidCallback? onNoWifi}) async {
@@ -8,12 +9,15 @@ Future<void> waitUntilWifi({VoidCallback? onNoWifi}) async {
     // on Blink, and none on Gecko
     return;
   }
-  while (true) {
-    final result = await Connectivity().checkConnectivity();
-    if (result == ConnectivityResult.wifi) {
-      return;
-    }
-    onNoWifi?.call();
-    await Future.delayed(const Duration(seconds: 5));
-  }
+  await async_util.wait(
+    () async {
+      final result = await Connectivity().checkConnectivity();
+      if (result == ConnectivityResult.wifi) {
+        return true;
+      }
+      onNoWifi?.call();
+      return false;
+    },
+    pollInterval: const Duration(seconds: 5),
+  );
 }
