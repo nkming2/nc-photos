@@ -182,10 +182,12 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    _refreshThrottler.trigger(
-      maxResponceTime: const Duration(seconds: 3),
-      maxPendingCount: 10,
-    );
+    if (_isAccountOfInterest(ev.account)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
   }
 
   void _onFileRemovedEvent(FileRemovedEvent ev) {
@@ -193,7 +195,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    if (file_util.isAlbumFile(ev.account, ev.file)) {
+    if (_isAccountOfInterest(ev.account) &&
+        file_util.isAlbumFile(ev.account, ev.file)) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -206,8 +209,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    if (ev.destination
-        .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
+    if (_isAccountOfInterest(ev.account) &&
+        ev.destination
+            .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -220,7 +224,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    add(const _ListAlbumBlocExternalEvent());
+    if (_isAccountOfInterest(ev.account)) {
+      add(const _ListAlbumBlocExternalEvent());
+    }
   }
 
   void _onShareCreatedEvent(ShareCreatedEvent ev) =>
@@ -230,13 +236,15 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       _onShareChanged(ev.account, ev.share);
 
   void _onShareChanged(Account account, Share share) {
-    final webdavPath = file_util.unstripPath(account, share.path);
-    if (webdavPath
-        .startsWith(remote_storage_util.getRemoteAlbumsDir(account))) {
-      _refreshThrottler.trigger(
-        maxResponceTime: const Duration(seconds: 3),
-        maxPendingCount: 10,
-      );
+    if (_isAccountOfInterest(account)) {
+      final webdavPath = file_util.unstripPath(account, share.path);
+      if (webdavPath
+          .startsWith(remote_storage_util.getRemoteAlbumsDir(account))) {
+        _refreshThrottler.trigger(
+          maxResponceTime: const Duration(seconds: 3),
+          maxPendingCount: 10,
+        );
+      }
     }
   }
 
@@ -302,6 +310,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       return ListAlbumBlocFailure(ev.account, [], e);
     }
   }
+
+  bool _isAccountOfInterest(Account account) =>
+      state.account == null || state.account!.compareServerIdentity(account);
 
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   late AppEventListener<FileRemovedEvent> _fileRemovedListener;

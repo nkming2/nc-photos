@@ -127,4 +127,15 @@ class AccountSettings with EquatableMixin {
 
 extension AccountExtension on Account {
   String get url => "$scheme://$address";
+
+  /// Compare the server identity of two Accounts
+  ///
+  /// Return true if two Accounts point to the same user on server. Be careful
+  /// that this does NOT mean that the two Accounts are identical (e.g., they
+  /// can have difference password)
+  bool compareServerIdentity(Account other) {
+    return scheme == other.scheme &&
+        address == other.address &&
+        username == other.username;
+  }
 }
