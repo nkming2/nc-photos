@@ -508,6 +508,10 @@ class FileRepo {
   Future<List<File>> list(Account account, File root) =>
       dataSrc.list(account, root);
 
+  /// See [FileDataSource.listSingle]
+  Future<File> listSingle(Account account, File root) =>
+      dataSrc.listSingle(account, root);
+
   /// See [FileDataSource.remove]
   Future<void> remove(Account account, File file) =>
       dataSrc.remove(account, file);
@@ -574,6 +578,9 @@ class FileRepo {
 abstract class FileDataSource {
   /// List all files under [f]
   Future<List<File>> list(Account account, File f);
+
+  /// List a single file [f]
+  Future<File> listSingle(Account account, File f);
 
   /// Remove file
   Future<void> remove(Account account, File f);

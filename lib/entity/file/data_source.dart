@@ -16,7 +16,6 @@ import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
-import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:quiver/iterables.dart';
 import 'package:uuid/uuid.dart';
@@ -76,6 +75,12 @@ class FileWebdavDataSource implements FileDataSource {
 
     await _compatUpgrade(account, files);
     return files;
+  }
+
+  @override
+  listSingle(Account account, File f) async {
+    _log.info("[listSingle] ${f.path}");
+    return (await list(account, f, depth: 0)).first;
   }
 
   @override
@@ -248,6 +253,12 @@ class FileAppDbDataSource implements FileDataSource {
       final store = transaction.objectStore(AppDb.fileStoreName);
       return await _doList(store, account, f);
     });
+  }
+
+  @override
+  listSingle(Account account, File f) {
+    _log.info("[listSingle] ${f.path}");
+    throw UnimplementedError();
   }
 
   @override
@@ -438,6 +449,11 @@ class FileCachedDataSource implements FileDataSource {
         rethrow;
       }
     }
+  }
+
+  @override
+  listSingle(Account account, File f) {
+    return _remoteSrc.listSingle(account, f);
   }
 
   @override
@@ -656,7 +672,7 @@ class _CacheManager {
         // compare the etag to see if the content has been updated
         var remoteEtag = f.etag;
         // if no etag supplied, we need to query it form remote
-        remoteEtag ??= (await LsSingleFile(remoteSrc)(account, f.path)).etag;
+        remoteEtag ??= (await remoteSrc.list(account, f, depth: 0)).first.etag;
         if (cacheEtag == remoteEtag) {
           _log.fine(
               "[_listCache] etag matched for ${AppDbFileEntry.toPath(account, f)}");

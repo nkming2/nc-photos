@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -57,12 +58,12 @@ class _RootPickerState extends State<RootPicker> {
 
   void _initAccount() async {
     try {
-      const fileSrc = FileWebdavDataSource();
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       final files = <File>[];
       for (final r in widget.account.roots) {
         if (r.isNotEmpty) {
           _ensureInitDialog();
-          files.add(await LsSingleFile(fileSrc)(
+          files.add(await LsSingleFile(fileRepo)(
               widget.account, file_util.unstripPath(widget.account, r)));
         }
       }

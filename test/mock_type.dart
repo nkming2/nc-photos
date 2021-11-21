@@ -143,6 +143,11 @@ class MockFileRepo implements FileRepo {
   }
 
   @override
+  Future<File> listSingle(Account account, File root) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> move(Account account, File f, String destination,
       {bool? shouldOverwrite}) {
     throw UnimplementedError();
