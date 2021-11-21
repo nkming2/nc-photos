@@ -15,3 +15,17 @@ Future<void> push(BuildContext context, Account account, Album album) {
         arguments: DynamicAlbumBrowserArguments(account, album));
   }
 }
+
+/// Push the corresponding browser route for this album and replace the current
+/// route
+Future<void> pushReplacement(
+    BuildContext context, Account account, Album album) {
+  if (album.provider is AlbumStaticProvider) {
+    return Navigator.of(context).pushReplacementNamed(AlbumBrowser.routeName,
+        arguments: AlbumBrowserArguments(account, album));
+  } else {
+    return Navigator.of(context).pushReplacementNamed(
+        DynamicAlbumBrowser.routeName,
+        arguments: DynamicAlbumBrowserArguments(account, album));
+  }
+}

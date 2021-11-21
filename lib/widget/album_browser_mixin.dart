@@ -18,6 +18,7 @@ import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/import_pending_shared_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_browser_app_bar.dart';
+import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
@@ -231,12 +232,14 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
 
   void _onAddToCollectionPressed(
       BuildContext context, Account account, Album album) async {
-    Navigator.of(context).pop();
+    Album? newAlbum;
     try {
       await NotifiedAction(
         () async {
-          const fileRepo = FileRepo(FileWebdavDataSource());
-          await ImportPendingSharedAlbum(fileRepo)(account, album.albumFile!);
+          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
+          newAlbum = await ImportPendingSharedAlbum(fileRepo, albumRepo)(
+              account, album);
         },
         L10n.global().addToCollectionProcessingNotification(album.name),
         L10n.global().addToCollectionSuccessNotification(album.name),
@@ -247,6 +250,9 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
               (shouldLogFileName ? ": ${album.albumFile?.path}" : ""),
           e,
           stackTrace);
+    }
+    if (newAlbum != null) {
+      album_browser_util.pushReplacement(context, account, newAlbum!);
     }
   }
 
