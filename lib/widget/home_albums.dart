@@ -479,7 +479,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   void _openAlbum(BuildContext context, Album album) {
-    album_browser_util.open(context, widget.account, album);
+    album_browser_util.push(context, widget.account, album);
   }
 
   void _reqQuery() {
