@@ -191,7 +191,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     if (state is! ListSharingBlocSuccess && state is! ListSharingBlocFailure) {
       return;
     }
-    final newItems = List.of(state.items)
+    final newItems = state.items
         .where((element) => !ev.shares.containsIdentical(element.share))
         .toList();
     // i love hacks :)
