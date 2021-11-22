@@ -26,9 +26,13 @@ void main() {
     test("manual cover file", _removeManualCoverFile);
     group("shared album (owned)", () {
       test("file", _removeFromSharedAlbumOwned);
+      test("file w/ shares managed by others",
+          _removeFromSharedAlbumOwnedWithOtherShare);
     });
     group("shared album (not owned)", () {
       test("file", _removeFromSharedAlbumNotOwned);
+      test("file w/ shares managed by owner",
+          _removeFromSharedAlbumNotOwnedWithOwnerShare);
       test("file w/ extra share", _removeFromSharedAlbumLeaveExtraShare);
     });
   });
@@ -431,6 +435,76 @@ Future<void> _removeFromSharedAlbumOwned() async {
   );
 }
 
+/// Remove a file (user1 -> admin, user2) from a shared album
+/// (admin -> user1, user2)
+///
+/// Expect: shares (user1 -> admin, user2) for the file created by others
+/// unchanged
+Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
+  final account = test_util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider({
+    "isLabEnableSharedAlbum": true,
+  }));
+  final albumFile = test_util.buildAlbumFile(
+    path: test_util.buildAlbumFilePath("test1.json"),
+    fileId: 0,
+    ownerId: "admin",
+  );
+  final file1 = test_util.buildJpegFile(
+    path: "remote.php/dav/files/admin/test1.jpg",
+    fileId: 1,
+  );
+  final fileItem1 = AlbumFileItem(
+    file: file1,
+    addedBy: "admin".toCi(),
+    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+  );
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, file1));
+  });
+  final albumRepo = MockAlbumMemoryRepo([
+    Album(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test",
+      provider: AlbumStaticProvider(
+        items: [fileItem1],
+        latestItemTime: file1.lastModified,
+      ),
+      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
+      sortProvider: const AlbumNullSortProvider(),
+      shares: [AlbumShare(userId: "user1".toCi())],
+      albumFile: albumFile,
+    ),
+  ]);
+  final shareRepo = MockShareMemoryRepo([
+    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    test_util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+    test_util.buildShare(
+        id: "2", uidOwner: "user1", file: file1, shareWith: "admin"),
+    test_util.buildShare(
+        id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
+  ]);
+  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  expect(
+    shareRepo.shares,
+    [
+      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      test_util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+      test_util.buildShare(
+          id: "2", uidOwner: "user1", file: file1, shareWith: "admin"),
+      test_util.buildShare(
+          id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
+    ],
+  );
+}
+
 /// Remove a file from a shared album (user1 -> admin, user2)
 ///
 /// Expect: shares (admin -> user1, user2) for the file deleted
@@ -497,6 +571,81 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
           id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
       test_util.buildShare(
           id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+    ],
+  );
+}
+
+/// Remove a file (admin -> user1 | user1 -> user2) from a shared album
+/// (user1 -> admin, user2)
+///
+/// Expect: shares (admin -> user1) for the file created by us deleted;
+/// shares (user1 -> user2) for the file created by others unchanged
+Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
+  final account = test_util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider({
+    "isLabEnableSharedAlbum": true,
+  }));
+  final albumFile = test_util.buildAlbumFile(
+    path: test_util.buildAlbumFilePath("test1.json"),
+    fileId: 0,
+    ownerId: "user1",
+  );
+  final file1 = test_util.buildJpegFile(
+    path: "remote.php/dav/files/admin/test1.jpg",
+    fileId: 1,
+    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
+  );
+  final fileItem1 = AlbumFileItem(
+    file: file1,
+    addedBy: "admin".toCi(),
+    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+  );
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, file1));
+  });
+  final albumRepo = MockAlbumMemoryRepo([
+    Album(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test",
+      provider: AlbumStaticProvider(
+        items: [fileItem1],
+        latestItemTime: file1.lastModified,
+      ),
+      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
+      sortProvider: const AlbumNullSortProvider(),
+      shares: [
+        AlbumShare(userId: "admin".toCi()),
+        AlbumShare(userId: "user2".toCi()),
+      ],
+      albumFile: albumFile,
+    ),
+  ]);
+  final shareRepo = MockShareMemoryRepo([
+    test_util.buildShare(
+        id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
+    test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
+    test_util.buildShare(
+        id: "2", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+    test_util.buildShare(
+        id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
+  ]);
+  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  expect(
+    shareRepo.shares,
+    [
+      test_util.buildShare(
+          id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
+      test_util.buildShare(
+          id: "2", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+      test_util.buildShare(
+          id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
     ],
   );
 }
