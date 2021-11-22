@@ -37,6 +37,16 @@ class ShareRemoteDataSource implements ShareDataSource {
   }
 
   @override
+  reverseList(Account account, File file) async {
+    _log.info("[reverseList] ${file.path}");
+    final response = await Api(account).ocs().filesSharing().shares().get(
+          path: file.strippedPath,
+          sharedWithMe: true,
+        );
+    return _onListResult(response);
+  }
+
+  @override
   reverseListAll(Account account) async {
     _log.info("[reverseListAll] $account");
     final response = await Api(account).ocs().filesSharing().shares().get(

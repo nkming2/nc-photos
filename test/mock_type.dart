@@ -229,6 +229,11 @@ class MockShareRepo implements ShareRepo {
   }
 
   @override
+  Future<List<Share>> reverseList(Account account, File file) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<List<Share>> reverseListAll(Account account) {
     throw UnimplementedError();
   }

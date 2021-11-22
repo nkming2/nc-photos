@@ -167,6 +167,10 @@ class ShareRepo {
   /// See [ShareDataSource.listAll]
   Future<List<Share>> listAll(Account account) => dataSrc.listAll(account);
 
+  /// See [ShareDataSource.reverseList]
+  Future<List<Share>> reverseList(Account account, File file) =>
+      dataSrc.reverseList(account, file);
+
   /// See [ShareDataSource.reverseListAll]
   Future<List<Share>> reverseListAll(Account account) =>
       dataSrc.reverseListAll(account);
@@ -199,6 +203,9 @@ abstract class ShareDataSource {
 
   /// List all shares from a given user
   Future<List<Share>> listAll(Account account);
+
+  /// List all shares by other users from a given file
+  Future<List<Share>> reverseList(Account account, File file);
 
   /// List all shares by other users with a given user
   Future<List<Share>> reverseListAll(Account account);

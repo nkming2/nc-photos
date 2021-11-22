@@ -14,7 +14,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:nc_photos/use_case/list_share_with_me.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:path/path.dart' as path;
 
 abstract class ListSharingItem {
@@ -63,6 +65,24 @@ class _ListSharingBlocShareRemoved extends ListSharingBlocEvent {
   }
 
   final List<Share> shares;
+}
+
+class _ListSharingBlocPendingSharedAlbumMoved extends ListSharingBlocEvent {
+  const _ListSharingBlocPendingSharedAlbumMoved(
+      this.account, this.file, this.destination);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "account: $account, "
+        "file: $file, "
+        "destination: $destination, "
+        "}";
+  }
+
+  final Account account;
+  final File file;
+  final String destination;
 }
 
 abstract class ListSharingBlocState {
@@ -134,6 +154,7 @@ class ListSharingBlocFailure extends ListSharingBlocState {
 class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   ListSharingBloc() : super(ListSharingBlocInit()) {
     _shareRemovedListener.begin();
+    _fileMovedEventListener.begin();
 
     _refreshThrottler = Throttler<Share>(
       onTriggered: (shares) {
@@ -162,6 +183,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   @override
   close() {
     _shareRemovedListener.end();
+    _fileMovedEventListener.end();
     _refreshThrottler.clear();
     return super.close();
   }
@@ -173,6 +195,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       yield* _onEventQuery(event);
     } else if (event is _ListSharingBlocShareRemoved) {
       yield* _onEventShareRemoved(event);
+    } else if (event is _ListSharingBlocPendingSharedAlbumMoved) {
+      yield* _onEventPendingSharedAlbumMoved(event);
     }
   }
 
@@ -200,6 +224,37 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     ) as ListSharingBlocState;
   }
 
+  Stream<ListSharingBlocState> _onEventPendingSharedAlbumMoved(
+      _ListSharingBlocPendingSharedAlbumMoved ev) async* {
+    if (state.items.isEmpty) {
+      return;
+    }
+    try {
+      yield ListSharingBlocLoading(ev.account, state.items);
+
+      final items = List.of(state.items);
+      items.removeWhere(
+          (i) => i is ListSharingAlbum && i.share.path == ev.file.strippedPath);
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
+      final shareRepo = ShareRepo(ShareRemoteDataSource());
+      final newShares = await ListShareWithMe(shareRepo)(
+          ev.account, File(path: ev.destination));
+      final newAlbumFile =
+          await LsSingleFile(fileRepo)(ev.account, ev.destination);
+      final newAlbum = await albumRepo.get(ev.account, newAlbumFile);
+      for (final s in newShares) {
+        items.add(ListSharingAlbum(s, newAlbum));
+      }
+
+      yield ListSharingBlocSuccess(ev.account, items);
+    } catch (e, stackTrace) {
+      _log.severe("[_onEventPendingSharedAlbumMoved] Exception while request",
+          e, stackTrace);
+      yield ListSharingBlocFailure(ev.account, state.items, e);
+    }
+  }
+
   void _onShareRemovedEvent(ShareRemovedEvent ev) {
     if (_isAccountOfInterest(ev.account)) {
       _refreshThrottler.trigger(
@@ -207,6 +262,22 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         maxPendingCount: 10,
         data: ev.share,
       );
+    }
+  }
+
+  void _onFileMovedEvent(FileMovedEvent ev) {
+    if (state is ListSharingBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    // from pending dir to album dir
+    if (_isAccountOfInterest(ev.account) &&
+        ev.file.path.startsWith(
+            remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account)) &&
+        ev.destination
+            .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
+      add(_ListSharingBlocPendingSharedAlbumMoved(
+          ev.account, ev.file, ev.destination));
     }
   }
 
@@ -349,6 +420,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   late final _shareRemovedListener =
       AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
+  late final _fileMovedEventListener =
+      AppEventListener<FileMovedEvent>(_onFileMovedEvent);
 
   late Throttler _refreshThrottler;
 
