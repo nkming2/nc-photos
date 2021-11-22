@@ -201,11 +201,13 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   void _onShareRemovedEvent(ShareRemovedEvent ev) {
-    _refreshThrottler.trigger(
-      maxResponceTime: const Duration(seconds: 3),
-      maxPendingCount: 10,
-      data: ev.share,
-    );
+    if (_isAccountOfInterest(ev.account)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+        data: ev.share,
+      );
+    }
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
@@ -341,6 +343,9 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       return null;
     }
   }
+
+  bool _isAccountOfInterest(Account account) =>
+      state.account == null || state.account!.compareServerIdentity(account);
 
   late final _shareRemovedListener =
       AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);
