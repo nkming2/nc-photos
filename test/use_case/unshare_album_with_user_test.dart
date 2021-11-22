@@ -24,7 +24,7 @@ void main() {
 
 /// Unshare an empty album with a user (user1)
 ///
-/// Expect: share (admin -> user1) removed from album's shares list;
+/// Expect: user (admin -> user1) removed from album's shares list;
 /// share (admin -> user1) for the album json deleted
 Future<void> _unshareWithoutFile() async {
   final account = test_util.buildAccount();
@@ -64,7 +64,7 @@ Future<void> _unshareWithoutFile() async {
 
 /// Unshare an album with a user (user1)
 ///
-/// Expect: share (admin -> user1) removed from album's shares list;
+/// Expect: user (admin -> user1) removed from album's shares list;
 /// share (admin -> user1) for the album json deleted;
 /// shares (admin -> user1) for the album files deleted
 Future<void> _unshareWithFile() async {
@@ -124,10 +124,10 @@ Future<void> _unshareWithFile() async {
 /// Unshare an album with a user (user1), where some files are not owned by us
 /// (admin)
 ///
-/// Expect: share (admin -> user1) removed from album's shares list;
+/// Expect: user (admin -> user1) removed from album's shares list;
 /// share (admin -> user1) for the album json deleted;
 /// shares (admin -> user1) for the owned album files deleted;
-/// shares (user2 -> user1) are left unchanged
+/// shares (user2 -> user1) created by other unchanged
 Future<void> _unshareWithFileNotOwned() async {
   final account = test_util.buildAccount();
   final albumFile = test_util.buildAlbumFile(
