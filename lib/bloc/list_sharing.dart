@@ -160,6 +160,13 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   @override
+  close() {
+    _shareRemovedListener.end();
+    _refreshThrottler.clear();
+    return super.close();
+  }
+
+  @override
   mapEventToState(ListSharingBlocEvent event) async* {
     _log.info("[mapEventToState] $event");
     if (event is ListSharingBlocQuery) {
