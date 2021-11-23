@@ -5,7 +5,7 @@ import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
-import '../test_util.dart' as test_util;
+import '../test_util.dart' as util;
 
 void main() {
   KiwiContainer().registerInstance<EventBus>(MockEventBus());
@@ -23,8 +23,8 @@ void main() {
 /// Expect: share (admin -> user1) added to album's shares list;
 /// a new share (admin -> user1) is created for the album json
 Future<void> _shareWithoutFile() async {
-  final account = test_util.buildAccount();
-  final album = test_util.AlbumBuilder().build();
+  final account = util.buildAccount();
+  final album = util.AlbumBuilder().build();
   final albumFile = album.albumFile!;
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo();
@@ -32,15 +32,15 @@ Future<void> _shareWithoutFile() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user1".toCi()),
+    util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [test_util.buildAlbumShare(userId: "user1")],
+    [util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
-    [test_util.buildShare(id: "0", file: albumFile, shareWith: "user1")],
+    [util.buildShare(id: "0", file: albumFile, shareWith: "user1")],
   );
 }
 
@@ -50,11 +50,10 @@ Future<void> _shareWithoutFile() async {
 /// new shares (admin -> user1) are created for the album json and the album
 /// files
 Future<void> _shareWithFile() async {
-  final account = test_util.buildAccount();
-  final files = (test_util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("admin/test1.jpg"))
-      .build();
-  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final account = util.buildAccount();
+  final files =
+      (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
+  final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
   final file1 = files[0];
   final albumFile = album.albumFile!;
   final albumRepo = MockAlbumMemoryRepo([album]);
@@ -63,17 +62,17 @@ Future<void> _shareWithFile() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user1".toCi()),
+    util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [test_util.buildAlbumShare(userId: "user1")],
+    [util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-      test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: file1, shareWith: "user1"),
     ],
   );
 }
@@ -83,11 +82,11 @@ Future<void> _shareWithFile() async {
 /// Expect: share (admin -> user1) added to album's shares list;
 /// new shares (admin -> user1) are created for the album json
 Future<void> _shareWithFileOwnedByUser() async {
-  final account = test_util.buildAccount();
-  final files = (test_util.FilesBuilder(initialFileId: 1)
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();
-  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
   final albumFile = album.albumFile!;
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo();
@@ -95,16 +94,16 @@ Future<void> _shareWithFileOwnedByUser() async {
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user1".toCi()),
+    util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [test_util.buildAlbumShare(userId: "user1")],
+    [util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ],
   );
 }
@@ -114,31 +113,31 @@ Future<void> _shareWithFileOwnedByUser() async {
 /// Expect: share (admin -> user2) added to album's shares list;
 /// a new share (admin -> user2) is created for the album json
 Future<void> _shareSharedAlbum() async {
-  final account = test_util.buildAccount();
-  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final account = util.buildAccount();
+  final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
-    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
 
   await ShareAlbumWithUser(shareRepo, albumRepo)(
     account,
     albumRepo.findAlbumByPath(albumFile.path),
-    test_util.buildSharee(shareWith: "user2".toCi()),
+    util.buildSharee(shareWith: "user2".toCi()),
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
     [
-      test_util.buildAlbumShare(userId: "user1"),
-      test_util.buildAlbumShare(userId: "user2"),
+      util.buildAlbumShare(userId: "user1"),
+      util.buildAlbumShare(userId: "user2"),
     ],
   );
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-      test_util.buildShare(id: "1", file: albumFile, shareWith: "user2")
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2")
     ],
   );
 }

@@ -10,7 +10,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/type.dart';
 import 'package:test/test.dart';
 
-import '../test_util.dart' as test_util;
+import '../test_util.dart' as util;
 
 void main() {
   group("Album", () {
@@ -1374,7 +1374,7 @@ void main() {
     });
 
     group("AlbumUpgraderV5", () {
-      final account = test_util.buildAccount(username: "user1");
+      final account = util.buildAccount(username: "user1");
 
       test("w/ ownerId", () {
         final json = <String, dynamic>{
@@ -1690,7 +1690,7 @@ void _fromJsonShares() {
         ),
         coverProvider: AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
-        shares: [test_util.buildAlbumShare(userId: "admin")],
+        shares: [util.buildAlbumShare(userId: "admin")],
       ));
 }
 
@@ -1703,7 +1703,7 @@ void _toRemoteJsonShares() {
     ),
     coverProvider: AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [test_util.buildAlbumShare(userId: "admin")],
+    shares: [util.buildAlbumShare(userId: "admin")],
   );
   expect(album.toRemoteJson(), <String, dynamic>{
     "version": Album.version,
@@ -1741,7 +1741,7 @@ void _toAppDbJsonShares() {
     ),
     coverProvider: AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [test_util.buildAlbumShare(userId: "admin")],
+    shares: [util.buildAlbumShare(userId: "admin")],
   );
   expect(album.toAppDbJson(), <String, dynamic>{
     "version": Album.version,

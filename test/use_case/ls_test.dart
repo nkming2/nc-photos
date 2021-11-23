@@ -5,14 +5,14 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
-import '../test_util.dart' as test_util;
+import '../test_util.dart' as util;
 
 void main() {
   group("Ls", () {
     test("normal", () async {
       expect(
           await Ls(_MockFileRepo())(
-              test_util.buildAccount(),
+              util.buildAccount(),
               File(
                 path: "remote.php/dav/files/admin",
               )),
@@ -33,7 +33,7 @@ void main() {
     test("shouldExcludeRootDir == false", () async {
       expect(
           await Ls(_MockFileRepo())(
-              test_util.buildAccount(),
+              util.buildAccount(),
               File(
                 path: "remote.php/dav/files/admin",
               ),

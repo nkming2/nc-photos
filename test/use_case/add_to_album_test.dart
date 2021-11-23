@@ -15,7 +15,7 @@ import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
-import '../test_util.dart' as test_util;
+import '../test_util.dart' as util;
 
 void main() {
   KiwiContainer().registerInstance<EventBus>(MockEventBus());
@@ -36,12 +36,11 @@ void main() {
 ///
 /// Expect: file added to album
 Future<void> _addFile() async {
-  final account = test_util.buildAccount();
+  final account = util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final file = (test_util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("admin/test1.jpg"))
+  final file = (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg"))
       .build()[0];
-  final album = test_util.AlbumBuilder().build();
+  final album = util.AlbumBuilder().build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
@@ -99,14 +98,13 @@ Future<void> _addFile() async {
 ///
 /// Expect: a new share (admin -> user1) is created for the file
 Future<void> _addFileToSharedAlbumOwned() async {
-  final account = test_util.buildAccount();
+  final account = util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final file = (test_util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("admin/test1.jpg"))
+  final file = (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg"))
       .build()[0];
-  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
@@ -117,7 +115,7 @@ Future<void> _addFileToSharedAlbumOwned() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
-    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
 
   await AddToAlbum(albumRepo, shareRepo, appDb, pref)(
@@ -135,8 +133,8 @@ Future<void> _addFileToSharedAlbumOwned() async {
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-      test_util.buildShare(id: "1", file: file, shareWith: "user1"),
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: file, shareWith: "user1"),
     ],
   );
 }
@@ -145,14 +143,14 @@ Future<void> _addFileToSharedAlbumOwned() async {
 ///
 /// Expect: no shares created
 Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
-  final account = test_util.buildAccount();
+  final account = util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final file = (test_util.FilesBuilder(initialFileId: 1)
+  final file = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build()[0];
-  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
@@ -163,7 +161,7 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
-    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
 
   await AddToAlbum(albumRepo, shareRepo, appDb, pref)(
@@ -181,7 +179,7 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ],
   );
 }
@@ -191,14 +189,13 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
 /// Expect: a new share (admin -> user1, user2) is created for the file
 Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
   // doesn't work right now, skipped
-  final account = test_util.buildAccount();
+  final account = util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final file = (test_util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("admin/test1.jpg"))
+  final file = (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg"))
       .build()[0];
-  final album = (test_util.AlbumBuilder(ownerId: "user1")
+  final album = (util.AlbumBuilder(ownerId: "user1")
         ..addShare("admin")
         ..addShare("user2"))
       .build();
@@ -212,9 +209,9 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
-    test_util.buildShare(
+    util.buildShare(
         id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-    test_util.buildShare(
+    util.buildShare(
         id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
   ]);
 
@@ -232,13 +229,13 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
   expect(
     shareRepo.shares,
     [
-      test_util.buildShare(
+      util.buildShare(
           id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-      test_util.buildShare(
+      util.buildShare(
           id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
       // the order for these two shares are actually NOT guaranteed
-      test_util.buildShare(id: "2", file: file, shareWith: "user2"),
-      test_util.buildShare(id: "3", file: file, shareWith: "user1"),
+      util.buildShare(id: "2", file: file, shareWith: "user2"),
+      util.buildShare(id: "3", file: file, shareWith: "user1"),
     ],
   );
 }
