@@ -1,11 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/ci_string.dart';
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -40,31 +35,11 @@ void _initialState() {
 /// Expect: emit the file with extra share (admin -> user1)
 void _testQueryUnsharedAlbumExtraFileShare() {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final album = Album(
-    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-    name: "test",
-    provider: AlbumStaticProvider(
-      items: [fileItem1],
-      latestItemTime: file1.lastModified,
-    ),
-    coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-    sortProvider: const AlbumNullSortProvider(),
-    albumFile: albumFile,
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final file1 = files[0];
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: file1, shareWith: "user1"),
   ]);
@@ -94,18 +69,8 @@ void _testQueryUnsharedAlbumExtraFileShare() {
 /// Expect: emit the json file with extra share (admin -> user1)
 void _testQueryUnsharedAlbumExtraJsonShare() {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final album = Album(
-    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-    name: "test",
-    provider: AlbumStaticProvider(items: []),
-    coverProvider: AlbumAutoCoverProvider(),
-    sortProvider: const AlbumNullSortProvider(),
-    albumFile: albumFile,
-  );
+  final album = test_util.AlbumBuilder().build();
+  final albumFile = album.albumFile!;
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
@@ -134,32 +99,15 @@ void _testQueryUnsharedAlbumExtraJsonShare() {
 /// Expect: emit the file with missing share (admin -> user1)
 void _testQuerySharedAlbumMissingFileShare() {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final album = Album(
-    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-    name: "test",
-    provider: AlbumStaticProvider(
-      items: [fileItem1],
-      latestItemTime: file1.lastModified,
-    ),
-    coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-    sortProvider: const AlbumNullSortProvider(),
-    shares: [AlbumShare(userId: "user1".toCi())],
-    albumFile: albumFile,
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addShare("user1"))
+      .build();
+  final file1 = files[0];
+  final albumFile = album.albumFile!;
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
@@ -175,7 +123,7 @@ void _testQuerySharedAlbumMissingFileShare() {
       ListAlbumShareOutlierBlocLoading(account, []),
       ListAlbumShareOutlierBlocSuccess(account, [
         ListAlbumShareOutlierItem(file1, [
-          ListAlbumShareOutlierMissingShareItem("user1".toCi(), null),
+          ListAlbumShareOutlierMissingShareItem("user1".toCi(), "user1"),
         ]),
       ]),
     ],
@@ -187,19 +135,8 @@ void _testQuerySharedAlbumMissingFileShare() {
 /// Expect: emit the file with missing share (admin -> user1)
 void _testQuerySharedAlbumMissingJsonShare() {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final album = Album(
-    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-    name: "test",
-    provider: AlbumStaticProvider(items: []),
-    coverProvider: AlbumAutoCoverProvider(),
-    sortProvider: const AlbumNullSortProvider(),
-    shares: [AlbumShare(userId: "user1".toCi())],
-    albumFile: albumFile,
-  );
+  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final albumFile = album.albumFile!;
   final shareRepo = MockShareMemoryRepo();
   final shareeRepo = MockShareeMemoryRepo([
     test_util.buildSharee(shareWith: "user1".toCi()),
@@ -213,7 +150,7 @@ void _testQuerySharedAlbumMissingJsonShare() {
       ListAlbumShareOutlierBlocLoading(account, []),
       ListAlbumShareOutlierBlocSuccess(account, [
         ListAlbumShareOutlierItem(albumFile, [
-          ListAlbumShareOutlierMissingShareItem("user1".toCi(), null),
+          ListAlbumShareOutlierMissingShareItem("user1".toCi(), "user1"),
         ]),
       ]),
     ],

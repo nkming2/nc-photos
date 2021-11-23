@@ -1,11 +1,6 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/ci_string.dart';
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:test/test.dart';
 
@@ -29,20 +24,9 @@ void main() {
 /// a new share (admin -> user1) is created for the album json
 Future<void> _shareWithoutFile() async {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final album = test_util.AlbumBuilder().build();
+  final albumFile = album.albumFile!;
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo();
 
   await ShareAlbumWithUser(shareRepo, albumRepo)(
@@ -52,7 +36,7 @@ Future<void> _shareWithoutFile() async {
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [AlbumShare(userId: "user1".toCi())],
+    [test_util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
@@ -67,33 +51,13 @@ Future<void> _shareWithoutFile() async {
 /// files
 Future<void> _shareWithFile() async {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final file1 = files[0];
+  final albumFile = album.albumFile!;
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo();
 
   await ShareAlbumWithUser(shareRepo, albumRepo)(
@@ -103,7 +67,7 @@ Future<void> _shareWithFile() async {
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [AlbumShare(userId: "user1".toCi())],
+    [test_util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
@@ -120,34 +84,12 @@ Future<void> _shareWithFile() async {
 /// new shares (admin -> user1) are created for the album json
 Future<void> _shareWithFileOwnedByUser() async {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-    ownerId: "user1"
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg", ownerId: "user1"))
+      .build();
+  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final albumFile = album.albumFile!;
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo();
 
   await ShareAlbumWithUser(shareRepo, albumRepo)(
@@ -157,7 +99,7 @@ Future<void> _shareWithFileOwnedByUser() async {
   );
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
-    [AlbumShare(userId: "user1".toCi())],
+    [test_util.buildAlbumShare(userId: "user1")],
   );
   expect(
     shareRepo.shares,
@@ -173,21 +115,9 @@ Future<void> _shareWithFileOwnedByUser() async {
 /// a new share (admin -> user2) is created for the album json
 Future<void> _shareSharedAlbum() async {
   final account = test_util.buildAccount();
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "user1".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
+  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final albumFile = album.albumFile!;
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
@@ -200,8 +130,8 @@ Future<void> _shareSharedAlbum() async {
   expect(
     albumRepo.findAlbumByPath(albumFile.path).shares,
     [
-      AlbumShare(userId: "user1".toCi()),
-      AlbumShare(userId: "user2".toCi()),
+      test_util.buildAlbumShare(userId: "user1"),
+      test_util.buildAlbumShare(userId: "user2"),
     ],
   );
   expect(

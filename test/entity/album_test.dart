@@ -1671,7 +1671,10 @@ void _fromJsonShares() {
       "content": <String, dynamic>{},
     },
     "shares": <JsonObj>[
-      {"userId": "admin"},
+      {
+        "userId": "admin",
+        "displayName": "admin",
+      },
     ],
   };
   expect(
@@ -1687,7 +1690,7 @@ void _fromJsonShares() {
         ),
         coverProvider: AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
-        shares: [AlbumShare(userId: "admin".toCi())],
+        shares: [test_util.buildAlbumShare(userId: "admin")],
       ));
 }
 
@@ -1700,7 +1703,7 @@ void _toRemoteJsonShares() {
     ),
     coverProvider: AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [AlbumShare(userId: "admin".toCi())],
+    shares: [test_util.buildAlbumShare(userId: "admin")],
   );
   expect(album.toRemoteJson(), <String, dynamic>{
     "version": Album.version,
@@ -1723,6 +1726,7 @@ void _toRemoteJsonShares() {
     "shares": [
       <String, dynamic>{
         "userId": "admin",
+        "displayName": "admin",
       },
     ],
   });
@@ -1737,7 +1741,7 @@ void _toAppDbJsonShares() {
     ),
     coverProvider: AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
-    shares: [AlbumShare(userId: "admin".toCi())],
+    shares: [test_util.buildAlbumShare(userId: "admin")],
   );
   expect(album.toAppDbJson(), <String, dynamic>{
     "version": Album.version,
@@ -1760,6 +1764,7 @@ void _toAppDbJsonShares() {
     "shares": [
       <String, dynamic>{
         "userId": "admin",
+        "displayName": "admin",
       },
     ],
   });

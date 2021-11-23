@@ -38,14 +38,11 @@ void main() {
 Future<void> _addFile() async {
   final account = test_util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
+  final file = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build()[0];
+  final album = test_util.AlbumBuilder().build();
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -53,16 +50,7 @@ Future<void> _addFile() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
 
   await AddToAlbum(albumRepo, shareRepo, appDb, pref)(
@@ -115,15 +103,11 @@ Future<void> _addFileToSharedAlbumOwned() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "admin",
-  );
-  final file = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
+  final file = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build()[0];
+  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -131,17 +115,7 @@ Future<void> _addFileToSharedAlbumOwned() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "user1".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
@@ -175,16 +149,11 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "admin",
-  );
-  final file = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    ownerId: "user1",
-  );
+  final file = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg", ownerId: "user1"))
+      .build()[0];
+  final album = (test_util.AlbumBuilder()..addShare("user1")).build();
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -192,17 +161,7 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "user1".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
   ]);
@@ -236,15 +195,14 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "user1",
-  );
-  final file = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
+  final file = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build()[0];
+  final album = (test_util.AlbumBuilder(ownerId: "user1")
+        ..addShare("admin")
+        ..addShare("user2"))
+      .build();
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -252,20 +210,7 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(items: []),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [
-        AlbumShare(userId: "admin".toCi()),
-        AlbumShare(userId: "user2".toCi()),
-      ],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(
         id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),

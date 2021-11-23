@@ -45,7 +45,7 @@ class MockAlbumRepo implements AlbumRepo {
 class MockAlbumMemoryRepo extends MockAlbumRepo {
   MockAlbumMemoryRepo([
     List<Album> initialData = const [],
-  ]) : albums = List.of(initialData);
+  ]) : albums = initialData.map((a) => a.copyWith()).toList();
 
   @override
   get(Account account, File albumFile) async {
@@ -176,7 +176,7 @@ class MockFileRepo implements FileRepo {
 class MockFileMemoryRepo extends MockFileRepo {
   MockFileMemoryRepo([
     List<File> initialData = const [],
-  ]) : files = List.of(initialData) {
+  ]) : files = initialData.map((f) => f.copyWith()).toList() {
     _id = files
             .where((f) => f.fileId != null)
             .map((f) => f.fileId!)

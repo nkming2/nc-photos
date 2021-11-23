@@ -2,10 +2,8 @@ import 'package:event_bus/event_bus.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/app_db.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/or_null.dart';
@@ -28,12 +26,12 @@ void main() {
       test("file", _removeFromSharedAlbumOwned);
       test("file w/ shares managed by others",
           _removeFromSharedAlbumOwnedWithOtherShare);
+      test("file w/ extra share", _removeFromSharedAlbumOwnedLeaveExtraShare);
     });
     group("shared album (not owned)", () {
       test("file", _removeFromSharedAlbumNotOwned);
       test("file w/ shares managed by owner",
           _removeFromSharedAlbumNotOwnedWithOwnerShare);
-      test("file w/ extra share", _removeFromSharedAlbumLeaveExtraShare);
     });
   });
 }
@@ -44,19 +42,13 @@ void main() {
 Future<void> _removeLastFile() async {
   final account = test_util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()..addFileItem(files[0])).build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -64,19 +56,7 @@ Future<void> _removeLastFile() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file1));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
@@ -108,69 +88,36 @@ Future<void> _removeLastFile() async {
 Future<void> _remove1OfNFiles() async {
   final account = test_util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final file2 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test2.jpg",
-    fileId: 2,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final fileItem2 = AlbumFileItem(
-    file: file2,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final file3 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test3.jpg",
-    fileId: 3,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
-  final fileItem3 = AlbumFileItem(
-    file: file3,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg")
+        ..addJpeg("admin/test2.jpg")
+        ..addJpeg("admin/test3.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addFileItem(files[1])
+        ..addFileItem(files[2]))
+      .build();
+  final fileItems = test_util.AlbumBuilder.fileItemsOf(album);
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
     final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-    await store.put(AppDbFileDbEntry.fromFile(account, file2).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file2));
-    await store.put(AppDbFileDbEntry.fromFile(account, file3).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file3));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1, fileItem2, fileItem3],
-        latestItemTime: file3.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file3),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, file1, file2, file3]);
+  final fileRepo =
+      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
         .map((e) => e.copyWith(
@@ -183,10 +130,10 @@ Future<void> _remove1OfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItem2, fileItem3],
-          latestItemTime: file3.lastModified,
+          items: [fileItems[1], fileItems[2]],
+          latestItemTime: files[2].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: file3),
+        coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -200,69 +147,39 @@ Future<void> _remove1OfNFiles() async {
 Future<void> _removeLatestOfNFiles() async {
   final account = test_util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 8),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 8),
-  );
-  final file2 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test2.jpg",
-    fileId: 2,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final fileItem2 = AlbumFileItem(
-    file: file2,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final file3 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test3.jpg",
-    fileId: 3,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
-  final fileItem3 = AlbumFileItem(
-    file: file3,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg",
+            lastModified: DateTime.utc(2020, 1, 2, 3, 4, 8))
+        ..addJpeg("admin/test2.jpg",
+            lastModified: DateTime.utc(2020, 1, 2, 3, 4, 7))
+        ..addJpeg("admin/test3.jpg",
+            lastModified: DateTime.utc(2020, 1, 2, 3, 4, 6)))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addFileItem(files[1])
+        ..addFileItem(files[2]))
+      .build();
+  final fileItems = test_util.AlbumBuilder.fileItemsOf(album);
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
     final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-    await store.put(AppDbFileDbEntry.fromFile(account, file2).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file2));
-    await store.put(AppDbFileDbEntry.fromFile(account, file3).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file3));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1, fileItem2, fileItem3],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, file1, file2, file3]);
+  final fileRepo =
+      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
         .map((e) => e.copyWith(
@@ -275,10 +192,10 @@ Future<void> _removeLatestOfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItem2, fileItem3],
-          latestItemTime: file3.lastModified,
+          items: [fileItems[1], fileItems[2]],
+          latestItemTime: files[1].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: file3),
+        coverProvider: AlbumAutoCoverProvider(coverFile: files[1]),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -292,69 +209,36 @@ Future<void> _removeLatestOfNFiles() async {
 Future<void> _removeManualCoverFile() async {
   final account = test_util.buildAccount();
   final pref = Pref.scoped(PrefMemoryProvider());
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final file2 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test2.jpg",
-    fileId: 2,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final fileItem2 = AlbumFileItem(
-    file: file2,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 6),
-  );
-  final file3 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test3.jpg",
-    fileId: 3,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
-  final fileItem3 = AlbumFileItem(
-    file: file3,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 7),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg")
+        ..addJpeg("admin/test2.jpg")
+        ..addJpeg("admin/test3.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0], isCover: true)
+        ..addFileItem(files[1])
+        ..addFileItem(files[2]))
+      .build();
+  final fileItems = test_util.AlbumBuilder.fileItemsOf(album);
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
     final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-    await store.put(AppDbFileDbEntry.fromFile(account, file2).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file2));
-    await store.put(AppDbFileDbEntry.fromFile(account, file3).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file3));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
+    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1, fileItem2, fileItem3],
-        latestItemTime: file3.lastModified,
-      ),
-      coverProvider: AlbumManualCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, file1, file2, file3]);
+  final fileRepo =
+      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
         .map((e) => e.copyWith(
@@ -367,10 +251,10 @@ Future<void> _removeManualCoverFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItem2, fileItem3],
-          latestItemTime: file3.lastModified,
+          items: [fileItems[1], fileItems[2]],
+          latestItemTime: files[2].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: file3),
+        coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -386,20 +270,16 @@ Future<void> _removeFromSharedAlbumOwned() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "admin",
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addShare("user1"))
+      .build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -407,20 +287,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file1));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "user1".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
@@ -445,20 +312,17 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "admin",
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("user1/test1.jpg", ownerId: "user1"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0], addedBy: "user1")
+        ..addShare("user1")
+        ..addShare("user2"))
+      .build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -466,20 +330,7 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file1));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "user1".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     test_util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
@@ -505,6 +356,52 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   );
 }
 
+/// Remove a file from a shared album (admin -> user1) with extra unmanaged
+/// share (admin -> user2)
+///
+/// Expect: share (admin -> user1) for the file deleted;
+/// extra share (admin -> user2) unchanged
+Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
+  final account = test_util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider({
+    "isLabEnableSharedAlbum": true,
+  }));
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addShare("user1"))
+      .build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, file1));
+  });
+  final albumRepo = MockAlbumMemoryRepo([album]);
+  final shareRepo = MockShareMemoryRepo([
+    test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
+    test_util.buildShare(id: "2", file: file1, shareWith: "user2"),
+  ]);
+  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  expect(
+    shareRepo.shares,
+    [
+      test_util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      test_util.buildShare(id: "2", file: file1, shareWith: "user2"),
+    ],
+  );
+}
+
 /// Remove a file from a shared album (user1 -> admin, user2)
 ///
 /// Expect: shares (admin -> user1, user2) for the file deleted
@@ -513,21 +410,17 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "user1",
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder(ownerId: "user1")
+        ..addFileItem(files[0])
+        ..addShare("admin")
+        ..addShare("user2"))
+      .build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -535,23 +428,7 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file1));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [
-        AlbumShare(userId: "admin".toCi()),
-        AlbumShare(userId: "user2".toCi()),
-      ],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(
         id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
@@ -585,21 +462,17 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
   final pref = Pref.scoped(PrefMemoryProvider({
     "isLabEnableSharedAlbum": true,
   }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "user1",
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
+  final files = (test_util.FilesBuilder(initialFileId: 1)
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final album = (test_util.AlbumBuilder(ownerId: "user1")
+        ..addFileItem(files[0])
+        ..addShare("admin")
+        ..addShare("user2"))
+      .build();
+  final file1 = files[0];
+  final fileItem1 = test_util.AlbumBuilder.fileItemsOf(album)[0];
+  final albumFile = album.albumFile!;
   final appDb = MockAppDb();
   await appDb.use((db) async {
     final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
@@ -607,23 +480,7 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
     await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
         AppDbFileDbEntry.toPrimaryKey(account, file1));
   });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [
-        AlbumShare(userId: "admin".toCi()),
-        AlbumShare(userId: "user2".toCi()),
-      ],
-      albumFile: albumFile,
-    ),
-  ]);
+  final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     test_util.buildShare(
         id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
@@ -646,72 +503,6 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
           id: "2", uidOwner: "user1", file: albumFile, shareWith: "user2"),
       test_util.buildShare(
           id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
-    ],
-  );
-}
-
-/// Remove a file from a shared album (admin -> user1) with extra unmanaged
-/// share (admin -> user2)
-///
-/// Expect: share (admin -> user1) for the file deleted;
-/// extra share (admin -> user2) unchanged
-Future<void> _removeFromSharedAlbumLeaveExtraShare() async {
-  final account = test_util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
-  final albumFile = test_util.buildAlbumFile(
-    path: test_util.buildAlbumFilePath("test1.json"),
-    fileId: 0,
-    ownerId: "user1",
-  );
-  final file1 = test_util.buildJpegFile(
-    path: "remote.php/dav/files/admin/test1.jpg",
-    fileId: 1,
-    lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final fileItem1 = AlbumFileItem(
-    file: file1,
-    addedBy: "admin".toCi(),
-    addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-  );
-  final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
-  final albumRepo = MockAlbumMemoryRepo([
-    Album(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      name: "test",
-      provider: AlbumStaticProvider(
-        items: [fileItem1],
-        latestItemTime: file1.lastModified,
-      ),
-      coverProvider: AlbumAutoCoverProvider(coverFile: file1),
-      sortProvider: const AlbumNullSortProvider(),
-      shares: [AlbumShare(userId: "admin".toCi())],
-      albumFile: albumFile,
-    ),
-  ]);
-  final shareRepo = MockShareMemoryRepo([
-    test_util.buildShare(
-        id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-    test_util.buildShare(id: "1", file: file1, shareWith: "user1"),
-    test_util.buildShare(id: "2", file: file1, shareWith: "user2"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
-
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
-  expect(
-    shareRepo.shares,
-    [
-      test_util.buildShare(
-          id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-      test_util.buildShare(id: "2", file: file1, shareWith: "user2"),
     ],
   );
 }

@@ -2,9 +2,126 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
+import 'package:nc_photos/entity/album/item.dart';
+import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/iterable_extension.dart';
+
+class FilesBuilder {
+  FilesBuilder({
+    int initialFileId = 0,
+  }) : fileId = initialFileId;
+
+  List<File> build() {
+    return files.map((f) => f.copyWith()).toList();
+  }
+
+  void addJpeg(
+    String relativePath, {
+    int contentLength = 1024,
+    DateTime? lastModified,
+    bool hasPreview = true,
+    String ownerId = "admin",
+  }) {
+    files.add(buildJpegFile(
+      path: "remote.php/dav/files/$relativePath",
+      contentLength: contentLength,
+      lastModified:
+          lastModified ?? DateTime.utc(2020, 1, 2, 3, 4, 5 + files.length),
+      hasPreview: hasPreview,
+      fileId: fileId++,
+      ownerId: ownerId,
+    ));
+  }
+
+  final files = <File>[];
+  int fileId;
+}
+
+/// Create an album for testing
+class AlbumBuilder {
+  AlbumBuilder({
+    DateTime? lastUpdated,
+    this.name = "test",
+    this.albumFilename = "test1.json",
+    this.fileId = 0,
+    this.ownerId = "admin",
+  }) : lastUpdated = lastUpdated ?? DateTime.utc(2020, 1, 2, 3, 4, 5);
+
+  Album build() {
+    final latestFileItem = items
+        .whereType<AlbumFileItem>()
+        .stableSorted(
+            (a, b) => a.file.lastModified!.compareTo(b.file.lastModified!))
+        .reversed
+        .firstOrNull;
+    return Album(
+      lastUpdated: lastUpdated,
+      name: name,
+      provider: AlbumStaticProvider(
+        items: items,
+        latestItemTime: latestFileItem?.file.lastModified,
+      ),
+      coverProvider: cover == null
+          ? AlbumAutoCoverProvider(coverFile: latestFileItem?.file)
+          : AlbumManualCoverProvider(coverFile: cover!),
+      sortProvider: const AlbumNullSortProvider(),
+      shares: shares.isEmpty ? null : shares,
+      albumFile: buildAlbumFile(
+        path: buildAlbumFilePath(albumFilename, user: ownerId),
+        fileId: fileId,
+        ownerId: ownerId,
+      ),
+    );
+  }
+
+  /// Add a file item
+  ///
+  /// By default, the item will be added by admin and added at the same time as
+  /// the file's lastModified.
+  ///
+  /// If [isCover] is true, the coverProvider of the album will become
+  /// [AlbumManualCoverProvider]
+  void addFileItem(
+    File file, {
+    String addedBy = "admin",
+    DateTime? addedAt,
+    bool isCover = false,
+  }) {
+    final fileItem = AlbumFileItem(
+      file: file,
+      addedBy: addedBy.toCi(),
+      addedAt: addedAt ?? file.lastModified!,
+    );
+    items.add(fileItem);
+    if (isCover) {
+      cover = file;
+    }
+  }
+
+  /// Add an album share
+  void addShare(String userId) {
+    shares.add(buildAlbumShare(userId: userId));
+  }
+
+  static fileItemsOf(Album album) =>
+      AlbumStaticProvider.of(album).items.whereType<AlbumFileItem>().toList();
+
+  final DateTime lastUpdated;
+  final String name;
+  final String albumFilename;
+  final int fileId;
+  final String ownerId;
+
+  final items = <AlbumItem>[];
+  File? cover;
+  final shares = <AlbumShare>[];
+}
 
 void initLog() {
   Logger.root.level = Level.ALL;
@@ -49,6 +166,15 @@ String buildAlbumFilePath(
   String user = "admin",
 }) =>
     "remote.php/dav/files/$user/.com.nkming.nc_photos/albums/$filename";
+
+AlbumShare buildAlbumShare({
+  required String userId,
+  String? displayName,
+}) =>
+    AlbumShare(
+      userId: userId.toCi(),
+      displayName: displayName ?? userId,
+    );
 
 /// Build a mock [File] pointing to a JPEG image file
 ///
@@ -96,14 +222,14 @@ Share buildShare({
 
 Sharee buildSharee({
   ShareeType type = ShareeType.user,
-  String label = "admin",
+  String? label,
   int shareType = 0,
   required CiString shareWith,
   String? shareWithDisplayNameUnique,
 }) =>
     Sharee(
       type: type,
-      label: label,
+      label: label ?? shareWith.toString(),
       shareType: shareType,
       shareWith: shareWith,
     );
