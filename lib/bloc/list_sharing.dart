@@ -216,7 +216,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       return;
     }
     final newItems = state.items
-        .where((element) => !ev.shares.containsIdentical(element.share))
+        .where((i) => !ev.shares.contains(i.share))
         .toList();
     // i love hacks :)
     yield (state as dynamic).copyWith(
