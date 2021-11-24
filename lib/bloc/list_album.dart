@@ -7,21 +7,17 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 
 class ListAlbumBlocItem {
-  ListAlbumBlocItem(this.album, this.isSharedByMe, this.isSharedToMe);
+  ListAlbumBlocItem(this.album);
 
   final Album album;
-  final bool isSharedByMe;
-  final bool isSharedToMe;
 }
 
 abstract class ListAlbumBlocEvent {
@@ -277,29 +273,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
         }
       }
 
-      final shareRepo = ShareRepo(ShareRemoteDataSource());
-      var shares = <Share>[];
-      try {
-        shares = await shareRepo.listDir(ev.account,
-            File(path: remote_storage_util.getRemoteAlbumsDir(ev.account)));
-      } on ApiException catch (e, stackTrace) {
-        if (e.response.statusCode == 404) {
-          // Normal when album dir is not created yet
-        } else {
-          _log.shout("[_queryWithAlbumDataSource] Failed while listDir", e,
-              stackTrace);
-        }
-      } catch (e, stackTrace) {
-        _log.shout(
-            "[_queryWithAlbumDataSource] Failed while listDir", e, stackTrace);
-      }
-      final items = albums.map((e) {
-        final isSharedByMe = shares.any((element) =>
-            element.path.trimAny("/") == e.albumFile!.strippedPath);
-        final isSharedToMe = !e.albumFile!.isOwned(ev.account.username);
-        return ListAlbumBlocItem(e, isSharedByMe, isSharedToMe);
-      }).toList();
-
+      final items = albums.map((e) => ListAlbumBlocItem(e)).toList();
       if (errors.isEmpty) {
         return ListAlbumBlocSuccess(ev.account, items);
       } else {

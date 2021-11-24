@@ -469,8 +469,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
       ...sortedAlbums.map((e) => _AlbumListItem(
             account: widget.account,
             album: e.album,
-            isSharedByMe: e.isSharedByMe,
-            isSharedToMe: e.isSharedToMe,
             onTap: () {
               _openAlbum(context, e.album);
             },
@@ -600,8 +598,6 @@ class _AlbumListItem extends _ListItem {
   _AlbumListItem({
     required this.account,
     required this.album,
-    required this.isSharedByMe,
-    required this.isSharedToMe,
     VoidCallback? onTap,
   }) : super(onTap: onTap);
 
@@ -619,14 +615,12 @@ class _AlbumListItem extends _ListItem {
     return AlbumGridItemBuilder(
       account: account,
       album: album,
-      isShared: isSharedByMe || isSharedToMe,
+      isShared: album.shares?.isNotEmpty == true,
     ).build(context);
   }
 
   final Account account;
   final Album album;
-  final bool isSharedByMe;
-  final bool isSharedToMe;
 }
 
 enum _Sort {
