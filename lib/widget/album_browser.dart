@@ -251,8 +251,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             ),
         ],
         menuItemBuilder: (_) => [
-          if (_album!.albumFile!.isOwned(widget.account.username) &&
-              Pref().isLabEnableSharedAlbumOr(false))
+          if (Pref().isLabEnableSharedAlbumOr(false))
             PopupMenuItem(
               value: _menuValueFixShares,
               child: Text(L10n.global().fixSharesTooltip),

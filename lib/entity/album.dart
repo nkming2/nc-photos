@@ -221,15 +221,17 @@ class Album with EquatableMixin {
 }
 
 class AlbumShare with EquatableMixin {
-  const AlbumShare({
+  AlbumShare({
     required this.userId,
     this.displayName,
-  });
+    DateTime? sharedAt,
+  }) : sharedAt = (sharedAt ?? DateTime.now()).toUtc();
 
   factory AlbumShare.fromJson(JsonObj json) {
     return AlbumShare(
       userId: CiString(json["userId"]),
       displayName: json["displayName"],
+      sharedAt: DateTime.parse(json["sharedAt"]),
     );
   }
 
@@ -237,7 +239,25 @@ class AlbumShare with EquatableMixin {
     return {
       "userId": userId.toString(),
       if (displayName != null) "displayName": displayName,
+      "sharedAt": sharedAt.toIso8601String(),
     };
+  }
+
+  /// Return a copy with specified field modified
+  ///
+  /// [sharedAt] is handled differently where if not set, the current time will
+  /// be used. In order to keep [sharedAt], you must explicitly assign it with
+  /// value from this or a null value
+  AlbumShare copyWith({
+    CiString? userId,
+    OrNull<String>? displayName,
+    OrNull<DateTime>? sharedAt,
+  }) {
+    return AlbumShare(
+      userId: userId ?? this.userId,
+      displayName: displayName == null ? this.displayName : displayName.obj,
+      sharedAt: sharedAt == null ? null : (sharedAt.obj ?? this.sharedAt),
+    );
   }
 
   @override
@@ -245,17 +265,20 @@ class AlbumShare with EquatableMixin {
     return "$runtimeType {"
         "userId: $userId, "
         "displayName: $displayName, "
+        "sharedAt: $sharedAt, "
         "}";
   }
 
   @override
   get props => [
         userId,
+        sharedAt,
       ];
 
   /// User ID or username, case insensitive
   final CiString userId;
   final String? displayName;
+  final DateTime sharedAt;
 }
 
 class AlbumRepo {
