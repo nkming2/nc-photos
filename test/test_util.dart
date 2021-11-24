@@ -105,8 +105,16 @@ class AlbumBuilder {
   }
 
   /// Add an album share
-  void addShare(String userId) {
-    shares.add(buildAlbumShare(userId: userId));
+  ///
+  /// By default, the album will be shared at 2020-01-02 03:04:05
+  void addShare(
+    String userId, {
+    DateTime? sharedAt,
+  }) {
+    shares.add(buildAlbumShare(
+      userId: userId,
+      sharedAt: sharedAt,
+    ));
   }
 
   static fileItemsOf(Album album) =>
@@ -170,10 +178,12 @@ String buildAlbumFilePath(
 AlbumShare buildAlbumShare({
   required String userId,
   String? displayName,
+  DateTime? sharedAt,
 }) =>
     AlbumShare(
       userId: userId.toCi(),
       displayName: displayName ?? userId,
+      sharedAt: sharedAt ?? DateTime.utc(2020, 1, 2, 3, 4, 5),
     );
 
 /// Build a mock [File] pointing to a JPEG image file

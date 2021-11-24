@@ -22,6 +22,7 @@ void main() {
 
   group("AddToAlbum", () {
     test("file", _addFile);
+    test("ignore existing file", _addExistingFile);
     group("shared album (owned)", () {
       test("file", _addFileToSharedAlbumOwned);
       test("file owned by user", _addFileOwnedByUserToSharedAlbumOwned);
@@ -92,6 +93,88 @@ Future<void> _addFile() async {
       ),
     ],
   );
+}
+
+/// Add a [File], already included in the [Album], to an [Album]
+///
+/// Expect: file not added to album
+Future<void> _addExistingFile() async {
+  final account = util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider());
+  final files =
+      (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
+  final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
+  final oldFile = files[0];
+  final newFile = files[0].copyWith();
+  final albumFile = album.albumFile!;
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
+  });
+  final albumRepo = MockAlbumMemoryRepo([album]);
+  final shareRepo = MockShareRepo();
+
+  await AddToAlbum(albumRepo, shareRepo, appDb, pref)(
+    account,
+    albumRepo.findAlbumByPath(albumFile.path),
+    [
+      AlbumFileItem(
+        addedBy: "admin".toCi(),
+        addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+        file: newFile,
+      ),
+    ],
+  );
+  expect(
+    albumRepo.albums
+        .map((e) => e.copyWith(
+              // we need to set a known value to lastUpdated
+              lastUpdated: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+            ))
+        .toList(),
+    [
+      Album(
+        lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+        name: "test",
+        provider: AlbumStaticProvider(
+          items: [
+            AlbumFileItem(
+              addedBy: "admin".toCi(),
+              addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+              file: files[0],
+            ),
+          ],
+          latestItemTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
+        ),
+        coverProvider: AlbumAutoCoverProvider(coverFile: files[0]),
+        sortProvider: const AlbumNullSortProvider(),
+        albumFile: albumFile,
+      ),
+    ],
+  );
+  // when there's a conflict, it's guaranteed that the original file in the
+  // album is kept and the incoming file dropped
+  expect(
+      identical(
+          AlbumStaticProvider.of(albumRepo.albums[0])
+              .items
+              .whereType<AlbumFileItem>()
+              .first
+              .file,
+          oldFile),
+      true);
+  expect(
+      identical(
+          AlbumStaticProvider.of(albumRepo.albums[0])
+              .items
+              .whereType<AlbumFileItem>()
+              .first
+              .file,
+          newFile),
+      false);
 }
 
 /// Add a file to a shared album (admin -> user1)

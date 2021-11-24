@@ -1674,6 +1674,7 @@ void _fromJsonShares() {
       {
         "userId": "admin",
         "displayName": "admin",
+        "sharedAt": "2020-01-02T03:04:05.000Z",
       },
     ],
   };
@@ -1727,6 +1728,7 @@ void _toRemoteJsonShares() {
       <String, dynamic>{
         "userId": "admin",
         "displayName": "admin",
+        "sharedAt": "2020-01-02T03:04:05.000Z",
       },
     ],
   });
@@ -1765,6 +1767,7 @@ void _toAppDbJsonShares() {
       <String, dynamic>{
         "userId": "admin",
         "displayName": "admin",
+        "sharedAt": "2020-01-02T03:04:05.000Z",
       },
     ],
   });

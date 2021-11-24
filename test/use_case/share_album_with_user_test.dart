@@ -1,6 +1,7 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:test/test.dart';
 
@@ -35,7 +36,14 @@ Future<void> _shareWithoutFile() async {
     util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
-    albumRepo.findAlbumByPath(albumFile.path).shares,
+    albumRepo
+        .findAlbumByPath(albumFile.path)
+        .shares
+        ?.map((s) => s.copyWith(
+              // we need to set a known value to sharedAt
+              sharedAt: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+            ))
+        .toList(),
     [util.buildAlbumShare(userId: "user1")],
   );
   expect(
@@ -65,7 +73,14 @@ Future<void> _shareWithFile() async {
     util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
-    albumRepo.findAlbumByPath(albumFile.path).shares,
+    albumRepo
+        .findAlbumByPath(albumFile.path)
+        .shares
+        ?.map((s) => s.copyWith(
+              // we need to set a known value to sharedAt
+              sharedAt: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+            ))
+        .toList(),
     [util.buildAlbumShare(userId: "user1")],
   );
   expect(
@@ -97,7 +112,14 @@ Future<void> _shareWithFileOwnedByUser() async {
     util.buildSharee(shareWith: "user1".toCi()),
   );
   expect(
-    albumRepo.findAlbumByPath(albumFile.path).shares,
+    albumRepo
+        .findAlbumByPath(albumFile.path)
+        .shares
+        ?.map((s) => s.copyWith(
+              // we need to set a known value to sharedAt
+              sharedAt: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+            ))
+        .toList(),
     [util.buildAlbumShare(userId: "user1")],
   );
   expect(
@@ -127,7 +149,14 @@ Future<void> _shareSharedAlbum() async {
     util.buildSharee(shareWith: "user2".toCi()),
   );
   expect(
-    albumRepo.findAlbumByPath(albumFile.path).shares,
+    albumRepo
+        .findAlbumByPath(albumFile.path)
+        .shares
+        ?.map((s) => s.copyWith(
+              // we need to set a known value to sharedAt
+              sharedAt: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+            ))
+        .toList(),
     [
       util.buildAlbumShare(userId: "user1"),
       util.buildAlbumShare(userId: "user2"),
