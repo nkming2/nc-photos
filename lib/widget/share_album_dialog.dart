@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:logging/logging.dart';
+import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
@@ -43,7 +44,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   @override
   initState() {
     super.initState();
-    _items = widget.album.shares
+    _album = widget.album;
+    _items = _album.shares
             ?.map((s) =>
                 _ShareItem(s.userId, s.displayName ?? s.userId.toString()))
             .toList() ??
@@ -53,18 +55,24 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   @override
   build(BuildContext context) {
+    final canPop = _processingSharee.isEmpty;
     return AppTheme(
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pop();
+          if (canPop) {
+            Navigator.of(context).pop();
+          }
         },
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: BlocListener<ListShareeBloc, ListShareeBlocState>(
-            bloc: _shareeBloc,
-            listener: _onShareeStateChange,
-            child: Builder(
-              builder: _buildContent,
+        child: WillPopScope(
+          onWillPop: () => Future.value(canPop),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: BlocListener<ListShareeBloc, ListShareeBlocState>(
+              bloc: _shareeBloc,
+              listener: _onShareeStateChange,
+              child: Builder(
+                builder: _buildContent,
+              ),
             ),
           ),
         ),
@@ -218,8 +226,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   void _onFixPressed() {
     Navigator.of(context).pushNamed(AlbumShareOutlierBrowser.routeName,
-        arguments:
-            AlbumShareOutlierBrowserArguments(widget.account, widget.album));
+        arguments: AlbumShareOutlierBrowserArguments(widget.account, _album));
   }
 
   void _transformShareeItems(List<Sharee> sharees) {
@@ -238,14 +245,16 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
-      await ShareAlbumWithUser(shareRepo, albumRepo)(
-        widget.account,
-        widget.album,
-        sharee,
-        onShareFileFailed: (_) {
-          hasFailure = true;
-        },
-      );
+      _album = await _editMutex.protect(() async {
+        return await ShareAlbumWithUser(shareRepo, albumRepo)(
+          widget.account,
+          _album,
+          sharee,
+          onShareFileFailed: (_) {
+            hasFailure = true;
+          },
+        );
+      });
     } catch (e, stackTrace) {
       _log.shout(
           "[_createShare] Failed while ShareAlbumWithUser", e, stackTrace);
@@ -278,14 +287,16 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
-      await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-        widget.account,
-        widget.album,
-        share.shareWith,
-        onUnshareFileFailed: (_) {
-          hasFailure = true;
-        },
-      );
+      _album = await _editMutex.protect(() async {
+        return await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
+          widget.account,
+          _album,
+          share.shareWith,
+          onUnshareFileFailed: (_) {
+            hasFailure = true;
+          },
+        );
+      });
     } catch (e, stackTrace) {
       _log.shout(
           "[_removeShare] Failed while UnshareAlbumWithUser", e, stackTrace);
@@ -330,6 +341,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     itemToKeywords: (item) => [item.shareWith, item.label.toCi()],
   );
 
+  late Album _album;
+  final _editMutex = Mutex();
   late final List<_ShareItem> _items;
   final _processingSharee = <CiString>[];
   final _searchController = TextEditingController();

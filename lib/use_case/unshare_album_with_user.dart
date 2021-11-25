@@ -16,7 +16,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 class UnshareAlbumWithUser {
   UnshareAlbumWithUser(this.shareRepo, this.fileRepo, this.albumRepo);
 
-  Future<void> call(
+  Future<Album> call(
     Account account,
     Album album,
     CiString shareWith, {
@@ -31,12 +31,17 @@ class UnshareAlbumWithUser {
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    await _deleteFileShares(
-      account,
-      newAlbum,
-      shareWith,
-      onUnshareFileFailed: onUnshareFileFailed,
-    );
+    try {
+      await _deleteFileShares(
+        account,
+        newAlbum,
+        shareWith,
+        onUnshareFileFailed: onUnshareFileFailed,
+      );
+    } catch (e, stackTrace) {
+      _log.shout("[call] Failed while _deleteFileShares", e, stackTrace);
+    }
+    return newAlbum;
   }
 
   Future<void> _deleteFileShares(

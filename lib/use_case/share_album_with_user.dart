@@ -16,7 +16,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 class ShareAlbumWithUser {
   ShareAlbumWithUser(this.shareRepo, this.albumRepo);
 
-  Future<void> call(
+  Future<Album> call(
     Account account,
     Album album,
     Sharee sharee, {
@@ -34,12 +34,17 @@ class ShareAlbumWithUser {
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    await _createFileShares(
-      account,
-      newAlbum,
-      sharee.shareWith,
-      onShareFileFailed: onShareFileFailed,
-    );
+    try {
+      await _createFileShares(
+        account,
+        newAlbum,
+        sharee.shareWith,
+        onShareFileFailed: onShareFileFailed,
+      );
+    } catch (e, stackTrace) {
+      _log.shout("[call] Failed while _createFileShares", e, stackTrace);
+    }
+    return newAlbum;
   }
 
   Future<void> _createFileShares(
