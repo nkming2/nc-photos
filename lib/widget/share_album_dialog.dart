@@ -132,8 +132,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       child: TypeAheadField<Sharee>(
         textFieldConfiguration: TextFieldConfiguration(
           controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: "Add user",
+          decoration: InputDecoration(
+            hintText: L10n.global().addUserInputHint,
           ),
         ),
         suggestionsCallback: _onSearch,

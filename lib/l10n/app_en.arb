@@ -1075,6 +1075,10 @@
 		}
 	},
 	"defaultButtonLabel": "DEFAULT",
+	"addUserInputHint": "Add user",
+	"@addUserInputHint": {
+		"description": "Input a user name to share this album with"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

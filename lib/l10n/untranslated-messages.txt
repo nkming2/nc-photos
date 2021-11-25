@@ -49,6 +49,7 @@
     "missingShareDescription",
     "extraShareDescription",
     "defaultButtonLabel",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ],
 
@@ -116,6 +117,7 @@
     "missingShareDescription",
     "extraShareDescription",
     "defaultButtonLabel",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ],
 
@@ -238,11 +240,13 @@
     "missingShareDescription",
     "extraShareDescription",
     "defaultButtonLabel",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ],
 
   "es": [
     "settingsMapProviderTitle",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ],
 
@@ -345,6 +349,7 @@
     "missingShareDescription",
     "extraShareDescription",
     "defaultButtonLabel",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ],
 
@@ -420,6 +425,7 @@
     "missingShareDescription",
     "extraShareDescription",
     "defaultButtonLabel",
+    "addUserInputHint",
     "errorAlbumDowngrade"
   ]
 }
