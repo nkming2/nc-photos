@@ -179,8 +179,10 @@ class ShareHandler {
         duration: k.snackBarDurationNormal,
       ));
 
-      final textShare = AndroidTextShare(share.url!);
-      textShare.share();
+      if (platform_k.isAndroid) {
+        final textShare = AndroidTextShare(share.url!);
+        textShare.share();
+      }
     } catch (e, stackTrace) {
       _log.shout(
           "[_shareFileAsLink] Failed while CreateLinkShare", e, stackTrace);
