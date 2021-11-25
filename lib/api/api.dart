@@ -371,7 +371,7 @@ class _Files {
   }) async {
     try {
       return await _api.request("COPY", path, header: {
-        "Destination": destinationUrl,
+        "Destination": Uri.parse(destinationUrl).toString(),
         if (overwrite != null) "Overwrite": overwrite ? "T" : "F",
       });
     } catch (e) {
@@ -389,7 +389,7 @@ class _Files {
   }) async {
     try {
       return await _api.request("MOVE", path, header: {
-        "Destination": destinationUrl,
+        "Destination": Uri.parse(destinationUrl).toString(),
         if (overwrite != null) "Overwrite": overwrite ? "T" : "F",
       });
     } catch (e) {
