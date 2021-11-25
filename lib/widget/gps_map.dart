@@ -107,7 +107,7 @@ class _OsmGpsMap extends StatelessWidget {
                   point: centerLl,
                   anchorPos: AnchorPos.align(AnchorAlign.top),
                   builder: (context) => const Image(
-                    image: AssetImage("gps_map_pin.png"),
+                    image: AssetImage("assets/gps_map_pin.png"),
                   ),
                 ),
               ],
