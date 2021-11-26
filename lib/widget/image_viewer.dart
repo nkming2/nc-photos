@@ -50,7 +50,7 @@ class _ImageViewerState extends State<ImageViewer>
       minScale: 1.0,
       maxScale: 3.0,
       transformationController: _transformationController,
-      panEnabled: widget.canZoom,
+      panEnabled: widget.canZoom && _isZoomed,
       scaleEnabled: widget.canZoom,
       // allow the image to be zoomed to fill the whole screen
       child: Container(

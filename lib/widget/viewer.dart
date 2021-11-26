@@ -233,13 +233,12 @@ class _ViewerState extends State<Viewer>
         onNotification: (notif) => _onPageContentScrolled(notif, index),
         child: SingleChildScrollView(
           controller: _pageStates[index]!.scrollController,
-          physics:
-              _isDetailPaneActive ? null : const NeverScrollableScrollPhysics(),
+          physics: !_isZoomed ? null : const NeverScrollableScrollPhysics(),
           child: Stack(
             children: [
               _buildItemView(context, index),
               Visibility(
-                visible: _isDetailPaneActive,
+                visible: !_isZoomed,
                 child: AnimatedOpacity(
                   opacity: _isShowDetailPane ? 1 : 0,
                   duration: k.animationDurationNormal,
@@ -260,11 +259,17 @@ class _ViewerState extends State<Viewer>
                           const BorderRadius.vertical(top: Radius.circular(4)),
                     ),
                     margin: EdgeInsets.only(top: _calcDetailPaneOffset(index)),
-                    child: ViewerDetailPane(
-                      account: widget.account,
-                      file: widget.streamFiles[index],
-                      album: widget.album,
-                      onSlideshowPressed: _onSlideshowPressed,
+                    // this visibility widget avoids loading the detail pane
+                    // until it's actually opened, otherwise swiping between
+                    // photos will slow down severely
+                    child: Visibility(
+                      visible: _isShowDetailPane,
+                      child: ViewerDetailPane(
+                        account: widget.account,
+                        file: widget.streamFiles[index],
+                        album: widget.album,
+                        onSlideshowPressed: _onSlideshowPressed,
+                      ),
                     ),
                   ),
                 ),
@@ -349,6 +354,14 @@ class _ViewerState extends State<Viewer>
                 shouldAnimate: true);
           });
         }
+      }
+    } else if (notification is ScrollUpdateNotification) {
+      if (!_isShowDetailPane) {
+        Future.delayed(Duration.zero, () {
+          setState(() {
+            _isShowDetailPane = true;
+          });
+        });
       }
     }
     return false;

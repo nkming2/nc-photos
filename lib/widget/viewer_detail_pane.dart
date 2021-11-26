@@ -30,6 +30,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
@@ -71,6 +72,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _initMetadata();
       }
     }
+
+    // postpone loading map to improve responsiveness
+    Future.delayed(const Duration(milliseconds: 750)).then((_) {
+      if (mounted) {
+        setState(() {
+          _shouldBlockGpsMap = false;
+        });
+      }
+    });
   }
 
   @override
@@ -239,12 +249,17 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
             ),
           if (features.isSupportMapView && _gps != null)
-            SizedBox(
-              height: 256,
-              child: GpsMap(
-                center: _gps!,
-                zoom: 16,
-                onTap: _onMapTap,
+            AnimatedVisibility(
+              opacity: _shouldBlockGpsMap ? 0 : 1,
+              curve: Curves.easeInOut,
+              duration: k.animationDurationNormal,
+              child: SizedBox(
+                height: 256,
+                child: GpsMap(
+                  center: _gps!,
+                  zoom: 16,
+                  onTap: _onMapTap,
+                ),
               ),
             ),
         ],
@@ -488,6 +503,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   Tuple2<double, double>? _gps;
 
   late final bool _canRemoveFromAlbum = _checkCanRemoveFromAlbum();
+
+  var _shouldBlockGpsMap = true;
 
   static final _log =
       Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
