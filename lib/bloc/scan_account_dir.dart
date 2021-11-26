@@ -328,8 +328,9 @@ class ScanAccountDirBloc
       } else {
         yield ScanAccountDirBlocSuccess(getState().files);
       }
-    } catch (e) {
-      _log.severe("[_queryWithFileDataSource] Exception while request", e);
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[_queryWithFileDataSource] Exception while request", e, stackTrace);
       yield ScanAccountDirBlocFailure(getState().files, e);
     }
   }
