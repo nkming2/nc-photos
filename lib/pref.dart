@@ -144,6 +144,12 @@ class Pref {
   Future<bool> setLabEnableSharedAlbum(bool value) =>
       provider.setBool(PrefKey.labEnableSharedAlbum, value);
 
+  bool? hasShownSharedAlbumInfo() =>
+      provider.getBool(PrefKey.hasShownSharedAlbumInfo);
+  bool hasShownSharedAlbumInfoOr(bool def) => hasShownSharedAlbumInfo() ?? def;
+  Future<bool> setHasShownSharedAlbumInfo(bool value) =>
+      provider.setBool(PrefKey.hasShownSharedAlbumInfo, value);
+
   final PrefProvider provider;
 
   static Pref? _inst;
@@ -314,6 +320,7 @@ enum PrefKey {
   isSlideshowRepeat,
   isAlbumBrowserShowDate,
   gpsMapProvider,
+  hasShownSharedAlbumInfo,
 }
 
 extension on PrefKey {
@@ -361,6 +368,8 @@ extension on PrefKey {
         return "isAlbumBrowserShowDate";
       case PrefKey.gpsMapProvider:
         return "gpsMapProvider";
+      case PrefKey.hasShownSharedAlbumInfo:
+        return "hasShownSharedAlbumInfo";
     }
   }
 }

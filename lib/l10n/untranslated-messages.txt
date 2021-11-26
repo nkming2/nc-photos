@@ -50,6 +50,9 @@
     "extraShareDescription",
     "defaultButtonLabel",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -118,6 +121,9 @@
     "extraShareDescription",
     "defaultButtonLabel",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -241,12 +247,18 @@
     "extraShareDescription",
     "defaultButtonLabel",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ],
 
   "es": [
     "settingsMapProviderTitle",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -350,6 +362,9 @@
     "extraShareDescription",
     "defaultButtonLabel",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -426,6 +441,9 @@
     "extraShareDescription",
     "defaultButtonLabel",
     "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
     "errorAlbumDowngrade"
   ]
 }

@@ -40,6 +40,7 @@ import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/share_album_dialog.dart';
+import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
@@ -182,6 +183,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     final album = await albumRepo.get(widget.account, widget.album.albumFile!);
     await _setAlbum(album);
+
+    if (album.shares?.isNotEmpty == true) {
+      _showSharedAlbumInfoDialog();
+    }
   }
 
   Widget _buildContent(BuildContext context) {
@@ -329,6 +334,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSharePressed(BuildContext context) async {
+    await _showSharedAlbumInfoDialog();
     await showDialog(
       context: context,
       builder: (_) => ShareAlbumDialog(
@@ -776,6 +782,18 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     return await UpdateAlbumWithActualItems(albumRepo)(
         widget.account, album, items);
+  }
+
+  Future<void> _showSharedAlbumInfoDialog() {
+    if (!Pref().hasShownSharedAlbumInfoOr(false)) {
+      return showDialog(
+        context: context,
+        builder: (_) => const SharedAlbumInfoDialog(),
+        barrierDismissible: false,
+      );
+    } else {
+      return Future.value();
+    }
   }
 
   bool get _canRemoveSelection {

@@ -1079,6 +1079,15 @@
 	"@addUserInputHint": {
 		"description": "Input a user name to share this album with"
 	},
+	"sharedAlbumInfoDialogTitle": "Introducing shared album",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"sharedAlbumInfoDialogContent": "Shared album allows multiple users on the same server to access the same album. Please read carefully the limitations before continuing",
+	"@sharedAlbumInfoDialogContent": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"learnMoreButtonLabel": "LEARN MORE",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
