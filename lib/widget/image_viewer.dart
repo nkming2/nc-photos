@@ -48,7 +48,7 @@ class _ImageViewerState extends State<ImageViewer>
   build(BuildContext context) {
     final content = InteractiveViewer(
       minScale: 1.0,
-      maxScale: 3.0,
+      maxScale: 3.5,
       transformationController: _transformationController,
       panEnabled: widget.canZoom && _isZoomed,
       scaleEnabled: widget.canZoom,
