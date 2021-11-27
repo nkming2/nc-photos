@@ -47,11 +47,27 @@ class FilesBuilder {
 class AlbumBuilder {
   AlbumBuilder({
     DateTime? lastUpdated,
-    this.name = "test",
-    this.albumFilename = "test1.json",
+    String? name,
+    this.albumFilename = "test0.nc_album.json",
     this.fileId = 0,
-    this.ownerId = "admin",
-  }) : lastUpdated = lastUpdated ?? DateTime.utc(2020, 1, 2, 3, 4, 5);
+    String? ownerId,
+  })  : lastUpdated = lastUpdated ?? DateTime.utc(2020, 1, 2, 3, 4, 5),
+        name = name ?? "test",
+        ownerId = ownerId ?? "admin";
+
+  factory AlbumBuilder.ofId({
+    required int albumId,
+    DateTime? lastUpdated,
+    String? name,
+    String? ownerId,
+  }) =>
+      AlbumBuilder(
+        lastUpdated: lastUpdated,
+        name: name,
+        albumFilename: "test$albumId.nc_album.json",
+        fileId: albumId,
+        ownerId: ownerId,
+      );
 
   Album build() {
     final latestFileItem = items
