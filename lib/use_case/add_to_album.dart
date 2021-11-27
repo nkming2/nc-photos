@@ -54,7 +54,7 @@ class AddToAlbum {
 
     if (album.shares?.isNotEmpty == true) {
       final newFiles =
-          items.whereType<AlbumFileItem>().map((e) => e.file).toList();
+          addItems.whereType<AlbumFileItem>().map((e) => e.file).toList();
       if (newFiles.isNotEmpty) {
         await _shareFiles(account, newAlbum, newFiles);
       }
