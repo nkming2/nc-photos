@@ -52,7 +52,7 @@ class AddToAlbum {
     );
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    if (pref.isLabEnableSharedAlbumOr(false)) {
+    if (album.shares?.isNotEmpty == true) {
       final newFiles =
           items.whereType<AlbumFileItem>().map((e) => e.file).toList();
       if (newFiles.isNotEmpty) {
@@ -65,9 +65,6 @@ class AddToAlbum {
 
   Future<void> _shareFiles(
       Account account, Album album, List<File> files) async {
-    if (album.shares?.isNotEmpty != true) {
-      return;
-    }
     final albumShares = (album.shares!.map((e) => e.userId).toList()
           ..add(album.albumFile!.ownerId ?? account.username))
         .where((element) => element != account.username)

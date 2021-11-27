@@ -19,7 +19,7 @@ class RemoveAlbum {
   /// Remove an album
   Future<void> call(Account account, Album album) async {
     _log.info("[call] Remove album: $album");
-    if (pref.isLabEnableSharedAlbumOr(false)) {
+    if (album.shares?.isNotEmpty == true) {
       // remove shares from the album json. This should be the first so if this
       // fail the whole op can fail safely
       await UpdateAlbum(albumRepo)(
@@ -39,8 +39,7 @@ class RemoveAlbum {
   }
 
   Future<void> _unshareFiles(Account account, Album album) async {
-    if (album.shares?.isNotEmpty != true ||
-        album.provider is! AlbumStaticProvider) {
+    if (album.provider is! AlbumStaticProvider) {
       return;
     }
     final albumShares = (album.shares!.map((e) => e.userId).toList()
