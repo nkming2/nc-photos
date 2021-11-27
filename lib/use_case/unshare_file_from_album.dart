@@ -28,14 +28,14 @@ class UnshareFileFromAlbum {
     _log.info(
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
     // list albums with shares identical to any element in [unshareWith]
-    final otherAlbums = (await ListAlbum(fileRepo, albumRepo)(account)
+    final otherAlbums = await ListAlbum(fileRepo, albumRepo)(account)
         .where((event) => event is Album)
         .cast<Album>()
-        .where((album) =>
-            !album.albumFile!.compareServerIdentity(album.albumFile!) &&
-            album.provider is AlbumStaticProvider &&
-            album.shares?.any((s) => unshareWith.contains(s.userId)) == true)
-        .toList());
+        .where((a) =>
+            !a.albumFile!.compareServerIdentity(album.albumFile!) &&
+            a.provider is AlbumStaticProvider &&
+            a.shares?.any((s) => unshareWith.contains(s.userId)) == true)
+        .toList();
 
     // look for shares that are exclusive to this album
     final exclusiveShares = <Share>[];
@@ -49,10 +49,12 @@ class UnshareFileFromAlbum {
             e, stackTrace);
       }
     }
+    _log.fine("[call] Pre-filter shares: $exclusiveShares");
     for (final a in otherAlbums) {
       // check if the album is shared with the same users
-      if (!a.shares!
-          .any((as) => exclusiveShares.any((s) => s.shareWith == as.userId))) {
+      final sharesOfInterest =
+          a.shares?.where((as) => unshareWith.contains(as.userId)).toList();
+      if (sharesOfInterest == null || sharesOfInterest.isEmpty) {
         continue;
       }
       final albumFiles = AlbumStaticProvider.of(a)
@@ -60,9 +62,12 @@ class UnshareFileFromAlbum {
           .whereType<AlbumFileItem>()
           .map((e) => e.file)
           .toList();
-      exclusiveShares.removeWhere(
-          (s) => albumFiles.any((element) => element.fileId == s.itemSource));
+      // remove files shared as part of this other shared album
+      exclusiveShares.removeWhere((s) =>
+          sharesOfInterest.any((i) => i.userId == s.shareWith) &&
+          albumFiles.any((f) => f.fileId == s.itemSource));
     }
+    _log.fine("[call] Post-filter shares: $exclusiveShares");
 
     // unshare them
     await _unshare(account, exclusiveShares, onUnshareFileFailed);

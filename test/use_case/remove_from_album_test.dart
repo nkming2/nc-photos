@@ -27,6 +27,8 @@ void main() {
       test("file w/ shares managed by others",
           _removeFromSharedAlbumOwnedWithOtherShare);
       test("file w/ extra share", _removeFromSharedAlbumOwnedLeaveExtraShare);
+      test("file w/ share in other album",
+          _removeFromSharedAlbumOwnedFileInOtherAlbum);
     });
     group("shared album (not owned)", () {
       test("file", _removeFromSharedAlbumNotOwned);
@@ -392,6 +394,58 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
     [
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "2", file: file1, shareWith: "user2"),
+    ],
+  );
+}
+
+/// Remove a file from a shared album (admin -> user1, user2) where the file is
+/// also shared in other album (admin -> user1)
+///
+/// Expect: share (admin -> user2) for the file deleted;
+/// share (admin -> user1) for the file unchanged
+Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
+  final account = util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider({
+    "isLabEnableSharedAlbum": true,
+  }));
+  final files =
+      (util.FilesBuilder(initialFileId: 2)..addJpeg("admin/test1.jpg")).build();
+  final album1 = (util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addShare("user1")
+        ..addShare("user2"))
+      .build();
+  final album2 = (util.AlbumBuilder.ofId(albumId: 1)
+        ..addFileItem(files[0])
+        ..addShare("user1"))
+      .build();
+  final album1fileItems = util.AlbumBuilder.fileItemsOf(album1);
+  final album1File = album1.albumFile!;
+  final album2File = album2.albumFile!;
+  final appDb = MockAppDb();
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
+        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
+  });
+  final albumRepo = MockAlbumMemoryRepo([album1, album2]);
+  final shareRepo = MockShareMemoryRepo([
+    util.buildShare(id: "0", file: album1File, shareWith: "user1"),
+    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+    util.buildShare(id: "3", file: album2File, shareWith: "user1"),
+  ]);
+  final fileRepo = MockFileMemoryRepo([album1File, album2File, ...files]);
+
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(account,
+      albumRepo.findAlbumByPath(album1File.path), [album1fileItems[0]]);
+  expect(
+    shareRepo.shares,
+    [
+      util.buildShare(id: "0", file: album1File, shareWith: "user1"),
+      util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+      util.buildShare(id: "3", file: album2File, shareWith: "user1"),
     ],
   );
 }
