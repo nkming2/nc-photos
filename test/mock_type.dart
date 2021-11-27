@@ -189,6 +189,17 @@ class MockFileMemoryRepo extends MockFileRepo {
     return files.where((f) => file_util.isOrUnderDir(f, root)).toList();
   }
 
+  @override
+  remove(Account account, File file) async {
+    files.removeWhere((f) {
+      if (file.isCollection == true) {
+        return file_util.isOrUnderDir(f, file);
+      } else {
+        return f.compareServerIdentity(file);
+      }
+    });
+  }
+
   final List<File> files;
   var _id = 0;
 }
