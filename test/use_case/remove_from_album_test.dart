@@ -112,8 +112,7 @@ Future<void> _remove1OfNFiles() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo =
-      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
+  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
@@ -174,8 +173,7 @@ Future<void> _removeLatestOfNFiles() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo =
-      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
+  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
@@ -233,8 +231,7 @@ Future<void> _removeManualCoverFile() async {
   });
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
-  final fileRepo =
-      MockFileMemoryRepo([albumFile, files[0], files[1], files[2]]);
+  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
   await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
