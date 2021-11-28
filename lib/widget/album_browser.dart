@@ -762,12 +762,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   Future<void> _setAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
     final items = await PreProcessAlbum(AppDb())(widget.account, album);
+    album = await _updateAlbumPostResync(album, items);
     album = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
         items: items,
       ),
     );
-    album = await _updateAlbumPostResync(album, items);
     if (mounted) {
       setState(() {
         _album = album;
