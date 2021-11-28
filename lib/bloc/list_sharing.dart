@@ -215,9 +215,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     if (state is! ListSharingBlocSuccess && state is! ListSharingBlocFailure) {
       return;
     }
-    final newItems = state.items
-        .where((i) => !ev.shares.contains(i.share))
-        .toList();
+    final newItems =
+        state.items.where((i) => !ev.shares.contains(i.share)).toList();
     // i love hacks :)
     yield (state as dynamic).copyWith(
       items: newItems,
