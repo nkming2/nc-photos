@@ -2,6 +2,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 class UpdateAutoAlbumCover {
@@ -47,8 +48,10 @@ class UpdateAutoAlbumCover {
           .where((element) => file_util.isSupportedFormat(element))
           .firstWhere((element) => element.hasPreview ?? false);
       // cache the result for later use
-      if (coverFile.path !=
-          (album.coverProvider as AlbumAutoCoverProvider).coverFile?.path) {
+      if ((album.coverProvider as AlbumAutoCoverProvider)
+              .coverFile
+              ?.compareServerIdentity(coverFile) !=
+          true) {
         return album.copyWith(
           coverProvider: AlbumAutoCoverProvider(
             coverFile: coverFile,
