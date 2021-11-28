@@ -396,7 +396,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
           L10n.global().deleteSelectedProcessingNotification(selected.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedAlbums = List.of(selected);
     setState(() {
       clearSelectedItems();
     });
@@ -404,7 +403,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     final failures = <Album>[];
-    for (final a in selectedAlbums) {
+    for (final a in selected) {
       try {
         if (a.albumFile?.isOwned(widget.account.username) == true) {
           // delete owned albums
