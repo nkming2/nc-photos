@@ -22,6 +22,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
+import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_search_delegate.dart';
@@ -405,8 +406,14 @@ class _HomeAlbumsState extends State<HomeAlbums>
     final failures = <Album>[];
     for (final a in selectedAlbums) {
       try {
-        await RemoveAlbum(fileRepo, albumRepo, shareRepo, Pref())(
-            widget.account, a);
+        if (a.albumFile?.isOwned(widget.account.username) == true) {
+          // delete owned albums
+          await RemoveAlbum(fileRepo, albumRepo, shareRepo, Pref())(
+              widget.account, a);
+        } else {
+          // remove shared albums from collection
+          await UnimportSharedAlbum(fileRepo)(widget.account, a);
+        }
       } catch (e, stackTrace) {
         _log.shout(
             "[_onSelectionDeletePressed] Failed while removing album: '${a.name}'",

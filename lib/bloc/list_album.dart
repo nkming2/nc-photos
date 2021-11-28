@@ -205,13 +205,17 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       // no data in this bloc, ignore
       return;
     }
-    if (_isAccountOfInterest(ev.account) &&
-        ev.destination
-            .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
-      _refreshThrottler.trigger(
-        maxResponceTime: const Duration(seconds: 3),
-        maxPendingCount: 10,
-      );
+    if (_isAccountOfInterest(ev.account)) {
+      if (ev.destination
+              .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account)) ||
+          ev.file.path
+              .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account))) {
+        // moving from/to album dir
+        _refreshThrottler.trigger(
+          maxResponceTime: const Duration(seconds: 3),
+          maxPendingCount: 10,
+        );
+      }
     }
   }
 
