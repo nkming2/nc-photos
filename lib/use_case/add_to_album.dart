@@ -120,7 +120,7 @@ bool _isItemFileEqual(AlbumItem a, AlbumItem b) {
 
 int _getItemHashCode(AlbumItem a) {
   if (a is AlbumFileItem) {
-    return a.file.path.hashCode;
+    return a.file.fileId?.hashCode ?? a.file.path.hashCode;
   } else {
     return a.hashCode;
   }
