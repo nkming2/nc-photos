@@ -61,5 +61,5 @@ class AddSelectionToAlbumHandler {
   }
 
   static final _log = Logger(
-      "widget.action.add_selection_to_album_handler.AddSelectionToAlbumHandler");
+      "widget.handler.add_selection_to_album_handler.AddSelectionToAlbumHandler");
 }
