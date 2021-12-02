@@ -26,6 +26,7 @@ void main() {
 /// Expect: album deleted
 Future<void> _removeAlbum() async {
   final account = util.buildAccount();
+  final pref = Pref.scoped(PrefMemoryProvider());
   final album1 = util.AlbumBuilder().build();
   final albumFile1 = album1.albumFile!;
   final album2 = util.AlbumBuilder.ofId(albumId: 1).build();
@@ -43,7 +44,7 @@ Future<void> _removeAlbum() async {
   final albumRepo = MockAlbumMemoryRepo([album1, album2]);
   final shareRepo = MockShareRepo();
 
-  await RemoveAlbum(fileRepo, albumRepo, shareRepo, Pref())(
+  await RemoveAlbum(fileRepo, albumRepo, shareRepo, pref)(
       account, albumRepo.findAlbumByPath(albumFile1.path));
   expect(fileRepo.files, [albumFile2]);
 }

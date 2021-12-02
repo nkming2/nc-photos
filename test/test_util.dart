@@ -133,7 +133,7 @@ class AlbumBuilder {
     ));
   }
 
-  static fileItemsOf(Album album) =>
+  static List<AlbumFileItem> fileItemsOf(Album album) =>
       AlbumStaticProvider.of(album).items.whereType<AlbumFileItem>().toList();
 
   final DateTime lastUpdated;
@@ -150,8 +150,15 @@ class AlbumBuilder {
 void initLog() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    debugPrint(
-        "[${record.loggerName}] ${record.level.name}: ${record.message}");
+    String msg =
+        "[${record.loggerName}] ${record.level.name}: ${record.message}";
+    if (record.error != null) {
+      msg += " (throw: ${record.error.runtimeType} { ${record.error} })";
+    }
+    if (record.stackTrace != null) {
+      msg += "\nStack Trace:\n${record.stackTrace}";
+    }
+    debugPrint(msg);
   });
 }
 
