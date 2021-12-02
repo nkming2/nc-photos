@@ -1,7 +1,5 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -44,12 +42,7 @@ Future<void> _addFile() async {
   final album = util.AlbumBuilder().build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file));
-  });
+  await util.fillAppDb(appDb, account, [file]);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
 
@@ -108,12 +101,7 @@ Future<void> _addExistingFile() async {
   final newFile = files[0].copyWith();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
 
@@ -190,12 +178,7 @@ Future<void> _addFileToSharedAlbumOwned() async {
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file));
-  });
+  await util.fillAppDb(appDb, account, [file]);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
@@ -236,12 +219,7 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file));
-  });
+  await util.fillAppDb(appDb, account, [file]);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
@@ -284,18 +262,13 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
       .build();
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file));
-  });
+  await util.fillAppDb(appDb, account, [file]);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(
-        id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
+        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
     util.buildShare(
-        id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+        id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
   ]);
 
   await AddToAlbum(albumRepo, shareRepo, appDb, pref)(

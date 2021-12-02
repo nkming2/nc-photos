@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:idb_shim/idb.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -11,6 +13,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
+
+import 'mock_type.dart';
 
 class FilesBuilder {
   FilesBuilder({
@@ -266,3 +270,15 @@ Sharee buildSharee({
       shareType: shareType,
       shareWith: shareWith,
     );
+
+Future<void> fillAppDb(
+    MockAppDb appDb, Account account, Iterable<File> files) async {
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
+    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    for (final f in files) {
+      await store.put(AppDbFileDbEntry.fromFile(account, f).toJson(),
+          AppDbFileDbEntry.toPrimaryKey(account, f));
+    }
+  });
+}

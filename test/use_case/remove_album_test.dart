@@ -1,7 +1,5 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:test/test.dart';
@@ -31,15 +29,6 @@ Future<void> _removeAlbum() async {
   final albumFile1 = album1.albumFile!;
   final album2 = util.AlbumBuilder.ofId(albumId: 1).build();
   final albumFile2 = album2.albumFile!;
-  final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, albumFile1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, albumFile1));
-    await store.put(AppDbFileDbEntry.fromFile(account, albumFile2).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, albumFile2));
-  });
   final fileRepo = MockFileMemoryRepo([albumFile1, albumFile2]);
   final albumRepo = MockAlbumMemoryRepo([album1, album2]);
   final shareRepo = MockShareRepo();
@@ -66,15 +55,6 @@ Future<void> _removeSharedAlbum() async {
         ..addShare("user1"))
       .build();
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, albumFile).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, albumFile));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-  });
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
@@ -112,17 +92,6 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
         .build(),
   ];
   final albumFiles = albums.map((e) => e.albumFile!).toList();
-  final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, albumFiles[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, albumFiles[0]));
-    await store.put(AppDbFileDbEntry.fromFile(account, albumFiles[1]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, albumFiles[1]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-  });
   final fileRepo = MockFileMemoryRepo([...albumFiles, ...files]);
   final albumRepo = MockAlbumMemoryRepo(albums);
   final shareRepo = MockShareMemoryRepo([

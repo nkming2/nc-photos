@@ -49,12 +49,7 @@ Future<void> _removeLastFile() async {
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
@@ -99,16 +94,7 @@ Future<void> _remove1OfNFiles() async {
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
@@ -159,16 +145,7 @@ Future<void> _removeLatestOfNFiles() async {
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
@@ -216,16 +193,7 @@ Future<void> _removeManualCoverFile() async {
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[1]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[1]));
-    await store.put(AppDbFileDbEntry.fromFile(account, files[2]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[2]));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
@@ -270,12 +238,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
@@ -298,6 +261,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
 /// unchanged
 Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final account = util.buildAccount();
+  final user1Account = util.buildAccount(username: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
       .build();
@@ -310,12 +274,7 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
+  await util.fillAppDb(appDb, user1Account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
@@ -359,12 +318,7 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
@@ -406,12 +360,7 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
   final album1File = album1.albumFile!;
   final album2File = album2.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, files[0]).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, files[0]));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album1, album2]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(id: "0", file: album1File, shareWith: "user1"),
@@ -449,12 +398,7 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
+  await util.fillAppDb(appDb, account, files);
   final albumRepo = MockAlbumMemoryRepo([album]);
   final shareRepo = MockShareMemoryRepo([
     util.buildShare(
