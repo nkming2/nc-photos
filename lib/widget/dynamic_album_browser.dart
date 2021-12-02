@@ -403,11 +403,14 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionDeletePressed() async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global()
-          .deleteSelectedProcessingNotification(selectedListItems.length)),
-      duration: k.snackBarDurationShort,
-    ));
+    SnackBarManager().showSnackBar(
+      SnackBar(
+        content: Text(L10n.global()
+            .deleteSelectedProcessingNotification(selectedListItems.length)),
+        duration: k.snackBarDurationShort,
+      ),
+      canBeReplaced: true,
+    );
 
     final selected = selectedListItems.whereType<_FileListItem>().toList();
     setState(() {

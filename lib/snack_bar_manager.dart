@@ -21,20 +21,38 @@ class SnackBarManager {
 
   /// Show a snack bar if possible
   ///
-  /// If the snack bar can't be shown at this time, return null
+  /// If the snack bar can't be shown at this time, return null.
+  ///
+  /// If [canBeReplaced] is true, this snackbar will be dismissed by the next
+  /// snack bar
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
-      SnackBar snackBar) {
+    SnackBar snackBar, {
+    bool canBeReplaced = false,
+  }) {
+    if (_canPrevBeReplaced) {
+      _prevController?.close();
+    }
+    _canPrevBeReplaced = canBeReplaced;
     for (final h in _handlers.reversed) {
       final result = h.showSnackBar(snackBar);
       if (result != null) {
+        _prevController = result;
+        result.closed.whenComplete(() {
+          if (identical(_prevController, result)) {
+            _prevController = null;
+          }
+        });
         return result;
       }
     }
     _log.warning("[showSnackBar] No handler available");
+    _prevController = null;
     return null;
   }
 
   final _handlers = <SnackBarHandler>[];
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _prevController;
+  var _canPrevBeReplaced = false;
 
   static final _inst = SnackBarManager._();
 
