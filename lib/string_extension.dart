@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 extension StringExtension on String {
   /// Returns the string without any leading characters included in [characters]
   String trimLeftAny(String characters) {
@@ -25,4 +27,22 @@ extension StringExtension on String {
   }
 
   bool equalsIgnoreCase(String other) => toLowerCase() == other.toLowerCase();
+
+  String slice(int start, [int? stop]) {
+    if (start < 0) {
+      start = math.max(length + start, 0);
+    }
+    if (stop != null && stop < 0) {
+      stop = math.max(length + stop, 0);
+    }
+    if (start >= length) {
+      return "";
+    } else if (stop == null) {
+      return substring(start);
+    } else if (start >= stop) {
+      return "";
+    } else {
+      return substring(start, math.min(stop, length));
+    }
+  }
 }
