@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -16,7 +15,7 @@ import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
   const RemoveFromAlbum(
-      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb, this.pref);
+      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -103,7 +102,6 @@ class RemoveFromAlbum {
   final ShareRepo shareRepo;
   final FileRepo fileRepo;
   final AppDb appDb;
-  final Pref pref;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

@@ -446,7 +446,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
       final shareRepo = ShareRepo(ShareRemoteDataSource());
       final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb(), Pref())(
+      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
           widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global()

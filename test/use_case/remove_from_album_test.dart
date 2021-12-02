@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:test/test.dart';
 
@@ -43,7 +42,6 @@ void main() {
 /// Expect: album emptied, cover unset
 Future<void> _removeLastFile() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider());
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
@@ -61,7 +59,7 @@ Future<void> _removeLastFile() async {
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     albumRepo.albums
@@ -88,7 +86,6 @@ Future<void> _removeLastFile() async {
 /// Expect: file removed from album
 Future<void> _remove1OfNFiles() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider());
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg")
         ..addJpeg("admin/test2.jpg")
@@ -116,7 +113,7 @@ Future<void> _remove1OfNFiles() async {
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
@@ -146,7 +143,6 @@ Future<void> _remove1OfNFiles() async {
 /// Expect: file removed from album, auto cover and time updated
 Future<void> _removeLatestOfNFiles() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider());
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg",
             lastModified: DateTime.utc(2020, 1, 2, 3, 4, 8))
@@ -177,7 +173,7 @@ Future<void> _removeLatestOfNFiles() async {
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
@@ -207,7 +203,6 @@ Future<void> _removeLatestOfNFiles() async {
 /// Expect: file removed from album, cover reverted to auto cover
 Future<void> _removeManualCoverFile() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider());
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg")
         ..addJpeg("admin/test2.jpg")
@@ -235,7 +230,7 @@ Future<void> _removeManualCoverFile() async {
   final shareRepo = MockShareRepo();
   final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
     albumRepo.albums
@@ -265,9 +260,6 @@ Future<void> _removeManualCoverFile() async {
 /// Expect: share (admin -> user1) for the file deleted
 Future<void> _removeFromSharedAlbumOwned() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()
@@ -291,7 +283,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
   ]);
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     shareRepo.shares,
@@ -306,9 +298,6 @@ Future<void> _removeFromSharedAlbumOwned() async {
 /// unchanged
 Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
       .build();
@@ -338,7 +327,7 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   ]);
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     shareRepo.shares,
@@ -360,9 +349,6 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
 /// extra share (admin -> user2) unchanged
 Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()
@@ -387,7 +373,7 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
   ]);
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     shareRepo.shares,
@@ -405,9 +391,6 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
 /// share (admin -> user1) for the file unchanged
 Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 2)..addJpeg("admin/test1.jpg")).build();
   final album1 = (util.AlbumBuilder()
@@ -438,7 +421,7 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
   ]);
   final fileRepo = MockFileMemoryRepo([album1File, album2File, ...files]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(account,
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(account,
       albumRepo.findAlbumByPath(album1File.path), [album1fileItems[0]]);
   expect(
     shareRepo.shares,
@@ -455,9 +438,6 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
 /// Expect: shares (admin -> user1, user2) for the file deleted
 Future<void> _removeFromSharedAlbumNotOwned() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder(ownerId: "user1")
@@ -486,7 +466,7 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   ]);
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     shareRepo.shares,
@@ -506,9 +486,6 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
 /// shares (user1 -> user2) for the file created by others unchanged
 Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder(ownerId: "user1")
@@ -538,7 +515,7 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
   ]);
   final fileRepo = MockFileMemoryRepo([albumFile, file1]);
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb, pref)(
+  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
       account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
     shareRepo.shares,

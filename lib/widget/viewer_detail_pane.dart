@@ -24,7 +24,6 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
@@ -316,8 +315,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               .items
               .whereType<AlbumFileItem>()
               .firstWhere((element) => element.file.path == widget.file.path);
-          await RemoveFromAlbum(
-                  albumRepo, shareRepo, fileRepo, AppDb(), Pref())(
+          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
               widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();
