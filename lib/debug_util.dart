@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/string_extension.dart';
+import 'package:path/path.dart' as path;
 
 class LogCapturer {
   factory LogCapturer() {
@@ -40,7 +42,22 @@ class LogCapturer {
   static LogCapturer? _inst;
 }
 
-String logFilename(String? filename) =>
-    shouldLogFileName || filename == null ? "$filename" : "***";
+String logFilename(String? filename) {
+  if (shouldLogFileName || filename == null) {
+    return "$filename";
+  }
+  try {
+    final basename = path.basenameWithoutExtension(filename);
+    final displayName = basename.length <= 6
+        ? basename
+        : "${basename.slice(0, 3)}***${basename.slice(-3)}";
+    return "${path.dirname(filename) != "." ? "***/" : ""}"
+        "$displayName"
+        "${path.extension(filename)}";
+  } catch (_) {
+    return "***";
+  }
+}
 
-const bool shouldLogFileName = kDebugMode;
+@visibleForTesting
+bool shouldLogFileName = kDebugMode;

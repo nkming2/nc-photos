@@ -37,8 +37,7 @@ class PopulateAlbum {
       await for (final result in stream) {
         if (result is ExceptionEvent) {
           _log.shout(
-              "[_populateDirAlbum] Failed while scanning dir" +
-                  (shouldLogFileName ? ": $d" : ""),
+              "[_populateDirAlbum] Failed while scanning dir: ${logFilename(d.path)}",
               result.error,
               result.stackTrace);
           continue;

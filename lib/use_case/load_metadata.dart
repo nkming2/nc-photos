@@ -32,8 +32,7 @@ class LoadMetadata {
         metadata = await exifdart.readMetadata(exifdartReaderBuilder());
       } catch (e, stacktrace) {
         _log.shout(
-            "[_loadMetadata] Failed while readMetadata for ${file.contentType} file" +
-                (shouldLogFileName ? ": ${file.path}" : ""),
+            "[_loadMetadata] Failed while readMetadata for ${file.contentType} file: ${logFilename(file.path)}",
             e,
             stacktrace);
         // ignore exif
@@ -59,8 +58,7 @@ class LoadMetadata {
       } catch (e, stacktrace) {
         // is this even an image file?
         _log.shout(
-            "[_loadMetadata] Failed while getSize for ${file.contentType} file" +
-                (shouldLogFileName ? ": ${file.path}" : ""),
+            "[_loadMetadata] Failed while getSize for ${file.contentType} file: ${logFilename(file.path)}",
             e,
             stacktrace);
       }

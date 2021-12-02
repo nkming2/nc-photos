@@ -458,8 +458,7 @@ extension FileExtension on File {
           DateTime.now().toUtc();
     } catch (e) {
       _log.severe(
-          "[bestDateTime] Non standard EXIF DateTimeOriginal '${metadata?.exif?.data["DateTimeOriginal"]}'" +
-              (shouldLogFileName ? " for file: '$path'" : ""),
+          "[bestDateTime] Non standard EXIF DateTimeOriginal '${metadata?.exif?.data["DateTimeOriginal"]}' for file: ${logFilename(path)}",
           e);
       return lastModified ?? DateTime.now().toUtc();
     }

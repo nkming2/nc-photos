@@ -160,8 +160,7 @@ class ListImportableAlbumBloc
       }
     } catch (e, stacktrace) {
       _log.shout(
-          "[_queryDir] Failed while listing dir" +
-              (shouldLogFileName ? ": ${dir.path}" : ""),
+          "[_queryDir] Failed while listing dir: ${logFilename(dir.path)}",
           e,
           stacktrace);
       yield e;

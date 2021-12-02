@@ -30,8 +30,7 @@ class ResyncAlbum {
             newItems.add(await _syncOne(account, item, store, index));
           } catch (e, stacktrace) {
             _log.shout(
-                "[call] Failed syncing file in album" +
-                    (shouldLogFileName ? ": '${item.file.path}'" : ""),
+                "[call] Failed syncing file in album: ${logFilename(item.file.path)}",
                 e,
                 stacktrace);
             newItems.add(item);

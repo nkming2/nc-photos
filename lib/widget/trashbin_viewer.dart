@@ -176,10 +176,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       ));
       Navigator.of(context).pop();
     } catch (e, stacktrace) {
-      _log.shout(
-          "Failed while restore trashbin" +
-              (shouldLogFileName ? ": ${file.path}" : ""),
-          e,
+      _log.shout("Failed while restore trashbin: ${logFilename(file.path)}", e,
           stacktrace);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(

@@ -299,8 +299,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
         await RestoreTrashbin(fileRepo)(widget.account, f);
       } catch (e, stacktrace) {
         _log.shout(
-            "[_onSelectionAppBarRestorePressed] Failed while restoring file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
+            "[_onSelectionAppBarRestorePressed] Failed while restoring file: ${logFilename(f.path)}",
             e,
             stacktrace);
         failures.add(f);

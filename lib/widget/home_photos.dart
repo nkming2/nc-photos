@@ -451,8 +451,7 @@ class _HomePhotosState extends State<HomePhotos>
           L10n.global().archiveSelectedFailureNotification(failures.length),
       onActionError: (file, e, stackTrace) {
         _log.shout(
-            "[_onSelectionArchivePressed] Failed while archiving file" +
-                (shouldLogFileName ? ": ${file.path}" : ""),
+            "[_onSelectionArchivePressed] Failed while archiving file: ${logFilename(file.path)}",
             e,
             stackTrace);
       },

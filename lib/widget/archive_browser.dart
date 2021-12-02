@@ -237,8 +237,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
             .updateIsArchived(widget.account, f, false);
       } catch (e, stacktrace) {
         _log.shout(
-            "[_onSelectionAppBarUnarchivePressed] Failed while unarchiving file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
+            "[_onSelectionAppBarUnarchivePressed] Failed while unarchiving file: ${logFilename(f.path)}",
             e,
             stacktrace);
         failures.add(f);

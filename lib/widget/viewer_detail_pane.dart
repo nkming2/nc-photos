@@ -384,8 +384,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       )();
     } catch (e, stackTrace) {
       _log.shout(
-          "[_onArchivePressed] Failed while archiving file" +
-              (shouldLogFileName ? ": ${widget.file.path}" : ""),
+          "[_onArchivePressed] Failed while archiving file: ${logFilename(widget.file.path)}",
           e,
           stackTrace);
     }
@@ -409,8 +408,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       )();
     } catch (e, stackTrace) {
       _log.shout(
-          "[_onUnarchivePressed] Failed while archiving file" +
-              (shouldLogFileName ? ": ${widget.file.path}" : ""),
+          "[_onUnarchivePressed] Failed while archiving file: ${logFilename(widget.file.path)}",
           e,
           stackTrace);
     }
@@ -445,8 +443,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         }
       } catch (e, stacktrace) {
         _log.shout(
-            "[_onDateTimeTap] Failed while updateOverrideDateTime" +
-                (shouldLogFileName ? ": ${widget.file.path}" : ""),
+            "[_onDateTimeTap] Failed while updateOverrideDateTime: ${logFilename(widget.file.path)}",
             e,
             stacktrace);
         SnackBarManager().showSnackBar(SnackBar(
