@@ -7,23 +7,19 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
-import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
+import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/slideshow_dialog.dart';
@@ -460,34 +456,13 @@ class _ViewerState extends State<Viewer>
   void _onDeletePressed(BuildContext context) async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().deleteProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    try {
-      await Remove(FileRepo(FileCachedDataSource(AppDb())),
-          AlbumRepo(AlbumCachedDataSource(AppDb())))(widget.account, file);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().deleteSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
+    final count = await RemoveSelectionHandler()(
+      account: widget.account,
+      selectedFiles: [file],
+      isRemoveOpened: true,
+    );
+    if (count > 0) {
       Navigator.of(context).pop();
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_onDeletePressed] Failed while remove" +
-              (shouldLogFileName ? ": ${file.path}" : ""),
-          e,
-          stacktrace);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().deleteFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
     }
   }
 

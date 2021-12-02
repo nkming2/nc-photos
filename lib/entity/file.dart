@@ -500,6 +500,26 @@ extension FileExtension on File {
   static final _log = Logger("entity.file.FileExtension");
 }
 
+class FileServerIdentityComparator {
+  const FileServerIdentityComparator(this.file);
+
+  @override
+  operator ==(Object other) {
+    if (other is FileServerIdentityComparator) {
+      return file.compareServerIdentity(other.file);
+    } else if (other is File) {
+      return file.compareServerIdentity(other);
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  get hashCode => file.fileId?.hashCode ?? file.path.hashCode;
+
+  final File file;
+}
+
 class FileRepo {
   const FileRepo(this.dataSrc);
 

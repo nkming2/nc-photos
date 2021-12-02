@@ -17,6 +17,8 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
@@ -419,31 +421,30 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
     final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
+    final shareRepo = ShareRepo(ShareRemoteDataSource());
     final successes = <_FileListItem>[];
-    final failures = <_FileListItem>[];
-    for (final item in selected) {
-      try {
-        await Remove(fileRepo, albumRepo)(widget.account, item.file);
-        successes.add(item);
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onSelectionDeletePressed] Failed while removing file" +
-                (shouldLogFileName ? ": ${item.file.path}" : ""),
-            e,
-            stacktrace);
-        failures.add(item);
-      }
-    }
 
-    if (failures.isEmpty) {
+    await Remove(fileRepo, albumRepo, shareRepo, AppDb(), Pref())(
+      widget.account,
+      selected.map((e) => e.file).toList(),
+      onRemoveFileFailed: (file, e, stackTrace) {
+        _log.shout(
+            "[_onSelectionDeletePressed] Failed while removing file: ${logFilename(file.path)}",
+            e,
+            stackTrace);
+        successes.removeWhere((item) => item.file.compareServerIdentity(file));
+      },
+    );
+
+    if (successes.length == selected.length) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().deleteSelectedSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            L10n.global().deleteSelectedFailureNotification(failures.length)),
+        content: Text(L10n.global().deleteSelectedFailureNotification(
+            selected.length - successes.length)),
         duration: k.snackBarDurationNormal,
       ));
     }

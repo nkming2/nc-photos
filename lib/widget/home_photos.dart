@@ -15,7 +15,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -30,9 +29,9 @@ import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -466,26 +465,10 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    await NotifiedListAction<File>(
-      list: selectedFiles,
-      action: (file) async {
-        await Remove(fileRepo, albumRepo)(widget.account, file);
-      },
-      processingText: L10n.global()
-          .deleteSelectedProcessingNotification(selectedFiles.length),
-      successText: L10n.global().deleteSelectedSuccessNotification,
-      getFailureText: (failures) =>
-          L10n.global().deleteSelectedFailureNotification(failures.length),
-      onActionError: (file, e, stackTrace) {
-        _log.shout(
-            "[_onSelectionDeletePressed] Failed while removing file" +
-                (shouldLogFileName ? ": ${file.path}" : ""),
-            e,
-            stackTrace);
-      },
-    )();
+    await RemoveSelectionHandler()(
+      account: widget.account,
+      selectedFiles: selectedFiles,
+    );
   }
 
   void _onMetadataTaskStateChanged(MetadataTaskStateChangedEvent ev) {

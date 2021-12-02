@@ -6,7 +6,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -19,9 +18,9 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
+import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -395,37 +394,11 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   Future<void> _deleteFiles(List<File> files) async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(
-          L10n.global().deleteSelectedProcessingNotification(files.length)),
-      duration: k.snackBarDurationShort,
-    ));
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final failures = <File>[];
-    for (final f in files) {
-      try {
-        await Remove(fileRepo, null)(widget.account, f);
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_deleteFiles] Failed while removing file" +
-                (shouldLogFileName ? ": ${f.path}" : ""),
-            e,
-            stacktrace);
-        failures.add(f);
-      }
-    }
-    if (failures.isEmpty) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().deleteSelectedSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    } else {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(
-            L10n.global().deleteSelectedFailureNotification(failures.length)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
+    await RemoveSelectionHandler()(
+      account: widget.account,
+      selectedFiles: files,
+      shouldCleanupAlbum: false,
+    );
   }
 
   void _reqQuery() {

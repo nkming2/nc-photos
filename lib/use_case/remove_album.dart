@@ -35,7 +35,7 @@ class RemoveAlbum {
     }
     // you can't add an album to another album, so passing null here can save
     // a few queries
-    await Remove(fileRepo, null)(account, album.albumFile!);
+    await Remove(fileRepo, null, null, null, null)(account, [album.albumFile!]);
   }
 
   Future<void> _unshareFiles(Account account, Album album) async {

@@ -278,11 +278,9 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
     }
 
     final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    return Remove(fileRepo, null)(
+    return Remove(fileRepo, null, null, null, null)(
       widget.account,
-      widget.file.copyWith(
-        path: dirPath,
-      ),
+      [widget.file.copyWith(path: dirPath)],
     );
   }
 

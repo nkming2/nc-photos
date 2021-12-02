@@ -26,7 +26,7 @@ class TouchTokenManager {
         "[setRemoteToken] Set remote token for file '${file.path}': $token");
     final path = _getRemotePath(account, file);
     if (token == null) {
-      return Remove(fileRepo, null)(account, file);
+      return Remove(fileRepo, null, null, null, null)(account, [file]);
     } else {
       return PutFileBinary(fileRepo)(
           account, path, const Utf8Encoder().convert(token),

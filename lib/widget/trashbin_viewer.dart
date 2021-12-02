@@ -13,8 +13,8 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
+import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
@@ -310,34 +310,14 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   Future<void> _delete(BuildContext context) async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_delete] Removing file: ${file.path}");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().deleteProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
-    try {
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      await Remove(fileRepo, null)(widget.account, file);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().deleteSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
+    final count = await RemoveSelectionHandler()(
+      account: widget.account,
+      selectedFiles: [file],
+      shouldCleanupAlbum: false,
+      isRemoveOpened: true,
+    );
+    if (count > 0) {
       Navigator.of(context).pop();
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_delete] Failed while remove" +
-              (shouldLogFileName ? ": ${file.path}" : ""),
-          e,
-          stacktrace);
-      controller?.close();
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text("${L10n.global().deleteFailureNotification}: "
-            "${exception_util.toUserString(e)}"),
-        duration: k.snackBarDurationNormal,
-      ));
     }
   }
 

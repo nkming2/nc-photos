@@ -13,7 +13,6 @@ import 'package:nc_photos/bloc/list_face.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -30,9 +29,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -405,26 +404,10 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    await NotifiedListAction<File>(
-      list: selectedFiles,
-      action: (file) async {
-        await Remove(fileRepo, albumRepo)(widget.account, file);
-      },
-      processingText: L10n.global()
-          .deleteSelectedProcessingNotification(selectedFiles.length),
-      successText: L10n.global().deleteSelectedSuccessNotification,
-      getFailureText: (failures) =>
-          L10n.global().deleteSelectedFailureNotification(failures.length),
-      onActionError: (file, e, stackTrace) {
-        _log.shout(
-            "[_onSelectionDeletePressed] Failed while removing file" +
-                (shouldLogFileName ? ": ${file.path}" : ""),
-            e,
-            stackTrace);
-      },
-    )();
+    await RemoveSelectionHandler()(
+      account: widget.account,
+      selectedFiles: selectedFiles,
+    );
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {

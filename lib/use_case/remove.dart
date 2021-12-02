@@ -2,116 +2,127 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/list_album.dart';
-import 'package:nc_photos/use_case/update_album.dart';
+import 'package:nc_photos/use_case/list_share.dart';
+import 'package:nc_photos/use_case/remove_from_album.dart';
+import 'package:nc_photos/use_case/remove_share.dart';
 
 class Remove {
-  Remove(this.fileRepo, this.albumRepo);
+  const Remove(
+      this.fileRepo, this.albumRepo, this.shareRepo, this.appDb, this.pref)
+      : assert(albumRepo == null ||
+            (shareRepo != null && appDb != null && pref != null));
 
-  /// Remove a file
-  Future<void> call(Account account, File file) async {
-    await fileRepo.remove(account, file);
-    if (albumRepo != null) {
-      _log.info("[call] Skip albums cleanup as albumRepo == null");
-      _CleanUpAlbums()(_CleanUpAlbumsData(fileRepo, albumRepo!, account, file));
+  /// Remove files
+  Future<void> call(
+    Account account,
+    List<File> files, {
+    void Function(File file, Object error, StackTrace stackTrace)?
+        onRemoveFileFailed,
+  }) async {
+    // need to cleanup first, otherwise we can't unshare the files
+    if (albumRepo == null) {
+      _log.info("[call] Skip album cleanup as albumRepo == null");
+    } else {
+      await _cleanUpAlbums(account, files);
     }
-    KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, file));
-  }
-
-  final FileRepo fileRepo;
-  final AlbumRepo? albumRepo;
-
-  static final _log = Logger("use_case.remove.Remove");
-}
-
-class _CleanUpAlbumsData {
-  _CleanUpAlbumsData(this.fileRepo, this.albumRepo, this.account, this.file);
-
-  final FileRepo fileRepo;
-  final AlbumRepo albumRepo;
-  final Account account;
-  final File file;
-}
-
-class _CleanUpAlbums {
-  factory _CleanUpAlbums() {
-    _inst ??= _CleanUpAlbums._();
-    return _inst!;
-  }
-
-  _CleanUpAlbums._() {
-    _throttler = Throttler<_CleanUpAlbumsData>(
-      onTriggered: (data) {
-        _onTriggered(data);
-      },
-      logTag: "remove._CleanUpAlbums",
-    );
-  }
-
-  void call(_CleanUpAlbumsData data) {
-    _throttler.trigger(
-      maxResponceTime: const Duration(seconds: 3),
-      maxPendingCount: 10,
-      data: data,
-    );
-  }
-
-  void _onTriggered(List<_CleanUpAlbumsData> data) async {
-    for (final pair in data.groupBy(key: (e) => e.account)) {
-      final list = pair.item2;
-      await _cleanUp(list.first.fileRepo, list.first.albumRepo,
-          list.first.account, list.map((e) => e.file).toList());
+    for (final f in files) {
+      try {
+        await fileRepo.remove(account, f);
+        KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, f));
+      } catch (e, stackTrace) {
+        _log.severe("[call] Failed while remove: ${logFilename(f.path)}", e,
+            stackTrace);
+        onRemoveFileFailed?.call(f, e, stackTrace);
+      }
     }
   }
 
-  /// Clean up for a single account
-  Future<void> _cleanUp(FileRepo fileRepo, AlbumRepo albumRepo, Account account,
-      List<File> removes) async {
-    final albums = (await ListAlbum(fileRepo, albumRepo)(account)
-            .where((event) => event is Album)
-            .toList())
-        .cast<Album>();
+  Future<void> _cleanUpAlbums(Account account, List<File> removes) async {
+    final albums = await ListAlbum(fileRepo, albumRepo!)(account)
+        .where((event) => event is Album)
+        .cast<Album>()
+        .toList();
+    // figure out which files need to be unshared with whom
+    final unshares = <FileServerIdentityComparator, Set<CiString>>{};
     // clean up only make sense for static albums
-    for (final a
-        in albums.where((element) => element.provider is AlbumStaticProvider)) {
+    for (final a in albums.where((a) => a.provider is AlbumStaticProvider)) {
       try {
         final provider = AlbumStaticProvider.of(a);
-        if (provider.items.whereType<AlbumFileItem>().any((element) =>
-            removes.containsIf(element.file, (a, b) => a.path == b.path))) {
-          final newItems = provider.items.where((element) {
-            if (element is AlbumFileItem) {
-              return !removes.containsIf(
-                  element.file, (a, b) => a.path == b.path);
-            } else {
-              return true;
-            }
-          }).toList();
-          await UpdateAlbum(albumRepo)(
-              account,
-              a.copyWith(
-                provider: AlbumStaticProvider.of(a).copyWith(
-                  items: newItems,
-                ),
-              ));
+        final itemsToRemove = provider.items
+            .whereType<AlbumFileItem>()
+            .where((i) =>
+                (i.file.isOwned(account.username) ||
+                    i.addedBy == account.username) &&
+                removes.any((r) => r.compareServerIdentity(i.file)))
+            .toList();
+        if (itemsToRemove.isEmpty) {
+          continue;
         }
+        for (final i in itemsToRemove) {
+          final key = FileServerIdentityComparator(i.file);
+          final value = (a.shares?.map((s) => s.userId).toList() ?? [])
+            ..add(a.albumFile!.ownerId!)
+            ..remove(account.username);
+          (unshares[key] ??= <CiString>{}).addAll(value);
+        }
+        _log.fine(
+            "[_cleanUpAlbums] Removing from album '${a.name}': ${itemsToRemove.map((e) => e.file.path).toReadableString()}");
+        // skip unsharing as we'll handle it ourselves
+        await RemoveFromAlbum(albumRepo!, null, null, appDb!)(
+            account, a, itemsToRemove);
       } catch (e, stacktrace) {
         _log.shout(
             "[_cleanUpAlbums] Failed while updating album", e, stacktrace);
         // continue to next album
       }
     }
+
+    for (final e in unshares.entries) {
+      try {
+        var file = e.key.file;
+        if (file_util.getUserDirName(file) != account.username) {
+          try {
+            file = await FindFile(appDb!)(account, file.fileId!);
+          } catch (_) {
+            // file not found
+            _log.warning(
+                "[_cleanUpAlbums] File not found in db: ${logFilename(file.path)}");
+          }
+        }
+        final shares = await ListShare(shareRepo!)(account, file);
+        for (final s in shares.where((s) => e.value.contains(s.shareWith))) {
+          try {
+            await RemoveShare(shareRepo!)(account, s);
+          } catch (e, stackTrace) {
+            _log.severe(
+                "[_cleanUpAlbums] Failed while RemoveShare: $s", e, stackTrace);
+          }
+        }
+      } catch (e, stackTrace) {
+        _log.shout("[_cleanUpAlbums] Failed", e, stackTrace);
+      }
+    }
   }
 
-  late final Throttler<_CleanUpAlbumsData> _throttler;
+  final FileRepo fileRepo;
+  final AlbumRepo? albumRepo;
+  final ShareRepo? shareRepo;
+  final AppDb? appDb;
+  final Pref? pref;
 
-  static final _log = Logger("use_case.remove");
-
-  static _CleanUpAlbums? _inst;
+  static final _log = Logger("use_case.remove.Remove");
 }

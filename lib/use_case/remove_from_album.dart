@@ -14,8 +14,13 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
+  /// Constructor
+  ///
+  /// If [shareRepo] and [fileRepo] are null, files will not be unshared after
+  /// removing from the album
   const RemoveFromAlbum(
-      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb);
+      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb)
+      : assert(shareRepo == null || fileRepo != null);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -37,11 +42,15 @@ class RemoveFromAlbum {
     newAlbum = await _fixAlbumPostRemove(account, newAlbum, items);
     await UpdateAlbum(albumRepo)(account, newAlbum);
 
-    if (album.shares?.isNotEmpty == true) {
-      final removeFiles =
-          items.whereType<AlbumFileItem>().map((e) => e.file).toList();
-      if (removeFiles.isNotEmpty) {
-        await _unshareFiles(account, newAlbum, removeFiles);
+    if (shareRepo == null) {
+      _log.info("[call] Skip unsharing files as shareRepo == null");
+    } else {
+      if (album.shares?.isNotEmpty == true) {
+        final removeFiles =
+            items.whereType<AlbumFileItem>().map((e) => e.file).toList();
+        if (removeFiles.isNotEmpty) {
+          await _unshareFiles(account, newAlbum, removeFiles);
+        }
       }
     }
 
@@ -93,14 +102,14 @@ class RemoveFromAlbum {
         .where((element) => element != account.username)
         .toList();
     if (albumShares.isNotEmpty) {
-      await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
+      await UnshareFileFromAlbum(shareRepo!, fileRepo!, albumRepo)(
           account, album, files, albumShares);
     }
   }
 
   final AlbumRepo albumRepo;
-  final ShareRepo shareRepo;
-  final FileRepo fileRepo;
+  final ShareRepo? shareRepo;
+  final FileRepo? fileRepo;
   final AppDb appDb;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
