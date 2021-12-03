@@ -17,6 +17,7 @@ void main() {
     group("shared album", () {
       test("file", _removeSharedAlbum);
       test("file w/ share in other album", _removeSharedAlbumFileInOtherAlbum);
+      test("file resynced by others", _removeSharedAlbumResyncedFile);
     });
   });
 }
@@ -118,4 +119,44 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
     util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
   ]);
+}
+
+/// Remove a shared album (admin -> user1) where the file is resynced by user1
+///
+/// Expect: album deleted;
+/// share (admin -> user1) for the album json deleted;
+/// share (admin -> user1) for the file delete
+Future<void> _removeSharedAlbumResyncedFile() async {
+  final account = util.buildAccount();
+  final user1Account = util.buildAccount(username: "user1");
+  final files =
+      (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
+  final user1Files = [
+    files[0].copyWith(path: "remote.php/dav/files/user1/share/test1.jpg"),
+  ];
+  final album = (util.AlbumBuilder()
+        ..addFileItem(user1Files[0])
+        ..addShare("user1"))
+      .build();
+  final albumFile = album.albumFile!;
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, ...files, ...user1Files]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+      await util.fillAppDb(obj, user1Account, user1Files);
+    }),
+    pref: Pref.scoped(PrefMemoryProvider({
+      "isLabEnableSharedAlbum": true,
+    })),
+  );
+
+  await RemoveAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));
+  expect(c.fileMemoryRepo.files, [...files, ...user1Files]);
+  expect(c.shareMemoryRepo.shares, []);
 }

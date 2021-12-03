@@ -9,10 +9,8 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
@@ -98,17 +96,7 @@ class Remove {
 
     for (final e in unshares.entries) {
       try {
-        var file = e.key.file;
-        if (file_util.getUserDirName(file) != account.username) {
-          try {
-            file = await FindFile(_c.appDb)(account, file.fileId!);
-          } catch (_) {
-            // file not found
-            _log.warning(
-                "[_cleanUpAlbums] File not found in db: ${logFilename(file.path)}");
-          }
-        }
-        final shares = await ListShare(_c)(account, file);
+        final shares = await ListShare(_c)(account, e.key.file);
         for (final s in shares.where((s) => e.value.contains(s.shareWith))) {
           try {
             await RemoveShare(_c.shareRepo)(account, s);
