@@ -1,14 +1,13 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/override_comparator.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
@@ -16,7 +15,14 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class AddToAlbum {
-  const AddToAlbum(this.albumRepo, this.shareRepo, this.appDb, this.pref);
+  AddToAlbum(this._c)
+      : assert(require(_c)),
+        assert(ListShare.require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.shareRepo) &&
+      DiContainer.has(c, DiType.appDb);
 
   /// Add a list of AlbumItems to [album]
   Future<Album> call(
@@ -24,7 +30,7 @@ class AddToAlbum {
     _log.info("[call] Add ${items.length} items to album '${album.name}'");
     assert(album.provider is AlbumStaticProvider);
     // resync is needed to work out album cover and latest item
-    final oldItems = await PreProcessAlbum(appDb)(account, album);
+    final oldItems = await PreProcessAlbum(_c.appDb)(account, album);
     final itemSet = oldItems
         .map((e) => OverrideComparator<AlbumItem>(
             e, _isItemFileEqual, _getItemHashCode))
@@ -50,7 +56,7 @@ class AddToAlbum {
       newAlbum,
       newItems,
     );
-    await UpdateAlbum(albumRepo)(account, newAlbum);
+    await UpdateAlbum(_c.albumRepo)(account, newAlbum);
 
     if (album.shares?.isNotEmpty == true) {
       final newFiles =
@@ -74,7 +80,7 @@ class AddToAlbum {
     }
     for (final f in files) {
       try {
-        final fileShares = (await ListShare(shareRepo)(account, f))
+        final fileShares = (await ListShare(_c)(account, f))
             .where((element) => element.shareType == ShareType.user)
             .map((e) => e.shareWith!)
             .toSet();
@@ -85,7 +91,7 @@ class AddToAlbum {
             continue;
           }
           try {
-            await CreateUserShare(shareRepo)(account, f, s.raw);
+            await CreateUserShare(_c.shareRepo)(account, f, s.raw);
           } catch (e, stackTrace) {
             _log.shout(
                 "[_shareFiles] Failed while CreateUserShare: ${logFilename(f.path)}",
@@ -102,10 +108,7 @@ class AddToAlbum {
     }
   }
 
-  final AlbumRepo albumRepo;
-  final ShareRepo shareRepo;
-  final AppDb appDb;
-  final Pref pref;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.add_to_album.AddToAlbum");
 }

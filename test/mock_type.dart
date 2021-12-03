@@ -8,6 +8,7 @@ import 'package:idb_shim/idb_client_memory.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -317,4 +318,14 @@ class MockShareeMemoryRepo extends MockShareeRepo {
   }
 
   final List<Sharee> sharees;
+}
+
+extension MockDiContainerExtension on DiContainer {
+  MockAlbumMemoryRepo get albumMemoryRepo => albumRepo as MockAlbumMemoryRepo;
+  MockFileMemoryRepo get fileMemoryRepo => fileRepo as MockFileMemoryRepo;
+  MockShareMemoryRepo get shareMemoryRepo => shareRepo as MockShareMemoryRepo;
+  MockShareeMemoryRepo get shareeMemoryRepo =>
+      shareeRepo as MockShareeMemoryRepo;
+
+  MockAppDb get appMemeoryDb => appDb as MockAppDb;
 }

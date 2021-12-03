@@ -1,6 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -49,9 +51,12 @@ void main() {
 }
 
 void _initialState() {
-  final shareRepo = MockShareRepo();
-  final shareeRepo = MockShareeRepo();
-  final bloc = ListAlbumShareOutlierBloc(shareRepo, shareeRepo);
+  final c = DiContainer(
+    shareRepo: MockShareRepo(),
+    shareeRepo: MockShareeRepo(),
+    appDb: MockAppDb(),
+  );
+  final bloc = ListAlbumShareOutlierBloc(c);
   expect(bloc.state.account, null);
   expect(bloc.state.items, const []);
 }
@@ -65,15 +70,24 @@ void _testQueryUnsharedAlbumExtraShare(String description) {
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
   final file1 = files[0];
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: file1, shareWith: "user1"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: file1, shareWith: "user1"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -96,15 +110,19 @@ void _testQueryUnsharedAlbumExtraJsonShare(String description) {
   final account = util.buildAccount();
   final album = util.AlbumBuilder().build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-  ]);
+  final c = DiContainer(
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+    ]),
+    shareeRepo: MockShareeMemoryRepo([
+      util.buildSharee(shareWith: "user1".toCi()),
+    ]),
+    appDb: MockAppDb(),
+  );
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -132,15 +150,24 @@ void _testQuerySharedAlbumMissingShare(String description) {
       .build();
   final file1 = files[0];
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -170,19 +197,28 @@ void _testQuerySharedAlbumMissingManagedOtherShare(String description) {
         ..addShare("user2", sharedAt: DateTime.utc(2021, 1, 2, 3, 4, 5)))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(
-        id: "2", file: files[0], uidOwner: "user1", shareWith: "admin"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+          util.buildShare(
+              id: "2", file: files[0], uidOwner: "user1", shareWith: "admin"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -213,19 +249,28 @@ void _testQuerySharedAlbumMissingUnmanagedOtherShare(String description) {
         ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(
-        id: "2", file: files[0], uidOwner: "user1", shareWith: "admin"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+          util.buildShare(
+              id: "2", file: files[0], uidOwner: "user1", shareWith: "admin"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -242,13 +287,17 @@ void _testQuerySharedAlbumMissingJsonShare(String description) {
   final account = util.buildAccount();
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo();
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-  ]);
+  final c = DiContainer(
+    shareRepo: MockShareMemoryRepo(),
+    shareeRepo: MockShareeMemoryRepo([
+      util.buildSharee(shareWith: "user1".toCi()),
+    ]),
+    appDb: MockAppDb(),
+  );
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -276,18 +325,27 @@ void _testQuerySharedAlbumExtraShare(String description) {
       .build();
   final file1 = files[0];
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -317,19 +375,28 @@ void _testQuerySharedAlbumExtraManagedOtherShare(String description) {
         ..addShare("user1", sharedAt: DateTime.utc(2021, 1, 2, 3, 4, 5)))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(
-        id: "1", file: files[0], uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(
+              id: "1", file: files[0], uidOwner: "user1", shareWith: "admin"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -360,20 +427,29 @@ void _testQuerySharedAlbumExtraUnmanagedOtherShare(String description) {
         ..addShare("user1"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(
-        id: "1", file: files[0], uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(
-        id: "2", file: files[0], uidOwner: "user1", shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(
+              id: "1", file: files[0], uidOwner: "user1", shareWith: "admin"),
+          util.buildShare(
+              id: "2", file: files[0], uidOwner: "user1", shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -391,17 +467,21 @@ void _testQuerySharedAlbumExtraJsonShare(String description) {
   final account = util.buildAccount();
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  final c = DiContainer(
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+    ]),
+    shareeRepo: MockShareeMemoryRepo([
+      util.buildSharee(shareWith: "user1".toCi()),
+      util.buildSharee(shareWith: "user2".toCi()),
+    ]),
+    appDb: MockAppDb(),
+  );
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -429,16 +509,25 @@ void _testQuerySharedAlbumNotOwnedMissingShareToOwner(String description) {
         ..addShare("admin"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(
+              id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -467,20 +556,29 @@ void _testQuerySharedAlbumNotOwnedMissingManagedShare(String description) {
         ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(
-        id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user1"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(
+              id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+          util.buildShare(
+              id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user1"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -509,18 +607,27 @@ void _testQuerySharedAlbumNotOwnedMissingUnmanagedShare(String description) {
         ..addShare("user2", sharedAt: DateTime.utc(2021, 1, 2, 3, 4, 5)))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user1"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user1"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -541,17 +648,21 @@ void _testQuerySharedAlbumNotOwnedMissingJsonShare(String description) {
         ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  final c = DiContainer(
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(
+          id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+    ]),
+    shareeRepo: MockShareeMemoryRepo([
+      util.buildSharee(shareWith: "user1".toCi()),
+      util.buildSharee(shareWith: "user2".toCi()),
+    ]),
+    appDb: MockAppDb(),
+  );
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -575,19 +686,28 @@ void _testQuerySharedAlbumNotOwnedExtraManagedShare(String description) {
         ..addShare("admin"))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(
+              id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+          util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -616,19 +736,28 @@ void _testQuerySharedAlbumNotOwnedExtraUnmanagedShare(String description) {
         ..addShare("admin", sharedAt: DateTime.utc(2021, 1, 2, 3, 4, 5)))
       .build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  late final DiContainer c;
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(
+              id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+          util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
@@ -652,19 +781,23 @@ void _testQuerySharedAlbumNotOwnedExtraJsonShare(String description) {
   final album =
       (util.AlbumBuilder(ownerId: "user1")..addShare("admin")).build();
   final albumFile = album.albumFile!;
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
-    util.buildShare(
-        id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
-  ]);
-  final shareeRepo = MockShareeMemoryRepo([
-    util.buildSharee(shareWith: "user1".toCi()),
-    util.buildSharee(shareWith: "user2".toCi()),
-  ]);
+  final c = DiContainer(
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(
+          id: "0", file: albumFile, uidOwner: "user1", shareWith: "admin"),
+      util.buildShare(
+          id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
+    ]),
+    shareeRepo: MockShareeMemoryRepo([
+      util.buildSharee(shareWith: "user1".toCi()),
+      util.buildSharee(shareWith: "user2".toCi()),
+    ]),
+    appDb: MockAppDb(),
+  );
+
   blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
     description,
-    build: () => ListAlbumShareOutlierBloc(shareRepo, shareeRepo),
+    build: () => ListAlbumShareOutlierBloc(c),
     act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
     wait: const Duration(milliseconds: 500),
     expect: () => [

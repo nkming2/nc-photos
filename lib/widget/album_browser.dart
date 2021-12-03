@@ -2,21 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -443,10 +442,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     });
 
     try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
+      await RemoveFromAlbum(KiwiContainer().resolve<DiContainer>())(
           widget.account, _album!, selectedItems);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global()

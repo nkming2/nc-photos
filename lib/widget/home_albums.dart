@@ -9,12 +9,11 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -400,14 +399,12 @@ class _HomeAlbumsState extends State<HomeAlbums>
       clearSelectedItems();
     });
     final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    final shareRepo = ShareRepo(ShareRemoteDataSource());
     final failures = <Album>[];
     for (final a in selected) {
       try {
         if (a.albumFile?.isOwned(widget.account.username) == true) {
           // delete owned albums
-          await RemoveAlbum(fileRepo, albumRepo, shareRepo, Pref())(
+          await RemoveAlbum(KiwiContainer().resolve<DiContainer>())(
               widget.account, a);
         } else {
           // remove shared albums from collection

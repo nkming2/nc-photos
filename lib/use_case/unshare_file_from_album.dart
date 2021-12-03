@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -12,7 +13,14 @@ import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 
 class UnshareFileFromAlbum {
-  const UnshareFileFromAlbum(this.shareRepo, this.fileRepo, this.albumRepo);
+  UnshareFileFromAlbum(this._c)
+      : assert(require(_c)),
+        assert(ListShare.require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.shareRepo);
 
   /// Remove file shares created for an album
   ///
@@ -28,7 +36,7 @@ class UnshareFileFromAlbum {
     _log.info(
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
     // list albums with shares identical to any element in [unshareWith]
-    final otherAlbums = await ListAlbum(fileRepo, albumRepo)(account)
+    final otherAlbums = await ListAlbum(_c.fileRepo, _c.albumRepo)(account)
         .where((event) => event is Album)
         .cast<Album>()
         .where((a) =>
@@ -41,7 +49,7 @@ class UnshareFileFromAlbum {
     final exclusiveShares = <Share>[];
     for (final f in files) {
       try {
-        final shares = await ListShare(shareRepo)(account, f);
+        final shares = await ListShare(_c)(account, f);
         exclusiveShares.addAll(
             shares.where((element) => unshareWith.contains(element.shareWith)));
       } catch (e, stackTrace) {
@@ -77,7 +85,7 @@ class UnshareFileFromAlbum {
       void Function(Share)? onUnshareFileFailed) async {
     for (final s in shares) {
       try {
-        await RemoveShare(shareRepo)(account, s);
+        await RemoveShare(_c.shareRepo)(account, s);
       } catch (e, stackTrace) {
         _log.severe(
             "[_unshare] Failed while RemoveShare: ${s.path}", e, stackTrace);
@@ -86,9 +94,7 @@ class UnshareFileFromAlbum {
     }
   }
 
-  final ShareRepo shareRepo;
-  final FileRepo fileRepo;
-  final AlbumRepo albumRepo;
+  final DiContainer _c;
 
   static final _log =
       Logger("use_case.unshare_file_from_album.UnshareFileFromAlbum");

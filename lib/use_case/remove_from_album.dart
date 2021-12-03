@@ -1,12 +1,11 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
@@ -14,20 +13,26 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 
 class RemoveFromAlbum {
-  /// Constructor
-  ///
-  /// If [shareRepo] and [fileRepo] are null, files will not be unshared after
-  /// removing from the album
-  const RemoveFromAlbum(
-      this.albumRepo, this.shareRepo, this.fileRepo, this.appDb)
-      : assert(shareRepo == null || fileRepo != null);
+  RemoveFromAlbum(this._c)
+      : assert(require(_c)),
+        assert(UnshareFileFromAlbum.require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) && DiContainer.has(c, DiType.appDb);
 
   /// Remove a list of AlbumItems from [album]
   ///
   /// The items are compared with [identical], so it must come from [album] for
   /// it to work
+  ///
+  /// If [shouldUnshare] is false, files will not be unshared after removing
+  /// from the album
   Future<Album> call(
-      Account account, Album album, List<AlbumItem> items) async {
+    Account account,
+    Album album,
+    List<AlbumItem> items, {
+    bool shouldUnshare = true,
+  }) async {
     _log.info("[call] Remove ${items.length} items from album '${album.name}'");
     assert(album.provider is AlbumStaticProvider);
     final provider = album.provider as AlbumStaticProvider;
@@ -40,10 +45,10 @@ class RemoveFromAlbum {
       ),
     );
     newAlbum = await _fixAlbumPostRemove(account, newAlbum, items);
-    await UpdateAlbum(albumRepo)(account, newAlbum);
+    await UpdateAlbum(_c.albumRepo)(account, newAlbum);
 
-    if (shareRepo == null) {
-      _log.info("[call] Skip unsharing files as shareRepo == null");
+    if (!shouldUnshare) {
+      _log.info("[call] Skip unsharing files");
     } else {
       if (album.shares?.isNotEmpty == true) {
         final removeFiles =
@@ -86,7 +91,7 @@ class RemoveFromAlbum {
     _log.info(
         "[_fixAlbumPostRemove] Resync as interesting item is being removed");
     // need to update the album properties
-    final newItemsSynced = await PreProcessAlbum(appDb)(account, newAlbum);
+    final newItemsSynced = await PreProcessAlbum(_c.appDb)(account, newAlbum);
     newAlbum = await UpdateAlbumWithActualItems(null)(
       account,
       newAlbum,
@@ -102,15 +107,11 @@ class RemoveFromAlbum {
         .where((element) => element != account.username)
         .toList();
     if (albumShares.isNotEmpty) {
-      await UnshareFileFromAlbum(shareRepo!, fileRepo!, albumRepo)(
-          account, album, files, albumShares);
+      await UnshareFileFromAlbum(_c)(account, album, files, albumShares);
     }
   }
 
-  final AlbumRepo albumRepo;
-  final ShareRepo? shareRepo;
-  final FileRepo? fileRepo;
-  final AppDb appDb;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

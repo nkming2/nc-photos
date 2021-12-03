@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/platform.dart'
@@ -26,7 +28,8 @@ class TouchTokenManager {
         "[setRemoteToken] Set remote token for file '${file.path}': $token");
     final path = _getRemotePath(account, file);
     if (token == null) {
-      return Remove(fileRepo, null, null, null, null)(account, [file]);
+      return Remove(KiwiContainer().resolve<DiContainer>())(account, [file],
+          shouldCleanUp: false);
     } else {
       return PutFileBinary(fileRepo)(
           account, path, const Utf8Encoder().convert(token),

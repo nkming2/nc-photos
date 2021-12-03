@@ -2,18 +2,16 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
@@ -21,10 +19,16 @@ import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 
 class Remove {
-  const Remove(
-      this.fileRepo, this.albumRepo, this.shareRepo, this.appDb, this.pref)
-      : assert(albumRepo == null ||
-            (shareRepo != null && appDb != null && pref != null));
+  Remove(this._c)
+      : assert(require(_c)),
+        assert(ListShare.require(_c)),
+        assert(RemoveFromAlbum.require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.shareRepo) &&
+      DiContainer.has(c, DiType.appDb);
 
   /// Remove files
   Future<void> call(
@@ -32,16 +36,17 @@ class Remove {
     List<File> files, {
     void Function(File file, Object error, StackTrace stackTrace)?
         onRemoveFileFailed,
+    bool shouldCleanUp = true,
   }) async {
     // need to cleanup first, otherwise we can't unshare the files
-    if (albumRepo == null) {
-      _log.info("[call] Skip album cleanup as albumRepo == null");
+    if (!shouldCleanUp) {
+      _log.info("[call] Skip album cleanup");
     } else {
       await _cleanUpAlbums(account, files);
     }
     for (final f in files) {
       try {
-        await fileRepo.remove(account, f);
+        await _c.fileRepo.remove(account, f);
         KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, f));
       } catch (e, stackTrace) {
         _log.severe("[call] Failed while remove: ${logFilename(f.path)}", e,
@@ -52,7 +57,7 @@ class Remove {
   }
 
   Future<void> _cleanUpAlbums(Account account, List<File> removes) async {
-    final albums = await ListAlbum(fileRepo, albumRepo!)(account)
+    final albums = await ListAlbum(_c.fileRepo, _c.albumRepo)(account)
         .where((event) => event is Album)
         .cast<Album>()
         .toList();
@@ -82,8 +87,8 @@ class Remove {
         _log.fine(
             "[_cleanUpAlbums] Removing from album '${a.name}': ${itemsToRemove.map((e) => e.file.path).toReadableString()}");
         // skip unsharing as we'll handle it ourselves
-        await RemoveFromAlbum(albumRepo!, null, null, appDb!)(
-            account, a, itemsToRemove);
+        await RemoveFromAlbum(_c)(account, a, itemsToRemove,
+            shouldUnshare: false);
       } catch (e, stacktrace) {
         _log.shout(
             "[_cleanUpAlbums] Failed while updating album", e, stacktrace);
@@ -96,17 +101,17 @@ class Remove {
         var file = e.key.file;
         if (file_util.getUserDirName(file) != account.username) {
           try {
-            file = await FindFile(appDb!)(account, file.fileId!);
+            file = await FindFile(_c.appDb)(account, file.fileId!);
           } catch (_) {
             // file not found
             _log.warning(
                 "[_cleanUpAlbums] File not found in db: ${logFilename(file.path)}");
           }
         }
-        final shares = await ListShare(shareRepo!)(account, file);
+        final shares = await ListShare(_c)(account, file);
         for (final s in shares.where((s) => e.value.contains(s.shareWith))) {
           try {
-            await RemoveShare(shareRepo!)(account, s);
+            await RemoveShare(_c.shareRepo)(account, s);
           } catch (e, stackTrace) {
             _log.severe(
                 "[_cleanUpAlbums] Failed while RemoveShare: $s", e, stackTrace);
@@ -118,11 +123,7 @@ class Remove {
     }
   }
 
-  final FileRepo fileRepo;
-  final AlbumRepo? albumRepo;
-  final ShareRepo? shareRepo;
-  final AppDb? appDb;
-  final Pref? pref;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.remove.Remove");
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -10,13 +11,12 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/entity/sharee.dart';
-import 'package:nc_photos/entity/sharee/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -485,8 +485,8 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     _itemStatuses[fileKey]!.remove(shareeKey);
   }
 
-  late final _bloc = ListAlbumShareOutlierBloc(
-      ShareRepo(ShareRemoteDataSource()), ShareeRepo(ShareeRemoteDataSource()));
+  late final _bloc =
+      ListAlbumShareOutlierBloc(KiwiContainer().resolve<DiContainer>());
 
   var _items = <_ListItem>[];
   final _itemStatuses = <String, Map<CiString, _ItemStatus>>{};

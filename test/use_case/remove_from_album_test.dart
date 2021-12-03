@@ -1,11 +1,11 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:idb_shim/idb.dart';
 import 'package:kiwi/kiwi.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:test/test.dart';
@@ -48,16 +48,19 @@ Future<void> _removeLastFile() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareRepo(),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    albumRepo.albums
+    c.albumMemoryRepo.albums
         .map((e) => e.copyWith(
               // we need to set a known value to lastUpdated
               lastUpdated: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
@@ -93,16 +96,19 @@ Future<void> _remove1OfNFiles() async {
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, ...files]),
+    shareRepo: MockShareRepo(),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
+  await RemoveFromAlbum(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
-    albumRepo.albums
+    c.albumMemoryRepo.albums
         .map((e) => e.copyWith(
               // we need to set a known value to lastUpdated
               lastUpdated: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5).toUtc()),
@@ -144,16 +150,19 @@ Future<void> _removeLatestOfNFiles() async {
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, ...files]),
+    shareRepo: MockShareRepo(),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
+  await RemoveFromAlbum(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
-    albumRepo.albums
+    c.albumMemoryRepo.albums
         .map((e) => e.copyWith(
               // we need to set a known value to lastUpdated
               lastUpdated: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5).toUtc()),
@@ -192,16 +201,19 @@ Future<void> _removeManualCoverFile() async {
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareRepo();
-  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, ...files]),
+    shareRepo: MockShareRepo(),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
+  await RemoveFromAlbum(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
   expect(
-    albumRepo.albums
+    c.albumMemoryRepo.albums
         .map((e) => e.copyWith(
               // we need to set a known value to lastUpdated
               lastUpdated: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
@@ -237,19 +249,22 @@ Future<void> _removeFromSharedAlbumOwned() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: file1, shareWith: "user1"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: file1, shareWith: "user1"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [util.buildShare(id: "0", file: albumFile, shareWith: "user1")],
   );
 }
@@ -273,23 +288,26 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, user1Account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(
-        id: "2", uidOwner: "user1", file: file1, shareWith: "admin"),
-    util.buildShare(
-        id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+      util.buildShare(
+          id: "2", uidOwner: "user1", file: file1, shareWith: "admin"),
+      util.buildShare(
+          id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, user1Account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
@@ -317,20 +335,23 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: file1, shareWith: "user1"),
-    util.buildShare(id: "2", file: file1, shareWith: "user2"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: file1, shareWith: "user1"),
+      util.buildShare(id: "2", file: file1, shareWith: "user2"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "2", file: file1, shareWith: "user2"),
@@ -359,21 +380,24 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
   final album1fileItems = util.AlbumBuilder.fileItemsOf(album1);
   final album1File = album1.albumFile!;
   final album2File = album2.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album1, album2]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: album1File, shareWith: "user1"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user2"),
-    util.buildShare(id: "3", file: album2File, shareWith: "user1"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([album1File, album2File, ...files]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album1, album2]),
+    fileRepo: MockFileMemoryRepo([album1File, album2File, ...files]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: album1File, shareWith: "user1"),
+      util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+      util.buildShare(id: "2", file: files[0], shareWith: "user2"),
+      util.buildShare(id: "3", file: album2File, shareWith: "user1"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(account,
-      albumRepo.findAlbumByPath(album1File.path), [album1fileItems[0]]);
+  await RemoveFromAlbum(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(album1File.path), [album1fileItems[0]]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(id: "0", file: album1File, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
@@ -397,23 +421,26 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await util.fillAppDb(appDb, account, files);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-    util.buildShare(
-        id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
-    util.buildShare(id: "2", file: file1, shareWith: "user1"),
-    util.buildShare(id: "3", file: file1, shareWith: "user2"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(
+          id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
+      util.buildShare(
+          id: "1", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+      util.buildShare(id: "2", file: file1, shareWith: "user1"),
+      util.buildShare(id: "3", file: file1, shareWith: "user2"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(
           id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
@@ -440,29 +467,27 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
-  final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
-    await store.put(AppDbFileDbEntry.fromFile(account, file1).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file1));
-  });
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(
-        id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
-    util.buildShare(id: "1", file: file1, shareWith: "user1"),
-    util.buildShare(
-        id: "2", uidOwner: "user1", file: albumFile, shareWith: "user2"),
-    util.buildShare(
-        id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
-  ]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(
+          id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),
+      util.buildShare(id: "1", file: file1, shareWith: "user1"),
+      util.buildShare(
+          id: "2", uidOwner: "user1", file: albumFile, shareWith: "user2"),
+      util.buildShare(
+          id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
+    ]),
+    appDb: await MockAppDb().applyFuture((obj) async {
+      await util.fillAppDb(obj, account, files);
+    }),
+  );
 
-  await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, appDb)(
-      account, albumRepo.findAlbumByPath(albumFile.path), [fileItem1]);
+  await RemoveFromAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(
           id: "0", uidOwner: "user1", file: albumFile, shareWith: "admin"),

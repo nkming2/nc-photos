@@ -4,12 +4,12 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
@@ -177,8 +177,12 @@ class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
 /// added on or after the album share for him/her was created
 class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     ListAlbumShareOutlierBlocState> {
-  ListAlbumShareOutlierBloc(this.shareRepo, this.shareeRepo)
-      : super(ListAlbumShareOutlierBlocInit());
+  ListAlbumShareOutlierBloc(this._c)
+      : assert(require(_c)),
+        assert(ListShare.require(_c)),
+        super(ListAlbumShareOutlierBlocInit());
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.shareeRepo);
 
   @override
   mapEventToState(ListAlbumShareOutlierBlocEvent event) async* {
@@ -200,7 +204,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
             .toList();
         if (ev.album.albumFile!.ownerId != ev.account.username) {
           // add owner if the album is not owned by this account
-          final ownerSharee = (await ListSharee(shareeRepo)(ev.account))
+          final ownerSharee = (await ListSharee(_c.shareeRepo)(ev.account))
               .firstWhere((s) => s.shareWith == ev.album.albumFile!.ownerId);
           temp.add(AlbumShare(
             userId: ownerSharee.shareWith,
@@ -243,7 +247,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     final shareItems = <ListAlbumShareOutlierShareItem>[];
     try {
       final albumSharees = albumShares.values.map((s) => s.userId).toSet();
-      final shares = (await ListShare(shareRepo)(account, album.albumFile!))
+      final shares = (await ListShare(_c)(account, album.albumFile!))
           .where((element) => element.shareType == ShareType.user)
           .toList();
       final sharees = shares.map((s) => s.shareWith!).toSet();
@@ -308,7 +312,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     List<Object> errors,
   ) async {
     final shareItems = <ListAlbumShareOutlierShareItem>[];
-    final shares = (await ListShare(shareRepo)(account, fileItem.file))
+    final shares = (await ListShare(_c)(account, fileItem.file))
         .where((element) => element.shareType == ShareType.user)
         .toList();
     final sharees = shares.map((s) => s.shareWith!).toSet();
@@ -369,8 +373,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     }
   }
 
-  final ShareRepo shareRepo;
-  final ShareeRepo shareeRepo;
+  final DiContainer _c;
 
   static final _log =
       Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");

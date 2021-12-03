@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
@@ -11,9 +12,8 @@ import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_sharee.dart';
 import 'package:nc_photos/bloc/search_suggestion.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -282,13 +282,11 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   }
 
   Future<bool> _removeShare(_ShareItem share) async {
-    final shareRepo = ShareRepo(ShareRemoteDataSource());
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
       _album = await _editMutex.protect(() async {
-        return await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
+        return await UnshareAlbumWithUser(
+            KiwiContainer().resolve<DiContainer>())(
           widget.account,
           _album,
           share.shareWith,

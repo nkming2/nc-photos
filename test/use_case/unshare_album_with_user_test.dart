@@ -1,6 +1,7 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/use_case/unshare_album_with_user.dart';
 import 'package:test/test.dart';
 
@@ -28,19 +29,22 @@ Future<void> _unshareWithoutFile() async {
         ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final fileRepo = MockFileMemoryRepo([albumFile]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-  ]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+    ]),
+    appDb: MockAppDb(),
+  );
 
-  await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
-  expect(albumRepo.findAlbumByPath(albumFile.path).shares,
+  await UnshareAlbumWithUser(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), "user1".toCi());
+  expect(c.albumMemoryRepo.findAlbumByPath(albumFile.path).shares,
       [util.buildAlbumShare(userId: "user2")]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [util.buildShare(id: "1", file: albumFile, shareWith: "user2")],
   );
 }
@@ -61,21 +65,24 @@ Future<void> _unshareWithFile() async {
       .build();
   final file1 = files[0];
   final albumFile = album.albumFile!;
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final fileRepo = MockFileMemoryRepo([albumFile, file1]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(id: "2", file: file1, shareWith: "user1"),
-    util.buildShare(id: "3", file: file1, shareWith: "user2"),
-  ]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, file1]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+      util.buildShare(id: "2", file: file1, shareWith: "user1"),
+      util.buildShare(id: "3", file: file1, shareWith: "user2"),
+    ]),
+    appDb: MockAppDb(),
+  );
 
-  await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
-  expect(albumRepo.findAlbumByPath(albumFile.path).shares,
+  await UnshareAlbumWithUser(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), "user1".toCi());
+  expect(c.albumMemoryRepo.findAlbumByPath(albumFile.path).shares,
       [util.buildAlbumShare(userId: "user2")]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
       util.buildShare(id: "3", file: file1, shareWith: "user2"),
@@ -103,25 +110,28 @@ Future<void> _unshareWithFileNotOwned() async {
         ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final fileRepo = MockFileMemoryRepo([albumFile, files[0]]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
-    util.buildShare(id: "2", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "3", file: files[0], shareWith: "user2"),
-    util.buildShare(
-        id: "4", uidOwner: "user2", file: files[1], shareWith: "admin"),
-    util.buildShare(
-        id: "5", uidOwner: "user2", file: files[1], shareWith: "user1"),
-  ]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, files[0]]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+      util.buildShare(id: "2", file: files[0], shareWith: "user1"),
+      util.buildShare(id: "3", file: files[0], shareWith: "user2"),
+      util.buildShare(
+          id: "4", uidOwner: "user2", file: files[1], shareWith: "admin"),
+      util.buildShare(
+          id: "5", uidOwner: "user2", file: files[1], shareWith: "user1"),
+    ]),
+    appDb: MockAppDb(),
+  );
 
-  await UnshareAlbumWithUser(shareRepo, fileRepo, albumRepo)(
-      account, albumRepo.findAlbumByPath(albumFile.path), "user1".toCi());
-  expect(albumRepo.findAlbumByPath(albumFile.path).shares,
+  await UnshareAlbumWithUser(c)(account,
+      c.albumMemoryRepo.findAlbumByPath(albumFile.path), "user1".toCi());
+  expect(c.albumMemoryRepo.findAlbumByPath(albumFile.path).shares,
       [util.buildAlbumShare(userId: "user2")]);
   expect(
-    shareRepo.shares,
+    c.shareMemoryRepo.shares,
     [
       util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
       util.buildShare(id: "3", file: files[0], shareWith: "user2"),

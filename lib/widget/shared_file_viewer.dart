@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -277,10 +277,10 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
       dirPath = widget.file.path;
     }
 
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    return Remove(fileRepo, null, null, null, null)(
+    return Remove(KiwiContainer().resolve<DiContainer>())(
       widget.account,
       [widget.file.copyWith(path: dirPath)],
+      shouldCleanUp: false,
     );
   }
 

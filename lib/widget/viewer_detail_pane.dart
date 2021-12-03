@@ -6,11 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -18,8 +20,6 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -308,14 +308,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-          final shareRepo = ShareRepo(ShareRemoteDataSource());
-          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
           final thisItem = AlbumStaticProvider.of(widget.album!)
               .items
               .whereType<AlbumFileItem>()
               .firstWhere((element) => element.file.path == widget.file.path);
-          await RemoveFromAlbum(albumRepo, shareRepo, fileRepo, AppDb())(
+          await RemoveFromAlbum(KiwiContainer().resolve<DiContainer>())(
               widget.account, widget.album!, [thisItem]);
           if (mounted) {
             Navigator.of(context).pop();

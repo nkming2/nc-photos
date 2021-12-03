@@ -2,10 +2,10 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/list_share.dart';
@@ -14,7 +14,14 @@ import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 
 class UnshareAlbumWithUser {
-  UnshareAlbumWithUser(this.shareRepo, this.fileRepo, this.albumRepo);
+  UnshareAlbumWithUser(this._c)
+      : assert(require(_c)),
+        assert(ListShare.require(_c)),
+        assert(UnshareFileFromAlbum.require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.shareRepo);
 
   Future<Album> call(
     Account account,
@@ -29,7 +36,7 @@ class UnshareAlbumWithUser {
     final newAlbum = album.copyWith(
       shares: OrNull(newShares.isEmpty ? null : newShares),
     );
-    await UpdateAlbum(albumRepo)(account, newAlbum);
+    await UpdateAlbum(_c.albumRepo)(account, newAlbum);
 
     try {
       await _deleteFileShares(
@@ -51,10 +58,10 @@ class UnshareAlbumWithUser {
     void Function(Share)? onUnshareFileFailed,
   }) async {
     // remove share from the album file
-    final albumShares = await ListShare(shareRepo)(account, album.albumFile!);
+    final albumShares = await ListShare(_c)(account, album.albumFile!);
     for (final s in albumShares.where((s) => s.shareWith == shareWith)) {
       try {
-        await RemoveShare(shareRepo)(account, s);
+        await RemoveShare(_c.shareRepo)(account, s);
       } catch (e, stackTrace) {
         _log.severe(
             "[_deleteFileShares] Failed unsharing album file '${logFilename(album.albumFile?.path)}' with '$shareWith'",
@@ -70,18 +77,11 @@ class UnshareAlbumWithUser {
         .whereType<AlbumFileItem>()
         .map((e) => e.file)
         .toList();
-    await UnshareFileFromAlbum(shareRepo, fileRepo, albumRepo)(
-      account,
-      album,
-      files,
-      [shareWith],
-      onUnshareFileFailed: onUnshareFileFailed,
-    );
+    await UnshareFileFromAlbum(_c)(account, album, files, [shareWith],
+        onUnshareFileFailed: onUnshareFileFailed);
   }
 
-  final ShareRepo shareRepo;
-  final FileRepo fileRepo;
-  final AlbumRepo albumRepo;
+  final DiContainer _c;
 
   static final _log =
       Logger("use_case.unshare_album_with_user.UnshareAlbumWithUser");

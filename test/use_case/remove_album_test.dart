@@ -1,5 +1,7 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:test/test.dart';
@@ -24,18 +26,21 @@ void main() {
 /// Expect: album deleted
 Future<void> _removeAlbum() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider());
   final album1 = util.AlbumBuilder().build();
   final albumFile1 = album1.albumFile!;
   final album2 = util.AlbumBuilder.ofId(albumId: 1).build();
   final albumFile2 = album2.albumFile!;
-  final fileRepo = MockFileMemoryRepo([albumFile1, albumFile2]);
-  final albumRepo = MockAlbumMemoryRepo([album1, album2]);
-  final shareRepo = MockShareRepo();
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album1, album2]),
+    fileRepo: MockFileMemoryRepo([albumFile1, albumFile2]),
+    shareRepo: MockShareRepo(),
+    appDb: MockAppDb(),
+    pref: Pref.scoped(PrefMemoryProvider()),
+  );
 
-  await RemoveAlbum(fileRepo, albumRepo, shareRepo, pref)(
-      account, albumRepo.findAlbumByPath(albumFile1.path));
-  expect(fileRepo.files, [albumFile2]);
+  await RemoveAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile1.path));
+  expect(c.fileMemoryRepo.files, [albumFile2]);
 }
 
 /// Remove a shared album (admin -> user1)
@@ -45,9 +50,6 @@ Future<void> _removeAlbum() async {
 /// share (admin -> user1) for the files deleted
 Future<void> _removeSharedAlbum() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()
@@ -55,30 +57,33 @@ Future<void> _removeSharedAlbum() async {
         ..addShare("user1"))
       .build();
   final albumFile = album.albumFile!;
-  final fileRepo = MockFileMemoryRepo([albumFile, ...files]);
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-  ]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo([album]),
+    fileRepo: MockFileMemoryRepo([albumFile, ...files]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+      util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+    ]),
+    appDb: MockAppDb(),
+    pref: Pref.scoped(PrefMemoryProvider({
+      "isLabEnableSharedAlbum": true,
+    })),
+  );
 
-  await RemoveAlbum(fileRepo, albumRepo, shareRepo, pref)(
-      account, albumRepo.findAlbumByPath(albumFile.path));
-  expect(fileRepo.files, [files[0]]);
-  expect(shareRepo.shares, const []);
+  await RemoveAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));
+  expect(c.fileMemoryRepo.files, [files[0]]);
+  expect(c.shareMemoryRepo.shares, const []);
 }
 
-/// Remove a shared album (admin -> user1) where the file is
-/// also shared in other album (admin -> user1)
+/// Remove a shared album (admin -> user1) where the file is also shared in
+/// other album (admin -> user1)
 ///
 /// Expect: album deleted;
 /// share (admin -> user1) for the album json deleted;
 /// share (admin -> user1) for the file unchanged
 Future<void> _removeSharedAlbumFileInOtherAlbum() async {
   final account = util.buildAccount();
-  final pref = Pref.scoped(PrefMemoryProvider({
-    "isLabEnableSharedAlbum": true,
-  }));
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final albums = [
@@ -92,18 +97,24 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
         .build(),
   ];
   final albumFiles = albums.map((e) => e.albumFile!).toList();
-  final fileRepo = MockFileMemoryRepo([...albumFiles, ...files]);
-  final albumRepo = MockAlbumMemoryRepo(albums);
-  final shareRepo = MockShareMemoryRepo([
-    util.buildShare(id: "0", file: albumFiles[0], shareWith: "user1"),
-    util.buildShare(id: "1", file: files[0], shareWith: "user1"),
-    util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
-  ]);
+  final c = DiContainer(
+    albumRepo: MockAlbumMemoryRepo(albums),
+    fileRepo: MockFileMemoryRepo([...albumFiles, ...files]),
+    shareRepo: MockShareMemoryRepo([
+      util.buildShare(id: "0", file: albumFiles[0], shareWith: "user1"),
+      util.buildShare(id: "1", file: files[0], shareWith: "user1"),
+      util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
+    ]),
+    appDb: MockAppDb(),
+    pref: Pref.scoped(PrefMemoryProvider({
+      "isLabEnableSharedAlbum": true,
+    })),
+  );
 
-  await RemoveAlbum(fileRepo, albumRepo, shareRepo, pref)(
-      account, albumRepo.findAlbumByPath(albumFiles[0].path));
-  expect(fileRepo.files, [albumFiles[1], files[0]]);
-  expect(shareRepo.shares, [
+  await RemoveAlbum(c)(
+      account, c.albumMemoryRepo.findAlbumByPath(albumFiles[0].path));
+  expect(c.fileMemoryRepo.files, [albumFiles[1], files[0]]);
+  expect(c.shareMemoryRepo.shares, [
     util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
   ]);

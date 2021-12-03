@@ -6,7 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/face.dart';
+import 'package:nc_photos/entity/face/data_source.dart';
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/person/data_source.dart';
+import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/entity/share/data_source.dart';
+import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/entity/sharee/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
@@ -27,6 +40,7 @@ void main() async {
   if (features.isSupportSelfSignedCert) {
     _initSelfSignedCertManager();
   }
+  _initDiContainer();
 
   runApp(const MyApp());
 }
@@ -112,6 +126,19 @@ void _initEquatable() {
 
 void _initSelfSignedCertManager() {
   SelfSignedCertManager().init();
+}
+
+void _initDiContainer() {
+  KiwiContainer().registerInstance<DiContainer>(DiContainer(
+    albumRepo: AlbumRepo(AlbumCachedDataSource(AppDb())),
+    faceRepo: const FaceRepo(FaceRemoteDataSource()),
+    fileRepo: FileRepo(FileCachedDataSource(AppDb())),
+    personRepo: const PersonRepo(PersonRemoteDataSource()),
+    shareRepo: ShareRepo(ShareRemoteDataSource()),
+    shareeRepo: ShareeRepo(ShareeRemoteDataSource()),
+    appDb: AppDb(),
+    pref: Pref(),
+  ));
 }
 
 class _BlocObserver extends BlocObserver {
