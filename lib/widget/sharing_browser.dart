@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -65,7 +66,11 @@ class _SharingBrowserState extends State<SharingBrowser> {
       _importPotentialSharedAlbum().whenComplete(() {
         _initBloc();
       });
-      Pref().setNewSharedAlbum(false);
+      AccountPref.of(widget.account).run((obj) {
+        if (obj.hasNewSharedAlbumOr()) {
+          obj.setNewSharedAlbum(false);
+        }
+      });
     } else {
       _initBloc();
     }

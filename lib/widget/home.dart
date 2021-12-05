@@ -50,7 +50,7 @@ class _HomeState extends State<Home> {
     if (Pref().isLabEnableSharedAlbumOr(false)) {
       _importPotentialSharedAlbum().then((value) {
         if (value.isNotEmpty) {
-          Pref().setNewSharedAlbum(true);
+          AccountPref.of(widget.account).setNewSharedAlbum(true);
         }
       });
     }

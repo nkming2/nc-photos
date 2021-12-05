@@ -128,11 +128,6 @@ class Pref {
   Future<bool> setAlbumBrowserShowDate(bool value) =>
       provider.setBool(PrefKey.isAlbumBrowserShowDate, value);
 
-  bool? hasNewSharedAlbum() => provider.getBool(PrefKey.newSharedAlbum);
-  bool hasNewSharedAlbumOr(bool def) => hasNewSharedAlbum() ?? def;
-  Future<bool> setNewSharedAlbum(bool value) =>
-      provider.setBool(PrefKey.newSharedAlbum, value);
-
   int? getGpsMapProvider() => provider.getInt(PrefKey.gpsMapProvider);
   int getGpsMapProviderOr(int def) => getGpsMapProvider() ?? def;
   Future<bool> setGpsMapProvider(int value) =>
@@ -186,6 +181,11 @@ class AccountPref {
   String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
   Future<bool> setShareFolder(String value) =>
       provider.setString(PrefKey.shareFolder, value);
+
+  bool? hasNewSharedAlbum() => provider.getBool(PrefKey.hasNewSharedAlbum);
+  bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
+  Future<bool> setNewSharedAlbum(bool value) =>
+      provider.setBool(PrefKey.hasNewSharedAlbum, value);
 
   final PrefProvider provider;
 
@@ -389,7 +389,6 @@ enum PrefKey {
   followSystemTheme,
   useBlackInDarkTheme,
   language,
-  newSharedAlbum,
   labEnableSharedAlbum,
   slideshowDuration,
   isSlideshowShuffle,
@@ -401,6 +400,7 @@ enum PrefKey {
   // account pref
   isEnableFaceRecognitionApp,
   shareFolder,
+  hasNewSharedAlbum,
 }
 
 extension on PrefKey {
@@ -434,8 +434,6 @@ extension on PrefKey {
         return "isUseBlackInDarkTheme";
       case PrefKey.language:
         return "language";
-      case PrefKey.newSharedAlbum:
-        return "hasNewSharedAlbum";
       case PrefKey.labEnableSharedAlbum:
         return "isLabEnableSharedAlbum";
       case PrefKey.slideshowDuration:
@@ -456,6 +454,8 @@ extension on PrefKey {
         return "isEnableFaceRecognitionApp";
       case PrefKey.shareFolder:
         return "shareFolder";
+      case PrefKey.hasNewSharedAlbum:
+        return "hasNewSharedAlbum";
     }
   }
 }

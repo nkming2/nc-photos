@@ -249,7 +249,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     return _ButtonListItem(
       icon: Icons.share_outlined,
       label: L10n.global().collectionSharingLabel,
-      isShowIndicator: Pref().hasNewSharedAlbumOr(false),
+      isShowIndicator: AccountPref.of(widget.account).hasNewSharedAlbumOr(),
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(SharingBrowser.routeName,
