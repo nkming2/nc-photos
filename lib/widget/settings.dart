@@ -408,9 +408,9 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     super.initState();
     _account = widget.account;
 
-    final settings = Pref().getAccountSettings(_account);
-    _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionApp;
-    _shareFolder = settings.shareFolder;
+    final settings = AccountPref.of(_account);
+    _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionAppOr();
+    _shareFolder = settings.getShareFolderOr();
   }
 
   @override
@@ -491,8 +491,8 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         _log.fine("[_onIncludedFoldersPressed] No changes");
         return;
       }
-      final accounts = Pref().getAccounts2()!;
-      if (accounts.any((element) => element.account == result)) {
+      final accounts = Pref().getAccounts3()!;
+      if (accounts.contains(result)) {
         // conflict with another account. This normally won't happen because
         // the app passwords are unique to each entry, but just in case
         Navigator.of(context).pop();
@@ -503,7 +503,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         return;
       }
 
-      final index = _findAccount(_account, accounts);
+      final index = accounts.indexOf(_account);
       if (index < 0) {
         _log.shout("[_onIncludedFoldersPressed] Account not found: $_account");
         SnackBarManager().showSnackBar(SnackBar(
@@ -513,11 +513,8 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         return;
       }
 
-      final newAccount = accounts[index].copyWith(
-        account: result,
-      );
-      accounts[index] = newAccount;
-      if (!await Pref().setAccounts2(accounts)) {
+      accounts[index] = result;
+      if (!await Pref().setAccounts3(accounts)) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(L10n.global().writePreferenceFailureNotification),
           duration: k.snackBarDurationNormal,
@@ -557,10 +554,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     setState(() {
       _isEnableFaceRecognitionApp = value;
     });
-    if (!await _modifyAccountSettings(
-      _account,
-      isEnableFaceRecognitionApp: value,
-    )) {
+    if (!await AccountPref.of(_account).setEnableFaceRecognitionApp(value)) {
       _log.severe("[_onEnableFaceRecognitionAppChanged] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -582,10 +576,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     setState(() {
       _shareFolder = value;
     });
-    if (!await _modifyAccountSettings(
-      _account,
-      shareFolder: value,
-    )) {
+    if (!await AccountPref.of(_account).setShareFolder(value)) {
       _log.severe("[_setShareFolder] Failed writing pref");
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
@@ -599,36 +590,6 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         _hasModified = true;
       });
     }
-  }
-
-  static Future<bool> _modifyAccountSettings(
-    Account account, {
-    bool? isEnableFaceRecognitionApp,
-    String? shareFolder,
-  }) {
-    try {
-      final accounts = Pref().getAccounts2()!;
-      final index = _findAccount(account, accounts);
-      accounts[index] = accounts[index].copyWith(
-        settings: accounts[index].settings.copyWith(
-              isEnableFaceRecognitionApp: isEnableFaceRecognitionApp,
-              shareFolder: shareFolder,
-            ),
-      );
-      return Pref().setAccounts2(accounts);
-    } catch (e, stackTrace) {
-      _log.severe(
-          "[_modifyAccountSettings] Failed while setting account settings",
-          e,
-          stackTrace);
-      return Future.value(false);
-    }
-  }
-
-  /// Return the index of [account] in [Pref.getAccounts2]
-  static int _findAccount(Account account, [List<PrefAccount>? accounts]) {
-    final from = accounts ?? Pref().getAccounts2Or([]);
-    return from.indexWhere((element) => element.account == account);
   }
 
   bool _hasModified = false;

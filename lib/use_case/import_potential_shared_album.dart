@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_potential_shared_album.dart';
 import 'package:nc_photos/use_case/move.dart';
@@ -10,10 +11,11 @@ import 'package:nc_photos/use_case/move.dart';
 class ImportPotentialSharedAlbum {
   ImportPotentialSharedAlbum(this.fileRepo, this.albumRepo);
 
-  Future<List<Album>> call(Account account, AccountSettings settings) async {
+  Future<List<Album>> call(Account account, AccountPref accountPref) async {
     _log.info("[call] $account");
     final products = <Album>[];
-    final files = await ListPotentialSharedAlbum(fileRepo)(account, settings);
+    final files =
+        await ListPotentialSharedAlbum(fileRepo)(account, accountPref);
     for (final f in files) {
       // check if the file is actually an album
       try {

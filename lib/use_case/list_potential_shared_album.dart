@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 /// List all shared files that are potentially albums
@@ -10,11 +11,13 @@ import 'package:nc_photos/use_case/ls.dart';
 class ListPotentialSharedAlbum {
   ListPotentialSharedAlbum(this.fileRepo);
 
-  Future<List<File>> call(Account account, AccountSettings settings) async {
+  Future<List<File>> call(Account account, AccountPref accountPref) async {
     final results = <File>[];
     final ls = await Ls(fileRepo)(
       account,
-      File(path: file_util.unstripPath(account, settings.shareFolder)),
+      File(
+        path: file_util.unstripPath(account, accountPref.getShareFolderOr()),
+      ),
     );
     for (final f in ls) {
       // check owner

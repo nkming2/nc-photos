@@ -9,6 +9,7 @@ import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/connect.dart';
@@ -229,36 +230,44 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  void _connect() {
+  Future<void> _connect() async {
     _formKey.currentState!.save();
-    final account = Account(_formValue.scheme, _formValue.address,
-        _formValue.username.toCi(), _formValue.password, [""]);
+    Account? account = Account(
+      Account.newId(),
+      _formValue.scheme,
+      _formValue.address,
+      _formValue.username.toCi(),
+      _formValue.password,
+      [""],
+    );
     _log.info("[_connect] Try connecting with account: $account");
-    Navigator.pushNamed<Account>(context, Connect.routeName,
-            arguments: ConnectArguments(account))
-        .then<Account?>((result) {
-      return result != null
-          ? Navigator.pushNamed(context, RootPicker.routeName,
-              arguments: RootPickerArguments(result))
-          : Future.value(null);
-    }).then((result) {
-      if (result != null) {
-        // we've got a good account
-        final pa = PrefAccount(result);
-        // only signing in with app password would trigger distinct
-        final accounts = (Pref().getAccounts2Or([])..add(pa)).distinctIf(
-          (a, b) => a.account == b.account,
-          (a) => a.account.hashCode,
-        );
-        Pref()
-          ..setAccounts2(accounts)
-          ..setCurrentAccountIndex(
-              accounts.indexWhere((element) => element.account == result));
-        Navigator.pushNamedAndRemoveUntil(
-            context, Home.routeName, (route) => false,
-            arguments: HomeArguments(pa.account));
-      }
-    });
+    account = await Navigator.pushNamed<Account>(context, Connect.routeName,
+        arguments: ConnectArguments(account));
+    if (account == null) {
+      // connection failed
+      return;
+    }
+    account = await Navigator.pushNamed<Account>(context, RootPicker.routeName,
+        arguments: RootPickerArguments(account));
+    if (account == null) {
+      // ???
+      return;
+    }
+    // we've got a good account
+    // only signing in with app password would trigger distinct
+    final accounts = (Pref().getAccounts3Or([])..add(account)).distinct();
+    try {
+      AccountPref.setGlobalInstance(
+          account, await pref_util.loadAccountPref(account));
+    } catch (e, stackTrace) {
+      _log.shout("[_connect] Failed reading pref for account: $account", e,
+          stackTrace);
+    }
+    Pref()
+      ..setAccounts3(accounts)
+      ..setCurrentAccountIndex(accounts.indexOf(account));
+    Navigator.pushNamedAndRemoveUntil(context, Home.routeName, (route) => false,
+        arguments: HomeArguments(account));
   }
 
   final _formKey = GlobalKey<FormState>();

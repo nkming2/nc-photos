@@ -274,7 +274,7 @@ class ScanAccountDirBloc
       // no data in this bloc, ignore
       return;
     }
-    if (ev.key == PrefKey.accounts2) {
+    if (ev.key == PrefKey.accounts3) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -301,9 +301,9 @@ class ScanAccountDirBloc
     try {
       final fileRepo = FileRepo(dataSrc);
       // include files shared with this account
-      final settings = Pref().getAccountSettings(account);
-      final shareDir =
-          File(path: file_util.unstripPath(account, settings.shareFolder));
+      final settings = AccountPref.of(account);
+      final shareDir = File(
+          path: file_util.unstripPath(account, settings.getShareFolderOr()));
       bool isShareDirIncluded = false;
 
       for (final r in account.roots) {
@@ -320,8 +320,12 @@ class ScanAccountDirBloc
       }
 
       if (!isShareDirIncluded) {
-        final files = await Ls(fileRepo)(account,
-            File(path: file_util.unstripPath(account, settings.shareFolder)));
+        final files = await Ls(fileRepo)(
+          account,
+          File(
+            path: file_util.unstripPath(account, settings.getShareFolderOr()),
+          ),
+        );
         final sharedFiles =
             files.where((f) => !f.isOwned(account.username)).toList();
         yield ScanAccountDirBlocSuccess(getState().files + sharedFiles);
@@ -347,9 +351,9 @@ class ScanAccountDirBloc
       }
     }
 
-    final settings = Pref().getAccountSettings(account);
+    final settings = AccountPref.of(account);
     final shareDir =
-        File(path: file_util.unstripPath(account, settings.shareFolder));
+        File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
     if (file_util.isUnderDir(file, shareDir)) {
       return true;
     }

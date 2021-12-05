@@ -167,13 +167,14 @@ void initLog() {
 }
 
 Account buildAccount({
+  String id = "123456-000000",
   String scheme = "http",
   String address = "example.com",
   String username = "admin",
   String password = "pass",
   List<String> roots = const [""],
 }) =>
-    Account(scheme, address, username.toCi(), password, roots);
+    Account(id, scheme, address, username.toCi(), password, roots);
 
 /// Build a mock [File] pointing to a album JSON file
 ///

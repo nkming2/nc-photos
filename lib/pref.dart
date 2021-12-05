@@ -4,8 +4,9 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/type.dart';
-import 'package:nc_photos/use_case/compat/v32.dart';
+import 'package:nc_photos/mobile/platform.dart'
+    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/use_case/compat/v34.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Pref {
@@ -22,16 +23,15 @@ class Pref {
     _inst = pref;
   }
 
-  List<PrefAccount>? getAccounts2() {
-    final jsonObjs = provider.getStringList(PrefKey.accounts2);
-    return jsonObjs?.map((e) => PrefAccount.fromJson(jsonDecode(e))).toList();
+  List<Account>? getAccounts3() {
+    final jsonObjs = provider.getStringList(PrefKey.accounts3);
+    return jsonObjs?.map((e) => Account.fromJson(jsonDecode(e))).toList();
   }
 
-  List<PrefAccount> getAccounts2Or(List<PrefAccount> def) =>
-      getAccounts2() ?? def;
-  Future<bool> setAccounts2(List<PrefAccount> value) {
+  List<Account> getAccounts3Or(List<Account> def) => getAccounts3() ?? def;
+  Future<bool> setAccounts3(List<Account> value) {
     final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
-    return provider.setStringList(PrefKey.accounts2, jsons);
+    return provider.setStringList(PrefKey.accounts3, jsons);
   }
 
   int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
@@ -155,6 +155,43 @@ class Pref {
   static Pref? _inst;
 }
 
+class AccountPref {
+  AccountPref.scoped(this.provider);
+
+  static AccountPref of(Account account) {
+    _insts.putIfAbsent(
+        account.id, () => AccountPref.scoped(PrefMemoryProvider()));
+    return _insts[account.id]!;
+  }
+
+  /// Set the global [AccountPref] instance returned by the default constructor
+  static void setGlobalInstance(Account account, AccountPref? pref) {
+    if (pref != null) {
+      assert(!_insts.containsKey(account.id));
+      _insts[account.id] = pref;
+    } else {
+      assert(_insts.containsKey(account.id));
+      _insts.remove(account.id);
+    }
+  }
+
+  bool? isEnableFaceRecognitionApp() =>
+      provider.getBool(PrefKey.isEnableFaceRecognitionApp);
+  bool isEnableFaceRecognitionAppOr([bool def = true]) =>
+      isEnableFaceRecognitionApp() ?? def;
+  Future<bool> setEnableFaceRecognitionApp(bool value) =>
+      provider.setBool(PrefKey.isEnableFaceRecognitionApp, value);
+
+  String? getShareFolder() => provider.getString(PrefKey.shareFolder);
+  String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
+  Future<bool> setShareFolder(String value) =>
+      provider.setString(PrefKey.shareFolder, value);
+
+  final PrefProvider provider;
+
+  static final _insts = <String, AccountPref>{};
+}
+
 /// Provide the data for [Pref]
 abstract class PrefProvider {
   bool? getBool(PrefKey key);
@@ -163,8 +200,13 @@ abstract class PrefProvider {
   int? getInt(PrefKey key);
   Future<bool> setInt(PrefKey key, int value);
 
+  String? getString(PrefKey key);
+  Future<bool> setString(PrefKey key, String value);
+
   List<String>? getStringList(PrefKey key);
   Future<bool> setStringList(PrefKey key, List<String> value);
+
+  Future<bool> clear();
 
   bool _onPostSet(bool result, PrefKey key, dynamic value) {
     if (result) {
@@ -179,8 +221,12 @@ abstract class PrefProvider {
 /// [Pref] stored with [SharedPreferences] lib
 class PrefSharedPreferencesProvider extends PrefProvider {
   Future<void> init() async {
-    if (await CompatV32.isPrefNeedMigration()) {
-      await CompatV32.migratePref();
+    // Obsolete, CompatV34 is compatible with pre v32 versions
+    // if (await CompatV32.isPrefNeedMigration()) {
+    //   await CompatV32.migratePref();
+    // }
+    if (await CompatV34.isPrefNeedMigration()) {
+      await CompatV34.migratePref(platform.UniversalStorage());
     }
     return SharedPreferences.getInstance().then((pref) {
       _pref = pref;
@@ -205,6 +251,15 @@ class PrefSharedPreferencesProvider extends PrefProvider {
   }
 
   @override
+  getString(PrefKey key) => _pref.getString(key.toStringKey());
+
+  @override
+  setString(PrefKey key, String value) async {
+    return _onPostSet(
+        await _pref.setString(key.toStringKey(), value), key, value);
+  }
+
+  @override
   getStringList(PrefKey key) => _pref.getStringList(key.toStringKey());
 
   @override
@@ -213,42 +268,103 @@ class PrefSharedPreferencesProvider extends PrefProvider {
         await _pref.setStringList(key.toStringKey(), value), key, value);
   }
 
+  @override
+  clear() => _pref.clear();
+
   late SharedPreferences _pref;
 }
 
-/// [Pref] stored in memory
+/// [Pref] backed by [UniversalStorage]
+class PrefUniversalStorageProvider extends PrefProvider {
+  PrefUniversalStorageProvider(this.name);
+
+  Future<void> init() async {
+    final prefStr = await platform.UniversalStorage().getString(name) ?? "{}";
+    _data
+      ..clear()
+      ..addAll(jsonDecode(prefStr));
+  }
+
+  @override
+  getBool(PrefKey key) => _get<bool>(key);
+  @override
+  setBool(PrefKey key, bool value) => _set(key, value);
+
+  @override
+  getInt(PrefKey key) => _get<int>(key);
+  @override
+  setInt(PrefKey key, int value) => _set(key, value);
+
+  @override
+  getString(PrefKey key) => _get<String>(key);
+  @override
+  setString(PrefKey key, String value) => _set(key, value);
+
+  @override
+  getStringList(PrefKey key) => _get<List<String>>(key);
+  @override
+  setStringList(PrefKey key, List<String> value) => _set(key, value);
+
+  @override
+  clear() async {
+    await platform.UniversalStorage().remove(name);
+    _data.clear();
+    return true;
+  }
+
+  T? _get<T>(PrefKey key) => _data[key.toStringKey()];
+
+  Future<bool> _set<T>(PrefKey key, T value) async {
+    return _onPostSet(await _update(key, value), key, value);
+  }
+
+  Future<bool> _update<T>(PrefKey key, T value) async {
+    final newData = Map.of(_data)
+      ..addEntries([MapEntry(key.toStringKey(), value)]);
+    await platform.UniversalStorage().putString(name, jsonEncode(newData));
+    _data[key.toStringKey()] = value;
+    return true;
+  }
+
+  final String name;
+  final _data = <String, dynamic>{};
+}
+
+/// [Pref] stored in memory, useful in unit tests
 class PrefMemoryProvider extends PrefProvider {
   PrefMemoryProvider([
     Map<String, dynamic> initialData = const <String, dynamic>{},
   ]) : _data = Map.of(initialData);
 
   @override
-  getBool(PrefKey key) => _data[key.toStringKey()];
+  getBool(PrefKey key) => _get<bool>(key);
+  @override
+  setBool(PrefKey key, bool value) => _set(key, value);
 
   @override
-  setBool(PrefKey key, bool value) async {
-    return _onPostSet(() {
-      _data[key.toStringKey()] = value;
-      return true;
-    }(), key, value);
+  getInt(PrefKey key) => _get<int>(key);
+  @override
+  setInt(PrefKey key, int value) => _set(key, value);
+
+  @override
+  getString(PrefKey key) => _get<String>(key);
+  @override
+  setString(PrefKey key, String value) => _set(key, value);
+
+  @override
+  getStringList(PrefKey key) => _get<List<String>>(key);
+  @override
+  setStringList(PrefKey key, List<String> value) => _set(key, value);
+
+  @override
+  clear() async {
+    _data.clear();
+    return true;
   }
 
-  @override
-  getInt(PrefKey key) => _data[key.toStringKey()];
+  T? _get<T>(PrefKey key) => _data[key.toStringKey()];
 
-  @override
-  setInt(PrefKey key, int value) async {
-    return _onPostSet(() {
-      _data[key.toStringKey()] = value;
-      return true;
-    }(), key, value);
-  }
-
-  @override
-  getStringList(PrefKey key) => _data[key.toStringKey()];
-
-  @override
-  setStringList(PrefKey key, List<String> value) async {
+  Future<bool> _set<T>(PrefKey key, T value) async {
     return _onPostSet(() {
       _data[key.toStringKey()] = value;
       return true;
@@ -258,48 +374,8 @@ class PrefMemoryProvider extends PrefProvider {
   final Map<String, dynamic> _data;
 }
 
-class PrefAccount {
-  const PrefAccount(
-    this.account, [
-    this.settings = const AccountSettings(),
-  ]);
-
-  factory PrefAccount.fromJson(JsonObj json) {
-    return PrefAccount(
-      Account.fromJson(json["account"].cast<String, dynamic>()),
-      AccountSettings.fromJson(json["settings"].cast<String, dynamic>()),
-    );
-  }
-
-  JsonObj toJson() => {
-        "account": account.toJson(),
-        "settings": settings.toJson(),
-      };
-
-  PrefAccount copyWith({
-    Account? account,
-    AccountSettings? settings,
-  }) {
-    return PrefAccount(
-      account ?? this.account,
-      settings ?? this.settings,
-    );
-  }
-
-  @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "settings: $settings, "
-        "}";
-  }
-
-  final Account account;
-  final AccountSettings settings;
-}
-
 enum PrefKey {
-  accounts2,
+  accounts3,
   currentAccountIndex,
   homePhotosZoomLevel,
   albumBrowserZoomLevel,
@@ -321,13 +397,17 @@ enum PrefKey {
   isAlbumBrowserShowDate,
   gpsMapProvider,
   hasShownSharedAlbumInfo,
+
+  // account pref
+  isEnableFaceRecognitionApp,
+  shareFolder,
 }
 
 extension on PrefKey {
   String toStringKey() {
     switch (this) {
-      case PrefKey.accounts2:
-        return "accounts2";
+      case PrefKey.accounts3:
+        return "accounts3";
       case PrefKey.currentAccountIndex:
         return "currentAccountIndex";
       case PrefKey.homePhotosZoomLevel:
@@ -370,6 +450,12 @@ extension on PrefKey {
         return "gpsMapProvider";
       case PrefKey.hasShownSharedAlbumInfo:
         return "hasShownSharedAlbumInfo";
+
+      // account pref
+      case PrefKey.isEnableFaceRecognitionApp:
+        return "isEnableFaceRecognitionApp";
+      case PrefKey.shareFolder:
+        return "shareFolder";
     }
   }
 }
@@ -377,16 +463,9 @@ extension on PrefKey {
 extension PrefExtension on Pref {
   Account? getCurrentAccount() {
     try {
-      return Pref().getAccounts2()![Pref().getCurrentAccountIndex()!].account;
+      return Pref().getAccounts3()![Pref().getCurrentAccountIndex()!];
     } catch (_) {
       return null;
     }
-  }
-
-  AccountSettings getAccountSettings(Account account) {
-    return Pref()
-        .getAccounts2()!
-        .firstWhere((element) => element.account == account)
-        .settings;
   }
 }

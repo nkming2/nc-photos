@@ -26,6 +26,7 @@ import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:nc_photos/widget/my_app.dart';
 
 void main() async {
@@ -34,6 +35,7 @@ void main() async {
   _initLog();
   _initKiwi();
   await _initPref();
+  await _initAccountPrefs();
   await _initDeviceInfo();
   _initBloc();
   _initEquatable();
@@ -105,6 +107,17 @@ Future<void> _initPref() async {
   }
 }
 
+Future<void> _initAccountPrefs() async {
+  for (final a in Pref().getAccounts3Or([])) {
+    try {
+      AccountPref.setGlobalInstance(a, await pref_util.loadAccountPref(a));
+    } catch (e, stackTrace) {
+      _log.shout("[_initAccountPrefs] Failed reading pref for account: $a", e,
+          stackTrace);
+    }
+  }
+}
+
 Future<void> _initDeviceInfo() async {
   if (platform_k.isAndroid) {
     await AndroidInfo.init();
@@ -150,3 +163,5 @@ class _BlocObserver extends BlocObserver {
 
   static final _log = Logger("main._BlocObserver");
 }
+
+final _log = Logger("main");
