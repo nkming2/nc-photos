@@ -10,4 +10,6 @@ extension ObjectExtension<T> on T {
     await fn(this);
     return this;
   }
+
+  U run<U>(U Function(T obj) fn) => fn(this);
 }
