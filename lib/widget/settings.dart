@@ -426,13 +426,13 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
 
   Widget _buildContent(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => !_hasModified,
+      onWillPop: () async => !_shouldReload,
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
             title: Text(L10n.global().settingsAccountPageTitle),
-            leading: _hasModified
+            leading: _shouldReload
                 ? IconButton(
                     icon: const Icon(Icons.check),
                     tooltip: L10n.global().doneButtonTooltip,
@@ -523,7 +523,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       }
       setState(() {
         _account = result;
-        _hasModified = true;
+        _shouldReload = true;
       });
     } catch (e, stackTrace) {
       _log.shout("[_onIncludedFoldersPressed] Exception", e, stackTrace);
@@ -563,10 +563,6 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       setState(() {
         _isEnableFaceRecognitionApp = oldValue;
       });
-    } else {
-      setState(() {
-        _hasModified = true;
-      });
     }
   }
 
@@ -585,14 +581,10 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       setState(() {
         _shareFolder = oldValue;
       });
-    } else {
-      setState(() {
-        _hasModified = true;
-      });
     }
   }
 
-  bool _hasModified = false;
+  bool _shouldReload = false;
   late Account _account;
   late bool _isEnableFaceRecognitionApp;
   late String _shareFolder;

@@ -14,6 +14,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -60,6 +61,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
   initState() {
     super.initState();
     _initBloc();
+    _accountPrefUpdatedEventListener.begin();
+  }
+
+  @override
+  dispose() {
+    _accountPrefUpdatedEventListener.end();
+    super.dispose();
   }
 
   @override
@@ -432,6 +440,17 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
+  void _onAccountPrefUpdatedEvent(AccountPrefUpdatedEvent ev) {
+    if (ev.key == PrefKey.isEnableFaceRecognitionApp ||
+        ev.key == PrefKey.hasNewSharedAlbum) {
+      if (identical(ev.pref, AccountPref.of(widget.account))) {
+        setState(() {
+          _transformItems(_bloc.state.items);
+        });
+      }
+    }
+  }
+
   /// Transform an Album list to grid items
   void _transformItems(List<ListAlbumBlocItem> items) {
     final sort = _getSortFromPref();
@@ -494,6 +513,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   late ListAlbumBloc _bloc;
+  late final _accountPrefUpdatedEventListener =
+      AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
 
   static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;

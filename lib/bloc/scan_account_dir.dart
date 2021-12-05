@@ -105,6 +105,7 @@ class ScanAccountDirBloc
     _fileTrashbinRestoredEventListener.begin();
     _fileMovedEventListener.begin();
     _prefUpdatedEventListener.begin();
+    _accountPrefUpdatedEventListener.begin();
   }
 
   static ScanAccountDirBloc of(Account account) {
@@ -156,6 +157,7 @@ class ScanAccountDirBloc
     _fileTrashbinRestoredEventListener.end();
     _fileMovedEventListener.end();
     _prefUpdatedEventListener.end();
+    _accountPrefUpdatedEventListener.end();
 
     _refreshThrottler.clear();
     return super.close();
@@ -282,6 +284,20 @@ class ScanAccountDirBloc
     }
   }
 
+  void _onAccountPrefUpdatedEvent(AccountPrefUpdatedEvent ev) {
+    if (state is ScanAccountDirBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if (ev.key == PrefKey.shareFolder &&
+        identical(ev.pref, AccountPref.of(account))) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
   Stream<ScanAccountDirBlocState> _queryOffline(ScanAccountDirBlocQueryBase ev,
           ScanAccountDirBlocState Function() getState) =>
       _queryWithFileDataSource(ev, getState, FileAppDbDataSource(AppDb()));
@@ -372,6 +388,8 @@ class ScanAccountDirBloc
       AppEventListener<FileMovedEvent>(_onFileMovedEvent);
   late final _prefUpdatedEventListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdatedEvent);
+  late final _accountPrefUpdatedEventListener =
+      AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
 
   late final _refreshThrottler = Throttler(
     onTriggered: (_) {
