@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:event_bus/event_bus.dart';
@@ -36,114 +37,150 @@ class Pref {
 
   int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
   int getCurrentAccountIndexOr(int def) => getCurrentAccountIndex() ?? def;
-  Future<bool> setCurrentAccountIndex(int value) =>
-      provider.setInt(PrefKey.currentAccountIndex, value);
+  Future<bool> setCurrentAccountIndex(int value) => _set<int>(
+      PrefKey.currentAccountIndex,
+      value,
+      (key, value) => provider.setInt(key, value));
 
   int? getHomePhotosZoomLevel() => provider.getInt(PrefKey.homePhotosZoomLevel);
   int getHomePhotosZoomLevelOr(int def) => getHomePhotosZoomLevel() ?? def;
-  Future<bool> setHomePhotosZoomLevel(int value) =>
-      provider.setInt(PrefKey.homePhotosZoomLevel, value);
+  Future<bool> setHomePhotosZoomLevel(int value) => _set<int>(
+      PrefKey.homePhotosZoomLevel,
+      value,
+      (key, value) => provider.setInt(key, value));
 
   int? getAlbumBrowserZoomLevel() =>
       provider.getInt(PrefKey.albumBrowserZoomLevel);
   int getAlbumBrowserZoomLevelOr(int def) => getAlbumBrowserZoomLevel() ?? def;
-  Future<bool> setAlbumBrowserZoomLevel(int value) =>
-      provider.setInt(PrefKey.albumBrowserZoomLevel, value);
+  Future<bool> setAlbumBrowserZoomLevel(int value) => _set<int>(
+      PrefKey.albumBrowserZoomLevel,
+      value,
+      (key, value) => provider.setInt(key, value));
 
   int? getHomeAlbumsSort() => provider.getInt(PrefKey.homeAlbumsSort);
   int getHomeAlbumsSortOr(int def) => getHomeAlbumsSort() ?? def;
-  Future<bool> setHomeAlbumsSort(int value) =>
-      provider.setInt(PrefKey.homeAlbumsSort, value);
+  Future<bool> setHomeAlbumsSort(int value) => _set<int>(PrefKey.homeAlbumsSort,
+      value, (key, value) => provider.setInt(key, value));
 
   bool? isEnableExif() => provider.getBool(PrefKey.enableExif);
   bool isEnableExifOr([bool def = true]) => isEnableExif() ?? def;
-  Future<bool> setEnableExif(bool value) =>
-      provider.setBool(PrefKey.enableExif, value);
+  Future<bool> setEnableExif(bool value) => _set<bool>(
+      PrefKey.enableExif, value, (key, value) => provider.setBool(key, value));
 
   int? getViewerScreenBrightness() =>
       provider.getInt(PrefKey.viewerScreenBrightness);
   int getViewerScreenBrightnessOr([int def = -1]) =>
       getViewerScreenBrightness() ?? def;
-  Future<bool> setViewerScreenBrightness(int value) =>
-      provider.setInt(PrefKey.viewerScreenBrightness, value);
+  Future<bool> setViewerScreenBrightness(int value) => _set<int>(
+      PrefKey.viewerScreenBrightness,
+      value,
+      (key, value) => provider.setInt(key, value));
 
   bool? isViewerForceRotation() =>
       provider.getBool(PrefKey.viewerForceRotation);
   bool isViewerForceRotationOr([bool def = false]) =>
       isViewerForceRotation() ?? def;
-  Future<bool> setViewerForceRotation(bool value) =>
-      provider.setBool(PrefKey.viewerForceRotation, value);
+  Future<bool> setViewerForceRotation(bool value) => _set<bool>(
+      PrefKey.viewerForceRotation,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   int? getSetupProgress() => provider.getInt(PrefKey.setupProgress);
   int getSetupProgressOr([int def = 0]) => getSetupProgress() ?? def;
-  Future<bool> setSetupProgress(int value) =>
-      provider.setInt(PrefKey.setupProgress, value);
+  Future<bool> setSetupProgress(int value) => _set<int>(PrefKey.setupProgress,
+      value, (key, value) => provider.setInt(key, value));
 
   /// Return the version number when the app last ran
   int? getLastVersion() => provider.getInt(PrefKey.lastVersion);
   int getLastVersionOr(int def) => getLastVersion() ?? def;
-  Future<bool> setLastVersion(int value) =>
-      provider.setInt(PrefKey.lastVersion, value);
+  Future<bool> setLastVersion(int value) => _set<int>(
+      PrefKey.lastVersion, value, (key, value) => provider.setInt(key, value));
 
   bool? isDarkTheme() => provider.getBool(PrefKey.darkTheme);
   bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
-  Future<bool> setDarkTheme(bool value) =>
-      provider.setBool(PrefKey.darkTheme, value);
+  Future<bool> setDarkTheme(bool value) => _set<bool>(
+      PrefKey.darkTheme, value, (key, value) => provider.setBool(key, value));
 
   bool? isFollowSystemTheme() => provider.getBool(PrefKey.followSystemTheme);
   bool isFollowSystemThemeOr(bool def) => isFollowSystemTheme() ?? def;
-  Future<bool> setFollowSystemTheme(bool value) =>
-      provider.setBool(PrefKey.followSystemTheme, value);
+  Future<bool> setFollowSystemTheme(bool value) => _set<bool>(
+      PrefKey.followSystemTheme,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   bool? isUseBlackInDarkTheme() =>
       provider.getBool(PrefKey.useBlackInDarkTheme);
   bool isUseBlackInDarkThemeOr(bool def) => isUseBlackInDarkTheme() ?? def;
-  Future<bool> setUseBlackInDarkTheme(bool value) =>
-      provider.setBool(PrefKey.useBlackInDarkTheme, value);
+  Future<bool> setUseBlackInDarkTheme(bool value) => _set<bool>(
+      PrefKey.useBlackInDarkTheme,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   int? getLanguage() => provider.getInt(PrefKey.language);
   int getLanguageOr(int def) => getLanguage() ?? def;
-  Future<bool> setLanguage(int value) =>
-      provider.setInt(PrefKey.language, value);
+  Future<bool> setLanguage(int value) => _set<int>(
+      PrefKey.language, value, (key, value) => provider.setInt(key, value));
 
   int? getSlideshowDuration() => provider.getInt(PrefKey.slideshowDuration);
   int getSlideshowDurationOr(int def) => getSlideshowDuration() ?? def;
-  Future<bool> setSlideshowDuration(int value) =>
-      provider.setInt(PrefKey.slideshowDuration, value);
+  Future<bool> setSlideshowDuration(int value) => _set<int>(
+      PrefKey.slideshowDuration,
+      value,
+      (key, value) => provider.setInt(key, value));
 
   bool? isSlideshowShuffle() => provider.getBool(PrefKey.isSlideshowShuffle);
   bool isSlideshowShuffleOr(bool def) => isSlideshowShuffle() ?? def;
-  Future<bool> setSlideshowShuffle(bool value) =>
-      provider.setBool(PrefKey.isSlideshowShuffle, value);
+  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
+      PrefKey.isSlideshowShuffle,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   bool? isSlideshowRepeat() => provider.getBool(PrefKey.isSlideshowRepeat);
   bool isSlideshowRepeatOr(bool def) => isSlideshowRepeat() ?? def;
-  Future<bool> setSlideshowRepeat(bool value) =>
-      provider.setBool(PrefKey.isSlideshowRepeat, value);
+  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
+      PrefKey.isSlideshowRepeat,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   bool? isAlbumBrowserShowDate() =>
       provider.getBool(PrefKey.isAlbumBrowserShowDate);
   bool isAlbumBrowserShowDateOr([bool def = false]) =>
       isAlbumBrowserShowDate() ?? def;
-  Future<bool> setAlbumBrowserShowDate(bool value) =>
-      provider.setBool(PrefKey.isAlbumBrowserShowDate, value);
+  Future<bool> setAlbumBrowserShowDate(bool value) => _set<bool>(
+      PrefKey.isAlbumBrowserShowDate,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   int? getGpsMapProvider() => provider.getInt(PrefKey.gpsMapProvider);
   int getGpsMapProviderOr(int def) => getGpsMapProvider() ?? def;
-  Future<bool> setGpsMapProvider(int value) =>
-      provider.setInt(PrefKey.gpsMapProvider, value);
+  Future<bool> setGpsMapProvider(int value) => _set<int>(PrefKey.gpsMapProvider,
+      value, (key, value) => provider.setInt(key, value));
 
   bool? isLabEnableSharedAlbum() =>
       provider.getBool(PrefKey.labEnableSharedAlbum);
   bool isLabEnableSharedAlbumOr(bool def) => isLabEnableSharedAlbum() ?? def;
-  Future<bool> setLabEnableSharedAlbum(bool value) =>
-      provider.setBool(PrefKey.labEnableSharedAlbum, value);
+  Future<bool> setLabEnableSharedAlbum(bool value) => _set<bool>(
+      PrefKey.labEnableSharedAlbum,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   bool? hasShownSharedAlbumInfo() =>
       provider.getBool(PrefKey.hasShownSharedAlbumInfo);
   bool hasShownSharedAlbumInfoOr(bool def) => hasShownSharedAlbumInfo() ?? def;
-  Future<bool> setHasShownSharedAlbumInfo(bool value) =>
-      provider.setBool(PrefKey.hasShownSharedAlbumInfo, value);
+  Future<bool> setHasShownSharedAlbumInfo(bool value) => _set<bool>(
+      PrefKey.hasShownSharedAlbumInfo,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  Future<bool> _set<T>(PrefKey key, T value,
+      Future<bool> Function(PrefKey key, T value) setFn) async {
+    if (await setFn(key, value)) {
+      KiwiContainer().resolve<EventBus>().fire(PrefUpdatedEvent(key, value));
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   final PrefProvider provider;
 
@@ -174,18 +211,34 @@ class AccountPref {
       provider.getBool(PrefKey.isEnableFaceRecognitionApp);
   bool isEnableFaceRecognitionAppOr([bool def = true]) =>
       isEnableFaceRecognitionApp() ?? def;
-  Future<bool> setEnableFaceRecognitionApp(bool value) =>
-      provider.setBool(PrefKey.isEnableFaceRecognitionApp, value);
+  Future<bool> setEnableFaceRecognitionApp(bool value) => _set<bool>(
+      PrefKey.isEnableFaceRecognitionApp,
+      value,
+      (key, value) => provider.setBool(key, value));
 
   String? getShareFolder() => provider.getString(PrefKey.shareFolder);
   String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
-  Future<bool> setShareFolder(String value) =>
-      provider.setString(PrefKey.shareFolder, value);
+  Future<bool> setShareFolder(String value) => _set<String>(PrefKey.shareFolder,
+      value, (key, value) => provider.setString(key, value));
 
   bool? hasNewSharedAlbum() => provider.getBool(PrefKey.hasNewSharedAlbum);
   bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
-  Future<bool> setNewSharedAlbum(bool value) =>
-      provider.setBool(PrefKey.hasNewSharedAlbum, value);
+  Future<bool> setNewSharedAlbum(bool value) => _set<bool>(
+      PrefKey.hasNewSharedAlbum,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  Future<bool> _set<T>(PrefKey key, T value,
+      Future<bool> Function(PrefKey key, T value) setFn) async {
+    if (await setFn(key, value)) {
+      KiwiContainer()
+          .resolve<EventBus>()
+          .fire(AccountPrefUpdatedEvent(this, key, value));
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   final PrefProvider provider;
 
@@ -207,15 +260,6 @@ abstract class PrefProvider {
   Future<bool> setStringList(PrefKey key, List<String> value);
 
   Future<bool> clear();
-
-  bool _onPostSet(bool result, PrefKey key, dynamic value) {
-    if (result) {
-      KiwiContainer().resolve<EventBus>().fire(PrefUpdatedEvent(key, value));
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
 
 /// [Pref] stored with [SharedPreferences] lib
@@ -237,36 +281,27 @@ class PrefSharedPreferencesProvider extends PrefProvider {
   getBool(PrefKey key) => _pref.getBool(key.toStringKey());
 
   @override
-  setBool(PrefKey key, bool value) async {
-    return _onPostSet(
-        await _pref.setBool(key.toStringKey(), value), key, value);
-  }
+  setBool(PrefKey key, bool value) => _pref.setBool(key.toStringKey(), value);
 
   @override
   getInt(PrefKey key) => _pref.getInt(key.toStringKey());
 
   @override
-  setInt(PrefKey key, int value) async {
-    return _onPostSet(await _pref.setInt(key.toStringKey(), value), key, value);
-  }
+  setInt(PrefKey key, int value) => _pref.setInt(key.toStringKey(), value);
 
   @override
   getString(PrefKey key) => _pref.getString(key.toStringKey());
 
   @override
-  setString(PrefKey key, String value) async {
-    return _onPostSet(
-        await _pref.setString(key.toStringKey(), value), key, value);
-  }
+  setString(PrefKey key, String value) =>
+      _pref.setString(key.toStringKey(), value);
 
   @override
   getStringList(PrefKey key) => _pref.getStringList(key.toStringKey());
 
   @override
-  setStringList(PrefKey key, List<String> value) async {
-    return _onPostSet(
-        await _pref.setStringList(key.toStringKey(), value), key, value);
-  }
+  setStringList(PrefKey key, List<String> value) =>
+      _pref.setStringList(key.toStringKey(), value);
 
   @override
   clear() => _pref.clear();
@@ -315,10 +350,6 @@ class PrefUniversalStorageProvider extends PrefProvider {
   T? _get<T>(PrefKey key) => _data[key.toStringKey()];
 
   Future<bool> _set<T>(PrefKey key, T value) async {
-    return _onPostSet(await _update(key, value), key, value);
-  }
-
-  Future<bool> _update<T>(PrefKey key, T value) async {
     final newData = Map.of(_data)
       ..addEntries([MapEntry(key.toStringKey(), value)]);
     await platform.UniversalStorage().putString(name, jsonEncode(newData));
@@ -365,10 +396,8 @@ class PrefMemoryProvider extends PrefProvider {
   T? _get<T>(PrefKey key) => _data[key.toStringKey()];
 
   Future<bool> _set<T>(PrefKey key, T value) async {
-    return _onPostSet(() {
-      _data[key.toStringKey()] = value;
-      return true;
-    }(), key, value);
+    _data[key.toStringKey()] = value;
+    return true;
   }
 
   final Map<String, dynamic> _data;

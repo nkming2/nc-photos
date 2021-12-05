@@ -37,6 +37,14 @@ class AppEventListener<T> {
   final _log = Logger("event.event.AppEventListener<${T.runtimeType}>");
 }
 
+class AccountPrefUpdatedEvent {
+  const AccountPrefUpdatedEvent(this.pref, this.key, this.value);
+
+  final AccountPref pref;
+  final PrefKey key;
+  final dynamic value;
+}
+
 class AlbumCreatedEvent {
   AlbumCreatedEvent(this.account, this.album);
 
