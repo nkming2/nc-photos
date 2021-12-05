@@ -148,5 +148,5 @@ class _BlocObserver extends BlocObserver {
     _log.finer("${bloc.runtimeType} $change");
   }
 
-  static final _log = Logger("_BlocObserver");
+  static final _log = Logger("main._BlocObserver");
 }
