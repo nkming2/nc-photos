@@ -15,6 +15,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -26,6 +27,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -180,7 +182,25 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<void> _initAlbum() async {
     final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    final album = await albumRepo.get(widget.account, widget.album.albumFile!);
+    var album = await albumRepo.get(widget.account, widget.album.albumFile!);
+    if (widget.album.shares?.isNotEmpty == true) {
+      try {
+        final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+        final file =
+            await LsSingleFile(fileRepo)(widget.account, album.albumFile!.path);
+        if (file.etag != album.albumFile!.etag) {
+          _log.info("[_initAlbum] Album modified in remote, forcing download");
+          album = await albumRepo.get(widget.account, File(path: file.path));
+        }
+      } catch (e, stackTrace) {
+        _log.warning("[_initAlbum] Failed while syncing remote album file", e,
+            stackTrace);
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(e)),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
+    }
     await _setAlbum(album);
 
     if (album.shares?.isNotEmpty == true) {
