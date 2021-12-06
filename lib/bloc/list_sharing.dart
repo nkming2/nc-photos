@@ -270,8 +270,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       return;
     }
     if (_isAccountOfInterest(ev.account)) {
-      if (ev.destination.startsWith(remote_storage_util
-              .getRemotePendingSharedAlbumsDir(ev.account)) &&
+      if (ev.destination
+              .startsWith(remote_storage_util.getRemoteAlbumsDir(ev.account)) &&
           ev.file.path.startsWith(remote_storage_util
               .getRemotePendingSharedAlbumsDir(ev.account))) {
         // moving from/to pending dir
