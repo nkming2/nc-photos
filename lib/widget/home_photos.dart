@@ -503,7 +503,8 @@ class _HomePhotosState extends State<HomePhotos>
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
-      MetadataTaskManager().addTask(MetadataTask(widget.account));
+      MetadataTaskManager().addTask(
+          MetadataTask(widget.account, AccountPref.of(widget.account)));
       _metadataTaskProcessTotalCount = _backingFiles
           .where(
               (f) => file_util.isSupportedImageFormat(f) && f.metadata == null)

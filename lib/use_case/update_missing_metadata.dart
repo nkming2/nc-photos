@@ -17,12 +17,27 @@ import 'package:nc_photos/use_case/update_property.dart';
 class UpdateMissingMetadata {
   UpdateMissingMetadata(this.fileRepo);
 
-  /// Update metadata for all files that support one under a dir recursively
+  /// Update metadata for all files that support one under a dir
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
   /// would emit either File data (for each updated files) or ExceptionEvent
-  Stream<dynamic> call(Account account, File root) async* {
-    final dataStream = ScanMissingMetadata(fileRepo)(account, root);
+  ///
+  /// If [isRecursive] is true, [root] and its sub dirs will be scanned,
+  /// otherwise only [root] will be scanned. Default to true
+  ///
+  /// [filter] can be used to filter files -- return true if a file should be
+  /// included. If [filter] is null, all files will be included.
+  Stream<dynamic> call(
+    Account account,
+    File root, {
+    bool isRecursive = true,
+    bool Function(File file)? filter,
+  }) async* {
+    final dataStream = ScanMissingMetadata(fileRepo)(
+      account,
+      root,
+      isRecursive: isRecursive,
+    );
     await for (final d in dataStream) {
       if (d is ExceptionEvent) {
         yield d;
@@ -31,7 +46,7 @@ class UpdateMissingMetadata {
       final File file = d;
       // check if this is a federation share. Nextcloud doesn't support
       // properties for such files
-      if (file.ownerId?.contains("/") == true) {
+      if (file.ownerId?.contains("/") == true || filter?.call(d) == false) {
         continue;
       }
       try {
