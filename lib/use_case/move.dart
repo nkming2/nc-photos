@@ -2,6 +2,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
@@ -10,7 +11,9 @@ import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:path/path.dart' as path;
 
 class Move {
-  Move(this.fileRepo);
+  Move(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   /// Move a file from its original location to [destination]
   Future<void> call(
@@ -44,15 +47,16 @@ class Move {
       _log.info("[call] Retry with: '$to'");
     }
     try {
-      await fileRepo.move(account, file, to, shouldOverwrite: shouldOverwrite);
+      await _c.fileRepo
+          .move(account, file, to, shouldOverwrite: shouldOverwrite);
     } catch (e) {
       if (e is ApiException) {
         if (e.response.statusCode == 409 && shouldCreateMissingDir) {
           // no dir
           _log.info("[call] Auto creating parent dirs");
-          await CreateDir(fileRepo)(account, path.dirname(to));
-          await fileRepo.move(account, file, to,
-              shouldOverwrite: shouldOverwrite);
+          await CreateDir(_c.fileRepo)(account, path.dirname(to));
+          await _c.fileRepo
+              .move(account, file, to, shouldOverwrite: shouldOverwrite);
         } else if (e.response.statusCode == 412 && shouldRenameOnOverwrite) {
           return _doWork(
             account,
@@ -84,7 +88,7 @@ class Move {
     return "${path.dirname(destination)}/$newName";
   }
 
-  final FileRepo fileRepo;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.move.Move");
 }

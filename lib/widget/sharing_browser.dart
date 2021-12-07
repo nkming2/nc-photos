@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -10,6 +11,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_sharing.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -18,6 +20,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -325,11 +328,13 @@ class _SharingBrowserState extends State<SharingBrowser> {
   }
 
   Future<List<Album>> _importPotentialSharedAlbum() async {
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    // don't want the potential albums to be cached at this moment
-    final albumRepo = AlbumRepo(AlbumRemoteDataSource());
+    final c = KiwiContainer().resolve<DiContainer>().copyWith(
+          // don't want the potential albums to be cached at this moment
+          fileRepo: OrNull(const FileRepo(FileWebdavDataSource())),
+          albumRepo: OrNull(AlbumRepo(AlbumRemoteDataSource())),
+        );
     try {
-      return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
+      return await ImportPotentialSharedAlbum(c)(
           widget.account, AccountPref.of(widget.account));
     } catch (e, stackTrace) {
       _log.shout(

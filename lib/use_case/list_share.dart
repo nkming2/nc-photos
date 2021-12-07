@@ -9,10 +9,11 @@ import 'package:nc_photos/use_case/find_file.dart';
 
 /// List all shares from a given file
 class ListShare {
-  ListShare(this._c) : assert(require(_c));
+  ListShare(this._c)
+      : assert(require(_c)),
+        assert(FindFile.require(_c));
 
-  static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.shareRepo) && DiContainer.has(c, DiType.appDb);
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.shareRepo);
 
   Future<List<Share>> call(
     Account account,
@@ -21,7 +22,7 @@ class ListShare {
   }) async {
     try {
       if (file_util.getUserDirName(file) != account.username) {
-        file = await FindFile(_c.appDb)(account, file.fileId!);
+        file = await FindFile(_c)(account, file.fileId!);
       }
     } catch (_) {
       // file not found

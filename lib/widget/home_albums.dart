@@ -6,14 +6,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
@@ -83,21 +81,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   void _initBloc() {
-    ListAlbumBloc bloc;
-    final blocId =
-        "${widget.account.scheme}://${widget.account.username}@${widget.account.address}";
-    try {
-      _log.fine("[_initBloc] Resolving bloc for '$blocId'");
-      bloc = KiwiContainer().resolve<ListAlbumBloc>("ListAlbumBloc($blocId)");
-    } catch (e) {
-      // no created instance for this account, make a new one
-      _log.info("[_initBloc] New bloc instance for account: ${widget.account}");
-      bloc = ListAlbumBloc();
-      KiwiContainer().registerInstance<ListAlbumBloc>(bloc,
-          name: "ListAlbumBloc($blocId)");
-    }
-
-    _bloc = bloc;
     if (_bloc.state is ListAlbumBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
       _reqQuery();
@@ -406,7 +389,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     final failures = <Album>[];
     for (final a in selected) {
       try {
@@ -416,7 +398,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
               widget.account, a);
         } else {
           // remove shared albums from collection
-          await UnimportSharedAlbum(fileRepo)(widget.account, a);
+          await UnimportSharedAlbum(KiwiContainer().resolve<DiContainer>())(
+              widget.account, a);
         }
       } catch (e, stackTrace) {
         _log.shout(
@@ -512,7 +495,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
-  late ListAlbumBloc _bloc;
+  late final _bloc = ListAlbumBloc.of(widget.account);
   late final _accountPrefUpdatedEventListener =
       AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
 

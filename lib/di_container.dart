@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 
 enum DiType {
@@ -56,6 +57,28 @@ class DiContainer {
       case DiType.pref:
         return contianer._pref != null;
     }
+  }
+
+  DiContainer copyWith({
+    OrNull<AlbumRepo>? albumRepo,
+    OrNull<FaceRepo>? faceRepo,
+    OrNull<FileRepo>? fileRepo,
+    OrNull<PersonRepo>? personRepo,
+    OrNull<ShareRepo>? shareRepo,
+    OrNull<ShareeRepo>? shareeRepo,
+    OrNull<AppDb>? appDb,
+    OrNull<Pref>? pref,
+  }) {
+    return DiContainer(
+      albumRepo: albumRepo == null ? this.albumRepo : albumRepo.obj,
+      faceRepo: faceRepo == null ? this.faceRepo : faceRepo.obj,
+      fileRepo: fileRepo == null ? this.fileRepo : fileRepo.obj,
+      personRepo: personRepo == null ? this.personRepo : personRepo.obj,
+      shareRepo: shareRepo == null ? this.shareRepo : shareRepo.obj,
+      shareeRepo: shareeRepo == null ? this.shareeRepo : shareeRepo.obj,
+      appDb: appDb == null ? this.appDb : appDb.obj,
+      pref: pref == null ? this.pref : pref.obj,
+    );
   }
 
   AlbumRepo get albumRepo => _albumRepo!;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
@@ -48,21 +47,6 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
   }
 
   void _initBloc() {
-    ListAlbumBloc bloc;
-    final blocId =
-        "${widget.account.scheme}://${widget.account.username}@${widget.account.address}";
-    try {
-      _log.fine("[_initBloc] Resolving bloc for '$blocId'");
-      bloc = KiwiContainer().resolve<ListAlbumBloc>("ListAlbumBloc($blocId)");
-    } catch (_) {
-      // no created instance for this account, make a new one
-      _log.info("[_initBloc] New bloc instance for account: ${widget.account}");
-      bloc = ListAlbumBloc();
-      KiwiContainer().registerInstance<ListAlbumBloc>(bloc,
-          name: "ListAlbumBloc($blocId)");
-    }
-
-    _bloc = bloc;
     if (_bloc.state is ListAlbumBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
       _reqQuery();
@@ -171,7 +155,7 @@ class _AlbumPickerDialogState extends State<AlbumPickerDialog> {
     _bloc.add(ListAlbumBlocQuery(widget.account));
   }
 
-  late ListAlbumBloc _bloc;
+  late final _bloc = ListAlbumBloc.of(widget.account);
 
   final _items = <Album>[];
 

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
@@ -291,11 +292,11 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     setState(() {
       clearSelectedItems();
     });
-    const fileRepo = FileRepo(FileWebdavDataSource());
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
-        await RestoreTrashbin(fileRepo)(widget.account, f);
+        await RestoreTrashbin(KiwiContainer().resolve<DiContainer>())(
+            widget.account, f);
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarRestorePressed] Failed while restoring file: ${logFilename(f.path)}",

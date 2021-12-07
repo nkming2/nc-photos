@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -58,12 +58,11 @@ class _RootPickerState extends State<RootPicker> {
 
   void _initAccount() async {
     try {
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       final files = <File>[];
       for (final r in widget.account.roots) {
         if (r.isNotEmpty) {
           _ensureInitDialog();
-          files.add(await LsSingleFile(fileRepo)(
+          files.add(await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
               widget.account, file_util.unstripPath(widget.account, r)));
         }
       }

@@ -2,13 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -152,7 +150,12 @@ class ListSharingBlocFailure extends ListSharingBlocState {
 
 /// List shares to be shown in [SharingBrowser]
 class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
-  ListSharingBloc() : super(ListSharingBlocInit()) {
+  ListSharingBloc(this._c)
+      : assert(require(_c)),
+        assert(FindFile.require(_c)),
+        assert(ListShareWithMe.require(_c)),
+        assert(LsSingleFile.require(_c)),
+        super(ListSharingBlocInit()) {
     _shareRemovedListener.begin();
     _fileMovedEventListener.begin();
 
@@ -164,6 +167,11 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     );
   }
 
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.shareRepo);
+
   static ListSharingBloc of(Account account) {
     final id =
         "${account.scheme}://${account.username}@${account.address}?${account.roots.join('&')}";
@@ -173,7 +181,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     } catch (_) {
       // no created instance for this account, make a new one
       _log.info("[of] New bloc instance for account: $account");
-      final bloc = ListSharingBloc();
+      final bloc = ListSharingBloc(KiwiContainer().resolve<DiContainer>());
       KiwiContainer().registerInstance<ListSharingBloc>(bloc,
           name: "ListSharingBloc($id)");
       return bloc;
@@ -234,14 +242,10 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       final items = List.of(state.items);
       items.removeWhere(
           (i) => i is ListSharingAlbum && i.share.path == ev.file.strippedPath);
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final shareRepo = ShareRepo(ShareRemoteDataSource());
-      final newShares = await ListShareWithMe(shareRepo)(
-          ev.account, File(path: ev.destination));
-      final newAlbumFile =
-          await LsSingleFile(fileRepo)(ev.account, ev.destination);
-      final newAlbum = await albumRepo.get(ev.account, newAlbumFile);
+      final newShares =
+          await ListShareWithMe(_c)(ev.account, File(path: ev.destination));
+      final newAlbumFile = await LsSingleFile(_c)(ev.account, ev.destination);
+      final newAlbum = await _c.albumRepo.get(ev.account, newAlbumFile);
       for (final s in newShares) {
         items.add(ListSharingAlbum(s, newAlbum));
       }
@@ -282,8 +286,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   }
 
   Future<List<ListSharingItem>> _query(ListSharingBlocQuery ev) async {
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final sharedAlbumFiles = await Ls(fileRepo)(
+    final sharedAlbumFiles = await Ls(_c.fileRepo)(
         ev.account,
         File(
           path: remote_storage_util.getRemoteAlbumsDir(ev.account),
@@ -297,8 +300,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   Future<List<ListSharingItem>> _querySharesByMe(
       ListSharingBlocQuery ev, List<File> sharedAlbumFiles) async {
-    final shareRepo = ShareRepo(ShareRemoteDataSource());
-    final shares = await shareRepo.listAll(ev.account);
+    final shares = await _c.shareRepo.listAll(ev.account);
     final futures = shares.map((s) async {
       final webdavPath = file_util.unstripPath(ev.account, s.path);
       // include link share dirs
@@ -344,7 +346,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       }
 
       try {
-        final file = await FindFile(AppDb())(ev.account, s.itemSource);
+        final file = await FindFile(_c)(ev.account, s.itemSource);
         return ListSharingFile(s, file);
       } catch (e, stackTrace) {
         _log.severe("[_querySharesByMe] File not found: ${s.itemSource}", e,
@@ -357,15 +359,13 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   Future<List<ListSharingItem>> _querySharesWithMe(
       ListSharingBlocQuery ev, List<File> sharedAlbumFiles) async {
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    final pendingSharedAlbumFiles = await Ls(fileRepo)(
+    final pendingSharedAlbumFiles = await Ls(_c.fileRepo)(
         ev.account,
         File(
           path: remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account),
         ));
 
-    final shareRepo = ShareRepo(ShareRemoteDataSource());
-    final shares = await shareRepo.reverseListAll(ev.account);
+    final shares = await _c.shareRepo.reverseListAll(ev.account);
     final futures = shares.map((s) async {
       final webdavPath = file_util.unstripPath(ev.account, s.path);
       // include pending shared albums
@@ -405,8 +405,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   Future<ListSharingItem?> _querySharedAlbum(
       ListSharingBlocQuery ev, Share share, File albumFile) async {
     try {
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final album = await albumRepo.get(ev.account, albumFile);
+      final album = await _c.albumRepo.get(ev.account, albumFile);
       return ListSharingAlbum(share, album);
     } catch (e, stackTrace) {
       _log.shout(
@@ -417,6 +416,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   bool _isAccountOfInterest(Account account) =>
       state.account == null || state.account!.compareServerIdentity(account);
+
+  final DiContainer _c;
 
   late final _shareRemovedListener =
       AppEventListener<ShareRemovedEvent>(_onShareRemovedEvent);

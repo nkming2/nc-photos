@@ -19,14 +19,13 @@ import 'package:nc_photos/use_case/remove_share.dart';
 class Remove {
   Remove(this._c)
       : assert(require(_c)),
+        assert(ListAlbum.require(_c)),
         assert(ListShare.require(_c)),
         assert(RemoveFromAlbum.require(_c));
 
   static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.albumRepo) &&
       DiContainer.has(c, DiType.fileRepo) &&
-      DiContainer.has(c, DiType.shareRepo) &&
-      DiContainer.has(c, DiType.appDb);
+      DiContainer.has(c, DiType.shareRepo);
 
   /// Remove files
   Future<void> call(
@@ -55,7 +54,7 @@ class Remove {
   }
 
   Future<void> _cleanUpAlbums(Account account, List<File> removes) async {
-    final albums = await ListAlbum(_c.fileRepo, _c.albumRepo)(account)
+    final albums = await ListAlbum(_c)(account)
         .where((event) => event is Album)
         .cast<Album>()
         .toList();

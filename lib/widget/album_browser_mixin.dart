@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/pref.dart';
@@ -236,10 +236,8 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     try {
       await NotifiedAction(
         () async {
-          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-          newAlbum = await ImportPendingSharedAlbum(fileRepo, albumRepo)(
-              account, album);
+          newAlbum = await ImportPendingSharedAlbum(
+              KiwiContainer().resolve<DiContainer>())(account, album);
         },
         L10n.global().addToCollectionProcessingNotification(album.name),
         L10n.global().addToCollectionSuccessNotification(album.name),

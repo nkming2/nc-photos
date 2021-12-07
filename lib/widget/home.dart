@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
@@ -126,11 +129,13 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Album>> _importPotentialSharedAlbum() async {
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    // don't want the potential albums to be cached at this moment
-    final albumRepo = AlbumRepo(AlbumRemoteDataSource());
+    final c = KiwiContainer().resolve<DiContainer>().copyWith(
+          // don't want the potential albums to be cached at this moment
+          fileRepo: OrNull(const FileRepo(FileWebdavDataSource())),
+          albumRepo: OrNull(AlbumRepo(AlbumRemoteDataSource())),
+        );
     try {
-      return await ImportPotentialSharedAlbum(fileRepo, albumRepo)(
+      return await ImportPotentialSharedAlbum(c)(
           widget.account, AccountPref.of(widget.account));
     } catch (e, stacktrace) {
       _log.shout(

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -166,9 +166,9 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     controller?.closed.whenComplete(() {
       controller = null;
     });
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
     try {
-      await RestoreTrashbin(fileRepo)(widget.account, file);
+      await RestoreTrashbin(KiwiContainer().resolve<DiContainer>())(
+          widget.account, file);
       controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().restoreSuccessNotification),

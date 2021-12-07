@@ -1,15 +1,18 @@
 import 'package:idb_shim/idb_client.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 class FindFile {
-  const FindFile(this.appDb);
+  FindFile(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.appDb);
 
   /// Find the [File] in the DB by [fileId]
   Future<File> call(Account account, int fileId) async {
-    return await appDb.use((db) async {
+    return await _c.appDb.use((db) async {
       final transaction =
           db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.fileDbStoreName);
@@ -27,5 +30,5 @@ class FindFile {
     });
   }
 
-  final AppDb appDb;
+  final DiContainer _c;
 }

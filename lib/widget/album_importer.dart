@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -79,7 +81,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
 
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
-    _bloc = ListImportableAlbumBloc();
+    _bloc = ListImportableAlbumBloc(KiwiContainer().resolve<DiContainer>());
     _bloc.add(ListImportableAlbumBlocQuery(
         widget.account,
         widget.account.roots

@@ -15,12 +15,10 @@ import 'package:nc_photos/use_case/remove_share.dart';
 class UnshareFileFromAlbum {
   UnshareFileFromAlbum(this._c)
       : assert(require(_c)),
+        assert(ListAlbum.require(_c)),
         assert(ListShare.require(_c));
 
-  static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.albumRepo) &&
-      DiContainer.has(c, DiType.fileRepo) &&
-      DiContainer.has(c, DiType.shareRepo);
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.shareRepo);
 
   /// Remove file shares created for an album
   ///
@@ -36,7 +34,7 @@ class UnshareFileFromAlbum {
     _log.info(
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
     // list albums with shares identical to any element in [unshareWith]
-    final otherAlbums = await ListAlbum(_c.fileRepo, _c.albumRepo)(account)
+    final otherAlbums = await ListAlbum(_c)(account)
         .where((event) => event is Album)
         .cast<Album>()
         .where((a) =>

@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -10,6 +11,7 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
@@ -102,7 +104,19 @@ class ListAlbumBlocInconsistent extends ListAlbumBlocState {
 }
 
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
-  ListAlbumBloc() : super(const ListAlbumBlocInit()) {
+  /// Constructor
+  ///
+  /// If [offlineC] is not null, this [DiContainer] will be used when requesting
+  /// offline contents, otherwise [_c] will be used
+  ListAlbumBloc(
+    this._c, [
+    DiContainer? offlineC,
+  ])  : _offlineC = offlineC ?? _c,
+        assert(require(_c)),
+        assert(offlineC == null || require(offlineC)),
+        assert(ListAlbum.require(_c)),
+        assert(offlineC == null || ListAlbum.require(offlineC)),
+        super(const ListAlbumBlocInit()) {
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _fileRemovedListener =
@@ -122,6 +136,28 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       },
       logTag: "ListAlbumBloc.refresh",
     );
+  }
+
+  static bool require(DiContainer c) => true;
+
+  static ListAlbumBloc of(Account account) {
+    final id = "${account.scheme}://${account.username}@${account.address}";
+    try {
+      _log.fine("[of] Resolving bloc for '$id'");
+      return KiwiContainer().resolve<ListAlbumBloc>("ListAlbumBloc($id)");
+    } catch (_) {
+      // no created instance for this account, make a new one
+      _log.info("[of] New bloc instance for account: $account");
+      final c = KiwiContainer().resolve<DiContainer>();
+      final offlineC = c.copyWith(
+        fileRepo: OrNull(FileRepo(FileAppDbDataSource(c.appDb))),
+        albumRepo: OrNull(AlbumRepo(AlbumAppDbDataSource(c.appDb))),
+      );
+      final bloc = ListAlbumBloc(c, offlineC);
+      KiwiContainer()
+          .registerInstance<ListAlbumBloc>(bloc, name: "ListAlbumBloc($id)");
+      return bloc;
+    }
   }
 
   @override
@@ -249,20 +285,17 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   }
 
   Future<ListAlbumBlocState> _queryOffline(ListAlbumBlocQuery ev) =>
-      _queryWithAlbumDataSource(
-          ev, FileAppDbDataSource(AppDb()), AlbumAppDbDataSource(AppDb()));
+      _queryWithAlbumDataSource(_offlineC, ev);
 
   Future<ListAlbumBlocState> _queryOnline(ListAlbumBlocQuery ev) =>
-      _queryWithAlbumDataSource(
-          ev, FileCachedDataSource(AppDb()), AlbumCachedDataSource(AppDb()));
+      _queryWithAlbumDataSource(_c, ev);
 
-  Future<ListAlbumBlocState> _queryWithAlbumDataSource(ListAlbumBlocQuery ev,
-      FileDataSource fileDataSource, AlbumDataSource albumDataSrc) async {
+  Future<ListAlbumBlocState> _queryWithAlbumDataSource(
+      DiContainer c, ListAlbumBlocQuery ev) async {
     try {
       final albums = <Album>[];
       final errors = <dynamic>[];
-      await for (final result in ListAlbum(
-          FileRepo(fileDataSource), AlbumRepo(albumDataSrc))(ev.account)) {
+      await for (final result in ListAlbum(c)(ev.account)) {
         if (result is ExceptionEvent) {
           if (result.error is CacheNotFoundException) {
             _log.info(
@@ -291,6 +324,9 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   bool _isAccountOfInterest(Account account) =>
       state.account == null || state.account!.compareServerIdentity(account);
+
+  final DiContainer _c;
+  final DiContainer _offlineC;
 
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
   late AppEventListener<FileRemovedEvent> _fileRemovedListener;

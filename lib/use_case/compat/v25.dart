@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/move.dart';
 import 'package:path/path.dart' as path;
@@ -12,12 +13,16 @@ class CompatV25 {
 
   /// Migrate an album file to the new naming scheme
   static Future<File> migrateAlbumFile(
-          FileRepo fileRepo, Account account, File albumFile) =>
-      _MigrateAlbumFile(fileRepo)(account, albumFile);
+          DiContainer c, Account account, File albumFile) =>
+      _MigrateAlbumFile(c)(account, albumFile);
 }
 
 class _MigrateAlbumFile {
-  _MigrateAlbumFile(this.fileRepo);
+  _MigrateAlbumFile(this._c)
+      : assert(require(_c)),
+        assert(Move.require(_c));
+
+  static bool require(DiContainer c) => true;
 
   Future<File> call(Account account, File albumFile) async {
     assert(CompatV25.isAlbumFileNeedMigration(albumFile));
@@ -25,12 +30,13 @@ class _MigrateAlbumFile {
         "/" +
         path.basenameWithoutExtension(albumFile.path) +
         ".nc_album.json";
-    _log.info("[call] Migrate album file from '${albumFile.path}' to '$newPath'");
-    await Move(fileRepo)(account, albumFile, newPath);
+    _log.info(
+        "[call] Migrate album file from '${albumFile.path}' to '$newPath'");
+    await Move(_c)(account, albumFile, newPath);
     return albumFile.copyWith(path: newPath);
   }
 
-  final FileRepo fileRepo;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.compat.v25._MigrateAlbumFile");
 }

@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
@@ -10,7 +11,11 @@ import 'package:nc_photos/use_case/compat/v25.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class ListAlbum {
-  ListAlbum(this.fileRepo, this.albumRepo);
+  ListAlbum(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.fileRepo);
 
   /// List all albums associated with [account]
   ///
@@ -22,7 +27,7 @@ class ListAlbum {
       yield result;
     }
     if (!hasAlbum) {
-      if (await CompatV15.migrateAlbumFiles(account, fileRepo)) {
+      if (await CompatV15.migrateAlbumFiles(account, _c.fileRepo)) {
         // migrated, try again
         yield* _call(account);
       }
@@ -32,7 +37,7 @@ class ListAlbum {
   Stream<dynamic> _call(Account account) async* {
     List<File> ls;
     try {
-      ls = await Ls(fileRepo)(
+      ls = await Ls(_c.fileRepo)(
           account,
           File(
             path: remote_storage_util.getRemoteAlbumsDir(account),
@@ -51,16 +56,16 @@ class ListAlbum {
       var f = albumFiles[i];
       try {
         if (CompatV25.isAlbumFileNeedMigration(f)) {
-          f = await CompatV25.migrateAlbumFile(fileRepo, account, f);
+          f = await CompatV25.migrateAlbumFile(_c, account, f);
         }
         albumFiles[i] = f;
-        yield await albumRepo.get(account, f);
+        yield await _c.albumRepo.get(account, f);
       } catch (e, stackTrace) {
         yield ExceptionEvent(e, stackTrace);
       }
     }
     try {
-      albumRepo.cleanUp(
+      _c.albumRepo.cleanUp(
           account, remote_storage_util.getRemoteAlbumsDir(account), albumFiles);
     } catch (e, stacktrace) {
       // not important, log and ignore
@@ -68,8 +73,7 @@ class ListAlbum {
     }
   }
 
-  final FileRepo fileRepo;
-  final AlbumRepo albumRepo;
+  final DiContainer _c;
 
   static final _log = Logger("use_case.list_album.ListAlbum");
 }

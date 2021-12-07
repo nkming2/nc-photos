@@ -1,15 +1,20 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/move.dart';
 
 class RestoreTrashbin {
-  RestoreTrashbin(this.fileRepo);
+  RestoreTrashbin(this._c)
+      : assert(require(_c)),
+        assert(Move.require(_c));
+
+  static bool require(DiContainer c) => true;
 
   Future<void> call(Account account, File file) async {
-    await Move(fileRepo)(
+    await Move(_c)(
       account,
       file,
       "remote.php/dav/trashbin/${account.username}/restore/${file.filename}",
@@ -20,5 +25,5 @@ class RestoreTrashbin {
         .fire(FileTrashbinRestoredEvent(account, file));
   }
 
-  final FileRepo fileRepo;
+  final DiContainer _c;
 }

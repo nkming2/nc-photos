@@ -1,12 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/list_album.dart';
@@ -87,7 +86,12 @@ class ListImportableAlbumBlocFailure extends ListImportableAlbumBlocState {
 /// Return all directories that potentially could be a new album
 class ListImportableAlbumBloc
     extends Bloc<ListImportableAlbumBlocEvent, ListImportableAlbumBlocState> {
-  ListImportableAlbumBloc() : super(ListImportableAlbumBlocInit());
+  ListImportableAlbumBloc(this._c)
+      : assert(require(_c)),
+        assert(ListAlbum.require(_c)),
+        super(ListImportableAlbumBlocInit());
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   @override
   mapEventToState(ListImportableAlbumBlocEvent event) async* {
@@ -101,9 +105,7 @@ class ListImportableAlbumBloc
       ListImportableAlbumBlocQuery ev) async* {
     yield const ListImportableAlbumBlocLoading([]);
     try {
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final albums = (await ListAlbum(fileRepo, albumRepo)(ev.account)
+      final albums = (await ListAlbum(_c)(ev.account)
               .where((event) => event is Album)
               .toList())
           .cast<Album>();
@@ -119,8 +121,7 @@ class ListImportableAlbumBloc
       final products = <ListImportableAlbumBlocItem>[];
       int count = 0;
       for (final r in ev.roots) {
-        await for (final ev
-            in _queryDir(fileRepo, ev.account, importedDirs, r)) {
+        await for (final ev in _queryDir(ev.account, importedDirs, r)) {
           if (ev is Exception || ev is Error) {
             throw ev;
           } else if (ev is ListImportableAlbumBlocItem) {
@@ -142,13 +143,13 @@ class ListImportableAlbumBloc
   /// Query [dir] and emit all conforming dirs recursively (including [dir])
   ///
   /// Emit ListImportableAlbumBlocItem or Exception
-  Stream<dynamic> _queryDir(FileRepo fileRepo, Account account,
-      List<File> importedDirs, File dir) async* {
+  Stream<dynamic> _queryDir(
+      Account account, List<File> importedDirs, File dir) async* {
     try {
       if (importedDirs.containsIf(dir, (a, b) => a.path == b.path)) {
         return;
       }
-      final files = await Ls(fileRepo)(account, dir);
+      final files = await Ls(_c.fileRepo)(account, dir);
       // check number of supported files in this directory
       final count = files.where((f) => file_util.isSupportedFormat(f)).length;
       // arbitrary number
@@ -156,7 +157,7 @@ class ListImportableAlbumBloc
         yield ListImportableAlbumBlocItem(dir, count);
       }
       for (final d in files.where((f) => f.isCollection == true)) {
-        yield* _queryDir(fileRepo, account, importedDirs, d);
+        yield* _queryDir(account, importedDirs, d);
       }
     } catch (e, stacktrace) {
       _log.shout(
@@ -166,6 +167,8 @@ class ListImportableAlbumBloc
       yield e;
     }
   }
+
+  final DiContainer _c;
 
   static final _log =
       Logger("bloc.list_importable_album.ListImportableAlbumBloc");
