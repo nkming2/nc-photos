@@ -312,10 +312,13 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     List<Object> errors,
   ) async {
     final shareItems = <ListAlbumShareOutlierShareItem>[];
-    final shares = (await ListShare(_c)(account, fileItem.file))
-        .where((element) => element.shareType == ShareType.user)
+    final shares = (await ListShare(_c)(
+      account,
+      fileItem.file,
+      isIncludeReshare: true,
+    ))
+        .where((s) => s.shareType == ShareType.user)
         .toList();
-    final sharees = shares.map((s) => s.shareWith!).toSet();
     final albumSharees = albumShares.keys.toSet();
     final managedAlbumSharees = albumShares.values
         .where((s) => _isItemSharePairOfInterest(account, album, fileItem, s))
@@ -324,9 +327,11 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     _log.info(
         "[_processSingleFileItem] Sharees: ${albumSharees.map((s) => managedAlbumSharees.contains(s) ? "(managed)$s" : s).toReadableString()} for file: ${logFilename(fileItem.file.path)}");
 
-    // check only against sharees that are managed by us
+    // check all shares (including reshares) against sharees that are managed by
+    // us
+    final allSharees = shares.map((s) => s.shareWith!).toSet();
     var missings = managedAlbumSharees
-        .difference(sharees)
+        .difference(allSharees)
         // Can't share to ourselves or the file owner
         .where((s) => s != account.username && s != fileItem.file.ownerId)
         .toList();
@@ -338,9 +343,13 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
           ListAlbumShareOutlierMissingShareItem(as.userId, as.displayName));
     }
 
-    // check against all sharees. Otherwise non-managed sharees will be listed
-    // and are quite confusing
-    final extras = sharees.difference(albumSharees);
+    // check owned shares against all album sharees. Use all album sharees such
+    // that non-managed sharees will not be listed
+    final ownedSharees = shares
+        .where((s) => s.uidOwner == account.username)
+        .map((s) => s.shareWith!)
+        .toSet();
+    final extras = ownedSharees.difference(albumSharees);
     _log.info(
         "[_processSingleFileItem] Extra shares: ${extras.toReadableString()} for file: ${logFilename(fileItem.file.path)}");
     for (final e in extras) {

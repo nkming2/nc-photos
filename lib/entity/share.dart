@@ -91,6 +91,7 @@ class Share with EquatableMixin {
     required this.stime,
     required this.uidOwner,
     required this.displaynameOwner,
+    required this.uidFileOwner,
     required String path,
     required this.itemType,
     required this.mimeType,
@@ -108,6 +109,7 @@ class Share with EquatableMixin {
         "stime: $stime, "
         "uidOwner: $uidOwner, "
         "displaynameOwner: $displaynameOwner, "
+        "uidFileOwner: $uidFileOwner, "
         "path: $path, "
         "itemType: $itemType, "
         "mimeType: $mimeType, "
@@ -125,6 +127,7 @@ class Share with EquatableMixin {
         stime,
         uidOwner,
         displaynameOwner,
+        uidFileOwner,
         path,
         itemType,
         mimeType,
@@ -140,6 +143,7 @@ class Share with EquatableMixin {
   final DateTime stime;
   final CiString uidOwner;
   final String displaynameOwner;
+  final CiString uidFileOwner;
   final String path;
   final ShareItemType itemType;
   final String mimeType;
@@ -157,8 +161,12 @@ class ShareRepo {
   ShareRepo(this.dataSrc);
 
   /// See [ShareDataSource.list]
-  Future<List<Share>> list(Account account, File file) =>
-      dataSrc.list(account, file);
+  Future<List<Share>> list(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  }) =>
+      dataSrc.list(account, file, isIncludeReshare: isIncludeReshare);
 
   /// See [ShareDataSource.listDir]
   Future<List<Share>> listDir(Account account, File dir) =>
@@ -196,7 +204,11 @@ class ShareRepo {
 
 abstract class ShareDataSource {
   /// List all shares from a given file
-  Future<List<Share>> list(Account account, File file);
+  Future<List<Share>> list(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  });
 
   /// List all shares from a given directory
   Future<List<Share>> listDir(Account account, File dir);

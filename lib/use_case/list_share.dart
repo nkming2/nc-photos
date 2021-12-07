@@ -14,7 +14,11 @@ class ListShare {
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.shareRepo) && DiContainer.has(c, DiType.appDb);
 
-  Future<List<Share>> call(Account account, File file) async {
+  Future<List<Share>> call(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  }) async {
     try {
       if (file_util.getUserDirName(file) != account.username) {
         file = await FindFile(_c.appDb)(account, file.fileId!);
@@ -23,7 +27,11 @@ class ListShare {
       // file not found
       _log.warning("[call] File not found in db: ${logFilename(file.path)}");
     }
-    return _c.shareRepo.list(account, file);
+    return _c.shareRepo.list(
+      account,
+      file,
+      isIncludeReshare: isIncludeReshare,
+    );
   }
 
   final DiContainer _c;

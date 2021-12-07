@@ -11,10 +11,15 @@ import 'package:nc_photos/type.dart';
 
 class ShareRemoteDataSource implements ShareDataSource {
   @override
-  list(Account account, File file) async {
+  list(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  }) async {
     _log.info("[list] ${file.path}");
     final response = await Api(account).ocs().filesSharing().shares().get(
           path: file.strippedPath,
+          reshares: isIncludeReshare,
         );
     return _onListResult(response);
   }
@@ -150,6 +155,7 @@ class _ShareParser {
       stime: DateTime.fromMillisecondsSinceEpoch(json["stime"] * 1000),
       uidOwner: CiString(json["uid_owner"]),
       displaynameOwner: json["displayname_owner"],
+      uidFileOwner: CiString(json["uid_file_owner"]),
       path: json["path"],
       itemType: itemType,
       mimeType: json["mimetype"],

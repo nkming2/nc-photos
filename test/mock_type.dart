@@ -226,7 +226,11 @@ class MockShareRepo implements ShareRepo {
   }
 
   @override
-  Future<List<Share>> list(Account account, File file) {
+  Future<List<Share>> list(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  }) {
     throw UnimplementedError();
   }
 
@@ -260,12 +264,20 @@ class MockShareMemoryRepo extends MockShareRepo {
   }
 
   @override
-  list(Account account, File file) async {
-    return shares
-        .where((element) =>
-            element.path == file.strippedPath &&
-            element.uidOwner == account.username)
-        .toList();
+  list(
+    Account account,
+    File file, {
+    bool? isIncludeReshare,
+  }) async {
+    return shares.where((s) {
+      if (s.itemSource != file.fileId) {
+        return false;
+      } else if (isIncludeReshare == true || s.uidOwner == account.username) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
   }
 
   @override
@@ -276,6 +288,7 @@ class MockShareMemoryRepo extends MockShareRepo {
       stime: DateTime.utc(2020, 1, 2, 3, 4, 5),
       uidOwner: account.username,
       displaynameOwner: account.username.toString(),
+      uidFileOwner: file.ownerId!,
       path: file.strippedPath,
       itemType: ShareItemType.file,
       mimeType: file.contentType ?? "",

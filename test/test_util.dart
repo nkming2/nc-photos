@@ -250,6 +250,7 @@ Share buildShare({
       stime: stime ?? DateTime.utc(2020, 1, 2, 3, 4, 5),
       uidOwner: uidOwner.toCi(),
       displaynameOwner: displaynameOwner ?? uidOwner,
+      uidFileOwner: file.ownerId!,
       path: file.strippedPath,
       itemType: ShareItemType.file,
       mimeType: file.contentType ?? "",

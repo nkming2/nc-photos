@@ -23,6 +23,8 @@ void main() {
               "missing managed share added by others");
           _testQuerySharedAlbumMissingUnmanagedShareOtherAdded(
               "missing unmanaged share added by others");
+          _testQuerySharedAlbumMissingManagedShareOtherReshared(
+              "missing managed share reshared by others");
           _testQuerySharedAlbumMissingJsonShare("missing json share");
 
           _testQuerySharedAlbumExtraShare("extra share");
@@ -228,6 +230,60 @@ void _testQuerySharedAlbumMissingManagedShareOtherAdded(String description) {
           ListAlbumShareOutlierMissingShareItem("user2".toCi(), "user2"),
         ]),
       ]),
+    ],
+  );
+}
+
+/// Query a shared album (admin -> user1, user2), with file managed by admin,
+/// shared (admin -> user1) and reshared (user1 -> user2)
+///
+/// Expect: emit empty list
+void _testQuerySharedAlbumMissingManagedShareOtherReshared(String description) {
+  final account = util.buildAccount();
+  final user1Account = util.buildAccount(username: "user1");
+  final files =
+      (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
+  final user1Files = [
+    files[0].copyWith(path: "remote.php/dav/files/user1/dir/test1.jpg"),
+  ];
+  final album = (util.AlbumBuilder()
+        ..addFileItem(files[0])
+        ..addShare("user1")
+        ..addShare("user2"))
+      .build();
+  final albumFile = album.albumFile!;
+  late final DiContainer c;
+
+  blocTest<ListAlbumShareOutlierBloc, ListAlbumShareOutlierBlocState>(
+    description,
+    setUp: () async {
+      c = DiContainer(
+        shareRepo: MockShareMemoryRepo([
+          util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
+          util.buildShare(id: "2", file: files[0], shareWith: "user1"),
+          util.buildShare(
+              id: "3",
+              file: user1Files[0],
+              uidOwner: "user1",
+              shareWith: "user2"),
+        ]),
+        shareeRepo: MockShareeMemoryRepo([
+          util.buildSharee(shareWith: "user1".toCi()),
+          util.buildSharee(shareWith: "user2".toCi()),
+        ]),
+        appDb: await MockAppDb().applyFuture((obj) async {
+          await util.fillAppDb(obj, account, files);
+          await util.fillAppDb(obj, user1Account, user1Files);
+        }),
+      );
+    },
+    build: () => ListAlbumShareOutlierBloc(c),
+    act: (bloc) => bloc.add(ListAlbumShareOutlierBlocQuery(account, album)),
+    wait: const Duration(milliseconds: 500),
+    expect: () => [
+      ListAlbumShareOutlierBlocLoading(account, []),
+      ListAlbumShareOutlierBlocSuccess(account, []),
     ],
   );
 }
