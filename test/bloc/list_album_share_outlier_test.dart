@@ -19,17 +19,17 @@ void main() {
       group("shared album", () {
         group("owned", () {
           _testQuerySharedAlbumMissingShare("missing share");
-          _testQuerySharedAlbumMissingManagedOtherShare(
-              "missing managed other share");
-          _testQuerySharedAlbumMissingUnmanagedOtherShare(
-              "missing unmanaged other share");
+          _testQuerySharedAlbumMissingManagedShareOtherAdded(
+              "missing managed share added by others");
+          _testQuerySharedAlbumMissingUnmanagedShareOtherAdded(
+              "missing unmanaged share added by others");
           _testQuerySharedAlbumMissingJsonShare("missing json share");
 
           _testQuerySharedAlbumExtraShare("extra share");
-          _testQuerySharedAlbumExtraManagedOtherShare(
-              "extra managed other share");
-          _testQuerySharedAlbumExtraUnmanagedOtherShare(
-              "extra unmanaged other share");
+          _testQuerySharedAlbumExtraShareOtherAdded(
+              "extra share, file added by others");
+          _testQuerySharedAlbumExtraUnmanagedShare(
+              "extra share for file managed by others");
           _testQuerySharedAlbumExtraJsonShare("extra json share");
         });
         group("not owned", () {
@@ -184,8 +184,8 @@ void _testQuerySharedAlbumMissingShare(String description) {
 /// Query a shared album (admin -> user1, user2), with file added by user1,
 /// managed by admin, not shared (admin -> user2)
 ///
-/// Expect: emit empty list
-void _testQuerySharedAlbumMissingManagedOtherShare(String description) {
+/// Expect: emit the file with missing share (admin -> user2)
+void _testQuerySharedAlbumMissingManagedShareOtherAdded(String description) {
   final account = util.buildAccount();
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
@@ -236,7 +236,7 @@ void _testQuerySharedAlbumMissingManagedOtherShare(String description) {
 /// managed by user1, not shared (user1 -> user2)
 ///
 /// Expect: emit empty list
-void _testQuerySharedAlbumMissingUnmanagedOtherShare(String description) {
+void _testQuerySharedAlbumMissingUnmanagedShareOtherAdded(String description) {
   final account = util.buildAccount();
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
@@ -360,15 +360,19 @@ void _testQuerySharedAlbumExtraShare(String description) {
   );
 }
 
-/// Query a shared album (admin -> user1), with file added by user1,
-/// managed by admin, shared (admin -> user1, user2)
+/// Query a shared album (admin -> user1), with file added by user1, shared
+/// (admin -> user1, user2)
 ///
 /// Expect: emit the file with extra share (admin -> user2)
-void _testQuerySharedAlbumExtraManagedOtherShare(String description) {
+void _testQuerySharedAlbumExtraShareOtherAdded(String description) {
   final account = util.buildAccount();
+  final user1Account = util.buildAccount(username: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("user1/test1.jpg", ownerId: "user1"))
+        ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();
+  final user1Files = [
+    files[0].copyWith(path: "remote.php/dav/files/user1/dir/test1.jpg"),
+  ];
   final album = (util.AlbumBuilder()
         // added before album shared, thus managed by album owner
         ..addFileItem(files[0], addedBy: "user1")
@@ -393,6 +397,7 @@ void _testQuerySharedAlbumExtraManagedOtherShare(String description) {
         ]),
         appDb: await MockAppDb().applyFuture((obj) async {
           await util.fillAppDb(obj, account, files);
+          await util.fillAppDb(obj, user1Account, user1Files);
         }),
       );
     },
@@ -411,20 +416,25 @@ void _testQuerySharedAlbumExtraManagedOtherShare(String description) {
   );
 }
 
-/// Query a shared album (admin -> user1), with file added by user1, managed by
-/// user1, shared (user1 -> admin, user2)
+/// Query a shared album (admin -> user1, user2), with file managed by user1,
+/// shared by user1 (user1 -> admin) and admin (admin -> user2)
 ///
 /// Expect: emit empty list
-void _testQuerySharedAlbumExtraUnmanagedOtherShare(String description) {
+void _testQuerySharedAlbumExtraUnmanagedShare(String description) {
   final account = util.buildAccount();
+  final user1Account = util.buildAccount(username: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("user1/test1.jpg", ownerId: "user1"))
+        ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();
+  final user1Files = [
+    files[0].copyWith(path: "remote.php/dav/files/user1/dir/test1.jpg"),
+  ];
   final album = (util.AlbumBuilder()
         // added after album shared, thus managed by adder
         ..addFileItem(files[0],
             addedBy: "user1", addedAt: DateTime.utc(2021, 1, 2, 3, 4, 5))
-        ..addShare("user1"))
+        ..addShare("user1")
+        ..addShare("user2"))
       .build();
   final albumFile = album.albumFile!;
   late final DiContainer c;
@@ -435,10 +445,13 @@ void _testQuerySharedAlbumExtraUnmanagedOtherShare(String description) {
       c = DiContainer(
         shareRepo: MockShareMemoryRepo([
           util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
+          util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
           util.buildShare(
-              id: "1", file: files[0], uidOwner: "user1", shareWith: "admin"),
-          util.buildShare(
-              id: "2", file: files[0], uidOwner: "user1", shareWith: "user2"),
+              id: "2",
+              file: user1Files[0],
+              uidOwner: "user1",
+              shareWith: "admin"),
+          util.buildShare(id: "3", file: files[0], shareWith: "user2"),
         ]),
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
@@ -446,6 +459,7 @@ void _testQuerySharedAlbumExtraUnmanagedOtherShare(String description) {
         ]),
         appDb: await MockAppDb().applyFuture((obj) async {
           await util.fillAppDb(obj, account, files);
+          await util.fillAppDb(obj, user1Account, user1Files);
         }),
       );
     },
