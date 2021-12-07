@@ -162,6 +162,21 @@ void initLog() {
     if (record.stackTrace != null) {
       msg += "\nStack Trace:\n${record.stackTrace}";
     }
+
+    int color;
+    if (record.level >= Level.SEVERE) {
+      color = 91;
+    } else if (record.level >= Level.WARNING) {
+      color = 33;
+    } else if (record.level >= Level.INFO) {
+      color = 34;
+    } else if (record.level >= Level.FINER) {
+      color = 32;
+    } else {
+      color = 90;
+    }
+    msg = "\x1B[${color}m$msg\x1B[0m";
+
     debugPrint(msg);
   });
 }
