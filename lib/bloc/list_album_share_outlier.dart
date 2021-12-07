@@ -316,12 +316,16 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
         .where((element) => element.shareType == ShareType.user)
         .toList();
     final sharees = shares.map((s) => s.shareWith!).toSet();
-    final albumSharees = albumShares.values
+    final albumSharees = albumShares.keys.toSet();
+    final managedAlbumSharees = albumShares.values
         .where((s) => _isItemSharePairOfInterest(account, album, fileItem, s))
         .map((s) => s.userId)
         .toSet();
+    _log.info(
+        "[_processSingleFileItem] Sharees: ${albumSharees.map((s) => managedAlbumSharees.contains(s) ? "(managed)$s" : s).toReadableString()} for file: ${logFilename(fileItem.file.path)}");
 
-    var missings = albumSharees
+    // check only against sharees that are managed by us
+    var missings = managedAlbumSharees
         .difference(sharees)
         // Can't share to ourselves or the file owner
         .where((s) => s != account.username && s != fileItem.file.ownerId)
@@ -334,6 +338,8 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
           ListAlbumShareOutlierMissingShareItem(as.userId, as.displayName));
     }
 
+    // check against all sharees. Otherwise non-managed sharees will be listed
+    // and are quite confusing
     final extras = sharees.difference(albumSharees);
     _log.info(
         "[_processSingleFileItem] Extra shares: ${extras.toReadableString()} for file: ${logFilename(fileItem.file.path)}");
