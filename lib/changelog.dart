@@ -128,4 +128,11 @@ Features:
 """,
   // v33
   null,
+  // v34
+  """34.0
+- Add OSM as an alternative map provider (Settings > Viewer)
+- (Experimental) Add shared album (Settings > Experimental)
+- (UI) Swipe up to show photo details
+- (Localization) Update Spanish (by luckkmaxx)
+""",
 ];
