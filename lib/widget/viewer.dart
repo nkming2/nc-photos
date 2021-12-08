@@ -326,7 +326,12 @@ class _ViewerState extends State<Viewer>
     if (!_canOpenDetailPane()) {
       return false;
     }
+    if (notification is ScrollStartNotification) {
+      _scrollStartPosition =
+          _pageStates[index]?.scrollController.position.pixels;
+    }
     if (notification is ScrollEndNotification) {
+      _scrollStartPosition = null;
       final scrollPos = _pageStates[index]!.scrollController.position;
       if (scrollPos.pixels == 0) {
         setState(() {
@@ -359,6 +364,19 @@ class _ViewerState extends State<Viewer>
           });
         });
       }
+    }
+
+    if (notification is OverscrollNotification) {
+      if (_scrollStartPosition == 0) {
+        // start at top
+        _overscrollSum += notification.overscroll;
+        if (_overscrollSum < -176) {
+          // and scroll downwards
+          Navigator.of(context).pop();
+        }
+      }
+    } else {
+      _overscrollSum = 0;
     }
     return false;
   }
@@ -577,6 +595,9 @@ class _ViewerState extends State<Viewer>
   final _viewerController = HorizontalPageViewerController();
   bool _isViewerLoaded = false;
   final _pageStates = <int, _PageState>{};
+
+  double? _scrollStartPosition;
+  var _overscrollSum = 0.0;
 
   static final _log = Logger("widget.viewer._ViewerState");
 
