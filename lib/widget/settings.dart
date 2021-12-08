@@ -1131,5 +1131,5 @@ enum _Experiment {
 }
 
 late final _enabledExperiments = [
-  if (kDebugMode) _Experiment.sharedAlbum,
+  _Experiment.sharedAlbum,
 ];
