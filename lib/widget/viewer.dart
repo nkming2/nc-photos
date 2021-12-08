@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -356,6 +355,7 @@ class _ViewerState extends State<Viewer>
         Future.delayed(Duration.zero, () {
           setState(() {
             _isShowDetailPane = true;
+            _isDetailPaneActive = true;
           });
         });
       }
