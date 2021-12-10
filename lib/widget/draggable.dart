@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 
 class Draggable<T extends Object> extends StatelessWidget {

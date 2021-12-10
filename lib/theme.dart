@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:nc_photos/pref.dart';
 
 class AppTheme extends StatelessWidget {

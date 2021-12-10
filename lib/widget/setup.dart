@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';

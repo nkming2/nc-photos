@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/widget/page_changed_listener.dart';

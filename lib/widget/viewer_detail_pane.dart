@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:exifdart/exifdart.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';

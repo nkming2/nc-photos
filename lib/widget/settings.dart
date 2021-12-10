@@ -1,5 +1,4 @@
 import 'package:event_bus/event_bus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
