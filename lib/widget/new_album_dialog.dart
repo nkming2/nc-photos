@@ -8,6 +8,9 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 
@@ -115,52 +118,62 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
     }
   }
 
-  void _onConfirmStaticAlbum() {
-    final album = Album(
-      name: _formValue.name,
-      provider: AlbumStaticProvider(
-        items: const [],
-      ),
-      coverProvider: AlbumAutoCoverProvider(),
-      sortProvider: const AlbumTimeSortProvider(isAscending: false),
-    );
-    _log.info("[_onOkPressed] Creating static album: $album");
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    final newAlbum = CreateAlbum(albumRepo)(widget.account, album);
-    // let previous route to handle this future
-    Navigator.of(context).pop(newAlbum);
-  }
-
-  void _onConfirmDirAlbum() {
-    setState(() {
-      _isVisible = false;
-    });
-    Navigator.of(context)
-        .pushNamed<List<File>>(AlbumDirPicker.routeName,
-            arguments: AlbumDirPickerArguments(widget.account))
-        .then((value) {
-      if (value == null) {
-        Navigator.of(context).pop();
-        return;
-      }
-
+  Future<void> _onConfirmStaticAlbum() async {
+    try {
       final album = Album(
         name: _formValue.name,
-        provider: AlbumDirProvider(
-          dirs: value,
+        provider: AlbumStaticProvider(
+          items: const [],
         ),
         coverProvider: AlbumAutoCoverProvider(),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
       );
-      _log.info("[_onOkPressed] Creating dir album: $album");
+      _log.info("[_onConfirmStaticAlbum] Creating static album: $album");
       final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final newAlbum = CreateAlbum(albumRepo)(widget.account, album);
-      // let previous route to handle this future
+      final newAlbum = await CreateAlbum(albumRepo)(widget.account, album);
       Navigator.of(context).pop(newAlbum);
-    }).catchError((e, stacktrace) {
-      _log.shout("[_onOkPressed] Failed while pushNamed", e, stacktrace);
+    } catch (e, stacktrace) {
+      _log.shout("[_onConfirmStaticAlbum] Failed", e, stacktrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
       Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _onConfirmDirAlbum() async {
+    setState(() {
+      _isVisible = false;
     });
+    try {
+      final dirs = await Navigator.of(context).pushNamed<List<File>>(
+          AlbumDirPicker.routeName,
+          arguments: AlbumDirPickerArguments(widget.account));
+      if (dirs == null) {
+        Navigator.of(context).pop();
+        return;
+      }
+      final album = Album(
+        name: _formValue.name,
+        provider: AlbumDirProvider(
+          dirs: dirs,
+        ),
+        coverProvider: AlbumAutoCoverProvider(),
+        sortProvider: const AlbumTimeSortProvider(isAscending: false),
+      );
+      _log.info("[_onConfirmDirAlbum] Creating dir album: $album");
+      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
+      final newAlbum = await CreateAlbum(albumRepo)(widget.account, album);
+      Navigator.of(context).pop(newAlbum);
+    } catch (e, stacktrace) {
+      _log.shout("[_onConfirmDirAlbum] Failed", e, stacktrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+      Navigator.of(context).pop();
+    }
   }
 
   final _formKey = GlobalKey<FormState>();

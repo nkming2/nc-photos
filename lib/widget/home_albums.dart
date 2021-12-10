@@ -9,10 +9,10 @@ import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/album_util.dart' as album_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -34,7 +34,6 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
-import 'package:tuple/tuple.dart';
 
 class HomeAlbums extends StatefulWidget {
   const HomeAlbums({
@@ -278,14 +277,15 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
-  void _onNewAlbumItemTap(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => NewAlbumDialog(
-        account: widget.account,
-      ),
-    ).then((album) {
-      if (album == null || album is! Album) {
+  Future<void> _onNewAlbumItemTap(BuildContext context) async {
+    try {
+      final album = await showDialog<Album>(
+        context: context,
+        builder: (_) => NewAlbumDialog(
+          account: widget.account,
+        ),
+      );
+      if (album == null) {
         return;
       }
       if (album.provider is AlbumDynamicProvider) {
@@ -294,14 +294,13 @@ class _HomeAlbumsState extends State<HomeAlbums>
         Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
             arguments: DynamicAlbumBrowserArguments(widget.account, album));
       }
-    }).catchError((e, stacktrace) {
-      _log.severe(
-          "[_onNewAlbumItemTap] Failed while showDialog", e, stacktrace);
+    } catch (e, stacktrace) {
+      _log.shout("[_onNewAlbumItemTap] Failed", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().createAlbumFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
-    });
+    }
   }
 
   void _onRefreshPressed() {
@@ -327,33 +326,37 @@ class _HomeAlbumsState extends State<HomeAlbums>
         items: [
           FancyOptionPickerItem(
             label: L10n.global().sortOptionTimeDescendingLabel,
-            isSelected: _getSortFromPref() == _Sort.dateDescending,
+            isSelected:
+                _getSortFromPref() == album_util.AlbumSort.dateDescending,
             onSelect: () {
-              _onSortSelected(_Sort.dateDescending);
+              _onSortSelected(album_util.AlbumSort.dateDescending);
               Navigator.of(context).pop();
             },
           ),
           FancyOptionPickerItem(
             label: L10n.global().sortOptionTimeAscendingLabel,
-            isSelected: _getSortFromPref() == _Sort.dateAscending,
+            isSelected:
+                _getSortFromPref() == album_util.AlbumSort.dateAscending,
             onSelect: () {
-              _onSortSelected(_Sort.dateAscending);
+              _onSortSelected(album_util.AlbumSort.dateAscending);
               Navigator.of(context).pop();
             },
           ),
           FancyOptionPickerItem(
             label: L10n.global().sortOptionAlbumNameLabel,
-            isSelected: _getSortFromPref() == _Sort.nameAscending,
+            isSelected:
+                _getSortFromPref() == album_util.AlbumSort.nameAscending,
             onSelect: () {
-              _onSortSelected(_Sort.nameAscending);
+              _onSortSelected(album_util.AlbumSort.nameAscending);
               Navigator.of(context).pop();
             },
           ),
           FancyOptionPickerItem(
             label: L10n.global().sortOptionAlbumNameDescendingLabel,
-            isSelected: _getSortFromPref() == _Sort.nameDescending,
+            isSelected:
+                _getSortFromPref() == album_util.AlbumSort.nameDescending,
             onSelect: () {
-              _onSortSelected(_Sort.nameDescending);
+              _onSortSelected(album_util.AlbumSort.nameDescending);
               Navigator.of(context).pop();
             },
           ),
@@ -362,7 +365,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     );
   }
 
-  void _onSortSelected(_Sort sort) async {
+  void _onSortSelected(album_util.AlbumSort sort) async {
     await Pref().setHomeAlbumsSort(sort.index);
     setState(() {
       _transformItems(_bloc.state.items);
@@ -435,29 +438,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
   /// Transform an Album list to grid items
   void _transformItems(List<ListAlbumBlocItem> items) {
     final sort = _getSortFromPref();
-    final isAscending = _isSortAscending(sort);
-    final sortedAlbums = items.map<Tuple2<dynamic, ListAlbumBlocItem>>((e) {
-      switch (sort) {
-        case _Sort.nameAscending:
-        case _Sort.nameDescending:
-          return Tuple2(e.album.name, e);
-
-        case _Sort.dateAscending:
-        case _Sort.dateDescending:
-        default:
-          return Tuple2(
-              e.album.provider.latestItemTime ?? e.album.lastUpdated, e);
-      }
-    }).sorted((a, b) {
-      final x = isAscending ? a : b;
-      final y = isAscending ? b : a;
-      final tmp = x.item1.compareTo(y.item1);
-      if (tmp != 0) {
-        return tmp;
-      } else {
-        return x.item2.album.name.compareTo(y.item2.album.name);
-      }
-    }).map((e) => e.item2);
+    final sortedAlbums =
+        album_util.sorted(items.map((e) => e.album).toList(), sort);
     itemStreamListItems = [
       if (AccountPref.of(widget.account).isEnableFaceRecognitionAppOr())
         _buildPersonItem(context),
@@ -466,11 +448,11 @@ class _HomeAlbumsState extends State<HomeAlbums>
       _buildTrashbinItem(context),
       _buildNewAlbumItem(context),
       _SeparatorListItem(),
-      ...sortedAlbums.map((e) => _AlbumListItem(
+      ...sortedAlbums.map((a) => _AlbumListItem(
             account: widget.account,
-            album: e.album,
+            album: a,
             onTap: () {
-              _openAlbum(context, e.album);
+              _openAlbum(context, a);
             },
           )),
     ];
@@ -625,21 +607,11 @@ class _AlbumListItem extends _ListItem {
   final Album album;
 }
 
-enum _Sort {
-  dateDescending,
-  dateAscending,
-  nameAscending,
-  nameDescending,
-}
-
-_Sort _getSortFromPref() {
+album_util.AlbumSort _getSortFromPref() {
   try {
-    return _Sort.values[Pref().getHomeAlbumsSort()!];
+    return album_util.AlbumSort.values[Pref().getHomeAlbumsSort()!];
   } catch (_) {
     // default
-    return _Sort.dateDescending;
+    return album_util.AlbumSort.dateDescending;
   }
 }
-
-bool _isSortAscending(_Sort sort) =>
-    sort == _Sort.dateAscending || sort == _Sort.nameAscending;

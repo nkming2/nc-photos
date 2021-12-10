@@ -10,6 +10,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_browser.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
+import 'package:nc_photos/widget/album_picker.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/connect.dart';
@@ -149,6 +150,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleAlbumShareOutlierBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
     route ??= _handleShareFolderPickerRoute(settings);
+    route ??= _handleAlbumPickerRoute(settings);
     return route;
   }
 
@@ -434,6 +436,19 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleShareFolderPickerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAlbumPickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AlbumPicker.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as AlbumPickerArguments;
+        return AlbumPicker.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handleAlbumPickerRoute] Failed while handling route", e);
     }
     return null;
   }

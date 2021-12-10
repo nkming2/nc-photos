@@ -10,7 +10,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
-import 'package:nc_photos/widget/album_picker_dialog.dart';
+import 'package:nc_photos/widget/album_picker.dart';
 
 class AddSelectionToAlbumHandler {
   Future<void> call({
@@ -20,12 +20,9 @@ class AddSelectionToAlbumHandler {
     required VoidCallback clearSelection,
   }) async {
     try {
-      final value = await showDialog<Album>(
-        context: context,
-        builder: (_) => AlbumPickerDialog(
-          account: account,
-        ),
-      );
+      final value = await Navigator.of(context).pushNamed<Album>(
+          AlbumPicker.routeName,
+          arguments: AlbumPickerArguments(account));
       if (value == null) {
         // user cancelled the dialog
         return;
