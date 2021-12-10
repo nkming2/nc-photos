@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
@@ -91,7 +92,10 @@ class _ViewerOrientationController implements Disposable {
     _subscription = NativeDeviceOrientationCommunicator()
         .onOrientationChanged(useSensor: true)
         .listen((orientation) {
-      onChanged?.call(orientation);
+      _triggerThrottler.trigger(
+        data: orientation,
+        maxResponceTime: const Duration(seconds: 1),
+      );
     });
   }
 
@@ -101,6 +105,15 @@ class _ViewerOrientationController implements Disposable {
     SystemChrome.setPreferredOrientations([]);
   }
 
+  void _onTriggered(List<NativeDeviceOrientation> values) {
+    onChanged?.call(values.last);
+  }
+
   ValueChanged<NativeDeviceOrientation>? onChanged;
   late final StreamSubscription<NativeDeviceOrientation> _subscription;
+
+  late final _triggerThrottler = Throttler<NativeDeviceOrientation>(
+    onTriggered: _onTriggered,
+    logTag: "_ViewerOrientationController.trigger",
+  );
 }
