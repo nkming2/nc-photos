@@ -106,6 +106,12 @@ class _ImageViewerState extends State<ImageViewer>
           }
           _prevFingerPosition = event.position;
         },
+        onPointerCancel: (event) {
+          --_finger;
+          if (_finger < 2) {
+            _setIsZooming(false);
+          }
+        },
         child: GestureDetector(
           onDoubleTap: () {
             if (_isZoomed) {
