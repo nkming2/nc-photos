@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/type.dart';
@@ -154,7 +155,8 @@ class Album with EquatableMixin {
       provider: provider ?? this.provider,
       coverProvider: coverProvider ?? this.coverProvider,
       sortProvider: sortProvider ?? this.sortProvider,
-      shares: shares == null ? this.shares : shares.obj,
+      shares:
+          shares == null ? this.shares?.run((obj) => List.of(obj)) : shares.obj,
       albumFile: albumFile == null ? this.albumFile : albumFile.obj,
       savedVersion: savedVersion,
     );

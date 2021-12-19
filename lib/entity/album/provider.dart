@@ -141,7 +141,7 @@ class AlbumStaticProvider extends AlbumProviderBase {
     return AlbumStaticProvider(
       latestItemTime:
           latestItemTime == null ? this.latestItemTime : latestItemTime.obj,
-      items: items ?? this.items,
+      items: items ?? List.of(this.items),
     );
   }
 
@@ -206,7 +206,7 @@ class AlbumDirProvider extends AlbumDynamicProvider {
     return AlbumDirProvider(
       latestItemTime:
           latestItemTime == null ? this.latestItemTime : latestItemTime.obj,
-      dirs: dirs ?? this.dirs,
+      dirs: dirs ?? List.of(this.dirs),
     );
   }
 

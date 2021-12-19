@@ -117,7 +117,7 @@ class ListSharingBlocSuccess extends ListSharingBlocState {
   }) =>
       ListSharingBlocSuccess(
         account ?? this.account,
-        items ?? this.items,
+        items ?? List.of(this.items),
       );
 }
 
@@ -141,7 +141,7 @@ class ListSharingBlocFailure extends ListSharingBlocState {
   }) =>
       ListSharingBlocFailure(
         account ?? this.account,
-        items ?? this.items,
+        items ?? List.of(this.items),
         exception ?? this.exception,
       );
 

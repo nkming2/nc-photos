@@ -36,7 +36,7 @@ class Account with EquatableMixin {
       address ?? this.address,
       username ?? this.username,
       password ?? this.password,
-      roots ?? _roots,
+      roots ?? List.of(_roots),
     );
   }
 
