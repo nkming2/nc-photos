@@ -195,7 +195,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               errorWidget: (context, url, error) => Icon(
-                Icons.image_not_supported,
+                Icons.folder,
                 size: 32,
                 color: AppTheme.getUnfocusedIconColor(context),
               ),
@@ -234,7 +234,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
               height: _leadingSize,
               width: _leadingSize,
               child: Icon(
-                Icons.photo_album_outlined,
+                Icons.photo_album,
                 size: 32,
                 color: AppTheme.getUnfocusedIconColor(context),
               ),
@@ -253,7 +253,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               errorWidget: (context, url, error) => Icon(
-                Icons.panorama,
+                Icons.photo_album,
                 size: 32,
                 color: AppTheme.getUnfocusedIconColor(context),
               ),
