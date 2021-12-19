@@ -612,23 +612,6 @@ class _HomePhotosState extends State<HomePhotos>
     return " ($clippedCount/$_metadataTaskProcessTotalCount)";
   }
 
-  int get _thumbSize {
-    switch (_thumbZoomLevel) {
-      case -1:
-        return 96;
-
-      case 1:
-        return 176;
-
-      case 2:
-        return 256;
-
-      case 0:
-      default:
-        return 112;
-    }
-  }
-
   Primitive<bool> get _hasFiredMetadataTask {
     final blocId =
         "${widget.account.scheme}://${widget.account.username}@${widget.account.address}";
@@ -651,6 +634,7 @@ class _HomePhotosState extends State<HomePhotos>
   var _backingFiles = <File>[];
 
   var _thumbZoomLevel = 0;
+  int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   final ScrollController _scrollController = ScrollController();
 

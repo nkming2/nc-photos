@@ -21,6 +21,7 @@ import 'package:nc_photos/use_case/restore_trashbin.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
@@ -404,25 +405,12 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     _bloc.add(LsTrashbinBlocQuery(widget.account));
   }
 
-  int get _thumbSize {
-    switch (_thumbZoomLevel) {
-      case 1:
-        return 176;
-
-      case 2:
-        return 256;
-
-      case 0:
-      default:
-        return 112;
-    }
-  }
-
   late LsTrashbinBloc _bloc;
 
   var _backingFiles = <File>[];
 
   var _thumbZoomLevel = 0;
+  int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   static final _log = Logger("widget.trashbin_browser._TrashbinBrowserState");
 }

@@ -17,6 +17,7 @@ import 'package:nc_photos/use_case/import_pending_shared_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/widget/album_browser_app_bar.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
@@ -163,19 +164,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
   }
 
   @protected
-  int get thumbSize {
-    switch (_thumbZoomLevel) {
-      case 1:
-        return 176;
-
-      case 2:
-        return 256;
-
-      case 0:
-      default:
-        return 112;
-    }
-  }
+  int get thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   void _onMenuOptionSelected(int option, Account account, Album album,
       void Function(int)? onSelectedMenuItem) {

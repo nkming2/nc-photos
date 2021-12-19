@@ -18,3 +18,20 @@ class DateGroupHelper {
   final bool isMonthOnly;
   DateTime? _currentDate;
 }
+
+int getThumbSize(int zoomLevel) {
+  switch (zoomLevel) {
+    case -1:
+      return 96;
+
+    case 1:
+      return 176;
+
+    case 2:
+      return 256;
+
+    case 0:
+    default:
+      return 112;
+  }
+}

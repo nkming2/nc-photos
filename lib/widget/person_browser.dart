@@ -33,6 +33,7 @@ import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -450,24 +451,11 @@ class _PersonBrowserState extends State<PersonBrowser>
     _bloc.add(ListFaceBlocQuery(widget.account, widget.person));
   }
 
-  int get _thumbSize {
-    switch (_thumbZoomLevel) {
-      case 1:
-        return 176;
-
-      case 2:
-        return 256;
-
-      case 0:
-      default:
-        return 112;
-    }
-  }
-
   final ListFaceBloc _bloc = ListFaceBloc();
   List<File>? _backingFiles;
 
   var _thumbZoomLevel = 0;
+  int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   late final Throttler _refreshThrottler = Throttler(
     onTriggered: (_) {

@@ -20,6 +20,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -294,25 +295,12 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     _bloc.add(const ScanAccountDirBlocQuery());
   }
 
-  int get _thumbSize {
-    switch (_thumbZoomLevel) {
-      case 1:
-        return 176;
-
-      case 2:
-        return 256;
-
-      case 0:
-      default:
-        return 112;
-    }
-  }
-
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
   var _backingFiles = <File>[];
 
   var _thumbZoomLevel = 0;
+  int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   static final _log = Logger("widget.archive_browser._ArchiveBrowserState");
 }
