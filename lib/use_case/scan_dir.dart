@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -14,13 +15,24 @@ class ScanDir {
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
   /// would emit either List<File> data or an exception
-  Stream<dynamic> call(Account account, File root) async* {
+  ///
+  /// If [isSupportedFileOnly] == true, the returned files will be filtered by
+  /// [file_util.isSupportedFormat]
+  Stream<dynamic> call(
+    Account account,
+    File root, {
+    bool isSupportedFileOnly = true,
+  }) async* {
     try {
       final items = await Ls(fileRepo)(account, root);
       if (_shouldScanIgnoreDir(items)) {
         return;
       }
-      yield items.where((element) => element.isCollection != true).toList();
+      yield items
+          .where((f) =>
+              f.isCollection != true &&
+              (!isSupportedFileOnly || file_util.isSupportedFormat(f)))
+          .toList();
       for (final i in items.where((element) =>
           element.isCollection == true &&
           !element.path

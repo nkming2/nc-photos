@@ -342,8 +342,10 @@ class ScanAccountDirBloc
             path: file_util.unstripPath(account, settings.getShareFolderOr()),
           ),
         );
-        final sharedFiles =
-            files.where((f) => !f.isOwned(account.username)).toList();
+        final sharedFiles = files
+            .where((f) =>
+                file_util.isSupportedFormat(f) && !f.isOwned(account.username))
+            .toList();
         yield ScanAccountDirBlocSuccess(getState().files + sharedFiles);
       } else {
         yield ScanAccountDirBlocSuccess(getState().files);

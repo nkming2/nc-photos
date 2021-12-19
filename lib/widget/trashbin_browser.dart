@@ -339,7 +339,6 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   void _transformItems(List<File> files) {
     _backingFiles = files
-        .where((element) => file_util.isSupportedFormat(element))
         .sorted((a, b) {
       if (a.trashbinDeletionTime == null && b.trashbinDeletionTime == null) {
         // ?

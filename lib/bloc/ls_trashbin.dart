@@ -171,10 +171,11 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
     );
   }
 
-  Future<List<File>> _query(LsTrashbinBlocQuery ev) {
+  Future<List<File>> _query(LsTrashbinBlocQuery ev) async {
     // caching contents in trashbin doesn't sounds useful
     const fileRepo = FileRepo(FileWebdavDataSource());
-    return LsTrashbin(fileRepo)(ev.account);
+    final files = await LsTrashbin(fileRepo)(ev.account);
+    return files.where((f) => file_util.isSupportedFormat(f)).toList();
   }
 
   late final AppEventListener<FileRemovedEvent> _fileRemovedEventListener;

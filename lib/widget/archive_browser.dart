@@ -258,8 +258,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   void _transformItems(List<File> files) {
     _backingFiles = files
-        .where((element) =>
-            file_util.isSupportedFormat(element) && element.isArchived == true)
+        .where((f) => f.isArchived == true)
         .sorted(compareFileDateTimeDescending);
 
     itemStreamListItems = () sync* {

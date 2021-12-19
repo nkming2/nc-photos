@@ -514,8 +514,7 @@ class _HomePhotosState extends State<HomePhotos>
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
-        .where((element) =>
-            file_util.isSupportedFormat(element) && element.isArchived != true)
+        .where((f) => f.isArchived != true)
         .sorted(compareFileDateTimeDescending);
 
     final isMonthOnly = _thumbZoomLevel < 0;
