@@ -33,8 +33,8 @@ import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -519,7 +519,7 @@ class _HomePhotosState extends State<HomePhotos>
         .sorted(compareFileDateTimeDescending);
 
     final isMonthOnly = _thumbZoomLevel < 0;
-    final dateHelper = PhotoListDateGroupHelper(
+    final dateHelper = photo_list_util.DateGroupHelper(
       isMonthOnly: isMonthOnly,
     );
     itemStreamListItems = () sync* {

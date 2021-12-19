@@ -34,8 +34,8 @@ import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
-import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/shared_album_info_dialog.dart';
@@ -678,7 +678,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
         .toList();
-    final dateHelper = PhotoListDateGroupHelper(
+    final dateHelper = photo_list_util.DateGroupHelper(
       isMonthOnly: false,
     );
 

@@ -1,7 +1,7 @@
 import 'package:nc_photos/entity/file.dart';
 
-class PhotoListDateGroupHelper {
-  PhotoListDateGroupHelper({
+class DateGroupHelper {
+  DateGroupHelper({
     required this.isMonthOnly,
   });
 

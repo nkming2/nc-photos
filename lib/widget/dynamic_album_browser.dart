@@ -31,8 +31,8 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
-import 'package:nc_photos/widget/photo_list_helper.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
+import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
@@ -532,7 +532,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
         .map((e) => e.file)
         .where((element) => file_util.isSupportedFormat(element))
         .toList();
-    final dateHelper = PhotoListDateGroupHelper(
+    final dateHelper = photo_list_util.DateGroupHelper(
       isMonthOnly: false,
     );
 
