@@ -42,9 +42,10 @@ bool isOrUnderDir(File file, File dir) =>
 /// Convert a stripped path to a full path
 ///
 /// See [File.strippedPath]
-String unstripPath(Account account, String strippedPath) =>
-    "${api_util.getWebdavRootUrlRelative(account)}/$strippedPath"
-        .trimRightAny("/");
+String unstripPath(Account account, String strippedPath) {
+  final p = strippedPath == "." ? "" : strippedPath;
+  return "${api_util.getWebdavRootUrlRelative(account)}/$p".trimRightAny("/");
+}
 
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
 CiString getUserDirName(File file) {
