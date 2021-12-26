@@ -56,20 +56,4 @@ extension IterableExtension<T> on Iterable<T> {
     return where((element) =>
         s.add(OverrideComparator<T>(element, equalFn, hashCodeFn))).toList();
   }
-
-  T? get firstOrNull {
-    try {
-      return first;
-    } on StateError catch (_) {
-      return null;
-    }
-  }
-
-  T? get lastOrNull {
-    try {
-      return last;
-    } on StateError catch (_) {
-      return null;
-    }
-  }
 }

@@ -1,9 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:tuple/tuple.dart';
 

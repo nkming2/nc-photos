@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:idb_shim/idb.dart';
 import 'package:logging/logging.dart';

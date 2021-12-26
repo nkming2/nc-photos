@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -7,7 +8,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/download.dart';
 import 'package:nc_photos/mobile/notification.dart';
