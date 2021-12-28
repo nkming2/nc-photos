@@ -300,8 +300,9 @@ class DirPickerState extends State<DirPicker> {
           _picks.removeWhere((element) => identical(element, parent));
         } catch (_) {
           SnackBarManager().showSnackBar(SnackBar(
-              content:
-                  Text(L10n.global().rootPickerUnpickFailureNotification)));
+            content: Text(L10n.global().rootPickerUnpickFailureNotification),
+            duration: k.snackBarDurationNormal,
+          ));
         }
       }
     });
