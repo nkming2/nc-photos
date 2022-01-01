@@ -3,10 +3,12 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:idb_sqflite/idb_sqflite.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -22,7 +24,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
-import 'package:nc_photos/use_case/ls.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
@@ -364,9 +366,9 @@ class AlbumRemoteDataSource implements AlbumDataSource {
         const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
         shouldCreateMissingDir: true);
     // query album file
-    final list = await Ls(fileRepo)(account, File(path: filePath),
-        shouldExcludeRootDir: false);
-    return album.copyWith(albumFile: OrNull(list.first));
+    final newFile = await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
+        account, filePath);
+    return album.copyWith(albumFile: OrNull(newFile));
   }
 
   @override
