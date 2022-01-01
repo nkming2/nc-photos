@@ -29,32 +29,6 @@ void main() {
             ),
           ]);
     });
-
-    test("shouldExcludeRootDir == false", () async {
-      expect(
-          await Ls(_MockFileRepo())(
-              util.buildAccount(),
-              File(
-                path: "remote.php/dav/files/admin",
-              ),
-              shouldExcludeRootDir: false),
-          [
-            File(
-              path: "remote.php/dav/files/admin",
-              isCollection: true,
-            ),
-            File(
-              path: "remote.php/dav/files/admin/test1.jpg",
-            ),
-            File(
-              path: "remote.php/dav/files/admin/test2.jpg",
-            ),
-            File(
-              path: "remote.php/dav/files/admin/d1",
-              isCollection: true,
-            ),
-          ]);
-    });
   });
 }
 

@@ -7,20 +7,14 @@ class Ls {
 
   /// List all files under a dir
   ///
-  /// The resulting list would normally also include the [root] dir. If
-  /// [shouldExcludeRootDir] == true, such entry will be removed
-  Future<List<File>> call(Account account, File root,
-      {bool shouldExcludeRootDir = true}) async {
-    final products = await fileRepo.list(account, root);
-    if (shouldExcludeRootDir) {
-      // filter out root file
-      final trimmedRootPath = root.path.trimAny("/");
-      return products
-          .where((element) => element.path.trimAny("/") != trimmedRootPath)
-          .toList();
-    } else {
-      return products;
-    }
+  /// The dir itself is not included in the returned list
+  Future<List<File>> call(Account account, File dir) async {
+    final products = await fileRepo.list(account, dir);
+    // filter out root file
+    final trimmedRootPath = dir.path.trimAny("/");
+    return products
+        .where((element) => element.path.trimAny("/") != trimmedRootPath)
+        .toList();
   }
 
   final FileRepo fileRepo;
