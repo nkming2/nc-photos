@@ -1,23 +1,23 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:path/path.dart' as path;
-import 'package:quiver/iterables.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
@@ -246,12 +246,32 @@ class FileAppDbDataSource implements FileDataSource {
   const FileAppDbDataSource(this.appDb);
 
   @override
-  list(Account account, File f) {
-    _log.info("[list] ${f.path}");
+  list(Account account, File dir) {
+    _log.info("[list] ${dir.path}");
     return appDb.use((db) async {
-      final transaction = db.transaction(AppDb.fileStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.fileStoreName);
-      return await _doList(store, account, f);
+      final transaction = db.transaction(
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadOnly);
+      final fileStore = transaction.objectStore(AppDb.file2StoreName);
+      final dirStore = transaction.objectStore(AppDb.dirStoreName);
+      final dirItem = await dirStore
+          .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
+      if (dirItem == null) {
+        throw CacheNotFoundException("No entry: ${dir.path}");
+      }
+      final dirEntry = AppDbDirEntry.fromJson(dirItem.cast<String, dynamic>());
+      final entries = await Future.wait(dirEntry.children.map((c) async {
+        final fileItem = await fileStore
+            .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
+        if (fileItem == null) {
+          _log.warning(
+              "[list] Missing file ($c) in db for dir: ${logFilename(dir.path)}");
+          throw CacheNotFoundException("No entry for dir child: $c");
+        }
+        return AppDbFile2Entry.fromJson(fileItem.cast<String, dynamic>());
+      }));
+      // we need to add dir to match the remote query
+      return [dirEntry.dir] +
+          entries.map((e) => e.file).where((f) => _validateFile(f)).toList();
     });
   }
 
@@ -261,22 +281,29 @@ class FileAppDbDataSource implements FileDataSource {
     throw UnimplementedError();
   }
 
+  /// Remove a file/dir from database
+  ///
+  /// If [f] is a dir, the dir and its sub-dirs will be removed from dirStore.
+  /// The files inside any of these dirs will be removed from file2Store.
+  ///
+  /// If [f] is a file, the file will be removed from file2Store, but no changes
+  /// to dirStore.
   @override
-  remove(Account account, File f) {
+  remove(Account account, File f) async {
     _log.info("[remove] ${f.path}");
-    return appDb.use((db) async {
-      final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.fileStoreName);
-      final index = store.index(AppDbFileEntry.indexName);
-      final path = AppDbFileEntry.toPath(account, f);
-      final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-      final keys = await index
-          .openKeyCursor(range: range, autoAdvance: true)
-          .map((cursor) => cursor.primaryKey)
-          .toList();
-      for (final k in keys) {
-        _log.fine("[remove] Removing DB entry: $k");
-        await store.delete(k);
+    await appDb.use((db) async {
+      if (f.isCollection == true) {
+        final transaction = db.transaction(
+            [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
+        final dirStore = transaction.objectStore(AppDb.dirStoreName);
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        await _removeDirFromAppDb(account, f,
+            dirStore: dirStore, fileStore: fileStore);
+      } else {
+        final transaction =
+            db.transaction(AppDb.file2StoreName, idbModeReadWrite);
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        await _removeFileFromAppDb(account, f, fileStore: fileStore);
       }
     });
   }
@@ -303,36 +330,18 @@ class FileAppDbDataSource implements FileDataSource {
   }) {
     _log.info("[updateProperty] ${f.path}");
     return appDb.use((db) async {
-      final transaction = db.transaction(
-          [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
+      final transaction =
+          db.transaction(AppDb.file2StoreName, idbModeReadWrite);
 
       // update file store
-      final fileStore = transaction.objectStore(AppDb.fileStoreName);
-      final parentDir = File(path: path.dirname(f.path));
-      final parentList = await _doList(fileStore, account, parentDir);
-      final jsonList = parentList.map((e) {
-        if (e.path == f.path) {
-          return e.copyWith(
-            metadata: metadata,
-            isArchived: isArchived,
-            overrideDateTime: overrideDateTime,
-          );
-        } else {
-          return e;
-        }
-      });
-      await _cacheListResults(fileStore, account, parentDir, jsonList);
-
-      // update file db store
-      final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
       final newFile = f.copyWith(
         metadata: metadata,
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
       );
-      await fileDbStore.put(
-          AppDbFileDbEntry.fromFile(account, newFile).toJson(),
-          AppDbFileDbEntry.toPrimaryKey(account, newFile));
+      final fileStore = transaction.objectStore(AppDb.file2StoreName);
+      await fileStore.put(AppDbFile2Entry.fromFile(account, newFile).toJson(),
+          AppDbFile2Entry.toPrimaryKeyForFile(account, newFile));
     });
   }
 
@@ -359,27 +368,6 @@ class FileAppDbDataSource implements FileDataSource {
   @override
   createDir(Account account, String path) async {
     // do nothing
-  }
-
-  Future<List<File>> _doList(ObjectStore store, Account account, File f) async {
-    final index = store.index(AppDbFileEntry.indexName);
-    final path = AppDbFileEntry.toPath(account, f);
-    final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-    final List results = await index.getAll(range);
-    if (results.isNotEmpty == true) {
-      final entries = results
-          .map((e) => AppDbFileEntry.fromJson(e.cast<String, dynamic>()));
-      return entries
-          .map((e) {
-            _log.info("[_doList] ${e.path}[${e.index}]");
-            return e.data;
-          })
-          .reduce((value, element) => value + element)
-          .where((element) => _validateFile(element))
-          .toList();
-    } else {
-      throw CacheNotFoundException("No entry: $path");
-    }
   }
 
   final AppDb appDb;
@@ -423,21 +411,7 @@ class FileCachedDataSource implements FileDataSource {
       }
 
       if (cache != null) {
-        _syncCacheWithRemote(account, remote, cache);
-      } else {
-        appDb.use((db) async {
-          final transaction =
-              db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-          final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
-          for (final f in remote) {
-            try {
-              await _upsertFileDbStoreCache(account, f, fileDbStore);
-            } catch (e, stacktrace) {
-              _log.shout(
-                  "[list] Failed while _upsertFileDbStoreCache", e, stacktrace);
-            }
-          }
-        });
+        await _cleanUpCacheWithRemote(account, remote, cache);
       }
       return remote;
     } on ApiException catch (e) {
@@ -536,107 +510,47 @@ class FileCachedDataSource implements FileDataSource {
 
   Future<void> _cacheResult(Account account, File f, List<File> result) {
     return appDb.use((db) async {
-      final transaction = db.transaction(AppDb.fileStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.fileStoreName);
-      await _cacheListResults(store, account, f, result);
+      final transaction = db.transaction(
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
+      final dirStore = transaction.objectStore(AppDb.dirStoreName);
+      final fileStore = transaction.objectStore(AppDb.file2StoreName);
+      await _cacheListResults(account, f, result,
+          fileStore: fileStore, dirStore: dirStore);
     });
   }
 
-  /// Sync the remote result and local cache
-  void _syncCacheWithRemote(
+  /// Remove extra entries from local cache based on remote results
+  Future<void> _cleanUpCacheWithRemote(
       Account account, List<File> remote, List<File> cache) async {
     final removed =
         cache.where((c) => !remote.any((r) => r.path == c.path)).toList();
+    if (removed.isEmpty) {
+      return;
+    }
     _log.info(
-        "[_syncCacheWithRemote] Removed: ${removed.map((f) => f.path).toReadableString()}");
+        "[_cleanUpCacheWithRemote] Removed: ${removed.map((f) => f.path).toReadableString()}");
 
-    appDb.use((db) async {
+    await appDb.use((db) async {
       final transaction = db.transaction(
-          [AppDb.fileStoreName, AppDb.fileDbStoreName], idbModeReadWrite);
-      final fileStore = transaction.objectStore(AppDb.fileStoreName);
-      final fileStoreIndex = fileStore.index(AppDbFileEntry.indexName);
-      final fileDbStore = transaction.objectStore(AppDb.fileDbStoreName);
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
+      final dirStore = transaction.objectStore(AppDb.dirStoreName);
+      final fileStore = transaction.objectStore(AppDb.file2StoreName);
       for (final f in removed) {
         try {
-          await _removeFileDbStoreCache(account, f, fileDbStore);
-        } catch (e, stacktrace) {
+          if (f.isCollection == true) {
+            await _removeDirFromAppDb(account, f,
+                dirStore: dirStore, fileStore: fileStore);
+          } else {
+            await _removeFileFromAppDb(account, f, fileStore: fileStore);
+          }
+        } catch (e, stackTrace) {
           _log.shout(
-              "[_syncCacheWithRemote] Failed while _removeFileDbStoreCache",
+              "[_cleanUpCacheWithRemote] Failed while removing file: ${logFilename(f.path)}",
               e,
-              stacktrace);
-        }
-        try {
-          await _removeFileStoreCache(account, f, fileStore, fileStoreIndex);
-        } catch (e, stacktrace) {
-          _log.shout(
-              "[_syncCacheWithRemote] Failed while _removeFileStoreCache",
-              e,
-              stacktrace);
-        }
-      }
-      for (final f in remote) {
-        try {
-          await _upsertFileDbStoreCache(account, f, fileDbStore);
-        } catch (e, stacktrace) {
-          _log.shout(
-              "[_syncCacheWithRemote] Failed while _upsertFileDbStoreCache",
-              e,
-              stacktrace);
+              stackTrace);
         }
       }
     });
-  }
-
-  Future<void> _removeFileDbStoreCache(
-      Account account, File file, ObjectStore objStore) async {
-    if (file.isCollection == true) {
-      final fullPath = AppDbFileDbEntry.toPrimaryKey(account, file);
-      final range = KeyRange.bound("$fullPath/", "$fullPath/\uffff");
-      await for (final k
-          in objStore.openKeyCursor(range: range, autoAdvance: true)) {
-        _log.fine(
-            "[_removeFileDbStoreCache] Removing DB entry: ${k.primaryKey}");
-        objStore.delete(k.primaryKey);
-      }
-    } else {
-      await objStore.delete(AppDbFileDbEntry.toPrimaryKey(account, file));
-    }
-  }
-
-  Future<void> _upsertFileDbStoreCache(
-      Account account, File file, ObjectStore objStore) async {
-    if (file.isCollection == true) {
-      return;
-    }
-    await objStore.put(AppDbFileDbEntry.fromFile(account, file).toJson(),
-        AppDbFileDbEntry.toPrimaryKey(account, file));
-  }
-
-  /// Remove dangling dir entries in the file object store
-  Future<void> _removeFileStoreCache(
-      Account account, File file, ObjectStore objStore, Index index) async {
-    if (file.isCollection != true) {
-      return;
-    }
-
-    final path = AppDbFileEntry.toPath(account, file);
-    // delete the dir itself
-    final dirRange = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-    // delete with KeyRange is not supported in idb_shim/idb_sqflite
-    // await store.delete(dirRange);
-    await for (final k
-        in index.openKeyCursor(range: dirRange, autoAdvance: true)) {
-      _log.fine("[_removeFileStoreCache] Removing DB entry: ${k.primaryKey}");
-      objStore.delete(k.primaryKey);
-    }
-    // then its children
-    final childrenRange =
-        KeyRange.bound(["$path/", 0], ["$path/\uffff", int_util.int32Max]);
-    await for (final k
-        in index.openKeyCursor(range: childrenRange, autoAdvance: true)) {
-      _log.fine("[_removeFileStoreCache] Removing DB entry: ${k.primaryKey}");
-      objStore.delete(k.primaryKey);
-    }
   }
 
   final AppDb appDb;
@@ -656,40 +570,35 @@ class _CacheManager {
     this.shouldCheckCache = false,
   });
 
-  /// Return the cached results of listing a directory [f]
+  /// Return the cached results of listing a directory [dir]
   ///
   /// Should check [isGood] before using the cache returning by this method
-  Future<List<File>?> list(Account account, File f) async {
-    final trimmedRootPath = f.path.trimAny("/");
+  Future<List<File>?> list(Account account, File dir) async {
     List<File>? cache;
     try {
-      cache = await appDbSrc.list(account, f);
+      cache = await appDbSrc.list(account, dir);
       // compare the cached root
-      final cacheEtag = cache
-          .firstWhere((element) => element.path.trimAny("/") == trimmedRootPath)
-          .etag;
-      if (cacheEtag != null) {
-        // compare the etag to see if the content has been updated
-        var remoteEtag = f.etag;
-        // if no etag supplied, we need to query it form remote
-        remoteEtag ??= (await remoteSrc.list(account, f, depth: 0)).first.etag;
-        if (cacheEtag == remoteEtag) {
-          _log.fine(
-              "[_listCache] etag matched for ${AppDbFileEntry.toPath(account, f)}");
-          if (shouldCheckCache) {
-            await _checkTouchToken(account, f, cache);
-          } else {
-            _isGood = true;
-          }
+      final cacheEtag =
+          cache.firstWhere((f) => f.compareServerIdentity(dir)).etag!;
+      // compare the etag to see if the content has been updated
+      var remoteEtag = dir.etag;
+      // if no etag supplied, we need to query it form remote
+      remoteEtag ??= (await remoteSrc.list(account, dir, depth: 0)).first.etag;
+      if (cacheEtag == remoteEtag) {
+        _log.fine(
+            "[list] etag matched for ${AppDbDirEntry.toPrimaryKeyForDir(account, dir)}");
+        if (shouldCheckCache) {
+          await _checkTouchToken(account, dir, cache);
+        } else {
+          _isGood = true;
         }
       } else {
-        _log.info(
-            "[_list] Remote content updated for ${AppDbFileEntry.toPath(account, f)}");
+        _log.info("[list] Remote content updated for ${dir.path}");
       }
     } on CacheNotFoundException catch (_) {
       // normal when there's no cache
-    } catch (e, stacktrace) {
-      _log.shout("[_list] Cache failure", e, stacktrace);
+    } catch (e, stackTrace) {
+      _log.shout("[list] Cache failure", e, stackTrace);
     }
     return cache;
   }
@@ -744,34 +653,76 @@ class _CacheManager {
 }
 
 Future<void> _cacheListResults(
-    ObjectStore store, Account account, File f, Iterable<File> results) async {
-  final index = store.index(AppDbFileEntry.indexName);
-  final path = AppDbFileEntry.toPath(account, f);
-  final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-  // count number of entries for this dir
-  final count = await index.count(range);
-  int newCount = 0;
-  for (final pair
-      in partition(results, AppDbFileEntry.maxDataSize).withIndex()) {
-    _log.info(
-        "[_cacheListResults] Caching $path[${pair.item1}], length: ${pair.item2.length}");
-    await store.put(
-      AppDbFileEntry(path, pair.item1, pair.item2).toJson(),
-      AppDbFileEntry.toPrimaryKey(account, f, pair.item1),
-    );
-    ++newCount;
+  Account account,
+  File dir,
+  List<File> results, {
+  required ObjectStore fileStore,
+  required ObjectStore dirStore,
+}) async {
+  // add files to db
+  await Future.wait(results.map((f) => fileStore.put(
+      AppDbFile2Entry.fromFile(account, f).toJson(),
+      AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
+
+  // results from remote also contain the dir itself
+  final resultGroup = results.groupListsBy((f) => f.compareServerIdentity(dir));
+  final remoteDir = resultGroup[true]!.first;
+  final remoteChildren = resultGroup[false] ?? [];
+  // add dir to db
+  await dirStore.put(
+      AppDbDirEntry.fromFiles(account, remoteDir, remoteChildren).toJson(),
+      AppDbDirEntry.toPrimaryKeyForDir(account, remoteDir));
+}
+
+Future<void> _removeFileFromAppDb(
+  Account account,
+  File file, {
+  required ObjectStore fileStore,
+}) async {
+  assert(file.isCollection != true);
+  await fileStore.delete(AppDbFile2Entry.toPrimaryKeyForFile(account, file));
+}
+
+/// Remove a dir and all files inside from the database
+Future<void> _removeDirFromAppDb(
+  Account account,
+  File dir, {
+  required ObjectStore dirStore,
+  required ObjectStore fileStore,
+}) async {
+  assert(dir.isCollection == true);
+  // delete the dir itself
+  await AppDbDirEntry.toPrimaryKeyForDir(account, dir).runFuture((key) async {
+    _log.fine("[_removeDirFromAppDb] Removing dirStore entry: $key");
+    await dirStore.delete(key);
+  });
+  // then its children
+  final childrenRange = KeyRange.bound(
+    AppDbDirEntry.toPrimaryLowerKeyForSubDirs(account, dir),
+    AppDbDirEntry.toPrimaryUpperKeyForSubDirs(account, dir),
+  );
+  for (final key in await dirStore.getAllKeys(childrenRange)) {
+    _log.fine("[_removeDirFromAppDb] Removing dirStore entry: $key");
+    await dirStore.delete(key);
   }
-  if (count > newCount) {
-    // index is 0-based
-    final rmRange = KeyRange.bound([path, newCount], [path, int_util.int32Max]);
-    final rmKeys = await index
-        .openKeyCursor(range: rmRange, autoAdvance: true)
-        .map((cursor) => cursor.primaryKey)
-        .toList();
-    for (final k in rmKeys) {
-      _log.fine("[_cacheListResults] Removing DB entry: $k");
-      await store.delete(k);
-    }
+
+  // delete files from fileStore
+  // first the dir
+  await AppDbFile2Entry.toPrimaryKeyForFile(account, dir)
+      .runFuture((key) async {
+    _log.fine("[_removeDirFromAppDb] Removing fileStore entry: $key");
+    await fileStore.delete(key);
+  });
+  // then files under this dir and sub-dirs
+  final range = KeyRange.bound(
+    AppDbFile2Entry.toStrippedPathIndexLowerKeyForDir(account, dir),
+    AppDbFile2Entry.toStrippedPathIndexUpperKeyForDir(account, dir),
+  );
+  final strippedPathIndex =
+      fileStore.index(AppDbFile2Entry.strippedPathIndexName);
+  for (final key in await strippedPathIndex.getAllKeys(range)) {
+    _log.fine("[_removeDirFromAppDb] Removing fileStore entry: $key");
+    await fileStore.delete(key);
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 class FindFile {
   FindFile(this._c) : assert(require(_c));
@@ -13,19 +12,14 @@ class FindFile {
   /// Find the [File] in the DB by [fileId]
   Future<File> call(Account account, int fileId) async {
     return await _c.appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.fileDbStoreName);
-      final index = store.index(AppDbFileDbEntry.indexName);
-      final List dbItems = await index
-          .getAll(AppDbFileDbEntry.toNamespacedFileId(account, fileId));
-
-      // find the one owned by us
-      final dbItem = dbItems.firstWhere((element) {
-        final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-        return file_util.getUserDirName(e.file) == account.username;
-      });
-      final dbEntry = AppDbFileDbEntry.fromJson(dbItem.cast<String, dynamic>());
+      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
+      final store = transaction.objectStore(AppDb.file2StoreName);
+      final dbItem = await store
+          .getObject(AppDbFile2Entry.toPrimaryKey(account, fileId)) as Map?;
+      if (dbItem == null) {
+        throw StateError("File ID not found: $fileId");
+      }
+      final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
       return dbEntry.file;
     });
   }

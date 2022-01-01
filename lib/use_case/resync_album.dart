@@ -6,7 +6,6 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
@@ -19,15 +18,15 @@ class ResyncAlbum {
           "Resync only make sense for static albums: ${album.name}");
     }
     return await appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.fileDbStoreName);
-      final index = store.index(AppDbFileDbEntry.indexName);
+      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
+      final store = transaction.objectStore(AppDb.file2StoreName);
+      final index = store.index(AppDbFile2Entry.strippedPathIndexName);
       final newItems = <AlbumItem>[];
       for (final item in AlbumStaticProvider.of(album).items) {
         if (item is AlbumFileItem) {
           try {
-            newItems.add(await _syncOne(account, item, store, index));
+            newItems.add(await _syncOne(account, item,
+                fileStore: store, fileStoreStrippedPathIndex: index));
           } catch (e, stacktrace) {
             _log.shout(
                 "[call] Failed syncing file in album: ${logFilename(item.file.path)}",
@@ -43,31 +42,27 @@ class ResyncAlbum {
     });
   }
 
-  Future<AlbumFileItem> _syncOne(Account account, AlbumFileItem item,
-      ObjectStore objStore, Index index) async {
+  Future<AlbumFileItem> _syncOne(
+    Account account,
+    AlbumFileItem item, {
+    required ObjectStore fileStore,
+    required Index fileStoreStrippedPathIndex,
+  }) async {
     Map? dbItem;
     if (item.file.fileId != null) {
-      final List dbItems = await index.getAll(
-          AppDbFileDbEntry.toNamespacedFileId(account, item.file.fileId!));
-      // find the one owned by us
-      try {
-        dbItem = dbItems.firstWhere((element) {
-          final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-          return file_util.getUserDirName(e.file) == account.username;
-        });
-      } on StateError catch (_) {
-        // not found
-      }
+      dbItem = await fileStore.getObject(
+          AppDbFile2Entry.toPrimaryKeyForFile(account, item.file)) as Map?;
     } else {
-      dbItem = await objStore
-          .getObject(AppDbFileDbEntry.toPrimaryKey(account, item.file)) as Map?;
+      dbItem = await fileStoreStrippedPathIndex.get(
+              AppDbFile2Entry.toStrippedPathIndexKeyForFile(account, item.file))
+          as Map?;
     }
     if (dbItem == null) {
       _log.warning(
           "[_syncOne] File doesn't exist in DB, removed?: '${item.file.path}'");
       return item;
     }
-    final dbEntry = AppDbFileDbEntry.fromJson(dbItem.cast<String, dynamic>());
+    final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
     return item.copyWith(
       file: dbEntry.file,
     );

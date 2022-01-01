@@ -468,7 +468,10 @@ extension FileExtension on File {
 
   /// Return the path of this file with the DAV part stripped
   ///
-  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}
+  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}. If this
+  /// file points to the user's root dir, return "."
+  ///
+  /// See: [strippedPathWithEmpty]
   String get strippedPath {
     if (path.contains("remote.php/dav/files")) {
       final position = path.indexOf("/", "remote.php/dav/files/".length) + 1;
@@ -481,6 +484,17 @@ extension FileExtension on File {
     } else {
       return path;
     }
+  }
+
+  /// Return the path of this file with the DAV part stripped
+  ///
+  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}. If this
+  /// file points to the user's root dir, return an empty string
+  ///
+  /// See: [strippedPath]
+  String get strippedPathWithEmpty {
+    final path = strippedPath;
+    return path == "." ? "" : path;
   }
 
   String get filename => path_util.basename(path);

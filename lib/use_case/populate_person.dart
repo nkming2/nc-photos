@@ -4,7 +4,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 
 class PopulatePerson {
@@ -13,14 +12,12 @@ class PopulatePerson {
   /// Return a list of files of the faces
   Future<List<File>> call(Account account, List<Face> faces) async {
     return await appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.fileDbStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.fileDbStoreName);
-      final index = store.index(AppDbFileDbEntry.indexName);
+      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
+      final store = transaction.objectStore(AppDb.file2StoreName);
       final products = <File>[];
       for (final f in faces) {
         try {
-          products.add(await _populateOne(account, f, store, index));
+          products.add(await _populateOne(account, f, fileStore: store));
         } catch (e, stackTrace) {
           _log.severe("[call] Failed populating file of face: ${f.fileId}", e,
               stackTrace);
@@ -31,25 +28,18 @@ class PopulatePerson {
   }
 
   Future<File> _populateOne(
-      Account account, Face face, ObjectStore store, Index index) async {
-    final List dbItems = await index
-        .getAll(AppDbFileDbEntry.toNamespacedFileId(account, face.fileId));
-    // find the one owned by us
-    Map? dbItem;
-    try {
-      dbItem = dbItems.firstWhere((element) {
-        final e = AppDbFileDbEntry.fromJson(element.cast<String, dynamic>());
-        return file_util.getUserDirName(e.file) == account.username;
-      });
-    } on StateError catch (_) {
-      // not found
-    }
+    Account account,
+    Face face, {
+    required ObjectStore fileStore,
+  }) async {
+    final dbItem = await fileStore
+        .getObject(AppDbFile2Entry.toPrimaryKey(account, face.fileId)) as Map?;
     if (dbItem == null) {
       _log.warning(
           "[_populateOne] File doesn't exist in DB, removed?: '${face.fileId}'");
       throw CacheNotFoundException();
     }
-    final dbEntry = AppDbFileDbEntry.fromJson(dbItem.cast<String, dynamic>());
+    final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
     return dbEntry.file;
   }
 

@@ -17,5 +17,10 @@ void main() {
       const obj = Object();
       expect(obj.run((obj) => 1), 1);
     });
+
+    test("runFuture", () async {
+      const obj = Object();
+      expect(await obj.runFuture((obj) => Future.value(1)), 1);
+    });
   });
 }

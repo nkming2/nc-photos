@@ -5,6 +5,8 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -14,6 +16,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
+import 'package:nc_photos/use_case/scan_dir_offline.dart';
 
 abstract class ScanAccountDirBlocEvent {
   const ScanAccountDirBlocEvent();
@@ -170,12 +173,12 @@ class ScanAccountDirBloc
 
     if (!hasContent) {
       // show something instantly on first load
-      ScanAccountDirBlocState cacheState = const ScanAccountDirBlocInit();
-      await for (final s in _queryOffline(ev, () => cacheState)) {
-        cacheState = s;
-      }
-      yield ScanAccountDirBlocLoading(cacheState.files);
-      hasContent = cacheState.files.isNotEmpty;
+      final stopwatch = Stopwatch()..start();
+      final cacheFiles = await _queryOffline(ev);
+      _log.info(
+          "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
+      yield ScanAccountDirBlocLoading(cacheFiles);
+      hasContent = cacheFiles.isNotEmpty;
     }
 
     ScanAccountDirBlocState newState = const ScanAccountDirBlocInit();
@@ -185,9 +188,12 @@ class ScanAccountDirBloc
         yield s;
       }
     } else {
+      final stopwatch = Stopwatch()..start();
       await for (final s in _queryOnline(ev, () => newState)) {
         newState = s;
       }
+      _log.info(
+          "[_onEventQuery] Elapsed time (_queryOnline): ${stopwatch.elapsedMilliseconds}ms");
       if (newState is ScanAccountDirBlocSuccess) {
         yield newState;
       } else if (newState is ScanAccountDirBlocFailure) {
@@ -298,9 +304,22 @@ class ScanAccountDirBloc
     }
   }
 
-  Stream<ScanAccountDirBlocState> _queryOffline(ScanAccountDirBlocQueryBase ev,
-          ScanAccountDirBlocState Function() getState) =>
-      _queryWithFileDataSource(ev, getState, FileAppDbDataSource(AppDb()));
+  Future<List<File>> _queryOffline(ScanAccountDirBlocQueryBase ev) async {
+    final c = KiwiContainer().resolve<DiContainer>();
+    final files = <File>[];
+    for (final r in account.roots) {
+      try {
+        final dir = File(path: file_util.unstripPath(account, r));
+        files.addAll(await ScanDirOffline(c)(account, dir));
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_queryOffline] Failed while ScanDirOffline: ${logFilename(r)}",
+            e,
+            stackTrace);
+      }
+    }
+    return files;
+  }
 
   Stream<ScanAccountDirBlocState> _queryOnline(ScanAccountDirBlocQueryBase ev,
       ScanAccountDirBlocState Function() getState) {

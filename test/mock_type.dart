@@ -69,6 +69,34 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
 
 /// Each MockAppDb instance contains a unique memory database
 class MockAppDb implements AppDb {
+  static Future<MockAppDb> create({
+    bool hasAlbumStore = true,
+    bool hasFileDb2Store = true,
+    bool hasDirStore = true,
+    // compat
+    bool hasFileStore = false,
+    bool hasFileDbStore = false,
+  }) async {
+    final inst = MockAppDb();
+    final db = await inst._dbFactory.open(
+      "test.db",
+      version: 1,
+      onUpgradeNeeded: (event) async {
+        final db = event.database;
+        _createDb(
+          db,
+          hasAlbumStore: hasAlbumStore,
+          hasFileDb2Store: hasFileDb2Store,
+          hasDirStore: hasDirStore,
+          hasFileStore: hasFileStore,
+          hasFileDbStore: hasFileDbStore,
+        );
+      },
+    );
+    db.close();
+    return inst;
+  }
+
   @override
   Future<T> use<T>(FutureOr<T> Function(Database) fn) async {
     final db = await _dbFactory.open(
@@ -76,15 +104,7 @@ class MockAppDb implements AppDb {
       version: 1,
       onUpgradeNeeded: (event) async {
         final db = event.database;
-        final albumStore = db.createObjectStore(AppDb.albumStoreName);
-        albumStore.createIndex(
-            AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
-        final fileDbStore = db.createObjectStore(AppDb.fileDbStoreName);
-        fileDbStore.createIndex(
-            AppDbFileDbEntry.indexName, AppDbFileDbEntry.keyPath,
-            unique: false);
-        final fileStore = db.createObjectStore(AppDb.fileStoreName);
-        fileStore.createIndex(AppDbFileEntry.indexName, AppDbFileEntry.keyPath);
+        _createDb(db);
       },
     );
 
@@ -95,7 +115,50 @@ class MockAppDb implements AppDb {
     }
   }
 
+  static void _createDb(
+    Database db, {
+    bool hasAlbumStore = true,
+    bool hasFileDb2Store = true,
+    bool hasDirStore = true,
+    // compat
+    bool hasFileStore = false,
+    bool hasFileDbStore = false,
+  }) {
+    if (hasAlbumStore) {
+      final albumStore = db.createObjectStore(AppDb.albumStoreName);
+      albumStore.createIndex(
+          AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
+    }
+    if (hasFileDb2Store) {
+      final file2Store = db.createObjectStore(AppDb.file2StoreName);
+      file2Store.createIndex(AppDbFile2Entry.strippedPathIndexName,
+          AppDbFile2Entry.strippedPathKeyPath);
+    }
+    if (hasDirStore) {
+      db.createObjectStore(AppDb.dirStoreName);
+    }
+
+    // compat
+    if (hasFileStore) {
+      final fileStore = db.createObjectStore(_fileStoreName);
+      fileStore.createIndex(_fileIndexName, _fileKeyPath);
+    }
+    if (hasFileDbStore) {
+      final fileDbStore = db.createObjectStore(_fileDbStoreName);
+      fileDbStore.createIndex(_fileDbIndexName, _fileDbKeyPath, unique: false);
+    }
+  }
+
   late final _dbFactory = newIdbFactoryMemory();
+
+  // compat only
+  static const _fileDbStoreName = "filesDb";
+  static const _fileDbIndexName = "fileDbStore_namespacedFileId";
+  static const _fileDbKeyPath = "namespacedFileId";
+
+  static const _fileStoreName = "files";
+  static const _fileIndexName = "fileStore_path_index";
+  static const _fileKeyPath = ["path", "index"];
 }
 
 /// EventBus that ignore all events

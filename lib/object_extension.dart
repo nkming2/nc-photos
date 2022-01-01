@@ -15,4 +15,9 @@ extension ObjectExtension<T> on T {
 
   /// Run [fn] with this, and return the results of [fn]
   U run<U>(U Function(T obj) fn) => fn(this);
+
+  /// Run [fn] with this, and return the results of [fn]
+  Future<U> runFuture<U>(FutureOr<U> Function(T obj) fn) async {
+    return await fn(this);
+  }
 }

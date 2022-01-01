@@ -14,8 +14,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
-
-import 'mock_type.dart';
+import 'package:nc_photos/type.dart';
 
 class FilesBuilder {
   FilesBuilder({
@@ -341,13 +340,37 @@ Sharee buildSharee({
     );
 
 Future<void> fillAppDb(
-    MockAppDb appDb, Account account, Iterable<File> files) async {
+    AppDb appDb, Account account, Iterable<File> files) async {
   await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.fileDbStoreName, idbModeReadWrite);
-    final store = transaction.objectStore(AppDb.fileDbStoreName);
+    final transaction = db.transaction(AppDb.file2StoreName, idbModeReadWrite);
+    final file2Store = transaction.objectStore(AppDb.file2StoreName);
     for (final f in files) {
-      await store.put(AppDbFileDbEntry.fromFile(account, f).toJson(),
-          AppDbFileDbEntry.toPrimaryKey(account, f));
+      await file2Store.put(AppDbFile2Entry.fromFile(account, f).toJson(),
+          AppDbFile2Entry.toPrimaryKeyForFile(account, f));
     }
+  });
+}
+
+Future<void> fillAppDbDir(
+    AppDb appDb, Account account, File dir, List<File> children) async {
+  await appDb.use((db) async {
+    final transaction = db.transaction(AppDb.dirStoreName, idbModeReadWrite);
+    final dirStore = transaction.objectStore(AppDb.dirStoreName);
+    await dirStore.put(AppDbDirEntry.fromFiles(account, dir, children).toJson(),
+        AppDbDirEntry.toPrimaryKeyForDir(account, dir));
+  });
+}
+
+Future<List<T>> listAppDb<T>(
+    AppDb appDb, String storeName, T Function(JsonObj) transform) {
+  return appDb.use((db) async {
+    final transaction = db.transaction(storeName, idbModeReadOnly);
+    final store = transaction.objectStore(storeName);
+    return await store
+        .openCursor(autoAdvance: true)
+        .map((c) => c.value)
+        .cast<Map>()
+        .map((e) => transform(e.cast<String, dynamic>()))
+        .toList();
   });
 }
