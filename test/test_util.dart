@@ -26,23 +26,74 @@ class FilesBuilder {
     return files.map((f) => f.copyWith()).toList();
   }
 
+  void add(
+    String relativePath, {
+    int? contentLength,
+    String? contentType,
+    DateTime? lastModified,
+    bool isCollection = false,
+    bool hasPreview = true,
+    String ownerId = "admin",
+  }) {
+    files.add(File(
+      path: "remote.php/dav/files/$relativePath",
+      contentLength: contentLength,
+      contentType: contentType,
+      lastModified:
+          lastModified ?? DateTime.utc(2020, 1, 2, 3, 4, 5 + files.length),
+      isCollection: isCollection,
+      hasPreview: hasPreview,
+      fileId: fileId++,
+      ownerId: ownerId.toCi(),
+    ));
+  }
+
+  void addGenericFile(
+    String relativePath,
+    String contentType, {
+    int contentLength = 1024,
+    DateTime? lastModified,
+    bool hasPreview = true,
+    String ownerId = "admin",
+  }) =>
+      add(
+        relativePath,
+        contentLength: contentLength,
+        contentType: contentType,
+        lastModified: lastModified,
+        hasPreview: hasPreview,
+        ownerId: ownerId,
+      );
+
   void addJpeg(
     String relativePath, {
     int contentLength = 1024,
     DateTime? lastModified,
     bool hasPreview = true,
     String ownerId = "admin",
-  }) {
-    files.add(buildJpegFile(
-      path: "remote.php/dav/files/$relativePath",
-      contentLength: contentLength,
-      lastModified:
-          lastModified ?? DateTime.utc(2020, 1, 2, 3, 4, 5 + files.length),
-      hasPreview: hasPreview,
-      fileId: fileId++,
-      ownerId: ownerId,
-    ));
-  }
+  }) =>
+      add(
+        relativePath,
+        contentLength: contentLength,
+        contentType: "image/jpeg",
+        lastModified: lastModified,
+        hasPreview: hasPreview,
+        ownerId: ownerId,
+      );
+
+  void addDir(
+    String relativePath, {
+    int contentLength = 1024,
+    DateTime? lastModified,
+    String ownerId = "admin",
+  }) =>
+      add(
+        relativePath,
+        lastModified: lastModified,
+        isCollection: true,
+        hasPreview: false,
+        ownerId: ownerId,
+      );
 
   final files = <File>[];
   int fileId;
