@@ -45,7 +45,7 @@ class Home extends StatefulWidget {
   final Account account;
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
@@ -56,6 +56,13 @@ class _HomeState extends State<Home> {
         }
       });
     }
+    _animationController.value = 1;
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,7 +97,16 @@ class _HomeState extends State<Home> {
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 2,
-      itemBuilder: _buildPage,
+      itemBuilder: (context, index) => SlideTransition(
+        position: Tween(
+          begin: const Offset(0, .05),
+          end: Offset.zero,
+        ).animate(_animation),
+        child: FadeTransition(
+          opacity: _animation,
+          child: _buildPage(context, index),
+        ),
+      ),
     );
   }
 
@@ -120,11 +136,13 @@ class _HomeState extends State<Home> {
   }
 
   void _onTapNavItem(int index) {
-    _pageController.animateToPage(index,
-        duration: k.animationDurationNormal, curve: Curves.easeInOut);
+    _pageController.jumpToPage(index);
     setState(() {
       _nextPage = index;
     });
+    _animationController
+      ..reset()
+      ..forward();
   }
 
   Future<List<Album>> _importPotentialSharedAlbum() async {
@@ -147,6 +165,15 @@ class _HomeState extends State<Home> {
 
   final _pageController = PageController(initialPage: 0, keepPage: false);
   int _nextPage = 0;
+
+  late final _animationController = AnimationController(
+    duration: k.animationDurationLong,
+    vsync: this,
+  );
+  late final _animation = CurvedAnimation(
+    parent: _animationController,
+    curve: Curves.easeIn,
+  );
 
   static final _log = Logger("widget.home._HomeState");
 }
