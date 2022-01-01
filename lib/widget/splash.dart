@@ -28,13 +28,16 @@ class _SplashState extends State<Splash> {
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (_shouldUpgrade()) {
-        _handleUpgrade();
-      } else {
-        _initTimedExit();
-      }
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _doWork();
     });
+  }
+
+  Future<void> _doWork() async {
+    if (_shouldUpgrade()) {
+      await _handleUpgrade();
+    }
+    _initTimedExit();
   }
 
   @override
@@ -90,7 +93,7 @@ class _SplashState extends State<Splash> {
     return lastVersion < k.version;
   }
 
-  void _handleUpgrade() async {
+  Future<void> _handleUpgrade() async {
     try {
       final lastVersion = Pref().getLastVersionOr(k.version);
       await _upgrade(lastVersion);
@@ -115,41 +118,43 @@ class _SplashState extends State<Splash> {
           ),
         );
       }
+    } catch (e, stackTrace) {
+      _log.shout("[_handleUpgrade] Failed while upgrade", e, stackTrace);
     } finally {
-      _initTimedExit();
-      Pref().setLastVersion(k.version);
+      await Pref().setLastVersion(k.version);
     }
   }
 
   Future<void> _upgrade(int lastVersion) async {
+    bool isShowDialog = false;
+    void showUpdateDialog() {
+      if (!isShowDialog) {
+        isShowDialog = true;
+        showDialog(
+          context: context,
+          builder: (_) => ProcessingDialog(
+            text: L10n.global().genericProcessingDialogContent,
+          ),
+        );
+      }
+    }
+
     if (lastVersion < 290) {
+      showUpdateDialog();
       await _upgrade29(lastVersion);
+    }
+    if (isShowDialog) {
+      Navigator.of(context).pop();
     }
   }
 
   Future<void> _upgrade29(int lastVersion) async {
-    await _peformUpgrade(() async {
-      try {
-        _log.info("[_upgrade29] clearDefaultCache");
-        await CompatV29.clearDefaultCache();
-      } catch (e, stackTrace) {
-        _log.shout(
-            "[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
-        // just leave the cache then
-      }
-    });
-  }
-
-  Future<void> _peformUpgrade(FutureOr<void> Function() fn) async {
-    showDialog(
-        context: context,
-        builder: (_) => ProcessingDialog(
-              text: L10n.global().genericProcessingDialogContent,
-            ));
     try {
-      await fn();
-    } finally {
-      Navigator.of(context).pop();
+      _log.info("[_upgrade29] clearDefaultCache");
+      await CompatV29.clearDefaultCache();
+    } catch (e, stackTrace) {
+      _log.shout("[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
+      // just leave the cache then
     }
   }
 
