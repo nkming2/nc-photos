@@ -6,5 +6,70 @@ void main() {
     test("takeIndex", () {
       expect([1, 2, 3, 4, 5, 6].takeIndex([5, 4, 3, 1, 0]), [6, 5, 4, 2, 1]);
     });
+
+    group("slice", () {
+      // [1, ..., 9]
+      final list = List.generate(9, (i) => i + 1);
+
+      /// Expected: [4, ..., 9]
+      test("+start", () {
+        expect(list.slice(3), List.generate(6, (i) => i + 4));
+      });
+
+      /// Expected: []
+      test("+start > length", () {
+        expect(list.slice(999), const []);
+      });
+
+      /// Expected: [4, 5]
+      test("+start +stop", () {
+        expect(list.slice(3, 5), const [4, 5]);
+      });
+
+      /// Expected: [4, ..., 9]
+      test("+start +stop > length", () {
+        expect(list.slice(3, 999), List.generate(6, (i) => i + 4));
+      });
+
+      /// Expected: []
+      test("+start > +stop", () {
+        expect(list.slice(5, 3), const []);
+      });
+
+      /// Expected: [5, ..., 9]
+      test("-start", () {
+        expect(list.slice(-5), List.generate(5, (i) => i + 5));
+      });
+
+      /// Expected: [1, ..., 9]
+      test("-start < -length", () {
+        expect(list.slice(-999), List.generate(9, (i) => i + 1));
+      });
+
+      /// Expected: [5, 6]
+      test("-start -stop", () {
+        expect(list.slice(-5, -3), const [5, 6]);
+      });
+
+      /// Expected: []
+      test("-start -stop < -length", () {
+        expect(list.slice(-5, -999), const []);
+      });
+
+      /// Expected: []
+      test("-start < -stop", () {
+        expect(list.slice(-3, -5), const []);
+      });
+
+      /// Expected: [4]
+      test("+start -stop", () {
+        expect(list.slice(3, -5), [4]);
+      });
+
+      /// Expected: [5, ..., 9]
+      test("-start +stop", () {
+        expect(list.slice(-5, 9), List.generate(5, (i) => i + 5));
+      });
+    });
   });
 }
