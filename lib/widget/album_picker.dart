@@ -110,7 +110,7 @@ class _AlbumPickerState extends State<AlbumPicker>
                 return _buildItem(context, index - 1);
               }
             },
-            itemCount: state.items.length + 1,
+            itemCount: _sortedAlbums.length + 1,
           ),
         ),
       ],
