@@ -14,7 +14,7 @@ class ScanDir {
   /// List all files under a dir recursively
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either List<File> data or an exception
+  /// would emit either List<File> or ExceptionEvent
   ///
   /// If [isSupportedFileOnly] == true, the returned files will be filtered by
   /// [file_util.isSupportedFormat]
