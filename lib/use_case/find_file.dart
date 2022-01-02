@@ -11,17 +11,17 @@ class FindFile {
 
   /// Find the [File] in the DB by [fileId]
   Future<File> call(Account account, int fileId) async {
-    return await _c.appDb.use((db) async {
+    final dbItem = await _c.appDb.use((db) async {
       final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
       final store = transaction.objectStore(AppDb.file2StoreName);
-      final dbItem = await store
+      return await store
           .getObject(AppDbFile2Entry.toPrimaryKey(account, fileId)) as Map?;
-      if (dbItem == null) {
-        throw StateError("File ID not found: $fileId");
-      }
-      final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
-      return dbEntry.file;
     });
+    if (dbItem == null) {
+      throw StateError("File ID not found: $fileId");
+    }
+    final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
+    return dbEntry.file;
   }
 
   final DiContainer _c;
