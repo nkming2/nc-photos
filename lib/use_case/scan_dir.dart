@@ -53,12 +53,8 @@ class ScanDir {
 
   /// Return if this dir should be ignored in a scan op based on files under
   /// this dir
-  static bool _shouldScanIgnoreDir(Iterable<File> files) {
-    return files.any((element) {
-      final basename = element.filename;
-      return basename == ".nomedia" || basename == ".noimage";
-    });
-  }
+  static bool _shouldScanIgnoreDir(Iterable<File> files) =>
+      files.any((f) => file_util.isNoMediaMarker(f));
 
   final FileRepo fileRepo;
 
