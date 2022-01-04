@@ -30,7 +30,7 @@ class AppDb {
   /// This function guarantees that:
   /// 1) Database is always closed after [fn] exits, even with an error
   /// 2) Only at most 1 database instance being opened at any time
-  Future<T> use<T>(FutureOr<T> Function(Database) fn) async {
+  Future<T> use<T>(FutureOr<T> Function(Database db) fn) async {
     // make sure only one client is opening the db
     return await _lock.synchronized(() async {
       final db = await _open();
