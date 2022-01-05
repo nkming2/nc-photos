@@ -171,35 +171,18 @@ class ScanAccountDirBloc
     yield ScanAccountDirBlocLoading(state.files);
     bool hasContent = state.files.isNotEmpty;
 
+    List<File> cacheFiles = [];
     if (!hasContent) {
       // show something instantly on first load
       final stopwatch = Stopwatch()..start();
-      final cacheFiles = await _queryOffline(ev);
+      cacheFiles = await _queryOffline(ev);
       _log.info(
           "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
       yield ScanAccountDirBlocLoading(cacheFiles);
       hasContent = cacheFiles.isNotEmpty;
     }
 
-    ScanAccountDirBlocState newState = const ScanAccountDirBlocInit();
-    if (!hasContent) {
-      await for (final s in _queryOnline(ev, () => newState)) {
-        newState = s;
-        yield s;
-      }
-    } else {
-      final stopwatch = Stopwatch()..start();
-      await for (final s in _queryOnline(ev, () => newState)) {
-        newState = s;
-      }
-      _log.info(
-          "[_onEventQuery] Elapsed time (_queryOnline): ${stopwatch.elapsedMilliseconds}ms");
-      if (newState is ScanAccountDirBlocSuccess) {
-        yield newState;
-      } else if (newState is ScanAccountDirBlocFailure) {
-        yield ScanAccountDirBlocFailure(state.files, newState.exception);
-      }
-    }
+    yield* _queryOnline(ev, hasContent ? cacheFiles : null);
   }
 
   Stream<ScanAccountDirBlocState> _onExternalEvent(
@@ -321,58 +304,101 @@ class ScanAccountDirBloc
     return files;
   }
 
-  Stream<ScanAccountDirBlocState> _queryOnline(ScanAccountDirBlocQueryBase ev,
-      ScanAccountDirBlocState Function() getState) {
-    final stream = _queryWithFileDataSource(ev, getState,
-        FileCachedDataSource(AppDb(), shouldCheckCache: _shouldCheckCache));
-    _shouldCheckCache = false;
-    return stream;
+  Stream<ScanAccountDirBlocState> _queryOnline(
+      ScanAccountDirBlocQueryBase ev, List<File>? cache) async* {
+    // 1st pass: scan for new files
+    final files = <File>[];
+    {
+      final stopwatch = Stopwatch()..start();
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
+          forwardCacheManager: FileForwardCacheManager(AppDb())));
+      final fileRepoNoCache = FileRepo(FileCachedDataSource(AppDb()));
+      await for (final event in _queryWithFileRepo(fileRepo, ev,
+          fileRepoForShareDir: fileRepoNoCache)) {
+        if (event is ExceptionEvent) {
+          _log.shout("[_queryOnline] Exception while request (1st pass)",
+              event.error, event.stackTrace);
+          yield ScanAccountDirBlocFailure(cache ?? files, event.error);
+          return;
+        }
+        files.addAll(event);
+        if (cache == null) {
+          // only emit partial results if there's no cache
+          yield ScanAccountDirBlocLoading(files);
+        }
+      }
+      _log.info(
+          "[_queryOnline] Elapsed time (pass1): ${stopwatch.elapsedMilliseconds}ms");
+    }
+    // if cache == null, we have already emitted the results in the loop
+    if (cache != null || files.isEmpty) {
+      // emit results from remote
+      yield ScanAccountDirBlocLoading(files);
+    }
+
+    if (_shouldCheckCache) {
+      // 2nd pass: check outdated cache
+      _shouldCheckCache = false;
+      final stopwatch = Stopwatch()..start();
+      final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
+          shouldCheckCache: true,
+          forwardCacheManager: FileForwardCacheManager(AppDb())));
+      final fileRepoNoCache =
+          FileRepo(FileCachedDataSource(AppDb(), shouldCheckCache: true));
+      final newFiles = <File>[];
+      await for (final event in _queryWithFileRepo(fileRepo, ev,
+          fileRepoForShareDir: fileRepoNoCache)) {
+        if (event is ExceptionEvent) {
+          _log.shout("[_queryOnline] Exception while request (2nd pass)",
+              event.error, event.stackTrace);
+          yield ScanAccountDirBlocSuccess(files);
+          return;
+        }
+        newFiles.addAll(event);
+      }
+      _log.info(
+          "[_queryOnline] Elapsed time (pass2): ${stopwatch.elapsedMilliseconds}ms");
+      yield ScanAccountDirBlocSuccess(newFiles);
+    } else {
+      yield ScanAccountDirBlocSuccess(files);
+    }
   }
 
-  Stream<ScanAccountDirBlocState> _queryWithFileDataSource(
-      ScanAccountDirBlocQueryBase ev,
-      ScanAccountDirBlocState Function() getState,
-      FileDataSource dataSrc) async* {
-    try {
-      final fileRepo = FileRepo(dataSrc);
-      // include files shared with this account
-      final settings = AccountPref.of(account);
-      final shareDir = File(
-          path: file_util.unstripPath(account, settings.getShareFolderOr()));
-      bool isShareDirIncluded = false;
+  /// Emit all files under this account
+  ///
+  /// Emit List<File> or ExceptionEvent
+  Stream<dynamic> _queryWithFileRepo(
+    FileRepo fileRepo,
+    ScanAccountDirBlocQueryBase ev, {
+    FileRepo? fileRepoForShareDir,
+  }) async* {
+    final settings = AccountPref.of(account);
+    final shareDir =
+        File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
+    bool isShareDirIncluded = false;
 
-      for (final r in account.roots) {
-        final dir = File(path: file_util.unstripPath(account, r));
-        final dataStream = ScanDir(fileRepo)(account, dir);
-        await for (final d in dataStream) {
-          if (d is ExceptionEvent) {
-            throw d.error;
-          }
-          yield ScanAccountDirBlocLoading(getState().files + d);
-        }
+    for (final r in account.roots) {
+      final dir = File(path: file_util.unstripPath(account, r));
+      yield* ScanDir(fileRepo)(account, dir);
+      isShareDirIncluded |= file_util.isOrUnderDir(shareDir, dir);
+    }
 
-        isShareDirIncluded |= file_util.isOrUnderDir(shareDir, dir);
-      }
-
-      if (!isShareDirIncluded) {
-        final files = await Ls(fileRepo)(
+    if (!isShareDirIncluded) {
+      _log.info("[_queryWithFileRepo] Explicitly scanning share folder");
+      try {
+        final files = await Ls(fileRepoForShareDir ?? fileRepo)(
           account,
           File(
             path: file_util.unstripPath(account, settings.getShareFolderOr()),
           ),
         );
-        final sharedFiles = files
+        yield files
             .where((f) =>
                 file_util.isSupportedFormat(f) && !f.isOwned(account.username))
             .toList();
-        yield ScanAccountDirBlocSuccess(getState().files + sharedFiles);
-      } else {
-        yield ScanAccountDirBlocSuccess(getState().files);
+      } catch (e, stackTrace) {
+        yield ExceptionEvent(e, stackTrace);
       }
-    } catch (e, stackTrace) {
-      _log.severe(
-          "[_queryWithFileDataSource] Exception while request", e, stackTrace);
-      yield ScanAccountDirBlocFailure(getState().files, e);
     }
   }
 

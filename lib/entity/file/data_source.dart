@@ -379,6 +379,7 @@ class FileCachedDataSource implements FileDataSource {
   FileCachedDataSource(
     this.appDb, {
     this.shouldCheckCache = false,
+    this.forwardCacheManager,
   }) : _appDbSrc = FileAppDbDataSource(appDb);
 
   @override
@@ -388,6 +389,7 @@ class FileCachedDataSource implements FileDataSource {
       appDbSrc: _appDbSrc,
       remoteSrc: _remoteSrc,
       shouldCheckCache: shouldCheckCache,
+      forwardCacheManager: forwardCacheManager,
     );
     final cache = await cacheManager.list(account, f);
     if (cacheManager.isGood) {
@@ -555,11 +557,106 @@ class FileCachedDataSource implements FileDataSource {
 
   final AppDb appDb;
   final bool shouldCheckCache;
+  final FileForwardCacheManager? forwardCacheManager;
 
   final _remoteSrc = const FileWebdavDataSource();
   final FileAppDbDataSource _appDbSrc;
 
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
+}
+
+/// Forward cache for listing AppDb dirs
+///
+/// It's very expensive to list a dir and its sub-dirs one by one in multiple
+/// queries. This class will instead query every sub-dirs when a new dir is
+/// passed to us in one transaction. For this reason, this should only be used
+/// when it's necessary to query everything
+class FileForwardCacheManager {
+  FileForwardCacheManager(this.appDb);
+
+  Future<List<File>> list(Account account, File dir) async {
+    // check cache
+    final dirKey = AppDbDirEntry.toPrimaryKeyForDir(account, dir);
+    final cachedDir = _dirCache[dirKey];
+    if (cachedDir != null) {
+      _log.fine("[list] Returning data from cache: ${logFilename(dir.path)}");
+      return _withDirEntry(cachedDir);
+    }
+    // no cache, query everything under [dir]
+    _log.info(
+        "[list] No cache and querying everything under ${logFilename(dir.path)}");
+    await _cacheDir(account, dir);
+    final cachedDir2 = _dirCache[dirKey];
+    if (cachedDir2 == null) {
+      throw CacheNotFoundException("No entry: ${dir.path}");
+    }
+    return _withDirEntry(cachedDir2);
+  }
+
+  Future<void> _cacheDir(Account account, File dir) async {
+    final dirItems = await appDb.use((db) async {
+      final transaction = db.transaction(AppDb.dirStoreName, idbModeReadOnly);
+      final store = transaction.objectStore(AppDb.dirStoreName);
+      final dirItem = await store
+          .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
+      if (dirItem == null) {
+        return null;
+      }
+      final range = KeyRange.bound(
+        AppDbDirEntry.toPrimaryLowerKeyForSubDirs(account, dir),
+        AppDbDirEntry.toPrimaryUpperKeyForSubDirs(account, dir),
+      );
+      return [dirItem] + (await store.getAll(range)).cast<Map>();
+    });
+    if (dirItems == null) {
+      // no cache
+      return;
+    }
+    final dirs = dirItems
+        .map((i) => AppDbDirEntry.fromJson(i.cast<String, dynamic>()))
+        .toList();
+    _dirCache.addEntries(dirs.map(
+        (e) => MapEntry(AppDbDirEntry.toPrimaryKeyForDir(account, e.dir), e)));
+    _log.info(
+        "[_cacheDir] Cached ${dirs.length} dirs under ${logFilename(dir.path)}");
+
+    // cache files
+    final fileIds = dirs.map((e) => e.children).fold<List<int>>(
+        [], (previousValue, element) => previousValue + element);
+    final fileItems = await appDb.use((db) async {
+      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
+      final store = transaction.objectStore(AppDb.file2StoreName);
+      return await Future.wait(fileIds.map(
+          (id) => store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
+    });
+    final files = fileItems
+        .cast<Map?>()
+        .whereType<Map>()
+        .map((i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()))
+        .toList();
+    _fileCache.addEntries(files.map((e) => MapEntry(e.file.fileId!, e.file)));
+    _log.info(
+        "[_cacheDir] Cached ${files.length} files under ${logFilename(dir.path)}");
+  }
+
+  List<File> _withDirEntry(AppDbDirEntry dirEntry) {
+    return [dirEntry.dir] +
+        dirEntry.children.map((id) {
+          try {
+            return _fileCache[id]!;
+          } catch (_) {
+            _log.warning(
+                "[list] Missing file ($id) in db for dir: ${logFilename(dirEntry.dir.path)}");
+            throw CacheNotFoundException("No entry for dir child: $id");
+          }
+        }).toList();
+  }
+
+  final AppDb appDb;
+  final _dirCache = <String, AppDbDirEntry>{};
+  final _fileCache = <int, File>{};
+
+  static final _log = Logger("entity.file.data_source.FileForwardCacheManager");
 }
 
 class _CacheManager {
@@ -568,6 +665,7 @@ class _CacheManager {
     required this.appDbSrc,
     required this.remoteSrc,
     this.shouldCheckCache = false,
+    this.forwardCacheManager,
   });
 
   /// Return the cached results of listing a directory [dir]
@@ -576,7 +674,11 @@ class _CacheManager {
   Future<List<File>?> list(Account account, File dir) async {
     List<File>? cache;
     try {
-      cache = await appDbSrc.list(account, dir);
+      if (forwardCacheManager != null) {
+        cache = await forwardCacheManager!.list(account, dir);
+      } else {
+        cache = await appDbSrc.list(account, dir);
+      }
       // compare the cached root
       final cacheEtag =
           cache.firstWhere((f) => f.compareServerIdentity(dir)).etag!;
@@ -645,6 +747,7 @@ class _CacheManager {
   final FileWebdavDataSource remoteSrc;
   final FileAppDbDataSource appDbSrc;
   final bool shouldCheckCache;
+  final FileForwardCacheManager? forwardCacheManager;
 
   var _isGood = false;
   String? _remoteToken;
