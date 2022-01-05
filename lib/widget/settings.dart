@@ -366,7 +366,7 @@ class _SettingsState extends State<Settings> {
   static const String _bugReportUrl =
       "https://gitlab.com/nkming2/nc-photos/-/issues";
   static const String _translationUrl =
-      "https://gitlab.com/nkming2/nc-photos/-/tree/master/lib/l10n";
+      "https://gitlab.com/nkming2/nc-photos/-/wikis/development/localization";
 }
 
 class AccountSettingsWidgetArguments {
