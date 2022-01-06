@@ -135,4 +135,13 @@ Features:
 - (UI) Swipe up to show photo details
 - (Localization) Update Spanish (by luckkmaxx)
 """,
+  // v35
+  """35.0
+- Optimize start up performance
+  - Photos should appear more quickly on start up
+- (UI) Swipe down to close the photo viewer
+- (Localization) Add Finnish (by pHamala)
+
+* The app needs to resync with the server due to changes in the database
+""",
 ];
