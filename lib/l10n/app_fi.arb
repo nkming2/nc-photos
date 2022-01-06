@@ -836,7 +836,7 @@
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
 	},
-	"personPhotoCountText": "{count, plural, =1{1 kuva} muut{{count} kuvat}}",
+	"personPhotoCountText": "{count, plural, =1{1 kuva} other{{count} kuvat}}",
 	"@personPhotoCountText": {
 		"description": "Number of photos associated to a specific person",
 		"placeholders": {
