@@ -262,6 +262,15 @@
     "errorAlbumDowngrade"
   ],
 
+  "fi": [
+    "settingsMapProviderTitle",
+    "addUserInputHint",
+    "sharedAlbumInfoDialogTitle",
+    "sharedAlbumInfoDialogContent",
+    "learnMoreButtonLabel",
+    "errorAlbumDowngrade"
+  ],
+
   "fr": [
     "collectionsTooltip",
     "settingsAccountTitle",
