@@ -79,7 +79,7 @@ Future<void> _removeFile() async {
   await src.remove(account, files[1]);
   expect(
     (await util.listAppDb(
-            appDb, AppDb.file2StoreName, AppDbFile2Entry.fromJson))
+            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
         .map((e) => e.file)
         .toList(),
     [files[0]],
@@ -106,7 +106,8 @@ Future<void> _removeEmptyDir() async {
   // parent dir is not updated, parent dir is only updated when syncing with
   // remote
   expect(
-    await util.listAppDb(appDb, AppDb.dirStoreName, AppDbDirEntry.fromJson),
+    await util.listAppDb(
+        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
     [
       AppDbDirEntry.fromFiles(account, files[0], [files[1]]),
     ],
@@ -132,7 +133,7 @@ Future<void> _removeDir() async {
   await src.remove(account, files[1]);
   expect(
     (await util.listAppDb(
-            appDb, AppDb.file2StoreName, AppDbFile2Entry.fromJson))
+            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
         .map((e) => e.file)
         .toList(),
     [files[0]],
@@ -159,14 +160,15 @@ Future<void> _removeDirWithSubDir() async {
   final src = FileAppDbDataSource(appDb);
   await src.remove(account, files[1]);
   expect(
-    await util.listAppDb(appDb, AppDb.dirStoreName, AppDbDirEntry.fromJson),
+    await util.listAppDb(
+        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
     [
       AppDbDirEntry.fromFiles(account, files[0], [files[1]]),
     ],
   );
   expect(
     (await util.listAppDb(
-            appDb, AppDb.file2StoreName, AppDbFile2Entry.fromJson))
+            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
         .map((e) => e.file)
         .toList(),
     [files[0]],
@@ -207,14 +209,15 @@ Future<void> _updateProperty() async {
     overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5, 678)),
   );
   expect(
-    await util.listAppDb(appDb, AppDb.dirStoreName, AppDbDirEntry.fromJson),
+    await util.listAppDb(
+        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
     [
       AppDbDirEntry.fromFiles(account, files[0], [expectFile]),
     ],
   );
   expect(
     (await util.listAppDb(
-            appDb, AppDb.file2StoreName, AppDbFile2Entry.fromJson))
+            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
         .map((e) => e.file)
         .toList(),
     [files[0], expectFile],
