@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -186,6 +187,8 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
       } on ApiException catch (e) {
         if (e.response.statusCode == 404) {
           // this could happen when the server db contains dangling entries
+          _log.warning(
+              "[call] HTTP404 error while listing dir: ${logFilename(f.path)}");
           removes.add(f);
         } else {
           rethrow;
