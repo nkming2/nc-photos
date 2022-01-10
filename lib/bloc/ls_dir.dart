@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class LsDirBlocItem with EquatableMixin {
@@ -174,12 +175,25 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
           .toList();
       _cache[ev.root.path] = files;
     }
+    final removes = <File>[];
     for (final f in files) {
-      List<LsDirBlocItem>? children;
-      if (ev.depth > 1) {
-        children = await _query(ev.copyWith(root: f, depth: ev.depth - 1));
+      try {
+        List<LsDirBlocItem>? children;
+        if (ev.depth > 1) {
+          children = await _query(ev.copyWith(root: f, depth: ev.depth - 1));
+        }
+        product.add(LsDirBlocItem(f, children));
+      } on ApiException catch (e) {
+        if (e.response.statusCode == 404) {
+          // this could happen when the server db contains dangling entries
+          removes.add(f);
+        } else {
+          rethrow;
+        }
       }
-      product.add(LsDirBlocItem(f, children));
+    }
+    if (removes.isNotEmpty) {
+      files.removeWhere((f) => removes.contains(f));
     }
     return product;
   }
