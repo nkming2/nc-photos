@@ -511,8 +511,13 @@ class AlbumCachedDataSource implements AlbumDataSource {
           .map((pair) => pair.item2)
           .toList();
       for (final k in danglingKeys) {
-        _log.fine("[cleanUp] Removing DB entry: $k");
-        await store.delete(k);
+        _log.fine("[cleanUp] Removing albumStore entry: $k");
+        try {
+          await store.delete(k);
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[cleanUp] Failed removing albumStore entry", e, stackTrace);
+        }
       }
     });
   }
@@ -579,8 +584,13 @@ Future<void> _cacheAlbum(
         .map((cursor) => cursor.primaryKey)
         .toList();
     for (final k in rmKeys) {
-      _log.fine("[_cacheAlbum] Removing DB entry: $k");
-      await store.delete(k);
+      _log.fine("[_cacheAlbum] Removing albumStore entry: $k");
+      try {
+        await store.delete(k);
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_cacheAlbum] Failed removing albumStore entry", e, stackTrace);
+      }
     }
   }
 }
