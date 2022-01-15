@@ -143,16 +143,13 @@ class _HomePhotosState extends State<HomePhotos>
                                 .isEnableMemoryAlbumOr(true) &&
                             _smartAlbums.isNotEmpty)
                           _buildSmartAlbumList(context),
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          sliver: buildItemStreamList(
-                            maxCrossAxisExtent: _thumbSize.toDouble(),
-                            onMaxExtentChanged: (value) {
-                              setState(() {
-                                _itemListMaxExtent = value;
-                              });
-                            },
-                          ),
+                        buildItemStreamList(
+                          maxCrossAxisExtent: _thumbSize.toDouble(),
+                          onMaxExtentChanged: (value) {
+                            setState(() {
+                              _itemListMaxExtent = value;
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -635,15 +632,14 @@ class _HomePhotosState extends State<HomePhotos>
               : 0;
       // scroll extent = list height - widget viewport height
       // + sliver app bar height + metadata task header height
-      // + smart album list height + list padding
+      // + smart album list height
       final scrollExtent = _itemListMaxExtent! -
           constraints.maxHeight +
           _appBarExtent! +
           metadataTaskHeaderExtent +
-          smartAlbumListHeight +
-          16;
+          smartAlbumListHeight;
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight + 16 = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
