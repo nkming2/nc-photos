@@ -17,7 +17,8 @@ class PreProcessAlbum {
   Future<List<AlbumItem>> call(Account account, Album album) {
     if (album.provider is AlbumStaticProvider) {
       return ResyncAlbum(appDb)(account, album);
-    } else if (album.provider is AlbumDynamicProvider) {
+    } else if (album.provider is AlbumDynamicProvider ||
+        album.provider is AlbumSmartProvider) {
       return PopulateAlbum(appDb)(account, album);
     } else {
       throw ArgumentError(

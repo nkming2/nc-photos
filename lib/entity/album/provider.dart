@@ -220,3 +220,55 @@ class AlbumDirProvider extends AlbumDynamicProvider {
 
   static const _type = "dir";
 }
+
+/// Smart albums are created only by the app and not the user
+abstract class AlbumSmartProvider extends AlbumProviderBase {
+  AlbumSmartProvider({
+    DateTime? latestItemTime,
+  }) : super(latestItemTime: latestItemTime);
+
+  @override
+  AlbumDirProvider copyWith({
+    OrNull<DateTime>? latestItemTime,
+  }) {
+    // Smart albums do not support copying
+    throw UnimplementedError();
+  }
+
+  @override
+  toContentJson() {
+    // Smart albums do not support saving
+    throw UnimplementedError();
+  }
+}
+
+/// Memory album is created based on dates
+class AlbumMemoryProvider extends AlbumSmartProvider {
+  AlbumMemoryProvider({
+    required this.year,
+    required this.month,
+    required this.day,
+  }) : super(latestItemTime: DateTime(year, month, day));
+
+  @override
+  toString({bool isDeep = false}) {
+    return "$runtimeType {"
+        "super: ${super.toString(isDeep: isDeep)}, "
+        "year: $year, "
+        "month: $month, "
+        "day: $day, "
+        "}";
+  }
+
+  @override
+  get props => [
+        ...super.props,
+        year,
+        month,
+        day,
+      ];
+
+  final int year;
+  final int month;
+  final int day;
+}

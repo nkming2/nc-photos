@@ -13,6 +13,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/download_handler.dart';
+import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -28,6 +29,7 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
@@ -137,6 +139,8 @@ class _HomePhotosState extends State<HomePhotos>
                         _buildAppBar(context),
                         if (_metadataTaskState != MetadataTaskState.idle)
                           _buildMetadataTaskHeader(context),
+                        if (_smartAlbums.isNotEmpty)
+                          _buildSmartAlbumList(context),
                         SliverPadding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           sliver: buildItemStreamList(
@@ -332,6 +336,35 @@ class _HomePhotosState extends State<HomePhotos>
     );
   }
 
+  Widget _buildSmartAlbumList(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: SizedBox(
+        height: _SmartAlbumItem.height,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: _smartAlbums.length,
+          itemBuilder: (context, index) {
+            final a = _smartAlbums[index];
+            final coverFile = a.coverProvider.getCover(a);
+            return _SmartAlbumItem(
+              account: widget.account,
+              previewUrl: coverFile == null
+                  ? null
+                  : api_util.getFilePreviewUrl(widget.account, coverFile,
+                      width: k.photoThumbSize, height: k.photoThumbSize),
+              label: a.name,
+              onTap: () {
+                album_browser_util.push(context, widget.account, a);
+              },
+            );
+          },
+          separatorBuilder: (context, index) => const SizedBox(width: 8),
+        ),
+      ),
+    );
+  }
+
   void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
     if (state is ScanAccountDirBlocInit) {
       itemStreamListItems = [];
@@ -521,6 +554,8 @@ class _HomePhotosState extends State<HomePhotos>
     final dateHelper = photo_list_util.DateGroupHelper(
       isMonthOnly: isMonthOnly,
     );
+    final today = DateTime.now();
+    final memoryAlbumHelper = photo_list_util.MemoryAlbumHelper(today);
     itemStreamListItems = () sync* {
       for (int i = 0; i < _backingFiles.length; ++i) {
         final f = _backingFiles[i];
@@ -528,6 +563,7 @@ class _HomePhotosState extends State<HomePhotos>
         if (date != null) {
           yield _DateListItem(date: date, isMonthOnly: isMonthOnly);
         }
+        memoryAlbumHelper.addFile(f);
 
         final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
             width: k.photoThumbSize, height: k.photoThumbSize);
@@ -552,6 +588,8 @@ class _HomePhotosState extends State<HomePhotos>
       }
     }()
         .toList();
+    _smartAlbums = memoryAlbumHelper
+        .build((year) => L10n.global().memoryAlbumName(today.year - year));
   }
 
   void _reqQuery() {
@@ -588,14 +626,19 @@ class _HomePhotosState extends State<HomePhotos>
           _metadataTaskState == MetadataTaskState.idle
               ? 0
               : _metadataTaskHeaderHeight;
-      // scroll extent = list height - widget viewport height + sliver app bar height + metadata task header height + list padding
+      final smartAlbumListHeight =
+          _smartAlbums.isNotEmpty ? _SmartAlbumItem.height : 0;
+      // scroll extent = list height - widget viewport height
+      // + sliver app bar height + metadata task header height
+      // + smart album list height + list padding
       final scrollExtent = _itemListMaxExtent! -
           constraints.maxHeight +
           _appBarExtent! +
           metadataTaskHeaderExtent +
+          smartAlbumListHeight +
           16;
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + 16 = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight + 16 = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
@@ -631,6 +674,7 @@ class _HomePhotosState extends State<HomePhotos>
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
   var _backingFiles = <File>[];
+  var _smartAlbums = <Album>[];
 
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
@@ -803,6 +847,80 @@ class _MetadataTaskLoadingIcon extends AnimatedWidget {
   }
 
   Animation<double> get _progress => listenable as Animation<double>;
+}
+
+class _SmartAlbumItem extends StatelessWidget {
+  static const width = 96.0;
+  static const height = width * 1.15;
+
+  const _SmartAlbumItem({
+    Key? key,
+    required this.account,
+    required this.previewUrl,
+    required this.label,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.topStart,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              PhotoListImage(
+                account: account,
+                previewUrl: previewUrl,
+                padding: const EdgeInsets.all(0),
+              ),
+              Positioned.fill(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.center,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black87],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: AlignmentDirectional.bottomStart,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      label,
+                      style: TextStyle(color: AppTheme.primaryTextColorDark),
+                    ),
+                  ),
+                ),
+              ),
+              if (onTap != null)
+                Positioned.fill(
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: InkWell(
+                      onTap: onTap,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  final Account account;
+  final String? previewUrl;
+  final String label;
+  final VoidCallback? onTap;
 }
 
 enum _SelectionMenuOption {

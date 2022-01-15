@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
@@ -18,9 +19,10 @@ class PopulateAlbum {
       _log.warning(
           "[call] Populate only make sense for dynamic albums: ${album.name}");
       return AlbumStaticProvider.of(album).items;
-    }
-    if (album.provider is AlbumDirProvider) {
+    } else if (album.provider is AlbumDirProvider) {
       return _populateDirAlbum(account, album);
+    } else if (album.provider is AlbumMemoryProvider) {
+      return _populateMemoryAlbum(account, album);
     } else {
       throw ArgumentError(
           "Unknown album provider: ${album.provider.runtimeType}");
@@ -50,6 +52,25 @@ class PopulateAlbum {
       }
     }
     return products;
+  }
+
+  Future<List<AlbumItem>> _populateMemoryAlbum(
+      Account account, Album album) async {
+    assert(album.provider is AlbumMemoryProvider);
+    final provider = album.provider as AlbumMemoryProvider;
+    final date = DateTime(provider.year, provider.month, provider.day);
+    final from = date.subtract(const Duration(days: 3));
+    final to = date.add(const Duration(days: 4));
+    final files = await FileAppDbDataSource(appDb).listByDate(account,
+        from.millisecondsSinceEpoch, to.millisecondsSinceEpoch);
+    return files
+        .where((f) => file_util.isSupportedFormat(f))
+        .map((f) => AlbumFileItem(
+              addedBy: account.username,
+              addedAt: DateTime.now(),
+              file: f,
+            ))
+        .toList();
   }
 
   final AppDb appDb;

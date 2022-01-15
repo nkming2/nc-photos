@@ -4,12 +4,16 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/widget/album_browser.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
+import 'package:nc_photos/widget/smart_album_browser.dart';
 
 /// Push the corresponding browser route for this album
 Future<void> push(BuildContext context, Account account, Album album) {
   if (album.provider is AlbumStaticProvider) {
     return Navigator.of(context).pushNamed(AlbumBrowser.routeName,
         arguments: AlbumBrowserArguments(account, album));
+  } else if (album.provider is AlbumSmartProvider) {
+    return Navigator.of(context).pushNamed(SmartAlbumBrowser.routeName,
+        arguments: SmartAlbumBrowserArguments(account, album));
   } else {
     return Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
         arguments: DynamicAlbumBrowserArguments(account, album));
@@ -23,6 +27,10 @@ Future<void> pushReplacement(
   if (album.provider is AlbumStaticProvider) {
     return Navigator.of(context).pushReplacementNamed(AlbumBrowser.routeName,
         arguments: AlbumBrowserArguments(account, album));
+  } else if (album.provider is AlbumSmartProvider) {
+    return Navigator.of(context).pushReplacementNamed(
+        SmartAlbumBrowser.routeName,
+        arguments: SmartAlbumBrowserArguments(account, album));
   } else {
     return Navigator.of(context).pushReplacementNamed(
         DynamicAlbumBrowser.routeName,

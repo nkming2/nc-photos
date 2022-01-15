@@ -53,6 +53,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -124,6 +127,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -250,6 +256,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -259,6 +268,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -268,6 +280,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -374,6 +389,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ],
 
@@ -453,6 +471,9 @@
     "sharedAlbumInfoDialogTitle",
     "sharedAlbumInfoDialogContent",
     "learnMoreButtonLabel",
+    "migrateDatabaseProcessingNotification",
+    "migrateDatabaseFailureNotification",
+    "memoryAlbumName",
     "errorAlbumDowngrade"
   ]
 }

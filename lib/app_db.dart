@@ -10,16 +10,18 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:synchronized/synchronized.dart';
 
 class AppDb {
   static const dbName = "app.db";
-  static const dbVersion = 4;
+  static const dbVersion = 5;
   static const albumStoreName = "albums";
   static const file2StoreName = "files2";
   static const dirStoreName = "dirs";
+  static const metaStoreName = "meta";
 
   factory AppDb() => _inst;
 
@@ -45,13 +47,14 @@ class AppDb {
   /// Open the database
   Future<Database> _open() async {
     final dbFactory = platform.getDbFactory();
-    return dbFactory.open(dbName, version: dbVersion,
-        onUpgradeNeeded: (event) async {
+    int? fromVersion, toVersion;
+    final db = await dbFactory.open(dbName, version: dbVersion,
+        onUpgradeNeeded: (event) {
       _log.info("[_open] Upgrade database: ${event.oldVersion} -> $dbVersion");
 
       final db = event.database;
       // ignore: unused_local_variable
-      ObjectStore? albumStore, file2Store, dirStore;
+      ObjectStore? albumStore, file2Store, dirStore, metaStore;
       if (event.oldVersion < 2) {
         // version 2 store things in a new way, just drop all
         try {
@@ -82,7 +85,32 @@ class AppDb {
 
         dirStore = db.createObjectStore(dirStoreName);
       }
+      file2Store ??= event.transaction.objectStore(file2StoreName);
+      if (event.oldVersion < 5) {
+        file2Store.createIndex(AppDbFile2Entry.dateTimeEpochMsIndexName,
+            AppDbFile2Entry.dateTimeEpochMsKeyPath);
+
+        metaStore = db.createObjectStore(metaStoreName,
+            keyPath: AppDbMetaEntry.keyPath);
+      }
+      fromVersion = event.oldVersion;
+      toVersion = event.newVersion;
     });
+    if (fromVersion != null && toVersion != null) {
+      await _onPostUpgrade(db, fromVersion!, toVersion!);
+    }
+    return db;
+  }
+
+  Future<void> _onPostUpgrade(
+      Database db, int fromVersion, int toVersion) async {
+    if (fromVersion.inRange(1, 4) && toVersion >= 5) {
+      final transaction = db.transaction(AppDb.metaStoreName, idbModeReadWrite);
+      final metaStore = transaction.objectStore(AppDb.metaStoreName);
+      await metaStore
+          .put(const AppDbMetaEntryDbCompatV5(false).toEntry().toJson());
+      await transaction.completed;
+    }
   }
 
   static late final _inst = AppDb._();
@@ -140,16 +168,21 @@ class AppDbFile2Entry with EquatableMixin {
   static const strippedPathIndexName = "server_userId_strippedPath";
   static const strippedPathKeyPath = ["server", "userId", "strippedPath"];
 
-  AppDbFile2Entry._(this.server, this.userId, this.strippedPath, this.file);
+  static const dateTimeEpochMsIndexName = "server_userId_dateTimeEpochMs";
+  static const dateTimeEpochMsKeyPath = ["server", "userId", "dateTimeEpochMs"];
+
+  AppDbFile2Entry(this.server, this.userId, this.strippedPath,
+      this.dateTimeEpochMs, this.file);
 
   factory AppDbFile2Entry.fromFile(Account account, File file) =>
-      AppDbFile2Entry._(
-          account.url, account.username, file.strippedPathWithEmpty, file);
+      AppDbFile2Entry(account.url, account.username, file.strippedPathWithEmpty,
+          file.bestDateTime.millisecondsSinceEpoch, file);
 
-  factory AppDbFile2Entry.fromJson(JsonObj json) => AppDbFile2Entry._(
+  factory AppDbFile2Entry.fromJson(JsonObj json) => AppDbFile2Entry(
         json["server"],
         (json["userId"] as String).toCi(),
         json["strippedPath"],
+        json["dateTimeEpochMs"],
         File.fromJson(json["file"].cast<String, dynamic>()),
       );
 
@@ -157,6 +190,7 @@ class AppDbFile2Entry with EquatableMixin {
         "server": server,
         "userId": userId.toCaseInsensitiveString(),
         "strippedPath": strippedPath,
+        "dateTimeEpochMs": dateTimeEpochMs,
         "file": file.toJson(),
       };
 
@@ -198,11 +232,19 @@ class AppDbFile2Entry with EquatableMixin {
     });
   }
 
+  static List<Object> toDateTimeEpochMsIndexKey(Account account, int epochMs) =>
+      [
+        account.url,
+        account.username.toCaseInsensitiveString(),
+        epochMs,
+      ];
+
   @override
   get props => [
         server,
         userId,
         strippedPath,
+        dateTimeEpochMs,
         file,
       ];
 
@@ -210,6 +252,7 @@ class AppDbFile2Entry with EquatableMixin {
   final String server;
   final CiString userId;
   final String strippedPath;
+  final int dateTimeEpochMs;
   final File file;
 }
 
@@ -273,4 +316,45 @@ class AppDbDirEntry with EquatableMixin {
   final String strippedPath;
   final File dir;
   final List<int> children;
+}
+
+
+class AppDbMetaEntry with EquatableMixin {
+  static const keyPath = "key";
+
+  const AppDbMetaEntry(this.key, this.obj);
+
+  factory AppDbMetaEntry.fromJson(JsonObj json) => AppDbMetaEntry(
+        json["key"],
+        json["obj"].cast<String, dynamic>(),
+      );
+
+  JsonObj toJson() => {
+        "key": key,
+        "obj": obj,
+      };
+
+  @override
+  get props => [
+        key,
+        obj,
+      ];
+
+  final String key;
+  final JsonObj obj;
+}
+
+class AppDbMetaEntryDbCompatV5 {
+  static const key = "dbCompatV5";
+
+  const AppDbMetaEntryDbCompatV5(this.isMigrated);
+
+  factory AppDbMetaEntryDbCompatV5.fromJson(JsonObj json) =>
+      AppDbMetaEntryDbCompatV5(json["isMigrated"]);
+
+  AppDbMetaEntry toEntry() => AppDbMetaEntry(key, {
+        "isMigrated": isMigrated,
+      });
+
+  final bool isMigrated;
 }

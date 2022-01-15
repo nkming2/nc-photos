@@ -281,6 +281,32 @@ class FileAppDbDataSource implements FileDataSource {
     throw UnimplementedError();
   }
 
+  /// List files with date between [fromEpochMs] (inclusive) and [toEpochMs]
+  /// (exclusive)
+  Future<List<File>> listByDate(
+      Account account, int fromEpochMs, int toEpochMs) async {
+    _log.info("[listByDate] [$fromEpochMs, $toEpochMs]");
+    final items = await appDb.use((db) async {
+      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
+      final fileStore = transaction.objectStore(AppDb.file2StoreName);
+      final dateTimeEpochMsIndex =
+          fileStore.index(AppDbFile2Entry.dateTimeEpochMsIndexName);
+      final range = KeyRange.bound(
+        AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, fromEpochMs),
+        AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, toEpochMs),
+        false,
+        true,
+      );
+      return await dateTimeEpochMsIndex.getAll(range);
+    });
+    return items
+        .cast<Map>()
+        .map((i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()))
+        .map((e) => e.file)
+        .where((f) => _validateFile(f))
+        .toList();
+  }
+
   /// Remove a file/dir from database
   ///
   /// If [f] is a dir, the dir and its sub-dirs will be removed from dirStore.

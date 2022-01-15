@@ -26,6 +26,7 @@ import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
+import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
@@ -152,6 +153,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleAccountSettingsRoute(settings);
     route ??= _handleShareFolderPickerRoute(settings);
     route ??= _handleAlbumPickerRoute(settings);
+    route ??= _handleSmartAlbumBrowserRoute(settings);
     return route;
   }
 
@@ -450,6 +452,20 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       }
     } catch (e) {
       _log.severe("[_handleAlbumPickerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleSmartAlbumBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == SmartAlbumBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as SmartAlbumBrowserArguments;
+        return SmartAlbumBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleSmartAlbumBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

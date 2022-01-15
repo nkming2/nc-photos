@@ -13,13 +13,14 @@ class PhotoListImage extends StatelessWidget {
     Key? key,
     required this.account,
     required this.previewUrl,
+    this.padding = const EdgeInsets.all(2),
     this.isGif = false,
   }) : super(key: key);
 
   @override
   build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(2),
+      padding: padding,
       child: FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
@@ -29,28 +30,37 @@ class PhotoListImage extends StatelessWidget {
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
               color: AppTheme.getListItemBackgroundColor(context),
-              child: CachedNetworkImage(
-                cacheManager: ThumbnailCacheManager.inst,
-                imageUrl: previewUrl,
-                httpHeaders: {
-                  "Authorization": Api.getAuthorizationHeaderValue(account),
-                },
-                fadeInDuration: const Duration(),
-                filterQuality: FilterQuality.high,
-                errorWidget: (context, url, error) {
-                  // won't work on web because the image is downloaded by the cache
-                  // manager instead
-                  // where's the preview???
-                  return Center(
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 64,
-                      color: Colors.white.withOpacity(.8),
+              child: previewUrl == null
+                  ? Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 64,
+                        color: Colors.white.withOpacity(.8),
+                      ),
+                    )
+                  : CachedNetworkImage(
+                      cacheManager: ThumbnailCacheManager.inst,
+                      imageUrl: previewUrl!,
+                      httpHeaders: {
+                        "Authorization":
+                            Api.getAuthorizationHeaderValue(account),
+                      },
+                      fadeInDuration: const Duration(),
+                      filterQuality: FilterQuality.high,
+                      errorWidget: (context, url, error) {
+                        // won't work on web because the image is downloaded by
+                        // the cache manager instead
+                        // where's the preview???
+                        return Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 64,
+                            color: Colors.white.withOpacity(.8),
+                          ),
+                        );
+                      },
+                      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                     ),
-                  );
-                },
-                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              ),
             ),
             if (isGif)
               Container(
@@ -71,8 +81,9 @@ class PhotoListImage extends StatelessWidget {
   }
 
   final Account account;
-  final String previewUrl;
+  final String? previewUrl;
   final bool isGif;
+  final EdgeInsetsGeometry padding;
 }
 
 class PhotoListVideo extends StatelessWidget {

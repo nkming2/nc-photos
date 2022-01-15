@@ -55,8 +55,8 @@ class AppTheme extends StatelessWidget {
 
   static Color getPrimaryTextColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
-        ? Colors.black87
-        : Colors.white.withOpacity(.87);
+        ? primaryTextColorLight
+        : primaryTextColorDark;
   }
 
   static Color getSecondaryTextColor(BuildContext context) {
@@ -131,6 +131,9 @@ class AppTheme extends StatelessWidget {
 
   static const primarySwatchLight = Colors.blue;
   static const primarySwatchDark = Colors.cyan;
+
+  static const primaryTextColorLight = Colors.black87;
+  static final primaryTextColorDark = Colors.white.withOpacity(.87);
 
   static const widthLimitedContentMaxWidth = 550.0;
 

@@ -73,6 +73,7 @@ class MockAppDb implements AppDb {
     bool hasAlbumStore = true,
     bool hasFileDb2Store = true,
     bool hasDirStore = true,
+    bool hasMetaStore = true,
     // compat
     bool hasFileStore = false,
     bool hasFileDbStore = false,
@@ -88,6 +89,7 @@ class MockAppDb implements AppDb {
           hasAlbumStore: hasAlbumStore,
           hasFileDb2Store: hasFileDb2Store,
           hasDirStore: hasDirStore,
+          hasMetaStore: hasMetaStore,
           hasFileStore: hasFileStore,
           hasFileDbStore: hasFileDbStore,
         );
@@ -120,6 +122,7 @@ class MockAppDb implements AppDb {
     bool hasAlbumStore = true,
     bool hasFileDb2Store = true,
     bool hasDirStore = true,
+    bool hasMetaStore = true,
     // compat
     bool hasFileStore = false,
     bool hasFileDbStore = false,
@@ -133,9 +136,15 @@ class MockAppDb implements AppDb {
       final file2Store = db.createObjectStore(AppDb.file2StoreName);
       file2Store.createIndex(AppDbFile2Entry.strippedPathIndexName,
           AppDbFile2Entry.strippedPathKeyPath);
+      file2Store.createIndex(AppDbFile2Entry.dateTimeEpochMsIndexName,
+          AppDbFile2Entry.dateTimeEpochMsKeyPath);
     }
     if (hasDirStore) {
       db.createObjectStore(AppDb.dirStoreName);
+    }
+    if (hasMetaStore) {
+      db.createObjectStore(AppDb.metaStoreName,
+          keyPath: AppDbMetaEntry.keyPath);
     }
 
     // compat
