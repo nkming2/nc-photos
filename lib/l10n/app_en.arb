@@ -309,6 +309,14 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsMemoriesTitle": "Memories",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "Show photos taken in the past",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
 	"settingsAccountTitle": "Account",
 	"settingsAccountPageTitle": "Account settings",
 	"@settingsAccountPageTitle": {

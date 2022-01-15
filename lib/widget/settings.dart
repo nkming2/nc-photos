@@ -59,6 +59,9 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     _isEnableExif = Pref().isEnableExifOr();
+
+    final settings = AccountPref.of(widget.account);
+    _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
   }
 
   @override
@@ -95,6 +98,12 @@ class _SettingsState extends State<Settings> {
                     : null,
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
+              ),
+              SwitchListTile(
+                title: Text(L10n.global().settingsMemoriesTitle),
+                subtitle: Text(L10n.global().settingsMemoriesSubtitle),
+                value: _isEnableMemoryAlbum,
+                onChanged: _onEnableMemoryAlbumChanged,
               ),
               _buildSubSettings(
                 context,
@@ -283,6 +292,24 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  Future<void> _onEnableMemoryAlbumChanged(bool value) async {
+    _log.info("[_onEnableMemoryAlbumChanged] New value: $value");
+    final oldValue = _isEnableMemoryAlbum;
+    setState(() {
+      _isEnableMemoryAlbum = value;
+    });
+    if (!await AccountPref.of(widget.account).setEnableMemoryAlbum(value)) {
+      _log.severe("[_onEnableMemoryAlbumChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableMemoryAlbum = oldValue;
+      });
+    }
+  }
+
   void _onCaptureLogChanged(BuildContext context, bool value) async {
     if (value) {
       final result = await showDialog<bool>(
@@ -359,6 +386,7 @@ class _SettingsState extends State<Settings> {
   }
 
   late bool _isEnableExif;
+  late bool _isEnableMemoryAlbum;
 
   static final _log = Logger("widget.settings._SettingsState");
 

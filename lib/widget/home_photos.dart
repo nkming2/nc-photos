@@ -139,7 +139,9 @@ class _HomePhotosState extends State<HomePhotos>
                         _buildAppBar(context),
                         if (_metadataTaskState != MetadataTaskState.idle)
                           _buildMetadataTaskHeader(context),
-                        if (_smartAlbums.isNotEmpty)
+                        if (AccountPref.of(widget.account)
+                                .isEnableMemoryAlbumOr(true) &&
+                            _smartAlbums.isNotEmpty)
                           _buildSmartAlbumList(context),
                         SliverPadding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -627,7 +629,10 @@ class _HomePhotosState extends State<HomePhotos>
               ? 0
               : _metadataTaskHeaderHeight;
       final smartAlbumListHeight =
-          _smartAlbums.isNotEmpty ? _SmartAlbumItem.height : 0;
+          AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
+                  _smartAlbums.isNotEmpty
+              ? _SmartAlbumItem.height
+              : 0;
       // scroll extent = list height - widget viewport height
       // + sliver app bar height + metadata task header height
       // + smart album list height + list padding

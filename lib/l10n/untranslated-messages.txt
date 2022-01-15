@@ -1,5 +1,7 @@
 {
   "cs": [
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
@@ -60,6 +62,8 @@
   ],
 
   "de": [
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
@@ -135,6 +139,8 @@
 
   "el": [
     "collectionsTooltip",
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
@@ -263,6 +269,8 @@
   ],
 
   "es": [
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsMapProviderTitle",
     "addUserInputHint",
     "sharedAlbumInfoDialogTitle",
@@ -275,6 +283,8 @@
   ],
 
   "fi": [
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsMapProviderTitle",
     "addUserInputHint",
     "sharedAlbumInfoDialogTitle",
@@ -288,6 +298,8 @@
 
   "fr": [
     "collectionsTooltip",
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",
@@ -396,6 +408,8 @@
   ],
 
   "ru": [
+    "settingsMemoriesTitle",
+    "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
     "settingsIncludedFoldersTitle",

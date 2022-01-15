@@ -228,6 +228,14 @@ class AccountPref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  bool? isEnableMemoryAlbum() => provider.getBool(PrefKey.isEnableMemoryAlbum);
+  bool isEnableMemoryAlbumOr([bool def = false]) =>
+      isEnableMemoryAlbum() ?? def;
+  Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
+      PrefKey.isEnableMemoryAlbum,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -430,6 +438,7 @@ enum PrefKey {
   isEnableFaceRecognitionApp,
   shareFolder,
   hasNewSharedAlbum,
+  isEnableMemoryAlbum,
 }
 
 extension on PrefKey {
@@ -485,6 +494,8 @@ extension on PrefKey {
         return "shareFolder";
       case PrefKey.hasNewSharedAlbum:
         return "hasNewSharedAlbum";
+      case PrefKey.isEnableMemoryAlbum:
+        return "isEnableMemoryAlbum";
     }
   }
 }
