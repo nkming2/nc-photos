@@ -12,6 +12,7 @@ import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/type.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -45,61 +46,145 @@ class AppDb {
   }
 
   /// Open the database
-  Future<Database> _open() async {
+  Future<Database> _open() {
+    if (platform_k.isWeb) {
+      return _openNative();
+    } else {
+      return _openSqflite();
+    }
+  }
+
+  /// Open the sqflite database
+  ///
+  /// We can't simply call deleteObjectStore on upgrade failure here, as the
+  /// package does not remove the corresponding indexes, so when we recreate
+  /// the indexes later, it'll fail. What we do here, is to delete the whole
+  /// database instead
+  Future<Database> _openSqflite() async {
+    final dbFactory = platform.getDbFactory();
+    try {
+      int? fromVersion, toVersion;
+      final db = await dbFactory.open(
+        dbName,
+        version: dbVersion,
+        onUpgradeNeeded: (event) {
+          _upgrade(event);
+          fromVersion = event.oldVersion;
+          toVersion = event.newVersion;
+        },
+      );
+      if (fromVersion != null && toVersion != null) {
+        await _onPostUpgrade(db, fromVersion!, toVersion!);
+      }
+      return db;
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_openSqflite] Failed while upgrading database", e, stackTrace);
+      _log.warning("[_openSqflite] Recreating db");
+      await dbFactory.deleteDatabase(dbName);
+      return dbFactory.open(dbName,
+          version: dbVersion, onUpgradeNeeded: _upgrade);
+    }
+  }
+
+  /// Open the native IndexedDB database
+  ///
+  /// Errors thrown in onUpgradeNeeded are not propagated properly to us on web,
+  /// so the sqflite approach will not work
+  Future<Database> _openNative() async {
     final dbFactory = platform.getDbFactory();
     int? fromVersion, toVersion;
-    final db = await dbFactory.open(dbName, version: dbVersion,
-        onUpgradeNeeded: (event) {
-      _log.info("[_open] Upgrade database: ${event.oldVersion} -> $dbVersion");
-
-      final db = event.database;
-      // ignore: unused_local_variable
-      ObjectStore? albumStore, file2Store, dirStore, metaStore;
-      if (event.oldVersion < 2) {
-        // version 2 store things in a new way, just drop all
+    final db = await dbFactory.open(
+      dbName,
+      version: dbVersion,
+      onUpgradeNeeded: (event) {
         try {
-          db.deleteObjectStore(albumStoreName);
-        } catch (_) {}
-        albumStore = db.createObjectStore(albumStoreName);
-        albumStore.createIndex(
-            AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
-      }
-      if (event.oldVersion < 3) {
-        // new object store in v3
-        // no longer relevant in v4
-
-        // recreate file store from scratch
-        // no longer relevant in v4
-      }
-      if (event.oldVersion < 4) {
-        try {
-          db.deleteObjectStore(_fileDbStoreName);
-        } catch (_) {}
-        try {
-          db.deleteObjectStore(_fileStoreName);
-        } catch (_) {}
-
-        file2Store = db.createObjectStore(file2StoreName);
-        file2Store.createIndex(AppDbFile2Entry.strippedPathIndexName,
-            AppDbFile2Entry.strippedPathKeyPath);
-
-        dirStore = db.createObjectStore(dirStoreName);
-      }
-      file2Store ??= event.transaction.objectStore(file2StoreName);
-      if (event.oldVersion < 5) {
-        file2Store.createIndex(AppDbFile2Entry.dateTimeEpochMsIndexName,
-            AppDbFile2Entry.dateTimeEpochMsKeyPath);
-
-        metaStore = db.createObjectStore(metaStoreName,
-            keyPath: AppDbMetaEntry.keyPath);
-      }
-      fromVersion = event.oldVersion;
-      toVersion = event.newVersion;
-    });
+          _upgrade(event);
+          fromVersion = event.oldVersion;
+          toVersion = event.newVersion;
+        } catch (e, stackTrace) {
+          _log.shout(
+              "[_openNative] Failed while upgrading database", e, stackTrace);
+          // drop the db and rebuild a new one instead
+          try {
+            event.database.deleteObjectStore(albumStoreName);
+          } catch (_) {}
+          try {
+            event.database.deleteObjectStore(file2StoreName);
+          } catch (_) {}
+          try {
+            event.database.deleteObjectStore(dirStoreName);
+          } catch (_) {}
+          try {
+            event.database.deleteObjectStore(metaStoreName);
+          } catch (_) {}
+          try {
+            event.database.deleteObjectStore(_fileDbStoreName);
+          } catch (_) {}
+          try {
+            event.database.deleteObjectStore(_fileStoreName);
+          } catch (_) {}
+          _log.warning("[_openNative] Recreating db");
+          _upgrade(_DummyVersionChangeEvent(
+              0,
+              event.newVersion,
+              event.transaction,
+              event.target,
+              event.currentTarget,
+              event.database));
+        }
+      },
+    );
     if (fromVersion != null && toVersion != null) {
       await _onPostUpgrade(db, fromVersion!, toVersion!);
     }
     return db;
+  }
+
+  void _upgrade(VersionChangeEvent event) {
+    _log.info("[_upgrade] Upgrade database: ${event.oldVersion} -> $dbVersion");
+
+    final db = event.database;
+    // ignore: unused_local_variable
+    ObjectStore? albumStore, file2Store, dirStore, metaStore;
+    if (event.oldVersion < 2) {
+      // version 2 store things in a new way, just drop all
+      try {
+        db.deleteObjectStore(albumStoreName);
+      } catch (_) {}
+      albumStore = db.createObjectStore(albumStoreName);
+      albumStore.createIndex(
+          AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
+    }
+    if (event.oldVersion < 3) {
+      // new object store in v3
+      // no longer relevant in v4
+
+      // recreate file store from scratch
+      // no longer relevant in v4
+    }
+    if (event.oldVersion < 4) {
+      try {
+        db.deleteObjectStore(_fileDbStoreName);
+      } catch (_) {}
+      try {
+        db.deleteObjectStore(_fileStoreName);
+      } catch (_) {}
+
+      file2Store = db.createObjectStore(file2StoreName);
+      file2Store.createIndex(AppDbFile2Entry.strippedPathIndexName,
+          AppDbFile2Entry.strippedPathKeyPath);
+
+      dirStore = db.createObjectStore(dirStoreName);
+    }
+    file2Store ??= event.transaction.objectStore(file2StoreName);
+    if (event.oldVersion < 5) {
+      file2Store.createIndex(AppDbFile2Entry.dateTimeEpochMsIndexName,
+          AppDbFile2Entry.dateTimeEpochMsKeyPath);
+
+      metaStore =
+          db.createObjectStore(metaStoreName, keyPath: AppDbMetaEntry.keyPath);
+    }
   }
 
   Future<void> _onPostUpgrade(
@@ -318,7 +403,6 @@ class AppDbDirEntry with EquatableMixin {
   final List<int> children;
 }
 
-
 class AppDbMetaEntry with EquatableMixin {
   static const keyPath = "key";
 
@@ -357,4 +441,22 @@ class AppDbMetaEntryDbCompatV5 {
       });
 
   final bool isMigrated;
+}
+
+class _DummyVersionChangeEvent implements VersionChangeEvent {
+  const _DummyVersionChangeEvent(this.oldVersion, this.newVersion,
+      this.transaction, this.target, this.currentTarget, this.database);
+
+  @override
+  final int oldVersion;
+  @override
+  final int newVersion;
+  @override
+  final Transaction transaction;
+  @override
+  final Object target;
+  @override
+  final Object currentTarget;
+  @override
+  final Database database;
 }
