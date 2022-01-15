@@ -14,21 +14,21 @@ void main() {
     test("next year", _nextYear);
     group("prev year", () {
       test("same day", _prevYear);
-      test("-4 day", _prevYear4DaysBefore);
       test("-3 day", _prevYear3DaysBefore);
-      test("+4 day", _prevYear4DaysAfter);
+      test("-2 day", _prevYear2DaysBefore);
       test("+3 day", _prevYear3DaysAfter);
+      test("+2 day", _prevYear2DaysAfter);
     });
     group("on feb 29", () {
-      test("+feb 25", _onFeb29AddFeb25);
       test("+feb 26", _onFeb29AddFeb26);
+      test("+feb 27", _onFeb29AddFeb27);
       group("non leap year", () {
-        test("+mar 5", _onFeb29AddMar5);
         test("+mar 4", _onFeb29AddMar4);
+        test("+mar 3", _onFeb29AddMar3);
       });
       group("leap year", () {
-        test("+mar 4", _onFeb29AddMar4LeapYear);
         test("+mar 3", _onFeb29AddMar3LeapYear);
+        test("+mar 2", _onFeb29AddMar2LeapYear);
       });
     });
     group("on jan 1", () {
@@ -102,28 +102,28 @@ void _prevYear() {
 /// Add a file taken in the prev year
 ///
 /// Today: 2021-02-03
-/// File: 2020-01-30
-/// Expect: empty
-void _prevYear4DaysBefore() {
-  final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
-  final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 30));
-  obj.addFile(file);
-  expect(obj.build(_nameBuilder), []);
-}
-
-/// Add a file taken in the prev year
-///
-/// Today: 2021-02-03
 /// File: 2020-01-31
-/// Expect: [2020]
+/// Expect: empty
 void _prevYear3DaysBefore() {
   final today = DateTime(2021, 2, 3);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 31));
   obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
+}
+
+/// Add a file taken in the prev year
+///
+/// Today: 2021-02-03
+/// File: 2020-02-01
+/// Expect: [2020]
+void _prevYear2DaysBefore() {
+  final today = DateTime(2021, 2, 3);
+  final obj = MemoryAlbumHelper(today);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 1));
+  obj.addFile(file);
   expect(
     obj
         .build(_nameBuilder)
@@ -145,28 +145,28 @@ void _prevYear3DaysBefore() {
 /// Add a file taken in the prev year
 ///
 /// Today: 2021-02-03
-/// File: 2020-01-30
+/// File: 2020-02-06
 /// Expect: empty
-void _prevYear4DaysAfter() {
-  final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
-  final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 7));
-  obj.addFile(file);
-  expect(obj.build(_nameBuilder), []);
-}
-
-/// Add a file taken in the prev year
-///
-/// Today: 2021-02-03
-/// File: 2020-01-31
-/// Expect: [2020]
 void _prevYear3DaysAfter() {
   final today = DateTime(2021, 2, 3);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 6));
   obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
+}
+
+/// Add a file taken in the prev year
+///
+/// Today: 2021-02-03
+/// File: 2020-02-05
+/// Expect: [2020]
+void _prevYear2DaysAfter() {
+  final today = DateTime(2021, 2, 3);
+  final obj = MemoryAlbumHelper(today);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 5));
+  obj.addFile(file);
   expect(
     obj
         .build(_nameBuilder)
@@ -188,28 +188,28 @@ void _prevYear3DaysAfter() {
 /// Add a file taken in the prev year
 ///
 /// Today: 2020-02-29
-/// File: 2019-02-25
-/// Expect: empty
-void _onFeb29AddFeb25() {
-  final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
-  final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 25));
-  obj.addFile(file);
-  expect(obj.build(_nameBuilder), []);
-}
-
-/// Add a file taken in the prev year
-///
-/// Today: 2020-02-29
 /// File: 2019-02-26
-/// Expect: [2019]
+/// Expect: empty
 void _onFeb29AddFeb26() {
   final today = DateTime(2020, 2, 29);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 26));
   obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
+}
+
+/// Add a file taken in the prev year
+///
+/// Today: 2020-02-29
+/// File: 2019-02-27
+/// Expect: [2019]
+void _onFeb29AddFeb27() {
+  final today = DateTime(2020, 2, 29);
+  final obj = MemoryAlbumHelper(today);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 27));
+  obj.addFile(file);
   expect(
     obj
         .build(_nameBuilder)
@@ -226,32 +226,32 @@ void _onFeb29AddFeb26() {
       ),
     ],
   );
-}
-
-/// Add a file taken in the prev year
-///
-/// Today: 2020-02-29
-/// File: 2019-03-05
-/// Expect: empty
-void _onFeb29AddMar5() {
-  final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
-  final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 5));
-  obj.addFile(file);
-  expect(obj.build(_nameBuilder), []);
 }
 
 /// Add a file taken in the prev year
 ///
 /// Today: 2020-02-29
 /// File: 2019-03-04
-/// Expect: [2019]
+/// Expect: empty
 void _onFeb29AddMar4() {
   final today = DateTime(2020, 2, 29);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 4));
+  obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
+}
+
+/// Add a file taken in the prev year
+///
+/// Today: 2020-02-29
+/// File: 2019-03-03
+/// Expect: [2019]
+void _onFeb29AddMar3() {
+  final today = DateTime(2020, 2, 29);
+  final obj = MemoryAlbumHelper(today);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 3));
   obj.addFile(file);
   expect(
     obj
@@ -274,13 +274,13 @@ void _onFeb29AddMar4() {
 /// Add a file taken in the prev leap year
 ///
 /// Today: 2020-02-29
-/// File: 2016-03-04
+/// File: 2016-03-03
 /// Expect: empty
-void _onFeb29AddMar4LeapYear() {
+void _onFeb29AddMar3LeapYear() {
   final today = DateTime(2020, 2, 29);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 4));
+      path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 3));
   obj.addFile(file);
   expect(obj.build(_nameBuilder), []);
 }
@@ -288,13 +288,13 @@ void _onFeb29AddMar4LeapYear() {
 /// Add a file taken in the prev leap year
 ///
 /// Today: 2020-02-29
-/// File: 2016-03-03
+/// File: 2016-03-02
 /// Expect: [2016]
-void _onFeb29AddMar3LeapYear() {
+void _onFeb29AddMar2LeapYear() {
   final today = DateTime(2020, 2, 29);
   final obj = MemoryAlbumHelper(today);
   final file = util.buildJpegFile(
-      path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 3));
+      path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 2));
   obj.addFile(file);
   expect(
     obj

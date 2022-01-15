@@ -41,7 +41,7 @@ class MemoryAlbumHelper {
     }
     for (final dy in [0, -1, 1]) {
       if (today.copyWith(year: date.year + dy).difference(date).abs().inDays <=
-          3) {
+          2) {
         _log.fine(
             "[addFile] Add file (${f.bestDateTime}) to ${date.year + dy}");
         _addFileToYear(f, date.year + dy);
