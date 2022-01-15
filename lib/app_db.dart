@@ -45,6 +45,14 @@ class AppDb {
     });
   }
 
+  Future<void> delete() async {
+    _log.warning("[delete] Deleting database");
+    return await _lock.synchronized(() async {
+      final dbFactory = platform.getDbFactory();
+      await dbFactory.deleteDatabase(dbName);
+    });
+  }
+
   /// Open the database
   Future<Database> _open() {
     if (platform_k.isWeb) {

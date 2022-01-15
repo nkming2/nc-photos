@@ -27,36 +27,43 @@ class DbCompatV5 {
 
   static Future<void> migrate(AppDb appDb) async {
     _log.info("[migrate] Migrate AppDb");
-    await appDb.use((db) async {
-      final transaction = db.transaction(
-          [AppDb.file2StoreName, AppDb.metaStoreName], idbModeReadWrite);
-      try {
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await for (final c in fileStore.openCursor()) {
-          final item = c.value as Map;
-          // migrate file entry: add bestDateTime
-          final fileEntry = item.cast<String, dynamic>().run((json) {
-            final f = File.fromJson(json["file"].cast<String, dynamic>());
-            return AppDbFile2Entry(
-              json["server"],
-              (json["userId"] as String).toCi(),
-              json["strippedPath"],
-              f.bestDateTime.millisecondsSinceEpoch,
-              File.fromJson(json["file"].cast<String, dynamic>()),
-            );
-          });
-          await c.update(fileEntry.toJson());
+    try {
+      await appDb.use((db) async {
+        final transaction = db.transaction(
+            [AppDb.file2StoreName, AppDb.metaStoreName], idbModeReadWrite);
+        try {
+          final fileStore = transaction.objectStore(AppDb.file2StoreName);
+          await for (final c in fileStore.openCursor()) {
+            final item = c.value as Map;
+            // migrate file entry: add bestDateTime
+            final fileEntry = item.cast<String, dynamic>().run((json) {
+              final f = File.fromJson(json["file"].cast<String, dynamic>());
+              return AppDbFile2Entry(
+                json["server"],
+                (json["userId"] as String).toCi(),
+                json["strippedPath"],
+                f.bestDateTime.millisecondsSinceEpoch,
+                File.fromJson(json["file"].cast<String, dynamic>()),
+              );
+            });
+            await c.update(fileEntry.toJson());
 
-          c.next();
+            c.next();
+          }
+          final metaStore = transaction.objectStore(AppDb.metaStoreName);
+          await metaStore
+              .put(const AppDbMetaEntryDbCompatV5(true).toEntry().toJson());
+        } catch (_) {
+          transaction.abort();
+          rethrow;
         }
-        final metaStore = transaction.objectStore(AppDb.metaStoreName);
-        await metaStore
-            .put(const AppDbMetaEntryDbCompatV5(true).toEntry().toJson());
-      } catch (_) {
-        transaction.abort();
-        rethrow;
-      }
-    });
+      });
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[migrate] Failed while migrating, drop db instead", e, stackTrace);
+      await appDb.delete();
+      rethrow;
+    }
   }
 
   static final _log = Logger("use_case.db_compat.v5.DbCompatV5");

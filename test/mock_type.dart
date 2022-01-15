@@ -117,6 +117,11 @@ class MockAppDb implements AppDb {
     }
   }
 
+  @override
+  Future<void> delete() async {
+    throw UnimplementedError();
+  }
+
   static void _createDb(
     Database db, {
     bool hasAlbumStore = true,
