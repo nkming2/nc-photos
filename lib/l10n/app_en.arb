@@ -757,6 +757,7 @@
 	"configButtonLabel": "CONFIG",
 	"useAsAlbumCoverTooltip": "Use as album cover",
 	"helpTooltip": "Help",
+	"helpButtonLabel": "HELP",
 	"removeFromAlbumTooltip": "Remove from album",
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
@@ -1109,6 +1110,18 @@
 				"example": "2"
 			}
 		}
+	},
+	"homeFolderNotFoundDialogTitle": "Home folder not found",
+	"@homeFolderNotFoundDialogTitle": {
+		"description": "The app failed to scan the user's home folder on signing in"
+	},
+	"homeFolderNotFoundDialogContent": "Please correct the WebDAV URL shown below. You can find the URL in the Nextcloud web interface.",
+	"@homeFolderNotFoundDialogContent": {
+		"description": "Ask the user to provide us the correct WebDAV URL"
+	},
+	"homeFolderInputInvalidEmpty": "Please enter the name of your home folder",
+	"@homeFolderInputInvalidEmpty": {
+		"description": "Home folder can't be left empty"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

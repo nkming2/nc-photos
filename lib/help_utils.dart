@@ -4,3 +4,5 @@ const sharedAlbumLimitationsUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/shared-album#limitations";
 const twoFactorAuthUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/two-factor-authentication";
+const homeFolderNotFoundUrl =
+    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/home-folder-not-found";

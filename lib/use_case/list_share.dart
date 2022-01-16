@@ -21,7 +21,7 @@ class ListShare {
     bool? isIncludeReshare,
   }) async {
     try {
-      if (file_util.getUserDirName(file) != account.username) {
+      if (file_util.getUserDirName(file) != account.homeDir) {
         file = await FindFile(_c)(account, file.fileId!);
       }
     } catch (_) {

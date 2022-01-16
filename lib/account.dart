@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
 
@@ -14,6 +16,7 @@ class Account with EquatableMixin {
     String address,
     this.username,
     this.password,
+    this.altHomeDir,
     List<String> roots,
   )   : address = address.trimRightAny("/"),
         _roots = roots.map((e) => e.trimRightAny("/")).toList() {
@@ -28,6 +31,7 @@ class Account with EquatableMixin {
     String? address,
     CiString? username,
     String? password,
+    OrNull<CiString>? altHomeDir,
     List<String>? roots,
   }) {
     return Account(
@@ -36,6 +40,7 @@ class Account with EquatableMixin {
       address ?? this.address,
       username ?? this.username,
       password ?? this.password,
+      altHomeDir == null ? this.altHomeDir : altHomeDir.obj,
       roots ?? List.of(_roots),
     );
   }
@@ -54,6 +59,7 @@ class Account with EquatableMixin {
         "address: '${kDebugMode ? address : "***"}', "
         "username: '${kDebugMode ? username : "***"}', "
         "password: '${password.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
+        "altHomeDir: '${altHomeDir == null || kDebugMode ? altHomeDir : "***"}', "
         "roots: List {'${roots.join('\', \'')}'}, "
         "}";
   }
@@ -64,6 +70,7 @@ class Account with EquatableMixin {
         address = json["address"],
         username = CiString(json["username"]),
         password = json["password"],
+        altHomeDir = (json["altHomeDir"] as String?)?.run((v) => CiString(v)),
         _roots = json["roots"].cast<String>();
 
   JsonObj toJson() => {
@@ -72,19 +79,26 @@ class Account with EquatableMixin {
         "address": address,
         "username": username.toString(),
         "password": password,
+        "altHomeDir": altHomeDir?.toString(),
         "roots": _roots,
       };
 
   @override
-  List<Object> get props => [id, scheme, address, username, password, _roots];
+  get props => [id, scheme, address, username, password, altHomeDir, _roots];
 
   List<String> get roots => _roots;
+
+  CiString get homeDir => altHomeDir ?? username;
 
   final String id;
   final String scheme;
   final String address;
   final CiString username;
   final String password;
+
+  /// Name of the user home dir. Normally [username] is used as the home dir
+  /// name, but for LDAP users, their home dir might be named differently
+  final CiString? altHomeDir;
   final List<String> _roots;
 }
 

@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -115,7 +114,7 @@ class _RootPickerState extends State<RootPicker> {
                 : DirPicker(
                     key: _pickerKey,
                     account: widget.account,
-                    rootDir: api_util.getWebdavRootUrlRelative(widget.account),
+                    strippedRootDir: "",
                     initialPicks: _initialPicks,
                     onConfirmed: (picks) => _onPickerConfirmed(context, picks),
                   ),

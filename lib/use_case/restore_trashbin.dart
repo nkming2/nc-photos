@@ -17,7 +17,7 @@ class RestoreTrashbin {
     await Move(_c)(
       account,
       file,
-      "remote.php/dav/trashbin/${account.username}/restore/${file.filename}",
+      "remote.php/dav/trashbin/${account.homeDir}/restore/${file.filename}",
       shouldOverwrite: true,
     );
     KiwiContainer()

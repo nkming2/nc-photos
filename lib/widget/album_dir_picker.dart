@@ -78,7 +78,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker> {
             child: DirPicker(
               key: _pickerKey,
               account: widget.account,
-              rootDir: _rootDir,
+              strippedRootDir: _strippedRootDir,
               validator: (dir) {
                 if (widget.account.roots.contains("")) {
                   return true;
@@ -132,17 +132,16 @@ class _AlbumDirPickerState extends State<AlbumDirPicker> {
   }
 
   String _getPickerRoot() {
-    final root = api_util.getWebdavRootUrlRelative(widget.account);
     if (widget.account.roots.length == 1 &&
         widget.account.roots.first.isNotEmpty) {
-      return "$root/${widget.account.roots.first}";
+      return widget.account.roots.first;
     } else {
-      return root;
+      return "";
     }
   }
 
   final _pickerKey = GlobalKey<DirPickerState>();
-  late final _rootDir = _getPickerRoot();
+  late final _strippedRootDir = _getPickerRoot();
 
   static final _log = Logger("widget.album_dir_picker._AlbumDirPickerState");
 }

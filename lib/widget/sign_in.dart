@@ -236,6 +236,7 @@ class _SignInState extends State<SignIn> {
       _formValue.address,
       _formValue.username.toCi(),
       _formValue.password,
+      null,
       [""],
     );
     _log.info("[_connect] Try connecting with account: $account");

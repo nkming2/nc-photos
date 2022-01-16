@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -82,7 +81,7 @@ class _ShareFolderPickerState extends State<ShareFolderPicker> {
             child: DirPicker(
               key: _pickerKey,
               account: widget.account,
-              rootDir: api_util.getWebdavRootUrlRelative(widget.account),
+              strippedRootDir: "",
               initialPicks: [
                 if (widget.initialValue.isNotEmpty)
                   File(

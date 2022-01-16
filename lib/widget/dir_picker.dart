@@ -17,7 +17,7 @@ class DirPicker extends StatefulWidget {
   const DirPicker({
     Key? key,
     required this.account,
-    required this.rootDir,
+    required this.strippedRootDir,
     this.initialPicks,
     this.isMultipleSelections = true,
     this.validator,
@@ -28,7 +28,7 @@ class DirPicker extends StatefulWidget {
   createState() => DirPickerState();
 
   final Account account;
-  final String rootDir;
+  final String strippedRootDir;
   final bool isMultipleSelections;
   final List<File>? initialPicks;
 
@@ -41,7 +41,7 @@ class DirPickerState extends State<DirPicker> {
   @override
   initState() {
     super.initState();
-    _root = LsDirBlocItem(File(path: widget.rootDir), []);
+    _root = LsDirBlocItem(File(path: _rootDir), []);
     _initBloc();
     if (widget.initialPicks != null) {
       _picks.addAll(widget.initialPicks!);
@@ -67,7 +67,7 @@ class DirPickerState extends State<DirPicker> {
 
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
-    _navigateInto(File(path: widget.rootDir));
+    _navigateInto(File(path: _rootDir));
   }
 
   Widget _buildContent(BuildContext context, LsDirBlocState state) {
@@ -89,7 +89,7 @@ class DirPickerState extends State<DirPicker> {
   }
 
   Widget _buildList(BuildContext context, LsDirBlocState state) {
-    final isTopLevel = _currentPath == widget.rootDir;
+    final isTopLevel = _currentPath == _rootDir;
     return AnimatedSwitcher(
       duration: k.animationDurationNormal,
       // see AnimatedSwitcher.defaultLayoutBuilder
@@ -383,6 +383,9 @@ class DirPickerState extends State<DirPicker> {
     _currentPath = file.path;
     _bloc.add(LsDirBlocQuery(widget.account, file, depth: 2));
   }
+
+  late final String _rootDir =
+      file_util.unstripPath(widget.account, widget.strippedRootDir);
 
   final _bloc = LsDirBloc(const FileRepo(FileWebdavDataSource()));
   late LsDirBlocItem _root;
