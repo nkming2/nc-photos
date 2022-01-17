@@ -280,7 +280,7 @@ class _WebDavUrlDialogState extends State<_WebDavUrlDialog> {
             Text("${widget.account.url}/remote.php/dav/files/"),
             TextFormField(
               validator: (value) {
-                if (value?.isNotEmpty == true) {
+                if (value?.trimAny("/").isNotEmpty == true) {
                   return null;
                 }
                 return L10n.global().homeFolderInputInvalidEmpty;
