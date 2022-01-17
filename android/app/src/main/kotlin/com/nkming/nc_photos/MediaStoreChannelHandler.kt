@@ -89,8 +89,15 @@ class MediaStoreChannelHandler(activity: Activity) :
 		val collection = MediaStore.Downloads.getContentUri(
 			MediaStore.VOLUME_EXTERNAL_PRIMARY
 		)
+		val file = File(fileName)
 		val details = ContentValues().apply {
-			put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+			put(MediaStore.Downloads.DISPLAY_NAME, file.name)
+			if (file.parent != null) {
+				put(
+					MediaStore.Downloads.RELATIVE_PATH,
+					"${Environment.DIRECTORY_DOWNLOADS}/${file.parent}"
+				)
+			}
 		}
 
 		val contentUri = resolver.insert(collection, details)
@@ -123,6 +130,7 @@ class MediaStoreChannelHandler(activity: Activity) :
 				File(path, "${f.nameWithoutExtension} ($count).${f.extension}")
 			++count
 		}
+		file.parentFile?.mkdirs()
 		BufferedOutputStream(FileOutputStream(file)).use { stream ->
 			data.copyTo(stream)
 		}
