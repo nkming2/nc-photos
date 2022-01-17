@@ -100,7 +100,7 @@ class MockAppDb implements AppDb {
   }
 
   @override
-  Future<T> use<T>(FutureOr<T> Function(Database) fn) async {
+  Future<T> use<T>(FutureOr<T> Function(Database db) fn) async {
     final db = await _dbFactory.open(
       "test.db",
       version: 1,
