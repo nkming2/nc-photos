@@ -451,9 +451,9 @@
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
 	},
-	"rootPickerSkipConfirmationDialogContent": "All your files will be included",
-	"@rootPickerSkipConfirmationDialogContent": {
-		"description": "Inform user what happens after skipping root picker"
+	"rootPickerSkipConfirmationDialogContent2": "All your files will be included. This may increase the memory usage and degrade performance",
+	"@rootPickerSkipConfirmationDialogContent2": {
+		"description": "Warn user not to include all files in their server"
 	},
 	"megapixelCount": "{count}MP",
 	"@megapixelCount": {

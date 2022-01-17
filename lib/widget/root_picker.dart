@@ -145,7 +145,7 @@ class _RootPickerState extends State<RootPicker> {
         context: context,
         builder: (context) => AlertDialog(
               content:
-                  Text(L10n.global().rootPickerSkipConfirmationDialogContent),
+                  Text(L10n.global().rootPickerSkipConfirmationDialogContent2),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
