@@ -144,4 +144,9 @@ Features:
 
 * The app needs to resync with the server due to changes in the database
 """,
+  // v36
+  """36.0
+- Memories
+  - Show photos taken in the past
+""",
 ];
