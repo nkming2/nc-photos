@@ -428,7 +428,7 @@ class FileCachedDataSource implements FileDataSource {
       await _cacheResult(account, f, remote);
       if (shouldCheckCache) {
         // update our local touch token to match the remote one
-        final tokenManager = TouchTokenManager();
+        const tokenManager = TouchTokenManager();
         try {
           await tokenManager.setLocalToken(
               account, f, cacheManager.remoteTouchToken);
@@ -500,7 +500,7 @@ class FileCachedDataSource implements FileDataSource {
 
     // generate a new random token
     final token = const Uuid().v4().replaceAll("-", "");
-    final tokenManager = TouchTokenManager();
+    const tokenManager = TouchTokenManager();
     final dir = File(path: path.dirname(f.path));
     await tokenManager.setLocalToken(account, dir, token);
     final fileRepo = FileRepo(this);
@@ -739,7 +739,7 @@ class _CacheManager {
     final touchPath =
         "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
     final fileRepo = FileRepo(FileCachedDataSource(appDb));
-    final tokenManager = TouchTokenManager();
+    const tokenManager = TouchTokenManager();
     String? remoteToken;
     try {
       remoteToken = await tokenManager.getRemoteToken(fileRepo, account, f);

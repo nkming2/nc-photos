@@ -22,6 +22,8 @@ import 'package:nc_photos/use_case/remove.dart';
 /// token requires downloading a file from the server so you may want to avoid
 /// doing it on every query
 class TouchTokenManager {
+  const TouchTokenManager();
+
   Future<void> setRemoteToken(
       FileRepo fileRepo, Account account, File file, String? token) async {
     _log.info(
