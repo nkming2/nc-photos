@@ -15,23 +15,15 @@ class ScanDir {
   ///
   /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
   /// would emit either List<File> or ExceptionEvent
-  ///
-  /// If [isSupportedFileOnly] == true, the returned files will be filtered by
-  /// [file_util.isSupportedFormat]
-  Stream<dynamic> call(
-    Account account,
-    File root, {
-    bool isSupportedFileOnly = true,
-  }) async* {
+  Stream<dynamic> call(Account account, File root) async* {
     try {
       final items = await Ls(fileRepo)(account, root);
       if (_shouldScanIgnoreDir(items)) {
         return;
       }
       yield items
-          .where((f) =>
-              f.isCollection != true &&
-              (!isSupportedFileOnly || file_util.isSupportedFormat(f)))
+          .where(
+              (f) => f.isCollection != true && file_util.isSupportedFormat(f))
           .toList();
       for (final i in items.where((element) =>
           element.isCollection == true &&

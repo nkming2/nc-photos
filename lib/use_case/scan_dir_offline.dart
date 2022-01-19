@@ -15,15 +15,8 @@ class ScanDirOffline {
 
   /// List all files under a dir recursively from the local DB
   ///
-  /// Dirs with a .nomedia/.noimage file will be ignored.
-  ///
-  /// If [isSupportedFileOnly] == true, the returned files will be filtered by
-  /// [file_util.isSupportedFormat]
-  Future<List<File>> call(
-    Account account,
-    File root, {
-    bool isSupportedFileOnly = true,
-  }) async {
+  /// Dirs with a .nomedia/.noimage file will be ignored
+  Future<List<File>> call(Account account, File root) async {
     final skipDirs = <File>[];
     final files = await _c.appDb.use((db) async {
       final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
