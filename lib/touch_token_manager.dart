@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -23,6 +24,29 @@ import 'package:nc_photos/use_case/remove.dart';
 /// doing it on every query
 class TouchTokenManager {
   const TouchTokenManager();
+
+  Future<String?> getRemoteRootEtag(FileRepo fileRepo, Account account) async {
+    try {
+      final touchDir = await fileRepo.listSingle(
+          account, File(path: remote_storage_util.getRemoteTouchDir(account)));
+      return touchDir.etag!;
+    } catch (_) {
+      // dir not found on server
+      return null;
+    }
+  }
+
+  Future<void> setLocalRootEtag(Account account, String? etag) async {
+    if (etag == null) {
+      await AccountPref.of(account).removeTouchRootEtag();
+    } else {
+      await AccountPref.of(account).setTouchRootEtag(etag);
+    }
+  }
+
+  Future<String?> getLocalRootEtag(Account account) async {
+    return AccountPref.of(account).getTouchRootEtag();
+  }
 
   Future<void> setRemoteToken(
       FileRepo fileRepo, Account account, File file, String? token) async {

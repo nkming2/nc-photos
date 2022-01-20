@@ -236,6 +236,14 @@ class AccountPref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  String? getTouchRootEtag() => provider.getString(PrefKey.touchRootEtag);
+  String getTouchRootEtagOr([String def = ""]) => getTouchRootEtag() ?? def;
+  Future<bool> setTouchRootEtag(String value) => _set<String>(
+      PrefKey.touchRootEtag,
+      value,
+      (key, value) => provider.setString(key, value));
+  Future<bool> removeTouchRootEtag() => _remove(PrefKey.touchRootEtag);
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -247,6 +255,8 @@ class AccountPref {
       return false;
     }
   }
+
+  Future<bool> _remove(PrefKey key) => provider.remove(key);
 
   final PrefProvider provider;
 
@@ -267,6 +277,7 @@ abstract class PrefProvider {
   List<String>? getStringList(PrefKey key);
   Future<bool> setStringList(PrefKey key, List<String> value);
 
+  Future<bool> remove(PrefKey key);
   Future<bool> clear();
 }
 
@@ -312,6 +323,9 @@ class PrefSharedPreferencesProvider extends PrefProvider {
       _pref.setStringList(key.toStringKey(), value);
 
   @override
+  remove(PrefKey key) => _pref.remove(key.toStringKey());
+
+  @override
   clear() => _pref.clear();
 
   late SharedPreferences _pref;
@@ -347,6 +361,14 @@ class PrefUniversalStorageProvider extends PrefProvider {
   getStringList(PrefKey key) => _get<List<String>>(key);
   @override
   setStringList(PrefKey key, List<String> value) => _set(key, value);
+
+  @override
+  remove(PrefKey key) async {
+    final newData = Map.of(_data)..remove(key.toStringKey());
+    await platform.UniversalStorage().putString(name, jsonEncode(newData));
+    _data.remove(key.toStringKey());
+    return true;
+  }
 
   @override
   clear() async {
@@ -396,6 +418,12 @@ class PrefMemoryProvider extends PrefProvider {
   setStringList(PrefKey key, List<String> value) => _set(key, value);
 
   @override
+  remove(PrefKey key) async {
+    _data.remove(key);
+    return true;
+  }
+
+  @override
   clear() async {
     _data.clear();
     return true;
@@ -439,6 +467,7 @@ enum PrefKey {
   shareFolder,
   hasNewSharedAlbum,
   isEnableMemoryAlbum,
+  touchRootEtag,
 }
 
 extension on PrefKey {
@@ -496,6 +525,8 @@ extension on PrefKey {
         return "hasNewSharedAlbum";
       case PrefKey.isEnableMemoryAlbum:
         return "isEnableMemoryAlbum";
+      case PrefKey.touchRootEtag:
+        return "touchRootEtag";
     }
   }
 }

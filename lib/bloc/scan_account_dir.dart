@@ -14,6 +14,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
@@ -307,7 +308,7 @@ class ScanAccountDirBloc
   Stream<ScanAccountDirBlocState> _queryOnline(
       ScanAccountDirBlocQueryBase ev, List<File>? cache) async* {
     // 1st pass: scan for new files
-    final files = <File>[];
+    var files = <File>[];
     {
       final stopwatch = Stopwatch()..start();
       final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
@@ -336,32 +337,56 @@ class ScanAccountDirBloc
       yield ScanAccountDirBlocLoading(files);
     }
 
-    if (_shouldCheckCache) {
-      // 2nd pass: check outdated cache
-      _shouldCheckCache = false;
-      final stopwatch = Stopwatch()..start();
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
-          shouldCheckCache: true,
-          forwardCacheManager: FileForwardCacheManager(AppDb())));
-      final fileRepoNoCache =
-          FileRepo(FileCachedDataSource(AppDb(), shouldCheckCache: true));
-      final newFiles = <File>[];
-      await for (final event in _queryWithFileRepo(fileRepo, ev,
-          fileRepoForShareDir: fileRepoNoCache)) {
-        if (event is ExceptionEvent) {
-          _log.shout("[_queryOnline] Exception while request (2nd pass)",
-              event.error, event.stackTrace);
-          yield ScanAccountDirBlocSuccess(files);
-          return;
-        }
-        newFiles.addAll(event);
+    try {
+      if (_shouldCheckCache) {
+        // 2nd pass: check outdated cache
+        _shouldCheckCache = false;
+        files = await _queryOnlinePass2(ev, files);
       }
-      _log.info(
-          "[_queryOnline] Elapsed time (pass2): ${stopwatch.elapsedMilliseconds}ms");
-      yield ScanAccountDirBlocSuccess(newFiles);
-    } else {
-      yield ScanAccountDirBlocSuccess(files);
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_queryOnline] Failed while _queryOnlinePass2", e, stackTrace);
     }
+    yield ScanAccountDirBlocSuccess(files);
+  }
+
+  Future<List<File>> _queryOnlinePass2(
+      ScanAccountDirBlocQueryBase ev, List<File> pass1Files) async {
+    const touchTokenManager = TouchTokenManager();
+    final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
+        shouldCheckCache: true,
+        forwardCacheManager: FileForwardCacheManager(AppDb())));
+    final remoteTouchEtag =
+        await touchTokenManager.getRemoteRootEtag(fileRepo, account);
+    if (remoteTouchEtag == null) {
+      _log.info("[_queryOnlinePass2] remoteTouchEtag == null");
+      await touchTokenManager.setLocalRootEtag(account, null);
+      return pass1Files;
+    }
+    final localTouchEtag = await touchTokenManager.getLocalRootEtag(account);
+    if (remoteTouchEtag == localTouchEtag) {
+      _log.info("[_queryOnlinePass2] remoteTouchEtag matched");
+      return pass1Files;
+    }
+
+    final stopwatch = Stopwatch()..start();
+    final fileRepoNoCache =
+        FileRepo(FileCachedDataSource(AppDb(), shouldCheckCache: true));
+    final newFiles = <File>[];
+    await for (final event in _queryWithFileRepo(fileRepo, ev,
+        fileRepoForShareDir: fileRepoNoCache)) {
+      if (event is ExceptionEvent) {
+        _log.shout("[_queryOnlinePass2] Exception while request (2nd pass)",
+            event.error, event.stackTrace);
+        return pass1Files;
+      }
+      newFiles.addAll(event);
+    }
+    _log.info(
+        "[_queryOnlinePass2] Elapsed time (pass2): ${stopwatch.elapsedMilliseconds}ms");
+    _log.info("[_queryOnlinePass2] Save new touch root etag: $remoteTouchEtag");
+    await touchTokenManager.setLocalRootEtag(account, remoteTouchEtag);
+    return newFiles;
   }
 
   /// Emit all files under this account
