@@ -1,0 +1,1155 @@
+{
+	"appTitle": "Zdjęcia",
+	"translator": "szymok",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "Zdjęcia",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"collectionsTooltip": "Kolekcje",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
+	},
+	"zoomTooltip": "Powiększenie",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "Odśwież",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "Ustawienia",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "Wybrano {count}",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"addSelectedToAlbumSuccessNotification": "Wszystkie elementy zostały pomyślnie dodane do {album}",
+	"@addSelectedToAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addSelectedToAlbumFailureNotification": "Nie udało się dodać elementów do albumu",
+	"@addSelectedToAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be added to an album"
+	},
+	"addToAlbumTooltip": "Dodaj do albumu",
+	"@addToAlbumTooltip": {
+		"description": "Add selected items to an album"
+	},
+	"addToAlbumSuccessNotification": "Pomyślnie dodano do {album}",
+	"@addToAlbumSuccessNotification": {
+		"description": "Inform user that the item is added to an album successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addToAlbumFailureNotification": "Nie udało się dodać do albumu",
+	"@addToAlbumFailureNotification": {
+		"description": "Inform user that the item cannot be added to an album"
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Usuwanie jednego elementu} other{Usuwanie elementów w ilości: {count}}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "Wszystkie wybrane elementy zostały usunięte pomyślnie",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotification": "{count, plural, =1{Nie udało się usunąć jednego elementu} other{Nie udało się usunąć elementów w ilości: {count}}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveTooltip": "Archiwizuj",
+	"@archiveTooltip": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Archiwizacja jednego elementu} other{Archiwizacja elementów w ilości: {count}}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "Wszystkie wybrane elementy zostały zarchiwizowane pomyślnie",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, =1{Nie udało się zarchiwizować jednego elementu} other{Nie udało się zarchiwizować elementów w ilości {count}}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveTooltip": "Przywróc z archiwum",
+	"@unarchiveTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Przywracanie jednego elementu z archiwum} other{Przywracanie z archiwum elementów w ilości: {count}}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "Wszystkie wybrane elementy zostały pomyślnie przywrócone z archiwum",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Nie udało się przywrócić jednego elementu z archiwum} other{Nie udało się przywrócić elementów z archiwum w ilości: {count}}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "Usuń",
+	"@deleteTooltip": {
+		"description": "Delete selected items"
+	},
+	"deleteProcessingNotification": "Usuwanie elementu",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "Element usunięty pomyślnie",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "Nie udało się usunąć elementu",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumTooltip": "Usuń wybrane elementy z albumu",
+	"@removeSelectedFromAlbumTooltip": {
+		"description": "Tooltip of the button that remove selected items from an album"
+	},
+	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{Jeden element usunięty z albumu} other{Z albumu usunięto elementy w ilości: {count}}}",
+	"@removeSelectedFromAlbumSuccessNotification": {
+		"description": "Inform user that the selected items are removed from an album successfully",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"removeSelectedFromAlbumFailureNotification": "Nie udało się usunąć elementów z albumu",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "Dodaj serwer",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "Pomyślnie usunięto serwer {server}",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "Nowy album",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"createAlbumFailureNotification": "Nie można utworzyć albumu",
+	"@createAlbumFailureNotification": {
+		"description": "Inform user that an album cannot be created"
+	},
+	"albumSize": "{count, plural, =0{Brak elementów} other{Liczba elementów w albumie: {count}}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "Archiwum",
+	"@albumArchiveLabel": {
+		"description": "Archive"
+	},
+	"connectingToServer": "Łączenie z {server}",
+	"@connectingToServer": {
+		"description": "Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"nameInputHint": "Nazwa",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"albumNameInputInvalidEmpty": "Proszę podać nazwę albumu",
+	"@albumNameInputInvalidEmpty": {
+		"description": "Inform user that the album name input field cannot be empty"
+	},
+	"skipButtonLabel": "POMIŃ",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "POTWIERDŹ",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "Zaloguj się do serwera Nextcloud",
+	"@signInHeaderText": {
+		"description": "Inform user what to do in sign in widget"
+	},
+	"signIn2faHintText": "Jeśli korzystasz z weryfikacji dwuetapowej, użyj hasła aplikacji",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
+	"serverAddressInputHint": "Adres serwera",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "Proszę podać adres serwera",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "Nazwa użytkownika",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "Proszę podać nazwę użytkownika",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "Hasło",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "Proszę podać hasło",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "Proszę wybrać foldery do uwzględnienia",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "Wyświtlane będą wyłącznie zdjęcia wewnątrz folderów. Wciśnij Pomiń, aby uwzględnić wszystkie",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(WSTECZ)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "Nie udało się odznaczyć elementu",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "Proszę wybrać przynajmniej jeden folder, lub wcisnąć Pomiń, aby uwzględnić wszystkie",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "Zaczynamy!",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "Można to zmienić później w Ustawieniach",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "Ta aplikacja tworzy folder na serwerze Nextcloud do przechowywania plików preferencji. Proszę go nie modyfikować ani nie usuwać, chyba że planujesz usunąć tę aplikację.",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "Ustawienia",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "Język",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
+	"settingsExifSupportTitle": "Wsparcie dla EXIF",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsExifSupportTrueSubtitle": "Wymaga dodatkowego wykorzystania sieci",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsMemoriesTitle": "Wspomnienia",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "Pokaż zdjęcia z przeszłości",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsAccountTitle": "Konto",
+	"settingsAccountPageTitle": "Ustawienia konta",
+	"@settingsAccountPageTitle": {
+		"description": "Dedicated page for account settings"
+	},
+	"settingsIncludedFoldersTitle": "Uwzględniane foldery",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
+	"settingsShareFolderTitle": "Udostępnij folder",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Zlokalizuj folder udostępniany",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "To ustawienie odpowiada parametrowi share_folder w config.php. Obie wartości MUSZĄ być identyczne. Proszę zlokalizować ten sam folder, który jest ustawiony w config.php.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "Proszę zlokalizować ten sam folder, który jest ustawiony w config.php. Naciśnij domyślne jeśli nie ustawiłeś parametru.",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsServerAppSectionTitle": "Wsparcie dla aplikacji serwera",
+	"@settingsServerAppSectionTitle": {
+		"description": "Enable/disable various server apps"
+	},
+	"settingsViewerTitle": "Przeglądarka",
+	"settingsViewerDescription": "Dostosowywanie przeglądarki obrazów/wideo",
+	"settingsViewerPageTitle": "Ustawienia przeglądarki",
+	"@settingsViewerPageTitle": {
+		"description": "Dedicated page for viewer settings"
+	},
+	"settingsScreenBrightnessTitle": "Jasność ekranu",
+	"settingsScreenBrightnessDescription": "Zastąp systemowe ustawienia jasności",
+	"settingsForceRotationTitle": "Zignoruj systemową blokadę orientacji ekranu",
+	"settingsForceRotationDescription": "Obracaj ekran nawet gdy autoobracanie jest wyłączone",
+	"settingsMapProviderTitle": "Dostawca map",
+	"settingsAlbumTitle": "Album",
+	"settingsAlbumDescription": "Dostosuj albumy",
+	"settingsAlbumPageTitle": "Ustawienia albumu",
+	"@settingsAlbumPageTitle": {
+		"description": "Dedicated page for album settings"
+	},
+	"settingsShowDateInAlbumTitle": "Grupuj zdjęcia według daty",
+	"settingsShowDateInAlbumDescription": "Zastosuj tylko wtedy, gdy album jest posortowany według czasu",
+	"settingsThemeTitle": "Motyw",
+	"settingsThemeDescription": "Dostosuj wygląd aplikacji",
+	"settingsThemePageTitle": "Ustawienia motywu",
+	"@settingsThemePageTitle": {
+		"description": "Dedicated page for theme settings"
+	},
+	"settingsFollowSystemThemeTitle": "Zostosuj motyw systemu",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Ciemniejszy motyw",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Używaj czerni w ciemnym motywie",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Używaj szarości w ciemnym motywie",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
+	"settingsExperimentalTitle": "Eksperymentalne",
+	"settingsExperimentalDescription": "Funkcje, które nie są gotowe do codziennego użytku",
+	"settingsExperimentalPageTitle": "Ustawienia funkcji eksperymentalnych",
+	"settingsAboutSectionTitle": "O aplikacji",
+	"@settingsAboutSectionTitle": {
+		"description": "Title of the about section in settings widget"
+	},
+	"settingsVersionTitle": "Wersja",
+	"@settingsVersionTitle": {
+		"description": "Title of the version data item"
+	},
+	"settingsSourceCodeTitle": "Kod źródłowy",
+	"@settingsSourceCodeTitle": {
+		"description": "Title of the source code item"
+	},
+	"settingsBugReportTitle": "Zgłoś błąd",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
+	"settingsCaptureLogsTitle": "Przechwyć logi",
+	"@settingsCaptureLogsTitle": {
+		"description": "Capture app logs for bug report"
+	},
+	"settingsCaptureLogsDescription": "Pomóż w diagnozowaniu błędów",
+	"settingsTranslatorTitle": "Translator",
+	"@settingsTranslatorTitle": {
+		"description": "Title of the translator item"
+	},
+	"writePreferenceFailureNotification": "Nie udało się ustawić preferencji",
+	"@writePreferenceFailureNotification": {
+		"description": "Inform user that the preference file cannot be modified"
+	},
+	"enableButtonLabel": "WŁĄCZ",
+	"@enableButtonLabel": {
+		"description": "Label of the enable button"
+	},
+	"exifSupportDetails": "Włączenie obsługi EXIF spowoduje udostępnienie różnych metadanych, takich jak data wykonania zdjęcia, model aparatu itp. Aby odczytać te metadane, wymagane jest dodatkowe użycie sieci w celu pobrania oryginalnego obrazu w pełnym rozmiarze. Aplikacja rozpocznie pobieranie tylko wtedy, gdy jest podłączona do sieci Wi-Fi.",
+	"@exifSupportDetails": {
+		"description": "Detailed description of the exif support feature"
+	},
+	"exifSupportConfirmationDialogTitle": "Włączyć obsługę EXIF?",
+	"@exifSupportConfirmationDialogTitle": {
+		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"captureLogDetails": "Aby pobrać logi do raportu o błędzie: \n1. Włącz to ustawienie:\n2. Wykonaj kroki generujące problem \n3. Wyłącz to ustawienie:\n4. Poszukaj pliku nc-photos.log w folderze pobierania* Jeśli problem spowoduje zawieszenie się aplikacji, nie będzie można przechwycić żadnych logów. W takim przypadku skontaktuj się z deweloperem, aby uzyskać dalsze instrukcje.",
+	"@captureLogDetails": {
+		"description": "Detailed description on capturing logs"
+	},
+	"captureLogSuccessNotification": "Logi zapisane pomyślnie",
+	"@captureLogSuccessNotification": {
+		"description": "Captured logs are successfully saved to the download directory"
+	},
+	"doneButtonLabel": "GOTOWE",
+	"@doneButtonLabel": {
+		"description": "Label of the done button"
+	},
+	"nextButtonLabel": "NASTĘPNY",
+	"@nextButtonLabel": {
+		"description": "Label of the next button"
+	},
+	"connectButtonLabel": "POŁĄCZ",
+	"@connectButtonLabel": {
+		"description": "Label of the connect button"
+	},
+	"rootPickerSkipConfirmationDialogContent2": "Wszystkie Twoje pliki zostaną uwzględnione. Może to zwiększyć użycie pamięci i pogorszyć wydajność",
+	"@rootPickerSkipConfirmationDialogContent2": {
+		"description": "Warn user not to include all files in their server"
+	},
+	"megapixelCount": "{count}MP",
+	"@megapixelCount": {
+		"description": "Resolution of an image in megapixel",
+		"placeholders": {
+			"count": {
+				"example": "1.3"
+			}
+		}
+	},
+	"secondCountSymbol": "{count}s",
+	"@secondCountSymbol": {
+		"description": "Number of seconds",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"millimeterCountSymbol": "{count}mm",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "Szczegóły",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "Pobierz",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "Pobieranie pliku",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "Plik pobrany pomyślnie",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "Nie udało się pobrać pliku",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"downloadFailureNoPermissionNotification": "Wymagany dostęp do pamięci",
+	"@downloadFailureNoPermissionNotification": {
+		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
+	},
+	"nextTooltip": "Dalej",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "Wstecz",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "Przytrzymaj shift i kliknij aby zazczyć elementy pomiędzy",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "Przytrzymaj inny element aby zazczyć elementy pomiędzy",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "Zmień datę & czas",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Data",
+	"timeSubtitle": "Czas",
+	"dateYearInputHint": "Rok",
+	"dateMonthInputHint": "Miesiąc",
+	"dateDayInputHint": "Dzień",
+	"timeHourInputHint": "Godzina",
+	"timeMinuteInputHint": "Minuta",
+	"timeSecondInputHint": "Sekunda",
+	"dateTimeInputInvalid": "Niewłaściwa wartość",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "Nie udało się zmodyfikować daty i czasu",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
+	},
+	"albumDirPickerHeaderText": "Wybierz foldery, które mają być powiązane",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "W tym albumie znajdą się tylko zdjęcia z powiązanych folderów",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "Proszę wybrać co najmniej jeden folder",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"createAlbumDialogBasicLabel": "Prosty",
+	"@createAlbumDialogBasicLabel": {
+		"description": "Simple album"
+	},
+	"createAlbumDialogBasicDescription": "Prosty album organizuje zdjęcia niezależnie od hierarchii plików na serwerze",
+	"@createAlbumDialogBasicDescription": {
+		"description": "Describe what a simple album is"
+	},
+	"createAlbumDialogFolderBasedLabel": "Folder",
+	"@createAlbumDialogFolderBasedLabel": {
+		"description": "Folder based album"
+	},
+	"createAlbumDialogFolderBasedDescription": "Album oparty na folderach odzwierciedla zawartość folderu",
+	"@createAlbumDialogFolderBasedDescription": {
+		"description": "Describe what a folder based album is"
+	},
+	"convertBasicAlbumMenuLabel": "Konwersja do prostego albumu",
+	"@convertBasicAlbumMenuLabel": {
+		"description": "Convert a non-simple album to a simple one"
+	},
+	"convertBasicAlbumConfirmationDialogTitle": "Konwersja do prostego albumu",
+	"@convertBasicAlbumConfirmationDialogTitle": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumConfirmationDialogContent": "Zawartość tego albumu nie będzie już zarządzana przez aplikację. Będziesz mógł swobodnie dodawać i usuwać zdjęcia.\n\nTa konwersja jest nieodwracalna",
+	"@convertBasicAlbumConfirmationDialogContent": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertBasicAlbumSuccessNotification": "Album skonwertowany pomyślnie",
+	"@convertBasicAlbumSuccessNotification": {
+		"description": "Successfully converted the album"
+	},
+	"importFoldersTooltip": "Importuj foldery",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "Importuj foldery jako albumy",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "Sugerowane foldery są wskazane poniżej. W zależności od ilości plików na Twoim serwerze, może to trochę potrwać.",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "IMPORT",
+	"albumImporterProgressText": "Importowanie folderów",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
+	"editAlbumMenuLabel": "Edytuj album",
+	"@editAlbumMenuLabel": {
+		"description": "Edit the opened album"
+	},
+	"doneButtonTooltip": "Gotowe",
+	"editTooltip": "Edytuj",
+	"editAccountConflictFailureNotification": "Konto z tymi samymi ustawieniami już istnieje",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"genericProcessingDialogContent": "Proszę czekać",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
+	"sortTooltip": "Sorowanie",
+	"sortOptionDialogTitle": "Sortuj według",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "Od najstarszych",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "Od najnowszych",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
+	"sortOptionAlbumNameLabel": "Nazwa albumu (rosnąco)",
+	"@sortOptionAlbumNameLabel": {
+		"description": "Sort by album name, in ascending order"
+	},
+	"sortOptionAlbumNameDescendingLabel": "Nazwa albumu (malejąco)",
+	"@sortOptionAlbumNameDescendingLabel": {
+		"description": "Sort by album name, in descending order"
+	},
+	"sortOptionManualLabel": "Ręcznie",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
+	},
+	"albumEditDragRearrangeNotification": "Przytrzymaj i przeciągnij element, aby zmienić układ",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "Dodaj tekst",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "Share",
+	"@shareTooltip": {
+		"description": "Udostępnij wybrane elementy poprzez inne aplikacje"
+	},
+	"shareSelectedEmptyNotification": "Wybierz zdjęcia do udostępnienia",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Pobieranie",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
+	"searchTooltip": "Szukaj",
+	"albumSearchTextFieldHint": "Szukaj albumów",
+	"clearTooltip": "Czyść",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "Brak wyników",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"listEmptyText": "Pusto",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Kosz",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Przywróć",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, =1{Przywracanie jednego elementu} other{Przywracanie eleentów w ilości: {count}}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Wszystkie elementy przywrócone pomyślnie",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, =1{Nie udało się przywrócić jednego elementu} other{Nie udało się przywrócić elementów w ilości: {count}}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Przywracanie elementu",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "Pomyślnie przywrócono element",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "Nie udało się przywrócić elementu",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Usuń na stałe",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "Usuń na stałe",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "SWybrane elementy zostaną trwale usunięte z serwera..\n\nTej akcji nie można cofnąć",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"albumSharedLabel": "Udostępnione",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
+	"setAlbumCoverProcessingNotification": "Ustawianie zdjęcia jako okładki albumu",
+	"@setAlbumCoverProcessingNotification": {
+		"description": "Setting the opened item as the album cover"
+	},
+	"setAlbumCoverSuccessNotification": "Okładka albumu ustawona pomyślnie",
+	"@setAlbumCoverSuccessNotification": {
+		"description": "Set the opened item as the album cover successfully"
+	},
+	"setAlbumCoverFailureNotification": "Nie udało się ustawić okładki albumu",
+	"@setAlbumCoverFailureNotification": {
+		"description": "Cannot set the opened item as the album cover"
+	},
+	"metadataTaskProcessingNotification": "Przetwarzanie metadanych obrazu w tle",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "Oczekiwanie na WiFi",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "KONFIGURACJA",
+	"useAsAlbumCoverTooltip": "Użyj jako okładki albumu",
+	"helpTooltip": "Pomoc",
+	"helpButtonLabel": "POMOC",
+	"removeFromAlbumTooltip": "Usuń z albumu",
+	"@removeFromAlbumTooltip": {
+		"description": "Remove the opened photo from an album"
+	},
+	"changelogTitle": "Opis zmian",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
+	"serverCertErrorDialogTitle": "Certyfikat serwera jest niezaufany",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "Serwer może zostać zhakowany lub ktoś może próbować wykraść twoje informacje",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"advancedButtonLabel": "ZAAWANSOWANE",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "Dodać nieznany certyfikat do listy wyjątków (biała lista)?",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "Możesz umieścić certyfikat na białej liście, aby aplikacja go zaakceptowała. UWAGA: Stanowi to duże zagrożenie dla bezpieczeństwa. Upewnij się, że certyfikat jest podpisany samodzielnie przez Ciebie lub zaufaną osobę.\n\nGospodarz: {host}\nOdcisk palca: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "ZAAKCEPTUJ RYZYKO I WPISZ NA BIAŁĄ LISTĘ",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
+	"fileSharedByDescription": "Udostępnione tobie przez tego użytkownika",
+	"@fileSharedByDescription": {
+		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+	},
+	"emptyTrashbinTooltip": "Opróżnij kosz",
+	"@emptyTrashbinTooltip": {
+		"description": "Permanently delete all items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogTitle": "Opróżnij kosz",
+	"@emptyTrashbinConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"emptyTrashbinConfirmationDialogContent": "Wszystkie elementy zostaną trwale usunięte z serwera.\n\nTo działanie jest nieodwracalne",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"unsetAlbumCoverTooltip": "Odznacz okładkę",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"unsetAlbumCoverProcessingNotification": "Odznaczanie okładki",
+	"@unsetAlbumCoverProcessingNotification": {
+		"description": "Unsetting the cover of the opened album"
+	},
+	"unsetAlbumCoverSuccessNotification": "Odznaczanie okładki pomyślne",
+	"@unsetAlbumCoverSuccessNotification": {
+		"description": "Unset the cover of the opened album successfully"
+	},
+	"unsetAlbumCoverFailureNotification": "Nie udało się odznaczyć okładki",
+	"@unsetAlbumCoverFailureNotification": {
+		"description": "Cannot unset the cover of the opened album"
+	},
+	"muteTooltip": "Wycisz",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
+	"unmuteTooltip": "Wyłącz wyciszenie",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
+	"collectionPeopleLabel": "Osoby",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"personPhotoCountText": "{count, plural, =1{Jedno zdjęcie} other{Liczba zdjęć: {count}}}",
+	"@personPhotoCountText": {
+		"description": "Number of photos associated to a specific person",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"slideshowTooltip": "Pokaz zdjęć",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "Ustaw pokaz zdjęć",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "Czas przeglądania zdjęcia (MM:SS)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "Wymieszaj",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "Powtórz",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
+	},
+	"linkCopiedNotification": "Link skopiowany",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "Udostępnij jako",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodFileTitle": "Plik",
+	"@shareMethodFileTitle": {
+		"description": "Share the actual file"
+	},
+	"shareMethodFileDescription": "Plik zostanie pobrany na to urządzenie i udostępniony (przesłany) za pomocą innej aplikacji",
+	"shareMethodPublicLinkTitle": "Publiczny link",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	},
+	"shareMethodPublicLinkDescription": "Utwórz publiczny link, element pozostanie na serwerze, każda osoba posiadająca link będzie miała dostęp do pliku",
+	"shareMethodPasswordLinkTitle": "Link zabezpieczony hasłem",
+	"@shareMethodPasswordLinkTitle": {
+		"description": "Create a password protected share link on server and share it"
+	},
+	"shareMethodPasswordLinkDescription": "Utwórz link zabezpieczony hasłem, element pozostanie na serwerze, jednak dostęp do pliku będzie możliwy wyłącznie po podaniu hasła",
+	"collectionSharingLabel": "Udostępniane",
+	"@collectionSharingLabel": {
+		"description": "List items being shared by the current account"
+	},
+	"fileLastSharedDescription": "Ostatnio udostępnione {date}",
+	"@fileLastSharedDescription": {
+		"description": "The date when this file was last shared by you",
+		"placeholders": {
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"fileLastSharedByOthersDescription": "{user} udostępnił Tobie {date}",
+	"@fileLastSharedByOthersDescription": {
+		"description": "The date when this file was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"albumLastSharedByOthersDescription": "{user} udostępnił album {date}",
+	"@albumLastSharedByOthersDescription": {
+		"description": "The date when this album was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"sharedWithLabel": "Współdzielone z",
+	"@sharedWithLabel": {
+		"description": "A list of users or links where this file is sharing with"
+	},
+	"unshareTooltip": "Zakończ udostępnianie",
+	"@unshareTooltip": {
+		"description": "Remove a share"
+	},
+	"unshareSuccessNotification": "Udostępnianie zakończone",
+	"@unshareSuccessNotification": {
+		"description": "Removed a share"
+	},
+	"locationLabel": "Lokalizacja pliku",
+	"@locationLabel": {
+		"description": "Show where the file is located"
+	},
+	"multipleFilesLinkShareDialogContent": "Nextcloud nie obsługuje udostępniania linku dla wielu plików. Aplikacja zamiast tego skopiuje pliki do nowego folderu i udostępni ten folder.",
+	"@multipleFilesLinkShareDialogContent": {
+		"description": "Dialog shown when sharing multiple files as link"
+	},
+	"folderNameInputHint": "Nazwa folderu",
+	"@folderNameInputHint": {
+		"description": "Input field for folder name"
+	},
+	"folderNameInputInvalidEmpty": "Proszę podać nazwę folderu",
+	"@folderNameInputInvalidEmpty": {
+		"description": "Folder name cannot be left empty"
+	},
+	"folderNameInputInvalidCharacters": "Zawiera niedozwolone znaki",
+	"@folderNameInputInvalidCharacters": {
+		"description": "Folder name contains characters that are not allowed"
+	},
+	"createShareProgressText": "Tworzenie udziału",
+	"@createShareProgressText": {
+		"description": "Message shown when sharing files"
+	},
+	"copyItemsFailureNotification": "{count, plural, =1{Nie udało się skopiować jednego elementu} other{Nie udało się skopiować elementów w ilości: {count}}}",
+	"@copyItemsFailureNotification": {
+		"description": "Error message shown when some files cannot be copied",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unshareLinkShareDirDialogTitle": "Usunąć folder?",
+	"@unshareLinkShareDirDialogTitle":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"unshareLinkShareDirDialogContent": "Ten folder został utworzony przez aplikację do udostępniania wielu plików jako link. Teraz nie jest on już udostępniany, czy chcesz usunąć ten folder?",
+	"@unshareLinkShareDirDialogContent":  {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"addToCollectionTooltip": "Dodaj do kolekcji",
+	"@addToCollectionTooltip": {
+		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+	},
+	"addToCollectionProcessingNotification": "Dodawanie {album} do kolekcji",
+	"@addToCollectionProcessingNotification": {
+		"description": "Adding an album to your collection",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"addToCollectionSuccessNotification": "Pomyślnie dodano album {album} do kolekcji",
+	"@addToCollectionSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully",
+		"placeholders": {
+			"album": {
+				"example": "Sunday Walk"
+			}
+		}
+	},
+	"shareAlbumDialogTitle": "Udostępnij użytkownikowi",
+	"@shareAlbumDialogTitle" : {
+		"description": "Dialog to share an album with another user"
+	},
+	"shareAlbumSuccessNotification": "Album współdzielony z {user}",
+	"@shareAlbumSuccessNotification": {
+		"description": "Shared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"shareAlbumSuccessWithErrorNotification": "Album współdzielony z {user}, jednak nie udało się udostępnić niektórych plików",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessNotification": "Zakończono współdzielenie albumu z {user}",
+	"@unshareAlbumSuccessNotification": {
+		"description": "Unshared an album with another user successfully",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "Zakończono współdzielenie albumu z {user}, jednak nie udało się zakończyć udostępniania niektórych plików",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"fixSharesTooltip": "Napraw udziały",
+	"@fixSharesTooltip": {
+		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+	},
+	"fixTooltip": "Napraw",
+	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixButtonLabel": "NAPRAW",
+	"@fixButtonLabel":{
+		"description": "Fix an issue"
+	},
+	"fixAllTooltip": "Napraw wszystko",
+	"@fixAllTooltip": {
+		"description": "Fix all listed issues"
+	},
+	"missingShareDescription": "Nie współdzielone z {user}",
+	"@missingShareDescription": {
+		"description": "The album is shared with user but a file is NOT",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"extraShareDescription": "Współdzielone z {user}",
+	"@extraShareDescription": {
+		"description": "The album is NOT shared with user but a file is",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"defaultButtonLabel": "DOMYŚLNE",
+	"addUserInputHint": "Dodaj użytkownika",
+	"@addUserInputHint": {
+		"description": "Input a user name to share this album with"
+	},
+	"sharedAlbumInfoDialogTitle": "Prezentacja współdzielonego albumu",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"sharedAlbumInfoDialogContent": "Współdzielony album umożliwia wielu użytkownikom na tym samym serwerze dostęp do tego samego albumu. Proszę uważnie przeczytać ograniczenia przed kontynuowaniem.",
+	"@sharedAlbumInfoDialogContent": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"learnMoreButtonLabel": "DOWIEDZ SIĘ WIĘCEJ",
+	"migrateDatabaseProcessingNotification": "Aktualizacja bazy danych",
+	"@migrateDatabaseProcessingNotification": {
+		"description": "Migrate database to work with the updated app"
+	},
+	"migrateDatabaseFailureNotification": "Migracja bazy danych zakończona niepowodzeniem",
+	"memoryAlbumName": "{count, plural, =1{W zeszłym roku} =2{2 lata temu} =3{3 lata temu} =4{4 lata temu} =22{22 lata temu} =23{23 lata temu} =24{24 lata temu} other{{count} lat temu}",
+	"@memoryAlbumName": {
+		"description": "Memory albums are generated by the app and include photos in the past years",
+		"placeholders": {
+			"count": {
+				"example": "2"
+			}
+		}
+	},
+	"homeFolderNotFoundDialogTitle": "Nie odnaleziono folderu domowego",
+	"@homeFolderNotFoundDialogTitle": {
+		"description": "The app failed to scan the user's home folder on signing in"
+	},
+	"homeFolderNotFoundDialogContent": "Proszę podać prawidłowy adres URL WebDAV. Możesz go znaleźć w interfejsie webowym Nextcloud, dostępnym poprzez przeglądarkę.",
+	"@homeFolderNotFoundDialogContent": {
+		"description": "Ask the user to provide us the correct WebDAV URL"
+	},
+	"homeFolderInputInvalidEmpty": "Proszę podać nazwę folderu domowego",
+	"@homeFolderInputInvalidEmpty": {
+		"description": "Home folder can't be left empty"
+	},
+
+	"errorUnauthenticated": "Nieautoryzowany dostęp. Jeśli problem będzie się powstarzał zaloguj się ponownie",
+	"@errorUnauthenticated": {
+		"description": "Error message when server responds with HTTP401"
+	},
+	"errorDisconnected": "Nie można się połączyć. Serwer może być offline lub Twoje urządzenie może być odłączone.",
+	"@errorDisconnected": {
+		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "Plik jest zablokowany na serwerze. Proszę spróbować później",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "Nie można się połączyć. Upewnij się, że adres jest adresem URL Twojego serwera Nextcloud.",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "Nie można uwierzytelnić. Proszę sprawdzić nazwę użytkownika i hasło.",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "Błąd serwera. Proszę upewnić się, że serwer jest poprawnie skonfigurowany.",
+	"@errorServerError": {
+		"description": "HTTP 500"
+	},
+	"errorAlbumDowngrade": "Nie można zmodyfikować tego albumu, ponieważ został on utworzony przez inną wersję tej aplikacji. Proszę zaktualizować aplikację i spróbować ponownie.",
+	"@errorAlbumDowngrade": {
+		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	}
+}
