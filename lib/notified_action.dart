@@ -65,7 +65,8 @@ class NotifiedListAction<T> {
     this.onActionError,
   });
 
-  Future<void> call() async {
+  /// Perform the action and return the success count
+  Future<int> call() async {
     ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
     if (processingText != null) {
       controller = SnackBarManager().showSnackBar(SnackBar(
@@ -101,6 +102,7 @@ class NotifiedListAction<T> {
         ));
       }
     }
+    return list.length - failedItems.length;
   }
 
   final List<T> list;

@@ -8,29 +8,26 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
-import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
-import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/measure.dart';
@@ -466,25 +463,10 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-    await NotifiedListAction<File>(
-      list: selectedFiles,
-      action: (file) async {
-        await UpdateProperty(fileRepo)
-            .updateIsArchived(widget.account, file, true);
-      },
-      processingText: L10n.global()
-          .archiveSelectedProcessingNotification(selectedFiles.length),
-      successText: L10n.global().archiveSelectedSuccessNotification,
-      getFailureText: (failures) =>
-          L10n.global().archiveSelectedFailureNotification(failures.length),
-      onActionError: (file, e, stackTrace) {
-        _log.shout(
-            "[_onSelectionArchivePressed] Failed while archiving file: ${logFilename(file.path)}",
-            e,
-            stackTrace);
-      },
-    )();
+    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+      account: widget.account,
+      selectedFiles: selectedFiles,
+    );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {

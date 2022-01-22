@@ -30,6 +30,7 @@ import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -363,25 +364,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onArchivePressed(BuildContext context) async {
     _log.info("[_onArchivePressed] Archive file: ${widget.file.path}");
-    try {
-      await NotifiedAction(
-        () async {
-          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-          await UpdateProperty(fileRepo)
-              .updateIsArchived(widget.account, widget.file, true);
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        },
-        L10n.global().archiveSelectedProcessingNotification(1),
-        L10n.global().archiveSelectedSuccessNotification,
-        failureText: L10n.global().archiveSelectedFailureNotification(1),
-      )();
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_onArchivePressed] Failed while archiving file: ${logFilename(widget.file.path)}",
-          e,
-          stackTrace);
+    final count =
+        await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+      account: widget.account,
+      selectedFiles: [widget.file],
+    );
+    if (count == 1) {
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
