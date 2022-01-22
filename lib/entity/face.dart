@@ -3,7 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/person.dart';
 
 class Face with EquatableMixin {
-  Face({
+  const Face({
     required this.id,
     required this.fileId,
   });
