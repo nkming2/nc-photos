@@ -70,14 +70,14 @@ class DiContainer {
     OrNull<Pref>? pref,
   }) {
     return DiContainer(
-      albumRepo: albumRepo == null ? this.albumRepo : albumRepo.obj,
-      faceRepo: faceRepo == null ? this.faceRepo : faceRepo.obj,
-      fileRepo: fileRepo == null ? this.fileRepo : fileRepo.obj,
-      personRepo: personRepo == null ? this.personRepo : personRepo.obj,
-      shareRepo: shareRepo == null ? this.shareRepo : shareRepo.obj,
-      shareeRepo: shareeRepo == null ? this.shareeRepo : shareeRepo.obj,
-      appDb: appDb == null ? this.appDb : appDb.obj,
-      pref: pref == null ? this.pref : pref.obj,
+      albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
+      faceRepo: faceRepo == null ? _faceRepo : faceRepo.obj,
+      fileRepo: fileRepo == null ? _fileRepo : fileRepo.obj,
+      personRepo: personRepo == null ? _personRepo : personRepo.obj,
+      shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
+      shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
+      appDb: appDb == null ? _appDb : appDb.obj,
+      pref: pref == null ? _pref : pref.obj,
     );
   }
 
