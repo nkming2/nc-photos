@@ -266,7 +266,7 @@ class _PersonBrowserState extends State<PersonBrowser>
           },
         ),
         IconButton(
-          icon: const Icon(Icons.playlist_add),
+          icon: const Icon(Icons.add),
           tooltip: L10n.global().addToAlbumTooltip,
           onPressed: () {
             _onSelectionAddToAlbumPressed(context);

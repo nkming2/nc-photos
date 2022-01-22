@@ -146,7 +146,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     onPressed: () => _onSetAlbumCoverPressed(context),
                   ),
                 _DetailPaneButton(
-                  icon: Icons.playlist_add_outlined,
+                  icon: Icons.add,
                   label: L10n.global().addToAlbumTooltip,
                   onPressed: () => _onAddToAlbumPressed(context),
                 ),
