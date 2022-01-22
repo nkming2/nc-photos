@@ -6,6 +6,9 @@ Or the [ad-supported version](https://play.google.com/store/apps/details?id=com.
 
 *\*Read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/Help/Web-App) if you want to try the experimental web app*
 
+<script src="https://liberapay.com/nkming2/widgets/button.js"></script>
+<noscript><a href="https://liberapay.com/nkming2/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+
 Features:
 - Support JPEG, PNG, WebP, HEIC, GIF images
 - Support MP4, WebM videos (codec support may vary between devices/browsers)
