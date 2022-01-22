@@ -1,4 +1,5 @@
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -110,6 +111,18 @@ class _ImageViewerState extends State<ImageViewer>
           --_finger;
           if (_finger < 2) {
             _setIsZooming(false);
+          }
+        },
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent &&
+              event.kind == PointerDeviceKind.mouse) {
+            if (event.scrollDelta.dy < 0) {
+              // scroll up
+              _setIsZooming(true);
+            } else if (event.scrollDelta.dy > 0) {
+              // scroll down
+              _setIsZooming(false);
+            }
           }
         },
         child: GestureDetector(
