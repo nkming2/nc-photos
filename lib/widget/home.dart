@@ -167,7 +167,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   int _nextPage = 0;
 
   late final _animationController = AnimationController(
-    duration: k.animationDurationLong,
+    duration: k.animationDurationTabTransition,
     vsync: this,
   );
   late final _animation = CurvedAnimation(

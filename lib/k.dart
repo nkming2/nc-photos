@@ -17,6 +17,9 @@ const animationDurationNormal = Duration(milliseconds: 250);
 /// Duration for long animation
 const animationDurationLong = Duration(milliseconds: 500);
 
+/// Duration for tab transition animation
+const animationDurationTabTransition = Duration(milliseconds: 400);
+
 /// Size of the photo/video thumbnails
 ///
 /// It's advisable to use a single size to minimize cache size
