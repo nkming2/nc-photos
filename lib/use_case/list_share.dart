@@ -22,7 +22,7 @@ class ListShare {
   }) async {
     try {
       if (file_util.getUserDirName(file) != account.homeDir) {
-        file = await FindFile(_c)(account, file.fileId!);
+        file = (await FindFile(_c)(account, [file.fileId!])).first;
       }
     } catch (_) {
       // file not found

@@ -28,7 +28,7 @@ Future<void> _findFile() async {
     }),
   );
 
-  expect(await FindFile(c)(account, 1), files[1]);
+  expect(await FindFile(c)(account, [1]), [files[1]]);
 }
 
 /// Find a file not existing in app db
@@ -43,5 +43,5 @@ Future<void> _findMissingFile() async {
     }),
   );
 
-  expect(() => FindFile(c)(account, 1), throwsStateError);
+  expect(() => FindFile(c)(account, [1]), throwsStateError);
 }

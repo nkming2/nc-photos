@@ -346,7 +346,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       }
 
       try {
-        final file = await FindFile(_c)(ev.account, s.itemSource);
+        final file = (await FindFile(_c)(ev.account, [s.itemSource])).first;
         return ListSharingFile(s, file);
       } catch (e, stackTrace) {
         _log.severe("[_querySharesByMe] File not found: ${s.itemSource}", e,
