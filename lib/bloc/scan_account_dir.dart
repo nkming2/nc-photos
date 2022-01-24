@@ -331,16 +331,19 @@ class ScanAccountDirBloc
       _log.info(
           "[_queryOnline] Elapsed time (pass1): ${stopwatch.elapsedMilliseconds}ms");
     }
-    // if cache == null, we have already emitted the results in the loop
-    if (cache != null || files.isEmpty) {
-      // emit results from remote
-      yield ScanAccountDirBlocLoading(files);
-    }
 
     try {
       if (_shouldCheckCache) {
         // 2nd pass: check outdated cache
         _shouldCheckCache = false;
+
+        // announce the result of the 1st pass
+        // if cache == null, we have already emitted the results in the loop
+        if (cache != null || files.isEmpty) {
+          // emit results from remote
+          yield ScanAccountDirBlocLoading(files);
+        }
+
         files = await _queryOnlinePass2(ev, files);
       }
     } catch (e, stackTrace) {
