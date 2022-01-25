@@ -28,13 +28,14 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
   - Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/people)
 
 ## Translations (sorted by ISO name)
-- čeština (contributed by Skyhawk)
-- suomi (contributed by pHamala)
-- français (contributed by mgreil)
-- Deutsch (contributed by PhilProg)
-- ελληνικά (contributed by Chris Karasoulis)
-- русский (contributed by meixnt & eriane)
-- Español (contributed by luckkmaxx)
+- Czech/čeština (contributed by Skyhawk)
+- Finnish/suomi (contributed by pHamala)
+- French/français (contributed by mgreil)
+- German/Deutsch (contributed by PhilProg)
+- Greek/ελληνικά (contributed by Chris Karasoulis)
+- Polish/język polski (contributed by szymok)
+- Russian/русский (contributed by meixnt & eriane)
+- Spanish/Español (contributed by luckkmaxx)
 
 ## Contributions, troubleshootings and guides
 Please visit the [project wiki](https://gitlab.com/nkming2/nc-photos/-/wikis/home)
