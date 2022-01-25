@@ -1,4 +1,4 @@
-# Photos (for Nextcloud)
+# Photos
 Browse your photos on Nextcloud servers
 
 <script src="https://liberapay.com/nkming2/widgets/button.js"></script>
