@@ -575,6 +575,7 @@ class FileRepo {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) =>
       dataSrc.updateProperty(
         account,
@@ -582,6 +583,7 @@ class FileRepo {
         metadata: metadata,
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
+        favorite: favorite,
       );
 
   /// See [FileDataSource.copy]
@@ -642,6 +644,7 @@ abstract class FileDataSource {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   });
 
   /// Copy [f] to [destination]

@@ -148,6 +148,7 @@ class FileWebdavDataSource implements FileDataSource {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) async {
     _log.info("[updateProperty] ${f.path}");
     if (metadata?.obj != null && metadata!.obj!.fileEtag != f.etag) {
@@ -161,6 +162,7 @@ class FileWebdavDataSource implements FileDataSource {
       if (overrideDateTime?.obj != null)
         "app:override-date-time":
             overrideDateTime!.obj!.toUtc().toIso8601String(),
+      if (favorite != null) "oc:favorite": favorite ? 1 : 0,
     };
     final removeProps = [
       if (OrNull.isSetNull(metadata)) "app:metadata",
@@ -171,6 +173,7 @@ class FileWebdavDataSource implements FileDataSource {
           path: f.path,
           namespaces: {
             "com.nkming.nc_photos": "app",
+            "http://owncloud.org/ns": "oc",
           },
           set: setProps.isNotEmpty ? setProps : null,
           remove: removeProps.isNotEmpty ? removeProps : null,
@@ -373,6 +376,7 @@ class FileAppDbDataSource implements FileDataSource {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) {
     _log.info("[updateProperty] ${f.path}");
     return appDb.use((db) async {
@@ -384,6 +388,7 @@ class FileAppDbDataSource implements FileDataSource {
         metadata: metadata,
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
+        isFavorite: favorite,
       );
       final fileStore = transaction.objectStore(AppDb.file2StoreName);
       await fileStore.put(AppDbFile2Entry.fromFile(account, newFile).toJson(),
@@ -501,6 +506,7 @@ class FileCachedDataSource implements FileDataSource {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) async {
     await _remoteSrc
         .updateProperty(
@@ -509,6 +515,7 @@ class FileCachedDataSource implements FileDataSource {
           metadata: metadata,
           isArchived: isArchived,
           overrideDateTime: overrideDateTime,
+          favorite: favorite,
         )
         .then((_) => _appDbSrc.updateProperty(
               account,
@@ -516,6 +523,7 @@ class FileCachedDataSource implements FileDataSource {
               metadata: metadata,
               isArchived: isArchived,
               overrideDateTime: overrideDateTime,
+              favorite: favorite,
             ));
 
     // generate a new random token

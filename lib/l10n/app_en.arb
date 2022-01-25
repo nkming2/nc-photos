@@ -1127,6 +1127,30 @@
 	"@collectionFavoritesLabel": {
 		"description": "Browse photos added to favorites"
 	},
+	"favoriteTooltip": "Favorite",
+	"@favoriteTooltip": {
+		"description": "Add photo to favorites"
+	},
+	"favoriteSuccessNotification": "Added to favorites",
+	"@favoriteSuccessNotification": {
+		"description": "Successfully added photos to favorites"
+	},
+	"favoriteFailureNotification": "Failed adding to favorites",
+	"@favoriteFailureNotification": {
+		"description": "Failed adding photos to favorites"
+	},
+	"unfavoriteTooltip": "Unfavorite",
+	"@unfavoriteTooltip": {
+		"description": "Remove photo to favorites"
+	},
+	"unfavoriteSuccessNotification": "Removed from favorites",
+	"@unfavoriteSuccessNotification": {
+		"description": "Successfully removed photos from favorites"
+	},
+	"unfavoriteFailureNotification": "Failed removing from favorites",
+	"@unfavoriteFailureNotification": {
+		"description": "Failed removing photos from favorites"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
