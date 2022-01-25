@@ -7,8 +7,12 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
 
-class WebdavFileParser {
-  List<File> call(XmlDocument xml) {
+class WebdavResponseParser {
+  List<File> parseFiles(XmlDocument xml) => _parse<File>(xml, _toFile);
+
+  Map<String, String> get namespaces => _namespaces;
+
+  List<T> _parse<T>(XmlDocument xml, T Function(XmlElement) mapper) {
     _namespaces = _parseNamespaces(xml);
     final body = () {
       try {
@@ -16,27 +20,25 @@ class WebdavFileParser {
             element.matchQualifiedName("multistatus",
                 prefix: "DAV:", namespaces: _namespaces));
       } catch (_) {
-        _log.shout("[call] Missing element: multistatus");
+        _log.shout("[_parse] Missing element: multistatus");
         rethrow;
       }
     }();
     return body.children
         .whereType<XmlElement>()
-        .where((element) => element.matchQualifiedName("response",
+        .where((e) => e.matchQualifiedName("response",
             prefix: "DAV:", namespaces: _namespaces))
-        .map((element) {
+        .map((e) {
           try {
-            return _toFile(element);
-          } catch (e, stacktrace) {
-            _log.shout("[call] Failed parsing XML", e, stacktrace);
+            return mapper(e);
+          } catch (e, stackTrace) {
+            _log.shout("[_parse] Failed parsing XML", e, stackTrace);
             return null;
           }
         })
-        .whereType<File>()
+        .whereType<T>()
         .toList();
   }
-
-  Map<String, String> get namespaces => _namespaces;
 
   Map<String, String> _parseNamespaces(XmlDocument xml) {
     final namespaces = <String, String>{};
@@ -91,7 +93,7 @@ class WebdavFileParser {
             (element) => element.matchQualifiedName("prop",
                 prefix: "DAV:", namespaces: _namespaces));
         final propParser =
-            _PropParser(namespaces: _namespaces, logFilePath: path);
+            _FilePropParser(namespaces: _namespaces, logFilePath: path);
         propParser.parse(prop);
         contentLength = propParser.contentLength;
         contentType = propParser.contentType;
@@ -149,8 +151,8 @@ class WebdavFileParser {
       Logger("entity.webdav_response_parser.WebdavResponseParser");
 }
 
-class _PropParser {
-  _PropParser({
+class _FilePropParser {
+  _FilePropParser({
     this.namespaces = const {},
     this.logFilePath,
   });

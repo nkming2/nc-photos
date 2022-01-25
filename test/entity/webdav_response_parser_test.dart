@@ -5,8 +5,21 @@ import 'package:xml/xml.dart';
 
 void main() {
   group("WebdavFileParser", () {
-    test("file", () {
-      final xml = XmlDocument.parse("""
+    group("parseFiles", () {
+      test("file", _files);
+      test("file w/ 404 properties", _files404props);
+      test("file w/ metadata", _filesMetadata);
+      test("file w/ is-archived", _filesIsArchived);
+      test("file w/ override-date-time", _filesOverrideDateTime);
+      test("multiple files", _filesMultiple);
+      test("directory", _filesDir);
+      test("nextcloud hosted in subdir", _filesServerHostedInSubdir);
+    });
+  });
+}
+
+void _files() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -29,23 +42,23 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
-          contentLength: 3963036,
-          contentType: "video/mp4",
-          etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: false,
-          fileId: 123,
-          isCollection: false,
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      contentLength: 3963036,
+      contentType: "video/mp4",
+      etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: false,
+      fileId: 123,
+      isCollection: false,
+    ),
+  ]);
+}
 
-    test("file w/ 404 properties", () {
-      final xml = XmlDocument.parse("""
+void _files404props() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -75,23 +88,23 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
-          contentLength: 3963036,
-          contentType: "video/mp4",
-          etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: false,
-          fileId: 123,
-          isCollection: false,
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      contentLength: 3963036,
+      contentType: "video/mp4",
+      etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: false,
+      fileId: 123,
+      isCollection: false,
+    ),
+  ]);
+}
 
-    test("file w/ metadata", () {
-      final xml = XmlDocument.parse("""
+void _filesMetadata() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -115,29 +128,29 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
-          contentLength: 797325,
-          contentType: "image/jpeg",
-          etag: "8950e39a034e369237d9285e2d815a50",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: true,
-          fileId: 123,
-          isCollection: false,
-          metadata: Metadata(
-            lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
-            fileEtag: "8950e39a034e369237d9285e2d815a50",
-            imageWidth: 3000,
-            imageHeight: 2000,
-          ),
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      contentLength: 797325,
+      contentType: "image/jpeg",
+      etag: "8950e39a034e369237d9285e2d815a50",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: true,
+      fileId: 123,
+      isCollection: false,
+      metadata: Metadata(
+        lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
+        fileEtag: "8950e39a034e369237d9285e2d815a50",
+        imageWidth: 3000,
+        imageHeight: 2000,
+      ),
+    ),
+  ]);
+}
 
-    test("file w/ is-archived", () {
-      final xml = XmlDocument.parse("""
+void _filesIsArchived() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -160,23 +173,23 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
-          contentLength: 797325,
-          contentType: "image/jpeg",
-          etag: "8950e39a034e369237d9285e2d815a50",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: true,
-          isCollection: false,
-          isArchived: true,
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      contentLength: 797325,
+      contentType: "image/jpeg",
+      etag: "8950e39a034e369237d9285e2d815a50",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: true,
+      isCollection: false,
+      isArchived: true,
+    ),
+  ]);
+}
 
-    test("file w/ override-date-time", () {
-      final xml = XmlDocument.parse("""
+void _filesOverrideDateTime() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -199,23 +212,23 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
-          contentLength: 797325,
-          contentType: "image/jpeg",
-          etag: "8950e39a034e369237d9285e2d815a50",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: true,
-          isCollection: false,
-          overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      contentLength: 797325,
+      contentType: "image/jpeg",
+      etag: "8950e39a034e369237d9285e2d815a50",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: true,
+      isCollection: false,
+      overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+    ),
+  ]);
+}
 
-    test("multiple files", () {
-      final xml = XmlDocument.parse("""
+void _filesMultiple() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -254,39 +267,39 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
-          contentLength: 3963036,
-          contentType: "video/mp4",
-          etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: false,
-          fileId: 123,
-          isCollection: false,
-        ),
-        File(
-          path: "remote.php/dav/files/admin/Nextcloud.png",
-          contentLength: 50598,
-          contentType: "image/png",
-          etag: "48689d5b17c449d9db492ffe8f7ab8a6",
-          lastModified: DateTime.utc(2021, 1, 2, 3, 4, 5),
-          hasPreview: true,
-          fileId: 124,
-          isCollection: false,
-          metadata: Metadata(
-            fileEtag: "48689d5b17c449d9db492ffe8f7ab8a6",
-            imageWidth: 500,
-            imageHeight: 500,
-            lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
-          ),
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      contentLength: 3963036,
+      contentType: "video/mp4",
+      etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: false,
+      fileId: 123,
+      isCollection: false,
+    ),
+    File(
+      path: "remote.php/dav/files/admin/Nextcloud.png",
+      contentLength: 50598,
+      contentType: "image/png",
+      etag: "48689d5b17c449d9db492ffe8f7ab8a6",
+      lastModified: DateTime.utc(2021, 1, 2, 3, 4, 5),
+      hasPreview: true,
+      fileId: 124,
+      isCollection: false,
+      metadata: Metadata(
+        fileEtag: "48689d5b17c449d9db492ffe8f7ab8a6",
+        imageWidth: 500,
+        imageHeight: 500,
+        lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
+      ),
+    ),
+  ]);
+}
 
-    test("directory", () {
-      final xml = XmlDocument.parse("""
+void _filesDir() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -317,21 +330,21 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Photos",
-          etag: "123456789abcd",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          isCollection: true,
-          hasPreview: false,
-          fileId: 123,
-        ),
-      ]);
-    });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Photos",
+      etag: "123456789abcd",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      isCollection: true,
+      hasPreview: false,
+      fileId: 123,
+    ),
+  ]);
+}
 
-    test("nextcloud hosed in subdir", () {
-      final xml = XmlDocument.parse("""
+void _filesServerHostedInSubdir() {
+  final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -354,19 +367,17 @@ void main() {
 	</d:response>
 </d:multistatus>
 """);
-      final results = WebdavFileParser()(xml);
-      expect(results, [
-        File(
-          path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
-          contentLength: 3963036,
-          contentType: "video/mp4",
-          etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
-          lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
-          hasPreview: false,
-          fileId: 123,
-          isCollection: false,
-        ),
-      ]);
-    });
-  });
+  final results = WebdavResponseParser().parseFiles(xml);
+  expect(results, [
+    File(
+      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      contentLength: 3963036,
+      contentType: "video/mp4",
+      etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: false,
+      fileId: 123,
+      isCollection: false,
+    ),
+  ]);
 }

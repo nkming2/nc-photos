@@ -62,7 +62,7 @@ class FileWebdavDataSource implements FileDataSource {
     }
 
     final xml = XmlDocument.parse(response.body);
-    var files = WebdavFileParser()(xml);
+    var files = WebdavResponseParser().parseFiles(xml);
     // _log.fine("[list] Parsed files: [$files]");
     files = files.where((element) => _validateFile(element)).map((e) {
       if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
