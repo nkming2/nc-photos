@@ -71,6 +71,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -160,6 +161,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -304,6 +306,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -331,6 +334,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -342,7 +346,8 @@
     "createCollectionDialogFolderDescription",
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification"
+    "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel"
   ],
 
   "fr": [
@@ -466,6 +471,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -477,7 +483,8 @@
     "createCollectionDialogFolderDescription",
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification"
+    "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel"
   ],
 
   "ru": [
@@ -574,6 +581,7 @@
     "convertAlbumTooltip",
     "convertAlbumConfirmationDialogContent",
     "convertAlbumSuccessNotification",
+    "collectionFavoritesLabel",
     "errorAlbumDowngrade"
   ]
 }

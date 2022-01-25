@@ -1123,6 +1123,10 @@
 	"@convertAlbumSuccessNotification": {
 		"description": "Successfully converted the album"
 	},
+	"collectionFavoritesLabel": "Favorites",
+	"@collectionFavoritesLabel": {
+		"description": "Browse photos added to favorites"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

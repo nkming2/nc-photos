@@ -13,6 +13,8 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/face/data_source.dart';
+import 'package:nc_photos/entity/favorite.dart';
+import 'package:nc_photos/entity/favorite/data_source.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/person.dart';
@@ -154,6 +156,7 @@ void _initDiContainer() {
     personRepo: const PersonRepo(PersonRemoteDataSource()),
     shareRepo: ShareRepo(ShareRemoteDataSource()),
     shareeRepo: ShareeRepo(ShareeRemoteDataSource()),
+    favoriteRepo: const FavoriteRepo(FavoriteRemoteDataSource()),
     appDb: AppDb(),
     pref: Pref(),
   ));

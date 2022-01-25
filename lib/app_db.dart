@@ -18,7 +18,7 @@ import 'package:synchronized/synchronized.dart';
 
 class AppDb {
   static const dbName = "app.db";
-  static const dbVersion = 5;
+  static const dbVersion = 6;
   static const albumStoreName = "albums";
   static const file2StoreName = "files2";
   static const dirStoreName = "dirs";
@@ -193,6 +193,10 @@ class AppDb {
       metaStore =
           db.createObjectStore(metaStoreName, keyPath: AppDbMetaEntry.keyPath);
     }
+    if (event.oldVersion < 6) {
+      file2Store.createIndex(AppDbFile2Entry.fileIsFavoriteIndexName,
+          AppDbFile2Entry.fileIsFavoriteKeyPath);
+    }
   }
 
   Future<void> _onPostUpgrade(
@@ -264,6 +268,9 @@ class AppDbFile2Entry with EquatableMixin {
   static const dateTimeEpochMsIndexName = "server_userId_dateTimeEpochMs";
   static const dateTimeEpochMsKeyPath = ["server", "userId", "dateTimeEpochMs"];
 
+  static const fileIsFavoriteIndexName = "server_userId_fileIsFavorite";
+  static const fileIsFavoriteKeyPath = ["server", "userId", "file.isFavorite"];
+
   AppDbFile2Entry(this.server, this.userId, this.strippedPath,
       this.dateTimeEpochMs, this.file);
 
@@ -330,6 +337,14 @@ class AppDbFile2Entry with EquatableMixin {
         account.url,
         account.username.toCaseInsensitiveString(),
         epochMs,
+      ];
+
+  static List<Object> toFileIsFavoriteIndexKey(
+          Account account, bool isFavorite) =>
+      [
+        account.url,
+        account.username.toCaseInsensitiveString(),
+        isFavorite ? 1 : 0,
       ];
 
   @override

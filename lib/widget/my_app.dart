@@ -15,6 +15,7 @@ import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
+import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
@@ -155,6 +156,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     route ??= _handleShareFolderPickerRoute(settings);
     route ??= _handleAlbumPickerRoute(settings);
     route ??= _handleSmartAlbumBrowserRoute(settings);
+    route ??= _handleFavoriteBrowserRoute(settings);
     return route;
   }
 
@@ -467,6 +469,20 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
     } catch (e) {
       _log.severe(
           "[_handleSmartAlbumBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleFavoriteBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == FavoriteBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as FavoriteBrowserArguments;
+        return FavoriteBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleFavoriteBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

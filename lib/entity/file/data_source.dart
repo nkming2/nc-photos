@@ -42,6 +42,7 @@ class FileWebdavDataSource implements FileDataSource {
       getcontentlength: 1,
       hasPreview: 1,
       fileid: 1,
+      favorite: 1,
       ownerId: 1,
       trashbinFilename: 1,
       trashbinOriginalLocation: 1,

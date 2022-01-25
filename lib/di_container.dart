@@ -1,6 +1,7 @@
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/face.dart';
+import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -15,6 +16,7 @@ enum DiType {
   personRepo,
   shareRepo,
   shareeRepo,
+  favoriteRepo,
   appDb,
   pref,
 }
@@ -27,6 +29,7 @@ class DiContainer {
     PersonRepo? personRepo,
     ShareRepo? shareRepo,
     ShareeRepo? shareeRepo,
+    FavoriteRepo? favoriteRepo,
     AppDb? appDb,
     Pref? pref,
   })  : _albumRepo = albumRepo,
@@ -35,6 +38,7 @@ class DiContainer {
         _personRepo = personRepo,
         _shareRepo = shareRepo,
         _shareeRepo = shareeRepo,
+        _favoriteRepo = favoriteRepo,
         _appDb = appDb,
         _pref = pref;
 
@@ -52,6 +56,8 @@ class DiContainer {
         return contianer._shareRepo != null;
       case DiType.shareeRepo:
         return contianer._shareeRepo != null;
+      case DiType.favoriteRepo:
+        return contianer._favoriteRepo != null;
       case DiType.appDb:
         return contianer._appDb != null;
       case DiType.pref:
@@ -66,6 +72,7 @@ class DiContainer {
     OrNull<PersonRepo>? personRepo,
     OrNull<ShareRepo>? shareRepo,
     OrNull<ShareeRepo>? shareeRepo,
+    OrNull<FavoriteRepo>? favoriteRepo,
     OrNull<AppDb>? appDb,
     OrNull<Pref>? pref,
   }) {
@@ -76,6 +83,7 @@ class DiContainer {
       personRepo: personRepo == null ? _personRepo : personRepo.obj,
       shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
       shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
+      favoriteRepo: favoriteRepo == null ? _favoriteRepo : favoriteRepo.obj,
       appDb: appDb == null ? _appDb : appDb.obj,
       pref: pref == null ? _pref : pref.obj,
     );
@@ -87,6 +95,7 @@ class DiContainer {
   PersonRepo get personRepo => _personRepo!;
   ShareRepo get shareRepo => _shareRepo!;
   ShareeRepo get shareeRepo => _shareeRepo!;
+  FavoriteRepo get favoriteRepo => _favoriteRepo!;
 
   AppDb get appDb => _appDb!;
   Pref get pref => _pref!;
@@ -97,6 +106,7 @@ class DiContainer {
   final PersonRepo? _personRepo;
   final ShareRepo? _shareRepo;
   final ShareeRepo? _shareeRepo;
+  final FavoriteRepo? _favoriteRepo;
 
   final AppDb? _appDb;
   final Pref? _pref;
