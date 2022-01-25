@@ -37,5 +37,5 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
 - Russian/русский (contributed by meixnt & eriane)
 - Spanish/Español (contributed by luckkmaxx)
 
-## Contributions, troubleshootings and guides
+## Contributions, troubleshooting and guides
 Please visit the [project wiki](https://gitlab.com/nkming2/nc-photos/-/wikis/home)
