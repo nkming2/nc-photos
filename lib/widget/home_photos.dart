@@ -760,6 +760,7 @@ class _ImageListItem extends _FileListItem {
       account: account,
       previewUrl: previewUrl,
       isGif: file.contentType == "image/gif",
+      isFavorite: file.isFavorite == true,
     );
   }
 
@@ -780,6 +781,7 @@ class _VideoListItem extends _FileListItem {
     return PhotoListVideo(
       account: account,
       previewUrl: previewUrl,
+      isFavorite: file.isFavorite == true,
     );
   }
 
