@@ -18,6 +18,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/home.dart';
+import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -212,8 +213,7 @@ class _SettingsState extends State<Settings> {
     return ListTile(
       leading: leading == null
           ? null
-          : SizedBox(
-              height: double.infinity,
+          : ListTileCenterLeading(
               child: leading,
             ),
       title: Text(label),

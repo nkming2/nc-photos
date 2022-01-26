@@ -21,6 +21,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
+import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:path/path.dart' as path;
 
 class SharedFileViewerArguments {
@@ -158,8 +159,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
     return ListTile(
       title: Text(_getShareTitle(share)),
       subtitle: Text(dateStr),
-      leading: SizedBox(
-        height: double.infinity,
+      leading: ListTileCenterLeading(
         child: Icon(_getShareIcon(share)),
       ),
       trailing: Row(

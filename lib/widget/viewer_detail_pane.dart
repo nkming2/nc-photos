@@ -31,6 +31,7 @@ import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
+import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart';
 import 'package:tuple/tuple.dart';
@@ -175,8 +176,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             child: Divider(),
           ),
           ListTile(
-            leading: SizedBox(
-              height: double.infinity,
+            leading: ListTileCenterLeading(
               child: Icon(
                 Icons.image_outlined,
                 color: AppTheme.getSecondaryTextColor(context),
@@ -187,8 +187,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           ),
           if (!widget.file.isOwned(widget.account.username))
             ListTile(
-              leading: SizedBox(
-                height: double.infinity,
+              leading: ListTileCenterLeading(
                 child: Icon(
                   Icons.share_outlined,
                   color: AppTheme.getSecondaryTextColor(context),
@@ -212,8 +211,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (widget.file.metadata?.imageWidth != null &&
               widget.file.metadata?.imageHeight != null)
             ListTile(
-              leading: SizedBox(
-                height: double.infinity,
+              leading: ListTileCenterLeading(
                 child: Icon(
                   Icons.aspect_ratio,
                   color: AppTheme.getSecondaryTextColor(context),
@@ -225,19 +223,15 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             )
           else
             ListTile(
-              leading: SizedBox(
-                height: double.infinity,
-                child: Icon(
-                  Icons.aspect_ratio,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
+              leading: Icon(
+                Icons.aspect_ratio,
+                color: AppTheme.getSecondaryTextColor(context),
               ),
               title: Text(_byteSizeToString(widget.file.contentLength ?? 0)),
             ),
           if (_model != null)
             ListTile(
-              leading: SizedBox(
-                height: double.infinity,
+              leading: ListTileCenterLeading(
                 child: Icon(
                   Icons.camera_outlined,
                   color: AppTheme.getSecondaryTextColor(context),
