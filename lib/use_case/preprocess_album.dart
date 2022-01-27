@@ -10,7 +10,7 @@ import 'package:nc_photos/use_case/resync_album.dart';
 ///
 /// Internally, it'll dispatch the work depending on the album:
 /// - with AlbumStaticProvider: [ResyncAlbum]
-/// - with AlbumDirProvider: [PopulateAlbum]
+/// - with AlbumDynamicProvider/AlbumSmartProvider: [PopulateAlbum]
 class PreProcessAlbum {
   const PreProcessAlbum(this.appDb);
 
