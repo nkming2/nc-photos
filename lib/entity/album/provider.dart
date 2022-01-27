@@ -228,7 +228,7 @@ abstract class AlbumSmartProvider extends AlbumProviderBase {
   }) : super(latestItemTime: latestItemTime);
 
   @override
-  AlbumDirProvider copyWith({
+  AlbumSmartProvider copyWith({
     OrNull<DateTime>? latestItemTime,
   }) {
     // Smart albums do not support copying
