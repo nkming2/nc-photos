@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -638,18 +639,16 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Primitive<bool> get _hasFiredMetadataTask {
-    final blocId =
-        "${widget.account.scheme}://${widget.account.username}@${widget.account.address}";
+    final name = bloc_util.getInstNameForRootAwareAccount(
+        "HomePhotosState.hasFiredMetadataTask", widget.account);
     try {
-      _log.fine("[_hasFiredMetadataTask] Resolving bloc for '$blocId'");
-      return KiwiContainer().resolve<Primitive<bool>>(
-          "HomePhotosState.hasFiredMetadataTask($blocId)");
+      _log.fine("[_hasFiredMetadataTask] Resolving for '$name'");
+      return KiwiContainer().resolve<Primitive<bool>>(name);
     } catch (_) {
       _log.info(
-          "[_hasFiredMetadataTask] New bloc instance for account: ${widget.account}");
+          "[_hasFiredMetadataTask] New instance for account: ${widget.account}");
       final obj = Primitive(false);
-      KiwiContainer().registerInstance<Primitive<bool>>(obj,
-          name: "HomePhotosState.hasFiredMetadataTask($blocId)");
+      KiwiContainer().registerInstance<Primitive<bool>>(obj, name: name);
       return obj;
     }
   }

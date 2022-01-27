@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
 
@@ -72,16 +73,15 @@ class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
   ListShareeBloc() : super(ListShareeBlocInit());
 
   static ListShareeBloc of(Account account) {
-    final id = "${account.scheme}://${account.username}@${account.address}";
+    final name = bloc_util.getInstNameForAccount("ListShareeBloc", account);
     try {
-      _log.fine("[of] Resolving bloc for '$id'");
-      return KiwiContainer().resolve<ListShareeBloc>("ListShareeBloc($id)");
+      _log.fine("[of] Resolving bloc for '$name'");
+      return KiwiContainer().resolve<ListShareeBloc>(name);
     } catch (_) {
       // no created instance for this account, make a new one
       _log.info("[of] New bloc instance for account: $account");
       final bloc = ListShareeBloc();
-      KiwiContainer()
-          .registerInstance<ListShareeBloc>(bloc, name: "ListShareeBloc($id)");
+      KiwiContainer().registerInstance<ListShareeBloc>(bloc, name: name);
       return bloc;
     }
   }

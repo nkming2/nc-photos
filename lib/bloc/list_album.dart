@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -141,10 +142,10 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   static bool require(DiContainer c) => true;
 
   static ListAlbumBloc of(Account account) {
-    final id = "${account.scheme}://${account.username}@${account.address}";
+    final name = bloc_util.getInstNameForAccount("ListAlbumBloc", account);
     try {
-      _log.fine("[of] Resolving bloc for '$id'");
-      return KiwiContainer().resolve<ListAlbumBloc>("ListAlbumBloc($id)");
+      _log.fine("[of] Resolving bloc for '$name'");
+      return KiwiContainer().resolve<ListAlbumBloc>(name);
     } catch (_) {
       // no created instance for this account, make a new one
       _log.info("[of] New bloc instance for account: $account");
@@ -154,8 +155,7 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
         albumRepo: OrNull(AlbumRepo(AlbumAppDbDataSource(c.appDb))),
       );
       final bloc = ListAlbumBloc(c, offlineC);
-      KiwiContainer()
-          .registerInstance<ListAlbumBloc>(bloc, name: "ListAlbumBloc($id)");
+      KiwiContainer().registerInstance<ListAlbumBloc>(bloc, name: name);
       return bloc;
     }
   }

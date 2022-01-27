@@ -5,6 +5,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -113,18 +114,16 @@ class ScanAccountDirBloc
   }
 
   static ScanAccountDirBloc of(Account account) {
-    final id =
-        "${account.scheme}://${account.username}@${account.address}?${account.roots.join('&')}";
+    final name =
+        bloc_util.getInstNameForRootAwareAccount("ScanAccountDirBloc", account);
     try {
-      _log.fine("[of] Resolving bloc for '$id'");
-      return KiwiContainer()
-          .resolve<ScanAccountDirBloc>("ScanAccountDirBloc($id)");
+      _log.fine("[of] Resolving bloc for '$name'");
+      return KiwiContainer().resolve<ScanAccountDirBloc>(name);
     } catch (_) {
       // no created instance for this account, make a new one
       _log.info("[of] New bloc instance for account: $account");
       final bloc = ScanAccountDirBloc._(account);
-      KiwiContainer().registerInstance<ScanAccountDirBloc>(bloc,
-          name: "ScanAccountDirBloc($id)");
+      KiwiContainer().registerInstance<ScanAccountDirBloc>(bloc, name: name);
       return bloc;
     }
   }

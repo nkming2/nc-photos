@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -108,16 +109,15 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
   }
 
   static LsTrashbinBloc of(Account account) {
-    final id = "${account.scheme}://${account.username}@${account.address}";
+    final name = bloc_util.getInstNameForAccount("LsTrashbinBloc", account);
     try {
-      _log.fine("[of] Resolving bloc for '$id'");
-      return KiwiContainer().resolve<LsTrashbinBloc>("LsTrashbinBloc($id)");
+      _log.fine("[of] Resolving bloc for '$name'");
+      return KiwiContainer().resolve<LsTrashbinBloc>(name);
     } catch (_) {
       // no created instance for this account, make a new one
       _log.info("[of] New bloc instance for account: $account");
       final bloc = LsTrashbinBloc();
-      KiwiContainer()
-          .registerInstance<LsTrashbinBloc>(bloc, name: "LsTrashbinBloc($id)");
+      KiwiContainer().registerInstance<LsTrashbinBloc>(bloc, name: name);
       return bloc;
     }
   }
