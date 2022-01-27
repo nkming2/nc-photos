@@ -63,6 +63,14 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -144,6 +152,14 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -280,6 +296,14 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -299,7 +323,26 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
+  ],
+
+  "fi": [
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification"
   ],
 
   "fr": [
@@ -415,7 +458,26 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
+  ],
+
+  "pl": [
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification"
   ],
 
   "ru": [
@@ -504,6 +566,14 @@
     "homeFolderNotFoundDialogTitle",
     "homeFolderNotFoundDialogContent",
     "homeFolderInputInvalidEmpty",
+    "createCollectionTooltip",
+    "createCollectionDialogAlbumLabel",
+    "createCollectionDialogAlbumDescription",
+    "createCollectionDialogFolderLabel",
+    "createCollectionDialogFolderDescription",
+    "convertAlbumTooltip",
+    "convertAlbumConfirmationDialogContent",
+    "convertAlbumSuccessNotification",
     "errorAlbumDowngrade"
   ]
 }

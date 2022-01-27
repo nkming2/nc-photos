@@ -250,7 +250,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildNewAlbumItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.add,
-      label: L10n.global().createAlbumTooltip,
+      label: L10n.global().createCollectionTooltip,
       onTap: () {
         if (!isSelectionMode) {
           _onNewAlbumItemTap(context);

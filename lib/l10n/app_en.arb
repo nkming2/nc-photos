@@ -554,38 +554,6 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Simple",
-	"@createAlbumDialogBasicLabel": {
-		"description": "Simple album"
-	},
-	"createAlbumDialogBasicDescription": "Simple album organizes photos regardless of the file hierarchy on the server",
-	"@createAlbumDialogBasicDescription": {
-		"description": "Describe what a simple album is"
-	},
-	"createAlbumDialogFolderBasedLabel": "Folder",
-	"@createAlbumDialogFolderBasedLabel": {
-		"description": "Folder based album"
-	},
-	"createAlbumDialogFolderBasedDescription": "Folder based album reflects contents of a folder",
-	"@createAlbumDialogFolderBasedDescription": {
-		"description": "Describe what a folder based album is"
-	},
-	"convertBasicAlbumMenuLabel": "Convert to simple album",
-	"@convertBasicAlbumMenuLabel": {
-		"description": "Convert a non-simple album to a simple one"
-	},
-	"convertBasicAlbumConfirmationDialogTitle": "Convert to simple album",
-	"@convertBasicAlbumConfirmationDialogTitle": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumConfirmationDialogContent": "The contents of this album will no longer be managed by the app. You will be able to freely add or remove photos.\n\nThis conversion is nonreversible",
-	"@convertBasicAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumSuccessNotification": "Album converted successfully",
-	"@convertBasicAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"importFoldersTooltip": "Import folders",
 	"@importFoldersTooltip": {
 		"description": "Menu entry in the album page to import folders as albums"
@@ -1122,6 +1090,38 @@
 	"homeFolderInputInvalidEmpty": "Please enter the name of your home folder",
 	"@homeFolderInputInvalidEmpty": {
 		"description": "Home folder can't be left empty"
+	},
+	"createCollectionTooltip": "New collection",
+	"@createCollectionTooltip": {
+		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+	},
+	"createCollectionDialogAlbumLabel": "Album",
+	"@createCollectionDialogAlbumLabel": {
+		"description": "Create an album as collection"
+	},
+	"createCollectionDialogAlbumDescription": "Show photos added by you from anywhere on the server",
+	"@createCollectionDialogAlbumDescription": {
+		"description": "Describe how an album collection works"
+	},
+	"createCollectionDialogFolderLabel": "Folder",
+	"@createCollectionDialogFolderLabel": {
+		"description": "Create a folder as collection"
+	},
+	"createCollectionDialogFolderDescription": "Show photos inside a folder",
+	"@createCollectionDialogFolderDescription": {
+		"description": "Describe how a folder collection works"
+	},
+	"convertAlbumTooltip": "Convert to album",
+	"@convertAlbumTooltip": {
+		"description": "Convert a non-album collection to an album"
+	},
+	"convertAlbumConfirmationDialogContent": "This conversion is nonreversible",
+	"@convertAlbumConfirmationDialogContent": {
+		"description": "Make sure the user wants to perform the conversion"
+	},
+	"convertAlbumSuccessNotification": "Converted collection to album successfully",
+	"@convertAlbumSuccessNotification": {
+		"description": "Successfully converted the album"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

@@ -43,7 +43,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
     return Visibility(
       visible: _isVisible,
       child: AlertDialog(
-        title: Text(L10n.global().createAlbumTooltip),
+        title: Text(L10n.global().createCollectionTooltip),
         content: Form(
           key: _formKey,
           child: Container(
@@ -200,11 +200,9 @@ extension on _Provider {
   String toValueString(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return L10n.global().createAlbumDialogBasicLabel;
-
+        return L10n.global().createCollectionDialogAlbumLabel;
       case _Provider.dir:
-        return L10n.global().createAlbumDialogFolderBasedLabel;
-
+        return L10n.global().createCollectionDialogFolderLabel;
       default:
         throw StateError("Unknown value: $this");
     }
@@ -213,11 +211,9 @@ extension on _Provider {
   String toDescription(BuildContext context) {
     switch (this) {
       case _Provider.static:
-        return L10n.global().createAlbumDialogBasicDescription;
-
+        return L10n.global().createCollectionDialogAlbumDescription;
       case _Provider.dir:
-        return L10n.global().createAlbumDialogFolderBasedDescription;
-
+        return L10n.global().createCollectionDialogFolderDescription;
       default:
         throw StateError("Unknown value: $this");
     }

@@ -230,7 +230,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     if (canEdit) {
       menuItems.add(PopupMenuItem(
         value: _menuValueConvertBasic,
-        child: Text(L10n.global().convertBasicAlbumMenuLabel),
+        child: Text(L10n.global().convertAlbumTooltip),
       ));
     }
 
@@ -310,8 +310,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(L10n.global().convertBasicAlbumConfirmationDialogTitle),
-        content: Text(L10n.global().convertBasicAlbumConfirmationDialogContent),
+        title: Text(L10n.global().convertAlbumTooltip),
+        content: Text(L10n.global().convertAlbumConfirmationDialogContent),
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -345,7 +345,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
             coverProvider: AlbumAutoCoverProvider(),
           ));
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().convertBasicAlbumSuccessNotification),
+        content: Text(L10n.global().convertAlbumSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
       if (mounted) {
