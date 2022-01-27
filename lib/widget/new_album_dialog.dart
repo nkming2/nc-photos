@@ -70,7 +70,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
                   DropdownButtonHideUnderline(
                     child: DropdownButtonFormField<_Provider>(
                       value: _provider,
-                      items: [_Provider.static, _Provider.dir]
+                      items: _Provider.values
                           .map((e) => DropdownMenuItem<_Provider>(
                                 value: e,
                                 child: Text(e.toValueString(context)),
@@ -109,11 +109,14 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
   void _onOkPressed(BuildContext context) {
     if (_formKey.currentState?.validate() == true) {
       _formKey.currentState!.save();
-      if (_formValue.provider == _Provider.static ||
-          _formValue.provider == null) {
-        _onConfirmStaticAlbum();
-      } else {
-        _onConfirmDirAlbum();
+      switch (_formValue.provider) {
+        case _Provider.static:
+        case null:
+          _onConfirmStaticAlbum();
+          break;
+        case _Provider.dir:
+          _onConfirmDirAlbum();
+          break;
       }
     }
   }

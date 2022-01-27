@@ -24,6 +24,7 @@ class AlbumGridItemBuilder {
   AlbumGridItem build(BuildContext context) {
     var subtitle = "";
     String? subtitle2;
+    IconData? icon;
     if (album.provider is AlbumStaticProvider) {
       subtitle =
           L10n.global().albumSize(AlbumStaticProvider.of(album).items.length);
@@ -33,6 +34,7 @@ class AlbumGridItemBuilder {
       if (provider.dirs.length > 1) {
         subtitle2 = "+${provider.dirs.length - 1}";
       }
+      icon = Icons.folder;
     }
     if (isShared) {
       subtitle = "${L10n.global().albumSharedLabel} | $subtitle";
@@ -42,7 +44,7 @@ class AlbumGridItemBuilder {
       title: album.name,
       subtitle: subtitle,
       subtitle2: subtitle2,
-      icon: album.provider is AlbumDirProvider ? Icons.folder : null,
+      icon: icon,
     );
   }
 
