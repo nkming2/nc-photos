@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album_util.dart' as album_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -215,7 +216,11 @@ class _AlbumPickerState extends State<AlbumPicker>
 
   void _transformItems(List<ListAlbumBlocItem> items) {
     _sortedAlbums = album_util.sorted(
-        items.map((e) => e.album).toList(), _getSortFromPref());
+        items
+            .map((e) => e.album)
+            .where((a) => a.provider is AlbumStaticProvider)
+            .toList(),
+        _getSortFromPref());
   }
 
   void _reqQuery() {
