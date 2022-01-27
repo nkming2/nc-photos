@@ -61,8 +61,8 @@ class PopulateAlbum {
     final date = DateTime(provider.year, provider.month, provider.day);
     final from = date.subtract(const Duration(days: 2));
     final to = date.add(const Duration(days: 3));
-    final files = await FileAppDbDataSource(appDb).listByDate(account,
-        from.millisecondsSinceEpoch, to.millisecondsSinceEpoch);
+    final files = await FileAppDbDataSource(appDb).listByDate(
+        account, from.millisecondsSinceEpoch, to.millisecondsSinceEpoch);
     return files
         .where((f) => file_util.isSupportedFormat(f))
         .map((f) => AlbumFileItem(
