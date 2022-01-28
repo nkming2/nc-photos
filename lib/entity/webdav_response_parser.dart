@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
 
@@ -14,9 +15,11 @@ class WebdavResponseParser {
   List<Favorite> parseFavorites(XmlDocument xml) =>
       _parse<Favorite>(xml, _toFavorite);
 
+  List<Tag> parseTags(XmlDocument xml) => _parse<Tag>(xml, _toTag);
+
   Map<String, String> get namespaces => _namespaces;
 
-  List<T> _parse<T>(XmlDocument xml, T Function(XmlElement) mapper) {
+  List<T> _parse<T>(XmlDocument xml, T? Function(XmlElement) mapper) {
     _namespaces = _parseNamespaces(xml);
     final body = () {
       try {
@@ -171,6 +174,56 @@ class WebdavResponseParser {
 
     return Favorite(
       fileId: fileId!,
+    );
+  }
+
+  /// Map <DAV:response> contents to Tag
+  Tag? _toTag(XmlElement element) {
+    String? path;
+    int? id;
+    String? displayName;
+    bool? userVisible;
+    bool? userAssignable;
+    bool? canAssign;
+
+    for (final child in element.children.whereType<XmlElement>()) {
+      if (child.matchQualifiedName("href",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        path = _hrefToPath(child);
+      } else if (child.matchQualifiedName("propstat",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        final status = child.children
+            .whereType<XmlElement>()
+            .firstWhere((element) => element.matchQualifiedName("status",
+                prefix: "DAV:", namespaces: _namespaces))
+            .innerText;
+        if (!status.contains(" 200 ")) {
+          continue;
+        }
+        final prop = child.children.whereType<XmlElement>().firstWhere(
+            (element) => element.matchQualifiedName("prop",
+                prefix: "DAV:", namespaces: _namespaces));
+        final propParser =
+            _TagPropParser(namespaces: _namespaces, logFilePath: path);
+        propParser.parse(prop);
+        id = propParser.id;
+        displayName = propParser.displayName;
+        userVisible = propParser.userVisible;
+        userAssignable = propParser.userAssignable;
+        canAssign = propParser.canAssign;
+      }
+    }
+    if (id == null) {
+      // the first returned item is not a valid tag
+      return null;
+    }
+
+    return Tag(
+      id: id,
+      displayName: displayName!,
+      userVisible: userVisible!,
+      userAssignable: userAssignable!,
+      canAssign: canAssign!,
     );
   }
 
@@ -334,6 +387,52 @@ class _FileIdPropParser {
   final String? logFilePath;
 
   int? _fileId;
+}
+
+class _TagPropParser {
+  _TagPropParser({
+    this.namespaces = const {},
+    this.logFilePath,
+  });
+
+  /// Parse <DAV:prop> element contents
+  void parse(XmlElement element) {
+    for (final child in element.children.whereType<XmlElement>()) {
+      if (child.matchQualifiedName("id",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _id = int.parse(child.innerText);
+      } else if (child.matchQualifiedName("display-name",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _displayName = child.innerText;
+      } else if (child.matchQualifiedName("user-visible",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _userVisible = child.innerText == "true";
+      } else if (child.matchQualifiedName("user-assignable",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _userAssignable = child.innerText == "true";
+      } else if (child.matchQualifiedName("can-assign",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _canAssign = child.innerText == "true";
+      }
+    }
+  }
+
+  int? get id => _id;
+  String? get displayName => _displayName;
+  bool? get userVisible => _userVisible;
+  bool? get userAssignable => _userAssignable;
+  bool? get canAssign => _canAssign;
+
+  final Map<String, String> namespaces;
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  int? _id;
+  String? _displayName;
+  bool? _userVisible;
+  bool? _userAssignable;
+  bool? _canAssign;
 }
 
 extension on XmlElement {

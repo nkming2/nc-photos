@@ -33,6 +33,7 @@ class Api {
 
   _Files files() => _Files(this);
   _Ocs ocs() => _Ocs(this);
+  _SystemtagsRelations systemtagsRelations() => _SystemtagsRelations(this);
 
   static String getAuthorizationHeaderValue(Account account) {
     final auth =
@@ -715,4 +716,83 @@ class _OcsFilesSharingSharees {
   final _OcsFilesSharing _filesSharing;
 
   static final _log = Logger("api.api._OcsFilesSharingSharees");
+}
+
+class _SystemtagsRelations {
+  const _SystemtagsRelations(this.api);
+
+  _SystemtagsRelationsFiles files(int fileId) =>
+      _SystemtagsRelationsFiles(this, fileId);
+
+  final Api api;
+}
+
+class _SystemtagsRelationsFiles {
+  const _SystemtagsRelationsFiles(this.systemtagsRelations, this.fileId);
+
+  /// List systemtags associated with a file
+  ///
+  /// Warning: this Nextcloud API is undocumented
+  Future<Response> propfind({
+    id,
+    displayName,
+    userVisible,
+    userAssignable,
+    canAssign,
+  }) async {
+    final endpoint = "remote.php/dav/systemtags-relations/files/$fileId";
+    try {
+      if (id == null &&
+          displayName == null &&
+          userVisible == null &&
+          userAssignable == null &&
+          canAssign == null) {
+        // no body
+        return await systemtagsRelations.api.request("PROPFIND", endpoint);
+      }
+
+      final namespaces = <String, String>{
+        "DAV:": "d",
+        "http://owncloud.org/ns": "oc",
+      };
+      final builder = XmlBuilder();
+      builder
+        ..processing("xml", "version=\"1.0\"")
+        ..element("d:propfind", namespaces: namespaces, nest: () {
+          builder.element("d:prop", nest: () {
+            if (id != null) {
+              builder.element("oc:id");
+            }
+            if (displayName != null) {
+              builder.element("oc:display-name");
+            }
+            if (userVisible != null) {
+              builder.element("oc:user-visible");
+            }
+            if (userAssignable != null) {
+              builder.element("oc:user-assignable");
+            }
+            if (canAssign != null) {
+              builder.element("oc:can-assign");
+            }
+          });
+        });
+      return await systemtagsRelations.api.request(
+        "PROPFIND",
+        endpoint,
+        header: {
+          "Content-Type": "application/xml",
+        },
+        body: builder.buildDocument().toXmlString(),
+      );
+    } catch (e) {
+      _log.severe("[propfind] Failed while propfind", e);
+      rethrow;
+    }
+  }
+
+  final _SystemtagsRelations systemtagsRelations;
+  final int fileId;
+
+  static final _log = Logger("api.api._SystemtagsRelationsFiles");
 }
