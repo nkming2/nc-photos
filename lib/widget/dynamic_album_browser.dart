@@ -162,8 +162,19 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Future<void> _initAlbum() async {
     assert(widget.album.provider is AlbumDynamicProvider);
-    final items = await PreProcessAlbum(AppDb())(widget.account, widget.album);
-    final album = await _updateAlbumPostPopulate(widget.album, items);
+    final List<AlbumItem> items;
+    final Album album;
+    try {
+      items = await PreProcessAlbum(AppDb())(widget.account, widget.album);
+      album = await _updateAlbumPostPopulate(widget.album, items);
+    } catch (e, stackTrace) {
+      _log.severe("[_initAlbum] Failed while PreProcessAlbum", e, stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+      return;
+    }
     if (mounted) {
       setState(() {
         _album = album;
