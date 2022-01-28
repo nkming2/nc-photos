@@ -23,6 +23,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:nc_photos/use_case/unshare_album_with_user.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
+import 'package:nc_photos/widget/dialog_scaffold.dart';
 
 class ShareAlbumDialog extends StatefulWidget {
   ShareAlbumDialog({
@@ -54,25 +55,14 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   @override
   build(BuildContext context) {
-    final canPop = _processingSharee.isEmpty;
     return AppTheme(
-      child: GestureDetector(
-        onTap: () {
-          if (canPop) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: WillPopScope(
-          onWillPop: () => Future.value(canPop),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: BlocListener<ListShareeBloc, ListShareeBlocState>(
-              bloc: _shareeBloc,
-              listener: _onShareeStateChange,
-              child: Builder(
-                builder: _buildContent,
-              ),
-            ),
+      child: DialogScaffold(
+        canPop: _processingSharee.isEmpty,
+        body: BlocListener<ListShareeBloc, ListShareeBlocState>(
+          bloc: _shareeBloc,
+          listener: _onShareeStateChange,
+          child: Builder(
+            builder: _buildContent,
           ),
         ),
       ),
@@ -80,15 +70,12 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: SimpleDialog(
-        title: Text(L10n.global().shareAlbumDialogTitle),
-        children: [
-          ..._items.map((i) => _buildItem(context, i)),
-          _buildCreateShareItem(context),
-        ],
-      ),
+    return SimpleDialog(
+      title: Text(L10n.global().shareAlbumDialogTitle),
+      children: [
+        ..._items.map((i) => _buildItem(context, i)),
+        _buildCreateShareItem(context),
+      ],
     );
   }
 
