@@ -25,6 +25,8 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tag/data_source.dart';
+import 'package:nc_photos/entity/tagged_file.dart';
+import 'package:nc_photos/entity/tagged_file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
@@ -160,6 +162,7 @@ void _initDiContainer() {
     shareeRepo: ShareeRepo(ShareeRemoteDataSource()),
     favoriteRepo: const FavoriteRepo(FavoriteRemoteDataSource()),
     tagRepo: const TagRepo(TagRemoteDataSource()),
+    taggedFileRepo: const TaggedFileRepo(TaggedFileRemoteDataSource()),
     appDb: AppDb(),
     pref: Pref(),
   ));

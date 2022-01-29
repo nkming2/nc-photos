@@ -94,6 +94,9 @@ extension TagExtension on Tag {
 class TagRepo {
   const TagRepo(this.dataSrc);
 
+  /// See [TagDataSource.list]
+  Future<List<Tag>> list(Account account) => dataSrc.list(account);
+
   /// See [TagDataSource.listByFile]
   Future<List<Tag>> listByFile(Account account, File file) =>
       dataSrc.listByFile(account, file);
@@ -102,6 +105,9 @@ class TagRepo {
 }
 
 abstract class TagDataSource {
+  /// List all tags
+  Future<List<Tag>> list(Account account);
+
   /// List all tags associated with [file]
   Future<List<Tag>> listByFile(Account account, File file);
 }

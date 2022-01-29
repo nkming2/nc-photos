@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
@@ -21,6 +22,8 @@ abstract class AlbumProvider with EquatableMixin {
         return AlbumStaticProvider.fromJson(content.cast<String, dynamic>());
       case AlbumDirProvider._type:
         return AlbumDirProvider.fromJson(content.cast<String, dynamic>());
+      case AlbumTagProvider._type:
+        return AlbumTagProvider.fromJson(content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -33,6 +36,8 @@ abstract class AlbumProvider with EquatableMixin {
         return AlbumStaticProvider._type;
       } else if (this is AlbumDirProvider) {
         return AlbumDirProvider._type;
+      } else if (this is AlbumTagProvider) {
+        return AlbumTagProvider._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -219,6 +224,55 @@ class AlbumDirProvider extends AlbumDynamicProvider {
   final List<File> dirs;
 
   static const _type = "dir";
+}
+
+class AlbumTagProvider extends AlbumDynamicProvider {
+  AlbumTagProvider({
+    required this.tags,
+    DateTime? latestItemTime,
+  }) : super(latestItemTime: latestItemTime);
+
+  factory AlbumTagProvider.fromJson(JsonObj json) => AlbumTagProvider(
+        latestItemTime: json["latestItemTime"] == null
+            ? null
+            : DateTime.parse(json["latestItemTime"]),
+        tags: (json["tags"] as List)
+            .map((e) => Tag.fromJson(e.cast<String, dynamic>()))
+            .toList(),
+      );
+
+  @override
+  toString({bool isDeep = false}) => "$runtimeType {"
+      "super: ${super.toString(isDeep: isDeep)}, "
+      "tags: ${tags.map((t) => t.displayName).toReadableString()}, "
+      "}";
+
+  @override
+  toContentJson() => {
+        ...super.toContentJson(),
+        "tags": tags.map((t) => t.toJson()).toList(),
+      };
+
+  @override
+  AlbumTagProvider copyWith({
+    OrNull<DateTime>? latestItemTime,
+    List<Tag>? tags,
+  }) =>
+      AlbumTagProvider(
+        latestItemTime:
+            latestItemTime == null ? this.latestItemTime : latestItemTime.obj,
+        tags: tags ?? List.of(this.tags),
+      );
+
+  @override
+  get props => [
+        ...super.props,
+        tags,
+      ];
+
+  final List<Tag> tags;
+
+  static const _type = "tag";
 }
 
 /// Smart albums are created only by the app and not the user

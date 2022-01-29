@@ -33,6 +33,7 @@ class Api {
 
   _Files files() => _Files(this);
   _Ocs ocs() => _Ocs(this);
+  _Systemtags systemtags() => _Systemtags(this);
   _SystemtagsRelations systemtagsRelations() => _SystemtagsRelations(this);
 
   static String getAuthorizationHeaderValue(Account account) {
@@ -402,6 +403,7 @@ class _Files {
   Future<Response> report({
     required String path,
     bool? favorite,
+    List<int>? systemtag,
   }) async {
     try {
       final namespaces = <String, String>{
@@ -416,6 +418,11 @@ class _Files {
             if (favorite != null) {
               builder.element("oc:favorite", nest: () {
                 builder.text(favorite ? "1" : "0");
+              });
+            }
+            for (final t in systemtag ?? []) {
+              builder.element("oc:systemtag", nest: () {
+                builder.text(t);
               });
             }
           });
@@ -716,6 +723,72 @@ class _OcsFilesSharingSharees {
   final _OcsFilesSharing _filesSharing;
 
   static final _log = Logger("api.api._OcsFilesSharingSharees");
+}
+
+class _Systemtags {
+  const _Systemtags(this.api);
+
+  Future<Response> propfind({
+    id,
+    displayName,
+    userVisible,
+    userAssignable,
+    canAssign,
+  }) async {
+    const endpoint = "remote.php/dav/systemtags";
+    try {
+      if (id == null &&
+          displayName == null &&
+          userVisible == null &&
+          userAssignable == null &&
+          canAssign == null) {
+        // no body
+        return await api.request("PROPFIND", endpoint);
+      }
+
+      final namespaces = <String, String>{
+        "DAV:": "d",
+        "http://owncloud.org/ns": "oc",
+      };
+      final builder = XmlBuilder();
+      builder
+        ..processing("xml", "version=\"1.0\"")
+        ..element("d:propfind", namespaces: namespaces, nest: () {
+          builder.element("d:prop", nest: () {
+            if (id != null) {
+              builder.element("oc:id");
+            }
+            if (displayName != null) {
+              builder.element("oc:display-name");
+            }
+            if (userVisible != null) {
+              builder.element("oc:user-visible");
+            }
+            if (userAssignable != null) {
+              builder.element("oc:user-assignable");
+            }
+            if (canAssign != null) {
+              builder.element("oc:can-assign");
+            }
+          });
+        });
+      return await api.request(
+        "PROPFIND",
+        endpoint,
+        header: {
+          "Content-Type": "application/xml",
+        },
+        body: builder.buildDocument().toXmlString(),
+      );
+    } catch (e) {
+      _log.severe("[propfind] Failed while propfind", e);
+      rethrow;
+    }
+  }
+
+  final Api api;
+
+  static final _log = Logger("api.api._Systemtags");
 }
 
 class _SystemtagsRelations {

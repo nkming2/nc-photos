@@ -6,6 +6,7 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
 
@@ -16,6 +17,9 @@ class WebdavResponseParser {
       _parse<Favorite>(xml, _toFavorite);
 
   List<Tag> parseTags(XmlDocument xml) => _parse<Tag>(xml, _toTag);
+
+  List<TaggedFile> parseTaggedFiles(XmlDocument xml) =>
+      _parse<TaggedFile>(xml, _toTaggedFile);
 
   Map<String, String> get namespaces => _namespaces;
 
@@ -224,6 +228,40 @@ class WebdavResponseParser {
       userVisible: userVisible!,
       userAssignable: userAssignable!,
       canAssign: canAssign!,
+    );
+  }
+
+  /// Map <DAV:response> contents to TaggedFile
+  TaggedFile _toTaggedFile(XmlElement element) {
+    String? path;
+    int? fileId;
+
+    for (final child in element.children.whereType<XmlElement>()) {
+      if (child.matchQualifiedName("href",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        path = _hrefToPath(child);
+      } else if (child.matchQualifiedName("propstat",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        final status = child.children
+            .whereType<XmlElement>()
+            .firstWhere((element) => element.matchQualifiedName("status",
+                prefix: "DAV:", namespaces: _namespaces))
+            .innerText;
+        if (!status.contains(" 200 ")) {
+          continue;
+        }
+        final prop = child.children.whereType<XmlElement>().firstWhere(
+            (element) => element.matchQualifiedName("prop",
+                prefix: "DAV:", namespaces: _namespaces));
+        final propParser =
+            _FileIdPropParser(namespaces: _namespaces, logFilePath: path);
+        propParser.parse(prop);
+        fileId = propParser.fileId;
+      }
+    }
+
+    return TaggedFile(
+      fileId: fileId!,
     );
   }
 

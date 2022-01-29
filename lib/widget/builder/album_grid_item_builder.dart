@@ -35,6 +35,10 @@ class AlbumGridItemBuilder {
         subtitle2 = "+${provider.dirs.length - 1}";
       }
       icon = Icons.folder;
+    } else if (album.provider is AlbumTagProvider) {
+      final provider = album.provider as AlbumTagProvider;
+      subtitle = provider.tags.map((t) => t.displayName).join(", ");
+      icon = Icons.local_offer;
     }
     if (isShared) {
       subtitle = "${L10n.global().albumSharedLabel} | $subtitle";

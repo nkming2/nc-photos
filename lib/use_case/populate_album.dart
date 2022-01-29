@@ -1,7 +1,9 @@
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -9,6 +11,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 
 class PopulateAlbum {
@@ -21,6 +24,8 @@ class PopulateAlbum {
       return AlbumStaticProvider.of(album).items;
     } else if (album.provider is AlbumDirProvider) {
       return _populateDirAlbum(account, album);
+    } else if (album.provider is AlbumTagProvider) {
+      return _populateTagAlbum(account, album);
     } else if (album.provider is AlbumMemoryProvider) {
       return _populateMemoryAlbum(account, album);
     } else {
@@ -51,6 +56,21 @@ class PopulateAlbum {
             )));
       }
     }
+    return products;
+  }
+
+  Future<List<AlbumItem>> _populateTagAlbum(
+      Account account, Album album) async {
+    assert(album.provider is AlbumTagProvider);
+    final provider = album.provider as AlbumTagProvider;
+    final products = <AlbumItem>[];
+    final c = KiwiContainer().resolve<DiContainer>();
+    final files = await ListTaggedFile(c)(account, provider.tags);
+    products.addAll(files.map((f) => AlbumFileItem(
+          addedBy: account.username,
+          addedAt: DateTime.now(),
+          file: f,
+        )));
     return products;
   }
 
