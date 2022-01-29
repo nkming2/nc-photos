@@ -6,6 +6,7 @@ class FancyOptionPickerItem {
     this.description,
     this.isSelected = false,
     this.onSelect,
+    this.onUnselect,
     this.dense = false,
   });
 
@@ -13,6 +14,7 @@ class FancyOptionPickerItem {
   String? description;
   bool isSelected;
   VoidCallback? onSelect;
+  VoidCallback? onUnselect;
   bool dense;
 }
 
@@ -44,7 +46,7 @@ class FancyOptionPicker extends StatelessWidget {
                         : null,
                   ),
                   subtitle: e.description == null ? null : Text(e.description!),
-                  onTap: e.isSelected ? null : e.onSelect,
+                  onTap: e.isSelected ? e.onUnselect : e.onSelect,
                   dense: e.dense,
                 ),
               ))
