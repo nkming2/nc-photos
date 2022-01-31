@@ -22,7 +22,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 class SharedFileViewerArguments {
   SharedFileViewerArguments(this.account, this.file, this.shares);
@@ -84,7 +84,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          title: Text(path.withoutExtension(widget.file.filename)),
+          title: Text(path_lib.withoutExtension(widget.file.filename)),
           pinned: true,
         ),
         if (widget.file.isCollection != true)
@@ -268,7 +268,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
 
   Future<void> _deleteLinkShareDir() {
     // the upper dir is also part of this link share dir
-    var dirPath = path.dirname(widget.file.path);
+    var dirPath = path_lib.dirname(widget.file.path);
     // make sure we are not accidentally deleting other dirs
     if (!dirPath.startsWith(
         remote_storage_util.getRemoteLinkSharesDir(widget.account) + "/")) {

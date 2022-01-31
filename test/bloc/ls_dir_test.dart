@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -154,6 +154,6 @@ class _MockFileRepo extends MockFileRepo {
         path: "remote.php/dav/files/admin/d1/d2-1/d3",
         isCollection: true,
       ),
-    ].where((element) => path.dirname(element.path) == root.path).toList();
+    ].where((element) => path_lib.dirname(element.path) == root.path).toList();
   }
 }

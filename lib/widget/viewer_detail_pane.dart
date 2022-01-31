@@ -33,7 +33,7 @@ import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path_lib;
 import 'package:tuple/tuple.dart';
 
 class ViewerDetailPane extends StatefulWidget {
@@ -182,7 +182,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 color: AppTheme.getSecondaryTextColor(context),
               ),
             ),
-            title: Text(basenameWithoutExtension(widget.file.path)),
+            title: Text(path_lib.basenameWithoutExtension(widget.file.path)),
             subtitle: Text(widget.file.strippedPath),
           ),
           if (!widget.file.isOwned(widget.account.username))

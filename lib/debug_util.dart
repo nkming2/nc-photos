@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/string_extension.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 class LogCapturer {
   factory LogCapturer() {
@@ -47,13 +47,13 @@ String logFilename(String? filename) {
     return "$filename";
   }
   try {
-    final basename = path.basenameWithoutExtension(filename);
+    final basename = path_lib.basenameWithoutExtension(filename);
     final displayName = basename.length <= 6
         ? basename
         : "${basename.slice(0, 3)}***${basename.slice(-3)}";
-    return "${path.dirname(filename) != "." ? "***/" : ""}"
+    return "${path_lib.dirname(filename) != "." ? "***/" : ""}"
         "$displayName"
-        "${path.extension(filename)}";
+        "${path_lib.extension(filename)}";
   } catch (_) {
     return "***";
   }

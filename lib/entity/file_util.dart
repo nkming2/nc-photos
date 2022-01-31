@@ -5,7 +5,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
 
@@ -60,11 +60,12 @@ CiString getUserDirName(File file) {
 }
 
 String renameConflict(String filename, int conflictCount) {
-  final temp = "${path.basenameWithoutExtension(filename)} ($conflictCount)";
-  if (path.extension(filename).isEmpty) {
+  final temp =
+      "${path_lib.basenameWithoutExtension(filename)} ($conflictCount)";
+  if (path_lib.extension(filename).isEmpty) {
     return temp;
   } else {
-    return "$temp${path.extension(filename)}";
+    return "$temp${path_lib.extension(filename)}";
   }
 }
 

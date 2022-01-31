@@ -4,7 +4,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 class Copy {
   Copy(this.fileRepo);
@@ -47,7 +47,7 @@ class Copy {
         if (e.response.statusCode == 409 && shouldCreateMissingDir) {
           // no dir
           _log.info("[call] Auto creating parent dirs");
-          await CreateDir(fileRepo)(account, path.dirname(to));
+          await CreateDir(fileRepo)(account, path_lib.dirname(to));
           await fileRepo.copy(account, file, to,
               shouldOverwrite: shouldOverwrite);
         } else if (e.response.statusCode == 204 && shouldRenameOnOverwrite) {
@@ -74,8 +74,8 @@ class Copy {
       return destination;
     }
     final newName =
-        file_util.renameConflict(path.basename(destination), retryCount);
-    return "${path.dirname(destination)}/$newName";
+        file_util.renameConflict(path_lib.basename(destination), retryCount);
+    return "${path_lib.dirname(destination)}/$newName";
   }
 
   final FileRepo fileRepo;

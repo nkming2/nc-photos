@@ -18,7 +18,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
@@ -529,7 +529,7 @@ class FileCachedDataSource implements FileDataSource {
     // generate a new random token
     final token = const Uuid().v4().replaceAll("-", "");
     const tokenManager = TouchTokenManager();
-    final dir = File(path: path.dirname(f.path));
+    final dir = File(path: path_lib.dirname(f.path));
     await tokenManager.setLocalToken(account, dir, token);
     final fileRepo = FileRepo(this);
     await tokenManager.setRemoteToken(fileRepo, account, dir, token);

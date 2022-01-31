@@ -3,7 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
-import 'package:path/path.dart' as path_util;
+import 'package:path/path.dart' as path_lib;
 
 enum ShareType {
   user,
@@ -154,7 +154,7 @@ class Share with EquatableMixin {
 }
 
 extension ShareExtension on Share {
-  String get filename => path_util.basename(path);
+  String get filename => path_lib.basename(path);
 }
 
 class ShareRepo {

@@ -10,7 +10,7 @@ import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
-import 'package:path/path.dart' as path_util;
+import 'package:path/path.dart' as path_lib;
 
 int compareFileDateTimeDescending(File x, File y) {
   final tmp = y.bestDateTime.compareTo(x.bestDateTime);
@@ -508,7 +508,7 @@ extension FileExtension on File {
     return path == "." ? "" : path;
   }
 
-  String get filename => path_util.basename(path);
+  String get filename => path_lib.basename(path);
 
   /// Compare the server identity of two Files
   ///

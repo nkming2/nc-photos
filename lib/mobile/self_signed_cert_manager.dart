@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/android/self_signed_cert.dart';
 import 'package:nc_photos/type.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -62,11 +62,11 @@ class SelfSignedCertManager {
       try {
         final info = _CertInfo.fromJson(jsonDecode(await f.readAsString()));
         _log.info(
-            "[_readAllCerts] Found certificate info: ${path.basename(f.path)} for host: ${info.host}");
+            "[_readAllCerts] Found certificate info: ${path_lib.basename(f.path)} for host: ${info.host}");
         products.add(info);
       } catch (e, stacktrace) {
         _log.severe(
-            "[_readAllCerts] Failed to read certificate file: ${path.basename(f.path)}",
+            "[_readAllCerts] Failed to read certificate file: ${path_lib.basename(f.path)}",
             e,
             stacktrace);
       }

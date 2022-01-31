@@ -16,7 +16,7 @@ import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/list_share_with_me.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 abstract class ListSharingItem {
   const ListSharingItem(this.share);
@@ -317,7 +317,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         }
       }
       // include shared albums
-      if (path.dirname(webdavPath) ==
+      if (path_lib.dirname(webdavPath) ==
           remote_storage_util.getRemoteAlbumsDir(ev.account)) {
         try {
           final file = sharedAlbumFiles
@@ -369,7 +369,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     final futures = shares.map((s) async {
       final webdavPath = file_util.unstripPath(ev.account, s.path);
       // include pending shared albums
-      if (path.dirname(webdavPath) ==
+      if (path_lib.dirname(webdavPath) ==
           remote_storage_util.getRemotePendingSharedAlbumsDir(ev.account)) {
         try {
           final file = pendingSharedAlbumFiles
@@ -384,7 +384,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         }
       }
       // include shared albums
-      if (path.dirname(webdavPath) ==
+      if (path_lib.dirname(webdavPath) ==
           remote_storage_util.getRemoteAlbumsDir(ev.account)) {
         try {
           final file = sharedAlbumFiles

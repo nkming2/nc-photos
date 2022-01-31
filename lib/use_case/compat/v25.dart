@@ -3,7 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/move.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 /// Compatibility helper for v25
 class CompatV25 {
@@ -26,9 +26,9 @@ class _MigrateAlbumFile {
 
   Future<File> call(Account account, File albumFile) async {
     assert(CompatV25.isAlbumFileNeedMigration(albumFile));
-    final newPath = path.dirname(albumFile.path) +
+    final newPath = path_lib.dirname(albumFile.path) +
         "/" +
-        path.basenameWithoutExtension(albumFile.path) +
+        path_lib.basenameWithoutExtension(albumFile.path) +
         ".nc_album.json";
     _log.info(
         "[call] Migrate album file from '${albumFile.path}' to '$newPath'");

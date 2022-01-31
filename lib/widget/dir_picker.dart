@@ -11,7 +11,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 
 class DirPicker extends StatefulWidget {
   const DirPicker({
@@ -110,7 +110,7 @@ class DirPickerState extends State<DirPicker> {
               title: Text(L10n.global().rootPickerNavigateUpItemText),
               onTap: () {
                 try {
-                  _navigateInto(File(path: path.dirname(_currentPath)));
+                  _navigateInto(File(path: path_lib.dirname(_currentPath)));
                 } catch (e) {
                   SnackBarManager().showSnackBar(SnackBar(
                     content: Text(exception_util.toUserString(e)),

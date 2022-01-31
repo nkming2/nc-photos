@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:nc_photos/platform/universal_storage.dart' as itf;
 import 'package:nc_photos/string_extension.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 
 class UniversalStorage extends itf.UniversalStorage {
@@ -56,7 +56,7 @@ class UniversalStorage extends itf.UniversalStorage {
   Future<Directory> _openStorageDirForFile(String relativePath) async {
     final privateDir = await getApplicationSupportDirectory();
     final rootPath = "${privateDir.path}/universal_storage";
-    final dirPath = path.dirname("$rootPath/${relativePath.trimAny('/')}");
+    final dirPath = path_lib.dirname("$rootPath/${relativePath.trimAny('/')}");
     final storageDir = Directory(dirPath);
     if (!await storageDir.exists()) {
       await storageDir.create(recursive: true);
