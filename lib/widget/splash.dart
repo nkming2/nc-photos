@@ -11,6 +11,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
+import 'package:nc_photos/use_case/compat/v37.dart';
 import 'package:nc_photos/use_case/db_compat/v5.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
@@ -148,6 +149,10 @@ class _SplashState extends State<Splash> {
       showUpdateDialog();
       await _upgrade29(lastVersion);
     }
+    if (lastVersion < 370) {
+      showUpdateDialog();
+      await _upgrade37(lastVersion);
+    }
     if (isShowDialog) {
       Navigator.of(context).pop();
     }
@@ -161,6 +166,11 @@ class _SplashState extends State<Splash> {
       _log.shout("[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
       // just leave the cache then
     }
+  }
+
+  Future<void> _upgrade37(int lastVersion) async {
+    final c = KiwiContainer().resolve<DiContainer>();
+    return CompatV37.setAppDbMigrationFlag(c.appDb);
   }
 
   Future<void> _migrateDb() async {
@@ -182,6 +192,17 @@ class _SplashState extends State<Splash> {
       showUpdateDialog();
       try {
         await DbCompatV5.migrate(c.appDb);
+      } catch (_) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().migrateDatabaseFailureNotification),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
+    }
+    if (await CompatV37.isAppDbNeedMigration(c.appDb)) {
+      showUpdateDialog();
+      try {
+        await CompatV37.migrateAppDb(c.appDb);
       } catch (_) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(L10n.global().migrateDatabaseFailureNotification),
