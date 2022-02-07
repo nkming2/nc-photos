@@ -609,8 +609,8 @@ class FileRepo {
 }
 
 abstract class FileDataSource {
-  /// List all files under [f]
-  Future<List<File>> list(Account account, File f);
+  /// List all files under [dir]
+  Future<List<File>> list(Account account, File dir);
 
   /// List a single file [f]
   Future<File> listSingle(Account account, File f);

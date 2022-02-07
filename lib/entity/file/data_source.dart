@@ -27,12 +27,12 @@ class FileWebdavDataSource implements FileDataSource {
   @override
   list(
     Account account,
-    File f, {
+    File dir, {
     int? depth,
   }) async {
-    _log.fine("[list] ${f.path}");
+    _log.fine("[list] ${dir.path}");
     final response = await Api(account).files().propfind(
-      path: f.path,
+      path: dir.path,
       depth: depth,
       getlastmodified: 1,
       resourcetype: 1,
@@ -409,7 +409,7 @@ class FileCachedDataSource implements FileDataSource {
   }) : _appDbSrc = FileAppDbDataSource(appDb);
 
   @override
-  list(Account account, File f) async {
+  list(Account account, File dir) async {
     final cacheManager = _CacheManager(
       appDb: appDb,
       appDbSrc: _appDbSrc,
@@ -417,21 +417,21 @@ class FileCachedDataSource implements FileDataSource {
       shouldCheckCache: shouldCheckCache,
       forwardCacheManager: forwardCacheManager,
     );
-    final cache = await cacheManager.list(account, f);
+    final cache = await cacheManager.list(account, dir);
     if (cacheManager.isGood) {
       return cache!;
     }
 
     // no cache or outdated
     try {
-      final remote = await _remoteSrc.list(account, f);
-      await _cacheResult(account, f, remote);
+      final remote = await _remoteSrc.list(account, dir);
+      await _cacheResult(account, dir, remote);
       if (shouldCheckCache) {
         // update our local touch token to match the remote one
         const tokenManager = TouchTokenManager();
         try {
           await tokenManager.setLocalToken(
-              account, f, cacheManager.remoteTouchToken);
+              account, dir, cacheManager.remoteTouchToken);
         } catch (e, stacktrace) {
           _log.shout("[list] Failed while setLocalToken", e, stacktrace);
           // ignore error
@@ -444,8 +444,8 @@ class FileCachedDataSource implements FileDataSource {
       return remote;
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
-        _log.info("[list] File removed: $f");
-        _appDbSrc.remove(account, f);
+        _log.info("[list] File removed: $dir");
+        _appDbSrc.remove(account, dir);
         return [];
       } else {
         rethrow;
