@@ -119,7 +119,7 @@ class MockAppDb implements AppDb {
 
   @override
   Future<void> delete() async {
-    throw UnimplementedError();
+    await _dbFactory.deleteDatabase("test.db");
   }
 
   static void _createDb(
