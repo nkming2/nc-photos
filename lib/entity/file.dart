@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
@@ -229,6 +230,7 @@ class File with EquatableMixin {
     this.usedBytes,
     this.hasPreview,
     this.fileId,
+    this.isFavorite,
     this.ownerId,
     this.metadata,
     this.isArchived,
@@ -265,6 +267,7 @@ class File with EquatableMixin {
       usedBytes: json["usedBytes"],
       hasPreview: json["hasPreview"],
       fileId: json["fileId"],
+      isFavorite: json_util.boolFromJson(json["isFavorite"]),
       ownerId: json["ownerId"] == null ? null : CiString(json["ownerId"]),
       trashbinFilename: json["trashbinFilename"],
       trashbinOriginalLocation: json["trashbinOriginalLocation"],
@@ -319,6 +322,9 @@ class File with EquatableMixin {
     if (fileId != null) {
       product += "fileId: $fileId, ";
     }
+    if (isFavorite != null) {
+      product += "isFavorite: $isFavorite, ";
+    }
     if (ownerId != null) {
       product += "ownerId: '$ownerId', ";
     }
@@ -355,6 +361,7 @@ class File with EquatableMixin {
       if (usedBytes != null) "usedBytes": usedBytes,
       if (hasPreview != null) "hasPreview": hasPreview,
       if (fileId != null) "fileId": fileId,
+      if (isFavorite != null) "isFavorite": json_util.boolToJson(isFavorite),
       if (ownerId != null) "ownerId": ownerId.toString(),
       if (trashbinFilename != null) "trashbinFilename": trashbinFilename,
       if (trashbinOriginalLocation != null)
@@ -378,6 +385,7 @@ class File with EquatableMixin {
     int? usedBytes,
     bool? hasPreview,
     int? fileId,
+    bool? isFavorite,
     CiString? ownerId,
     String? trashbinFilename,
     String? trashbinOriginalLocation,
@@ -396,6 +404,7 @@ class File with EquatableMixin {
       usedBytes: usedBytes ?? this.usedBytes,
       hasPreview: hasPreview ?? this.hasPreview,
       fileId: fileId ?? this.fileId,
+      isFavorite: isFavorite ?? this.isFavorite,
       ownerId: ownerId ?? this.ownerId,
       trashbinFilename: trashbinFilename ?? this.trashbinFilename,
       trashbinOriginalLocation:
@@ -420,6 +429,7 @@ class File with EquatableMixin {
         usedBytes,
         hasPreview,
         fileId,
+        isFavorite,
         ownerId,
         trashbinFilename,
         trashbinOriginalLocation,
@@ -439,6 +449,7 @@ class File with EquatableMixin {
   final bool? hasPreview;
   // maybe null when loaded from old cache
   final int? fileId;
+  final bool? isFavorite;
   final CiString? ownerId;
   final String? trashbinFilename;
   final String? trashbinOriginalLocation;
@@ -564,6 +575,7 @@ class FileRepo {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) =>
       dataSrc.updateProperty(
         account,
@@ -571,6 +583,7 @@ class FileRepo {
         metadata: metadata,
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
+        favorite: favorite,
       );
 
   /// See [FileDataSource.copy]
@@ -631,6 +644,7 @@ abstract class FileDataSource {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   });
 
   /// Copy [f] to [destination]

@@ -15,6 +15,7 @@ class PhotoListImage extends StatelessWidget {
     required this.previewUrl,
     this.padding = const EdgeInsets.all(2),
     this.isGif = false,
+    this.isFavorite = false,
   }) : super(key: key);
 
   @override
@@ -74,6 +75,18 @@ class PhotoListImage extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+            if (isFavorite)
+              Container(
+                // arbitrary size here
+                constraints: BoxConstraints.tight(const Size(128, 128)),
+                alignment: AlignmentDirectional.bottomStart,
+                padding: const EdgeInsets.all(8),
+                child: const Icon(
+                  Icons.star,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
           ],
         ),
       ),
@@ -84,6 +97,7 @@ class PhotoListImage extends StatelessWidget {
   final String? previewUrl;
   final bool isGif;
   final EdgeInsetsGeometry padding;
+  final bool isFavorite;
 }
 
 class PhotoListVideo extends StatelessWidget {
@@ -91,6 +105,7 @@ class PhotoListVideo extends StatelessWidget {
     Key? key,
     required this.account,
     required this.previewUrl,
+    this.isFavorite = false,
   }) : super(key: key);
 
   @override
@@ -139,6 +154,18 @@ class PhotoListVideo extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            if (isFavorite)
+              Container(
+                // arbitrary size here
+                constraints: BoxConstraints.tight(const Size(128, 128)),
+                alignment: AlignmentDirectional.bottomStart,
+                padding: const EdgeInsets.all(8),
+                child: const Icon(
+                  Icons.star,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
           ],
         ),
       ),
@@ -147,6 +174,7 @@ class PhotoListVideo extends StatelessWidget {
 
   final Account account;
   final String previewUrl;
+  final bool isFavorite;
 }
 
 class PhotoListLabel extends StatelessWidget {

@@ -15,8 +15,12 @@ class UpdateProperty {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
   }) async {
-    if (metadata == null && isArchived == null && overrideDateTime == null) {
+    if (metadata == null &&
+        isArchived == null &&
+        overrideDateTime == null &&
+        favorite == null) {
       // ?
       _log.warning("[call] Nothing to update");
       return;
@@ -32,6 +36,7 @@ class UpdateProperty {
       metadata: metadata,
       isArchived: isArchived,
       overrideDateTime: overrideDateTime,
+      favorite: favorite,
     );
 
     int properties = 0;
@@ -43,6 +48,9 @@ class UpdateProperty {
     }
     if (overrideDateTime != null) {
       properties |= FilePropertyUpdatedEvent.propOverrideDateTime;
+    }
+    if (favorite != null) {
+      properties |= FilePropertyUpdatedEvent.propFavorite;
     }
     assert(properties != 0);
     KiwiContainer()

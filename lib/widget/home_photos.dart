@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -26,6 +27,7 @@ import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -369,6 +371,7 @@ class _HomePhotosState extends State<HomePhotos>
         state is ScanAccountDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanAccountDirBlocSuccess) {
+        _syncFavorite();
         _tryStartMetadataTask();
       }
     } else if (state is ScanAccountDirBlocFailure) {
@@ -526,6 +529,21 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  Future<void> _syncFavorite() async {
+    if (!_hasResyncedFavorites.value) {
+      final c = KiwiContainer().resolve<DiContainer>();
+      try {
+        await SyncFavorite(c)(widget.account);
+      } catch (e, stackTrace) {
+        if (e is! ApiException) {
+          _log.shout(
+              "[_syncFavorite] Failed while SyncFavorite", e, stackTrace);
+        }
+      }
+      _hasResyncedFavorites.value = true;
+    }
+  }
+
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
     _backingFiles = files
@@ -653,6 +671,21 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  Primitive<bool> get _hasResyncedFavorites {
+    final name = bloc_util.getInstNameForRootAwareAccount(
+        "HomePhotosState._hasResyncedFavorites", widget.account);
+    try {
+      _log.fine("[_hasResyncedFavorites] Resolving for '$name'");
+      return KiwiContainer().resolve<Primitive<bool>>(name);
+    } catch (_) {
+      _log.info(
+          "[_hasResyncedFavorites] New instance for account: ${widget.account}");
+      final obj = Primitive(false);
+      KiwiContainer().registerInstance<Primitive<bool>>(obj, name: name);
+      return obj;
+    }
+  }
+
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
   var _backingFiles = <File>[];
@@ -760,6 +793,7 @@ class _ImageListItem extends _FileListItem {
       account: account,
       previewUrl: previewUrl,
       isGif: file.contentType == "image/gif",
+      isFavorite: file.isFavorite == true,
     );
   }
 
@@ -780,6 +814,7 @@ class _VideoListItem extends _FileListItem {
     return PhotoListVideo(
       account: account,
       previewUrl: previewUrl,
+      isFavorite: file.isFavorite == true,
     );
   }
 

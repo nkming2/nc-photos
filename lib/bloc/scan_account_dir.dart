@@ -109,6 +109,7 @@ class ScanAccountDirBloc
     _filePropertyUpdatedEventListener.begin();
     _fileTrashbinRestoredEventListener.begin();
     _fileMovedEventListener.begin();
+    _favoriteResyncedEventListener.begin();
     _prefUpdatedEventListener.begin();
     _accountPrefUpdatedEventListener.begin();
   }
@@ -159,6 +160,7 @@ class ScanAccountDirBloc
     _filePropertyUpdatedEventListener.end();
     _fileTrashbinRestoredEventListener.end();
     _fileMovedEventListener.end();
+    _favoriteResyncedEventListener.end();
     _prefUpdatedEventListener.end();
     _accountPrefUpdatedEventListener.end();
 
@@ -208,6 +210,7 @@ class ScanAccountDirBloc
       FilePropertyUpdatedEvent.propMetadata,
       FilePropertyUpdatedEvent.propIsArchived,
       FilePropertyUpdatedEvent.propOverrideDateTime,
+      FilePropertyUpdatedEvent.propFavorite,
     ])) {
       // not interested
       return;
@@ -223,6 +226,7 @@ class ScanAccountDirBloc
     if (ev.hasAnyProperties([
       FilePropertyUpdatedEvent.propIsArchived,
       FilePropertyUpdatedEvent.propOverrideDateTime,
+      FilePropertyUpdatedEvent.propFavorite,
     ])) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
@@ -253,6 +257,19 @@ class ScanAccountDirBloc
       return;
     }
     if (_isFileOfInterest(ev.file)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
+  void _onFavoriteResyncedEvent(FavoriteResyncedEvent ev) {
+    if (state is ScanAccountDirBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if ((ev.newFavorites + ev.removedFavorites).any(_isFileOfInterest)) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -460,6 +477,8 @@ class ScanAccountDirBloc
       AppEventListener<FileTrashbinRestoredEvent>(_onFileTrashbinRestoredEvent);
   late final _fileMovedEventListener =
       AppEventListener<FileMovedEvent>(_onFileMovedEvent);
+  late final _favoriteResyncedEventListener =
+      AppEventListener<FavoriteResyncedEvent>(_onFavoriteResyncedEvent);
   late final _prefUpdatedEventListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdatedEvent);
   late final _accountPrefUpdatedEventListener =

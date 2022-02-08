@@ -242,10 +242,14 @@ class MockFileRepo implements FileRepo {
   }
 
   @override
-  Future<void> updateProperty(Account account, File file,
-      {OrNull<Metadata>? metadata,
-      OrNull<bool>? isArchived,
-      OrNull<DateTime>? overrideDateTime}) {
+  Future<void> updateProperty(
+    Account account,
+    File file, {
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
+  }) {
     throw UnimplementedError();
   }
 }

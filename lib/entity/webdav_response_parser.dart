@@ -3,12 +3,16 @@ import 'dart:io';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
 
 class WebdavResponseParser {
   List<File> parseFiles(XmlDocument xml) => _parse<File>(xml, _toFile);
+
+  List<Favorite> parseFavorites(XmlDocument xml) =>
+      _parse<Favorite>(xml, _toFavorite);
 
   Map<String, String> get namespaces => _namespaces;
 
@@ -67,6 +71,7 @@ class WebdavResponseParser {
     int? usedBytes;
     bool? hasPreview;
     int? fileId;
+    bool? isFavorite;
     CiString? ownerId;
     Metadata? metadata;
     bool? isArchived;
@@ -103,6 +108,7 @@ class WebdavResponseParser {
         usedBytes = propParser.usedBytes;
         hasPreview = propParser.hasPreview;
         fileId = propParser.fileId;
+        isFavorite = propParser.isFavorite;
         ownerId = propParser.ownerId;
         metadata = propParser.metadata;
         isArchived = propParser.isArchived;
@@ -123,6 +129,7 @@ class WebdavResponseParser {
       usedBytes: usedBytes,
       hasPreview: hasPreview,
       fileId: fileId,
+      isFavorite: isFavorite,
       ownerId: ownerId,
       metadata: metadata,
       isArchived: isArchived,
@@ -130,6 +137,40 @@ class WebdavResponseParser {
       trashbinFilename: trashbinFilename,
       trashbinOriginalLocation: trashbinOriginalLocation,
       trashbinDeletionTime: trashbinDeletionTime,
+    );
+  }
+
+  /// Map <DAV:response> contents to Favorite
+  Favorite _toFavorite(XmlElement element) {
+    String? path;
+    int? fileId;
+
+    for (final child in element.children.whereType<XmlElement>()) {
+      if (child.matchQualifiedName("href",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        path = _hrefToPath(child);
+      } else if (child.matchQualifiedName("propstat",
+          prefix: "DAV:", namespaces: _namespaces)) {
+        final status = child.children
+            .whereType<XmlElement>()
+            .firstWhere((element) => element.matchQualifiedName("status",
+                prefix: "DAV:", namespaces: _namespaces))
+            .innerText;
+        if (!status.contains(" 200 ")) {
+          continue;
+        }
+        final prop = child.children.whereType<XmlElement>().firstWhere(
+            (element) => element.matchQualifiedName("prop",
+                prefix: "DAV:", namespaces: _namespaces));
+        final propParser =
+            _FileIdPropParser(namespaces: _namespaces, logFilePath: path);
+        propParser.parse(prop);
+        fileId = propParser.fileId;
+      }
+    }
+
+    return Favorite(
+      fileId: fileId!,
     );
   }
 
@@ -186,6 +227,9 @@ class _FilePropParser {
       } else if (child.matchQualifiedName("fileid",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _fileId = int.parse(child.innerText);
+      } else if (child.matchQualifiedName("favorite",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _isFavorite = child.innerText != "0";
       } else if (child.matchQualifiedName("owner-id",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _ownerId = child.innerText.toCi();
@@ -234,6 +278,7 @@ class _FilePropParser {
   bool? get isCollection => _isCollection;
   bool? get hasPreview => _hasPreview;
   int? get fileId => _fileId;
+  bool? get isFavorite => _isFavorite;
   CiString? get ownerId => _ownerId;
   Metadata? get metadata => _metadata;
   bool? get isArchived => _isArchived;
@@ -255,6 +300,7 @@ class _FilePropParser {
   bool? _isCollection;
   bool? _hasPreview;
   int? _fileId;
+  bool? _isFavorite;
   CiString? _ownerId;
   Metadata? _metadata;
   bool? _isArchived;
@@ -262,6 +308,32 @@ class _FilePropParser {
   String? _trashbinFilename;
   String? _trashbinOriginalLocation;
   DateTime? _trashbinDeletionTime;
+}
+
+class _FileIdPropParser {
+  _FileIdPropParser({
+    this.namespaces = const {},
+    this.logFilePath,
+  });
+
+  /// Parse <DAV:prop> element contents
+  void parse(XmlElement element) {
+    for (final child in element.children.whereType<XmlElement>()) {
+      if (child.matchQualifiedName("fileid",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _fileId = int.parse(child.innerText);
+      }
+    }
+  }
+
+  int? get fileId => _fileId;
+
+  final Map<String, String> namespaces;
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  int? _fileId;
 }
 
 extension on XmlElement {

@@ -70,6 +70,7 @@ class FilePropertyUpdatedEvent {
   static const propMetadata = 0x01;
   static const propIsArchived = 0x02;
   static const propOverrideDateTime = 0x04;
+  static const propFavorite = 0x08;
 }
 
 class FileRemovedEvent {
@@ -106,6 +107,15 @@ class ShareRemovedEvent {
 
   final Account account;
   final Share share;
+}
+
+class FavoriteResyncedEvent {
+  const FavoriteResyncedEvent(
+      this.account, this.newFavorites, this.removedFavorites);
+
+  final Account account;
+  final List<File> newFavorites;
+  final List<File> removedFavorites;
 }
 
 class ThemeChangedEvent {}

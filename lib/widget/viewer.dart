@@ -5,17 +5,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -125,6 +129,9 @@ class _ViewerState extends State<Viewer>
   }
 
   Widget _buildAppBar(BuildContext context) {
+    final index =
+        _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
+    final file = widget.streamFiles[index];
     return Wrap(
       children: [
         AnimatedVisibility(
@@ -151,12 +158,25 @@ class _ViewerState extends State<Viewer>
                 shadowColor: Colors.transparent,
                 foregroundColor: Colors.white.withOpacity(.87),
                 actions: [
-                  if (!_isDetailPaneActive && _canOpenDetailPane())
+                  if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
+                    (_pageStates[index]?.favoriteOverride ?? file.isFavorite) ==
+                            true
+                        ? IconButton(
+                            icon: const Icon(Icons.star),
+                            tooltip: L10n.global().unfavoriteTooltip,
+                            onPressed: () => _onUnfavoritePressed(index),
+                          )
+                        : IconButton(
+                            icon: const Icon(Icons.star_border),
+                            tooltip: L10n.global().favoriteTooltip,
+                            onPressed: () => _onFavoritePressed(index),
+                          ),
                     IconButton(
                       icon: const Icon(Icons.more_vert),
                       tooltip: L10n.global().detailsTooltip,
                       onPressed: _onDetailsPressed,
                     ),
+                  ],
                 ],
               ),
             ],
@@ -454,6 +474,72 @@ class _ViewerState extends State<Viewer>
     }
   }
 
+  Future<void> _onFavoritePressed(int index) async {
+    if (_pageStates[index]!.isProcessingFavorite) {
+      _log.fine("[_onFavoritePressed] Process ongoing, ignored");
+      return;
+    }
+
+    final file = widget.streamFiles[_viewerController.currentPage];
+    final c = KiwiContainer().resolve<DiContainer>();
+    setState(() {
+      _pageStates[index]!.favoriteOverride = true;
+    });
+    _pageStates[index]!.isProcessingFavorite = true;
+    try {
+      await NotifiedAction(
+        () => UpdateProperty(c.fileRepo)(
+          widget.account,
+          file,
+          favorite: true,
+        ),
+        null,
+        L10n.global().favoriteSuccessNotification,
+        failureText: L10n.global().favoriteFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onFavoritePressed] Failed while UpdateProperty", e, stackTrace);
+      setState(() {
+        _pageStates[index]!.favoriteOverride = false;
+      });
+    }
+    _pageStates[index]!.isProcessingFavorite = false;
+  }
+
+  Future<void> _onUnfavoritePressed(int index) async {
+    if (_pageStates[index]!.isProcessingFavorite) {
+      _log.fine("[_onUnfavoritePressed] Process ongoing, ignored");
+      return;
+    }
+
+    final file = widget.streamFiles[_viewerController.currentPage];
+    final c = KiwiContainer().resolve<DiContainer>();
+    setState(() {
+      _pageStates[index]!.favoriteOverride = false;
+    });
+    _pageStates[index]!.isProcessingFavorite = true;
+    try {
+      await NotifiedAction(
+        () => UpdateProperty(c.fileRepo)(
+          widget.account,
+          file,
+          favorite: false,
+        ),
+        null,
+        L10n.global().unfavoriteSuccessNotification,
+        failureText: L10n.global().unfavoriteFailureNotification,
+      )();
+    } catch (e, stackTrace) {
+      _log.shout(
+          "[_onUnfavoritePressed] Failed while UpdateProperty", e, stackTrace);
+      setState(() {
+        _pageStates[index]!.favoriteOverride = true;
+      });
+    }
+    _pageStates[index]!.isProcessingFavorite = false;
+  }
+
   void _onDetailsPressed() {
     if (!_isDetailPaneActive) {
       setState(() {
@@ -614,4 +700,7 @@ class _PageState {
   ScrollController scrollController;
   double? itemHeight;
   bool hasLoaded = false;
+
+  bool isProcessingFavorite = false;
+  bool? favoriteOverride;
 }

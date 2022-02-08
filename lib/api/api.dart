@@ -398,6 +398,44 @@ class _Files {
     }
   }
 
+  Future<Response> report({
+    required String path,
+    bool? favorite,
+  }) async {
+    try {
+      final namespaces = <String, String>{
+        "DAV:": "d",
+        "http://owncloud.org/ns": "oc",
+      };
+      final builder = XmlBuilder();
+      builder
+        ..processing("xml", "version=\"1.0\"")
+        ..element("oc:filter-files", namespaces: namespaces, nest: () {
+          builder.element("oc:filter-rules", nest: () {
+            if (favorite != null) {
+              builder.element("oc:favorite", nest: () {
+                builder.text(favorite ? "1" : "0");
+              });
+            }
+          });
+          builder.element("d:prop", nest: () {
+            builder.element("oc:fileid");
+          });
+        });
+      return await _api.request(
+        "REPORT",
+        path,
+        header: {
+          "Content-Type": "application/xml",
+        },
+        body: builder.buildDocument().toXmlString(),
+      );
+    } catch (e) {
+      _log.severe("[report] Failed while report", e);
+      rethrow;
+    }
+  }
+
   static final _log = Logger("api.api._Files");
 }
 
