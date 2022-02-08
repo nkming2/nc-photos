@@ -1,3 +1,4 @@
+ 
 {
 	"appTitle": "Photos",
 	"translator": "pHamala",
@@ -305,13 +306,21 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
-	"settingsExifSupportTitle": "EXIF tuki",
+	"settingsExifSupportTitle": "EXIF-tuki",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
 	},
 	"settingsExifSupportTrueSubtitle": "Vaatii ylimääräistä verkon käyttöä",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsMemoriesTitle": "Muistot",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "Näytä aiemmin otettuja kuvia",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Tili",
 	"settingsAccountPageTitle": "Account settings",
@@ -330,7 +339,7 @@
 	"@settingsShareFolderDialogTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsShareFolderDialogDescription": "Tämä asetus vaikuttaa share_folder parametreihini config.php -tiedostossa. Asetusten arvon TÄYTYY olla identtisiä. \n\nPaikanna sama kansio, joka on määritetty config-php -tiedostossa.",
+	"settingsShareFolderDialogDescription": "Tämä asetus vaikuttaa share_folder parametreihini config.php -tiedostossa. Asetusten arvojen TÄYTYY olla identtisiä. \n\nPaikanna sama kansio, joka on määritetty config-php -tiedostossa.",
 	"@settingsShareFolderDialogDescription": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
@@ -343,7 +352,7 @@
 		"description": "Enable/disable various server apps"
 	},
 	"settingsViewerTitle": "Katselija",
-	"settingsViewerDescription": "Customize the image/video viewer",
+	"settingsViewerDescription": "Muokkaa kuva/video -katselinta",
 	"settingsViewerPageTitle": "Viewer settings",
 	"@settingsViewerPageTitle": {
 		"description": "Dedicated page for viewer settings"
@@ -352,8 +361,9 @@
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
 	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
+	"settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
 	"settingsAlbumTitle": "Albumi",
-	"settingsAlbumDescription": "Customize albums",
+	"settingsAlbumDescription": "Muokkaa albumeita",
 	"settingsAlbumPageTitle": "Albumi-asetukset",
 	"@settingsAlbumPageTitle": {
 		"description": "Dedicated page for album settings"
@@ -383,7 +393,7 @@
 		"description": "When black in dark theme is set to false"
 	},
 	"settingsExperimentalTitle": "Kokeellinen",
-	"settingsExperimentalDescription": "Features that are not ready for everyday use",
+	"settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
 	"settingsExperimentalPageTitle": "Kokeelliset asetukset",
 	"settingsAboutSectionTitle": "Tietoa",
 	"@settingsAboutSectionTitle": {
@@ -401,7 +411,7 @@
 	"@settingsBugReportTitle": {
 		"description": "Report issue"
 	},
-	"settingsCaptureLogsTitle": "Kaappaa",
+	"settingsCaptureLogsTitle": "Kaappaa lokitiedot",
 	"@settingsCaptureLogsTitle": {
 		"description": "Capture app logs for bug report"
 	},
@@ -446,9 +456,9 @@
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
 	},
-	"rootPickerSkipConfirmationDialogContent": "Kaikki tiedostosi sisällytetään",
-	"@rootPickerSkipConfirmationDialogContent": {
-		"description": "Inform user what happens after skipping root picker"
+	"rootPickerSkipConfirmationDialogContent2": "Kaikki tiedostosi sisällytetään. Tämä voi lisä muistinkäyttöä ja hidastaa suorituskykyä.",
+	"@rootPickerSkipConfirmationDialogContent2": {
+		"description": "Warn user not to include all files in their server"
 	},
 	"megapixelCount": "{count}MP",
 	"@megapixelCount": {
@@ -751,8 +761,9 @@
 	},
 	"configButtonLabel": "ASETUS",
 	"useAsAlbumCoverTooltip": "Use as album cover",
-	"helpTooltip": "Help",
-	"removeFromAlbumTooltip": "Remove from album",
+	"helpTooltip": "Tuki",
+	"helpButtonLabel": "TUKI",
+	"removeFromAlbumTooltip": "Poista albumista",
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
 	},
@@ -888,7 +899,7 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Luo uusi salasanasuojattu linkki palvelimelle",
-	"collectionSharingLabel": "Sharing",
+	"collectionSharingLabel": "Jaettu",
 	"@collectionSharingLabel": {
 		"description": "List items being shared by the current account"
 	},
@@ -1078,6 +1089,46 @@
 		}
 	},
 	"defaultButtonLabel": "OLETUS",
+	"addUserInputHint": "Add user",
+	"@addUserInputHint": {
+		"description": "Input a user name to share this album with"
+	},
+	"sharedAlbumInfoDialogTitle": "Uutena ominaisuutena jaetut albumit",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"sharedAlbumInfoDialogContent": "Jaetut albumit sallii useiden käyttäjien yhtäaikaisen pääsyn albumiin. Lue huolellisesti jaettujen albumien rajoitukset ennen käyttöä",
+	"@sharedAlbumInfoDialogContent": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"learnMoreButtonLabel": "LUE LISÄÄ",
+	"migrateDatabaseProcessingNotification": "Päivitetään tietokantaa",
+	"@migrateDatabaseProcessingNotification": {
+		"description": "Migrate database to work with the updated app"
+	},
+	"migrateDatabaseFailureNotification": "Tietokantojen yhdistäminen epäonnistui",
+	"memoryAlbumName": "{count, plural, =1{1 vuosi sitten} other{{count} vuotta sitten}}",
+	"@memoryAlbumName": {
+		"description": "Memory albums are generated by the app and include photos in the past years",
+		"placeholders": {
+			"count": {
+				"example": "2"
+			}
+		}
+	},
+
+	"homeFolderNotFoundDialogTitle": "Kotikansiota ei löytynyt",
+	"@homeFolderNotFoundDialogTitle": {
+		"description": "The app failed to scan the user's home folder on signing in"
+	},
+	"homeFolderNotFoundDialogContent": "Korjaa WebDAV URL-osoite. Löydät URL-osoitteen Nextloud-verkkokäyttöliittymästä.",
+	"@homeFolderNotFoundDialogContent": {
+		"description": "Ask the user to provide us the correct WebDAV URL"
+	},
+	"homeFolderInputInvalidEmpty": "Nimeä kotikansiosi",
+	"@homeFolderInputInvalidEmpty": {
+		"description": "Home folder can't be left empty"
+	},
 
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
@@ -1102,5 +1153,9 @@
 	"errorServerError": "Palvelin-virhe. Varmista, että palvelin on konfiguroitu oikein",
 	"@errorServerError": {
 		"description": "HTTP 500"
+	}
+	"errorAlbumDowngrade": "Albumia ei voitu muokata, koska albumi on luotu sovelluksen uudemmalla versiolla. Päivitä sovellus viimeisimpään versioon ja yritä uudelleen",
+	"@errorAlbumDowngrade": {
+		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
 	}
 }

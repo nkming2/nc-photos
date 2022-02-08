@@ -303,22 +303,7 @@
   ],
 
   "fi": [
-    "settingsMemoriesTitle",
-    "settingsMemoriesSubtitle",
-    "settingsMapProviderTitle",
-    "rootPickerSkipConfirmationDialogContent2",
-    "helpButtonLabel",
-    "addUserInputHint",
-    "sharedAlbumInfoDialogTitle",
-    "sharedAlbumInfoDialogContent",
-    "learnMoreButtonLabel",
-    "migrateDatabaseProcessingNotification",
-    "migrateDatabaseFailureNotification",
-    "memoryAlbumName",
-    "homeFolderNotFoundDialogTitle",
-    "homeFolderNotFoundDialogContent",
-    "homeFolderInputInvalidEmpty",
-    "errorAlbumDowngrade"
+    
   ],
 
   "fr": [
