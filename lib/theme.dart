@@ -65,6 +65,11 @@ class AppTheme extends StatelessWidget {
         : Colors.white60;
   }
 
+  static Color getPrimaryTextColorInverse(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.light
+          ? primaryTextColorDark
+          : primaryTextColorLight;
+
   static Color getAppBarDarkModeSwitchColor(BuildContext context) {
     return Colors.black87;
   }

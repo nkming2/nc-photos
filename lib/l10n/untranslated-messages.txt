@@ -78,6 +78,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -174,6 +178,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -325,6 +333,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -359,6 +371,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -377,7 +393,11 @@
     "favoriteFailureNotification",
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
-    "unfavoriteFailureNotification"
+    "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification"
   ],
 
   "fr": [
@@ -508,6 +528,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ],
 
@@ -526,7 +550,11 @@
     "favoriteFailureNotification",
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
-    "unfavoriteFailureNotification"
+    "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification"
   ],
 
   "ru": [
@@ -630,6 +658,10 @@
     "unfavoriteTooltip",
     "unfavoriteSuccessNotification",
     "unfavoriteFailureNotification",
+    "createCollectionDialogTagLabel",
+    "createCollectionDialogTagDescription",
+    "addTagInputHint",
+    "tagPickerNoTagSelectedNotification",
     "errorAlbumDowngrade"
   ]
 }

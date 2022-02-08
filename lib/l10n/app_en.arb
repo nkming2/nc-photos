@@ -1151,6 +1151,22 @@
 	"@unfavoriteFailureNotification": {
 		"description": "Failed removing photos from favorites"
 	},
+	"createCollectionDialogTagLabel": "Tag",
+	"@createCollectionDialogTagLabel": {
+		"description": "Create a collection containing files with tags"
+	},
+	"createCollectionDialogTagDescription": "Show photos with specific tags",
+	"@createCollectionDialogTagDescription": {
+		"description": "Describe how a tag collection works"
+	},
+	"addTagInputHint": "Add tag",
+	"@addTagInputHint": {
+		"description": "Input a tag"
+	},
+	"tagPickerNoTagSelectedNotification": "Please add at least 1 tag",
+	"@tagPickerNoTagSelectedNotification": {
+		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

@@ -6,6 +6,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 
@@ -17,6 +19,8 @@ enum DiType {
   shareRepo,
   shareeRepo,
   favoriteRepo,
+  tagRepo,
+  taggedFileRepo,
   appDb,
   pref,
 }
@@ -30,6 +34,8 @@ class DiContainer {
     ShareRepo? shareRepo,
     ShareeRepo? shareeRepo,
     FavoriteRepo? favoriteRepo,
+    TagRepo? tagRepo,
+    TaggedFileRepo? taggedFileRepo,
     AppDb? appDb,
     Pref? pref,
   })  : _albumRepo = albumRepo,
@@ -39,6 +45,8 @@ class DiContainer {
         _shareRepo = shareRepo,
         _shareeRepo = shareeRepo,
         _favoriteRepo = favoriteRepo,
+        _tagRepo = tagRepo,
+        _taggedFileRepo = taggedFileRepo,
         _appDb = appDb,
         _pref = pref;
 
@@ -58,6 +66,10 @@ class DiContainer {
         return contianer._shareeRepo != null;
       case DiType.favoriteRepo:
         return contianer._favoriteRepo != null;
+      case DiType.tagRepo:
+        return contianer._tagRepo != null;
+      case DiType.taggedFileRepo:
+        return contianer._taggedFileRepo != null;
       case DiType.appDb:
         return contianer._appDb != null;
       case DiType.pref:
@@ -73,6 +85,8 @@ class DiContainer {
     OrNull<ShareRepo>? shareRepo,
     OrNull<ShareeRepo>? shareeRepo,
     OrNull<FavoriteRepo>? favoriteRepo,
+    OrNull<TagRepo>? tagRepo,
+    OrNull<TaggedFileRepo>? taggedFileRepo,
     OrNull<AppDb>? appDb,
     OrNull<Pref>? pref,
   }) {
@@ -84,6 +98,9 @@ class DiContainer {
       shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
       shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
       favoriteRepo: favoriteRepo == null ? _favoriteRepo : favoriteRepo.obj,
+      tagRepo: tagRepo == null ? _tagRepo : tagRepo.obj,
+      taggedFileRepo:
+          taggedFileRepo == null ? _taggedFileRepo : taggedFileRepo.obj,
       appDb: appDb == null ? _appDb : appDb.obj,
       pref: pref == null ? _pref : pref.obj,
     );
@@ -96,6 +113,8 @@ class DiContainer {
   ShareRepo get shareRepo => _shareRepo!;
   ShareeRepo get shareeRepo => _shareeRepo!;
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
+  TagRepo get tagRepo => _tagRepo!;
+  TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
 
   AppDb get appDb => _appDb!;
   Pref get pref => _pref!;
@@ -107,6 +126,8 @@ class DiContainer {
   final ShareRepo? _shareRepo;
   final ShareeRepo? _shareeRepo;
   final FavoriteRepo? _favoriteRepo;
+  final TagRepo? _tagRepo;
+  final TaggedFileRepo? _taggedFileRepo;
 
   final AppDb? _appDb;
   final Pref? _pref;

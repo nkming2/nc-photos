@@ -24,6 +24,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
@@ -71,6 +72,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         _initMetadata();
       }
     }
+    _initTags();
 
     // postpone loading map to improve responsiveness
     Future.delayed(const Duration(milliseconds: 750)).then((_) {
@@ -196,6 +198,46 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               title: Text(widget.file.ownerId!.toString()),
               subtitle: Text(L10n.global().fileSharedByDescription),
             ),
+          if (_tags.isNotEmpty)
+            ListTile(
+              leading: Icon(
+                Icons.local_offer_outlined,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
+              title: SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _tags.length,
+                  itemBuilder: (context, index) => Center(
+                    child: Wrap(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppTheme.getUnfocusedIconColor(context),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8)),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          alignment: Alignment.center,
+                          child: Text(
+                            _tags[index],
+                            style: TextStyle(
+                              fontSize: 12,
+                              color:
+                                  AppTheme.getPrimaryTextColorInverse(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 8),
+                ),
+              ),
+            ),
           ListTile(
             leading: Icon(
               Icons.calendar_today_outlined,
@@ -293,6 +335,16 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           (exif.gpsLongitudeRef == "W" ? -1 : 1);
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
+    }
+  }
+
+  Future<void> _initTags() async {
+    final c = KiwiContainer().resolve<DiContainer>();
+    try {
+      final tags = await ListFileTag(c)(widget.account, widget.file);
+      _tags.addAll(tags.map((t) => t.displayName));
+    } catch (e, stackTrace) {
+      _log.shout("[_initTags] Failed while ListFileTag", e, stackTrace);
     }
   }
 
@@ -476,6 +528,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   double? _focalLength;
   int? _isoSpeedRatings;
   Tuple2<double, double>? _gps;
+
+  final _tags = <String>[];
 
   late final bool _canRemoveFromAlbum = _checkCanRemoveFromAlbum();
 
