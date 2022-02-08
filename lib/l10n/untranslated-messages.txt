@@ -302,10 +302,6 @@
     "errorAlbumDowngrade"
   ],
 
-  "fi": [
-    
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsMemoriesTitle",

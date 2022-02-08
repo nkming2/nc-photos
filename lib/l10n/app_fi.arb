@@ -1,4 +1,4 @@
- 
+
 {
 	"appTitle": "Photos",
 	"translator": "pHamala",
@@ -1153,7 +1153,7 @@
 	"errorServerError": "Palvelin-virhe. Varmista, että palvelin on konfiguroitu oikein",
 	"@errorServerError": {
 		"description": "HTTP 500"
-	}
+	},
 	"errorAlbumDowngrade": "Albumia ei voitu muokata, koska albumi on luotu sovelluksen uudemmalla versiolla. Päivitä sovellus viimeisimpään versioon ja yritä uudelleen",
 	"@errorAlbumDowngrade": {
 		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
