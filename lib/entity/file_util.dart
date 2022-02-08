@@ -72,8 +72,11 @@ String renameConflict(String filename, int conflictCount) {
 ///
 /// A no media marker marks the parent dir and its sub dirs as not containing
 /// media files of interest
-bool isNoMediaMarker(File file) {
-  final filename = file.filename;
+bool isNoMediaMarker(File file) => isNoMediaMarkerPath(file.path);
+
+/// See [isNoMediaMarker]
+bool isNoMediaMarkerPath(String path) {
+  final filename = path_lib.basename(path);
   return filename == ".nomedia" || filename == ".noimage";
 }
 

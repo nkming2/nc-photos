@@ -451,6 +451,21 @@ class AppDbMetaEntryDbCompatV5 {
   final bool isMigrated;
 }
 
+class AppDbMetaEntryCompatV37 {
+  static const key = "compatV37";
+
+  const AppDbMetaEntryCompatV37(this.isMigrated);
+
+  factory AppDbMetaEntryCompatV37.fromJson(JsonObj json) =>
+      AppDbMetaEntryCompatV37(json["isMigrated"]);
+
+  AppDbMetaEntry toEntry() => AppDbMetaEntry(key, {
+        "isMigrated": isMigrated,
+      });
+
+  final bool isMigrated;
+}
+
 class _DummyVersionChangeEvent implements VersionChangeEvent {
   const _DummyVersionChangeEvent(this.oldVersion, this.newVersion,
       this.transaction, this.target, this.currentTarget, this.database);

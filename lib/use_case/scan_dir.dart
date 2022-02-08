@@ -12,15 +12,9 @@ class ScanDir {
   ScanDir(this.fileRepo);
 
   /// List all files under a dir recursively
-  ///
-  /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either List<File> or ExceptionEvent
   Stream<dynamic> call(Account account, File root) async* {
     try {
       final items = await Ls(fileRepo)(account, root);
-      if (_shouldScanIgnoreDir(items)) {
-        return;
-      }
       yield items
           .where(
               (f) => f.isCollection != true && file_util.isSupportedFormat(f))
@@ -42,11 +36,6 @@ class ScanDir {
       yield ExceptionEvent(e, stackTrace);
     }
   }
-
-  /// Return if this dir should be ignored in a scan op based on files under
-  /// this dir
-  static bool _shouldScanIgnoreDir(Iterable<File> files) =>
-      files.any((f) => file_util.isNoMediaMarker(f));
 
   final FileRepo fileRepo;
 

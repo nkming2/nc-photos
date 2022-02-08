@@ -56,4 +56,13 @@ extension IterableExtension<T> on Iterable<T> {
     return where((element) =>
         s.add(OverrideComparator<T>(element, equalFn, hashCodeFn))).toList();
   }
+
+  /// Invokes [action] on each element of this iterable in iteration order
+  /// lazily
+  Iterable<T> forEachLazy(void Function(T element) action) sync* {
+    for (final e in this) {
+      action(e);
+      yield e;
+    }
+  }
 }

@@ -19,8 +19,8 @@ class UpdateMissingMetadata {
 
   /// Update metadata for all files that support one under a dir
   ///
-  /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either File data (for each updated files) or ExceptionEvent
+  /// The returned stream would emit either File data (for each updated files)
+  /// or ExceptionEvent
   ///
   /// If [isRecursive] is true, [root] and its sub dirs will be scanned,
   /// otherwise only [root] will be scanned. Default to true

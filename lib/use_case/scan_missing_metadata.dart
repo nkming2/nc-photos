@@ -10,8 +10,7 @@ class ScanMissingMetadata {
 
   /// List all files that support metadata but yet having one under a dir
   ///
-  /// Dirs with a .nomedia/.noimage file will be ignored. The returned stream
-  /// would emit either File data or ExceptionEvent
+  /// The returned stream would emit either File data or ExceptionEvent
   ///
   /// If [isRecursive] is true, [root] and its sub dirs will be listed,
   /// otherwise only [root] will be listed. Default to true

@@ -9,6 +9,7 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
@@ -64,17 +65,35 @@ class FileWebdavDataSource implements FileDataSource {
     final xml = XmlDocument.parse(response.body);
     var files = WebdavResponseParser().parseFiles(xml);
     // _log.fine("[list] Parsed files: [$files]");
-    files = files.where((element) => _validateFile(element)).map((e) {
-      if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
-        return e;
-      } else {
-        _log.info("[list] Ignore outdated metadata for ${e.path}");
-        return e.copyWith(metadata: OrNull(null));
-      }
-    }).toList();
+    bool hasNoMediaMarker = false;
+    files = files
+        .forEachLazy((f) {
+          if (file_util.isNoMediaMarker(f)) {
+            hasNoMediaMarker = true;
+          }
+        })
+        .where((f) => _validateFile(f))
+        .map((e) {
+          if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
+            return e;
+          } else {
+            _log.info("[list] Ignore outdated metadata for ${e.path}");
+            return e.copyWith(metadata: OrNull(null));
+          }
+        })
+        .toList();
 
     await _compatUpgrade(account, files);
-    return files;
+
+    if (hasNoMediaMarker) {
+      // return only the marker and the dir itself
+      return files
+          .where((f) =>
+              dir.compareServerIdentity(f) || file_util.isNoMediaMarker(f))
+          .toList();
+    } else {
+      return files;
+    }
   }
 
   @override
