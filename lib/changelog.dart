@@ -149,4 +149,14 @@ Features:
 - Memories
   - Show photos taken in the past
 """,
+  // v37
+  """37.0
+- Favorites
+  - Browse favorites (Collections > Favorites)
+  - Add to or remove from favorites in photo viewer
+- Tag
+  - Browse photos by specific tags (Collections > New collection > Tag)
+- (Localization) Add Polish (by szymok)
+- (Localization) Update Finnish (by pHamala)
+""",
 ];
