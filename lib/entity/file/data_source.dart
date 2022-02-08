@@ -578,8 +578,9 @@ class FileCachedDataSource implements FileDataSource {
   /// Remove extra entries from local cache based on remote results
   Future<void> _cleanUpCacheWithRemote(
       Account account, List<File> remote, List<File> cache) async {
-    final removed =
-        cache.where((c) => !remote.any((r) => r.path == c.path)).toList();
+    final removed = cache
+        .where((c) => !remote.any((r) => r.compareServerIdentity(c)))
+        .toList();
     if (removed.isEmpty) {
       return;
     }
