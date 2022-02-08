@@ -14,7 +14,6 @@ void main() {
       test("root", _root);
       test("subdir", _subDir);
       test("unsupported file", _unsupportedFile);
-      test("nomedia", _noMediaDir);
     });
     group("multiple account", () {
       test("root", _multiAccountRoot);
@@ -91,32 +90,6 @@ Future<void> _unsupportedFile() async {
   );
 
   // convert to set because ScanDirOffline does not guarantee order
-  expect(
-    (await ScanDirOffline(c)(
-            account, File(path: file_util.unstripPath(account, "."))))
-        .toSet(),
-    {files[0]},
-  );
-}
-
-/// Scan nomedia dir
-///
-/// Files: admin/test1.jpg, admin/test/test2.jpg, admin/test/.nomedia
-/// Scan: admin
-/// Expect: admin/test1.jpg
-Future<void> _noMediaDir() async {
-  final account = util.buildAccount();
-  final files = (util.FilesBuilder()
-        ..addJpeg("admin/test1.jpg")
-        ..addJpeg("admin/test/test2.jpg")
-        ..addGenericFile("admin/test/.nomedia", "application/octet-stream"))
-      .build();
-  final c = DiContainer(
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
-  );
-
   expect(
     (await ScanDirOffline(c)(
             account, File(path: file_util.unstripPath(account, "."))))
