@@ -394,7 +394,7 @@ class _ViewerState extends State<Viewer>
       if (_scrollStartPosition == 0) {
         // start at top
         _overscrollSum += notification.overscroll;
-        if (_overscrollSum < -160) {
+        if (_overscrollSum < -144) {
           // and scroll downwards
           Navigator.of(context).pop();
         }
