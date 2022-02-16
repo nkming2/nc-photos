@@ -7,7 +7,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -54,26 +53,22 @@ class _RootPickerState extends State<RootPicker> {
   }
 
   void _initAccount() async {
-    try {
-      final files = <File>[];
-      for (final r in widget.account.roots) {
+    final files = <File>[];
+    for (final r in widget.account.roots) {
+      try {
         if (r.isNotEmpty) {
           _ensureInitDialog();
           files.add(await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
               widget.account, file_util.unstripPath(widget.account, r)));
         }
+      } catch (e, stackTrace) {
+        _log.severe("[_initAccount] Failed", e, stackTrace);
       }
-      setState(() {
-        _initialPicks = files;
-      });
-    } catch (e) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-    } finally {
-      _dismissInitDialog();
     }
+    _dismissInitDialog();
+    setState(() {
+      _initialPicks = files;
+    });
   }
 
   @override
