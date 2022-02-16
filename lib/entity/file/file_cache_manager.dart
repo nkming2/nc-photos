@@ -199,7 +199,9 @@ class FileCacheRemover {
   /// to dirStore.
   Future<void> call(Account account, File f) async {
     await appDb.use((db) async {
-      if (f.isCollection == true) {
+      if (f.isCollection != false) {
+        // removing dir is basically a superset of removing file, so we'll treat
+        // unspecified file as dir
         final transaction = db.transaction(
             [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
         final dirStore = transaction.objectStore(AppDb.dirStoreName);
@@ -223,11 +225,25 @@ Future<void> _removeFileFromAppDb(
   File file, {
   required ObjectStore fileStore,
 }) async {
-  assert(file.isCollection != true);
   try {
-    await fileStore.delete(AppDbFile2Entry.toPrimaryKeyForFile(account, file));
+    if (file.fileId == null) {
+      final index = fileStore.index(AppDbFile2Entry.strippedPathIndexName);
+      final key = await index
+          .getKey(AppDbFile2Entry.toStrippedPathIndexKeyForFile(account, file));
+      if (key != null) {
+        _log.fine("[_removeFileFromAppDb] Removing fileStore entry: $key");
+        await fileStore.delete(key);
+      }
+    } else {
+      await AppDbFile2Entry.toPrimaryKeyForFile(account, file).run((key) {
+        _log.fine("[_removeFileFromAppDb] Removing fileStore entry: $key");
+        return fileStore.delete(key);
+      });
+    }
   } catch (e, stackTrace) {
-    _log.shout("[_removeFileFromAppDb] Failed removing fileStore entry", e,
+    _log.shout(
+        "[_removeFileFromAppDb] Failed removing fileStore entry: ${logFilename(file.path)}",
+        e,
         stackTrace);
   }
 }
@@ -239,16 +255,17 @@ Future<void> _removeDirFromAppDb(
   required ObjectStore dirStore,
   required ObjectStore fileStore,
 }) async {
-  assert(dir.isCollection == true);
   // delete the dir itself
   try {
-    await AppDbDirEntry.toPrimaryKeyForDir(account, dir).runFuture((key) async {
+    await AppDbDirEntry.toPrimaryKeyForDir(account, dir).run((key) {
       _log.fine("[_removeDirFromAppDb] Removing dirStore entry: $key");
-      await dirStore.delete(key);
+      return dirStore.delete(key);
     });
   } catch (e, stackTrace) {
-    _log.shout(
-        "[_removeDirFromAppDb] Failed removing dirStore entry", e, stackTrace);
+    if (dir.isCollection != null) {
+      _log.shout("[_removeDirFromAppDb] Failed removing dirStore entry", e,
+          stackTrace);
+    }
   }
   // then its children
   final childrenRange = KeyRange.bound(
@@ -267,16 +284,7 @@ Future<void> _removeDirFromAppDb(
 
   // delete files from fileStore
   // first the dir
-  try {
-    await AppDbFile2Entry.toPrimaryKeyForFile(account, dir)
-        .runFuture((key) async {
-      _log.fine("[_removeDirFromAppDb] Removing fileStore entry: $key");
-      await fileStore.delete(key);
-    });
-  } catch (e, stackTrace) {
-    _log.shout(
-        "[_removeDirFromAppDb] Failed removing fileStore entry", e, stackTrace);
-  }
+  await _removeFileFromAppDb(account, dir, fileStore: fileStore);
   // then files under this dir and sub-dirs
   final range = KeyRange.bound(
     AppDbFile2Entry.toStrippedPathIndexLowerKeyForDir(account, dir),
