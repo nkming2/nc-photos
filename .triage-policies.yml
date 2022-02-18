@@ -11,6 +11,7 @@ resource_rules:
           state: opened
           forbidden_labels:
             - status::backlog
+            - status::blocked
             - status::in_progress
             - status::stale
         actions:
