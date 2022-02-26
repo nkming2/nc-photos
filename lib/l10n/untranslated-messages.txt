@@ -379,25 +379,7 @@
   ],
 
   "fi": [
-    "createCollectionTooltip",
-    "createCollectionDialogAlbumLabel",
-    "createCollectionDialogAlbumDescription",
-    "createCollectionDialogFolderLabel",
-    "createCollectionDialogFolderDescription",
-    "convertAlbumTooltip",
-    "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification",
-    "collectionFavoritesLabel",
-    "favoriteTooltip",
-    "favoriteSuccessNotification",
-    "favoriteFailureNotification",
-    "unfavoriteTooltip",
-    "unfavoriteSuccessNotification",
-    "unfavoriteFailureNotification",
-    "createCollectionDialogTagLabel",
-    "createCollectionDialogTagDescription",
-    "addTagInputHint",
-    "tagPickerNoTagSelectedNotification"
+    
   ],
 
   "fr": [
