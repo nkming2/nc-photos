@@ -341,45 +341,8 @@
   ],
 
   "es": [
-    "settingsMemoriesTitle",
-    "settingsMemoriesSubtitle",
-    "settingsMapProviderTitle",
     "rootPickerSkipConfirmationDialogContent2",
-    "helpButtonLabel",
-    "addUserInputHint",
-    "sharedAlbumInfoDialogTitle",
-    "sharedAlbumInfoDialogContent",
-    "learnMoreButtonLabel",
-    "migrateDatabaseProcessingNotification",
-    "migrateDatabaseFailureNotification",
-    "memoryAlbumName",
-    "homeFolderNotFoundDialogTitle",
-    "homeFolderNotFoundDialogContent",
-    "homeFolderInputInvalidEmpty",
-    "createCollectionTooltip",
-    "createCollectionDialogAlbumLabel",
-    "createCollectionDialogAlbumDescription",
-    "createCollectionDialogFolderLabel",
-    "createCollectionDialogFolderDescription",
-    "convertAlbumTooltip",
-    "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification",
-    "collectionFavoritesLabel",
-    "favoriteTooltip",
-    "favoriteSuccessNotification",
-    "favoriteFailureNotification",
-    "unfavoriteTooltip",
-    "unfavoriteSuccessNotification",
-    "unfavoriteFailureNotification",
-    "createCollectionDialogTagLabel",
-    "createCollectionDialogTagDescription",
-    "addTagInputHint",
-    "tagPickerNoTagSelectedNotification",
-    "errorAlbumDowngrade"
-  ],
-
-  "fi": [
-    
+    "helpButtonLabel"
   ],
 
   "fr": [
