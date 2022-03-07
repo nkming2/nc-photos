@@ -145,7 +145,7 @@
 	"@deleteProcessingNotification": {
 		"description": "Inform user that the item is being deleted"
 	},
-	"deleteSuccessNotification": "Elemento borrado en éxito",
+	"deleteSuccessNotification": "Elemento borrado con éxito",
 	"@deleteSuccessNotification": {
 		"description": "Inform user that the item is deleted successfully"
 	},
