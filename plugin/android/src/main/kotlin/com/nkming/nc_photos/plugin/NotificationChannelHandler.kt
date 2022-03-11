@@ -1,6 +1,5 @@
-package com.nkming.nc_photos
+package com.nkming.nc_photos.plugin
 
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -25,10 +24,10 @@ import kotlin.math.max
  * fun notifyItemsDownloadSuccessful(fileUris: List<String>,
  * 		mimeTypes: List<String>): Unit
  */
-class NotificationChannelHandler(activity: Activity) :
+class NotificationChannelHandler(context: Context) :
 	MethodChannel.MethodCallHandler {
 	companion object {
-		const val CHANNEL = "com.nkming.nc_photos/notification"
+		const val CHANNEL = "${K.LIB_ID}/notification"
 
 		fun getNextNotificationId(): Int {
 			if (++notificationId >= K.DOWNLOAD_NOTIFICATION_ID_MAX) {
@@ -42,7 +41,7 @@ class NotificationChannelHandler(activity: Activity) :
 	}
 
 	init {
-		createDownloadChannel(activity)
+		createDownloadChannel(context)
 	}
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -217,7 +216,7 @@ class NotificationChannelHandler(activity: Activity) :
 		}
 
 		val cancelIntent = Intent().apply {
-			`package` = BuildConfig.APPLICATION_ID
+			`package` = _context.packageName
 			action = K.ACTION_DOWNLOAD_CANCEL
 			putExtra(K.EXTRA_NOTIFICATION_ID, id)
 		}
@@ -337,6 +336,5 @@ class NotificationChannelHandler(activity: Activity) :
 		}
 	}
 
-	private val _activity = activity
-	private val _context get() = _activity
+	private val _context = context
 }

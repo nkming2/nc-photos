@@ -138,7 +138,7 @@ class MediaStoreChannelHandler(activity: Activity) :
 		val fileUri = Uri.fromFile(file)
 		triggerMediaScan(fileUri)
 		val contentUri = FileProvider.getUriForFile(
-			_context, "${BuildConfig.APPLICATION_ID}.fileprovider", file
+			_context, "com.nkming.nc_photos.plugin.fileprovider", file
 		)
 		result.success(contentUri.toString())
 	}

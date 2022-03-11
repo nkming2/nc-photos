@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:nc_photos/mobile/android/notification.dart';
 import 'package:nc_photos/platform/notification.dart' as itf;
+import 'package:nc_photos_plugin/nc_photos_plugin.dart' as plugin;
 
 class AndroidDownloadSuccessfulNotification extends _AndroidNotification {
   AndroidDownloadSuccessfulNotification(
@@ -10,8 +10,8 @@ class AndroidDownloadSuccessfulNotification extends _AndroidNotification {
   }) : replaceId = notificationId;
 
   @override
-  doNotify() =>
-      Notification.notifyDownloadSuccessful(fileUris, mimeTypes, replaceId);
+  doNotify() => plugin.Notification.notifyDownloadSuccessful(
+      fileUris, mimeTypes, replaceId);
 
   final List<String> fileUris;
   final List<String?> mimeTypes;
@@ -26,7 +26,7 @@ class AndroidDownloadProgressNotification extends _AndroidNotification {
   });
 
   @override
-  doNotify() => Notification.notifyDownloadProgress(
+  doNotify() => plugin.Notification.notifyDownloadProgress(
       progress, max, currentItemTitle, notificationId);
 
   Future<void> update(
@@ -47,7 +47,7 @@ class AndroidLogSaveSuccessfulNotification extends _AndroidNotification {
   AndroidLogSaveSuccessfulNotification(this.fileUri);
 
   @override
-  doNotify() => Notification.notifyLogSaveSuccessful(fileUri);
+  doNotify() => plugin.Notification.notifyLogSaveSuccessful(fileUri);
 
   final String fileUri;
 }
@@ -61,7 +61,7 @@ abstract class _AndroidNotification extends itf.Notification {
   @override
   dismiss() async {
     if (notificationId != null) {
-      await Notification.dismiss(notificationId!);
+      await plugin.Notification.dismiss(notificationId!);
     }
   }
 

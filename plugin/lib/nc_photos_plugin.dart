@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 
 class Notification {
@@ -28,5 +30,6 @@ class Notification {
         "notificationId": notificationId,
       });
 
-  static const _channel = MethodChannel("com.nkming.nc_photos/notification");
+  static const _channel =
+      MethodChannel("com.nkming.nc_photos.plugin/notification");
 }
