@@ -8,6 +8,7 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/num_extension.dart';
@@ -35,7 +36,7 @@ class AppDb {
   /// 2) Only at most 1 database instance being opened at any time
   Future<T> use<T>(FutureOr<T> Function(Database db) fn) async {
     // make sure only one client is opening the db
-    return await _lock.synchronized(() async {
+    return await platform.Lock.synchronized(k.appDbLockId, () async {
       final db = await _open();
       try {
         return await fn(db);
