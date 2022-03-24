@@ -20,17 +20,19 @@ class ResyncAlbum {
     final items = AlbumStaticProvider.of(album).items;
     final fileIds =
         items.whereType<AlbumFileItem>().map((i) => i.file.fileId!).toList();
-    final dbItems = Map.fromEntries(await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.file2StoreName);
-      return await Future.wait(fileIds.map(
-        (id) async => MapEntry(
-          id,
-          await store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))
-              as Map?,
-        ),
-      ));
-    }));
+    final dbItems = Map.fromEntries(await appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.file2StoreName);
+        return await Future.wait(fileIds.map(
+          (id) async => MapEntry(
+            id,
+            await store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))
+                as Map?,
+          ),
+        ));
+      },
+    ));
     return items.map((i) {
       if (i is AlbumFileItem) {
         try {

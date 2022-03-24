@@ -12,14 +12,15 @@ class CompatV37 {
   static Future<void> setAppDbMigrationFlag(AppDb appDb) async {
     _log.info("[setAppDbMigrationFlag] Set db flag");
     try {
-      await appDb.use((db) async {
-        final transaction =
-            db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-        final metaStore = transaction.objectStore(AppDb.metaStoreName);
-        await metaStore
-            .put(const AppDbMetaEntryCompatV37(false).toEntry().toJson());
-        await transaction.completed;
-      });
+      await appDb.use(
+        (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+        (transaction) async {
+          final metaStore = transaction.objectStore(AppDb.metaStoreName);
+          await metaStore
+              .put(const AppDbMetaEntryCompatV37(false).toEntry().toJson());
+          await transaction.completed;
+        },
+      );
     } catch (e, stackTrace) {
       _log.shout(
           "[setAppDbMigrationFlag] Failed while setting db flag, drop db instead",
@@ -30,11 +31,13 @@ class CompatV37 {
   }
 
   static Future<bool> isAppDbNeedMigration(AppDb appDb) async {
-    final dbItem = await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.metaStoreName, idbModeReadOnly);
-      final metaStore = transaction.objectStore(AppDb.metaStoreName);
-      return await metaStore.getObject(AppDbMetaEntryCompatV37.key) as Map?;
-    });
+    final dbItem = await appDb.use(
+      (db) => db.transaction(AppDb.metaStoreName, idbModeReadOnly),
+      (transaction) async {
+        final metaStore = transaction.objectStore(AppDb.metaStoreName);
+        return await metaStore.getObject(AppDbMetaEntryCompatV37.key) as Map?;
+      },
+    );
     if (dbItem == null) {
       return false;
     }
@@ -51,51 +54,53 @@ class CompatV37 {
   static Future<void> migrateAppDb(AppDb appDb) async {
     _log.info("[migrateAppDb] Migrate AppDb");
     try {
-      await appDb.use((db) async {
-        final transaction = db.transaction(
+      await appDb.use(
+        (db) => db.transaction(
             [AppDb.file2StoreName, AppDb.dirStoreName, AppDb.metaStoreName],
-            idbModeReadWrite);
-        final noMediaFiles = <_NoMediaFile>[];
-        try {
-          final fileStore = transaction.objectStore(AppDb.file2StoreName);
-          final dirStore = transaction.objectStore(AppDb.dirStoreName);
-          // scan the db to see which dirs contain a no media marker
-          await for (final c in fileStore.openCursor()) {
-            final item = c.value as Map;
-            final strippedPath = item["strippedPath"] as String;
-            if (file_util.isNoMediaMarkerPath(strippedPath)) {
-              noMediaFiles.add(_NoMediaFile(
-                item["server"],
-                item["userId"],
-                path_lib
-                    .dirname(item["strippedPath"])
-                    .run((p) => p == "." ? "" : p),
-                item["file"]["fileId"],
-              ));
+            idbModeReadWrite),
+        (transaction) async {
+          final noMediaFiles = <_NoMediaFile>[];
+          try {
+            final fileStore = transaction.objectStore(AppDb.file2StoreName);
+            final dirStore = transaction.objectStore(AppDb.dirStoreName);
+            // scan the db to see which dirs contain a no media marker
+            await for (final c in fileStore.openCursor()) {
+              final item = c.value as Map;
+              final strippedPath = item["strippedPath"] as String;
+              if (file_util.isNoMediaMarkerPath(strippedPath)) {
+                noMediaFiles.add(_NoMediaFile(
+                  item["server"],
+                  item["userId"],
+                  path_lib
+                      .dirname(item["strippedPath"])
+                      .run((p) => p == "." ? "" : p),
+                  item["file"]["fileId"],
+                ));
+              }
+              c.next();
             }
-            c.next();
-          }
-          // sort to make sure parent dirs are always in front of sub dirs
-          noMediaFiles
-              .sort((a, b) => a.strippedDirPath.compareTo(b.strippedDirPath));
-          _log.info(
-              "[migrateAppDb] nomedia dirs: ${noMediaFiles.toReadableString()}");
+            // sort to make sure parent dirs are always in front of sub dirs
+            noMediaFiles
+                .sort((a, b) => a.strippedDirPath.compareTo(b.strippedDirPath));
+            _log.info(
+                "[migrateAppDb] nomedia dirs: ${noMediaFiles.toReadableString()}");
 
-          if (noMediaFiles.isNotEmpty) {
-            await _migrateAppDbFileStore(appDb, noMediaFiles,
-                fileStore: fileStore);
-            await _migrateAppDbDirStore(appDb, noMediaFiles,
-                dirStore: dirStore);
-          }
+            if (noMediaFiles.isNotEmpty) {
+              await _migrateAppDbFileStore(appDb, noMediaFiles,
+                  fileStore: fileStore);
+              await _migrateAppDbDirStore(appDb, noMediaFiles,
+                  dirStore: dirStore);
+            }
 
-          final metaStore = transaction.objectStore(AppDb.metaStoreName);
-          await metaStore
-              .put(const AppDbMetaEntryCompatV37(true).toEntry().toJson());
-        } catch (_) {
-          transaction.abort();
-          rethrow;
-        }
-      });
+            final metaStore = transaction.objectStore(AppDb.metaStoreName);
+            await metaStore
+                .put(const AppDbMetaEntryCompatV37(true).toEntry().toJson());
+          } catch (_) {
+            transaction.abort();
+            rethrow;
+          }
+        },
+      );
     } catch (e, stackTrace) {
       _log.shout("[migrateAppDb] Failed while migrating, drop db instead", e,
           stackTrace);

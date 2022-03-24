@@ -398,34 +398,36 @@ class AlbumAppDbDataSource implements AlbumDataSource {
   @override
   get(Account account, File albumFile) {
     _log.info("[get] ${albumFile.path}");
-    return appDb.use((db) async {
-      final transaction = db.transaction(AppDb.albumStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.albumStoreName);
-      final index = store.index(AppDbAlbumEntry.indexName);
-      final path = AppDbAlbumEntry.toPathFromFile(account, albumFile);
-      final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-      final List results = await index.getAll(range);
-      if (results.isNotEmpty == true) {
-        final entries = results.map((e) =>
-            AppDbAlbumEntry.fromJson(e.cast<String, dynamic>(), account));
-        if (entries.length > 1) {
-          final items = entries.map((e) {
-            _log.info("[get] ${e.path}[${e.index}]");
-            return AlbumStaticProvider.of(e.album).items;
-          }).reduce((value, element) => value + element);
-          return entries.first.album.copyWith(
-            lastUpdated: OrNull(null),
-            provider: AlbumStaticProvider.of(entries.first.album).copyWith(
-              items: items,
-            ),
-          );
+    return appDb.use(
+      (db) => db.transaction(AppDb.albumStoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.albumStoreName);
+        final index = store.index(AppDbAlbumEntry.indexName);
+        final path = AppDbAlbumEntry.toPathFromFile(account, albumFile);
+        final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
+        final List results = await index.getAll(range);
+        if (results.isNotEmpty == true) {
+          final entries = results.map((e) =>
+              AppDbAlbumEntry.fromJson(e.cast<String, dynamic>(), account));
+          if (entries.length > 1) {
+            final items = entries.map((e) {
+              _log.info("[get] ${e.path}[${e.index}]");
+              return AlbumStaticProvider.of(e.album).items;
+            }).reduce((value, element) => value + element);
+            return entries.first.album.copyWith(
+              lastUpdated: OrNull(null),
+              provider: AlbumStaticProvider.of(entries.first.album).copyWith(
+                items: items,
+              ),
+            );
+          } else {
+            return entries.first.album;
+          }
         } else {
-          return entries.first.album;
+          throw CacheNotFoundException("No entry: $path");
         }
-      } else {
-        throw CacheNotFoundException("No entry: $path");
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -437,12 +439,13 @@ class AlbumAppDbDataSource implements AlbumDataSource {
   @override
   update(Account account, Album album) {
     _log.info("[update] ${album.albumFile!.path}");
-    return appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.albumStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.albumStoreName);
-      await _cacheAlbum(store, account, album);
-    });
+    return appDb.use(
+      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.albumStoreName);
+        await _cacheAlbum(store, account, album);
+      },
+    );
   }
 
   @override
@@ -492,43 +495,45 @@ class AlbumCachedDataSource implements AlbumDataSource {
 
   @override
   cleanUp(Account account, String rootDir, List<File> albumFiles) async {
-    appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.albumStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.albumStoreName);
-      final index = store.index(AppDbAlbumEntry.indexName);
-      final rootPath = AppDbAlbumEntry.toPath(account, rootDir);
-      final range = KeyRange.bound(
-          ["$rootPath/", 0], ["$rootPath/\uffff", int_util.int32Max]);
-      final danglingKeys = await index
-          // get all albums for this account
-          .openKeyCursor(range: range, autoAdvance: true)
-          .map((cursor) => Tuple2((cursor.key as List)[0], cursor.primaryKey))
-          // and pick the dangling ones
-          .where((pair) => !albumFiles.any(
-              (f) => pair.item1 == AppDbAlbumEntry.toPathFromFile(account, f)))
-          // map to primary keys
-          .map((pair) => pair.item2)
-          .toList();
-      for (final k in danglingKeys) {
-        _log.fine("[cleanUp] Removing albumStore entry: $k");
-        try {
-          await store.delete(k);
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[cleanUp] Failed removing albumStore entry", e, stackTrace);
+    appDb.use(
+      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.albumStoreName);
+        final index = store.index(AppDbAlbumEntry.indexName);
+        final rootPath = AppDbAlbumEntry.toPath(account, rootDir);
+        final range = KeyRange.bound(
+            ["$rootPath/", 0], ["$rootPath/\uffff", int_util.int32Max]);
+        final danglingKeys = await index
+            // get all albums for this account
+            .openKeyCursor(range: range, autoAdvance: true)
+            .map((cursor) => Tuple2((cursor.key as List)[0], cursor.primaryKey))
+            // and pick the dangling ones
+            .where((pair) => !albumFiles.any((f) =>
+                pair.item1 == AppDbAlbumEntry.toPathFromFile(account, f)))
+            // map to primary keys
+            .map((pair) => pair.item2)
+            .toList();
+        for (final k in danglingKeys) {
+          _log.fine("[cleanUp] Removing albumStore entry: $k");
+          try {
+            await store.delete(k);
+          } catch (e, stackTrace) {
+            _log.shout(
+                "[cleanUp] Failed removing albumStore entry", e, stackTrace);
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   Future<void> _cacheResult(Account account, Album result) {
-    return appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.albumStoreName, idbModeReadWrite);
-      final store = transaction.objectStore(AppDb.albumStoreName);
-      await _cacheAlbum(store, account, result);
-    });
+    return appDb.use(
+      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.albumStoreName);
+        await _cacheAlbum(store, account, result);
+      },
+    );
   }
 
   final AppDb appDb;

@@ -11,20 +11,22 @@ class PopulatePerson {
 
   /// Return a list of files of the faces
   Future<List<File>> call(Account account, List<Face> faces) async {
-    return await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.file2StoreName);
-      final products = <File>[];
-      for (final f in faces) {
-        try {
-          products.add(await _populateOne(account, f, fileStore: store));
-        } catch (e, stackTrace) {
-          _log.severe("[call] Failed populating file of face: ${f.fileId}", e,
-              stackTrace);
+    return await appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.file2StoreName);
+        final products = <File>[];
+        for (final f in faces) {
+          try {
+            products.add(await _populateOne(account, f, fileStore: store));
+          } catch (e, stackTrace) {
+            _log.severe("[call] Failed populating file of face: ${f.fileId}", e,
+                stackTrace);
+          }
         }
-      }
-      return products;
-    });
+        return products;
+      },
+    );
   }
 
   Future<File> _populateOne(

@@ -12,22 +12,25 @@ class ScanDirOffline {
 
   /// List all files under a dir recursively from the local DB
   Future<List<File>> call(Account account, File root) async {
-    return await _c.appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.file2StoreName);
-      final index = store.index(AppDbFile2Entry.strippedPathIndexName);
-      final range = KeyRange.bound(
-        AppDbFile2Entry.toStrippedPathIndexLowerKeyForDir(account, root),
-        AppDbFile2Entry.toStrippedPathIndexUpperKeyForDir(account, root),
-      );
-      return await index
-          .openCursor(range: range, autoAdvance: true)
-          .map((c) => c.value)
-          .cast<Map>()
-          .map((e) => AppDbFile2Entry.fromJson(e.cast<String, dynamic>()).file)
-          .where((f) => file_util.isSupportedFormat(f))
-          .toList();
-    });
+    return await _c.appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.file2StoreName);
+        final index = store.index(AppDbFile2Entry.strippedPathIndexName);
+        final range = KeyRange.bound(
+          AppDbFile2Entry.toStrippedPathIndexLowerKeyForDir(account, root),
+          AppDbFile2Entry.toStrippedPathIndexUpperKeyForDir(account, root),
+        );
+        return await index
+            .openCursor(range: range, autoAdvance: true)
+            .map((c) => c.value)
+            .cast<Map>()
+            .map(
+                (e) => AppDbFile2Entry.fromJson(e.cast<String, dynamic>()).file)
+            .where((f) => file_util.isSupportedFormat(f))
+            .toList();
+      },
+    );
   }
 
   final DiContainer _c;

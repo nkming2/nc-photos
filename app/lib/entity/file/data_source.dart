@@ -269,31 +269,34 @@ class FileAppDbDataSource implements FileDataSource {
   @override
   list(Account account, File dir) {
     _log.info("[list] ${dir.path}");
-    return appDb.use((db) async {
-      final transaction = db.transaction(
-          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadOnly);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      final dirStore = transaction.objectStore(AppDb.dirStoreName);
-      final dirItem = await dirStore
-          .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
-      if (dirItem == null) {
-        throw CacheNotFoundException("No entry: ${dir.path}");
-      }
-      final dirEntry = AppDbDirEntry.fromJson(dirItem.cast<String, dynamic>());
-      final entries = await Future.wait(dirEntry.children.map((c) async {
-        final fileItem = await fileStore
-            .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
-        if (fileItem == null) {
-          _log.warning(
-              "[list] Missing file ($c) in db for dir: ${logFilename(dir.path)}");
-          throw CacheNotFoundException("No entry for dir child: $c");
+    return appDb.use(
+      (db) => db.transaction(
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadOnly),
+      (transaction) async {
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        final dirStore = transaction.objectStore(AppDb.dirStoreName);
+        final dirItem = await dirStore
+            .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
+        if (dirItem == null) {
+          throw CacheNotFoundException("No entry: ${dir.path}");
         }
-        return AppDbFile2Entry.fromJson(fileItem.cast<String, dynamic>());
-      }));
-      // we need to add dir to match the remote query
-      return [dirEntry.dir] +
-          entries.map((e) => e.file).where((f) => _validateFile(f)).toList();
-    });
+        final dirEntry =
+            AppDbDirEntry.fromJson(dirItem.cast<String, dynamic>());
+        final entries = await Future.wait(dirEntry.children.map((c) async {
+          final fileItem = await fileStore
+              .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
+          if (fileItem == null) {
+            _log.warning(
+                "[list] Missing file ($c) in db for dir: ${logFilename(dir.path)}");
+            throw CacheNotFoundException("No entry for dir child: $c");
+          }
+          return AppDbFile2Entry.fromJson(fileItem.cast<String, dynamic>());
+        }));
+        // we need to add dir to match the remote query
+        return [dirEntry.dir] +
+            entries.map((e) => e.file).where((f) => _validateFile(f)).toList();
+      },
+    );
   }
 
   @override
@@ -307,19 +310,21 @@ class FileAppDbDataSource implements FileDataSource {
   Future<List<File>> listByDate(
       Account account, int fromEpochMs, int toEpochMs) async {
     _log.info("[listByDate] [$fromEpochMs, $toEpochMs]");
-    final items = await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      final dateTimeEpochMsIndex =
-          fileStore.index(AppDbFile2Entry.dateTimeEpochMsIndexName);
-      final range = KeyRange.bound(
-        AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, fromEpochMs),
-        AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, toEpochMs),
-        false,
-        true,
-      );
-      return await dateTimeEpochMsIndex.getAll(range);
-    });
+    final items = await appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        final dateTimeEpochMsIndex =
+            fileStore.index(AppDbFile2Entry.dateTimeEpochMsIndexName);
+        final range = KeyRange.bound(
+          AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, fromEpochMs),
+          AppDbFile2Entry.toDateTimeEpochMsIndexKey(account, toEpochMs),
+          false,
+          true,
+        );
+        return await dateTimeEpochMsIndex.getAll(range);
+      },
+    );
     return items
         .cast<Map>()
         .map((i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()))
@@ -357,21 +362,21 @@ class FileAppDbDataSource implements FileDataSource {
     bool? favorite,
   }) {
     _log.info("[updateProperty] ${f.path}");
-    return appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.file2StoreName, idbModeReadWrite);
-
-      // update file store
-      final newFile = f.copyWith(
-        metadata: metadata,
-        isArchived: isArchived,
-        overrideDateTime: overrideDateTime,
-        isFavorite: favorite,
-      );
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      await fileStore.put(AppDbFile2Entry.fromFile(account, newFile).toJson(),
-          AppDbFile2Entry.toPrimaryKeyForFile(account, newFile));
-    });
+    return appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
+      (transaction) async {
+        // update file store
+        final newFile = f.copyWith(
+          metadata: metadata,
+          isArchived: isArchived,
+          overrideDateTime: overrideDateTime,
+          isFavorite: favorite,
+        );
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        await fileStore.put(AppDbFile2Entry.fromFile(account, newFile).toJson(),
+            AppDbFile2Entry.toPrimaryKeyForFile(account, newFile));
+      },
+    );
   }
 
   @override
@@ -577,20 +582,22 @@ class FileForwardCacheManager {
   }
 
   Future<void> _cacheDir(Account account, File dir) async {
-    final dirItems = await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.dirStoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.dirStoreName);
-      final dirItem = await store
-          .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
-      if (dirItem == null) {
-        return null;
-      }
-      final range = KeyRange.bound(
-        AppDbDirEntry.toPrimaryLowerKeyForSubDirs(account, dir),
-        AppDbDirEntry.toPrimaryUpperKeyForSubDirs(account, dir),
-      );
-      return [dirItem] + (await store.getAll(range)).cast<Map>();
-    });
+    final dirItems = await appDb.use(
+      (db) => db.transaction(AppDb.dirStoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.dirStoreName);
+        final dirItem = await store
+            .getObject(AppDbDirEntry.toPrimaryKeyForDir(account, dir)) as Map?;
+        if (dirItem == null) {
+          return null;
+        }
+        final range = KeyRange.bound(
+          AppDbDirEntry.toPrimaryLowerKeyForSubDirs(account, dir),
+          AppDbDirEntry.toPrimaryUpperKeyForSubDirs(account, dir),
+        );
+        return [dirItem] + (await store.getAll(range)).cast<Map>();
+      },
+    );
     if (dirItems == null) {
       // no cache
       return;
@@ -606,12 +613,14 @@ class FileForwardCacheManager {
     // cache files
     final fileIds = dirs.map((e) => e.children).fold<List<int>>(
         [], (previousValue, element) => previousValue + element);
-    final fileItems = await appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final store = transaction.objectStore(AppDb.file2StoreName);
-      return await Future.wait(fileIds.map(
-          (id) => store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
-    });
+    final fileItems = await appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final store = transaction.objectStore(AppDb.file2StoreName);
+        return await Future.wait(fileIds.map((id) =>
+            store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
+      },
+    );
     final files = fileItems
         .cast<Map?>()
         .whereType<Map>()

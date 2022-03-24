@@ -19,12 +19,14 @@ class FindFile {
     List<int> fileIds, {
     void Function(int fileId)? onFileNotFound,
   }) async {
-    final dbItems = await _c.appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      return await Future.wait(fileIds.map((id) =>
-          fileStore.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
-    });
+    final dbItems = await _c.appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        return await Future.wait(fileIds.map((id) =>
+            fileStore.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
+      },
+    );
     final files = <File>[];
     for (final pair in zip([fileIds, dbItems])) {
       final dbItem = pair[1] as Map?;

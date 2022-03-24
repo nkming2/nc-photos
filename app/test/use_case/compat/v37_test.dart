@@ -29,12 +29,14 @@ void main() {
 /// Expect: true
 Future<void> _isAppDbNeedMigrationEntryFalse() async {
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-    final metaStore = transaction.objectStore(AppDb.metaStoreName);
-    const entry = AppDbMetaEntryCompatV37(false);
-    await metaStore.put(entry.toEntry().toJson());
-  });
+  await appDb.use(
+    (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+    (transaction) async {
+      final metaStore = transaction.objectStore(AppDb.metaStoreName);
+      const entry = AppDbMetaEntryCompatV37(false);
+      await metaStore.put(entry.toEntry().toJson());
+    },
+  );
 
   expect(await CompatV37.isAppDbNeedMigration(appDb), true);
 }
@@ -44,12 +46,14 @@ Future<void> _isAppDbNeedMigrationEntryFalse() async {
 /// Expect: false
 Future<void> _isAppDbNeedMigrationEntryTrue() async {
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-    final metaStore = transaction.objectStore(AppDb.metaStoreName);
-    const entry = AppDbMetaEntryCompatV37(true);
-    await metaStore.put(entry.toEntry().toJson());
-  });
+  await appDb.use(
+    (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+    (transaction) async {
+      final metaStore = transaction.objectStore(AppDb.metaStoreName);
+      const entry = AppDbMetaEntryCompatV37(true);
+      await metaStore.put(entry.toEntry().toJson());
+    },
+  );
 
   expect(await CompatV37.isAppDbNeedMigration(appDb), false);
 }
@@ -59,12 +63,14 @@ Future<void> _isAppDbNeedMigrationEntryTrue() async {
 /// Expect: false
 Future<void> _isAppDbNeedMigrationWithoutEntry() async {
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    final transaction = db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-    final metaStore = transaction.objectStore(AppDb.metaStoreName);
-    const entry = AppDbMetaEntryCompatV37(true);
-    await metaStore.put(entry.toEntry().toJson());
-  });
+  await appDb.use(
+    (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+    (transaction) async {
+      final metaStore = transaction.objectStore(AppDb.metaStoreName);
+      const entry = AppDbMetaEntryCompatV37(true);
+      await metaStore.put(entry.toEntry().toJson());
+    },
+  );
 
   expect(await CompatV37.isAppDbNeedMigration(appDb), false);
 }
@@ -81,11 +87,9 @@ Future<void> _migrateAppDbWithoutNomedia() async {
         ..addJpeg("admin/dir1/test2.jpg"))
       .build();
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    await util.fillAppDb(appDb, account, files);
-    await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
-    await util.fillAppDbDir(appDb, account, files[2], [files[3]]);
-  });
+  await util.fillAppDb(appDb, account, files);
+  await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
+  await util.fillAppDbDir(appDb, account, files[2], [files[3]]);
   await CompatV37.migrateAppDb(appDb);
 
   final fileObjs = await util.listAppDb(
@@ -113,11 +117,9 @@ Future<void> _migrateAppDb() async {
         ..addJpeg("admin/dir1/test2.jpg"))
       .build();
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    await util.fillAppDb(appDb, account, files);
-    await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
-    await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 5));
-  });
+  await util.fillAppDb(appDb, account, files);
+  await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
+  await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 5));
   await CompatV37.migrateAppDb(appDb);
 
   final fileObjs = await util.listAppDb(
@@ -147,12 +149,10 @@ Future<void> _migrateAppDbNestedDir() async {
         ..addJpeg("admin/dir1/dir1-1/test3.jpg"))
       .build();
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    await util.fillAppDb(appDb, account, files);
-    await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
-    await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 6));
-    await util.fillAppDbDir(appDb, account, files[5], [files[6]]);
-  });
+  await util.fillAppDb(appDb, account, files);
+  await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
+  await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 6));
+  await util.fillAppDbDir(appDb, account, files[5], [files[6]]);
   await CompatV37.migrateAppDb(appDb);
 
   final fileObjs = await util.listAppDb(
@@ -183,12 +183,10 @@ Future<void> _migrateAppDbNestedMarker() async {
         ..addJpeg("admin/dir1/dir1-1/test3.jpg"))
       .build();
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    await util.fillAppDb(appDb, account, files);
-    await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
-    await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 6));
-    await util.fillAppDbDir(appDb, account, files[5], files.slice(6, 8));
-  });
+  await util.fillAppDb(appDb, account, files);
+  await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 3));
+  await util.fillAppDbDir(appDb, account, files[2], files.slice(3, 6));
+  await util.fillAppDbDir(appDb, account, files[5], files.slice(6, 8));
   await CompatV37.migrateAppDb(appDb);
 
   final fileObjs = await util.listAppDb(
@@ -216,11 +214,9 @@ Future<void> _migrateAppDbRoot() async {
         ..addJpeg("admin/dir1/test2.jpg"))
       .build();
   final appDb = MockAppDb();
-  await appDb.use((db) async {
-    await util.fillAppDb(appDb, account, files);
-    await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 4));
-    await util.fillAppDbDir(appDb, account, files[3], [files[4]]);
-  });
+  await util.fillAppDb(appDb, account, files);
+  await util.fillAppDbDir(appDb, account, files[0], files.slice(1, 4));
+  await util.fillAppDbDir(appDb, account, files[3], [files[4]]);
   await CompatV37.migrateAppDb(appDb);
 
   final objs = await util.listAppDb(

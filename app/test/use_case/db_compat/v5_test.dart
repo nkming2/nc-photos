@@ -13,39 +13,42 @@ void main() {
     group("isNeedMigration", () {
       test("w/ meta entry == false", () async {
         final appDb = MockAppDb();
-        await appDb.use((db) async {
-          final transaction =
-              db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-          final metaStore = transaction.objectStore(AppDb.metaStoreName);
-          const entry = AppDbMetaEntryDbCompatV5(false);
-          await metaStore.put(entry.toEntry().toJson());
-        });
+        await appDb.use(
+          (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+          (transaction) async {
+            final metaStore = transaction.objectStore(AppDb.metaStoreName);
+            const entry = AppDbMetaEntryDbCompatV5(false);
+            await metaStore.put(entry.toEntry().toJson());
+          },
+        );
 
         expect(await DbCompatV5.isNeedMigration(appDb), true);
       });
 
       test("w/ meta entry == true", () async {
         final appDb = MockAppDb();
-        await appDb.use((db) async {
-          final transaction =
-              db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-          final metaStore = transaction.objectStore(AppDb.metaStoreName);
-          const entry = AppDbMetaEntryDbCompatV5(true);
-          await metaStore.put(entry.toEntry().toJson());
-        });
+        await appDb.use(
+          (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+          (transaction) async {
+            final metaStore = transaction.objectStore(AppDb.metaStoreName);
+            const entry = AppDbMetaEntryDbCompatV5(true);
+            await metaStore.put(entry.toEntry().toJson());
+          },
+        );
 
         expect(await DbCompatV5.isNeedMigration(appDb), false);
       });
 
       test("w/o meta entry", () async {
         final appDb = MockAppDb();
-        await appDb.use((db) async {
-          final transaction =
-              db.transaction(AppDb.metaStoreName, idbModeReadWrite);
-          final metaStore = transaction.objectStore(AppDb.metaStoreName);
-          const entry = AppDbMetaEntryDbCompatV5(true);
-          await metaStore.put(entry.toEntry().toJson());
-        });
+        await appDb.use(
+          (db) => db.transaction(AppDb.metaStoreName, idbModeReadWrite),
+          (transaction) async {
+            final metaStore = transaction.objectStore(AppDb.metaStoreName);
+            const entry = AppDbMetaEntryDbCompatV5(true);
+            await metaStore.put(entry.toEntry().toJson());
+          },
+        );
 
         expect(await DbCompatV5.isNeedMigration(appDb), false);
       });
@@ -60,17 +63,18 @@ void main() {
             ))
           .build();
       final appDb = MockAppDb();
-      await appDb.use((db) async {
-        final transaction =
-            db.transaction(AppDb.file2StoreName, idbModeReadWrite);
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await fileStore.put({
-          "server": account.url,
-          "userId": account.username.toCaseInsensitiveString(),
-          "strippedPath": files[0].strippedPathWithEmpty,
-          "file": files[0].toJson(),
-        }, "${account.url}/${account.username.toCaseInsensitiveString()}/${files[0].fileId}");
-      });
+      await appDb.use(
+        (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
+        (transaction) async {
+          final fileStore = transaction.objectStore(AppDb.file2StoreName);
+          await fileStore.put({
+            "server": account.url,
+            "userId": account.username.toCaseInsensitiveString(),
+            "strippedPath": files[0].strippedPathWithEmpty,
+            "file": files[0].toJson(),
+          }, "${account.url}/${account.username.toCaseInsensitiveString()}/${files[0].fileId}");
+        },
+      );
       await DbCompatV5.migrate(appDb);
 
       final objs =
