@@ -15,7 +15,7 @@ class AppEventListener<T> {
 
   void begin() {
     if (_subscription != null) {
-      _log.warning("[beginListenEvent] Already listening");
+      _log.warning("[begin] Already listening");
       return;
     }
     _subscription = _stream.listen(_listener);
@@ -23,7 +23,7 @@ class AppEventListener<T> {
 
   void end() {
     if (_subscription == null) {
-      _log.warning("[endListenEvent] Already not listening");
+      _log.warning("[end] Already not listening");
       return;
     }
     _subscription?.cancel();
