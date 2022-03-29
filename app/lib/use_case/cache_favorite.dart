@@ -37,35 +37,36 @@ class CacheFavorite {
     if (newFavorites.isEmpty && removedFavorites.isEmpty) {
       return;
     }
-    await _c.appDb.use((db) async {
-      final transaction =
-          db.transaction(AppDb.file2StoreName, idbModeReadWrite);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      await Future.wait(newFavorites.map((f) async {
-        _log.info("[call] New favorite: ${f.path}");
-        try {
-          await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
-              AppDbFile2Entry.toPrimaryKeyForFile(account, f));
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[call] Failed while writing new favorite to AppDb: ${logFilename(f.path)}",
-              e,
-              stackTrace);
-        }
-      }));
-      await Future.wait(removedFavorites.map((f) async {
-        _log.info("[call] Remove favorite: ${f.path}");
-        try {
-          await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
-              AppDbFile2Entry.toPrimaryKeyForFile(account, f));
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[call] Failed while writing removed favorite to AppDb: ${logFilename(f.path)}",
-              e,
-              stackTrace);
-        }
-      }));
-    });
+    await _c.appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
+      (transaction) async {
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        await Future.wait(newFavorites.map((f) async {
+          _log.info("[call] New favorite: ${f.path}");
+          try {
+            await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
+                AppDbFile2Entry.toPrimaryKeyForFile(account, f));
+          } catch (e, stackTrace) {
+            _log.shout(
+                "[call] Failed while writing new favorite to AppDb: ${logFilename(f.path)}",
+                e,
+                stackTrace);
+          }
+        }));
+        await Future.wait(removedFavorites.map((f) async {
+          _log.info("[call] Remove favorite: ${f.path}");
+          try {
+            await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
+                AppDbFile2Entry.toPrimaryKeyForFile(account, f));
+          } catch (e, stackTrace) {
+            _log.shout(
+                "[call] Failed while writing removed favorite to AppDb: ${logFilename(f.path)}",
+                e,
+                stackTrace);
+          }
+        }));
+      },
+    );
 
     KiwiContainer()
         .resolve<EventBus>()

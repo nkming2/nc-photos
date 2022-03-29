@@ -124,27 +124,30 @@ class FileCacheUpdater {
   }
 
   Future<void> _cacheRemote(Account account, File dir, List<File> remote) {
-    return appDb.use((db) async {
-      final transaction = db.transaction(
-          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
-      final dirStore = transaction.objectStore(AppDb.dirStoreName);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
+    return appDb.use(
+      (db) => db.transaction(
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite),
+      (transaction) async {
+        final dirStore = transaction.objectStore(AppDb.dirStoreName);
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
 
-      // add files to db
-      await Future.wait(remote.map((f) => fileStore.put(
-          AppDbFile2Entry.fromFile(account, f).toJson(),
-          AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
+        // add files to db
+        await Future.wait(remote.map((f) => fileStore.put(
+            AppDbFile2Entry.fromFile(account, f).toJson(),
+            AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
 
-      // results from remote also contain the dir itself
-      final resultGroup =
-          remote.groupListsBy((f) => f.compareServerIdentity(dir));
-      final remoteDir = resultGroup[true]!.first;
-      final remoteChildren = resultGroup[false] ?? [];
-      // add dir to db
-      await dirStore.put(
-          AppDbDirEntry.fromFiles(account, remoteDir, remoteChildren).toJson(),
-          AppDbDirEntry.toPrimaryKeyForDir(account, remoteDir));
-    });
+        // results from remote also contain the dir itself
+        final resultGroup =
+            remote.groupListsBy((f) => f.compareServerIdentity(dir));
+        final remoteDir = resultGroup[true]!.first;
+        final remoteChildren = resultGroup[false] ?? [];
+        // add dir to db
+        await dirStore.put(
+            AppDbDirEntry.fromFiles(account, remoteDir, remoteChildren)
+                .toJson(),
+            AppDbDirEntry.toPrimaryKeyForDir(account, remoteDir));
+      },
+    );
   }
 
   /// Remove extra entries from local cache based on remote contents
@@ -159,27 +162,29 @@ class FileCacheUpdater {
     _log.info(
         "[_cleanUpCache] Removed: ${removed.map((f) => f.path).toReadableString()}");
 
-    await appDb.use((db) async {
-      final transaction = db.transaction(
-          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
-      final dirStore = transaction.objectStore(AppDb.dirStoreName);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      for (final f in removed) {
-        try {
-          if (f.isCollection == true) {
-            await _removeDirFromAppDb(account, f,
-                dirStore: dirStore, fileStore: fileStore);
-          } else {
-            await _removeFileFromAppDb(account, f, fileStore: fileStore);
+    await appDb.use(
+      (db) => db.transaction(
+          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite),
+      (transaction) async {
+        final dirStore = transaction.objectStore(AppDb.dirStoreName);
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        for (final f in removed) {
+          try {
+            if (f.isCollection == true) {
+              await _removeDirFromAppDb(account, f,
+                  dirStore: dirStore, fileStore: fileStore);
+            } else {
+              await _removeFileFromAppDb(account, f, fileStore: fileStore);
+            }
+          } catch (e, stackTrace) {
+            _log.shout(
+                "[_cleanUpCache] Failed while removing file: ${logFilename(f.path)}",
+                e,
+                stackTrace);
           }
-        } catch (e, stackTrace) {
-          _log.shout(
-              "[_cleanUpCache] Failed while removing file: ${logFilename(f.path)}",
-              e,
-              stackTrace);
         }
-      }
-    });
+      },
+    );
   }
 
   final AppDb appDb;
@@ -198,23 +203,28 @@ class FileCacheRemover {
   /// If [f] is a file, the file will be removed from file2Store, but no changes
   /// to dirStore.
   Future<void> call(Account account, File f) async {
-    await appDb.use((db) async {
-      if (f.isCollection != false) {
-        // removing dir is basically a superset of removing file, so we'll treat
-        // unspecified file as dir
-        final transaction = db.transaction(
-            [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite);
-        final dirStore = transaction.objectStore(AppDb.dirStoreName);
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await _removeDirFromAppDb(account, f,
-            dirStore: dirStore, fileStore: fileStore);
-      } else {
-        final transaction =
-            db.transaction(AppDb.file2StoreName, idbModeReadWrite);
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await _removeFileFromAppDb(account, f, fileStore: fileStore);
-      }
-    });
+    if (f.isCollection != false) {
+      // removing dir is basically a superset of removing file, so we'll treat
+      // unspecified file as dir
+      await appDb.use(
+        (db) => db.transaction(
+            [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite),
+        (transaction) async {
+          final dirStore = transaction.objectStore(AppDb.dirStoreName);
+          final fileStore = transaction.objectStore(AppDb.file2StoreName);
+          await _removeDirFromAppDb(account, f,
+              dirStore: dirStore, fileStore: fileStore);
+        },
+      );
+    } else {
+      await appDb.use(
+        (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
+        (transaction) async {
+          final fileStore = transaction.objectStore(AppDb.file2StoreName);
+          await _removeFileFromAppDb(account, f, fileStore: fileStore);
+        },
+      );
+    }
   }
 
   final AppDb appDb;

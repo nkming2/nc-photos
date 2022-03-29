@@ -18,24 +18,26 @@ class ListFavoriteOffline {
     final rootDirs = account.roots
         .map((r) => File(path: file_util.unstripPath(account, r)))
         .toList();
-    return _c.appDb.use((db) async {
-      final transaction = db.transaction(AppDb.file2StoreName, idbModeReadOnly);
-      final fileStore = transaction.objectStore(AppDb.file2StoreName);
-      final fileIsFavoriteIndex =
-          fileStore.index(AppDbFile2Entry.fileIsFavoriteIndexName);
-      return await fileIsFavoriteIndex
-          .openCursor(
-            key: AppDbFile2Entry.toFileIsFavoriteIndexKey(account, true),
-            autoAdvance: true,
-          )
-          .map((c) => AppDbFile2Entry.fromJson(
-              (c.value as Map).cast<String, dynamic>()))
-          .map((e) => e.file)
-          .where((f) =>
-              file_util.isSupportedFormat(f) &&
-              rootDirs.any((r) => file_util.isOrUnderDir(f, r)))
-          .toList();
-    });
+    return _c.appDb.use(
+      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+      (transaction) async {
+        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+        final fileIsFavoriteIndex =
+            fileStore.index(AppDbFile2Entry.fileIsFavoriteIndexName);
+        return await fileIsFavoriteIndex
+            .openCursor(
+              key: AppDbFile2Entry.toFileIsFavoriteIndexKey(account, true),
+              autoAdvance: true,
+            )
+            .map((c) => AppDbFile2Entry.fromJson(
+                (c.value as Map).cast<String, dynamic>()))
+            .map((e) => e.file)
+            .where((f) =>
+                file_util.isSupportedFormat(f) &&
+                rootDirs.any((r) => file_util.isOrUnderDir(f, r)))
+            .toList();
+      },
+    );
   }
 
   final DiContainer _c;

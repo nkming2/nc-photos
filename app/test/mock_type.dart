@@ -100,7 +100,8 @@ class MockAppDb implements AppDb {
   }
 
   @override
-  Future<T> use<T>(FutureOr<T> Function(Database db) fn) async {
+  Future<T> use<T>(Transaction Function(Database db) transactionBuilder,
+      FutureOr<T> Function(Transaction transaction) fn) async {
     final db = await _dbFactory.open(
       "test.db",
       version: 1,
@@ -110,9 +111,14 @@ class MockAppDb implements AppDb {
       },
     );
 
+    Transaction? transaction;
     try {
-      return await fn(db);
+      transaction = transactionBuilder(db);
+      return await fn(transaction);
     } finally {
+      if (transaction != null) {
+        await transaction.completed;
+      }
       db.close();
     }
   }

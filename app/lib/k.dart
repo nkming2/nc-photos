@@ -33,3 +33,7 @@ const photoLargeSize = 1080;
 
 /// Size of the cover photos
 const coverSize = 512;
+
+/// AppDb lock ID
+const appDbLockId = 1;
+
