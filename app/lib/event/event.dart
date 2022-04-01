@@ -7,7 +7,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/pref.dart';
 
 class AppEventListener<T> {
@@ -121,6 +120,17 @@ class FavoriteResyncedEvent {
 class ThemeChangedEvent {}
 
 class LanguageChangedEvent {}
+
+enum MetadataTaskState {
+  /// No work is being done
+  idle,
+
+  /// Processing images
+  prcoessing,
+
+  /// Paused on data network
+  waitingForWifi,
+}
 
 class MetadataTaskStateChangedEvent {
   const MetadataTaskStateChangedEvent(this.state);

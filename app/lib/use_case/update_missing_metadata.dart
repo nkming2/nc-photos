@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';

@@ -117,14 +117,3 @@ class MetadataTaskManager {
 
   static MetadataTaskManager? _inst;
 }
-
-enum MetadataTaskState {
-  /// No work is being done
-  idle,
-
-  /// Processing images
-  prcoessing,
-
-  /// Paused on data network
-  waitingForWifi,
-}
