@@ -56,7 +56,7 @@ class SnackBarManager {
 
   static final _inst = SnackBarManager._();
 
-  final _log = Logger("snack_bar_manager.SnackBarManager");
+  static final _log = Logger("snack_bar_manager.SnackBarManager");
 }
 
 abstract class SnackBarHandler {
