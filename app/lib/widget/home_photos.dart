@@ -22,8 +22,10 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/metadata_task_manager.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/primitive.dart';
+import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -66,17 +68,14 @@ class _HomePhotosState extends State<HomePhotos>
     super.initState();
     _thumbZoomLevel = Pref().getHomePhotosZoomLevelOr(0);
     _initBloc();
-    _metadataTaskStateChangedListener.begin();
+    _web?.onInitState();
     _prefUpdatedListener.begin();
-    _filePropertyUpdatedListener.begin();
   }
 
   @override
   dispose() {
-    _metadataTaskIconController.stop();
-    _metadataTaskStateChangedListener.end();
     _prefUpdatedListener.end();
-    _filePropertyUpdatedListener.end();
+    _web?.onDispose();
     super.dispose();
   }
 
@@ -137,8 +136,7 @@ class _HomePhotosState extends State<HomePhotos>
                       controller: _scrollController,
                       slivers: [
                         _buildAppBar(context),
-                        if (_metadataTaskState != MetadataTaskState.idle)
-                          _buildMetadataTaskHeader(context),
+                        _web?.buildContent(context),
                         if (AccountPref.of(widget.account)
                                 .isEnableMemoryAlbumOr(true) &&
                             _smartAlbums.isNotEmpty)
@@ -151,7 +149,7 @@ class _HomePhotosState extends State<HomePhotos>
                             });
                           },
                         ),
-                      ],
+                      ].whereType<Widget>().toList(),
                     ),
                   ),
                 ),
@@ -256,81 +254,6 @@ class _HomePhotosState extends State<HomePhotos>
               break;
           }
         },
-      ),
-    );
-  }
-
-  Widget _buildMetadataTaskHeader(BuildContext context) {
-    return SliverPersistentHeader(
-      pinned: true,
-      floating: false,
-      delegate: _MetadataTaskHeaderDelegate(
-        extent: _metadataTaskHeaderHeight,
-        builder: (context) => Container(
-          height: double.infinity,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          alignment: AlignmentDirectional.centerStart,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              children: [
-                if (_metadataTaskState == MetadataTaskState.prcoessing)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _MetadataTaskLoadingIcon(
-                        controller: _metadataTaskIconController,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        L10n.global().metadataTaskProcessingNotification +
-                            _getMetadataTaskProgressString(),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  )
-                else if (_metadataTaskState == MetadataTaskState.waitingForWifi)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.sync_problem,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        L10n.global().metadataTaskPauseNoWiFiNotification,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                Expanded(
-                  child: Container(),
-                ),
-                Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: Text(
-                        L10n.global().configButtonLabel,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pushNamed(Settings.routeName,
-                          arguments: SettingsArguments(widget.account));
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -487,30 +410,14 @@ class _HomePhotosState extends State<HomePhotos>
     );
   }
 
-  void _onMetadataTaskStateChanged(MetadataTaskStateChangedEvent ev) {
-    if (ev.state == MetadataTaskState.idle) {
-      _metadataTaskProcessCount = 0;
-    }
-    if (ev.state != _metadataTaskState) {
-      setState(() {
-        _metadataTaskState = ev.state;
-      });
-    }
-  }
-
   void _onPrefUpdated(PrefUpdatedEvent ev) {
-    if (ev.key == PrefKey.enableExif && ev.value == true) {
-      _tryStartMetadataTask(ignoreFired: true);
+    if (ev.key == PrefKey.enableExif) {
+      if (ev.value == true) {
+        _tryStartMetadataTask(ignoreFired: true);
+      } else {
+        _stopMetadataTask();
+      }
     }
-  }
-
-  void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
-    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
-      return;
-    }
-    setState(() {
-      ++_metadataTaskProcessCount;
-    });
   }
 
   void _tryStartMetadataTask({
@@ -519,13 +426,25 @@ class _HomePhotosState extends State<HomePhotos>
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
-      MetadataTaskManager().addTask(
-          MetadataTask(widget.account, AccountPref.of(widget.account)));
-      _metadataTaskProcessTotalCount = _backingFiles
+      final missingMetadataCount = _backingFiles
           .where(
               (f) => file_util.isSupportedImageFormat(f) && f.metadata == null)
           .length;
+      if (missingMetadataCount > 0) {
+        if (_web != null) {
+          _web!.startMetadataTask(missingMetadataCount);
+        } else {
+          service.startService();
+        }
+      }
+
       _hasFiredMetadataTask.value = true;
+    }
+  }
+
+  void _stopMetadataTask() {
+    if (_web == null) {
+      service.stopService();
     }
   }
 
@@ -622,10 +541,7 @@ class _HomePhotosState extends State<HomePhotos>
     if (_itemListMaxExtent != null &&
         constraints.hasBoundedHeight &&
         _appBarExtent != null) {
-      final metadataTaskHeaderExtent =
-          _metadataTaskState == MetadataTaskState.idle
-              ? 0
-              : _metadataTaskHeaderHeight;
+      final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
           AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
                   _smartAlbums.isNotEmpty
@@ -645,15 +561,6 @@ class _HomePhotosState extends State<HomePhotos>
     } else {
       return null;
     }
-  }
-
-  String _getMetadataTaskProgressString() {
-    if (_metadataTaskProcessTotalCount == 0) {
-      return "";
-    }
-    final clippedCount =
-        math.min(_metadataTaskProcessCount, _metadataTaskProcessTotalCount - 1);
-    return " ($clippedCount/$_metadataTaskProcessTotalCount)";
   }
 
   Primitive<bool> get _hasFiredMetadataTask {
@@ -699,12 +606,161 @@ class _HomePhotosState extends State<HomePhotos>
   double? _appBarExtent;
   double? _itemListMaxExtent;
 
+  late final _prefUpdatedListener =
+      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
+
+  late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
+
+  static final _log = Logger("widget.home_photos._HomePhotosState");
+  static const _menuValueRefresh = 0;
+}
+
+class _Web {
+  _Web(this.state);
+
+  void onInitState() {
+    _metadataTaskStateChangedListener.begin();
+    _filePropertyUpdatedListener.begin();
+  }
+
+  void onDispose() {
+    _metadataTaskIconController.stop();
+    _metadataTaskStateChangedListener.end();
+    _filePropertyUpdatedListener.end();
+  }
+
+  Widget? buildContent(BuildContext context) {
+    if (_metadataTaskState != MetadataTaskState.idle) {
+      return _buildMetadataTaskHeader(context);
+    } else {
+      return null;
+    }
+  }
+
+  void startMetadataTask(int missingMetadataCount) {
+    MetadataTaskManager().addTask(MetadataTask(
+        state.widget.account, AccountPref.of(state.widget.account)));
+    _metadataTaskProcessTotalCount = missingMetadataCount;
+  }
+
+  double getHeaderHeight() {
+    return _metadataTaskState == MetadataTaskState.idle
+        ? 0
+        : _metadataTaskHeaderHeight;
+  }
+
+  Widget _buildMetadataTaskHeader(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      floating: false,
+      delegate: _MetadataTaskHeaderDelegate(
+        extent: _metadataTaskHeaderHeight,
+        builder: (context) => Container(
+          height: double.infinity,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          alignment: AlignmentDirectional.centerStart,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                if (_metadataTaskState == MetadataTaskState.prcoessing)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _MetadataTaskLoadingIcon(
+                        controller: _metadataTaskIconController,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        L10n.global().metadataTaskProcessingNotification +
+                            _getMetadataTaskProgressString(),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  )
+                else if (_metadataTaskState == MetadataTaskState.waitingForWifi)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.sync_problem,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        L10n.global().metadataTaskPauseNoWiFiNotification,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                Expanded(
+                  child: Container(),
+                ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Text(
+                        L10n.global().configButtonLabel,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Settings.routeName,
+                          arguments: SettingsArguments(state.widget.account));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onMetadataTaskStateChanged(MetadataTaskStateChangedEvent ev) {
+    if (ev.state == MetadataTaskState.idle) {
+      _metadataTaskProcessCount = 0;
+    }
+    if (ev.state != _metadataTaskState) {
+      // ignore: invalid_use_of_protected_member
+      state.setState(() {
+        _metadataTaskState = ev.state;
+      });
+    }
+  }
+
+  void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
+    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
+      return;
+    }
+    // ignore: invalid_use_of_protected_member
+    state.setState(() {
+      ++_metadataTaskProcessCount;
+    });
+  }
+
+  String _getMetadataTaskProgressString() {
+    if (_metadataTaskProcessTotalCount == 0) {
+      return "";
+    }
+    final clippedCount =
+        math.min(_metadataTaskProcessCount, _metadataTaskProcessTotalCount - 1);
+    return " ($clippedCount/$_metadataTaskProcessTotalCount)";
+  }
+
+  final _HomePhotosState state;
+
   late final _metadataTaskStateChangedListener =
       AppEventListener<MetadataTaskStateChangedEvent>(
           _onMetadataTaskStateChanged);
   var _metadataTaskState = MetadataTaskManager().state;
-  late final _prefUpdatedListener =
-      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
   late final _filePropertyUpdatedListener =
       AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
   var _metadataTaskProcessCount = 0;
@@ -712,11 +768,8 @@ class _HomePhotosState extends State<HomePhotos>
   late final _metadataTaskIconController = AnimationController(
     upperBound: 2 * math.pi,
     duration: const Duration(seconds: 10),
-    vsync: this,
+    vsync: state,
   )..repeat();
-
-  static final _log = Logger("widget.home_photos._HomePhotosState");
-  static const _menuValueRefresh = 0;
 
   static const _metadataTaskHeaderHeight = 32.0;
 }

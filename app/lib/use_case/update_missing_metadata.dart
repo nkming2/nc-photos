@@ -86,6 +86,9 @@ class UpdateMissingMetadata {
           metadata: OrNull(metadataObj),
         );
         yield file;
+
+        // slow down a bit to give some space for the main isolate
+        await Future.delayed(const Duration(milliseconds: 10));
       } catch (e, stackTrace) {
         _log.severe("[call] Failed while updating metadata: ${file.path}", e,
             stackTrace);

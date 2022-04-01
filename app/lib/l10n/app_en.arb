@@ -1167,6 +1167,10 @@
 	"@tagPickerNoTagSelectedNotification": {
 		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
 	},
+	"backgroundServiceStopping": "Stopping service",
+	"@backgroundServiceStopping": {
+		"description": "The background service is stopping itself"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
