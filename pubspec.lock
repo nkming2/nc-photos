@@ -245,7 +245,7 @@ packages:
       path: "."
       ref: "v0.1.0-nc-photos-2"
       resolved-ref: "233d360e24f101ca9e33c7a1332dadd20fc20b71"
-      url: "https://gitlab.com/nkming2/flutter-draggable-scrollbar"
+      url: "https://gitlab.com/nc-photos/flutter-draggable-scrollbar"
     source: git
     version: "0.1.0"
   equatable:
@@ -268,7 +268,7 @@ packages:
       path: "."
       ref: "1.1.0"
       resolved-ref: "3b5712b23252e695c4767eb1be044af18668570d"
-      url: "https://gitlab.com/nkming2/exifdart.git"
+      url: "https://gitlab.com/nc-photos/exifdart.git"
     source: git
     version: "1.1.0"
   fake_async:
@@ -371,7 +371,7 @@ packages:
       path: "."
       ref: "v0.4.0-nc-photos-1"
       resolved-ref: "361b081221dfe73d84435db880699204790659bd"
-      url: "https://gitlab.com/nkming2/flutter_staggered_grid_view"
+      url: "https://gitlab.com/nc-photos/flutter_staggered_grid_view"
     source: git
     version: "0.4.0"
   flutter_test:
@@ -474,7 +474,7 @@ packages:
       path: library
       ref: "1.0.0-nc-photos-2"
       resolved-ref: "57af58e04b7501337b4c56e741834a866ba8ac42"
-      url: "https://gitlab.com/nkming2/dart_image_size_getter"
+      url: "https://gitlab.com/nc-photos/dart_image_size_getter"
     source: git
     version: "1.0.0"
   intl:
@@ -1088,27 +1088,27 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/video_player/video_player"
-      ref: "video_player-v2.2.6-nc-photos-1"
-      resolved-ref: eb464791d6f0c086da946175696a62886b9fdbdd
-      url: "https://gitlab.com/nkming2/flutter-plugins"
+      ref: "video_player-v2.2.6-nc-photos-2"
+      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
+      url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.2.6"
   video_player_platform_interface:
     dependency: transitive
     description:
       path: "packages/video_player/video_player_platform_interface"
-      ref: "video_player-v2.2.6-nc-photos-1"
-      resolved-ref: eb464791d6f0c086da946175696a62886b9fdbdd
-      url: "https://gitlab.com/nkming2/flutter-plugins"
+      ref: "video_player-v2.2.6-nc-photos-2"
+      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
+      url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "4.2.0"
   video_player_web:
     dependency: transitive
     description:
       path: "packages/video_player/video_player_web"
-      ref: "video_player-v2.2.6-nc-photos-1"
-      resolved-ref: eb464791d6f0c086da946175696a62886b9fdbdd
-      url: "https://gitlab.com/nkming2/flutter-plugins"
+      ref: "video_player-v2.2.6-nc-photos-2"
+      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
+      url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.0.4"
   vm_service:
