@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.0.0
   collection: ^1.15.0
   connectivity_plus: ^2.0.2
+  devicelocale: ^0.5.0
   device_info_plus: ^3.1.0
   draggable_scrollbar:
     git:
@@ -43,6 +44,10 @@ dependencies:
     git:
       url: https://gitlab.com/nc-photos/exifdart.git
       ref: 1.1.0
+  flutter_background_service:
+    git:
+      url: https://gitlab.com/nc-photos/flutter_background_service.git
+      ref: v0.2.6-nc-photos-1
   flutter_bloc: ^7.0.0
   flutter_map: ^0.14.0
   flutter_staggered_grid_view:

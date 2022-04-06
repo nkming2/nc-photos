@@ -12,7 +12,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/touch_token_manager.dart';
@@ -112,6 +114,8 @@ class ScanAccountDirBloc
     _favoriteResyncedEventListener.begin();
     _prefUpdatedEventListener.begin();
     _accountPrefUpdatedEventListener.begin();
+
+    _nativeFileExifUpdatedListener?.begin();
   }
 
   static ScanAccountDirBloc of(Account account) {
@@ -163,6 +167,8 @@ class ScanAccountDirBloc
     _favoriteResyncedEventListener.end();
     _prefUpdatedEventListener.end();
     _accountPrefUpdatedEventListener.end();
+
+    _nativeFileExifUpdatedListener?.end();
 
     _refreshThrottler.clear();
     return super.close();
@@ -302,6 +308,13 @@ class ScanAccountDirBloc
         maxPendingCount: 10,
       );
     }
+  }
+
+  void _onNativeFileExifUpdated(FileExifUpdatedEvent ev) {
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
   }
 
   Future<List<File>> _queryOffline(ScanAccountDirBlocQueryBase ev) async {
@@ -483,6 +496,10 @@ class ScanAccountDirBloc
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdatedEvent);
   late final _accountPrefUpdatedEventListener =
       AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
+
+  late final _nativeFileExifUpdatedListener = platform_k.isWeb
+      ? null
+      : NativeEventListener<FileExifUpdatedEvent>(_onNativeFileExifUpdated);
 
   late final _refreshThrottler = Throttler(
     onTriggered: (_) {

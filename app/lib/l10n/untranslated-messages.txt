@@ -82,6 +82,7 @@
     "createCollectionDialogTagDescription",
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping",
     "errorAlbumDowngrade"
   ],
 
@@ -182,6 +183,7 @@
     "createCollectionDialogTagDescription",
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping",
     "errorAlbumDowngrade"
   ],
 
@@ -337,12 +339,18 @@
     "createCollectionDialogTagDescription",
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping",
     "errorAlbumDowngrade"
   ],
 
   "es": [
     "rootPickerSkipConfirmationDialogContent2",
-    "helpButtonLabel"
+    "helpButtonLabel",
+    "backgroundServiceStopping"
+  ],
+
+  "fi": [
+    "backgroundServiceStopping"
   ],
 
   "fr": [
@@ -477,6 +485,7 @@
     "createCollectionDialogTagDescription",
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping",
     "errorAlbumDowngrade"
   ],
 
@@ -499,7 +508,8 @@
     "createCollectionDialogTagLabel",
     "createCollectionDialogTagDescription",
     "addTagInputHint",
-    "tagPickerNoTagSelectedNotification"
+    "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping"
   ],
 
   "ru": [
@@ -607,6 +617,7 @@
     "createCollectionDialogTagDescription",
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
+    "backgroundServiceStopping",
     "errorAlbumDowngrade"
   ]
 }
