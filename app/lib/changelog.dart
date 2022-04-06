@@ -159,4 +159,10 @@ Features:
 - (Localization) Add Polish (by szymok)
 - (Localization) Update Finnish (by pHamala)
 """,
+  // v38
+  """38.0
+- (Android) Image metadata are now processed in a background service
+- (Localization) Update Finnish (by pHamala)
+- (Localization) Update Spanish (by luckkmaxx)
+""",
 ];
