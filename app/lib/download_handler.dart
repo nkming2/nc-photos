@@ -11,6 +11,8 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/download.dart';
 import 'package:nc_photos/mobile/notification.dart';
+import 'package:nc_photos/mobile/platform.dart'
+    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/download_file.dart';
@@ -52,12 +54,13 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
     String? parentDir,
   }) async {
     _log.info("[downloadFiles] Downloading ${files.length} file");
+    final nm = platform.NotificationManager();
     final notif = AndroidDownloadProgressNotification(
       0,
       files.length,
       currentItemTitle: files.firstOrNull?.filename,
     );
-    await notif.notify();
+    final id = await nm.notify(notif);
 
     final successes = <Tuple2<File, dynamic>>[];
     StreamSubscription<DownloadCancelEvent>? subscription;
@@ -65,7 +68,7 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
       bool isCancel = false;
       subscription = DownloadEvent.listenDownloadCancel()
         ..onData((data) {
-          if (data.notificationId == notif.notificationId) {
+          if (data.notificationId == id) {
             isCancel = true;
           }
         });
@@ -76,10 +79,11 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
           _log.info("[downloadFiles] User canceled remaining files");
           break;
         }
-        notif.update(
-          count++,
+        await nm.notify(notif.copyWith(
+          progress: count++,
           currentItemTitle: f.filename,
-        );
+          notificationId: id,
+        ));
 
         StreamSubscription<DownloadCancelEvent>? itemSubscription;
         try {
@@ -91,7 +95,7 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
           );
           itemSubscription = DownloadEvent.listenDownloadCancel()
             ..onData((data) {
-              if (data.notificationId == notif.notificationId) {
+              if (data.notificationId == id) {
                 _log.info("[downloadFiles] Cancel requested");
                 download.cancel();
               }
@@ -125,21 +129,21 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
       subscription?.cancel();
       if (successes.isNotEmpty) {
         await _onDownloadSuccessful(successes.map((e) => e.item1).toList(),
-            successes.map((e) => e.item2).toList(), notif.notificationId);
+            successes.map((e) => e.item2).toList(), id);
       } else {
-        await notif.dismiss();
+        await nm.dismiss(id);
       }
     }
   }
 
   Future<void> _onDownloadSuccessful(
       List<File> files, List<dynamic> results, int? notificationId) async {
-    final notif = AndroidDownloadSuccessfulNotification(
+    final nm = platform.NotificationManager();
+    await nm.notify(AndroidDownloadSuccessfulNotification(
       results.cast<String>(),
       files.map((e) => e.contentType).toList(),
       notificationId: notificationId,
-    );
-    await notif.notify();
+    ));
   }
 
   static final _log = Logger("download_handler._DownloadHandlerAndroid");

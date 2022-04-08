@@ -1,72 +1,70 @@
-import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/platform/notification.dart' as itf;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart' as plugin;
 
-class AndroidDownloadSuccessfulNotification extends _AndroidNotification {
-  AndroidDownloadSuccessfulNotification(
-    this.fileUris,
-    this.mimeTypes, {
-    int? notificationId,
-  }) : replaceId = notificationId;
-
+class NotificationManager implements itf.NotificationManager {
   @override
-  doNotify() => plugin.Notification.notifyDownloadSuccessful(
-      fileUris, mimeTypes, replaceId);
-
-  final List<String> fileUris;
-  final List<String?> mimeTypes;
-  final int? replaceId;
-}
-
-class AndroidDownloadProgressNotification extends _AndroidNotification {
-  AndroidDownloadProgressNotification(
-    this.progress,
-    this.max, {
-    this.currentItemTitle,
-  });
-
-  @override
-  doNotify() => plugin.Notification.notifyDownloadProgress(
-      progress, max, currentItemTitle, notificationId);
-
-  Future<void> update(
-    int progress, {
-    String? currentItemTitle,
-  }) async {
-    this.progress = progress;
-    this.currentItemTitle = currentItemTitle;
-    await doNotify();
-  }
-
-  int progress;
-  final int max;
-  String? currentItemTitle;
-}
-
-class AndroidLogSaveSuccessfulNotification extends _AndroidNotification {
-  AndroidLogSaveSuccessfulNotification(this.fileUri);
-
-  @override
-  doNotify() => plugin.Notification.notifyLogSaveSuccessful(fileUri);
-
-  final String fileUri;
-}
-
-abstract class _AndroidNotification extends itf.Notification {
-  @override
-  notify() async {
-    notificationId = await doNotify();
-  }
-
-  @override
-  dismiss() async {
-    if (notificationId != null) {
-      await plugin.Notification.dismiss(notificationId!);
+  notify(itf.Notification n) {
+    if (n is itf.LogSaveSuccessfulNotification) {
+      return plugin.Notification.notifyLogSaveSuccessful(n.result);
+    } else if (n is AndroidDownloadSuccessfulNotification) {
+      return plugin.Notification.notifyDownloadSuccessful(
+          n.fileUris, n.mimeTypes, n.notificationId);
+    } else if (n is AndroidDownloadProgressNotification) {
+      return plugin.Notification.notifyDownloadProgress(
+          n.progress, n.max, n.currentItemTitle, n.notificationId);
+    } else {
+      _log.shout("[notify] Unknown type: ${n.runtimeType}");
+      throw UnsupportedError("Unsupported notification");
     }
   }
 
-  @protected
-  Future<int?> doNotify();
+  @override
+  dismiss(dynamic id) async {
+    if (id != null) {
+      return plugin.Notification.dismiss(id);
+    } else {
+      return;
+    }
+  }
 
-  int? notificationId;
+  static final _log = Logger("mobile.notification.NotificationManager");
+}
+
+class AndroidDownloadSuccessfulNotification implements itf.Notification {
+  const AndroidDownloadSuccessfulNotification(
+    this.fileUris,
+    this.mimeTypes, {
+    this.notificationId,
+  });
+
+  final List<String> fileUris;
+  final List<String?> mimeTypes;
+  final dynamic notificationId;
+}
+
+class AndroidDownloadProgressNotification implements itf.Notification {
+  const AndroidDownloadProgressNotification(
+    this.progress,
+    this.max, {
+    this.currentItemTitle,
+    this.notificationId,
+  });
+
+  AndroidDownloadProgressNotification copyWith({
+    int? progress,
+    String? currentItemTitle,
+    dynamic notificationId,
+  }) =>
+      AndroidDownloadProgressNotification(
+        progress ?? this.progress,
+        max,
+        currentItemTitle: currentItemTitle ?? this.currentItemTitle,
+        notificationId: notificationId ?? this.notificationId,
+      );
+
+  final int progress;
+  final int max;
+  final String? currentItemTitle;
+  final dynamic notificationId;
 }

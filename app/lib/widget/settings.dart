@@ -10,8 +10,10 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/android/android_info.dart';
-import 'package:nc_photos/mobile/notification.dart';
+import 'package:nc_photos/mobile/platform.dart'
+    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -344,28 +346,14 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _onLogSaveSuccessful(dynamic result) {
-    dynamic notif;
-    if (platform_k.isAndroid) {
-      notif = AndroidLogSaveSuccessfulNotification(result);
+  Future<void> _onLogSaveSuccessful(dynamic result) async {
+    final nm = platform.NotificationManager();
+    try {
+      await nm.notify(LogSaveSuccessfulNotification(result));
+    } catch (e, stacktrace) {
+      _log.shout("[_onLogSaveSuccessful] Failed showing platform notification",
+          e, stacktrace);
     }
-    if (notif != null) {
-      try {
-        notif.notify();
-        return;
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onLogSaveSuccessful] Failed showing platform notification",
-            e,
-            stacktrace);
-      }
-    }
-
-    // fallback
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().downloadSuccessNotification),
-      duration: k.snackBarDurationShort,
-    ));
   }
 
   Future<void> _setExifSupport(bool value) async {
