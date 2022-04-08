@@ -117,11 +117,20 @@ class _Service {
       return;
     }
     _metadataTaskState = ev.state;
-    if (ev.state == MetadataTaskState.waitingForWifi) {
-      final service = FlutterBackgroundService();
-      service.setNotificationInfo(
-        title: _L10n.global().metadataTaskPauseNoWiFiNotification,
-      );
+    if (_isPaused != true) {
+      if (ev.state == MetadataTaskState.waitingForWifi) {
+        FlutterBackgroundService()
+          ..setNotificationInfo(
+            title: _L10n.global().metadataTaskPauseNoWiFiNotification,
+          )
+          ..pauseWakeLock();
+        _isPaused = true;
+      }
+    } else {
+      if (ev.state == MetadataTaskState.prcoessing) {
+        FlutterBackgroundService().resumeWakeLock();
+        _isPaused = false;
+      }
     }
   }
 
@@ -137,6 +146,8 @@ class _Service {
   late final _metadataTaskStateChangedListener =
       AppEventListener<MetadataTaskStateChangedEvent>(
           _onMetadataTaskStateChanged);
+
+  bool? _isPaused;
 
   static var _shouldRun = true;
   static final _log = Logger("service._Service");
