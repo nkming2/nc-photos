@@ -101,3 +101,12 @@ class AlbumDowngradeException implements Exception {
 
   final dynamic message;
 }
+
+class InterruptedException implements Exception {
+  const InterruptedException([this.message]);
+
+  @override
+  toString() => "InterruptedException: $message";
+
+  final dynamic message;
+}

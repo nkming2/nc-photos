@@ -48,7 +48,7 @@ void stopService() {
 
 @visibleForTesting
 void serviceMain() async {
-  _Service._shouldRun = true;
+  _Service._shouldRun.value = true;
   WidgetsFlutterBinding.ensureInitialized();
 
   await _Service()();
@@ -139,7 +139,7 @@ class _Service {
     FlutterBackgroundService().setNotificationInfo(
       title: _L10n.global().backgroundServiceStopping,
     );
-    _shouldRun = false;
+    _shouldRun.value = false;
   }
 
   var _metadataTaskState = MetadataTaskState.idle;
@@ -149,7 +149,7 @@ class _Service {
 
   bool? _isPaused;
 
-  static var _shouldRun = true;
+  static final _shouldRun = ValueNotifier<bool>(true);
   static final _log = Logger("service._Service");
 }
 
@@ -219,33 +219,43 @@ class _MetadataTask {
       final dir = File(path: file_util.unstripPath(account, r));
       hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
       final updater = UpdateMissingMetadata(fileRepo);
-      await for (final ev in updater(account, dir)) {
-        if (!_Service._shouldRun) {
-          _log.info("[_updateMetadata] Stopping task: user canceled");
-          updater.stop();
-          return;
+      void onServiceStop() {
+        _log.info("[_updateMetadata] Stopping task: user canceled");
+        updater.stop();
+      }
+
+      _Service._shouldRun.addListener(onServiceStop);
+      try {
+        await for (final ev in updater(account, dir)) {
+          if (ev is File) {
+            _onFileProcessed(ev);
+          }
         }
-        if (ev is File) {
-          _onFileProcessed(ev);
-        }
+      } finally {
+        _Service._shouldRun.removeListener(onServiceStop);
       }
     }
     if (!hasScanShareFolder) {
       final shareUpdater = UpdateMissingMetadata(fileRepo);
-      await for (final ev in shareUpdater(
-        account,
-        shareFolder,
-        isRecursive: false,
-        filter: (f) => f.ownerId != account.username,
-      )) {
-        if (!_Service._shouldRun) {
-          _log.info("[_updateMetadata] Stopping task: user canceled");
-          shareUpdater.stop();
-          return;
+      void onServiceStop() {
+        _log.info("[_updateMetadata] Stopping task: user canceled");
+        shareUpdater.stop();
+      }
+
+      _Service._shouldRun.addListener(onServiceStop);
+      try {
+        await for (final ev in shareUpdater(
+          account,
+          shareFolder,
+          isRecursive: false,
+          filter: (f) => f.ownerId != account.username,
+        )) {
+          if (ev is File) {
+            _onFileProcessed(ev);
+          }
         }
-        if (ev is File) {
-          _onFileProcessed(ev);
-        }
+      } finally {
+        _Service._shouldRun.removeListener(onServiceStop);
       }
     }
   }

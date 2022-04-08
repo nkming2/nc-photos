@@ -6,6 +6,7 @@ import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
@@ -51,11 +52,7 @@ class UpdateMissingMetadata {
       try {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
-        await connectivity_util.waitUntilWifi(onNoWifi: () {
-          KiwiContainer().resolve<EventBus>().fire(
-              const MetadataTaskStateChangedEvent(
-                  MetadataTaskState.waitingForWifi));
-        });
+        await ensureWifi();
         KiwiContainer().resolve<EventBus>().fire(
             const MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
         if (!shouldRun) {
@@ -89,6 +86,8 @@ class UpdateMissingMetadata {
 
         // slow down a bit to give some space for the main isolate
         await Future.delayed(const Duration(milliseconds: 10));
+      } on InterruptedException catch (_) {
+        return;
       } catch (e, stackTrace) {
         _log.severe("[call] Failed while updating metadata: ${file.path}", e,
             stackTrace);
@@ -99,6 +98,22 @@ class UpdateMissingMetadata {
 
   void stop() {
     shouldRun = false;
+  }
+
+  Future<void> ensureWifi() async {
+    var count = 0;
+    while (!await connectivity_util.isWifi()) {
+      if (!shouldRun) {
+        throw const InterruptedException();
+      }
+      // give a chance to reconnect with the WiFi network
+      if (++count >= 12) {
+        KiwiContainer().resolve<EventBus>().fire(
+            const MetadataTaskStateChangedEvent(
+                MetadataTaskState.waitingForWifi));
+      }
+      await Future.delayed(const Duration(seconds: 5));
+    }
   }
 
   final FileRepo fileRepo;
