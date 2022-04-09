@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -119,16 +121,38 @@ class _HomeAlbumsState extends State<HomeAlbums>
                       mainAxisSpacing: 8,
                     ),
                   ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: _calcBottomAppBarExtent(context),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        if (state is ListAlbumBlocLoading)
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: LinearProgressIndicator(),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (state is ListAlbumBlocLoading)
+                const LinearProgressIndicator(),
+              SizedBox(
+                width: double.infinity,
+                height: _calcBottomAppBarExtent(context),
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                    child: const ColoredBox(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+        ),
       ],
     );
   }
@@ -489,6 +513,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
       }
     }
   }
+
+  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
 
   late final _bloc = ListAlbumBloc.of(widget.account);
   late final _accountPrefUpdatedEventListener =

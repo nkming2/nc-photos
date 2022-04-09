@@ -71,6 +71,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       child: Scaffold(
         bottomNavigationBar: _buildBottomNavigationBar(context),
         body: Builder(builder: (context) => _buildContent(context)),
+        extendBody: true,
       ),
     );
   }
@@ -89,6 +90,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ],
       currentIndex: _nextPage,
       onTap: _onTapNavItem,
+      backgroundColor: Theme.of(context).bottomAppBarColor.withOpacity(.8),
     );
   }
 

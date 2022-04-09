@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,7 @@ class _HomePhotosState extends State<HomePhotos>
                 overrideMaxScrollExtent: scrollExtent,
                 // status bar + app bar
                 topOffset: _calcAppBarExtent(context),
+                bottomOffset: _calcBottomAppBarExtent(context),
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
@@ -148,6 +150,11 @@ class _HomePhotosState extends State<HomePhotos>
                             });
                           },
                         ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: _calcBottomAppBarExtent(context),
+                          ),
+                        ),
                       ].whereType<Widget>().toList(),
                     ),
                   ),
@@ -155,11 +162,28 @@ class _HomePhotosState extends State<HomePhotos>
               ),
             ),
           ),
-          if (state is ScanAccountDirBlocLoading)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: LinearProgressIndicator(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (state is ScanAccountDirBlocLoading)
+                  const LinearProgressIndicator(),
+                SizedBox(
+                  width: double.infinity,
+                  height: _calcBottomAppBarExtent(context),
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                      child: const ColoredBox(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
         ],
       );
     });
@@ -535,6 +559,7 @@ class _HomePhotosState extends State<HomePhotos>
       BuildContext context, BoxConstraints constraints) {
     if (_itemListMaxExtent != null && constraints.hasBoundedHeight) {
       final appBarExtent = _calcAppBarExtent(context);
+      final bottomAppBarExtent = _calcBottomAppBarExtent(context);
       final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
           AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
@@ -542,15 +567,16 @@ class _HomePhotosState extends State<HomePhotos>
               ? _SmartAlbumItem.height
               : 0;
       // scroll extent = list height - widget viewport height
-      // + sliver app bar height + metadata task header height
-      // + smart album list height
+      // + sliver app bar height + bottom app bar height
+      // + metadata task header height + smart album list height
       final scrollExtent = _itemListMaxExtent! -
           constraints.maxHeight +
           appBarExtent +
+          bottomAppBarExtent +
           metadataTaskHeaderExtent +
           smartAlbumListHeight;
       _log.info(
-          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $_appBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight = $scrollExtent");
+          "[_getScrollViewExtent] $_itemListMaxExtent - ${constraints.maxHeight} + $appBarExtent + $bottomAppBarExtent + $metadataTaskHeaderExtent + $smartAlbumListHeight = $scrollExtent");
       return scrollExtent;
     } else {
       return null;
@@ -559,6 +585,8 @@ class _HomePhotosState extends State<HomePhotos>
 
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
+
+  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
 
   Primitive<bool> get _hasFiredMetadataTask {
     final name = bloc_util.getInstNameForRootAwareAccount(
