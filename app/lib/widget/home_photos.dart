@@ -35,7 +35,6 @@ import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
-import 'package:nc_photos/widget/measure.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -107,7 +106,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
     return LayoutBuilder(builder: (context, constraints) {
-      final scrollExtent = _getScrollViewExtent(constraints);
+      final scrollExtent = _getScrollViewExtent(context, constraints);
       return Stack(
         children: [
           buildItemStreamListOuter(
@@ -122,7 +121,7 @@ class _HomePhotosState extends State<HomePhotos>
                 controller: _scrollController,
                 overrideMaxScrollExtent: scrollExtent,
                 // status bar + app bar
-                topOffset: MediaQuery.of(context).padding.top + kToolbarHeight,
+                topOffset: _calcAppBarExtent(context),
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
@@ -222,39 +221,34 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return SliverMeasureExtent(
-      onChange: (extent) {
-        _appBarExtent = extent;
+    return HomeSliverAppBar(
+      account: widget.account,
+      actions: [
+        ZoomMenuButton(
+          initialZoom: _thumbZoomLevel,
+          minZoom: -1,
+          maxZoom: 2,
+          onZoomChanged: (value) {
+            setState(() {
+              _setThumbZoomLevel(value.round());
+            });
+            Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+          },
+        ),
+      ],
+      menuActions: [
+        PopupMenuItem(
+          value: _menuValueRefresh,
+          child: Text(L10n.global().refreshMenuLabel),
+        ),
+      ],
+      onSelectedMenuActions: (option) {
+        switch (option) {
+          case _menuValueRefresh:
+            _onRefreshSelected();
+            break;
+        }
       },
-      child: HomeSliverAppBar(
-        account: widget.account,
-        actions: [
-          ZoomMenuButton(
-            initialZoom: _thumbZoomLevel,
-            minZoom: -1,
-            maxZoom: 2,
-            onZoomChanged: (value) {
-              setState(() {
-                _setThumbZoomLevel(value.round());
-              });
-              Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
-            },
-          ),
-        ],
-        menuActions: [
-          PopupMenuItem(
-            value: _menuValueRefresh,
-            child: Text(L10n.global().refreshMenuLabel),
-          ),
-        ],
-        onSelectedMenuActions: (option) {
-          switch (option) {
-            case _menuValueRefresh:
-              _onRefreshSelected();
-              break;
-          }
-        },
-      ),
     );
   }
 
@@ -537,10 +531,10 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   /// Return the estimated scroll extent of the custom scroll view, or null
-  double? _getScrollViewExtent(BoxConstraints constraints) {
-    if (_itemListMaxExtent != null &&
-        constraints.hasBoundedHeight &&
-        _appBarExtent != null) {
+  double? _getScrollViewExtent(
+      BuildContext context, BoxConstraints constraints) {
+    if (_itemListMaxExtent != null && constraints.hasBoundedHeight) {
+      final appBarExtent = _calcAppBarExtent(context);
       final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
           AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
@@ -552,7 +546,7 @@ class _HomePhotosState extends State<HomePhotos>
       // + smart album list height
       final scrollExtent = _itemListMaxExtent! -
           constraints.maxHeight +
-          _appBarExtent! +
+          appBarExtent +
           metadataTaskHeaderExtent +
           smartAlbumListHeight;
       _log.info(
@@ -562,6 +556,9 @@ class _HomePhotosState extends State<HomePhotos>
       return null;
     }
   }
+
+  double _calcAppBarExtent(BuildContext context) =>
+      MediaQuery.of(context).padding.top + kToolbarHeight;
 
   Primitive<bool> get _hasFiredMetadataTask {
     final name = bloc_util.getInstNameForRootAwareAccount(
@@ -603,7 +600,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   final ScrollController _scrollController = ScrollController();
 
-  double? _appBarExtent;
   double? _itemListMaxExtent;
 
   late final _prefUpdatedListener =
