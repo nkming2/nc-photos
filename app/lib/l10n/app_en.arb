@@ -1171,6 +1171,10 @@
 	"@backgroundServiceStopping": {
 		"description": "The background service is stopping itself"
 	},
+	"metadataTaskPauseLowBatteryNotification": "Battery is low",
+	"@metadataTaskPauseLowBatteryNotification": {
+		"description": "Shown when the app has paused reading image metadata due to low battery"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

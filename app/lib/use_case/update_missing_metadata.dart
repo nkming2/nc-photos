@@ -1,3 +1,4 @@
+import 'package:battery_plus/battery_plus.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -53,6 +54,7 @@ class UpdateMissingMetadata {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
         await ensureWifi();
+        await ensureBattery();
         KiwiContainer().resolve<EventBus>().fire(
             const MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
         if (!shouldRun) {
@@ -112,6 +114,17 @@ class UpdateMissingMetadata {
             const MetadataTaskStateChangedEvent(
                 MetadataTaskState.waitingForWifi));
       }
+      await Future.delayed(const Duration(seconds: 5));
+    }
+  }
+
+  Future<void> ensureBattery() async {
+    while (await Battery().batteryLevel <= 15) {
+      if (!shouldRun) {
+        throw const InterruptedException();
+      }
+      KiwiContainer().resolve<EventBus>().fire(
+          const MetadataTaskStateChangedEvent(MetadataTaskState.lowBattery));
       await Future.delayed(const Duration(seconds: 5));
     }
   }

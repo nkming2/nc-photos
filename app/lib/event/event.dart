@@ -130,6 +130,9 @@ enum MetadataTaskState {
 
   /// Paused on data network
   waitingForWifi,
+
+  /// Paused on low battery
+  lowBattery,
 }
 
 class MetadataTaskStateChangedEvent {

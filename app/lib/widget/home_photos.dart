@@ -692,6 +692,21 @@ class _Web {
                         style: const TextStyle(fontSize: 12),
                       ),
                     ],
+                  )
+                else if (_metadataTaskState == MetadataTaskState.lowBattery)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.sync_problem,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        L10n.global().metadataTaskPauseLowBatteryNotification,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
                   ),
                 Expanded(
                   child: Container(),

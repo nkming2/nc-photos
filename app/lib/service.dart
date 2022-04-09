@@ -125,6 +125,13 @@ class _Service {
           )
           ..pauseWakeLock();
         _isPaused = true;
+      } else if (ev.state == MetadataTaskState.lowBattery) {
+        FlutterBackgroundService()
+          ..setNotificationInfo(
+            title: _L10n.global().metadataTaskPauseLowBatteryNotification,
+          )
+          ..pauseWakeLock();
+        _isPaused = true;
       }
     } else {
       if (ev.state == MetadataTaskState.prcoessing) {
