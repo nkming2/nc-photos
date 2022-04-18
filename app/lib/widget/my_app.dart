@@ -92,6 +92,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
         Locale("cs"),
         Locale("fi"),
         Locale("pl"),
+        Locale("pt"),
       ],
       builder: (context, child) {
         MyApp._globalContext = context;
