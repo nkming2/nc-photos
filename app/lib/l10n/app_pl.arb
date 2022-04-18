@@ -24,7 +24,7 @@
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
 	},
-	"selectionAppBarTitle": "Wybrano {count}",
+	"selectionAppBarTitle": "{count, plural, other{Wybrano {count}}}",
 	"@selectionAppBarTitle": {
 		"description": "Title of the contextual app bar that shows number of selected items",
 		"placeholders": {

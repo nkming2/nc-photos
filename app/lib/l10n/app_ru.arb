@@ -24,7 +24,7 @@
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
 	},
-	"selectionAppBarTitle": "Выбрано {count} фото",
+	"selectionAppBarTitle": "{count, plural, other{Выбрано {count} фото}}",
 	"@selectionAppBarTitle": {
 		"description": "Title of the contextual app bar that shows number of selected items",
 		"placeholders": {
