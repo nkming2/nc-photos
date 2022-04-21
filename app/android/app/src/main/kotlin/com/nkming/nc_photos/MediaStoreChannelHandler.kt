@@ -1,17 +1,10 @@
 package com.nkming.nc_photos
 
 import android.app.Activity
-import android.content.ContentValues
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
-import androidx.annotation.RequiresApi
-import androidx.core.content.FileProvider
+import com.nkming.nc_photos.plugin.MediaStoreUtil
+import com.nkming.nc_photos.plugin.PermissionException
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.io.*
 
 /*
  * Save downloaded item on device
@@ -55,100 +48,28 @@ class MediaStoreChannelHandler(activity: Activity) :
 	private fun saveFileToDownload(
 		fileName: String, content: ByteArray, result: MethodChannel.Result
 	) {
-		val stream = ByteArrayInputStream(content)
-		writeFileToDownload(fileName, stream, result)
+		try {
+			val uri =
+				MediaStoreUtil.saveFileToDownload(_context, fileName, content)
+			result.success(uri.toString())
+		} catch (e: PermissionException) {
+			PermissionHandler.ensureWriteExternalStorage(_activity)
+			result.error("permissionError", "Permission not granted", null)
+		}
 	}
 
 	private fun copyFileToDownload(
 		toFileName: String, fromFilePath: String, result: MethodChannel.Result
 	) {
-		val file = File(fromFilePath)
-		val stream = file.inputStream()
-		writeFileToDownload(toFileName, stream, result)
-	}
-
-	private fun writeFileToDownload(
-		fileName: String, data: InputStream, result: MethodChannel.Result
-	) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			writeFileToDownload29(fileName, data, result)
-		} else {
-			writeFileToDownload0(fileName, data, result)
-		}
-	}
-
-	@RequiresApi(Build.VERSION_CODES.Q)
-	private fun writeFileToDownload29(
-		fileName: String, data: InputStream, result: MethodChannel.Result
-	) {
-		// Add a media item that other apps shouldn't see until the item is
-		// fully written to the media store.
-		val resolver = _context.applicationContext.contentResolver
-
-		// Find all audio files on the primary external storage device.
-		val collection = MediaStore.Downloads.getContentUri(
-			MediaStore.VOLUME_EXTERNAL_PRIMARY
-		)
-		val file = File(fileName)
-		val details = ContentValues().apply {
-			put(MediaStore.Downloads.DISPLAY_NAME, file.name)
-			if (file.parent != null) {
-				put(
-					MediaStore.Downloads.RELATIVE_PATH,
-					"${Environment.DIRECTORY_DOWNLOADS}/${file.parent}"
-				)
-			}
-		}
-
-		val contentUri = resolver.insert(collection, details)
-
-		resolver.openFileDescriptor(contentUri!!, "w", null).use { pfd ->
-			// Write data into the pending audio file.
-			BufferedOutputStream(FileOutputStream(pfd!!.fileDescriptor)).use { stream ->
-				data.copyTo(stream)
-			}
-		}
-		result.success(contentUri.toString())
-	}
-
-	private fun writeFileToDownload0(
-		fileName: String, data: InputStream, result: MethodChannel.Result
-	) {
-		if (!PermissionHandler.ensureWriteExternalStorage(_activity)) {
+		try {
+			val uri = MediaStoreUtil.copyFileToDownload(
+				_context, toFileName, fromFilePath
+			)
+			result.success(uri.toString())
+		} catch (e: PermissionException) {
+			PermissionHandler.ensureWriteExternalStorage(_activity)
 			result.error("permissionError", "Permission not granted", null)
-			return
 		}
-
-		val path = Environment.getExternalStoragePublicDirectory(
-			Environment.DIRECTORY_DOWNLOADS
-		)
-		var file = File(path, fileName)
-		var count = 1
-		while (file.exists()) {
-			val f = File(fileName)
-			file =
-				File(path, "${f.nameWithoutExtension} ($count).${f.extension}")
-			++count
-		}
-		file.parentFile?.mkdirs()
-		BufferedOutputStream(FileOutputStream(file)).use { stream ->
-			data.copyTo(stream)
-		}
-
-		val fileUri = Uri.fromFile(file)
-		triggerMediaScan(fileUri)
-		val contentUri = FileProvider.getUriForFile(
-			_context, "${BuildConfig.APPLICATION_ID}.fileprovider", file
-		)
-		result.success(contentUri.toString())
-	}
-
-	private fun triggerMediaScan(uri: Uri) {
-		val scanIntent = Intent().apply {
-			action = Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
-			data = uri
-		}
-		_context.sendBroadcast(scanIntent)
 	}
 
 	private val _activity = activity
