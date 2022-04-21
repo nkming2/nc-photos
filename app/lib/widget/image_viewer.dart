@@ -10,8 +10,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
 
-class ImageViewer extends StatefulWidget {
-  const ImageViewer({
+class RemoteImageViewer extends StatefulWidget {
+  const RemoteImageViewer({
     Key? key,
     required this.account,
     required this.file,
@@ -23,7 +23,7 @@ class ImageViewer extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  createState() => _ImageViewerState();
+  createState() => _RemoteImageViewerState();
 
   static void preloadImage(Account account, File file) {
     LargeImageCacheManager.inst.getFileStream(
@@ -43,7 +43,67 @@ class ImageViewer extends StatefulWidget {
   final VoidCallback? onZoomEnded;
 }
 
-class _ImageViewerState extends State<ImageViewer>
+class _RemoteImageViewerState extends State<RemoteImageViewer> {
+  @override
+  build(BuildContext context) => _ImageViewer(
+        canZoom: widget.canZoom,
+        onHeightChanged: widget.onHeightChanged,
+        onZoomStarted: widget.onZoomStarted,
+        onZoomEnded: widget.onZoomEnded,
+        child: mod.CachedNetworkImage(
+          cacheManager: LargeImageCacheManager.inst,
+          imageUrl: _getImageUrl(widget.account, widget.file),
+          httpHeaders: {
+            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+          },
+          fit: BoxFit.contain,
+          fadeInDuration: const Duration(),
+          filterQuality: FilterQuality.high,
+          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+          imageBuilder: (context, child, imageProvider) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              _onItemLoaded();
+            });
+            SizeChangedLayoutNotification().dispatch(context);
+            return child;
+          },
+        ),
+      );
+
+  void _onItemLoaded() {
+    if (!_isLoaded) {
+      _log.info("[_onItemLoaded]");
+      _isLoaded = true;
+      widget.onLoaded?.call();
+    }
+  }
+
+  var _isLoaded = false;
+
+  static final _log = Logger("widget.image_viewer._RemoteImageViewerState");
+}
+
+class _ImageViewer extends StatefulWidget {
+  const _ImageViewer({
+    Key? key,
+    required this.child,
+    required this.canZoom,
+    this.onHeightChanged,
+    this.onZoomStarted,
+    this.onZoomEnded,
+  }) : super(key: key);
+
+  @override
+  createState() => _ImageViewerState();
+
+  final Widget child;
+  final bool canZoom;
+  final ValueChanged<double>? onHeightChanged;
+  final VoidCallback? onZoomStarted;
+  final VoidCallback? onZoomEnded;
+}
+
+class _ImageViewerState extends State<_ImageViewer>
     with TickerProviderStateMixin {
   @override
   build(BuildContext context) {
@@ -68,26 +128,8 @@ class _ImageViewerState extends State<ImageViewer>
             return false;
           },
           child: SizeChangedLayoutNotifier(
-            child: mod.CachedNetworkImage(
-              key: _key,
-              cacheManager: LargeImageCacheManager.inst,
-              imageUrl: _getImageUrl(widget.account, widget.file),
-              httpHeaders: {
-                "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
-              },
-              fit: BoxFit.contain,
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              imageBuilder: (context, child, imageProvider) {
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
-                  _onItemLoaded();
-                });
-                SizeChangedLayoutNotification().dispatch(context);
-                return child;
-              },
-            ),
+            key: _key,
+            child: widget.child,
           ),
         ),
       ),
@@ -146,14 +188,6 @@ class _ImageViewerState extends State<ImageViewer>
   dispose() {
     super.dispose();
     _transformationController.dispose();
-  }
-
-  void _onItemLoaded() {
-    if (!_isLoaded) {
-      _log.info("[_onItemLoaded]");
-      _isLoaded = true;
-      widget.onLoaded?.call();
-    }
   }
 
   void _setIsZooming(bool flag) {
@@ -221,7 +255,6 @@ class _ImageViewerState extends State<ImageViewer>
   final _key = GlobalKey();
   final _transformationController = TransformationController();
 
-  var _isLoaded = false;
   var _isZooming = false;
   var _wasZoomed = false;
 

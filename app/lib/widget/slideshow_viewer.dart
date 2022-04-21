@@ -189,7 +189,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
   }
 
   Widget _buildImageView(BuildContext context, int index) {
-    return ImageViewer(
+    return RemoteImageViewer(
       account: widget.account,
       file: widget.streamFiles[index],
       canZoom: false,
@@ -221,13 +221,13 @@ class _SlideshowViewerState extends State<SlideshowViewer>
       if (index > 0) {
         final prevFile = widget.streamFiles[index - 1];
         if (file_util.isSupportedImageFormat(prevFile)) {
-          ImageViewer.preloadImage(widget.account, prevFile);
+          RemoteImageViewer.preloadImage(widget.account, prevFile);
         }
       }
       if (index + 1 < widget.streamFiles.length) {
         final nextFile = widget.streamFiles[index + 1];
         if (file_util.isSupportedImageFormat(nextFile)) {
-          ImageViewer.preloadImage(widget.account, nextFile);
+          RemoteImageViewer.preloadImage(widget.account, nextFile);
         }
       }
     }
