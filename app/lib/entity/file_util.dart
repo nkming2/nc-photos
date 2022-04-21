@@ -17,8 +17,11 @@ bool isSupportedImageFormat(File file) =>
 bool isSupportedVideoFormat(File file) =>
     isSupportedFormat(file) && file.contentType?.startsWith("video/") == true;
 
+bool isMetadataSupportedMime(String mime) =>
+    _metadataSupportedFormatMimes.contains(mime);
+
 bool isMetadataSupportedFormat(File file) =>
-    _metadataSupportedFormatMimes.contains(file.contentType);
+    isMetadataSupportedMime(file.contentType ?? "");
 
 bool isTrash(Account account, File file) =>
     file.path.startsWith(api_util.getTrashbinPath(account));

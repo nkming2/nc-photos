@@ -6,33 +6,35 @@ import 'package:image_size_getter/image_size_getter.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/image_size_getter_util.dart';
 
 class LoadMetadata {
   /// Load metadata of [binary], which is the content of [file]
-  Future<Map<String, dynamic>> call(
-      Account account, File file, Uint8List binary) {
+  Future<Metadata> loadRemote(Account account, File file, Uint8List binary) {
     return _loadMetadata(
-      file: file,
+      mime: file.contentType ?? "",
       exifdartReaderBuilder: () => MemoryBlobReader(binary),
       imageSizeGetterInputBuilder: () => AsyncMemoryInput(binary),
+      filename: file.path,
     );
   }
 
-  Future<Map<String, dynamic>> _loadMetadata({
-    required File file,
+  Future<Metadata> _loadMetadata({
+    required String mime,
     required exifdart.AbstractBlobReader Function() exifdartReaderBuilder,
     required AsyncImageInput Function() imageSizeGetterInputBuilder,
+    String? filename,
   }) async {
     var metadata = exifdart.Metadata();
-    if (file_util.isMetadataSupportedFormat(file)) {
+    if (file_util.isMetadataSupportedMime(mime)) {
       try {
         metadata = await exifdart.readMetadata(exifdartReaderBuilder());
       } catch (e, stacktrace) {
         _log.shout(
-            "[_loadMetadata] Failed while readMetadata for ${file.contentType} file: ${logFilename(file.path)}",
+            "[_loadMetadata] Failed while readMetadata for $mime file: ${logFilename(filename)}",
             e,
             stacktrace);
         // ignore exif
@@ -58,7 +60,7 @@ class LoadMetadata {
       } catch (e, stacktrace) {
         // is this even an image file?
         _log.shout(
-            "[_loadMetadata] Failed while getSize for ${file.contentType} file: ${logFilename(file.path)}",
+            "[_loadMetadata] Failed while getSize for $mime file: ${logFilename(filename)}",
             e,
             stacktrace);
       }
@@ -73,7 +75,7 @@ class LoadMetadata {
       }
     }
 
-    return {
+    final map = {
       if (metadata.exif != null) "exif": metadata.exif,
       if (imageWidth > 0 && imageHeight > 0)
         "resolution": {
@@ -81,6 +83,24 @@ class LoadMetadata {
           "height": imageHeight,
         },
     };
+    return _buildMetadata(map);
+  }
+
+  Metadata _buildMetadata(Map<String, dynamic> map) {
+    int? imageWidth, imageHeight;
+    Exif? exif;
+    if (map.containsKey("resolution")) {
+      imageWidth = map["resolution"]["width"];
+      imageHeight = map["resolution"]["height"];
+    }
+    if (map.containsKey("exif")) {
+      exif = Exif(map["exif"]);
+    }
+    return Metadata(
+      imageWidth: imageWidth,
+      imageHeight: imageHeight,
+      exif: exif,
+    );
   }
 
   static final _log = Logger("use_case.load_metadata.LoadMetadata");

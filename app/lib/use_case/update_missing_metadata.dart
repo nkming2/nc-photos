@@ -4,7 +4,6 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
-import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
@@ -62,27 +61,15 @@ class UpdateMissingMetadata {
         }
         _log.fine("[call] Updating metadata for ${file.path}");
         final binary = await GetFileBinary(fileRepo)(account, file);
-        final metadata = await LoadMetadata()(account, file, binary);
-        int? imageWidth, imageHeight;
-        Exif? exif;
-        if (metadata.containsKey("resolution")) {
-          imageWidth = metadata["resolution"]["width"];
-          imageHeight = metadata["resolution"]["height"];
-        }
-        if (metadata.containsKey("exif")) {
-          exif = Exif(metadata["exif"]);
-        }
-        final metadataObj = Metadata(
+        final metadata =
+            (await LoadMetadata().loadRemote(account, file, binary)).copyWith(
           fileEtag: file.etag,
-          imageWidth: imageWidth,
-          imageHeight: imageHeight,
-          exif: exif,
         );
 
         await UpdateProperty(fileRepo)(
           account,
           file,
-          metadata: OrNull(metadataObj),
+          metadata: OrNull(metadata),
         );
         yield file;
 
