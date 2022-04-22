@@ -165,4 +165,13 @@ Features:
 - (Localization) Update Finnish (by pHamala)
 - (Localization) Update Spanish (by luckkmaxx)
 """,
+  // v39
+  null,
+  // v40
+  """40.0
+- (Android) Fixed a race condition causing the app to deadlock
+- (Localization) Add Portuguese (by fernosan)
+- (Localization) Update Finnish (by pHamala)
+- (Localization) Update Russian (by kvasenok)
+""",
 ];
