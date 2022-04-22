@@ -9,11 +9,11 @@ class NcPhotosPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		// this may get called more than once
+		lockChannelHandler = LockChannelHandler()
 		lockChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger, LockChannelHandler.CHANNEL
 		)
-		lockChannel.setMethodCallHandler(LockChannelHandler())
+		lockChannel.setMethodCallHandler(lockChannelHandler)
 
 		notificationChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
@@ -41,6 +41,7 @@ class NcPhotosPlugin : FlutterPlugin {
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
+		lockChannelHandler.dismiss()
 		lockChannel.setMethodCallHandler(null)
 		notificationChannel.setMethodCallHandler(null)
 		nativeEventChannel.setStreamHandler(null)
@@ -51,4 +52,6 @@ class NcPhotosPlugin : FlutterPlugin {
 	private lateinit var notificationChannel: MethodChannel
 	private lateinit var nativeEventChannel: EventChannel
 	private lateinit var nativeEventMethodChannel: MethodChannel
+
+	private lateinit var lockChannelHandler: LockChannelHandler
 }
