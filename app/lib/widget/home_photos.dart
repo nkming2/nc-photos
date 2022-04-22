@@ -425,6 +425,7 @@ class _HomePhotosState extends State<HomePhotos>
     await RemoveSelectionHandler()(
       account: widget.account,
       selectedFiles: selectedFiles,
+      isMoveToTrash: true,
     );
   }
 

@@ -568,6 +568,7 @@ class _ViewerState extends State<Viewer>
       account: widget.account,
       selectedFiles: [file],
       isRemoveOpened: true,
+      isMoveToTrash: true,
     );
     if (count > 0) {
       Navigator.of(context).pop();

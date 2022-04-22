@@ -7,8 +7,10 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/widget/trashbin_browser.dart';
 
 class RemoveSelectionHandler {
   /// Remove [selectedFiles] and return the removed count
@@ -17,6 +19,7 @@ class RemoveSelectionHandler {
     required List<File> selectedFiles,
     bool shouldCleanupAlbum = true,
     bool isRemoveOpened = false,
+    bool isMoveToTrash = false,
   }) async {
     final String processingText, successText;
     final String Function(int) failureText;
@@ -52,15 +55,27 @@ class RemoveSelectionHandler {
       },
       shouldCleanUp: shouldCleanupAlbum,
     );
+    final trashAction = isMoveToTrash
+        ? SnackBarAction(
+            label: L10n.global().albumTrashLabel,
+            onPressed: () {
+              NavigationManager().getNavigator()?.pushNamed(
+                  TrashbinBrowser.routeName,
+                  arguments: TrashbinBrowserArguments(account));
+            },
+          )
+        : null;
     if (failureCount == 0) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(successText),
         duration: k.snackBarDurationNormal,
+        action: trashAction,
       ));
     } else {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(failureText(failureCount)),
         duration: k.snackBarDurationNormal,
+        action: trashAction,
       ));
     }
     return selectedFiles.length - failureCount;

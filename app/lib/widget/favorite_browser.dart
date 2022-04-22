@@ -333,6 +333,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
     await RemoveSelectionHandler()(
       account: widget.account,
       selectedFiles: selectedFiles,
+      isMoveToTrash: true,
     );
   }
 

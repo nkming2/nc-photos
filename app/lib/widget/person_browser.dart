@@ -392,6 +392,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     await RemoveSelectionHandler()(
       account: widget.account,
       selectedFiles: selectedFiles,
+      isMoveToTrash: true,
     );
   }
 

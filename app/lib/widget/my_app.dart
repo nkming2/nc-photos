@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -49,11 +50,13 @@ class MyApp extends StatefulWidget {
   static late BuildContext _globalContext;
 }
 
-class _MyAppState extends State<MyApp> implements SnackBarHandler {
+class _MyAppState extends State<MyApp>
+    implements SnackBarHandler, NavigationHandler {
   @override
   void initState() {
     super.initState();
     SnackBarManager().registerHandler(this);
+    NavigationManager().setHandler(this);
     _themeChangedListener =
         AppEventListener<ThemeChangedEvent>(_onThemeChangedEvent)..begin();
     _langChangedListener =
@@ -77,6 +80,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
       navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
+      navigatorKey: _navigatorKey,
       scaffoldMessengerKey: _scaffoldMessengerKey,
       locale: language_util.getSelectedLocale(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -107,6 +111,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   void dispose() {
     super.dispose();
     SnackBarManager().unregisterHandler(this);
+    NavigationManager().unsetHandler(this);
     _themeChangedListener.end();
     _langChangedListener.end();
   }
@@ -114,6 +119,9 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   @override
   showSnackBar(SnackBar snackBar) =>
       _scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
+
+  @override
+  getNavigator() => _navigatorKey.currentState;
 
   ThemeData _getLightTheme() => ThemeData(
         brightness: Brightness.light,
@@ -489,6 +497,7 @@ class _MyAppState extends State<MyApp> implements SnackBarHandler {
   }
 
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   late AppEventListener<ThemeChangedEvent> _themeChangedListener;
   late AppEventListener<LanguageChangedEvent> _langChangedListener;
