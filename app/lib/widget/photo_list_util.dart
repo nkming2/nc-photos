@@ -19,6 +19,8 @@ class DateGroupHelper {
         (!isMonthOnly && newDate.day != _currentDate?.day)) {
       _currentDate = newDate;
       return newDate;
+    } else {
+      return null;
     }
   }
 
