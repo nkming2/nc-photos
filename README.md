@@ -34,7 +34,8 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
 - German/Deutsch (contributed by PhilProg)
 - Greek/ελληνικά (contributed by Chris Karasoulis)
 - Polish/język polski (contributed by szymok)
-- Russian/русский (contributed by meixnt & eriane)
+- Portuguese/Português (contributed by fernosan)
+- Russian/русский (contributed by kvasenok, meixnt & eriane)
 - Spanish/Español (contributed by luckkmaxx)
 
 ## Contributions, troubleshooting and guides
