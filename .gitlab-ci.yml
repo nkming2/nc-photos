@@ -8,6 +8,7 @@ test:
     - pub global activate junitreport
     - export PATH="$PATH":"$HOME/.pub-cache/bin"
   script:
+    - cd app
     - flutter test --machine --coverage | tojunit -o report.xml
     - lcov --summary coverage/lcov.info
     - genhtml coverage/lcov.info --output=coverage
@@ -15,7 +16,7 @@ test:
   artifacts:
     name: coverage
     paths:
-      - $CI_PROJECT_DIR/coverage
+      - $CI_PROJECT_DIR/app/coverage
     reports:
       junit: report.xml
     expire_in: 6 mos
