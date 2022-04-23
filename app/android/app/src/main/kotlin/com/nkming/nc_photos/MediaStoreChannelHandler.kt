@@ -23,24 +23,30 @@ class MediaStoreChannelHandler(activity: Activity) :
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 		when (call.method) {
-			"saveFileToDownload" -> try {
-				saveFileToDownload(
-					call.argument("fileName")!!,
-					call.argument("content")!!,
-					result
-				)
-			} catch (e: Throwable) {
-				result.error("systemException", e.message, null)
+			"saveFileToDownload" -> {
+				try {
+					saveFileToDownload(
+						call.argument("fileName")!!,
+						call.argument("content")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.message, null)
+				}
 			}
-			"copyFileToDownload" -> try {
-				copyFileToDownload(
-					call.argument("toFileName")!!,
-					call.argument("fromFilePath")!!,
-					result
-				)
-			} catch (e: Throwable) {
-				result.error("systemException", e.message, null)
+
+			"copyFileToDownload" -> {
+				try {
+					copyFileToDownload(
+						call.argument("toFileName")!!,
+						call.argument("fromFilePath")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.message, null)
+				}
 			}
+
 			else -> result.notImplemented()
 		}
 	}
