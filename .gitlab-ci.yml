@@ -18,5 +18,5 @@ test:
     paths:
       - $CI_PROJECT_DIR/app/coverage
     reports:
-      junit: report.xml
+      junit: app/report.xml
     expire_in: 6 mos
