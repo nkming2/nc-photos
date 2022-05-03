@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
@@ -35,8 +36,7 @@ class UnshareFileFromAlbum {
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
     // list albums with shares identical to any element in [unshareWith]
     final otherAlbums = await ListAlbum(_c)(account)
-        .where((event) => event is Album)
-        .cast<Album>()
+        .whereType<Album>()
         .where((a) =>
             !a.albumFile!.compareServerIdentity(album.albumFile!) &&
             a.provider is AlbumStaticProvider &&

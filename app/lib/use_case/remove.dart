@@ -11,6 +11,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
@@ -54,10 +55,7 @@ class Remove {
   }
 
   Future<void> _cleanUpAlbums(Account account, List<File> removes) async {
-    final albums = await ListAlbum(_c)(account)
-        .where((event) => event is Album)
-        .cast<Album>()
-        .toList();
+    final albums = await ListAlbum(_c)(account).whereType<Album>().toList();
     // figure out which files need to be unshared with whom
     final unshares = <FileServerIdentityComparator, Set<CiString>>{};
     // clean up only make sense for static albums

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
+import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
 class NativeEventListener<T> {
@@ -12,10 +13,7 @@ class NativeEventListener<T> {
       _log.warning("[begin] Already listening");
       return;
     }
-    _subscription = _mappedStream
-        .where((event) => event is T)
-        .cast<T>()
-        .listen(listener);
+    _subscription = _mappedStream.whereType<T>().listen(listener);
   }
 
   void end() {
@@ -28,7 +26,7 @@ class NativeEventListener<T> {
   }
 
   static late final _mappedStream =
-      NativeEvent.stream.where((event) => event is NativeEventObject).map((ev) {
+      NativeEvent.stream.whereType<NativeEventObject>().map((ev) {
     switch (ev.event) {
       case FileExifUpdatedEvent._id:
         return FileExifUpdatedEvent.fromEvent(ev);
