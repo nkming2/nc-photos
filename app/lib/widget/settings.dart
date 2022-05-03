@@ -990,7 +990,8 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              if (platform_k.isAndroid && AndroidInfo().sdkInt >= 29)
+              if (platform_k.isAndroid &&
+                  AndroidInfo().sdkInt >= AndroidVersion.Q)
                 SwitchListTile(
                   title: Text(L10n.global().settingsFollowSystemThemeTitle),
                   value: _isFollowSystemTheme,

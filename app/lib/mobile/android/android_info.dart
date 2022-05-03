@@ -25,3 +25,13 @@ class AndroidInfo {
   /// Corresponding to Build.VERSION.SDK_INT
   final int sdkInt;
 }
+
+abstract class AndroidVersion {
+  static const O = 26;
+  // ignore: constant_identifier_names
+  static const O_MR1 = 27;
+  static const P = 28;
+  static const Q = 29;
+  static const R = 30;
+  static const S = 31;
+}
