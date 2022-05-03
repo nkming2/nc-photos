@@ -453,10 +453,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "Je vyžadováno oprávnění k přístupu do úložiště",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "Další",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -864,5 +860,9 @@
 	"errorServerError": "Chyba serveru. Zkontrolujte, zda je server správně nastaven",
 	"@errorServerError": {
 		"description": "HTTP 500"
+	},
+	"errorNoStoragePermission": "Je vyžadováno oprávnění k přístupu do úložiště",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }

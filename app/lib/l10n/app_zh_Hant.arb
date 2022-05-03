@@ -502,10 +502,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "需要存取裝置檔案的權限",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "下一項",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -1203,5 +1199,9 @@
 	"errorAlbumDowngrade": "無法修改新版本 App 所儲存的相簿，請更新 App 後重試",
 	"@errorAlbumDowngrade": {
 		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	},
+	"errorNoStoragePermission": "需要存取裝置檔案的權限",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }

@@ -446,10 +446,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "Необходимо разрешение на доступ к хранилищу",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "Далее",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -1233,5 +1229,9 @@
 	"errorAlbumDowngrade": "Невозможно изменить этот альбом, так как он был создан более поздней версией этого приложения. Обновите приложение и повторите попытку",
 	"@errorAlbumDowngrade": {
 		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	},
+	"errorNoStoragePermission": "Необходимо разрешение на доступ к хранилищу",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }

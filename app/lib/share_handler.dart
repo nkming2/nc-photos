@@ -95,7 +95,7 @@ class ShareHandler {
       } on PermissionException catch (_) {
         _log.warning("[_shareAsFile] Permission not granted");
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().downloadFailureNoPermissionNotification),
+          content: Text(L10n.global().errorNoStoragePermission),
           duration: k.snackBarDurationNormal,
         ));
         // dismiss the dialog

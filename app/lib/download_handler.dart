@@ -105,8 +105,7 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
         } on PermissionException catch (_) {
           _log.warning("[downloadFiles] Permission not granted");
           SnackBarManager().showSnackBar(SnackBar(
-            content:
-                Text(L10n.global().downloadFailureNoPermissionNotification),
+            content: Text(L10n.global().errorNoStoragePermission),
             duration: k.snackBarDurationNormal,
           ));
           break;
@@ -177,7 +176,7 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
         _log.warning("[downloadFiles] Permission not granted");
         controller?.close();
         SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().downloadFailureNoPermissionNotification),
+          content: Text(L10n.global().errorNoStoragePermission),
           duration: k.snackBarDurationNormal,
         ));
         break;

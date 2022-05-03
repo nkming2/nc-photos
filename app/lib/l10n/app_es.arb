@@ -502,10 +502,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "Se requiere permiso de acceso al almacenamiento",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "Siguiente",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -1194,5 +1190,9 @@
 	"errorAlbumDowngrade": "No puede modificarse este álbum ya que fue creado por una versión más reciente de esta app. Por favor, actualiza la app e inténtalo de nuevo.",
 	"@errorAlbumDowngrade": {
 		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	},
+	"errorNoStoragePermission": "Se requiere permiso de acceso al almacenamiento",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }

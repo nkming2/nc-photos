@@ -408,10 +408,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "Απαιτείται άδεια πρόσβασης στο χώρο αποθήκευσης",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "Επόμενο",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -625,5 +621,9 @@
 	"errorServerError": "Σφάλμα διακομιστή. Βεβαιωθείτε ότι ο διακομιστής έχει ρυθμιστεί σωστά",
 	"@errorServerError": {
 		"description": "HTTP 500"
+	},
+	"errorNoStoragePermission": "Απαιτείται άδεια πρόσβασης στο χώρο αποθήκευσης",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }

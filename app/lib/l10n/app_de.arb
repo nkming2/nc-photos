@@ -453,10 +453,6 @@
 	"@downloadFailureNotification": {
 		"description": "Inform user that the file cannot be downloaded"
 	},
-	"downloadFailureNoPermissionNotification": "Speicherzugriffsberechtigung erforderlich",
-	"@downloadFailureNoPermissionNotification": {
-		"description": "Inform user that the file cannot be downloaded due to missing storage permission"
-	},
 	"nextTooltip": "Nächste",
 	"@nextTooltip": {
 		"description": "Tooltip of the next button"
@@ -819,5 +815,9 @@
 	"errorServerError": "Serverfehler. Bitte stellen Sie sicher, dass der Server richtig eingerichtet ist",
 	"@errorServerError": {
 		"description": "HTTP 500"
+	},
+	"errorNoStoragePermission": "Speicherzugriffsberechtigung erforderlich",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
 	}
 }
