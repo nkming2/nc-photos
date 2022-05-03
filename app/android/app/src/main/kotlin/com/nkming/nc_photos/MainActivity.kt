@@ -11,12 +11,6 @@ class MainActivity : FlutterActivity() {
 		super.configureFlutterEngine(flutterEngine)
 		MethodChannel(
 			flutterEngine.dartExecutor.binaryMessenger,
-			MediaStoreChannelHandler.CHANNEL
-		).setMethodCallHandler(
-			MediaStoreChannelHandler(this)
-		)
-		MethodChannel(
-			flutterEngine.dartExecutor.binaryMessenger,
 			SelfSignedCertChannelHandler.CHANNEL
 		).setMethodCallHandler(
 			SelfSignedCertChannelHandler(this)

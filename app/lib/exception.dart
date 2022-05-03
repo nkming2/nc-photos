@@ -34,22 +34,6 @@ class ApiException implements Exception {
   final dynamic message;
 }
 
-/// Platform permission is not granted by user
-class PermissionException implements Exception {
-  PermissionException([this.message]);
-
-  @override
-  toString() {
-    if (message == null) {
-      return "PermissionException";
-    } else {
-      return "PermissionException: $message";
-    }
-  }
-
-  final dynamic message;
-}
-
 /// The Nextcloud base URL address is invalid
 class InvalidBaseUrlException implements Exception {
   InvalidBaseUrlException([this.message]);

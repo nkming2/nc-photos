@@ -1,18 +1,23 @@
 package com.nkming.nc_photos.plugin
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.*
+
+class MediaStoreCopyWriter(data: InputStream) {
+	operator fun invoke(ostream: OutputStream) {
+		data.copyTo(ostream)
+	}
+
+	private val data = data
+}
 
 interface MediaStoreUtil {
 	companion object {
@@ -20,46 +25,60 @@ interface MediaStoreUtil {
 		 * Save the @c content as a file under the user Download dir
 		 *
 		 * @param context
-		 * @param filename Filename of the new file
 		 * @param content
+		 * @param filename Filename of the new file
+		 * @param subDir
 		 * @return Uri of the created file
 		 */
 		fun saveFileToDownload(
-			context: Context, filename: String, content: ByteArray
+			context: Context, content: ByteArray, filename: String,
+			subDir: String? = null
 		): Uri {
-			val stream = ByteArrayInputStream(content)
-			return writeFileToDownload(context, filename, stream)
+			return ByteArrayInputStream(content).use {
+				writeFileToDownload(
+					context, MediaStoreCopyWriter(it)::invoke, filename, subDir
+				)
+			}
 		}
 
 		/**
 		 * Copy a file from @c fromFilePath to the user Download dir
 		 *
 		 * @param context
-		 * @param toFilename Filename of the new file
-		 * @param fromFilePath Path of the file to be copied
+		 * @param fromFile Path of the file to be copied
+		 * @param filename Filename of the new file. If null, the same filename
+		 * @param subDir
+		 * will be used
 		 * @return Uri of the created file
 		 */
 		fun copyFileToDownload(
-			context: Context, toFilename: String, fromFilePath: String
+			context: Context, fromFile: Uri, filename: String? = null,
+			subDir: String? = null
 		): Uri {
-			val file = File(fromFilePath)
-			val stream = file.inputStream()
-			return writeFileToDownload(context, toFilename, stream)
+			return context.contentResolver.openInputStream(fromFile)!!.use {
+				writeFileToDownload(
+					context, MediaStoreCopyWriter(it)::invoke,
+					filename ?: UriUtil.resolveFilename(context, fromFile)!!,
+					subDir
+				)
+			}
 		}
 
-		private fun writeFileToDownload(
-			context: Context, filename: String, data: InputStream
+		fun writeFileToDownload(
+			context: Context, writer: (OutputStream) -> Unit, filename: String,
+			subDir: String? = null
 		): Uri {
 			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-				writeFileToDownload29(context, filename, data)
+				writeFileToDownload29(context, writer, filename, subDir)
 			} else {
-				writeFileToDownload0(context, filename, data)
+				writeFileToDownload0(context, writer, filename, subDir)
 			}
 		}
 
 		@RequiresApi(Build.VERSION_CODES.Q)
 		private fun writeFileToDownload29(
-			context: Context, filename: String, data: InputStream
+			context: Context, writer: (OutputStream) -> Unit, filename: String,
+			subDir: String?
 		): Uri {
 			// Add a media item that other apps shouldn't see until the item is
 			// fully written to the media store.
@@ -69,13 +88,12 @@ interface MediaStoreUtil {
 			val collection = MediaStore.Downloads.getContentUri(
 				MediaStore.VOLUME_EXTERNAL_PRIMARY
 			)
-			val file = File(filename)
 			val details = ContentValues().apply {
-				put(MediaStore.Downloads.DISPLAY_NAME, file.name)
-				if (file.parent != null) {
+				put(MediaStore.Downloads.DISPLAY_NAME, filename)
+				if (subDir != null) {
 					put(
 						MediaStore.Downloads.RELATIVE_PATH,
-						"${Environment.DIRECTORY_DOWNLOADS}/${file.parent}"
+						"${Environment.DIRECTORY_DOWNLOADS}/$subDir"
 					)
 				}
 			}
@@ -87,19 +105,17 @@ interface MediaStoreUtil {
 				BufferedOutputStream(
 					FileOutputStream(pfd!!.fileDescriptor)
 				).use { stream ->
-					data.copyTo(stream)
+					writer(stream)
 				}
 			}
 			return contentUri
 		}
 
 		private fun writeFileToDownload0(
-			context: Context, filename: String, data: InputStream
+			context: Context, writer: (OutputStream) -> Unit, filename: String,
+			subDir: String?
 		): Uri {
-			if (ContextCompat.checkSelfPermission(
-					context, Manifest.permission.WRITE_EXTERNAL_STORAGE
-				) != PackageManager.PERMISSION_GRANTED
-			) {
+			if (!PermissionUtil.hasWriteExternalStorage(context)) {
 				throw PermissionException("Permission not granted")
 			}
 
@@ -107,19 +123,19 @@ interface MediaStoreUtil {
 			val path = Environment.getExternalStoragePublicDirectory(
 				Environment.DIRECTORY_DOWNLOADS
 			)
-			var file = File(path, filename)
+			val prefix = if (subDir != null) "$subDir/" else ""
+			var file = File(path, prefix + filename)
+			val baseFilename = file.nameWithoutExtension
 			var count = 1
 			while (file.exists()) {
-				val f = File(filename)
 				file = File(
-					path,
-					"${f.nameWithoutExtension} ($count).${f.extension}"
+					path, prefix + "$baseFilename ($count).${file.extension}"
 				)
 				++count
 			}
 			file.parentFile?.mkdirs()
 			BufferedOutputStream(FileOutputStream(file)).use { stream ->
-				data.copyTo(stream)
+				writer(stream)
 			}
 
 			val fileUri = Uri.fromFile(file)
@@ -138,6 +154,5 @@ interface MediaStoreUtil {
 			}
 			context.sendBroadcast(scanIntent)
 		}
-
 	}
 }

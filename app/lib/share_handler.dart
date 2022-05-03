@@ -11,7 +11,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -27,6 +26,7 @@ import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
 import 'package:nc_photos/widget/share_method_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:tuple/tuple.dart';
 
 /// Handle sharing to other apps
