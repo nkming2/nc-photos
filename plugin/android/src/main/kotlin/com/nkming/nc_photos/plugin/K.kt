@@ -7,8 +7,8 @@ interface K {
 
 		const val LIB_ID = "com.nkming.nc_photos.plugin"
 
-		const val ACTION_DOWNLOAD_CANCEL = "com.nkming.nc_photos.ACTION_DOWNLOAD_CANCEL"
+		const val ACTION_DOWNLOAD_CANCEL = "${LIB_ID}.ACTION_DOWNLOAD_CANCEL"
 
-		const val EXTRA_NOTIFICATION_ID = "com.nkming.nc_photos.EXTRA_NOTIFICATION_ID"
+		const val EXTRA_NOTIFICATION_ID = "${LIB_ID}.EXTRA_NOTIFICATION_ID"
 	}
 }
