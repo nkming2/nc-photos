@@ -9,6 +9,8 @@ interface K {
 		const val IMAGE_PROCESSOR_SERVICE_RESULT_FAILED_NOTIFICATION_ID = 5002
 
 		const val PERMISSION_REQUEST_CODE = 11011
+		const val MEDIA_STORE_DELETE_REQUEST_CODE = 11012
+
 		const val LIB_ID = "com.nkming.nc_photos.plugin"
 
 		const val ACTION_DOWNLOAD_CANCEL = "${LIB_ID}.ACTION_DOWNLOAD_CANCEL"

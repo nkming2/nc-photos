@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos_plugin/src/exception.dart';
 import 'package:nc_photos_plugin/src/k.dart' as k;
 
@@ -14,6 +15,12 @@ class MediaStoreQueryResult {
   final int dateModified;
   final String? mimeType;
   final int? dateTaken;
+}
+
+class MediaStoreDeleteRequestResultEvent {
+  const MediaStoreDeleteRequestResultEvent(this.resultCode);
+
+  final int resultCode;
 }
 
 class MediaStore {
@@ -85,7 +92,36 @@ class MediaStore {
     }
   }
 
+  static Future<List<String>?> deleteFiles(List<String> uris) async {
+    return (await _methodChannel
+            .invokeMethod<List>("deleteFiles", <String, dynamic>{
+      "uris": uris,
+    }))
+        ?.cast<String>();
+  }
+
+  static Stream get stream => _eventStream;
+
+  static late final _eventStream =
+      _eventChannel.receiveBroadcastStream().map((event) {
+    if (event is Map) {
+      switch (event["event"]) {
+        case _eventDeleteRequestResult:
+          return MediaStoreDeleteRequestResultEvent(event["resultCode"]);
+
+        default:
+          _log.shout("[_eventStream] Unknown event: ${event["event"]}");
+      }
+    } else {
+      return event;
+    }
+  });
+
+  static const _eventChannel = EventChannel("${k.libId}/media_store");
   static const _methodChannel = MethodChannel("${k.libId}/media_store_method");
 
   static const _exceptionCodePermissionError = "permissionError";
+  static const _eventDeleteRequestResult = "DeleteRequestResult";
+
+  static final _log = Logger("media_store.MediaStore");
 }

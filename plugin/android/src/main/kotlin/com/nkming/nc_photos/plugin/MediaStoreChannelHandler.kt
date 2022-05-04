@@ -3,13 +3,17 @@ package com.nkming.nc_photos.plugin
 import android.app.Activity
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.PluginRegistry
 import java.io.File
 
 /*
@@ -24,8 +28,10 @@ import java.io.File
  * fun queryFiles(relativePath: String): List<Map>
  */
 class MediaStoreChannelHandler(context: Context) :
-	MethodChannel.MethodCallHandler, ActivityAware {
+	MethodChannel.MethodCallHandler, EventChannel.StreamHandler,
+	ActivityAware, PluginRegistry.ActivityResultListener {
 	companion object {
+		const val EVENT_CHANNEL = "${K.LIB_ID}/media_store"
 		const val METHOD_CHANNEL = "${K.LIB_ID}/media_store_method"
 
 		private const val TAG = "MediaStoreChannelHandler"
@@ -47,6 +53,27 @@ class MediaStoreChannelHandler(context: Context) :
 
 	override fun onDetachedFromActivityForConfigChanges() {
 		activity = null
+	}
+
+	override fun onActivityResult(
+		requestCode: Int, resultCode: Int, data: Intent?
+	): Boolean {
+		if (requestCode == K.MEDIA_STORE_DELETE_REQUEST_CODE) {
+			eventSink?.success(buildMap {
+				put("event", "DeleteRequestResult")
+				put("resultCode", resultCode)
+			})
+			return true
+		}
+		return false
+	}
+
+	override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
+		eventSink = events
+	}
+
+	override fun onCancel(arguments: Any?) {
+		eventSink = null
 	}
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -76,6 +103,14 @@ class MediaStoreChannelHandler(context: Context) :
 			"queryFiles" -> {
 				try {
 					queryFiles(call.argument("relativePath")!!, result)
+				} catch (e: Throwable) {
+					result.error("systemException", e.message, null)
+				}
+			}
+
+			"deleteFiles" -> {
+				try {
+					deleteFiles(call.argument("uris")!!, result)
 				} catch (e: Throwable) {
 					result.error("systemException", e.message, null)
 				}
@@ -196,6 +231,37 @@ class MediaStoreChannelHandler(context: Context) :
 		result.success(files)
 	}
 
+	private fun deleteFiles(uris: List<String>, result: MethodChannel.Result) {
+		val urisTyped = uris.map(Uri::parse)
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			val pi = MediaStore.createDeleteRequest(
+				context.contentResolver, urisTyped
+			)
+			activity!!.startIntentSenderForResult(
+				pi.intentSender, K.MEDIA_STORE_DELETE_REQUEST_CODE, null, 0, 0,
+				0
+			)
+			result.success(null)
+		} else {
+			if (!PermissionUtil.hasWriteExternalStorage(context)) {
+				activity?.let { PermissionUtil.requestWriteExternalStorage(it) }
+				result.error("permissionError", "Permission not granted", null)
+				return
+			}
+
+			val failed = mutableListOf<String>()
+			for (uri in urisTyped) {
+				try {
+					context.contentResolver.delete(uri, null, null)
+				} catch (e: Throwable) {
+					Log.e(TAG, "[deleteFiles] Failed while delete", e)
+					failed += uri.toString()
+				}
+			}
+			result.success(failed)
+		}
+	}
+
 	private fun inputToUri(fromFile: String): Uri {
 		val testUri = Uri.parse(fromFile)
 		return if (testUri.scheme == null) {
@@ -209,4 +275,5 @@ class MediaStoreChannelHandler(context: Context) :
 
 	private val context = context
 	private var activity: Activity? = null
+	private var eventSink: EventChannel.EventSink? = null
 }
