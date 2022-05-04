@@ -84,6 +84,8 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -186,6 +188,8 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -343,6 +347,8 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -350,14 +356,23 @@
     "rootPickerSkipConfirmationDialogContent2",
     "helpButtonLabel",
     "backgroundServiceStopping",
-    "metadataTaskPauseLowBatteryNotification"
+    "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
+  ],
+
+  "fi": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
   ],
 
   "fr": [
     "collectionsTooltip",
     "helpTooltip",
     "helpButtonLabel",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
   ],
 
   "pl": [
@@ -381,6 +396,18 @@
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
-    "metadataTaskPauseLowBatteryNotification"
+    "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
+  ],
+
+  "pt": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
+  ],
+
+  "ru": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle"
   ]
 }

@@ -16,12 +16,14 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
+import 'package:nc_photos/widget/handler/enhance_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
@@ -187,6 +189,9 @@ class _ViewerState extends State<Viewer>
   }
 
   Widget _buildBottomAppBar(BuildContext context) {
+    final index =
+        _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
+    final file = widget.streamFiles[index];
     return Align(
       alignment: Alignment.bottomCenter,
       child: Material(
@@ -206,6 +211,16 @@ class _ViewerState extends State<Viewer>
                 tooltip: L10n.global().shareTooltip,
                 onPressed: () => _onSharePressed(context),
               ),
+              if (features.isSupportEnhancement &&
+                  EnhanceHandler.isSupportedFormat(file))
+                IconButton(
+                  icon: Icon(
+                    Icons.auto_fix_high_outlined,
+                    color: Colors.white.withOpacity(.87),
+                  ),
+                  tooltip: L10n.global().enhanceTooltip,
+                  onPressed: () => _onEnhancePressed(context),
+                ),
               IconButton(
                 icon: Icon(
                   Icons.download_outlined,
@@ -553,6 +568,20 @@ class _ViewerState extends State<Viewer>
     ShareHandler(
       context: context,
     ).shareFiles(widget.account, [file]);
+  }
+
+  void _onEnhancePressed(BuildContext context) {
+    final file = widget.streamFiles[_viewerController.currentPage];
+    if (!file_util.isSupportedImageFormat(file)) {
+      _log.shout("[_onEnhancePressed] Video file not supported");
+      return;
+    }
+
+    _log.info("[_onEnhancePressed] Enhance file: ${file.path}");
+    EnhanceHandler(
+      account: widget.account,
+      file: file,
+    )(context);
   }
 
   void _onDownloadPressed() {

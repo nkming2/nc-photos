@@ -6,3 +6,5 @@ const twoFactorAuthUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/two-factor-authentication";
 const homeFolderNotFoundUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/home-folder-not-found";
+const enhanceZeroDceUrl =
+    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/zero-dce";

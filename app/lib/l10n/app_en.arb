@@ -1171,6 +1171,14 @@
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
 	},
+	"enhanceTooltip": "Enhance",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceLowLightTitle": "Low-light enhancement",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
