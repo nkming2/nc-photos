@@ -86,7 +86,7 @@ class LocalUriFile with EquatableMixin implements LocalFile {
   final DateTime? dateTaken;
 }
 
-typedef LocalFileOnDeleteFailureListener = void Function(
+typedef LocalFileOnFailureListener = void Function(
     LocalFile file, Object? error, StackTrace? stackTrace);
 
 class LocalFileRepo {
@@ -95,10 +95,23 @@ class LocalFileRepo {
   /// See [LocalFileDataSource.listDir]
   Future<List<LocalFile>> listDir(String path) => dataSrc.listDir(path);
 
+  /// See [LocalFileDataSource.deleteFiles]
+  Future<void> deleteFiles(
+    List<LocalFile> files, {
+    LocalFileOnFailureListener? onFailure,
+  }) =>
+      dataSrc.deleteFiles(files, onFailure: onFailure);
+
   final LocalFileDataSource dataSrc;
 }
 
 abstract class LocalFileDataSource {
   /// List all files under [path]
   Future<List<LocalFile>> listDir(String path);
+
+  /// Delete files
+  Future<void> deleteFiles(
+    List<LocalFile> files, {
+    LocalFileOnFailureListener? onFailure,
+  });
 }
