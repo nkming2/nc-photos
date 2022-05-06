@@ -27,6 +27,7 @@ import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
+import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
@@ -37,6 +38,7 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 
 class HomeAlbums extends StatefulWidget {
   const HomeAlbums({
@@ -285,6 +287,19 @@ class _HomeAlbumsState extends State<HomeAlbums>
     );
   }
 
+  SelectableItem _buildEnhancedPhotosItem(BuildContext context) {
+    return _ButtonListItem(
+      icon: Icons.auto_fix_high_outlined,
+      label: L10n.global().collectionEnhancedPhotosLabel,
+      onTap: () {
+        if (!isSelectionMode) {
+          Navigator.of(context).pushNamed(EnhancedPhotoBrowser.routeName,
+              arguments: const EnhancedPhotoBrowserArguments(null));
+        }
+      },
+    );
+  }
+
   SelectableItem _buildNewAlbumItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.add,
@@ -483,6 +498,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
       if (AccountPref.of(widget.account).isEnableFaceRecognitionAppOr())
         _buildPersonItem(context),
       _buildSharingItem(context),
+      if (features.isSupportEnhancement) _buildEnhancedPhotosItem(context),
       _buildArchiveItem(context),
       _buildTrashbinItem(context),
       _buildNewAlbumItem(context),

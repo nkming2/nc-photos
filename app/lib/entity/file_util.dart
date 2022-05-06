@@ -11,8 +11,11 @@ bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
 
 bool isSupportedFormat(File file) => isSupportedMime(file.contentType ?? "");
 
+bool isSupportedImageMime(String mime) =>
+    isSupportedMime(mime) && mime.startsWith("image/") == true;
+
 bool isSupportedImageFormat(File file) =>
-    isSupportedFormat(file) && file.contentType?.startsWith("image/") == true;
+    isSupportedImageMime(file.contentType ?? "");
 
 bool isSupportedVideoFormat(File file) =>
     isSupportedFormat(file) && file.contentType?.startsWith("video/") == true;

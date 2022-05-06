@@ -86,6 +86,8 @@
     "metadataTaskPauseLowBatteryNotification",
     "enhanceTooltip",
     "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -190,6 +192,8 @@
     "metadataTaskPauseLowBatteryNotification",
     "enhanceTooltip",
     "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -349,6 +353,8 @@
     "metadataTaskPauseLowBatteryNotification",
     "enhanceTooltip",
     "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -358,12 +364,16 @@
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "fi": [
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "fr": [
@@ -372,7 +382,9 @@
     "helpButtonLabel",
     "removeFromAlbumTooltip",
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "pl": [
@@ -398,16 +410,22 @@
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "pt": [
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "ru": [
     "enhanceTooltip",
-    "enhanceLowLightTitle"
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ]
 }
