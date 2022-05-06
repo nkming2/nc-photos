@@ -7,6 +7,8 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/changelog.dart' as changelog;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/activity.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -80,18 +82,23 @@ class _SplashState extends State<Splash> {
     );
   }
 
-  void _initTimedExit() {
-    Future.delayed(const Duration(seconds: 1)).then((_) {
-      final account = Pref().getCurrentAccount();
-      if (isNeedSetup()) {
-        Navigator.pushReplacementNamed(context, Setup.routeName);
-      } else if (account == null) {
-        Navigator.pushReplacementNamed(context, SignIn.routeName);
-      } else {
-        Navigator.pushReplacementNamed(context, Home.routeName,
-            arguments: HomeArguments(account));
+  Future<void> _initTimedExit() async {
+    await Future.delayed(const Duration(seconds: 1));
+    final account = Pref().getCurrentAccount();
+    if (isNeedSetup()) {
+      Navigator.pushReplacementNamed(context, Setup.routeName);
+    } else if (account == null) {
+      Navigator.pushReplacementNamed(context, SignIn.routeName);
+    } else {
+      Navigator.pushReplacementNamed(context, Home.routeName,
+          arguments: HomeArguments(account));
+      if (platform_k.isAndroid) {
+        final initialRoute = await Activity.consumeInitialRoute();
+        if (initialRoute != null) {
+          Navigator.pushNamed(context, initialRoute);
+        }
       }
-    });
+    }
   }
 
   bool _shouldUpgrade() {

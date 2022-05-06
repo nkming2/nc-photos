@@ -508,6 +508,12 @@ class _MyAppState extends State<MyApp>
           settings.arguments != null) {
         final args = settings.arguments as EnhancedPhotoBrowserArguments;
         return EnhancedPhotoBrowser.buildRoute(args);
+      } else if (settings.name
+              ?.startsWith("${EnhancedPhotoBrowser.routeName}?") ==
+          true) {
+        final queries = Uri.parse(settings.name!).queryParameters;
+        final args = EnhancedPhotoBrowserArguments(queries["filename"]);
+        return EnhancedPhotoBrowser.buildRoute(args);
       }
     } catch (e) {
       _log.severe(
