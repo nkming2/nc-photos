@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
+import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
@@ -28,23 +29,34 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
     LocalFileOnFailureListener? onFailure,
   }) async {
     _log.info("[deleteFiles] ${files.map((f) => f.logTag).toReadableString()}");
-    final uriFiles = files
-        .where((f) {
-          if (f is! LocalUriFile) {
-            _log.warning(
-                "[deleteFiles] Can't remove file not returned by this data source: $f");
-            onFailure?.call(f, ArgumentError("File not supported"), null);
-            return false;
-          } else {
-            return true;
-          }
-        })
-        .cast<LocalUriFile>()
-        .toList();
+    final uriFiles = _filterUriFiles(files, (f) {
+      onFailure?.call(f, ArgumentError("File not supported"), null);
+    });
     if (AndroidInfo().sdkInt >= AndroidVersion.R) {
       await _deleteFiles30(uriFiles, onFailure);
     } else {
       await _deleteFiles0(uriFiles, onFailure);
+    }
+  }
+
+  @override
+  shareFiles(
+    List<LocalFile> files, {
+    LocalFileOnFailureListener? onFailure,
+  }) async {
+    _log.info("[shareFiles] ${files.map((f) => f.logTag).toReadableString()}");
+    final uriFiles = _filterUriFiles(files, (f) {
+      onFailure?.call(f, ArgumentError("File not supported"), null);
+    });
+
+    final share = AndroidFileShare(uriFiles.map((e) => e.uri).toList(),
+        uriFiles.map((e) => e.mime).toList());
+    try {
+      await share.share();
+    } catch (e, stackTrace) {
+      for (final f in uriFiles) {
+        onFailure?.call(f, e, stackTrace);
+      }
     }
   }
 
@@ -77,6 +89,25 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
     for (final f in failedFilesIt) {
       onFailure?.call(f, null, null);
     }
+  }
+
+  List<LocalUriFile> _filterUriFiles(
+    List<LocalFile> files, [
+    void Function(LocalFile)? nonUriFileCallback,
+  ]) {
+    return files
+        .where((f) {
+          if (f is! LocalUriFile) {
+            _log.warning(
+                "[deleteFiles] Can't remove file not returned by this data source: $f");
+            nonUriFileCallback?.call(f);
+            return false;
+          } else {
+            return true;
+          }
+        })
+        .cast<LocalUriFile>()
+        .toList();
   }
 
   static LocalFile _toLocalFile(MediaStoreQueryResult r) => LocalUriFile(

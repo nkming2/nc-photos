@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
@@ -108,6 +109,13 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
               shadowColor: Colors.transparent,
               foregroundColor: Colors.white.withOpacity(.87),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  tooltip: L10n.global().shareTooltip,
+                  onPressed: () {
+                    _onSharePressed(context);
+                  },
+                ),
                 PopupMenuButton<_AppBarMenuOption>(
                   tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
                   itemBuilder: (context) => [
@@ -124,6 +132,12 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
         ),
       ],
     );
+  }
+
+  Future<void> _onSharePressed(BuildContext context) async {
+    final file = widget.streamFiles[_viewerController.currentPage];
+    _log.info("[_onSharePressed] Sharing file: ${file.logTag}");
+    await ShareHandler(context: context).shareLocalFiles([file]);
   }
 
   void _onMenuSelected(BuildContext context, _AppBarMenuOption option) {

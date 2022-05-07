@@ -102,6 +102,13 @@ class LocalFileRepo {
   }) =>
       dataSrc.deleteFiles(files, onFailure: onFailure);
 
+  /// See [LocalFileDataSource.shareFiles]
+  Future<void> shareFiles(
+    List<LocalFile> files, {
+    LocalFileOnFailureListener? onFailure,
+  }) =>
+      dataSrc.shareFiles(files, onFailure: onFailure);
+
   final LocalFileDataSource dataSrc;
 }
 
@@ -111,6 +118,12 @@ abstract class LocalFileDataSource {
 
   /// Delete files
   Future<void> deleteFiles(
+    List<LocalFile> files, {
+    LocalFileOnFailureListener? onFailure,
+  });
+
+  /// Share files
+  Future<void> shareFiles(
     List<LocalFile> files, {
     LocalFileOnFailureListener? onFailure,
   });

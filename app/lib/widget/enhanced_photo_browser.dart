@@ -11,6 +11,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -160,6 +161,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         });
       },
       actions: [
+        IconButton(
+          icon: const Icon(Icons.share),
+          tooltip: L10n.global().shareTooltip,
+          onPressed: () {
+            _onSelectionSharePressed(context);
+          },
+        ),
         PopupMenuButton<_SelectionMenuOption>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
           itemBuilder: (context) => [
@@ -196,6 +204,21 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         duration: k.snackBarDurationNormal,
       ));
     }
+  }
+
+  Future<void> _onSelectionSharePressed(BuildContext context) async {
+    final selected = selectedListItems
+        .whereType<_FileListItem>()
+        .map((e) => e.file)
+        .toList();
+    await ShareHandler(
+      context: context,
+      clearSelection: () {
+        setState(() {
+          clearSelectedItems();
+        });
+      },
+    ).shareLocalFiles(selected);
   }
 
   void _onSelectionMenuSelected(
