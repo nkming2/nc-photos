@@ -11,7 +11,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
 class NcPhotosPlugin : FlutterPlugin, ActivityAware,
-	PluginRegistry.ActivityResultListener {
+	PluginRegistry.ActivityResultListener,
+	PluginRegistry.RequestPermissionsResultListener {
 	companion object {
 		const val ACTION_SHOW_IMAGE_PROCESSOR_RESULT =
 			K.ACTION_SHOW_IMAGE_PROCESSOR_RESULT
@@ -81,6 +82,19 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 		contentUriMethodChannel.setMethodCallHandler(
 			ContentUriChannelHandler(flutterPluginBinding.applicationContext)
 		)
+
+		permissionChannelHandler =
+			PermissionChannelHandler(flutterPluginBinding.applicationContext)
+		permissionChannel = EventChannel(
+			flutterPluginBinding.binaryMessenger,
+			PermissionChannelHandler.EVENT_CHANNEL
+		)
+		permissionChannel.setStreamHandler(permissionChannelHandler)
+		permissionMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			PermissionChannelHandler.METHOD_CHANNEL
+		)
+		permissionMethodChannel.setMethodCallHandler(permissionChannelHandler)
 	}
 
 	override fun onDetachedFromEngine(
@@ -94,30 +108,39 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 		mediaStoreMethodChannel.setMethodCallHandler(null)
 		imageProcessorMethodChannel.setMethodCallHandler(null)
 		contentUriMethodChannel.setMethodCallHandler(null)
+		permissionMethodChannel.setMethodCallHandler(null)
 	}
 
 	override fun onAttachedToActivity(binding: ActivityPluginBinding) {
 		mediaStoreChannelHandler.onAttachedToActivity(binding)
+		permissionChannelHandler.onAttachedToActivity(binding)
 		pluginBinding = binding
 		binding.addActivityResultListener(this)
+		binding.addRequestPermissionsResultListener(this)
 	}
 
 	override fun onReattachedToActivityForConfigChanges(
 		binding: ActivityPluginBinding
 	) {
 		mediaStoreChannelHandler.onReattachedToActivityForConfigChanges(binding)
+		permissionChannelHandler.onReattachedToActivityForConfigChanges(binding)
 		pluginBinding = binding
 		binding.addActivityResultListener(this)
+		binding.addRequestPermissionsResultListener(this)
 	}
 
 	override fun onDetachedFromActivity() {
 		mediaStoreChannelHandler.onDetachedFromActivity()
+		permissionChannelHandler.onDetachedFromActivity()
 		pluginBinding?.removeActivityResultListener(this)
+		pluginBinding?.removeRequestPermissionsResultListener(this)
 	}
 
 	override fun onDetachedFromActivityForConfigChanges() {
 		mediaStoreChannelHandler.onDetachedFromActivityForConfigChanges()
+		permissionChannelHandler.onDetachedFromActivityForConfigChanges()
 		pluginBinding?.removeActivityResultListener(this)
+		pluginBinding?.removeRequestPermissionsResultListener(this)
 	}
 
 	override fun onActivityResult(
@@ -141,6 +164,27 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 		}
 	}
 
+	override fun onRequestPermissionsResult(
+		requestCode: Int, permissions: Array<String>, grantResults: IntArray
+	): Boolean {
+		return try {
+			when (requestCode) {
+				K.PERMISSION_REQUEST_CODE -> {
+					permissionChannelHandler.onRequestPermissionsResult(
+						requestCode, permissions, grantResults
+					)
+				}
+
+				else -> false
+			}
+		} catch (e: Throwable) {
+			Log.e(
+				TAG, "Failed while onActivityResult, requestCode=$requestCode"
+			)
+			false
+		}
+	}
+
 	private var pluginBinding: ActivityPluginBinding? = null
 
 	private lateinit var lockChannel: MethodChannel
@@ -151,7 +195,10 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	private lateinit var mediaStoreMethodChannel: MethodChannel
 	private lateinit var imageProcessorMethodChannel: MethodChannel
 	private lateinit var contentUriMethodChannel: MethodChannel
+	private lateinit var permissionChannel: EventChannel
+	private lateinit var permissionMethodChannel: MethodChannel
 
 	private lateinit var lockChannelHandler: LockChannelHandler
 	private lateinit var mediaStoreChannelHandler: MediaStoreChannelHandler
+	private lateinit var permissionChannelHandler: PermissionChannelHandler
 }
