@@ -60,6 +60,10 @@ android {
             dimension "version"
             applicationIdSuffix ".paid"
         }
+        gitlab {
+            dimension "version"
+            applicationIdSuffix ".gitlab"
+        }
     }
 
     splits {
