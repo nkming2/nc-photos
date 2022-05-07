@@ -1,13 +1,13 @@
 # Photos
 Browse your photos on Nextcloud servers
 
-<script src="https://liberapay.com/nkming2/widgets/button.js"></script>
-<noscript><a href="https://liberapay.com/nkming2/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+<a href="https://liberapay.com/nkming2/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
 ## Get the app
 ### Android
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Play" width="160" />](https://play.google.com/store/apps/details?id=com.nkming.nc_photos.paid&referrer=utm_source%3Drepo)  
-Or the [ad-supported version](https://play.google.com/store/apps/details?id=com.nkming.nc_photos&referrer=utm_source%3Drepo)
+Or the [ad-supported version](https://play.google.com/store/apps/details?id=com.nkming.nc_photos&referrer=utm_source%3Drepo)  
+Or download pre-built binary [here](https://gitlab.com/nkming2/nc-photos/-/wikis/Release)
 
 ### Web (experimental)
 Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/web-app)
