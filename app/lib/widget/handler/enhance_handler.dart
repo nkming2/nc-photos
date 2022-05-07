@@ -9,8 +9,11 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/help_utils.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/android_info.dart';
+import 'package:nc_photos/mobile/android/permission_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,6 +27,10 @@ class EnhanceHandler {
       file_util.isSupportedImageFormat(file) && file.contentType != "image/gif";
 
   Future<void> call(BuildContext context) async {
+    if (!await _ensurePermission()) {
+      return;
+    }
+
     final selected = await showDialog<_Algorithm>(
       context: context,
       builder: (context) => SimpleDialog(
@@ -62,6 +69,28 @@ class EnhanceHandler {
         await ImageProcessor.zeroDce(imageUri.toString(), file.filename);
         break;
     }
+  }
+
+  Future<bool> _ensurePermission() async {
+    if (platform_k.isAndroid) {
+      if (AndroidInfo().sdkInt < AndroidVersion.R &&
+          !await Permission.hasWriteExternalStorage()) {
+        final results = await requestPermissionsForResult([
+          Permission.WRITE_EXTERNAL_STORAGE,
+        ]);
+        if (results[Permission.WRITE_EXTERNAL_STORAGE] !=
+            PermissionRequestResult.granted) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(L10n.global().errorNoStoragePermission),
+            duration: k.snackBarDurationNormal,
+          ));
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+    return true;
   }
 
   List<_Option> _getOptions() => [
