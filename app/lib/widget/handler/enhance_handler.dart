@@ -36,6 +36,7 @@ class EnhanceHandler {
       builder: (context) => SimpleDialog(
         children: _getOptions()
             .map((o) => SimpleDialogOption(
+                  padding: const EdgeInsets.all(0),
                   child: ListTile(
                     title: Text(o.title),
                     subtitle: o.subtitle?.run((t) => Text(t)),
