@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/help_utils.dart';
@@ -64,10 +62,15 @@ class EnhanceHandler {
       return;
     }
     _log.info("[call] Selected: ${selected.name}");
-    final imageUri = await _getFileUri();
     switch (selected) {
       case _Algorithm.zeroDce:
-        await ImageProcessor.zeroDce(imageUri.toString(), file.filename);
+        await ImageProcessor.zeroDce(
+          "${account.url}/${file.path}",
+          file.filename,
+          headers: {
+            "Authorization": Api.getAuthorizationHeaderValue(account),
+          },
+        );
         break;
     }
   }
@@ -103,22 +106,6 @@ class EnhanceHandler {
             algorithm: _Algorithm.zeroDce,
           ),
       ];
-
-  Future<Uri> _getFileUri() async {
-    final f = await LargeImageCacheManager.inst.getSingleFile(
-      api_util.getFilePreviewUrl(
-        account,
-        file,
-        width: k.photoLargeSize,
-        height: k.photoLargeSize,
-        a: true,
-      ),
-      headers: {
-        "Authorization": Api.getAuthorizationHeaderValue(account),
-      },
-    );
-    return f.absolute.uri;
-  }
 
   final Account account;
   final File file;

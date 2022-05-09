@@ -18,12 +18,16 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.nkming.nc_photos.plugin.image_processor.ZeroDce
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 
 class ImageProcessorService : Service() {
 	companion object {
 		const val EXTRA_METHOD = "method"
 		const val METHOD_ZERO_DCE = "zero-dce"
-		const val EXTRA_IMAGE = "image"
+		const val EXTRA_FILE_URL = "fileUrl"
+		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
 
 		private const val NOTIFICATION_ID =
@@ -45,6 +49,7 @@ class ImageProcessorService : Service() {
 		super.onCreate()
 		wakeLock.acquire()
 		createNotificationChannel()
+		cleanUp()
 	}
 
 	override fun onDestroy() {
@@ -55,7 +60,7 @@ class ImageProcessorService : Service() {
 
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 		assert(intent.hasExtra(EXTRA_METHOD))
-		assert(intent.hasExtra(EXTRA_IMAGE))
+		assert(intent.hasExtra(EXTRA_FILE_URL))
 		if (!isForeground) {
 			try {
 				startForeground(NOTIFICATION_ID, buildNotification())
@@ -73,19 +78,23 @@ class ImageProcessorService : Service() {
 				Log.e(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
 				// there are commands running in the bg
-				addCommand(
-					ImageProcessorCommand(startId, "null", Uri.EMPTY, "")
-				)
+				addCommand(ImageProcessorCommand(startId, "null", "", null, ""))
 			}
 		}
 		return START_REDELIVER_INTENT
 	}
 
 	private fun onZeroDce(startId: Int, extras: Bundle) {
-		val imageUri = Uri.parse(extras.getString(EXTRA_IMAGE)!!)
+		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
+
+		@Suppress("Unchecked_cast")
+		val headers =
+			extras.getSerializable(EXTRA_HEADERS) as HashMap<String, String>?
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		addCommand(
-			ImageProcessorCommand(startId, METHOD_ZERO_DCE, imageUri, filename)
+			ImageProcessorCommand(
+				startId, METHOD_ZERO_DCE, fileUrl, headers, filename
+			)
 		)
 	}
 
@@ -186,6 +195,17 @@ class ImageProcessorService : Service() {
 		}
 	}
 
+	/**
+	 * Clean up temp files in case the service ended prematurely last time
+	 */
+	private fun cleanUp() {
+		try {
+			getTempDir(this).deleteRecursively()
+		} catch (e: Throwable) {
+			Log.e(TAG, "[cleanUp] Failed while cleanUp", e)
+		}
+	}
+
 	private var isForeground = false
 	private val cmds = mutableListOf<ImageProcessorCommand>()
 	private var cmdTask: ImageProcessorCommandTask? = null
@@ -205,7 +225,8 @@ class ImageProcessorService : Service() {
 private data class ImageProcessorCommand(
 	val startId: Int,
 	val method: String,
-	val uri: Uri,
+	val fileUrl: String,
+	val headers: Map<String, String>?,
 	val filename: String,
 	val args: Map<String, Any> = mapOf(),
 )
@@ -222,18 +243,62 @@ private open class ImageProcessorCommandTask(context: Context) :
 	): MessageEvent {
 		val cmd = params[0]!!
 		return try {
+			val outUri = handleCommand(cmd)
+			ImageProcessorCompletedEvent(outUri)
+		} catch (e: Throwable) {
+			Log.e(TAG, "[doInBackground] Failed while handleCommand", e)
+			ImageProcessorFailedEvent(e)
+		}
+	}
+
+	private fun handleCommand(cmd: ImageProcessorCommand): Uri {
+		val file = downloadFile(cmd.fileUrl, cmd.headers)
+		return try {
+			val fileUri = Uri.fromFile(file)
 			val output = when (cmd.method) {
 				ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(context).infer(
-					cmd.uri
+					fileUri
 				)
 				else -> throw IllegalArgumentException(
 					"Unknown method: ${cmd.method}"
 				)
 			}
-			val uri = saveBitmap(output, cmd.filename)
-			ImageProcessorCompletedEvent(cmd.uri, uri)
-		} catch (e: Throwable) {
-			ImageProcessorFailedEvent(cmd.uri, e)
+			saveBitmap(output, cmd.filename)
+		} finally {
+			file.delete()
+		}
+	}
+
+	private fun downloadFile(
+		fileUrl: String, headers: Map<String, String>?
+	): File {
+		Log.i(TAG, "[downloadFile] $fileUrl")
+		return (URL(fileUrl).openConnection() as HttpURLConnection).apply {
+			requestMethod = "GET"
+			instanceFollowRedirects = true
+			connectTimeout = 8000
+			readTimeout = 15000
+			for (entry in (headers ?: mapOf()).entries) {
+				setRequestProperty(entry.key, entry.value)
+			}
+		}.use {
+			val responseCode = it.responseCode
+			if (responseCode / 100 == 2) {
+				val file =
+					File.createTempFile("img", null, getTempDir(context))
+				file.outputStream().use { oStream ->
+					it.inputStream.copyTo(oStream)
+				}
+				file
+			} else {
+				Log.e(
+					TAG,
+					"[downloadFile] Failed downloading file: HTTP$responseCode"
+				)
+				throw HttpException(
+					responseCode, "Failed downloading file (HTTP$responseCode)"
+				)
+			}
 		}
 	}
 
@@ -247,4 +312,15 @@ private open class ImageProcessorCommandTask(context: Context) :
 
 	@SuppressLint("StaticFieldLeak")
 	private val context = context
+}
+
+private fun getTempDir(context: Context): File {
+	val f = File(context.cacheDir, "imageProcessor")
+	if (!f.exists()) {
+		f.mkdirs()
+	} else if (!f.isDirectory) {
+		f.delete()
+		f.mkdirs()
+	}
+	return f
 }

@@ -20,7 +20,8 @@ class ImageProcessorChannelHandler(context: Context) :
 			"zeroDce" -> {
 				try {
 					zeroDce(
-						call.argument("image")!!,
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
 						call.argument("filename")!!,
 						result
 					)
@@ -42,14 +43,18 @@ class ImageProcessorChannelHandler(context: Context) :
 	}
 
 	private fun zeroDce(
-		image: String, filename: String, result: MethodChannel.Result
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		result: MethodChannel.Result
 	) {
 		val intent = Intent(context, ImageProcessorService::class.java).apply {
 			putExtra(
 				ImageProcessorService.EXTRA_METHOD,
 				ImageProcessorService.METHOD_ZERO_DCE
 			)
-			putExtra(ImageProcessorService.EXTRA_IMAGE, image)
+			putExtra(ImageProcessorService.EXTRA_FILE_URL, fileUrl)
+			putExtra(
+				ImageProcessorService.EXTRA_HEADERS,
+				headers?.let { HashMap(it) })
 			putExtra(ImageProcessorService.EXTRA_FILENAME, filename)
 		}
 		ContextCompat.startForegroundService(context, intent)
