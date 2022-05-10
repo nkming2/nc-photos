@@ -31,6 +31,8 @@ class ImageProcessorService : Service() {
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
 
+		private const val ACTION_CANCEL = "cancel"
+
 		private const val NOTIFICATION_ID =
 			K.IMAGE_PROCESSOR_SERVICE_NOTIFICATION_ID
 		private const val RESULT_NOTIFICATION_ID =
@@ -60,6 +62,20 @@ class ImageProcessorService : Service() {
 	}
 
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+		when (intent.action) {
+			ACTION_CANCEL -> onCancel(startId)
+			else -> onNewImage(intent, startId)
+		}
+		return START_REDELIVER_INTENT
+	}
+
+	private fun onCancel(startId: Int) {
+		Log.i(TAG, "[onCancel] Cancel requested")
+		cmdTask?.cancel(false)
+		stopSelf(startId)
+	}
+
+	private fun onNewImage(intent: Intent, startId: Int) {
 		assert(intent.hasExtra(EXTRA_METHOD))
 		assert(intent.hasExtra(EXTRA_FILE_URL))
 		if (!isForeground) {
@@ -82,7 +98,6 @@ class ImageProcessorService : Service() {
 				addCommand(ImageProcessorCommand(startId, "null", "", null, ""))
 			}
 		}
-		return START_REDELIVER_INTENT
 	}
 
 	private fun onZeroDce(startId: Int, extras: Bundle) {
@@ -111,10 +126,20 @@ class ImageProcessorService : Service() {
 	}
 
 	private fun buildNotification(content: String? = null): Notification {
+		val cancelIntent =
+			Intent(this, ImageProcessorService::class.java).apply {
+				action = ACTION_CANCEL
+			}
+		val cancelPendingIntent = PendingIntent.getService(
+			this, 0, cancelIntent, getPendingIntentFlagImmutable()
+		)
 		return NotificationCompat.Builder(this, CHANNEL_ID).run {
 			setSmallIcon(R.drawable.outline_auto_fix_high_white_24)
 			setContentTitle("Processing image")
 			if (content != null) setContentText(content)
+			addAction(
+				0, getString(android.R.string.cancel), cancelPendingIntent
+			)
 			build()
 		}
 	}
@@ -171,7 +196,8 @@ class ImageProcessorService : Service() {
 				notifyResult(result)
 				cmds.removeFirst()
 				stopSelf(cmd.startId)
-				if (cmds.isNotEmpty()) {
+				@Suppress("Deprecation")
+				if (cmds.isNotEmpty() && !isCancelled) {
 					runCommand()
 				} else {
 					cmdTask = null
@@ -363,6 +389,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 
 	private fun handleCommand(cmd: ImageProcessorCommand): Uri {
 		val file = downloadFile(cmd.fileUrl, cmd.headers)
+		handleCancel()
 		return try {
 			val fileUri = Uri.fromFile(file)
 			val output = when (cmd.method) {
@@ -373,6 +400,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 					"Unknown method: ${cmd.method}"
 				)
 			}
+			handleCancel()
 			saveBitmap(output, cmd.filename, file)
 		} finally {
 			file.delete()
@@ -447,6 +475,13 @@ private open class ImageProcessorCommandTask(context: Context) :
 			} catch (e: Throwable) {
 				Log.e(TAG, "[copyExif] Failed while copying tag: $t", e)
 			}
+		}
+	}
+
+	private fun handleCancel() {
+		if (isCancelled) {
+			Log.i(TAG, "[handleCancel] Canceled")
+			throw InterruptedException()
 		}
 	}
 
