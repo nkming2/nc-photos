@@ -9,7 +9,10 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
+import 'package:nc_photos/mobile/android/permission_util.dart';
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -58,8 +61,18 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   @override
   initState() {
     super.initState();
-    _initBloc();
     _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
+    _ensurePermission().then((value) {
+      if (value) {
+        _initBloc();
+      } else {
+        if (mounted) {
+          setState(() {
+            _isNoPermission = true;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -94,7 +107,23 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   Widget _buildContent(BuildContext context, ScanLocalDirBlocState state) {
-    if (state is ScanLocalDirBlocSuccess && itemStreamListItems.isEmpty) {
+    if (_isNoPermission) {
+      return Column(
+        children: [
+          AppBar(
+            title: Text(L10n.global().collectionEnhancedPhotosLabel),
+            elevation: 0,
+          ),
+          Expanded(
+            child: EmptyListIndicator(
+              icon: Icons.folder_off_outlined,
+              text: L10n.global().errorNoStoragePermission,
+            ),
+          ),
+        ],
+      );
+    } else if (state is ScanLocalDirBlocSuccess &&
+        itemStreamListItems.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -300,6 +329,29 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         arguments: LocalFileViewerArguments(_backingFiles, index));
   }
 
+  Future<bool> _ensurePermission() async {
+    if (platform_k.isAndroid) {
+      if (AndroidInfo().sdkInt >= AndroidVersion.R) {
+        if (!await Permission.hasReadExternalStorage()) {
+          final results = await requestPermissionsForResult([
+            Permission.READ_EXTERNAL_STORAGE,
+          ]);
+          return results[Permission.READ_EXTERNAL_STORAGE] ==
+              PermissionRequestResult.granted;
+        }
+      } else {
+        if (!await Permission.hasWriteExternalStorage()) {
+          final results = await requestPermissionsForResult([
+            Permission.WRITE_EXTERNAL_STORAGE,
+          ]);
+          return results[Permission.WRITE_EXTERNAL_STORAGE] ==
+              PermissionRequestResult.granted;
+        }
+      }
+    }
+    return true;
+  }
+
   void _reqQuery() {
     _bloc.add(const ScanLocalDirBlocQuery(
         ["Download/Photos (for Nextcloud)/Enhanced Photos"]));
@@ -312,6 +364,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   var _isFirstRun = true;
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
+  var _isNoPermission = false;
 
   static final _log =
       Logger("widget.enhanced_photo_browser._EnhancedPhotoBrowserState");
