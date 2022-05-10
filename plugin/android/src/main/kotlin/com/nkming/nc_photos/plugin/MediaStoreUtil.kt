@@ -68,15 +68,15 @@ interface MediaStoreUtil {
 			context: Context, writer: (OutputStream) -> Unit, filename: String,
 			subDir: String? = null
 		): Uri {
-			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-				writeFileToDownload29(context, writer, filename, subDir)
+			return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+				writeFileToDownload30(context, writer, filename, subDir)
 			} else {
 				writeFileToDownload0(context, writer, filename, subDir)
 			}
 		}
 
 		@RequiresApi(Build.VERSION_CODES.Q)
-		private fun writeFileToDownload29(
+		private fun writeFileToDownload30(
 			context: Context, writer: (OutputStream) -> Unit, filename: String,
 			subDir: String?
 		): Uri {
