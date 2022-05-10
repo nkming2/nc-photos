@@ -17,6 +17,9 @@ class ZeroDce(context: Context) {
 		private const val WIDTH = 300
 		private const val HEIGHT = 200
 		private const val ITERATION = 8
+
+		private const val MAX_WIDTH = 2048
+		private const val MAX_HEIGHT = 1536
 	}
 
 	fun infer(imageUri: Uri): Bitmap {
@@ -51,7 +54,7 @@ class ZeroDce(context: Context) {
 		Log.i(TAG, "Enhancing image, iteration: $iteration")
 		// downscale original to prevent OOM
 		val resized = BitmapUtil.loadImage(
-			context, imageUri, 1920, 1080, BitmapResizeMethod.FIT,
+			context, imageUri, MAX_WIDTH, MAX_HEIGHT, BitmapResizeMethod.FIT,
 			isAllowSwapSide = true, shouldUpscale = false
 		)
 		// resize aMaps
