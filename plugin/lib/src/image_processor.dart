@@ -1,0 +1,20 @@
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:nc_photos_plugin/src/k.dart' as k;
+
+class ImageProcessor {
+  static Future<void> zeroDce(
+    String fileUrl,
+    String filename, {
+    Map<String, String>? headers,
+  }) =>
+      _methodChannel.invokeMethod("zeroDce", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+      });
+
+  static const _methodChannel =
+      MethodChannel("${k.libId}/image_processor_method");
+}

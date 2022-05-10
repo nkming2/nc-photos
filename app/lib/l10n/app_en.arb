@@ -1171,6 +1171,22 @@
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
 	},
+	"enhanceTooltip": "Enhance",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceLowLightTitle": "Low-light enhancement",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
+	"collectionEnhancedPhotosLabel": "Enhanced photos",
+	"@collectionEnhancedPhotosLabel": {
+		"description": "List photos enhanced by the app"
+	},
+	"deletePermanentlyLocalConfirmationDialogContent": "Selected items will be deleted permanently from this device.\n\nThis action is nonreversible",
+	"@deletePermanentlyLocalConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items from the current device"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

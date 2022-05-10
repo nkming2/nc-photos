@@ -16,6 +16,7 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/download_file.dart';
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:tuple/tuple.dart';
 
 class DownloadHandler {

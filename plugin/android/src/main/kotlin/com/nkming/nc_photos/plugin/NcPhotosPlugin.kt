@@ -1,11 +1,26 @@
 package com.nkming.nc_photos.plugin
 
+import android.content.Intent
+import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.PluginRegistry
 
-class NcPhotosPlugin : FlutterPlugin {
+class NcPhotosPlugin : FlutterPlugin, ActivityAware,
+	PluginRegistry.ActivityResultListener,
+	PluginRegistry.RequestPermissionsResultListener {
+	companion object {
+		const val ACTION_SHOW_IMAGE_PROCESSOR_RESULT =
+			K.ACTION_SHOW_IMAGE_PROCESSOR_RESULT
+		const val EXTRA_IMAGE_RESULT_URI = K.EXTRA_IMAGE_RESULT_URI
+
+		private const val TAG = "NcPhotosPlugin"
+	}
+
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
@@ -36,6 +51,50 @@ class NcPhotosPlugin : FlutterPlugin {
 			NativeEventChannelHandler.METHOD_CHANNEL
 		)
 		nativeEventMethodChannel.setMethodCallHandler(nativeEventHandler)
+
+		mediaStoreChannelHandler =
+			MediaStoreChannelHandler(flutterPluginBinding.applicationContext)
+		mediaStoreChannel = EventChannel(
+			flutterPluginBinding.binaryMessenger,
+			MediaStoreChannelHandler.EVENT_CHANNEL
+		)
+		mediaStoreChannel.setStreamHandler(mediaStoreChannelHandler)
+		mediaStoreMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			MediaStoreChannelHandler.METHOD_CHANNEL
+		)
+		mediaStoreMethodChannel.setMethodCallHandler(mediaStoreChannelHandler)
+
+		imageProcessorMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			ImageProcessorChannelHandler.METHOD_CHANNEL
+		)
+		imageProcessorMethodChannel.setMethodCallHandler(
+			ImageProcessorChannelHandler(
+				flutterPluginBinding.applicationContext
+			)
+		)
+
+		contentUriMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			ContentUriChannelHandler.METHOD_CHANNEL
+		)
+		contentUriMethodChannel.setMethodCallHandler(
+			ContentUriChannelHandler(flutterPluginBinding.applicationContext)
+		)
+
+		permissionChannelHandler =
+			PermissionChannelHandler(flutterPluginBinding.applicationContext)
+		permissionChannel = EventChannel(
+			flutterPluginBinding.binaryMessenger,
+			PermissionChannelHandler.EVENT_CHANNEL
+		)
+		permissionChannel.setStreamHandler(permissionChannelHandler)
+		permissionMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			PermissionChannelHandler.METHOD_CHANNEL
+		)
+		permissionMethodChannel.setMethodCallHandler(permissionChannelHandler)
 	}
 
 	override fun onDetachedFromEngine(
@@ -46,12 +105,100 @@ class NcPhotosPlugin : FlutterPlugin {
 		notificationChannel.setMethodCallHandler(null)
 		nativeEventChannel.setStreamHandler(null)
 		nativeEventMethodChannel.setMethodCallHandler(null)
+		mediaStoreMethodChannel.setMethodCallHandler(null)
+		imageProcessorMethodChannel.setMethodCallHandler(null)
+		contentUriMethodChannel.setMethodCallHandler(null)
+		permissionMethodChannel.setMethodCallHandler(null)
 	}
+
+	override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+		mediaStoreChannelHandler.onAttachedToActivity(binding)
+		permissionChannelHandler.onAttachedToActivity(binding)
+		pluginBinding = binding
+		binding.addActivityResultListener(this)
+		binding.addRequestPermissionsResultListener(this)
+	}
+
+	override fun onReattachedToActivityForConfigChanges(
+		binding: ActivityPluginBinding
+	) {
+		mediaStoreChannelHandler.onReattachedToActivityForConfigChanges(binding)
+		permissionChannelHandler.onReattachedToActivityForConfigChanges(binding)
+		pluginBinding = binding
+		binding.addActivityResultListener(this)
+		binding.addRequestPermissionsResultListener(this)
+	}
+
+	override fun onDetachedFromActivity() {
+		mediaStoreChannelHandler.onDetachedFromActivity()
+		permissionChannelHandler.onDetachedFromActivity()
+		pluginBinding?.removeActivityResultListener(this)
+		pluginBinding?.removeRequestPermissionsResultListener(this)
+	}
+
+	override fun onDetachedFromActivityForConfigChanges() {
+		mediaStoreChannelHandler.onDetachedFromActivityForConfigChanges()
+		permissionChannelHandler.onDetachedFromActivityForConfigChanges()
+		pluginBinding?.removeActivityResultListener(this)
+		pluginBinding?.removeRequestPermissionsResultListener(this)
+	}
+
+	override fun onActivityResult(
+		requestCode: Int, resultCode: Int, data: Intent?
+	): Boolean {
+		return try {
+			when (requestCode) {
+				K.MEDIA_STORE_DELETE_REQUEST_CODE -> {
+					mediaStoreChannelHandler.onActivityResult(
+						requestCode, resultCode, data
+					)
+				}
+
+				else -> false
+			}
+		} catch (e: Throwable) {
+			Log.e(
+				TAG, "Failed while onActivityResult, requestCode=$requestCode"
+			)
+			false
+		}
+	}
+
+	override fun onRequestPermissionsResult(
+		requestCode: Int, permissions: Array<String>, grantResults: IntArray
+	): Boolean {
+		return try {
+			when (requestCode) {
+				K.PERMISSION_REQUEST_CODE -> {
+					permissionChannelHandler.onRequestPermissionsResult(
+						requestCode, permissions, grantResults
+					)
+				}
+
+				else -> false
+			}
+		} catch (e: Throwable) {
+			Log.e(
+				TAG, "Failed while onActivityResult, requestCode=$requestCode"
+			)
+			false
+		}
+	}
+
+	private var pluginBinding: ActivityPluginBinding? = null
 
 	private lateinit var lockChannel: MethodChannel
 	private lateinit var notificationChannel: MethodChannel
 	private lateinit var nativeEventChannel: EventChannel
 	private lateinit var nativeEventMethodChannel: MethodChannel
+	private lateinit var mediaStoreChannel: EventChannel
+	private lateinit var mediaStoreMethodChannel: MethodChannel
+	private lateinit var imageProcessorMethodChannel: MethodChannel
+	private lateinit var contentUriMethodChannel: MethodChannel
+	private lateinit var permissionChannel: EventChannel
+	private lateinit var permissionMethodChannel: MethodChannel
 
 	private lateinit var lockChannelHandler: LockChannelHandler
+	private lateinit var mediaStoreChannelHandler: MediaStoreChannelHandler
+	private lateinit var permissionChannelHandler: PermissionChannelHandler
 }

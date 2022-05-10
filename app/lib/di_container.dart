@@ -3,6 +3,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -21,6 +22,7 @@ enum DiType {
   favoriteRepo,
   tagRepo,
   taggedFileRepo,
+  localFileRepo,
   appDb,
   pref,
 }
@@ -36,6 +38,7 @@ class DiContainer {
     FavoriteRepo? favoriteRepo,
     TagRepo? tagRepo,
     TaggedFileRepo? taggedFileRepo,
+    LocalFileRepo? localFileRepo,
     AppDb? appDb,
     Pref? pref,
   })  : _albumRepo = albumRepo,
@@ -47,6 +50,7 @@ class DiContainer {
         _favoriteRepo = favoriteRepo,
         _tagRepo = tagRepo,
         _taggedFileRepo = taggedFileRepo,
+        _localFileRepo = localFileRepo,
         _appDb = appDb,
         _pref = pref;
 
@@ -70,6 +74,8 @@ class DiContainer {
         return contianer._tagRepo != null;
       case DiType.taggedFileRepo:
         return contianer._taggedFileRepo != null;
+      case DiType.localFileRepo:
+        return contianer._localFileRepo != null;
       case DiType.appDb:
         return contianer._appDb != null;
       case DiType.pref:
@@ -87,6 +93,7 @@ class DiContainer {
     OrNull<FavoriteRepo>? favoriteRepo,
     OrNull<TagRepo>? tagRepo,
     OrNull<TaggedFileRepo>? taggedFileRepo,
+    OrNull<LocalFileRepo>? localFileRepo,
     OrNull<AppDb>? appDb,
     OrNull<Pref>? pref,
   }) {
@@ -101,6 +108,7 @@ class DiContainer {
       tagRepo: tagRepo == null ? _tagRepo : tagRepo.obj,
       taggedFileRepo:
           taggedFileRepo == null ? _taggedFileRepo : taggedFileRepo.obj,
+      localFileRepo: localFileRepo == null ? _localFileRepo : localFileRepo.obj,
       appDb: appDb == null ? _appDb : appDb.obj,
       pref: pref == null ? _pref : pref.obj,
     );
@@ -115,6 +123,7 @@ class DiContainer {
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
   TagRepo get tagRepo => _tagRepo!;
   TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
+  LocalFileRepo get localFileRepo => _localFileRepo!;
 
   AppDb get appDb => _appDb!;
   Pref get pref => _pref!;
@@ -128,6 +137,7 @@ class DiContainer {
   final FavoriteRepo? _favoriteRepo;
   final TagRepo? _tagRepo;
   final TaggedFileRepo? _taggedFileRepo;
+  final LocalFileRepo? _localFileRepo;
 
   final AppDb? _appDb;
   final Pref? _pref;

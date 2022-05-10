@@ -16,8 +16,10 @@ import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
+import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home.dart';
+import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -168,6 +170,8 @@ class _MyAppState extends State<MyApp>
     route ??= _handleAlbumPickerRoute(settings);
     route ??= _handleSmartAlbumBrowserRoute(settings);
     route ??= _handleFavoriteBrowserRoute(settings);
+    route ??= _handleEnhancedPhotoBrowserRoute(settings);
+    route ??= _handleLocalFileViewerRoute(settings);
     return route;
   }
 
@@ -494,6 +498,40 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleFavoriteBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleEnhancedPhotoBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == EnhancedPhotoBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as EnhancedPhotoBrowserArguments;
+        return EnhancedPhotoBrowser.buildRoute(args);
+      } else if (settings.name
+              ?.startsWith("${EnhancedPhotoBrowser.routeName}?") ==
+          true) {
+        final queries = Uri.parse(settings.name!).queryParameters;
+        final args = EnhancedPhotoBrowserArguments(queries["filename"]);
+        return EnhancedPhotoBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleEnhancedPhotoBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleLocalFileViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == LocalFileViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as LocalFileViewerArguments;
+        return LocalFileViewer.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleLocalFileViewerRoute] Failed while handling route", e);
     }
     return null;
   }

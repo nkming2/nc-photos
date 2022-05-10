@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/file_saver.dart' as itf;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
 class FileSaver extends itf.FileSaver {
   @override
@@ -15,5 +15,5 @@ class FileSaver extends itf.FileSaver {
   }
 
   Future<String> _saveFileAndroid(String filename, Uint8List content) =>
-      MediaStore.saveFileToDownload(filename, content);
+      MediaStore.saveFileToDownload(content, filename);
 }

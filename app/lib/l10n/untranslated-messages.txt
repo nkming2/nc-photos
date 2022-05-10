@@ -84,6 +84,10 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -186,6 +190,10 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -343,6 +351,10 @@
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
     "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -350,14 +362,29 @@
     "rootPickerSkipConfirmationDialogContent2",
     "helpButtonLabel",
     "backgroundServiceStopping",
-    "metadataTaskPauseLowBatteryNotification"
+    "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
+  ],
+
+  "fi": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "fr": [
     "collectionsTooltip",
     "helpTooltip",
     "helpButtonLabel",
-    "removeFromAlbumTooltip"
+    "removeFromAlbumTooltip",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ],
 
   "pl": [
@@ -381,6 +408,24 @@
     "addTagInputHint",
     "tagPickerNoTagSelectedNotification",
     "backgroundServiceStopping",
-    "metadataTaskPauseLowBatteryNotification"
+    "metadataTaskPauseLowBatteryNotification",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
+  ],
+
+  "pt": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
+  ],
+
+  "ru": [
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent"
   ]
 }

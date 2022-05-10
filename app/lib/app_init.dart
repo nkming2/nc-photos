@@ -15,6 +15,8 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/favorite/data_source.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -142,6 +144,11 @@ void _initSelfSignedCertManager() {
 }
 
 void _initDiContainer() {
+  LocalFileRepo? localFileRepo;
+  if (platform_k.isAndroid) {
+    // local file currently only supported on Android
+    localFileRepo = const LocalFileRepo(LocalFileMediaStoreDataSource());
+  }
   KiwiContainer().registerInstance<DiContainer>(DiContainer(
     albumRepo: AlbumRepo(AlbumCachedDataSource(AppDb())),
     faceRepo: const FaceRepo(FaceRemoteDataSource()),
@@ -152,6 +159,7 @@ void _initDiContainer() {
     favoriteRepo: const FavoriteRepo(FavoriteRemoteDataSource()),
     tagRepo: const TagRepo(TagRemoteDataSource()),
     taggedFileRepo: const TaggedFileRepo(TaggedFileRemoteDataSource()),
+    localFileRepo: localFileRepo,
     appDb: AppDb(),
     pref: Pref(),
   ));

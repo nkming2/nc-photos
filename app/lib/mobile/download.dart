@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/mobile/android/media_store.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -92,13 +92,11 @@ class _AndroidDownload extends itf.Download {
       }
 
       // copy the file to the actual dir
-      final String path;
-      if (parentDir?.isNotEmpty == true) {
-        path = "$parentDir/$filename";
-      } else {
-        path = filename;
-      }
-      return await MediaStore.copyFileToDownload(path, file.path);
+      return await MediaStore.copyFileToDownload(
+        file.path,
+        filename: filename,
+        subDir: parentDir,
+      );
     } finally {
       file.delete();
     }

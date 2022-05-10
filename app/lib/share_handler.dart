@@ -3,15 +3,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -23,10 +26,12 @@ import 'package:nc_photos/use_case/copy.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/download_file.dart';
+import 'package:nc_photos/use_case/share_local.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
 import 'package:nc_photos/widget/share_method_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:tuple/tuple.dart';
 
 /// Handle sharing to other apps
@@ -35,6 +40,32 @@ class ShareHandler {
     required this.context,
     this.clearSelection,
   });
+
+  Future<void> shareLocalFiles(List<LocalFile> files) async {
+    if (!isSelectionCleared) {
+      clearSelection?.call();
+    }
+    final c = KiwiContainer().resolve<DiContainer>();
+    var hasShownError = false;
+    await ShareLocal(c)(
+      files,
+      onFailure: (f, e, stackTrace) {
+        if (e != null) {
+          _log.shout(
+              "[shareLocalFiles] Failed while sharing file: ${logFilename(f.logTag)}",
+              e,
+              stackTrace);
+          if (!hasShownError) {
+            SnackBarManager().showSnackBar(SnackBar(
+              content: Text(exception_util.toUserString(e)),
+              duration: k.snackBarDurationNormal,
+            ));
+            hasShownError = true;
+          }
+        }
+      },
+    );
+  }
 
   Future<void> shareFiles(Account account, List<File> files) async {
     try {

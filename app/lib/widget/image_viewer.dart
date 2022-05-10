@@ -6,9 +6,74 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file.dart' as app;
+import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
+
+class LocalImageViewer extends StatefulWidget {
+  const LocalImageViewer({
+    Key? key,
+    required this.file,
+    required this.canZoom,
+    this.onLoaded,
+    this.onHeightChanged,
+    this.onZoomStarted,
+    this.onZoomEnded,
+  }) : super(key: key);
+
+  @override
+  createState() => _LocalImageViewerState();
+
+  final LocalFile file;
+  final bool canZoom;
+  final VoidCallback? onLoaded;
+  final ValueChanged<double>? onHeightChanged;
+  final VoidCallback? onZoomStarted;
+  final VoidCallback? onZoomEnded;
+}
+
+class _LocalImageViewerState extends State<LocalImageViewer> {
+  @override
+  build(BuildContext context) {
+    final ImageProvider provider;
+    if (widget.file is LocalUriFile) {
+      provider = ContentUriImage((widget.file as LocalUriFile).uri);
+    } else {
+      throw ArgumentError("Invalid file");
+    }
+
+    return _ImageViewer(
+      canZoom: widget.canZoom,
+      onHeightChanged: widget.onHeightChanged,
+      onZoomStarted: widget.onZoomStarted,
+      onZoomEnded: widget.onZoomEnded,
+      child: Image(
+        image: provider,
+        fit: BoxFit.contain,
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            _onItemLoaded();
+          });
+          return child;
+        },
+      ),
+    );
+  }
+
+  void _onItemLoaded() {
+    if (!_isLoaded) {
+      _log.info("[_onItemLoaded] ${widget.file.logTag}");
+      _isLoaded = true;
+      widget.onLoaded?.call();
+    }
+  }
+
+  var _isLoaded = false;
+
+  static final _log = Logger("widget.image_viewer._LocalImageViewerState");
+}
 
 class RemoteImageViewer extends StatefulWidget {
   const RemoteImageViewer({
@@ -25,7 +90,7 @@ class RemoteImageViewer extends StatefulWidget {
   @override
   createState() => _RemoteImageViewerState();
 
-  static void preloadImage(Account account, File file) {
+  static void preloadImage(Account account, app.File file) {
     LargeImageCacheManager.inst.getFileStream(
       _getImageUrl(account, file),
       headers: {
@@ -35,7 +100,7 @@ class RemoteImageViewer extends StatefulWidget {
   }
 
   final Account account;
-  final File file;
+  final app.File file;
   final bool canZoom;
   final VoidCallback? onLoaded;
   final ValueChanged<double>? onHeightChanged;
@@ -264,7 +329,7 @@ class _ImageViewerState extends State<_ImageViewer>
   static final _log = Logger("widget.image_viewer._ImageViewerState");
 }
 
-String _getImageUrl(Account account, File file) {
+String _getImageUrl(Account account, app.File file) {
   if (file.contentType == "image/gif") {
     return api_util.getFileUrl(account, file);
   } else {
