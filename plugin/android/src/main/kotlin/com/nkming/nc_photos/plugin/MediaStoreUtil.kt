@@ -99,14 +99,8 @@ interface MediaStoreUtil {
 			}
 
 			val contentUri = resolver.insert(collection, details)
-
-			resolver.openFileDescriptor(contentUri!!, "w", null).use { pfd ->
-				// Write data into the pending audio file.
-				BufferedOutputStream(
-					FileOutputStream(pfd!!.fileDescriptor)
-				).use { stream ->
-					writer(stream)
-				}
+			resolver.openOutputStream(contentUri!!).use {
+				writer(it!!)
 			}
 			return contentUri
 		}
