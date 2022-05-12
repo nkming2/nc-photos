@@ -1,7 +1,7 @@
 # Photos
 Browse your photos on Nextcloud servers
 
-<a href="https://liberapay.com/nkming2/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
+[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" width="110" />](https://liberapay.com/nkming2/donate)
 
 ## Get the app
 ### Android
