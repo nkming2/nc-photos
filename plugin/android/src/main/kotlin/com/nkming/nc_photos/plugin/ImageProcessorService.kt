@@ -398,6 +398,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 		val cmd = params[0]!!
 		return try {
 			val outUri = handleCommand(cmd)
+			System.gc()
 			ImageProcessorCompletedEvent(outUri)
 		} catch (e: Throwable) {
 			Log.e(TAG, "[doInBackground] Failed while handleCommand", e)
