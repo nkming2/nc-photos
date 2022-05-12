@@ -8,3 +8,5 @@ const homeFolderNotFoundUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/home-folder-not-found";
 const enhanceZeroDceUrl =
     "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/zero-dce";
+const enhanceDeepLabPortraitBlurUrl =
+    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/portrait-blur-(deeplab)";

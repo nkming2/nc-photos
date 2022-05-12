@@ -88,5 +88,20 @@ interface TfLiteHelper {
 			outputBitmap.copyPixelsFromBuffer(buffer)
 			return outputBitmap
 		}
+
+		fun argmax(
+			output: FloatBuffer, width: Int, height: Int, channel: Int
+		): ByteBuffer {
+			val product = ByteBuffer.allocate(width * height)
+			val array = output.array()
+			var j = 0
+			for (i in 0 until width * height) {
+				val pixel = array.slice(j until j + channel)
+				val max = pixel.indices.maxByOrNull { pixel[it] }!!
+				product.put(i, max.toByte())
+				j += channel
+			}
+			return product
+		}
 	}
 }

@@ -88,6 +88,7 @@
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -194,6 +195,7 @@
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -355,6 +357,7 @@
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -366,14 +369,16 @@
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ],
 
   "fi": [
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ],
 
   "fr": [
@@ -384,7 +389,8 @@
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ],
 
   "pl": [
@@ -412,20 +418,23 @@
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ],
 
   "pt": [
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ],
 
   "ru": [
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent"
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ]
 }

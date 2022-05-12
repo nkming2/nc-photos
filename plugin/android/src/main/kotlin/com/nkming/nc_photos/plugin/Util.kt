@@ -22,3 +22,7 @@ inline fun <T> HttpURLConnection.use(block: (HttpURLConnection) -> T): T {
 		disconnect()
 	}
 }
+
+inline fun ByteArray.transform(transform: (Byte) -> Byte) {
+	forEachIndexed{ i, v -> this[i] = transform(v) }
+}

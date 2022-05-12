@@ -30,6 +30,19 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"deepLab3Portrait" -> {
+				try {
+					deepLab3Portrait(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> result.notImplemented()
 		}
 	}
@@ -45,12 +58,25 @@ class ImageProcessorChannelHandler(context: Context) :
 	private fun zeroDce(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
 		result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename, ImageProcessorService.METHOD_ZERO_DCE,
+		result
+	)
+
+	private fun deepLab3Portrait(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename,
+		ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT, result
+	)
+
+	private fun method(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		method: String, result: MethodChannel.Result
 	) {
 		val intent = Intent(context, ImageProcessorService::class.java).apply {
-			putExtra(
-				ImageProcessorService.EXTRA_METHOD,
-				ImageProcessorService.METHOD_ZERO_DCE
-			)
+			putExtra(ImageProcessorService.EXTRA_METHOD, method)
 			putExtra(ImageProcessorService.EXTRA_FILE_URL, fileUrl)
 			putExtra(
 				ImageProcessorService.EXTRA_HEADERS,

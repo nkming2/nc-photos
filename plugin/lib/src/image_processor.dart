@@ -15,6 +15,17 @@ class ImageProcessor {
         "filename": filename,
       });
 
+  static Future<void> deepLab3Portrait(
+    String fileUrl,
+    String filename, {
+    Map<String, String>? headers,
+  }) =>
+      _methodChannel.invokeMethod("deepLab3Portrait", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+      });
+
   static const _methodChannel =
       MethodChannel("${k.libId}/image_processor_method");
 }

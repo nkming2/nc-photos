@@ -1187,6 +1187,10 @@
 	"@deletePermanentlyLocalConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items from the current device"
 	},
+	"enhancePortraitBlurTitle": "Portrait blur",
+	"@enhancePortraitBlurTitle": {
+		"description": "Blur the background of a photo"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

@@ -18,6 +18,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.exifinterface.media.ExifInterface
+import com.nkming.nc_photos.plugin.image_processor.DeepLab3Portrait
 import com.nkming.nc_photos.plugin.image_processor.ZeroDce
 import java.io.File
 import java.net.HttpURLConnection
@@ -27,6 +28,7 @@ class ImageProcessorService : Service() {
 	companion object {
 		const val EXTRA_METHOD = "method"
 		const val METHOD_ZERO_DCE = "zero-dce"
+		const val METHOD_DEEL_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -91,6 +93,9 @@ class ImageProcessorService : Service() {
 		val method = intent.getStringExtra(EXTRA_METHOD)
 		when (method) {
 			METHOD_ZERO_DCE -> onZeroDce(startId, intent.extras!!)
+			METHOD_DEEL_LAP_PORTRAIT -> onDeepLapPortrait(
+				startId, intent.extras!!
+			)
 			else -> {
 				Log.e(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
@@ -100,7 +105,20 @@ class ImageProcessorService : Service() {
 		}
 	}
 
-	private fun onZeroDce(startId: Int, extras: Bundle) {
+	private fun onZeroDce(startId: Int, extras: Bundle) =
+		onMethod(startId, extras, METHOD_ZERO_DCE)
+
+	private fun onDeepLapPortrait(startId: Int, extras: Bundle) =
+		onMethod(startId, extras, METHOD_DEEL_LAP_PORTRAIT)
+
+	/**
+	 * Handle methods without arguments
+	 *
+	 * @param startId
+	 * @param extras
+	 * @param method
+	 */
+	private fun onMethod(startId: Int, extras: Bundle, method: String) {
 		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
 
 		@Suppress("Unchecked_cast")
@@ -109,7 +127,7 @@ class ImageProcessorService : Service() {
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		addCommand(
 			ImageProcessorCommand(
-				startId, METHOD_ZERO_DCE, fileUrl, headers, filename
+				startId, method, fileUrl, headers, filename
 			)
 		)
 	}
@@ -396,6 +414,9 @@ private open class ImageProcessorCommandTask(context: Context) :
 				ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(context).infer(
 					fileUri
 				)
+				ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
+					context
+				).infer(fileUri)
 				else -> throw IllegalArgumentException(
 					"Unknown method: ${cmd.method}"
 				)

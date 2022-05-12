@@ -72,6 +72,16 @@ class EnhanceHandler {
           },
         );
         break;
+
+      case _Algorithm.deepLab3Portrait:
+        await ImageProcessor.deepLab3Portrait(
+          "${account.url}/${file.path}",
+          file.filename,
+          headers: {
+            "Authorization": Api.getAuthorizationHeaderValue(account),
+          },
+        );
+        break;
     }
   }
 
@@ -105,6 +115,13 @@ class EnhanceHandler {
             link: enhanceZeroDceUrl,
             algorithm: _Algorithm.zeroDce,
           ),
+        if (platform_k.isAndroid)
+          _Option(
+            title: L10n.global().enhancePortraitBlurTitle,
+            subtitle: "DeepLap v3",
+            link: enhanceDeepLabPortraitBlurUrl,
+            algorithm: _Algorithm.deepLab3Portrait,
+          ),
       ];
 
   final Account account;
@@ -115,6 +132,7 @@ class EnhanceHandler {
 
 enum _Algorithm {
   zeroDce,
+  deepLab3Portrait,
 }
 
 class _Option {
