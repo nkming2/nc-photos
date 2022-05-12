@@ -128,11 +128,8 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
               child: CustomScrollView(
                 slivers: [
                   _buildAppBar(context),
-                  SliverPadding(
-                    padding: const EdgeInsets.only(top: 8),
-                    sliver: buildItemStreamList(
-                      maxCrossAxisExtent: _thumbSize.toDouble(),
-                    ),
+                  buildItemStreamList(
+                    maxCrossAxisExtent: _thumbSize.toDouble(),
                   ),
                 ],
               ),

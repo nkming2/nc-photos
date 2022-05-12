@@ -125,11 +125,8 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
               child: CustomScrollView(
                 slivers: [
                   _buildAppBar(context),
-                  SliverPadding(
-                    padding: const EdgeInsets.only(top: 8),
-                    sliver: buildItemStreamList(
-                      maxCrossAxisExtent: _thumbSize.toDouble(),
-                    ),
+                  buildItemStreamList(
+                    maxCrossAxisExtent: _thumbSize.toDouble(),
                   ),
                 ],
               ),
