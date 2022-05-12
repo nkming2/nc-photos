@@ -335,8 +335,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   void _transformItems(List<File> files) {
-    _backingFiles = files
-        .sorted((a, b) {
+    _backingFiles = files.sorted((a, b) {
       if (a.trashbinDeletionTime == null && b.trashbinDeletionTime == null) {
         // ?
         return 0;
