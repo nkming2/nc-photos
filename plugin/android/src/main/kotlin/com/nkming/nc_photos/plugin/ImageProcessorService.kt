@@ -465,6 +465,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	private fun saveBitmap(
 		bitmap: Bitmap, filename: String, srcFile: File
 	): Uri {
+		Log.i(TAG, "[saveBitmap] $filename")
 		val outFile = File.createTempFile("out", null, getTempDir(context))
 		outFile.outputStream().use {
 			bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it)
