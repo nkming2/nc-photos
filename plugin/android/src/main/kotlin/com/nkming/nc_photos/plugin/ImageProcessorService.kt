@@ -32,6 +32,8 @@ class ImageProcessorService : Service() {
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
+		const val EXTRA_MAX_WIDTH = "maxWidth"
+		const val EXTRA_MAX_HEIGHT = "maxHeight"
 
 		private const val ACTION_CANCEL = "cancel"
 
@@ -100,7 +102,9 @@ class ImageProcessorService : Service() {
 				Log.e(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
 				// there are commands running in the bg
-				addCommand(ImageProcessorCommand(startId, "null", "", null, ""))
+				addCommand(
+					ImageProcessorCommand(startId, "null", "", null, "", 0, 0)
+				)
 			}
 		}
 	}
@@ -125,9 +129,11 @@ class ImageProcessorService : Service() {
 		val headers =
 			extras.getSerializable(EXTRA_HEADERS) as HashMap<String, String>?
 		val filename = extras.getString(EXTRA_FILENAME)!!
+		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
+		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
 		addCommand(
 			ImageProcessorCommand(
-				startId, method, fileUrl, headers, filename
+				startId, method, fileUrl, headers, filename, maxWidth, maxHeight
 			)
 		)
 	}
@@ -273,6 +279,8 @@ private data class ImageProcessorCommand(
 	val fileUrl: String,
 	val headers: Map<String, String>?,
 	val filename: String,
+	val maxWidth: Int,
+	val maxHeight: Int,
 	val args: Map<String, Any> = mapOf(),
 )
 
@@ -412,11 +420,13 @@ private open class ImageProcessorCommandTask(context: Context) :
 		return try {
 			val fileUri = Uri.fromFile(file)
 			val output = when (cmd.method) {
-				ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(context).infer(
+				ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
+					context, cmd.maxWidth, cmd.maxHeight
+				).infer(
 					fileUri
 				)
 				ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
-					context
+					context, cmd.maxWidth, cmd.maxHeight
 				).infer(fileUri)
 				else -> throw IllegalArgumentException(
 					"Unknown method: ${cmd.method}"

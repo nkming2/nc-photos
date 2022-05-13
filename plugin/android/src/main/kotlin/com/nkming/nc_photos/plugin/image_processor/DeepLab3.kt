@@ -71,11 +71,9 @@ private class DeepLab3(context: Context) {
 	private val context = context
 }
 
-class DeepLab3Portrait(context: Context) {
+class DeepLab3Portrait(context: Context, maxWidth: Int, maxHeight: Int) {
 	companion object {
 		private const val RADIUS = 16
-		private const val MAX_WIDTH = 2048
-		private const val MAX_HEIGHT = 1536
 
 		private const val TAG = "DeepLab3Portrait"
 	}
@@ -115,7 +113,7 @@ class DeepLab3Portrait(context: Context) {
 		Log.i(TAG, "[enhance] Enhancing image")
 		// downscale original to prevent OOM
 		val orig = BitmapUtil.loadImage(
-			context, imageUri, MAX_WIDTH, MAX_HEIGHT, BitmapResizeMethod.FIT,
+			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
 			isAllowSwapSide = true, shouldUpscale = false
 		)
 		val bg = Toolkit.blur(orig, radius)
@@ -146,5 +144,7 @@ class DeepLab3Portrait(context: Context) {
 	}
 
 	private val context = context
+	private val maxWidth = maxWidth
+	private val maxHeight = maxHeight
 	private val deepLab = DeepLab3(context)
 }

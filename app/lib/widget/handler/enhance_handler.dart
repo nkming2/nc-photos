@@ -11,6 +11,7 @@ import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -67,6 +68,8 @@ class EnhanceHandler {
         await ImageProcessor.zeroDce(
           "${account.url}/${file.path}",
           file.filename,
+          Pref().getEnhanceMaxWidthOr(),
+          Pref().getEnhanceMaxHeightOr(),
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
@@ -77,6 +80,8 @@ class EnhanceHandler {
         await ImageProcessor.deepLab3Portrait(
           "${account.url}/${file.path}",
           file.filename,
+          Pref().getEnhanceMaxWidthOr(),
+          Pref().getEnhanceMaxHeightOr(),
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },

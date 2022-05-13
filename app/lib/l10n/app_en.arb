@@ -365,6 +365,13 @@
 	},
 	"settingsShowDateInAlbumTitle": "Group photos by date",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
+	"settingsPhotoEnhancementTitle": "Photo enhancement",
+	"settingsPhotoEnhancementPageTitle": "Photo enhancement settings",
+	"@settingsPhotoEnhancementPageTitle": {
+		"description": "Dedicated page for photo enhancement settings"
+	},
+	"settingsEnhanceMaxResolutionTitle": "Max output resolution",
+	"settingsEnhanceMaxResolutionDescription": "Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.",
 	"settingsThemeTitle": "Theme",
 	"settingsThemeDescription": "Customize the appearance of the app",
 	"settingsThemePageTitle": "Theme settings",

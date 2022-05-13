@@ -25,6 +25,7 @@ import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
+import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsArguments {
@@ -136,6 +137,15 @@ class _SettingsState extends State<Settings> {
                 label: L10n.global().settingsAlbumTitle,
                 description: L10n.global().settingsAlbumDescription,
                 builder: () => _AlbumSettings(),
+              ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.auto_fix_high_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().settingsPhotoEnhancementTitle,
+                builder: () => _EnhancementSettings(),
               ),
               _buildSubSettings(
                 context,
@@ -954,6 +964,216 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
   late bool _isBrowserShowDate;
 
   static final _log = Logger("widget.settings._AlbumSettingsState");
+}
+
+class _EnhancementSettings extends StatefulWidget {
+  @override
+  createState() => _EnhancementSettingsState();
+}
+
+class _EnhancementSettingsState extends State<_EnhancementSettings> {
+  @override
+  initState() {
+    super.initState();
+    _maxWidth = Pref().getEnhanceMaxWidthOr();
+    _maxHeight = Pref().getEnhanceMaxHeightOr();
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsPhotoEnhancementPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              ListTile(
+                title: Text(L10n.global().settingsEnhanceMaxResolutionTitle),
+                subtitle: Text("${_maxWidth}x$_maxHeight"),
+                onTap: () => _onMaxResolutionTap(context),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onMaxResolutionTap(BuildContext context) async {
+    var width = _maxWidth;
+    var height = _maxHeight;
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => AppTheme(
+        child: AlertDialog(
+          title: Text(L10n.global().settingsEnhanceMaxResolutionTitle),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(L10n.global().settingsEnhanceMaxResolutionDescription),
+              const SizedBox(height: 16),
+              _EnhanceResolutionSlider(
+                initialWidth: _maxWidth,
+                initialHeight: _maxHeight,
+                onChanged: (value) {
+                  width = value.item1;
+                  height = value.item2;
+                },
+              )
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(MaterialLocalizations.of(context).okButtonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (result != true || (width == _maxWidth && height == _maxHeight)) {
+      return;
+    }
+
+    _setMaxResolution(width, height);
+  }
+
+  Future<void> _setMaxResolution(int width, int height) async {
+    _log.info(
+        "[_setMaxResolution] ${_maxWidth}x$_maxHeight -> ${width}x$height");
+    final oldWidth = _maxWidth;
+    final oldHeight = _maxHeight;
+    setState(() {
+      _maxWidth = width;
+      _maxHeight = height;
+    });
+    if (!await Pref().setEnhanceMaxWidth(width) ||
+        !await Pref().setEnhanceMaxHeight(height)) {
+      _log.severe("[_setMaxResolution] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      await Pref().setEnhanceMaxWidth(oldWidth);
+      setState(() {
+        _maxWidth = oldWidth;
+        _maxHeight = oldHeight;
+      });
+    }
+  }
+
+  late int _maxWidth;
+  late int _maxHeight;
+
+  static final _log = Logger("widget.settings._EnhancementSettingsState");
+}
+
+class _EnhanceResolutionSlider extends StatefulWidget {
+  const _EnhanceResolutionSlider({
+    Key? key,
+    required this.initialWidth,
+    required this.initialHeight,
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  createState() => _EnhanceResolutionSliderState();
+
+  final int initialWidth;
+  final int initialHeight;
+  final ValueChanged<Tuple2<int, int>>? onChanged;
+}
+
+class _EnhanceResolutionSliderState extends State<_EnhanceResolutionSlider> {
+  @override
+  initState() {
+    super.initState();
+    _width = widget.initialWidth;
+    _height = widget.initialHeight;
+  }
+
+  @override
+  build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Text("${_width}x$_height"),
+        ),
+        StatefulSlider(
+          initialValue: resolutionToSliderValue(_width).toDouble(),
+          min: -3,
+          max: 3,
+          divisions: 6,
+          onChangeEnd: (value) async {
+            final resolution = sliderValueToResolution(value.toInt());
+            setState(() {
+              _width = resolution.item1;
+              _height = resolution.item2;
+            });
+            widget.onChanged?.call(resolution);
+          },
+        ),
+      ],
+    );
+  }
+
+  static Tuple2<int, int> sliderValueToResolution(int value) {
+    switch (value) {
+      case -3:
+        return const Tuple2(1024, 768);
+      case -2:
+        return const Tuple2(1280, 960);
+      case -1:
+        return const Tuple2(1600, 1200);
+      case 1:
+        return const Tuple2(2560, 1920);
+      case 2:
+        return const Tuple2(3200, 2400);
+      case 3:
+        return const Tuple2(4096, 3072);
+      default:
+        return const Tuple2(2048, 1536);
+    }
+  }
+
+  static int resolutionToSliderValue(int width) {
+    switch (width) {
+      case 1024:
+        return -3;
+      case 1280:
+        return -2;
+      case 1600:
+        return -1;
+      case 2560:
+        return 1;
+      case 3200:
+        return 2;
+      case 4096:
+        return 3;
+      default:
+        return 0;
+    }
+  }
+
+  late int _width;
+  late int _height;
 }
 
 class _ThemeSettings extends StatefulWidget {

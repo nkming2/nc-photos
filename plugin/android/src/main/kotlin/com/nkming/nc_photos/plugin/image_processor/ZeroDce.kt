@@ -10,16 +10,13 @@ import org.tensorflow.lite.Interpreter
 import java.nio.FloatBuffer
 import kotlin.math.pow
 
-class ZeroDce(context: Context) {
+class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
 	companion object {
 		private const val TAG = "ZeroDce"
 		private const val MODEL = "zero_dce_lite_200x300_iter8_60.tflite"
 		private const val WIDTH = 300
 		private const val HEIGHT = 200
 		private const val ITERATION = 8
-
-		private const val MAX_WIDTH = 2048
-		private const val MAX_HEIGHT = 1536
 	}
 
 	fun infer(imageUri: Uri): Bitmap {
@@ -54,7 +51,7 @@ class ZeroDce(context: Context) {
 		Log.i(TAG, "Enhancing image, iteration: $iteration")
 		// downscale original to prevent OOM
 		val resized = BitmapUtil.loadImage(
-			context, imageUri, MAX_WIDTH, MAX_HEIGHT, BitmapResizeMethod.FIT,
+			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
 			isAllowSwapSide = true, shouldUpscale = false
 		)
 		// resize aMaps
@@ -77,4 +74,6 @@ class ZeroDce(context: Context) {
 	}
 
 	private val context = context
+	private val maxWidth = maxWidth
+	private val maxHeight = maxHeight
 }

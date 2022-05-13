@@ -7,6 +7,7 @@ class StatefulSlider extends StatefulWidget {
     required this.initialValue,
     this.min = 0.0,
     this.max = 1.0,
+    this.divisions,
     this.onChangeEnd,
   }) : super(key: key);
 
@@ -16,6 +17,7 @@ class StatefulSlider extends StatefulWidget {
   final double initialValue;
   final double min;
   final double max;
+  final int? divisions;
   final ValueChanged<double>? onChangeEnd;
 }
 
@@ -32,6 +34,7 @@ class _StatefulSliderState extends State<StatefulSlider> {
       value: _value,
       min: widget.min,
       max: widget.max,
+      divisions: widget.divisions,
       onChanged: (value) {
         setState(() {
           _value = value;

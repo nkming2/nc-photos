@@ -16,6 +16,10 @@
     "settingsAlbumPageTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "settingsExperimentalTitle",
     "settingsExperimentalDescription",
     "settingsExperimentalPageTitle",
@@ -109,6 +113,10 @@
     "settingsAlbumPageTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "settingsExperimentalTitle",
     "settingsExperimentalDescription",
     "settingsExperimentalPageTitle",
@@ -224,6 +232,10 @@
     "settingsAlbumPageTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "settingsThemeTitle",
     "settingsThemeDescription",
     "settingsThemePageTitle",
@@ -362,6 +374,10 @@
   ],
 
   "es": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "rootPickerSkipConfirmationDialogContent2",
     "helpButtonLabel",
     "backgroundServiceStopping",
@@ -374,6 +390,10 @@
   ],
 
   "fi": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
@@ -383,6 +403,10 @@
 
   "fr": [
     "collectionsTooltip",
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "helpTooltip",
     "helpButtonLabel",
     "removeFromAlbumTooltip",
@@ -394,6 +418,10 @@
   ],
 
   "pl": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "createCollectionTooltip",
     "createCollectionDialogAlbumLabel",
     "createCollectionDialogAlbumDescription",
@@ -423,6 +451,10 @@
   ],
 
   "pt": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",
@@ -431,6 +463,10 @@
   ],
 
   "ru": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
     "enhanceTooltip",
     "enhanceLowLightTitle",
     "collectionEnhancedPhotosLabel",

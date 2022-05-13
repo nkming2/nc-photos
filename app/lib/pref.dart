@@ -172,6 +172,20 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  int? getEnhanceMaxWidth() => provider.getInt(PrefKey.enhanceMaxWidth);
+  int getEnhanceMaxWidthOr([int def = 2048]) => getEnhanceMaxWidth() ?? def;
+  Future<bool> setEnhanceMaxWidth(int value) => _set<int>(
+      PrefKey.enhanceMaxWidth,
+      value,
+      (key, value) => provider.setInt(key, value));
+
+  int? getEnhanceMaxHeight() => provider.getInt(PrefKey.enhanceMaxHeight);
+  int getEnhanceMaxHeightOr([int def = 1536]) => getEnhanceMaxHeight() ?? def;
+  Future<bool> setEnhanceMaxHeight(int value) => _set<int>(
+      PrefKey.enhanceMaxHeight,
+      value,
+      (key, value) => provider.setInt(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -461,6 +475,8 @@ enum PrefKey {
   isAlbumBrowserShowDate,
   gpsMapProvider,
   hasShownSharedAlbumInfo,
+  enhanceMaxWidth,
+  enhanceMaxHeight,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -515,6 +531,10 @@ extension on PrefKey {
         return "gpsMapProvider";
       case PrefKey.hasShownSharedAlbumInfo:
         return "hasShownSharedAlbumInfo";
+      case PrefKey.enhanceMaxWidth:
+        return "enhanceMaxWidth";
+      case PrefKey.enhanceMaxHeight:
+        return "enhanceMaxHeight";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

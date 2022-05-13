@@ -23,6 +23,8 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("fileUrl")!!,
 						call.argument("headers"),
 						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -36,6 +38,8 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("fileUrl")!!,
 						call.argument("headers"),
 						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -57,23 +61,24 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun zeroDce(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename, ImageProcessorService.METHOD_ZERO_DCE,
-		result
+		fileUrl, headers, filename, maxWidth, maxHeight,
+		ImageProcessorService.METHOD_ZERO_DCE, result
 	)
 
 	private fun deepLab3Portrait(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename,
+		fileUrl, headers, filename, maxWidth, maxHeight,
 		ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT, result
 	)
 
 	private fun method(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		method: String, result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, method: String,
+		result: MethodChannel.Result
 	) {
 		val intent = Intent(context, ImageProcessorService::class.java).apply {
 			putExtra(ImageProcessorService.EXTRA_METHOD, method)
@@ -82,6 +87,8 @@ class ImageProcessorChannelHandler(context: Context) :
 				ImageProcessorService.EXTRA_HEADERS,
 				headers?.let { HashMap(it) })
 			putExtra(ImageProcessorService.EXTRA_FILENAME, filename)
+			putExtra(ImageProcessorService.EXTRA_MAX_WIDTH, maxWidth)
+			putExtra(ImageProcessorService.EXTRA_MAX_HEIGHT, maxHeight)
 		}
 		ContextCompat.startForegroundService(context, intent)
 		result.success(null)
