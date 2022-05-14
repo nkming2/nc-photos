@@ -174,4 +174,13 @@ Features:
 - (Localization) Update Finnish (by pHamala)
 - (Localization) Update Russian (by kvasenok)
 """,
+  // v41
+  """41.0
+- (Android) Enhance your photo with the new Enhance button in viewer
+- (Android) New photo enhancement algorithms:
+  - Low-light enhancement
+  - Portrait blur
+- (Localization) Add Chinese (by zerolin)
+- (Localization) Update French (by mgreil)
+""",
 ];
