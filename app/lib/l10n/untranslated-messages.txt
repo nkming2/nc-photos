@@ -472,5 +472,29 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle"
+  ],
+
+  "zh": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
+  ],
+
+  "zh_Hant": [
+    "settingsPhotoEnhancementTitle",
+    "settingsPhotoEnhancementPageTitle",
+    "settingsEnhanceMaxResolutionTitle",
+    "settingsEnhanceMaxResolutionDescription",
+    "enhanceTooltip",
+    "enhanceLowLightTitle",
+    "collectionEnhancedPhotosLabel",
+    "deletePermanentlyLocalConfirmationDialogContent",
+    "enhancePortraitBlurTitle"
   ]
 }
