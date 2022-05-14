@@ -186,6 +186,13 @@ class Pref {
       value,
       (key, value) => provider.setInt(key, value));
 
+  bool? hasShownEnhanceInfo() => provider.getBool(PrefKey.hasShownEnhanceInfo);
+  bool hasShownEnhanceInfoOr([bool def = false]) => hasShownEnhanceInfo() ?? def;
+  Future<bool> setHasShownEnhanceInfo(bool value) => _set<bool>(
+      PrefKey.hasShownEnhanceInfo,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -477,6 +484,7 @@ enum PrefKey {
   hasShownSharedAlbumInfo,
   enhanceMaxWidth,
   enhanceMaxHeight,
+  hasShownEnhanceInfo,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -535,6 +543,8 @@ extension on PrefKey {
         return "enhanceMaxWidth";
       case PrefKey.enhanceMaxHeight:
         return "enhanceMaxHeight";
+      case PrefKey.hasShownEnhanceInfo:
+        return "hasShownEnhanceInfo";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

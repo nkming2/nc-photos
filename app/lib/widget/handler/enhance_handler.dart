@@ -13,6 +13,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,6 +27,10 @@ class EnhanceHandler {
       file_util.isSupportedImageFormat(file) && file.contentType != "image/gif";
 
   Future<void> call(BuildContext context) async {
+    if (!Pref().hasShownEnhanceInfoOr()) {
+      await _showInfo(context);
+    }
+
     if (!await _ensurePermission()) {
       return;
     }
@@ -88,6 +93,37 @@ class EnhanceHandler {
         );
         break;
     }
+  }
+
+  Future<void> _showInfo(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(L10n.global().enhanceIntroDialogTitle),
+        content: Text(L10n.global().enhanceIntroDialogDescription),
+        actions: [
+          TextButton(
+            onPressed: () {
+              launch(enhanceUrl);
+            },
+            child: Text(L10n.global().learnMoreButtonLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(EnhancementSettings.routeName);
+            },
+            child: Text(L10n.global().configButtonLabel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
+          ),
+        ],
+      ),
+    );
+    Pref().setHasShownEnhanceInfo(true);
   }
 
   Future<bool> _ensurePermission() async {

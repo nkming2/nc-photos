@@ -1182,6 +1182,8 @@
 	"@enhanceTooltip": {
 		"description": "Enhance a photo"
 	},
+	"enhanceIntroDialogTitle": "Enhance your photos",
+	"enhanceIntroDialogDescription": "Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings",
 	"enhanceLowLightTitle": "Low-light enhancement",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"

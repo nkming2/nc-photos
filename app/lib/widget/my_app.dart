@@ -172,6 +172,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleFavoriteBrowserRoute(settings);
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
+    route ??= _handleEnhancementSettingsRoute(settings);
     return route;
   }
 
@@ -532,6 +533,18 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleLocalFileViewerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleEnhancementSettingsRoute(RouteSettings settings) {
+    try {
+      if (settings.name == EnhancementSettings.routeName) {
+        return EnhancementSettings.buildRoute();
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleEnhancementSettingsRoute] Failed while handling route", e);
     }
     return null;
   }

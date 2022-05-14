@@ -145,7 +145,7 @@ class _SettingsState extends State<Settings> {
                   color: AppTheme.getUnfocusedIconColor(context),
                 ),
                 label: L10n.global().settingsPhotoEnhancementTitle,
-                builder: () => _EnhancementSettings(),
+                builder: () => const EnhancementSettings(),
               ),
               _buildSubSettings(
                 context,
@@ -966,12 +966,22 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
   static final _log = Logger("widget.settings._AlbumSettingsState");
 }
 
-class _EnhancementSettings extends StatefulWidget {
+class EnhancementSettings extends StatefulWidget {
+  static const routeName = "/enhancement-settings";
+
+  static Route buildRoute() => MaterialPageRoute(
+        builder: (_) => const EnhancementSettings(),
+      );
+
+  const EnhancementSettings({
+    Key? key,
+  }) : super(key: key);
+
   @override
   createState() => _EnhancementSettingsState();
 }
 
-class _EnhancementSettingsState extends State<_EnhancementSettings> {
+class _EnhancementSettingsState extends State<EnhancementSettings> {
   @override
   initState() {
     super.initState();
