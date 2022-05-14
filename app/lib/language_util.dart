@@ -28,23 +28,26 @@ final supportedLanguages = {
       "Chinese (Traditional)",
       const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant")),
   _AppLanguageEnum.czech.index: AppLanguage(
-      _AppLanguageEnum.czech.index, "čeština", "Czech", const Locale("cs")),
+      _AppLanguageEnum.czech.index, "Čeština", "Czech", const Locale("cs")),
   _AppLanguageEnum.english.index: AppLanguage(
       _AppLanguageEnum.english.index, "English", "English", const Locale("en")),
   _AppLanguageEnum.finnish.index: AppLanguage(
-      _AppLanguageEnum.finnish.index, "suomi", "Finnish", const Locale("fi")),
+      _AppLanguageEnum.finnish.index, "Suomi", "Finnish", const Locale("fi")),
   _AppLanguageEnum.french.index: AppLanguage(
-      _AppLanguageEnum.french.index, "français", "French", const Locale("fr")),
+      _AppLanguageEnum.french.index, "Français", "French", const Locale("fr")),
   _AppLanguageEnum.german.index: AppLanguage(
       _AppLanguageEnum.german.index, "Deutsch", "German", const Locale("de")),
   _AppLanguageEnum.greek.index: AppLanguage(
-      _AppLanguageEnum.greek.index, "ελληνικά", "Greek", const Locale("el")),
+      _AppLanguageEnum.greek.index, "Ελληνικά", "Greek", const Locale("el")),
   _AppLanguageEnum.polish.index: AppLanguage(
-      _AppLanguageEnum.polish.index, "język polski", "Polish", const Locale("pl")),
+      _AppLanguageEnum.polish.index, "Polski", "Polish", const Locale("pl")),
   _AppLanguageEnum.portuguese.index: AppLanguage(
-      _AppLanguageEnum.portuguese.index, "Português", "Portuguese", const Locale("pt")),
+      _AppLanguageEnum.portuguese.index,
+      "Português",
+      "Portuguese",
+      const Locale("pt")),
   _AppLanguageEnum.russian.index: AppLanguage(
-      _AppLanguageEnum.russian.index, "русский", "Russian", const Locale("ru")),
+      _AppLanguageEnum.russian.index, "Русский", "Russian", const Locale("ru")),
   _AppLanguageEnum.spanish.index: AppLanguage(
       _AppLanguageEnum.spanish.index, "Español", "Spanish", const Locale("es")),
 };
