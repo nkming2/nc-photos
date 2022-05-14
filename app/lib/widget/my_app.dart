@@ -97,6 +97,8 @@ class _MyAppState extends State<MyApp>
         Locale("fi"),
         Locale("pl"),
         Locale("pt"),
+        Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
+        Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
       ],
       builder: (context, child) {
         MyApp._globalContext = context;

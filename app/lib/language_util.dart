@@ -17,6 +17,16 @@ final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index: AppLanguage(
       _AppLanguageEnum.systemDefault.index, "System default", null, null),
   // sorted by alphabetic order of their ISO language names
+  _AppLanguageEnum.chineseHans.index: AppLanguage(
+      _AppLanguageEnum.chineseHans.index,
+      "中文 (简体)",
+      "Chinese (Simplified)",
+      const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans")),
+  _AppLanguageEnum.chineseHant.index: AppLanguage(
+      _AppLanguageEnum.chineseHant.index,
+      "中文 (繁體/正體)",
+      "Chinese (Traditional)",
+      const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant")),
   _AppLanguageEnum.czech.index: AppLanguage(
       _AppLanguageEnum.czech.index, "čeština", "Czech", const Locale("cs")),
   _AppLanguageEnum.english.index: AppLanguage(
@@ -52,6 +62,8 @@ enum _AppLanguageEnum {
   finnish,
   polish,
   portuguese,
+  chineseHans,
+  chineseHant,
 }
 
 AppLanguage _getSelectedLanguage() {
