@@ -28,6 +28,7 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
   - Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/people)
 
 ## Translations (sorted by ISO name)
+- Chinese/中文 (contributed by zerolin)
 - Czech/Čeština (contributed by Skyhawk)
 - Finnish/Suomi (contributed by pHamala)
 - French/Français (contributed by mgreil)
