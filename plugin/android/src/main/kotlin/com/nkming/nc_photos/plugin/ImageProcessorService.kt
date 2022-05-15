@@ -171,7 +171,7 @@ class ImageProcessorService : Service() {
 		val intent = Intent().apply {
 			`package` = packageName
 			component = ComponentName(
-				"com.nkming.nc_photos", "com.nkming.nc_photos.MainActivity"
+				packageName, "com.nkming.nc_photos.MainActivity"
 			)
 			action = K.ACTION_SHOW_IMAGE_PROCESSOR_RESULT
 			putExtra(K.EXTRA_IMAGE_RESULT_URI, result)
