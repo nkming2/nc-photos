@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.flutter.plugin.common.MethodCall
@@ -307,7 +306,7 @@ class NotificationChannelHandler(context: Context) :
 				)
 			}
 		} catch (e: Throwable) {
-			Log.e(
+			logE(
 				"NotificationChannelHandler::loadNotificationImage",
 				"Failed generating preview image",
 				e

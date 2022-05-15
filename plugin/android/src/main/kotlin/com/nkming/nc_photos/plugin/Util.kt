@@ -2,7 +2,6 @@ package com.nkming.nc_photos.plugin
 
 import android.app.PendingIntent
 import android.os.Build
-import android.util.Log
 import java.net.HttpURLConnection
 
 fun getPendingIntentFlagImmutable(): Int {
@@ -35,6 +34,6 @@ inline fun <T> measureTime(tag: String, message: String, block: () -> T): T {
 	} finally {
 		val end = System.currentTimeMillis()
 		val elapsed = end - begin
-		Log.i(tag, "$message: ${elapsed}ms")
+		logI(tag, "$message: ${elapsed}ms")
 	}
 }

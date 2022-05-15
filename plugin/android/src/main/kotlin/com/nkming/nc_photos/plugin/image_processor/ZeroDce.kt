@@ -3,9 +3,9 @@ package com.nkming.nc_photos.plugin.image_processor
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
+import com.nkming.nc_photos.plugin.logI
 import org.tensorflow.lite.Interpreter
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
@@ -30,7 +30,7 @@ class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
 			Interpreter(TfLiteHelper.loadModelFromAsset(context, MODEL))
 		interpreter.allocateTensors()
 
-		Log.i(TAG, "Converting bitmap to input")
+		logI(TAG, "Converting bitmap to input")
 		val inputBitmap =
 			BitmapUtil.loadImageFixed(context, imageUri, WIDTH, HEIGHT)
 		val inputs = arrayOf(TfLiteHelper.bitmapToRgbFloatArray(inputBitmap))
@@ -38,7 +38,7 @@ class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
 			0 to FloatBuffer.allocate(inputs[0].capacity()),
 			1 to FloatBuffer.allocate(inputs[0].capacity())
 		)
-		Log.i(TAG, "Inferring")
+		logI(TAG, "Inferring")
 		interpreter.runForMultipleInputsOutputs(inputs, outputs)
 
 		return TfLiteHelper.rgbFloatArrayToBitmap(
@@ -49,7 +49,7 @@ class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
 	private fun enhance(
 		imageUri: Uri, alphaMaps: Bitmap, iteration: Int
 	): Bitmap {
-		Log.i(TAG, "Enhancing image, iteration: $iteration")
+		logI(TAG, "Enhancing image, iteration: $iteration")
 		// we can't work with FloatBuffer directly here as a FloatBuffer is way
 		// too large to fit in Android's heap limit
 		// downscale original to prevent OOM

@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.annotation.NonNull
 import com.nkming.nc_photos.plugin.NcPhotosPlugin
 import com.nkming.nc_photos.plugin.UriUtil
+import com.nkming.nc_photos.plugin.logE
+import com.nkming.nc_photos.plugin.logI
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -25,7 +27,7 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
 		super.onCreate(savedInstanceState)
 		if (intent.action == NcPhotosPlugin.ACTION_SHOW_IMAGE_PROCESSOR_RESULT) {
 			val route = getRouteFromImageProcessorResult(intent) ?: return
-			Log.i(TAG, "Initial route: $route")
+			logI(TAG, "Initial route: $route")
 			_initialRoute = route
 		}
 	}
@@ -59,7 +61,7 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
 	override fun onNewIntent(intent: Intent) {
 		if (intent.action == NcPhotosPlugin.ACTION_SHOW_IMAGE_PROCESSOR_RESULT) {
 			val route = getRouteFromImageProcessorResult(intent) ?: return
-			Log.i(TAG, "Navigate to route: $route")
+			logI(TAG, "Navigate to route: $route")
 			flutterEngine?.navigationChannel?.pushRoute(route)
 		} else {
 			super.onNewIntent(intent)
@@ -83,7 +85,7 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
 				NcPhotosPlugin.EXTRA_IMAGE_RESULT_URI
 			)
 		if (resultUri == null) {
-			Log.e(TAG, "Image result uri == null")
+			logE(TAG, "Image result uri == null")
 			return null
 		}
 		val filename = UriUtil.resolveFilename(this, resultUri)?.let {

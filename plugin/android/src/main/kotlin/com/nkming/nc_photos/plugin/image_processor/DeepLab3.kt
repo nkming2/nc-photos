@@ -3,10 +3,10 @@ package com.nkming.nc_photos.plugin.image_processor
 import android.content.Context
 import android.graphics.*
 import android.net.Uri
-import android.util.Log
 import com.google.android.renderscript.Toolkit
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
+import com.nkming.nc_photos.plugin.logI
 import com.nkming.nc_photos.plugin.transform
 import org.tensorflow.lite.Interpreter
 import java.io.File
@@ -58,12 +58,12 @@ private class DeepLab3(context: Context) {
 			Interpreter(TfLiteHelper.loadModelFromAsset(context, MODEL))
 		interpreter.allocateTensors()
 
-		Log.i(TAG, "Converting bitmap to input")
+		logI(TAG, "Converting bitmap to input")
 		val inputBitmap =
 			BitmapUtil.loadImageFixed(context, imageUri, WIDTH, HEIGHT)
 		val input = TfLiteHelper.bitmapToRgbFloatArray(inputBitmap)
 		val output = FloatBuffer.allocate(WIDTH * HEIGHT * Label.values().size)
-		Log.i(TAG, "Inferring")
+		logI(TAG, "Inferring")
 		interpreter.run(input, output)
 		return TfLiteHelper.argmax(output, WIDTH, HEIGHT, Label.values().size)
 	}
@@ -110,7 +110,7 @@ class DeepLab3Portrait(context: Context, maxWidth: Int, maxHeight: Int) {
 	private fun enhance(
 		imageUri: Uri, segmentMap: ByteBuffer, radius: Int
 	): Bitmap {
-		Log.i(TAG, "[enhance] Enhancing image")
+		logI(TAG, "[enhance] Enhancing image")
 		// downscale original to prevent OOM
 		val orig = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,

@@ -2,6 +2,8 @@ package com.nkming.nc_photos
 
 import android.content.Context
 import android.util.Pair
+import com.nkming.nc_photos.plugin.logE
+import com.nkming.nc_photos.plugin.logI
 import io.flutter.Log
 import org.json.JSONObject
 import java.io.File
@@ -47,11 +49,11 @@ class SelfSignedCertManager {
 				val jsonFile = File(certDir, f.name + ".json")
 				val jsonStr = jsonFile.bufferedReader().use { it.readText() }
 				val info = CertInfo.fromJson(JSONObject(jsonStr))
-				Log.i("SelfSignedCertManager::readAllCerts",
+				logI("SelfSignedCertManager::readAllCerts",
 						"Found certificate: ${f.name} for host: ${info.host}")
 				products.add(Pair(info, c))
 			} catch (e: Exception) {
-				Log.e("SelfSignedCertManager::readAllCerts",
+				logE("SelfSignedCertManager::readAllCerts",
 						"Failed to read certificate file: ${f.name}", e)
 			}
 		}
@@ -87,7 +89,7 @@ class SelfSignedCertManager {
 			certDir.mkdir()
 			certDir
 		} else if (!certDir.isDirectory) {
-			Log.e("SelfSignedCertManager::openCertsDir",
+			logE("SelfSignedCertManager::openCertsDir",
 					"Removing certs file to make way for the directory")
 			certDir.delete()
 			certDir.mkdir()

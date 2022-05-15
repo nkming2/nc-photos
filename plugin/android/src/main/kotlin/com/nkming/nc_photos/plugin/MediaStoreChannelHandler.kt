@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
@@ -220,14 +219,14 @@ class MediaStoreChannelHandler(context: Context) :
 					put("mimeType", mimeType)
 					if (dateTaken != 0L) put("dateTaken", dateTaken)
 				})
-				Log.d(
+				logD(
 					TAG,
 					"[queryEnhancedPhotos] Found $displayName, path=$path, uri=$contentUri"
 				)
 			}
 			products
 		}
-		Log.i(TAG, "[queryEnhancedPhotos] Found ${files.size} files")
+		logI(TAG, "[queryEnhancedPhotos] Found ${files.size} files")
 		result.success(files)
 	}
 
@@ -254,7 +253,7 @@ class MediaStoreChannelHandler(context: Context) :
 				try {
 					context.contentResolver.delete(uri, null, null)
 				} catch (e: Throwable) {
-					Log.e(TAG, "[deleteFiles] Failed while delete", e)
+					logE(TAG, "[deleteFiles] Failed while delete", e)
 					failed += uri.toString()
 				}
 			}

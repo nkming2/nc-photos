@@ -3,7 +3,6 @@ package com.nkming.nc_photos.plugin
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 
 interface UriUtil {
 	companion object {
@@ -16,7 +15,7 @@ interface UriUtil {
 					null, null
 				).use {
 					if (it == null || !it.moveToFirst()) {
-						Log.i(TAG, "Uri not found: $uri")
+						logI(TAG, "Uri not found: $uri")
 						null
 					} else {
 						it.getString(

@@ -1,6 +1,5 @@
 package com.nkming.nc_photos.plugin
 
-import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -35,7 +34,7 @@ class LockChannelHandler : MethodChannel.MethodCallHandler {
 	fun dismiss() {
 		for (id in _lockedIds) {
 			if (locks[id] == true) {
-				Log.w(TAG, "[dismiss] Automatically unlocking id: $id")
+				logW(TAG, "[dismiss] Automatically unlocking id: $id")
 				locks[id] = false
 			}
 		}

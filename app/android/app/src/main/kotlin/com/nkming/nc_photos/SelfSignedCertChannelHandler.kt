@@ -1,6 +1,7 @@
 package com.nkming.nc_photos
 
 import android.app.Activity
+import com.nkming.nc_photos.plugin.logE
 import io.flutter.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -49,7 +50,7 @@ class SelfSignedCertChannelHandler(activity: Activity) :
 			HttpsURLConnection.setDefaultSSLSocketFactory(_sslSocketFactory)
 			HttpsURLConnection.setDefaultHostnameVerifier(_hostNameVerifier)
 		} catch (e: Exception) {
-			Log.e("SelfSignedCertChannelHandler::init",
+			logE("SelfSignedCertChannelHandler::init",
 					"Failed while setting custom SSL handler, self-signed cert will not work",
 					e)
 		}

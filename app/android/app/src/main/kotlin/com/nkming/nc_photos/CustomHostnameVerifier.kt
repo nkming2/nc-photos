@@ -1,6 +1,7 @@
 package com.nkming.nc_photos
 
 import android.content.Context
+import com.nkming.nc_photos.plugin.logI
 import io.flutter.Log
 import java.util.*
 import javax.net.ssl.HostnameVerifier
@@ -15,7 +16,7 @@ class CustomHostnameVerifier(context: Context) : HostnameVerifier {
 	override fun verify(hostname: String, session: SSLSession): Boolean {
 		return if (allowedHosts.contains(hostname.toLowerCase())) {
 			// good
-			Log.i("CustomHostnameVerifier::verify",
+			logI("CustomHostnameVerifier::verify",
 					"Allowing registered host: $hostname")
 			true
 		} else {

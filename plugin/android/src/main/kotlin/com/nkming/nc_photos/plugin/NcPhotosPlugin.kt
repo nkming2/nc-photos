@@ -1,7 +1,6 @@
 package com.nkming.nc_photos.plugin
 
 import android.content.Intent
-import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -157,9 +156,7 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 				else -> false
 			}
 		} catch (e: Throwable) {
-			Log.e(
-				TAG, "Failed while onActivityResult, requestCode=$requestCode"
-			)
+			logE(TAG, "Failed while onActivityResult, requestCode=$requestCode")
 			false
 		}
 	}
@@ -178,7 +175,7 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 				else -> false
 			}
 		} catch (e: Throwable) {
-			Log.e(
+			logE(
 				TAG, "Failed while onActivityResult, requestCode=$requestCode"
 			)
 			false

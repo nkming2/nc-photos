@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 
 fun Bitmap.aspectRatio() = width / height.toFloat()
 
@@ -24,7 +23,7 @@ interface BitmapUtil {
 				BitmapResizeMethod.FILL
 			)
 			if (subsample > 1) {
-				Log.d(
+				logD(
 					TAG,
 					"Subsample image to fixed: $subsample ${opt.outWidth}x${opt.outHeight} -> ${targetW}x$targetH"
 				)
@@ -34,9 +33,7 @@ interface BitmapUtil {
 			}
 			val bitmap = loadImage(context, uri, outOpt)
 			if (subsample > 1) {
-				Log.d(
-					TAG, "Bitmap subsampled: ${bitmap.width}x${bitmap.height}"
-				)
+				logD(TAG, "Bitmap subsampled: ${bitmap.width}x${bitmap.height}")
 			}
 			return Bitmap.createScaledBitmap(bitmap, targetW, targetH, true)
 		}
@@ -83,7 +80,7 @@ interface BitmapUtil {
 				opt.outWidth, opt.outHeight, dstW, dstH, resizeMethod
 			)
 			if (subsample > 1) {
-				Log.d(
+				logD(
 					TAG,
 					"Subsample image to ${resizeMethod.name}: $subsample ${opt.outWidth}x${opt.outHeight} -> ${dstW}x$dstH" +
 							(if (shouldSwapSide) " (swapped)" else "")
@@ -94,9 +91,7 @@ interface BitmapUtil {
 			}
 			val bitmap = loadImage(context, uri, outOpt)
 			if (subsample > 1) {
-				Log.d(
-					TAG, "Bitmap subsampled: ${bitmap.width}x${bitmap.height}"
-				)
+				logD(TAG, "Bitmap subsampled: ${bitmap.width}x${bitmap.height}")
 			}
 			if (bitmap.width < dstW && bitmap.height < dstH && !shouldUpscale) {
 				return bitmap

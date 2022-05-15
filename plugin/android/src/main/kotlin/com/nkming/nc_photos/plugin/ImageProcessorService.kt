@@ -13,7 +13,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.IBinder
 import android.os.PowerManager
-import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -52,7 +51,7 @@ class ImageProcessorService : Service() {
 
 	@SuppressLint("WakelockTimeout")
 	override fun onCreate() {
-		Log.i(TAG, "[onCreate] Service created")
+		logI(TAG, "[onCreate] Service created")
 		super.onCreate()
 		wakeLock.acquire()
 		createNotificationChannel()
@@ -60,7 +59,7 @@ class ImageProcessorService : Service() {
 	}
 
 	override fun onDestroy() {
-		Log.i(TAG, "[onDestroy] Service destroyed")
+		logI(TAG, "[onDestroy] Service destroyed")
 		wakeLock.release()
 		super.onDestroy()
 	}
@@ -74,7 +73,7 @@ class ImageProcessorService : Service() {
 	}
 
 	private fun onCancel(startId: Int) {
-		Log.i(TAG, "[onCancel] Cancel requested")
+		logI(TAG, "[onCancel] Cancel requested")
 		cmdTask?.cancel(false)
 		stopSelf(startId)
 	}
@@ -88,7 +87,7 @@ class ImageProcessorService : Service() {
 				isForeground = true
 			} catch (e: Throwable) {
 				// ???
-				Log.e(TAG, "[onStartCommand] Failed while startForeground", e)
+				logE(TAG, "[onStartCommand] Failed while startForeground", e)
 			}
 		}
 
@@ -99,7 +98,7 @@ class ImageProcessorService : Service() {
 				startId, intent.extras!!
 			)
 			else -> {
-				Log.e(TAG, "Unknown method: $method")
+				logE(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
 				// there are commands running in the bg
 				addCommand(
@@ -253,7 +252,7 @@ class ImageProcessorService : Service() {
 		try {
 			getTempDir(this).deleteRecursively()
 		} catch (e: Throwable) {
-			Log.e(TAG, "[cleanUp] Failed while cleanUp", e)
+			logE(TAG, "[cleanUp] Failed while cleanUp", e)
 		}
 	}
 
@@ -409,7 +408,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 			System.gc()
 			ImageProcessorCompletedEvent(outUri)
 		} catch (e: Throwable) {
-			Log.e(TAG, "[doInBackground] Failed while handleCommand", e)
+			logE(TAG, "[doInBackground] Failed while handleCommand", e)
 			ImageProcessorFailedEvent(e)
 		}
 	}
@@ -445,7 +444,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	private fun downloadFile(
 		fileUrl: String, headers: Map<String, String>?
 	): File {
-		Log.i(TAG, "[downloadFile] $fileUrl")
+		logI(TAG, "[downloadFile] $fileUrl")
 		return (URL(fileUrl).openConnection() as HttpURLConnection).apply {
 			requestMethod = "GET"
 			instanceFollowRedirects = true
@@ -464,7 +463,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 				}
 				file
 			} else {
-				Log.e(
+				logE(
 					TAG,
 					"[downloadFile] Failed downloading file: HTTP$responseCode"
 				)
@@ -478,7 +477,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	private fun saveBitmap(
 		bitmap: Bitmap, filename: String, srcFile: File
 	): Uri {
-		Log.i(TAG, "[saveBitmap] $filename")
+		logI(TAG, "[saveBitmap] $filename")
 		val outFile = File.createTempFile("out", null, getTempDir(context))
 		outFile.outputStream().use {
 			bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it)
@@ -491,7 +490,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 			copyExif(iExif, oExif)
 			oExif.saveAttributes()
 		} catch (e: Throwable) {
-			Log.e(TAG, "[copyExif] Failed while saving EXIF", e)
+			logE(TAG, "[copyExif] Failed while saving EXIF", e)
 		}
 
 		// move file to user accessible storage
@@ -509,14 +508,14 @@ private open class ImageProcessorCommandTask(context: Context) :
 			try {
 				from.getAttribute(t)?.let { to.setAttribute(t, it) }
 			} catch (e: Throwable) {
-				Log.e(TAG, "[copyExif] Failed while copying tag: $t", e)
+				logE(TAG, "[copyExif] Failed while copying tag: $t", e)
 			}
 		}
 	}
 
 	private fun handleCancel() {
 		if (isCancelled) {
-			Log.i(TAG, "[handleCancel] Canceled")
+			logI(TAG, "[handleCancel] Canceled")
 			throw InterruptedException()
 		}
 	}
