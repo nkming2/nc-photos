@@ -24,6 +24,7 @@ class EmptyListIndicator extends StatelessWidget {
           Text(
             text,
             style: const TextStyle(fontSize: 24),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
