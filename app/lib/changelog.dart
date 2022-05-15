@@ -183,4 +183,8 @@ Features:
 - (Localization) Add Chinese (by zerolin)
 - (Localization) Update French (by mgreil)
 """,
+  // v42
+  """42.0
+- Add tweakable parameters to low-light enhancement and portrait blur
+""",
 ];
