@@ -161,7 +161,11 @@ class NotificationChannelHandler(context: Context) :
 			action = Intent.ACTION_SEND_MULTIPLE
 			putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
 			type =
-				if (mimeTypes.all { it?.startsWith("image/") == true }) "image/*" else "*/*"
+				if (mimeTypes.all {
+						it?.startsWith(
+							"image/"
+						) == true
+					}) "image/*" else "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		}
@@ -204,7 +208,11 @@ class NotificationChannelHandler(context: Context) :
 			).setOnlyAlertOnce(true).setAutoCancel(false).setLocalOnly(true)
 			.setProgress(max, progress, false).setContentText("$progress/$max")
 		if (currentItemTitle == null) {
-			builder.setContentTitle(_context.getString(R.string.download_progress_notification_untitled_text))
+			builder.setContentTitle(
+				_context.getString(
+					R.string.download_progress_notification_untitled_text
+				)
+			)
 		} else {
 			builder.setContentTitle(
 				_context.getString(
@@ -330,7 +338,9 @@ class NotificationChannelHandler(context: Context) :
 			}
 
 			val manager =
-				context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+				context.getSystemService(
+					Context.NOTIFICATION_SERVICE
+				) as NotificationManager
 			manager.createNotificationChannel(channel)
 		}
 	}

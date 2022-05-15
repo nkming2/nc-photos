@@ -24,7 +24,7 @@ inline fun <T> HttpURLConnection.use(block: (HttpURLConnection) -> T): T {
 }
 
 inline fun ByteArray.transform(transform: (Byte) -> Byte) {
-	forEachIndexed{ i, v -> this[i] = transform(v) }
+	forEachIndexed { i, v -> this[i] = transform(v) }
 }
 
 inline fun <T> measureTime(tag: String, message: String, block: () -> T): T {
