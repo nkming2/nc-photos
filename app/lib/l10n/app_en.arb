@@ -1189,6 +1189,10 @@
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
 	},
+	"enhanceLowLightParamBrightnessLabel": "Brightness",
+	"@enhanceLowLightParamBrightnessLabel": {
+		"description": "This parameter sets how much brighter the output will be"
+	},
 	"collectionEnhancedPhotosLabel": "Enhanced photos",
 	"@collectionEnhancedPhotosLabel": {
 		"description": "List photos enhanced by the app"

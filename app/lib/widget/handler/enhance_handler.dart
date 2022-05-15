@@ -55,6 +55,7 @@ class EnhanceHandler {
           file.filename,
           Pref().getEnhanceMaxWidthOr(),
           Pref().getEnhanceMaxHeightOr(),
+          args["iteration"] ?? 8,
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
@@ -180,11 +181,62 @@ class EnhanceHandler {
       BuildContext context, _Algorithm selected) async {
     switch (selected) {
       case _Algorithm.zeroDce:
-        return {};
+        return _getZeroDceArgs(context);
 
       case _Algorithm.deepLab3Portrait:
         return _getDeepLab3PortraitArgs(context);
     }
+  }
+
+  Future<Map<String, dynamic>?> _getZeroDceArgs(BuildContext context) async {
+    var current = .8;
+    final iteration = await showDialog<int>(
+      context: context,
+      builder: (context) => AppTheme(
+        child: AlertDialog(
+          title: Text(L10n.global().enhanceLowLightParamBrightnessLabel),
+          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Icon(
+                    Icons.brightness_low,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                  Expanded(
+                    child: StatefulSlider(
+                      initialValue: current,
+                      onChangeEnd: (value) {
+                        current = value;
+                      },
+                    ),
+                  ),
+                  Icon(
+                    Icons.brightness_high,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                final iteration = (current * 10).round().clamp(1, 10);
+                Navigator.of(context).pop(iteration);
+              },
+              child: Text(L10n.global().enhanceButtonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    _log.info("[_getZeroDceArgs] iteration: $iteration");
+    return iteration?.run((it) => {"iteration": it});
   }
 
   Future<Map<String, dynamic>?> _getDeepLab3PortraitArgs(

@@ -34,6 +34,7 @@ class ImageProcessorService : Service() {
 		const val EXTRA_MAX_WIDTH = "maxWidth"
 		const val EXTRA_MAX_HEIGHT = "maxHeight"
 		const val EXTRA_RADIUS = "radius"
+		const val EXTRA_ITERATION = "iteration"
 
 		private const val ACTION_CANCEL = "cancel"
 
@@ -109,8 +110,13 @@ class ImageProcessorService : Service() {
 		}
 	}
 
-	private fun onZeroDce(startId: Int, extras: Bundle) =
-		onMethod(startId, extras, METHOD_ZERO_DCE)
+	private fun onZeroDce(startId: Int, extras: Bundle) {
+		return onMethod(
+			startId, extras, METHOD_ZERO_DCE, args = mapOf(
+				"iteration" to extras.getIntOrNull(EXTRA_ITERATION)
+			)
+		)
+	}
 
 	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
 		return onMethod(
@@ -432,7 +438,8 @@ private open class ImageProcessorCommandTask(context: Context) :
 				TAG, "[handleCommand] Elapsed time", {
 					when (cmd.method) {
 						ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
-							context, cmd.maxWidth, cmd.maxHeight
+							context, cmd.maxWidth, cmd.maxHeight,
+							cmd.args["iteration"] as? Int ?: 8
 						).infer(
 							fileUri
 						)

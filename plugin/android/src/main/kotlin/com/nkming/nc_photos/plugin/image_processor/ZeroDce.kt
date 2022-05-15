@@ -11,18 +11,17 @@ import java.nio.FloatBuffer
 import java.nio.IntBuffer
 import kotlin.math.pow
 
-class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
+class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int, iteration: Int) {
 	companion object {
 		private const val TAG = "ZeroDce"
 		private const val MODEL = "zero_dce_lite_200x300_iter8_60.tflite"
 		private const val WIDTH = 300
 		private const val HEIGHT = 200
-		private const val ITERATION = 8
 	}
 
 	fun infer(imageUri: Uri): Bitmap {
 		val alphaMaps = inferAlphaMaps(imageUri)
-		return enhance(imageUri, alphaMaps, ITERATION)
+		return enhance(imageUri, alphaMaps, iteration)
 	}
 
 	private fun inferAlphaMaps(imageUri: Uri): Bitmap {
@@ -105,4 +104,5 @@ class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int) {
 	private val context = context
 	private val maxWidth = maxWidth
 	private val maxHeight = maxHeight
+	private val iteration = iteration
 }

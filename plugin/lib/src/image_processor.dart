@@ -8,7 +8,8 @@ class ImageProcessor {
     String fileUrl,
     String filename,
     int maxWidth,
-    int maxHeight, {
+    int maxHeight,
+    int iteration, {
     Map<String, String>? headers,
   }) =>
       _methodChannel.invokeMethod("zeroDce", <String, dynamic>{
@@ -17,6 +18,7 @@ class ImageProcessor {
         "filename": filename,
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
+        "iteration": iteration,
       });
 
   static Future<void> deepLab3Portrait(

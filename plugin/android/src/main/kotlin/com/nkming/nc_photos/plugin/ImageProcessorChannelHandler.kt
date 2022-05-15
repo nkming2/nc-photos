@@ -25,6 +25,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument("iteration")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -62,10 +63,13 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun zeroDce(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, iteration: Int,
+		result: MethodChannel.Result
 	) = method(
 		fileUrl, headers, filename, maxWidth, maxHeight,
-		ImageProcessorService.METHOD_ZERO_DCE, result
+		ImageProcessorService.METHOD_ZERO_DCE, result, onIntent = {
+			it.putExtra(ImageProcessorService.EXTRA_ITERATION, iteration)
+		}
 	)
 
 	private fun deepLab3Portrait(
