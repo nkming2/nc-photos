@@ -23,7 +23,8 @@ class ImageProcessor {
     String fileUrl,
     String filename,
     int maxWidth,
-    int maxHeight, {
+    int maxHeight,
+    int radius, {
     Map<String, String>? headers,
   }) =>
       _methodChannel.invokeMethod("deepLab3Portrait", <String, dynamic>{
@@ -32,6 +33,7 @@ class ImageProcessor {
         "filename": filename,
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
+        "radius": radius,
       });
 
   static const _methodChannel =

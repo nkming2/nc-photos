@@ -40,6 +40,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument("radius")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -69,16 +70,18 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun deepLab3Portrait(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, radius: Int, result: MethodChannel.Result
 	) = method(
 		fileUrl, headers, filename, maxWidth, maxHeight,
-		ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT, result
+		ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT, result, onIntent = {
+			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
+		}
 	)
 
 	private fun method(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
 		maxWidth: Int, maxHeight: Int, method: String,
-		result: MethodChannel.Result
+		result: MethodChannel.Result, onIntent: ((Intent) -> Unit)? = null
 	) {
 		val intent = Intent(context, ImageProcessorService::class.java).apply {
 			putExtra(ImageProcessorService.EXTRA_METHOD, method)
@@ -89,6 +92,7 @@ class ImageProcessorChannelHandler(context: Context) :
 			putExtra(ImageProcessorService.EXTRA_FILENAME, filename)
 			putExtra(ImageProcessorService.EXTRA_MAX_WIDTH, maxWidth)
 			putExtra(ImageProcessorService.EXTRA_MAX_HEIGHT, maxHeight)
+			onIntent?.invoke(this)
 		}
 		ContextCompat.startForegroundService(context, intent)
 		result.success(null)

@@ -33,6 +33,7 @@ class ImageProcessorService : Service() {
 		const val EXTRA_FILENAME = "filename"
 		const val EXTRA_MAX_WIDTH = "maxWidth"
 		const val EXTRA_MAX_HEIGHT = "maxHeight"
+		const val EXTRA_RADIUS = "radius"
 
 		private const val ACTION_CANCEL = "cancel"
 
@@ -111,8 +112,13 @@ class ImageProcessorService : Service() {
 	private fun onZeroDce(startId: Int, extras: Bundle) =
 		onMethod(startId, extras, METHOD_ZERO_DCE)
 
-	private fun onDeepLapPortrait(startId: Int, extras: Bundle) =
-		onMethod(startId, extras, METHOD_DEEL_LAP_PORTRAIT)
+	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
+		return onMethod(
+			startId, extras, METHOD_DEEL_LAP_PORTRAIT, args = mapOf(
+				"radius" to extras.getIntOrNull(EXTRA_RADIUS)
+			)
+		)
+	}
 
 	/**
 	 * Handle methods without arguments
@@ -121,7 +127,10 @@ class ImageProcessorService : Service() {
 	 * @param extras
 	 * @param method
 	 */
-	private fun onMethod(startId: Int, extras: Bundle, method: String) {
+	private fun onMethod(
+		startId: Int, extras: Bundle, method: String,
+		args: Map<String, Any?> = mapOf()
+	) {
 		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
 
 		@Suppress("Unchecked_cast")
@@ -132,7 +141,8 @@ class ImageProcessorService : Service() {
 		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
 		addCommand(
 			ImageProcessorCommand(
-				startId, method, fileUrl, headers, filename, maxWidth, maxHeight
+				startId, method, fileUrl, headers, filename, maxWidth,
+				maxHeight, args = args
 			)
 		)
 	}
@@ -280,7 +290,7 @@ private data class ImageProcessorCommand(
 	val filename: String,
 	val maxWidth: Int,
 	val maxHeight: Int,
-	val args: Map<String, Any> = mapOf(),
+	val args: Map<String, Any?> = mapOf(),
 )
 
 @Suppress("Deprecation")
@@ -426,9 +436,12 @@ private open class ImageProcessorCommandTask(context: Context) :
 						).infer(
 							fileUri
 						)
+
 						ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
-							context, cmd.maxWidth, cmd.maxHeight
+							context, cmd.maxWidth, cmd.maxHeight,
+							cmd.args["radius"] as? Int ?: 16
 						).infer(fileUri)
+
 						else -> throw IllegalArgumentException(
 							"Unknown method: ${cmd.method}"
 						)

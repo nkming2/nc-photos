@@ -1182,6 +1182,7 @@
 	"@enhanceTooltip": {
 		"description": "Enhance a photo"
 	},
+	"enhanceButtonLabel": "ENHANCE",
 	"enhanceIntroDialogTitle": "Enhance your photos",
 	"enhanceIntroDialogDescription": "Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings",
 	"enhanceLowLightTitle": "Low-light enhancement",
@@ -1199,6 +1200,10 @@
 	"enhancePortraitBlurTitle": "Portrait blur",
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
+	},
+	"enhancePortraitBlurParamBlurLabel": "Blurriness",
+	"@enhancePortraitBlurParamBlurLabel": {
+		"description": "This parameter sets the radius of the blur filter"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

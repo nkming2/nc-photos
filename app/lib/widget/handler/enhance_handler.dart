@@ -13,7 +13,9 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,39 +37,17 @@ class EnhanceHandler {
       return;
     }
 
-    final selected = await showDialog<_Algorithm>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        children: _getOptions()
-            .map((o) => SimpleDialogOption(
-                  padding: const EdgeInsets.all(0),
-                  child: ListTile(
-                    title: Text(o.title),
-                    subtitle: o.subtitle?.run((t) => Text(t)),
-                    trailing: o.link != null
-                        ? SizedBox(
-                            height: double.maxFinite,
-                            child: TextButton(
-                              child: Text(L10n.global().detailsTooltip),
-                              onPressed: () {
-                                launch(o.link!);
-                              },
-                            ),
-                          )
-                        : null,
-                    onTap: () {
-                      Navigator.of(context).pop(o.algorithm);
-                    },
-                  ),
-                ))
-            .toList(),
-      ),
-    );
+    final selected = await _pickAlgorithm(context);
     if (selected == null) {
       // user canceled
       return;
     }
     _log.info("[call] Selected: ${selected.name}");
+    final args = await _getArgs(context, selected);
+    if (args == null) {
+      // user canceled
+      return;
+    }
     switch (selected) {
       case _Algorithm.zeroDce:
         await ImageProcessor.zeroDce(
@@ -87,6 +67,7 @@ class EnhanceHandler {
           file.filename,
           Pref().getEnhanceMaxWidthOr(),
           Pref().getEnhanceMaxHeightOr(),
+          args["radius"] ?? 16,
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
@@ -148,6 +129,36 @@ class EnhanceHandler {
     return true;
   }
 
+  Future<_Algorithm?> _pickAlgorithm(BuildContext context) =>
+      showDialog<_Algorithm>(
+        context: context,
+        builder: (context) => SimpleDialog(
+          children: _getOptions()
+              .map((o) => SimpleDialogOption(
+                    padding: const EdgeInsets.all(0),
+                    child: ListTile(
+                      title: Text(o.title),
+                      subtitle: o.subtitle?.run((t) => Text(t)),
+                      trailing: o.link != null
+                          ? SizedBox(
+                              height: double.maxFinite,
+                              child: TextButton(
+                                child: Text(L10n.global().detailsTooltip),
+                                onPressed: () {
+                                  launch(o.link!);
+                                },
+                              ),
+                            )
+                          : null,
+                      onTap: () {
+                        Navigator.of(context).pop(o.algorithm);
+                      },
+                    ),
+                  ))
+              .toList(),
+        ),
+      );
+
   List<_Option> _getOptions() => [
         if (platform_k.isAndroid)
           _Option(
@@ -164,6 +175,70 @@ class EnhanceHandler {
             algorithm: _Algorithm.deepLab3Portrait,
           ),
       ];
+
+  Future<Map<String, dynamic>?> _getArgs(
+      BuildContext context, _Algorithm selected) async {
+    switch (selected) {
+      case _Algorithm.zeroDce:
+        return {};
+
+      case _Algorithm.deepLab3Portrait:
+        return _getDeepLab3PortraitArgs(context);
+    }
+  }
+
+  Future<Map<String, dynamic>?> _getDeepLab3PortraitArgs(
+      BuildContext context) async {
+    var current = .5;
+    final radius = await showDialog<int>(
+      context: context,
+      builder: (context) => AppTheme(
+        child: AlertDialog(
+          title: Text(L10n.global().enhancePortraitBlurParamBlurLabel),
+          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Icon(
+                    Icons.circle,
+                    size: 20,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                  Expanded(
+                    child: StatefulSlider(
+                      initialValue: current,
+                      onChangeEnd: (value) {
+                        current = value;
+                      },
+                    ),
+                  ),
+                  Icon(
+                    Icons.blur_on,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                final radius = (current * 25).round().clamp(1, 25);
+                Navigator.of(context).pop(radius);
+              },
+              child: Text(L10n.global().enhanceButtonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    _log.info("[_getDeepLab3PortraitArgs] radius: $radius");
+    return radius?.run((it) => {"radius": it});
+  }
 
   final Account account;
   final File file;

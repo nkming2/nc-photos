@@ -71,10 +71,10 @@ private class DeepLab3(context: Context) {
 	private val context = context
 }
 
-class DeepLab3Portrait(context: Context, maxWidth: Int, maxHeight: Int) {
+class DeepLab3Portrait(
+	context: Context, maxWidth: Int, maxHeight: Int, radius: Int
+) {
 	companion object {
-		private const val RADIUS = 16
-
 		private const val TAG = "DeepLab3Portrait"
 	}
 
@@ -82,7 +82,7 @@ class DeepLab3Portrait(context: Context, maxWidth: Int, maxHeight: Int) {
 		val segmentMap = deepLab.infer(imageUri).also {
 			postProcessSegmentMap(it)
 		}
-		return enhance(imageUri, segmentMap, RADIUS)
+		return enhance(imageUri, segmentMap, radius)
 	}
 
 	/**
@@ -146,5 +146,6 @@ class DeepLab3Portrait(context: Context, maxWidth: Int, maxHeight: Int) {
 	private val context = context
 	private val maxWidth = maxWidth
 	private val maxHeight = maxHeight
+	private val radius = radius
 	private val deepLab = DeepLab3(context)
 }
