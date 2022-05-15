@@ -419,19 +419,22 @@ private open class ImageProcessorCommandTask(context: Context) :
 		handleCancel()
 		return try {
 			val fileUri = Uri.fromFile(file)
-			val output = when (cmd.method) {
-				ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
-					context, cmd.maxWidth, cmd.maxHeight
-				).infer(
-					fileUri
-				)
-				ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
-					context, cmd.maxWidth, cmd.maxHeight
-				).infer(fileUri)
-				else -> throw IllegalArgumentException(
-					"Unknown method: ${cmd.method}"
-				)
-			}
+			val output = measureTime(
+				TAG, "[handleCommand] Elapsed time", {
+					when (cmd.method) {
+						ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
+							context, cmd.maxWidth, cmd.maxHeight
+						).infer(
+							fileUri
+						)
+						ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
+							context, cmd.maxWidth, cmd.maxHeight
+						).infer(fileUri)
+						else -> throw IllegalArgumentException(
+							"Unknown method: ${cmd.method}"
+						)
+					}
+				})
 			handleCancel()
 			saveBitmap(output, cmd.filename, file)
 		} finally {
