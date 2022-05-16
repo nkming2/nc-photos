@@ -117,10 +117,10 @@ class _HomeAlbumsState extends State<HomeAlbums>
                 slivers: [
                   _buildAppBar(context),
                   SliverPadding(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     sliver: buildItemStreamList(
                       maxCrossAxisExtent: 256,
-                      mainAxisSpacing: 8,
+                      mainAxisSpacing: 6,
                     ),
                   ),
                   SliverToBoxAdapter(
@@ -590,7 +590,7 @@ class _ButtonListItem extends _ListItem {
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               child: Row(
                 children: [
                   Icon(
