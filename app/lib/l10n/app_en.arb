@@ -1193,7 +1193,7 @@
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Enhanced photos",
+	"collectionEnhancedPhotosLabel": "Enhanced",
 	"@collectionEnhancedPhotosLabel": {
 		"description": "List photos enhanced by the app"
 	},
