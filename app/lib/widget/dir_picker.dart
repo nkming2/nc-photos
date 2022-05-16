@@ -100,32 +100,36 @@ class DirPickerState extends State<DirPicker> {
         ],
         alignment: Alignment.topLeft,
       ),
-      child: ListView.separated(
-        key: Key(_currentPath),
-        itemBuilder: (context, index) {
-          if (!isTopLevel && index == 0) {
-            return ListTile(
-              dense: true,
-              leading: const SizedBox(width: 24),
-              title: Text(L10n.global().rootPickerNavigateUpItemText),
-              onTap: () {
-                try {
-                  _navigateInto(File(path: path_lib.dirname(_currentPath)));
-                } catch (e) {
-                  SnackBarManager().showSnackBar(SnackBar(
-                    content: Text(exception_util.toUserString(e)),
-                    duration: k.snackBarDurationNormal,
-                  ));
-                }
-              },
-            );
-          } else {
-            return _buildItem(
-                context, state.items[index - (isTopLevel ? 0 : 1)]);
-          }
-        },
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: state.items.length + (isTopLevel ? 0 : 1),
+      // needed to prevent background color overflowing the parent bound, see:
+      // https://github.com/flutter/flutter/issues/86584
+      child: Material(
+        child: ListView.separated(
+          key: Key(_currentPath),
+          itemBuilder: (context, index) {
+            if (!isTopLevel && index == 0) {
+              return ListTile(
+                dense: true,
+                leading: const SizedBox(width: 24),
+                title: Text(L10n.global().rootPickerNavigateUpItemText),
+                onTap: () {
+                  try {
+                    _navigateInto(File(path: path_lib.dirname(_currentPath)));
+                  } catch (e) {
+                    SnackBarManager().showSnackBar(SnackBar(
+                      content: Text(exception_util.toUserString(e)),
+                      duration: k.snackBarDurationNormal,
+                    ));
+                  }
+                },
+              );
+            } else {
+              return _buildItem(
+                  context, state.items[index - (isTopLevel ? 0 : 1)]);
+            }
+          },
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: state.items.length + (isTopLevel ? 0 : 1),
+        ),
       ),
     );
   }
