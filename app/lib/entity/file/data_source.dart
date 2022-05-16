@@ -451,6 +451,10 @@ class FileCachedDataSource implements FileDataSource {
         _log.info("[list] File removed: $dir");
         _appDbSrc.remove(account, dir);
         return [];
+      } else if (e.response.statusCode == 403) {
+        _log.info("[list] E2E encrypted dir: $dir");
+        _appDbSrc.remove(account, dir);
+        return [];
       } else {
         rethrow;
       }
