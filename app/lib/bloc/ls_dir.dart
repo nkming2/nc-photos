@@ -8,7 +8,7 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
 class LsDirBlocItem with EquatableMixin {
-  LsDirBlocItem(this.file, this.children);
+  LsDirBlocItem(this.file, this.isE2ee, this.children);
 
   @override
   toString({bool isDeep = false}) {
@@ -41,6 +41,7 @@ class LsDirBlocItem with EquatableMixin {
       ];
 
   final File file;
+  final bool isE2ee;
 
   /// Child directories under this directory
   ///
@@ -183,13 +184,17 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
         if (ev.depth > 1) {
           children = await _query(ev.copyWith(root: f, depth: ev.depth - 1));
         }
-        product.add(LsDirBlocItem(f, children));
+        product.add(LsDirBlocItem(f, false, children));
       } on ApiException catch (e) {
         if (e.response.statusCode == 404) {
           // this could happen when the server db contains dangling entries
           _log.warning(
               "[call] HTTP404 error while listing dir: ${logFilename(f.path)}");
           removes.add(f);
+        } else if (f.isCollection == true && e.response.statusCode == 403) {
+          // e2ee dir
+          _log.warning("[call] HTTP403 error, likely E2EE dir: ${f.path}");
+          product.add(LsDirBlocItem(f, true, []));
         } else {
           rethrow;
         }

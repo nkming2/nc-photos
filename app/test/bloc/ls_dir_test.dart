@@ -41,6 +41,7 @@ void main() {
                 path: "remote.php/dav/files/admin/d1",
                 isCollection: true,
               ),
+              false,
               null,
             ),
           ]),
@@ -62,6 +63,7 @@ void main() {
                 path: "remote.php/dav/files/admin/d1/d2-1",
                 isCollection: true,
               ),
+              false,
               null,
             ),
             LsDirBlocItem(
@@ -69,6 +71,7 @@ void main() {
                 path: "remote.php/dav/files/admin/d1/d2-2",
                 isCollection: true,
               ),
+              false,
               null,
             ),
           ]),
@@ -104,12 +107,14 @@ void main() {
                 path: "remote.php/dav/files/admin/d1",
                 isCollection: true,
               ),
+              false,
               [
                 LsDirBlocItem(
                   File(
                     path: "remote.php/dav/files/admin/d1/d2-1",
                     isCollection: true,
                   ),
+                  false,
                   null,
                 ),
                 LsDirBlocItem(
@@ -117,6 +122,7 @@ void main() {
                     path: "remote.php/dav/files/admin/d1/d2-2",
                     isCollection: true,
                   ),
+                  false,
                   null,
                 ),
               ],

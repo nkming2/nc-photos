@@ -11,6 +11,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:path/path.dart' as path_lib;
 
 class DirPicker extends StatefulWidget {
@@ -41,7 +42,7 @@ class DirPickerState extends State<DirPicker> {
   @override
   initState() {
     super.initState();
-    _root = LsDirBlocItem(File(path: _rootDir), []);
+    _root = LsDirBlocItem(File(path: _rootDir), false, []);
     _initBloc();
     if (widget.initialPicks != null) {
       _picks.addAll(widget.initialPicks!);
@@ -127,7 +128,7 @@ class DirPickerState extends State<DirPicker> {
                   context, state.items[index - (isTopLevel ? 0 : 1)]);
             }
           },
-          separatorBuilder: (context, index) => const Divider(),
+          separatorBuilder: (context, index) => const Divider(height: 2),
           itemCount: state.items.length + (isTopLevel ? 0 : 1),
         ),
       ),
@@ -135,7 +136,7 @@ class DirPickerState extends State<DirPicker> {
   }
 
   Widget _buildItem(BuildContext context, LsDirBlocItem item) {
-    final canPick = widget.validator?.call(item.file) != false;
+    final canPick = !item.isE2ee && widget.validator?.call(item.file) != false;
     final pickState = _isItemPicked(item);
 
     IconData? iconData;
@@ -158,9 +159,12 @@ class DirPickerState extends State<DirPicker> {
               : Icons.radio_button_unchecked;
           break;
       }
+    } else if (item.isE2ee) {
+      iconData = Icons.lock_outlined;
     }
 
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       dense: true,
       leading: canPick
           ? IconButton(
@@ -181,14 +185,16 @@ class DirPickerState extends State<DirPicker> {
                 }
               },
             )
-          : const IconButton(
-              icon: Icon(null),
+          : IconButton(
+              icon: Icon(iconData),
+              color: AppTheme.getUnfocusedIconColor(context),
               onPressed: null,
             ),
       title: Text(item.file.filename),
       trailing: item.children?.isNotEmpty == true
           ? const Icon(Icons.arrow_forward_ios)
           : null,
+      textColor: item.isE2ee ? AppTheme.getUnfocusedIconColor(context) : null,
       onTap: item.children?.isNotEmpty == true
           ? () {
               try {
