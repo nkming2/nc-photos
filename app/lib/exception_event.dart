@@ -4,6 +4,6 @@ class ExceptionEvent {
     this.stackTrace,
   ]);
 
-  final dynamic error;
+  final Object error;
   final StackTrace? stackTrace;
 }
