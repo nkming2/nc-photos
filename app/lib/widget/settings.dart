@@ -228,6 +228,13 @@ class _SettingsState extends State<Settings> {
                 },
               ),
               ListTile(
+                title: const Text("Donate"),
+                subtitle: const Text("Support the project"),
+                onTap: () {
+                  launch("https://bit.ly/3wQOHPZ");
+                },
+              ),
+              ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
                 onTap: () {
                   launch(_sourceRepo);
