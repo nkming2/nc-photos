@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -39,11 +42,33 @@ class Changelog extends StatelessWidget {
 
   AppBar _buildAppBar() => AppBar(
         title: const Text("Changelog"),
+        elevation: 0,
       );
 
   Widget _buildContent(BuildContext context) {
     return Column(
       children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.blue[100]
+              : Colors.blueGrey[800],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Text(L10n.global().donationShortMessage),
+              ),
+              TextButton(
+                onPressed: () {
+                  launch(help_util.donateUrl);
+                },
+                child: Text(L10n.global().donationButtonLabel),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: _changelogs.length,

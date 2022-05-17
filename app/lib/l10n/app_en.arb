@@ -1452,6 +1452,10 @@
 		"description": "Save the image on your Nextcloud server"
 	},
 
+	"donationTitle": "Buy me a coffee",
+	"donationButtonLabel": "BUY ME A COFFEE",
+	"donationShortMessage": "Want to help?",
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
