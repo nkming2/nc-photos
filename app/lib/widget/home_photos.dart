@@ -39,6 +39,7 @@ import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/startup_sync.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
+import 'package:nc_photos/widget/donation_dialog.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
@@ -80,6 +81,10 @@ class _HomePhotosState extends State<HomePhotos>
     _web?.onInitState();
     _prefUpdatedListener.begin();
     _imageProcessorUploadSuccessListener?.begin();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DonationDialogHandler().showIfNeeded(context);
+    });
   }
 
   @override
