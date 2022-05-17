@@ -126,7 +126,9 @@ enum PrefKey implements PrefKeyInterface {
   isSlideshowReverse,
   seedColor,
   isVideoPlayerMute,
-  isVideoPlayerLoop;
+  isVideoPlayerLoop,
+  lastDonationDialogTime,
+  shouldRemindDonationLater;
 
   @override
   String toStringKey() {
@@ -201,6 +203,10 @@ enum PrefKey implements PrefKeyInterface {
         return "isVideoPlayerMute";
       case PrefKey.isVideoPlayerLoop:
         return "isVideoPlayerLoop";
+      case PrefKey.lastDonationDialogTime:
+        return "lastDonationDialogTime";
+      case PrefKey.shouldRemindDonationLater:
+        return "shouldRemindDonationLater";
     }
   }
 }
