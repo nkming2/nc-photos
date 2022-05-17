@@ -1506,6 +1506,10 @@
 		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
 	},
 
+	"donationTitle": "Buy me a coffee",
+	"donationButtonLabel": "BUY ME A COFFEE",
+	"donationShortMessage": "Want to help?",
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
