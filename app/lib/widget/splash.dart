@@ -41,6 +41,9 @@ class _SplashState extends State<Splash> {
   }
 
   Future<void> _doWork() async {
+    if (Pref().getFirstRunTime() == null) {
+      await Pref().setFirstRunTime(DateTime.now().millisecondsSinceEpoch);
+    }
     if (_shouldUpgrade()) {
       await _handleUpgrade();
     }

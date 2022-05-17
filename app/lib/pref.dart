@@ -193,6 +193,11 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  int? getFirstRunTime() => provider.getInt(PrefKey.firstRunTime);
+  int getFirstRunTimeOr(int def) => getFirstRunTime() ?? def;
+  Future<bool> setFirstRunTime(int value) => _set<int>(
+      PrefKey.firstRunTime, value, (key, value) => provider.setInt(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -485,6 +490,7 @@ enum PrefKey {
   enhanceMaxWidth,
   enhanceMaxHeight,
   hasShownEnhanceInfo,
+  firstRunTime,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -545,6 +551,8 @@ extension on PrefKey {
         return "enhanceMaxHeight";
       case PrefKey.hasShownEnhanceInfo:
         return "hasShownEnhanceInfo";
+      case PrefKey.firstRunTime:
+        return "firstRunTime";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:
