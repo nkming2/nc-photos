@@ -117,6 +117,8 @@ enum PrefKey implements PrefKeyInterface {
   isNewHttpEngine,
   mapDefaultRangeType,
   mapDefaultCustomRange,
+  lastDonationDialogTime,
+  shouldRemindDonationLater,
   ;
 
   @override
@@ -211,6 +213,10 @@ enum PrefKey implements PrefKeyInterface {
         return "mapDefaultRangeType";
       case PrefKey.mapDefaultCustomRange:
         return "mapDefaultCustomRange";
+      case PrefKey.lastDonationDialogTime:
+        return "lastDonationDialogTime";
+      case PrefKey.shouldRemindDonationLater:
+        return "shouldRemindDonationLater";
     }
   }
 }
