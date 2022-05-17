@@ -187,7 +187,8 @@ class Pref {
       (key, value) => provider.setInt(key, value));
 
   bool? hasShownEnhanceInfo() => provider.getBool(PrefKey.hasShownEnhanceInfo);
-  bool hasShownEnhanceInfoOr([bool def = false]) => hasShownEnhanceInfo() ?? def;
+  bool hasShownEnhanceInfoOr([bool def = false]) =>
+      hasShownEnhanceInfo() ?? def;
   Future<bool> setHasShownEnhanceInfo(bool value) => _set<bool>(
       PrefKey.hasShownEnhanceInfo,
       value,
