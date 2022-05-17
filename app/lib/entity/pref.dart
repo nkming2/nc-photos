@@ -112,6 +112,8 @@ enum PrefKey implements PrefKeyInterface {
   protectedPageAuthType,
   protectedPageAuthPin,
   protectedPageAuthPassword,
+  lastDonationDialogTime,
+  shouldRemindDonationLater,
   ;
 
   @override
@@ -196,6 +198,10 @@ enum PrefKey implements PrefKeyInterface {
         return "protectedPageAuthPin";
       case PrefKey.protectedPageAuthPassword:
         return "protectedPageAuthPassword";
+      case PrefKey.lastDonationDialogTime:
+        return "lastDonationDialogTime";
+      case PrefKey.shouldRemindDonationLater:
+        return "shouldRemindDonationLater";
     }
   }
 }
