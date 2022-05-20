@@ -77,7 +77,7 @@ class ImageProcessorChannelHandler(context: Context) :
 		maxWidth: Int, maxHeight: Int, radius: Int, result: MethodChannel.Result
 	) = method(
 		fileUrl, headers, filename, maxWidth, maxHeight,
-		ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT, result, onIntent = {
+		ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
 		}
 	)

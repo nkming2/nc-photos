@@ -27,7 +27,7 @@ class ImageProcessorService : Service() {
 	companion object {
 		const val EXTRA_METHOD = "method"
 		const val METHOD_ZERO_DCE = "zero-dce"
-		const val METHOD_DEEL_LAP_PORTRAIT = "DeepLab3Portrait"
+		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -96,7 +96,7 @@ class ImageProcessorService : Service() {
 		val method = intent.getStringExtra(EXTRA_METHOD)
 		when (method) {
 			METHOD_ZERO_DCE -> onZeroDce(startId, intent.extras!!)
-			METHOD_DEEL_LAP_PORTRAIT -> onDeepLapPortrait(
+			METHOD_DEEP_LAP_PORTRAIT -> onDeepLapPortrait(
 				startId, intent.extras!!
 			)
 			else -> {
@@ -120,7 +120,7 @@ class ImageProcessorService : Service() {
 
 	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
 		return onMethod(
-			startId, extras, METHOD_DEEL_LAP_PORTRAIT, args = mapOf(
+			startId, extras, METHOD_DEEP_LAP_PORTRAIT, args = mapOf(
 				"radius" to extras.getIntOrNull(EXTRA_RADIUS)
 			)
 		)
@@ -444,7 +444,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 							fileUri
 						)
 
-						ImageProcessorService.METHOD_DEEL_LAP_PORTRAIT -> DeepLab3Portrait(
+						ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
 							context, cmd.maxWidth, cmd.maxHeight,
 							cmd.args["radius"] as? Int ?: 16
 						).infer(fileUri)
