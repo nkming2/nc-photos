@@ -74,6 +74,18 @@ class EnhanceHandler {
           },
         );
         break;
+
+      case _Algorithm.esrgan:
+        await ImageProcessor.esrgan(
+          "${account.url}/${file.path}",
+          file.filename,
+          Pref().getEnhanceMaxWidthOr(),
+          Pref().getEnhanceMaxHeightOr(),
+          headers: {
+            "Authorization": Api.getAuthorizationHeaderValue(account),
+          },
+        );
+        break;
     }
   }
 
@@ -175,6 +187,13 @@ class EnhanceHandler {
             link: enhanceDeepLabPortraitBlurUrl,
             algorithm: _Algorithm.deepLab3Portrait,
           ),
+        if (platform_k.isAndroid)
+          _Option(
+            title: L10n.global().enhanceSuperResolution4xTitle,
+            subtitle: "ESRGAN",
+            link: enhanceEsrganUrl,
+            algorithm: _Algorithm.esrgan,
+          ),
       ];
 
   Future<Map<String, dynamic>?> _getArgs(
@@ -185,6 +204,9 @@ class EnhanceHandler {
 
       case _Algorithm.deepLab3Portrait:
         return _getDeepLab3PortraitArgs(context);
+
+      case _Algorithm.esrgan:
+        return {};
     }
   }
 
@@ -301,6 +323,7 @@ class EnhanceHandler {
 enum _Algorithm {
   zeroDce,
   deepLab3Portrait,
+  esrgan,
 }
 
 class _Option {

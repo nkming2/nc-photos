@@ -49,6 +49,21 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"esrgan" -> {
+				try {
+					esrgan(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> result.notImplemented()
 		}
 	}
@@ -80,6 +95,14 @@ class ImageProcessorChannelHandler(context: Context) :
 		ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
 		}
+	)
+
+	private fun esrgan(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename, maxWidth, maxHeight,
+		ImageProcessorService.METHOD_ESRGAN, result
 	)
 
 	private fun method(

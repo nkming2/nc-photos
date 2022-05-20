@@ -38,6 +38,21 @@ class ImageProcessor {
         "radius": radius,
       });
 
+  static Future<void> esrgan(
+    String fileUrl,
+    String filename,
+    int maxWidth,
+    int maxHeight, {
+    Map<String, String>? headers,
+  }) =>
+      _methodChannel.invokeMethod("esrgan", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+        "maxWidth": maxWidth,
+        "maxHeight": maxHeight,
+      });
+
   static const _methodChannel =
       MethodChannel("${k.libId}/image_processor_method");
 }

@@ -98,6 +98,7 @@
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -214,6 +215,7 @@
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -385,6 +387,7 @@
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -406,7 +409,12 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
+  ],
+
+  "fi": [
+    "enhanceSuperResolution4xTitle"
   ],
 
   "fr": [
@@ -427,7 +435,8 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ],
 
   "pl": [
@@ -465,7 +474,8 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ],
 
   "pt": [
@@ -482,7 +492,8 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ],
 
   "ru": [
@@ -499,7 +510,8 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ],
 
   "zh": [
@@ -516,7 +528,8 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ],
 
   "zh_Hant": [
@@ -533,6 +546,7 @@
     "collectionEnhancedPhotosLabel",
     "deletePermanentlyLocalConfirmationDialogContent",
     "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    "enhancePortraitBlurParamBlurLabel",
+    "enhanceSuperResolution4xTitle"
   ]
 }

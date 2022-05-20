@@ -1209,6 +1209,10 @@
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
 	},
+	"enhanceSuperResolution4xTitle": "Super-resolution (4x)",
+	"@enhanceSuperResolution4xTitle": {
+		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

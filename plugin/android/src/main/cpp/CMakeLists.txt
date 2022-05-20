@@ -34,7 +34,9 @@ add_library( # Sets the name of the library.
 
              # Provides a relative path to your source file(s).
              deep_lap_3.cpp
+             esrgan.cpp
              exception.cpp
+             image_splitter.cpp
              stopwatch.cpp
              tflite_wrapper.cpp
              util.cpp
