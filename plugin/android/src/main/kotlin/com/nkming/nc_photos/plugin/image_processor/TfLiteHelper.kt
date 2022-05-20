@@ -1,67 +1,46 @@
 package com.nkming.nc_photos.plugin.image_processor
 
-import android.content.Context
 import android.graphics.Bitmap
-import java.io.FileInputStream
-import java.nio.ByteBuffer
-import java.nio.FloatBuffer
 import java.nio.IntBuffer
-import java.nio.channels.FileChannel
-import kotlin.math.abs
 
 interface TfLiteHelper {
 	companion object {
 		/**
-		 * Load a TFLite model from the assets dir
-		 *
-		 * @param context
-		 * @param name Name of the model file
-		 * @return
-		 */
-		fun loadModelFromAsset(context: Context, name: String): ByteBuffer {
-			val fd = context.assets.openFd(name)
-			val istream = FileInputStream(fd.fileDescriptor)
-			val channel = istream.channel
-			return channel.map(
-				FileChannel.MapMode.READ_ONLY, fd.startOffset, fd.declaredLength
-			)
-		}
-
-		/**
-		 * Convert an ARGB_8888 Android bitmap to a float RGB buffer
+		 * Convert an ARGB_8888 Android bitmap to a RGB8 byte array
 		 *
 		 * @param bitmap
 		 * @return
 		 */
-		fun bitmapToRgbFloatArray(bitmap: Bitmap): FloatBuffer {
+		fun bitmapToRgb8Array(bitmap: Bitmap): ByteArray {
 			val buffer = IntBuffer.allocate(bitmap.width * bitmap.height)
 			bitmap.copyPixelsToBuffer(buffer)
-			val input = FloatBuffer.allocate(bitmap.width * bitmap.height * 3)
-			buffer.array().forEach {
-				input.put((it and 0xFF) / 255.0f)
-				input.put((it shr 8 and 0xFF) / 255.0f)
-				input.put((it shr 16 and 0xFF) / 255.0f)
+			val rgb8 = ByteArray(bitmap.width * bitmap.height * 3)
+			buffer.array().forEachIndexed { i, it ->
+				run {
+					rgb8[i * 3] = (it and 0xFF).toByte()
+					rgb8[i * 3 + 1] = (it shr 8 and 0xFF).toByte()
+					rgb8[i * 3 + 2] = (it shr 16 and 0xFF).toByte()
+				}
 			}
-			input.rewind()
-			return input
+			return rgb8
 		}
 
 		/**
-		 * Convert a float RGB buffer to an ARGB_8888 Android bitmap
+		 * Convert a RGB8 byte array to an ARGB_8888 Android bitmap
 		 *
-		 * @param output
+		 * @param rgb8
 		 * @param width
 		 * @param height
 		 * @return
 		 */
-		fun rgbFloatArrayToBitmap(
-			output: FloatBuffer, width: Int, height: Int
+		fun rgb8ArrayToBitmap(
+			rgb8: ByteArray, width: Int, height: Int
 		): Bitmap {
 			val buffer = IntBuffer.allocate(width * height)
 			var i = 0
 			var pixel = 0
-			output.array().forEach {
-				val value = (abs(it * 255f)).toInt().coerceIn(0, 255)
+			rgb8.forEach {
+				val value = it.toInt() and 0xFF
 				when (i++) {
 					0 -> {
 						// A
@@ -87,21 +66,6 @@ interface TfLiteHelper {
 				Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 			outputBitmap.copyPixelsFromBuffer(buffer)
 			return outputBitmap
-		}
-
-		fun argmax(
-			output: FloatBuffer, width: Int, height: Int, channel: Int
-		): ByteBuffer {
-			val product = ByteBuffer.allocate(width * height)
-			val array = output.array()
-			var j = 0
-			for (i in 0 until width * height) {
-				val pixel = array.slice(j until j + channel)
-				val max = pixel.indices.maxByOrNull { pixel[it] }!!
-				product.put(i, max.toByte())
-				j += channel
-			}
-			return product
 		}
 	}
 }

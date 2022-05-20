@@ -13,6 +13,10 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	PluginRegistry.ActivityResultListener,
 	PluginRegistry.RequestPermissionsResultListener {
 	companion object {
+		init {
+			System.loadLibrary("plugin")
+		}
+
 		const val ACTION_SHOW_IMAGE_PROCESSOR_RESULT =
 			K.ACTION_SHOW_IMAGE_PROCESSOR_RESULT
 		const val EXTRA_IMAGE_RESULT_URI = K.EXTRA_IMAGE_RESULT_URI
