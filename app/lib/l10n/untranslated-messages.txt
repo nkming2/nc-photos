@@ -409,10 +409,6 @@
     "enhancePortraitBlurParamBlurLabel"
   ],
 
-  "fi": [
-    
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsPhotoEnhancementTitle",
