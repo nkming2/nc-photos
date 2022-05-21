@@ -69,6 +69,22 @@ class ImageProcessorService : Service() {
 	}
 
 	override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+		if (!isForeground) {
+			try {
+				startForeground(NOTIFICATION_ID, buildNotification())
+				isForeground = true
+			} catch (e: Throwable) {
+				// ???
+				logE(TAG, "[onStartCommand] Failed while startForeground", e)
+			}
+		}
+
+		if ((flags and START_FLAG_REDELIVERY) != 0) {
+			logW(TAG, "[onStartCommand] Redelivered intent, service crashed?")
+			// add a short grace period to let user cancel the queue
+			addCommand(ImageProcessorGracePeriodCommand())
+		}
+
 		when (intent.action) {
 			ACTION_CANCEL -> onCancel(startId)
 			else -> onNewImage(intent, startId)
@@ -85,15 +101,6 @@ class ImageProcessorService : Service() {
 	private fun onNewImage(intent: Intent, startId: Int) {
 		assert(intent.hasExtra(EXTRA_METHOD))
 		assert(intent.hasExtra(EXTRA_FILE_URL))
-		if (!isForeground) {
-			try {
-				startForeground(NOTIFICATION_ID, buildNotification())
-				isForeground = true
-			} catch (e: Throwable) {
-				// ???
-				logE(TAG, "[onStartCommand] Failed while startForeground", e)
-			}
-		}
 
 		val method = intent.getStringExtra(EXTRA_METHOD)
 		when (method) {
@@ -107,7 +114,9 @@ class ImageProcessorService : Service() {
 				// we can't call stopSelf here as it'll stop the service even if
 				// there are commands running in the bg
 				addCommand(
-					ImageProcessorCommand(startId, "null", "", null, "", 0, 0)
+					ImageProcessorEnhanceCommand(
+						startId, "null", "", null, "", 0, 0
+					)
 				)
 			}
 		}
@@ -153,7 +162,7 @@ class ImageProcessorService : Service() {
 		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
 		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
 		addCommand(
-			ImageProcessorCommand(
+			ImageProcessorEnhanceCommand(
 				startId, method, fileUrl, headers, filename, maxWidth,
 				maxHeight, args = args
 			)
@@ -224,6 +233,24 @@ class ImageProcessorService : Service() {
 		}
 	}
 
+	private fun buildGracePeriodNotification(): Notification {
+		val cancelIntent =
+			Intent(this, ImageProcessorService::class.java).apply {
+				action = ACTION_CANCEL
+			}
+		val cancelPendingIntent = PendingIntent.getService(
+			this, 0, cancelIntent, getPendingIntentFlagImmutable()
+		)
+		return NotificationCompat.Builder(this, CHANNEL_ID).run {
+			setSmallIcon(R.drawable.outline_auto_fix_high_white_24)
+			setContentTitle("Preparing to restart photo enhancement")
+			addAction(
+				0, getString(android.R.string.cancel), cancelPendingIntent
+			)
+			build()
+		}
+	}
+
 	private fun addCommand(cmd: ImageProcessorCommand) {
 		cmds.add(cmd)
 		if (cmdTask == null) {
@@ -231,9 +258,17 @@ class ImageProcessorService : Service() {
 		}
 	}
 
-	@SuppressLint("StaticFieldLeak")
 	private fun runCommand() {
 		val cmd = cmds.first()
+		if (cmd is ImageProcessorEnhanceCommand) {
+			runCommand(cmd)
+		} else if (cmd is ImageProcessorGracePeriodCommand) {
+			runCommand(cmd)
+		}
+	}
+
+	@SuppressLint("StaticFieldLeak")
+	private fun runCommand(cmd: ImageProcessorEnhanceCommand) {
 		notificationManager.notify(
 			NOTIFICATION_ID, buildNotification(cmd.filename)
 		)
@@ -242,16 +277,46 @@ class ImageProcessorService : Service() {
 				notifyResult(result)
 				cmds.removeFirst()
 				stopSelf(cmd.startId)
+				cmdTask = null
 				@Suppress("Deprecation")
 				if (cmds.isNotEmpty() && !isCancelled) {
 					runCommand()
-				} else {
-					cmdTask = null
 				}
 			}
 		}.apply {
 			@Suppress("Deprecation")
 			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, cmd)
+		}
+	}
+
+	@SuppressLint("StaticFieldLeak")
+	private fun runCommand(
+		@Suppress("UNUSED_PARAMETER") cmd: ImageProcessorGracePeriodCommand
+	) {
+		notificationManager.notify(
+			NOTIFICATION_ID, buildGracePeriodNotification()
+		)
+		@Suppress("Deprecation")
+		cmdTask = object : AsyncTask<Unit, Unit, Unit>(), AsyncTaskCancellable {
+			override fun doInBackground(vararg params: Unit?) {
+				// 10 seconds
+				for (i in 0 until 20) {
+					if (isCancelled) {
+						return
+					}
+					Thread.sleep(500)
+				}
+			}
+
+			override fun onPostExecute(result: Unit?) {
+				cmdTask = null
+				cmds.removeFirst()
+				if (cmds.isNotEmpty() && !isCancelled) {
+					runCommand()
+				}
+			}
+		}.apply {
+			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 		}
 	}
 
@@ -281,7 +346,7 @@ class ImageProcessorService : Service() {
 
 	private var isForeground = false
 	private val cmds = mutableListOf<ImageProcessorCommand>()
-	private var cmdTask: ImageProcessorCommandTask? = null
+	private var cmdTask: AsyncTaskCancellable? = null
 
 	private val notificationManager by lazy {
 		NotificationManagerCompat.from(this)
@@ -295,7 +360,9 @@ class ImageProcessorService : Service() {
 	}
 }
 
-private data class ImageProcessorCommand(
+private interface ImageProcessorCommand
+
+private class ImageProcessorEnhanceCommand(
 	val startId: Int,
 	val method: String,
 	val fileUrl: String,
@@ -304,11 +371,14 @@ private data class ImageProcessorCommand(
 	val maxWidth: Int,
 	val maxHeight: Int,
 	val args: Map<String, Any?> = mapOf(),
-)
+) : ImageProcessorCommand
+
+private class ImageProcessorGracePeriodCommand : ImageProcessorCommand
 
 @Suppress("Deprecation")
 private open class ImageProcessorCommandTask(context: Context) :
-	AsyncTask<ImageProcessorCommand, Unit, MessageEvent>() {
+	AsyncTask<ImageProcessorEnhanceCommand, Unit, MessageEvent>(),
+	AsyncTaskCancellable {
 	companion object {
 		private val exifTagOfInterests = listOf(
 			ExifInterface.TAG_IMAGE_DESCRIPTION,
@@ -423,7 +493,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	}
 
 	override fun doInBackground(
-		vararg params: ImageProcessorCommand?
+		vararg params: ImageProcessorEnhanceCommand?
 	): MessageEvent {
 		val cmd = params[0]!!
 		return try {
@@ -436,7 +506,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 		}
 	}
 
-	private fun handleCommand(cmd: ImageProcessorCommand): Uri {
+	private fun handleCommand(cmd: ImageProcessorEnhanceCommand): Uri {
 		val file = downloadFile(cmd.fileUrl, cmd.headers)
 		handleCancel()
 		return try {
@@ -553,6 +623,10 @@ private open class ImageProcessorCommandTask(context: Context) :
 
 	@SuppressLint("StaticFieldLeak")
 	private val context = context
+}
+
+private interface AsyncTaskCancellable {
+	fun cancel(a: Boolean): Boolean
 }
 
 private fun getTempDir(context: Context): File {
