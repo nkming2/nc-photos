@@ -121,7 +121,10 @@ class _SplashState extends State<Splash> {
           builder: (context) => AlertDialog(
             title: Text(L10n.global().changelogTitle),
             content: SingleChildScrollView(
-              child: Text(change),
+              child: Text(
+                change,
+                style: const TextStyle(fontSize: 14),
+              ),
             ),
             actions: <Widget>[
               TextButton(
