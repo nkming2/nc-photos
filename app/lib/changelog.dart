@@ -187,4 +187,13 @@ Features:
   """42.0
 - Add tweakable parameters to low-light enhancement and portrait blur
 """,
+  // v43
+  """43.0
+- (Android) Photo enhancements now implemented in C++:
+  - Better performance
+  - Less restrictions on RAM usage
+- (Android) New photo enhancement algorithms:
+  - Super-resolution (upscale image to 4x)
+- (Localization) Update Finnish (by pHamala)
+""",
 ];
