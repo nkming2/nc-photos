@@ -410,20 +410,7 @@
   ],
 
   "fi": [
-    "settingsPhotoEnhancementTitle",
-    "settingsPhotoEnhancementPageTitle",
-    "settingsEnhanceMaxResolutionTitle",
-    "settingsEnhanceMaxResolutionDescription",
-    "enhanceTooltip",
-    "enhanceButtonLabel",
-    "enhanceIntroDialogTitle",
-    "enhanceIntroDialogDescription",
-    "enhanceLowLightTitle",
-    "enhanceLowLightParamBrightnessLabel",
-    "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent",
-    "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel"
+    
   ],
 
   "fr": [
