@@ -365,6 +365,13 @@
 	},
 	"settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
+	"settingsPhotoEnhancementTitle": "Kuvan parannus",
+	"settingsPhotoEnhancementPageTitle": "Kuvan parannuksen asetukset",
+	"@settingsPhotoEnhancementPageTitle": {
+		"description": "Dedicated page for photo enhancement settings"
+	},
+	"settingsEnhanceMaxResolutionTitle": "Ulostulon maksimiresoluutio",
+	"settingsEnhanceMaxResolutionDescription": "Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.",
 	"settingsThemeTitle": "Teema",
 	"settingsThemeDescription": "Muokkaa sovelluksen ulkoasua",
 	"settingsThemePageTitle": "Teema-asetukset",
@@ -1170,6 +1177,37 @@
 	"metadataTaskPauseLowBatteryNotification": "Akku on vähissä",
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
+	},
+	"enhanceTooltip": "Paranna",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceButtonLabel": "PARANNA",
+	"enhanceIntroDialogTitle": "Paranna kuviasi",
+	"enhanceIntroDialogDescription": "Kuviasi käsitellään paikallisesti laitteellasi. Oletuksena kuvat skaalataan resoluutioon 2048x1536. Voit muuttaa tämän resoluution asetuksista.",
+	"enhanceLowLightTitle": "Hämärässä otettujen kuvien parannus",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
+	"enhanceLowLightParamBrightnessLabel": "Kirkkaus",
+	"@enhanceLowLightParamBrightnessLabel": {
+		"description": "This parameter sets how much brighter the output will be"
+	},
+	"collectionEnhancedPhotosLabel": "Parannettu",
+	"@collectionEnhancedPhotosLabel": {
+		"description": "List photos enhanced by the app"
+	},
+	"deletePermanentlyLocalConfirmationDialogContent": "Valitut kuvat poistetaan lopullisesti laitteeltasi.\n\nTätä toimintoa ei voi perua.",
+	"@deletePermanentlyLocalConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items from the current device"
+	},
+	"enhancePortraitBlurTitle": "Muotokuvan sumennus",
+	"@enhancePortraitBlurTitle": {
+		"description": "Blur the background of a photo"
+	},
+	"enhancePortraitBlurParamBlurLabel": "Sumennus",
+	"@enhancePortraitBlurParamBlurLabel": {
+		"description": "This parameter sets the radius of the blur filter"
 	},
 
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
