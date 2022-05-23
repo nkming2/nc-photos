@@ -135,8 +135,7 @@ vector<uint8_t> DeepLab3::infer(const uint8_t *image, const size_t width,
 
   LOGI(TAG, "[infer] Convert bitmap to input");
   vector<uint8_t> inputBitmap(WIDTH * HEIGHT * 3);
-  base::ResampleImage24(const_cast<uint8_t *>(image), width, height,
-                        inputBitmap.data(), WIDTH, HEIGHT,
+  base::ResampleImage24(image, width, height, inputBitmap.data(), WIDTH, HEIGHT,
                         base::KernelTypeLanczos3);
   const auto input =
       rgb8ToRgbFloat(inputBitmap.data(), inputBitmap.size(), true);

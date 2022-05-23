@@ -53,7 +53,7 @@ Java_com_nkming_nc_1photos_plugin_image_1processor_Esrgan_inferNative(
   try {
     initOpenMp();
     auto aam = AAssetManager_fromJava(env, assetManager);
-    Esrgan model(Esrgan{aam});
+    Esrgan model(aam);
     RaiiContainer<jbyte> cImage(
         [&]() { return env->GetByteArrayElements(image, nullptr); },
         [&](jbyte *obj) {
