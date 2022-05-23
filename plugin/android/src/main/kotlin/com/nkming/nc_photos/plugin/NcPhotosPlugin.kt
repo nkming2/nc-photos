@@ -108,9 +108,11 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 		notificationChannel.setMethodCallHandler(null)
 		nativeEventChannel.setStreamHandler(null)
 		nativeEventMethodChannel.setMethodCallHandler(null)
+		mediaStoreChannel.setStreamHandler(null)
 		mediaStoreMethodChannel.setMethodCallHandler(null)
 		imageProcessorMethodChannel.setMethodCallHandler(null)
 		contentUriMethodChannel.setMethodCallHandler(null)
+		permissionChannel.setStreamHandler(null)
 		permissionMethodChannel.setMethodCallHandler(null)
 	}
 
