@@ -175,7 +175,6 @@ class _SettingsState extends State<Settings> {
               ),
               ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
-                subtitle: const Text(_sourceRepo),
                 onTap: () {
                   launch(_sourceRepo);
                 },
@@ -388,11 +387,9 @@ class _SettingsState extends State<Settings> {
 
   static final _log = Logger("widget.settings._SettingsState");
 
-  static const String _sourceRepo = "https://gitlab.com/nkming2/nc-photos";
-  static const String _bugReportUrl =
-      "https://gitlab.com/nkming2/nc-photos/-/issues";
-  static const String _translationUrl =
-      "https://gitlab.com/nkming2/nc-photos/-/wikis/development/localization";
+  static const String _sourceRepo = "https://bit.ly/3LQerBv";
+  static const String _bugReportUrl = "https://bit.ly/3NANrr7";
+  static const String _translationUrl = "https://bit.ly/3NwmdSw";
 }
 
 class AccountSettingsWidgetArguments {

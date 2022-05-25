@@ -1,16 +1,9 @@
-const mainUrl = "https://gitlab.com/nkming2/nc-photos/-/wikis/home";
-const peopleUrl = "https://gitlab.com/nkming2/nc-photos/-/wikis/help/people";
-const sharedAlbumLimitationsUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/shared-album#limitations";
-const twoFactorAuthUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/two-factor-authentication";
-const homeFolderNotFoundUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/home-folder-not-found";
-const enhanceUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance";
-const enhanceZeroDceUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/zero-dce";
-const enhanceDeepLabPortraitBlurUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/portrait-blur-(deeplab)";
-const enhanceEsrganUrl =
-    "https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance/esrgan";
+const mainUrl = "https://bit.ly/3lIETCI";
+const peopleUrl = "https://bit.ly/3wKL3Zp";
+const sharedAlbumLimitationsUrl = "https://bit.ly/3GgaDsh";
+const twoFactorAuthUrl = "https://bit.ly/3wKlbN3";
+const homeFolderNotFoundUrl = "https://bit.ly/3LJjMuv";
+const enhanceUrl = "https://bit.ly/3lF5OiT";
+const enhanceZeroDceUrl = "https://bit.ly/3wKJcm9";
+const enhanceDeepLabPortraitBlurUrl = "https://bit.ly/3wIuXy6";
+const enhanceEsrganUrl = "https://bit.ly/3wO0NJP";
