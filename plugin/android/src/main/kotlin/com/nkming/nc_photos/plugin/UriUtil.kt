@@ -28,6 +28,24 @@ interface UriUtil {
 			}
 		}
 
+		/**
+		 * Asset URI is a non-standard Uri that points to an asset file.
+		 *
+		 * An asset URI is formatted as file:///android_asset/path/to/file
+		 *
+		 * @param uri
+		 * @return
+		 */
+		fun isAssetUri(uri: Uri): Boolean {
+			return uri.scheme == "file" && uri.path?.startsWith(
+				"/android_asset/"
+			) == true
+		}
+
+		fun getAssetUriPath(uri: Uri): String {
+			return uri.path!!.substring("/android_asset/".length)
+		}
+
 		private const val TAG = "UriUtil"
 	}
 }

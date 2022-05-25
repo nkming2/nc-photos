@@ -4,8 +4,30 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import java.io.InputStream
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 fun Bitmap.aspectRatio() = width / height.toFloat()
+
+/**
+ * Recycle the bitmap after @c block returns.
+ *
+ * @param block
+ * @return
+ */
+@OptIn(ExperimentalContracts::class)
+inline fun <T> Bitmap.use(block: (Bitmap) -> T): T {
+	contract {
+		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+	}
+	try {
+		return block(this)
+	} finally {
+		recycle()
+	}
+}
 
 enum class BitmapResizeMethod {
 	FIT,
@@ -113,10 +135,20 @@ interface BitmapUtil {
 			}
 		}
 
+		private fun openUriInputStream(
+			context: Context, uri: Uri
+		): InputStream? {
+			return if (UriUtil.isAssetUri(uri)) {
+				context.assets.open(UriUtil.getAssetUriPath(uri))
+			} else {
+				context.contentResolver.openInputStream(uri)
+			}
+		}
+
 		private fun loadImageBounds(
 			context: Context, uri: Uri
 		): BitmapFactory.Options {
-			context.contentResolver.openInputStream(uri)!!.use {
+			openUriInputStream(context, uri)!!.use {
 				val opt = BitmapFactory.Options().apply {
 					inJustDecodeBounds = true
 				}
@@ -128,7 +160,7 @@ interface BitmapUtil {
 		private fun loadImage(
 			context: Context, uri: Uri, opt: BitmapFactory.Options
 		): Bitmap {
-			context.contentResolver.openInputStream(uri)!!.use {
+			openUriInputStream(context, uri)!!.use {
 				return BitmapFactory.decodeStream(it, null, opt)!!
 			}
 		}

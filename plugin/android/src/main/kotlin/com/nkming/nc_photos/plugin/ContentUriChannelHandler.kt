@@ -31,10 +31,15 @@ class ContentUriChannelHandler(context: Context) :
 	private fun readUri(uri: String, result: MethodChannel.Result) {
 		val uriTyped = Uri.parse(uri)
 		try {
-			val bytes =
+			val bytes = if (UriUtil.isAssetUri(uriTyped)) {
+				context.assets.open(UriUtil.getAssetUriPath(uriTyped)).use {
+					it.readBytes()
+				}
+			} else {
 				context.contentResolver.openInputStream(uriTyped)!!.use {
 					it.readBytes()
 				}
+			}
 			result.success(bytes)
 		} catch (e: FileNotFoundException) {
 			result.error("fileNotFoundException", e.toString(), null)

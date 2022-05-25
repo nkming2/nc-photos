@@ -33,6 +33,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
+             arbitrary_style_transfer.cpp
              deep_lap_3.cpp
              esrgan.cpp
              exception.cpp

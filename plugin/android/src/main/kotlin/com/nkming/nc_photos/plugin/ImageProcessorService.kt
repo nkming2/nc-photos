@@ -17,6 +17,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.exifinterface.media.ExifInterface
+import com.nkming.nc_photos.plugin.image_processor.ArbitraryStyleTransfer
 import com.nkming.nc_photos.plugin.image_processor.DeepLab3Portrait
 import com.nkming.nc_photos.plugin.image_processor.Esrgan
 import com.nkming.nc_photos.plugin.image_processor.ZeroDce
@@ -30,6 +31,7 @@ class ImageProcessorService : Service() {
 		const val METHOD_ZERO_DCE = "zero-dce"
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ESRGAN = "Esrgan"
+		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -37,6 +39,8 @@ class ImageProcessorService : Service() {
 		const val EXTRA_MAX_HEIGHT = "maxHeight"
 		const val EXTRA_RADIUS = "radius"
 		const val EXTRA_ITERATION = "iteration"
+		const val EXTRA_STYLE_URI = "styleUri"
+		const val EXTRA_WEIGHT = "weight"
 
 		private const val ACTION_CANCEL = "cancel"
 
@@ -109,6 +113,9 @@ class ImageProcessorService : Service() {
 				startId, intent.extras!!
 			)
 			METHOD_ESRGAN -> onEsrgan(startId, intent.extras!!)
+			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
+				startId, intent.extras!!
+			)
 			else -> {
 				logE(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
@@ -140,6 +147,16 @@ class ImageProcessorService : Service() {
 
 	private fun onEsrgan(startId: Int, extras: Bundle) {
 		return onMethod(startId, extras, METHOD_ESRGAN)
+	}
+
+	private fun onArbitraryStyleTransfer(startId: Int, extras: Bundle) {
+		return onMethod(
+			startId, extras, METHOD_ARBITRARY_STYLE_TRANSFER,
+			args = mapOf(
+				"styleUri" to extras.getParcelable<Uri>(EXTRA_STYLE_URI),
+				"weight" to extras.getFloat(EXTRA_WEIGHT),
+			)
+		)
 	}
 
 	/**
@@ -528,6 +545,12 @@ private open class ImageProcessorCommandTask(context: Context) :
 
 						ImageProcessorService.METHOD_ESRGAN -> Esrgan(
 							context, cmd.maxWidth, cmd.maxHeight
+						).infer(fileUri)
+
+						ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
+							context, cmd.maxWidth, cmd.maxHeight,
+							cmd.args["styleUri"] as Uri,
+							cmd.args["weight"] as Float
 						).infer(fileUri)
 
 						else -> throw IllegalArgumentException(

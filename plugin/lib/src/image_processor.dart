@@ -53,6 +53,25 @@ class ImageProcessor {
         "maxHeight": maxHeight,
       });
 
+  static Future<void> arbitraryStyleTransfer(
+    String fileUrl,
+    String filename,
+    int maxWidth,
+    int maxHeight,
+    String styleUri,
+    double weight, {
+    Map<String, String>? headers,
+  }) =>
+      _methodChannel.invokeMethod("arbitraryStyleTransfer", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+        "maxWidth": maxWidth,
+        "maxHeight": maxHeight,
+        "styleUri": styleUri,
+        "weight": weight,
+      });
+
   static const _methodChannel =
       MethodChannel("${k.libId}/image_processor_method");
 }

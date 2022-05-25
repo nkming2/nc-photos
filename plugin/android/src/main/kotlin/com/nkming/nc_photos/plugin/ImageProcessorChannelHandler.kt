@@ -2,6 +2,7 @@ package com.nkming.nc_photos.plugin
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.ContextCompat
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
@@ -64,6 +65,23 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"arbitraryStyleTransfer" -> {
+				try {
+					arbitraryStyleTransfer(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
+						call.argument("styleUri")!!,
+						call.argument("weight")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> result.notImplemented()
 		}
 	}
@@ -103,6 +121,21 @@ class ImageProcessorChannelHandler(context: Context) :
 	) = method(
 		fileUrl, headers, filename, maxWidth, maxHeight,
 		ImageProcessorService.METHOD_ESRGAN, result
+	)
+
+	private fun arbitraryStyleTransfer(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		maxWidth: Int, maxHeight: Int, styleUri: String, weight: Float,
+		result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename, maxWidth, maxHeight,
+		ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER, result,
+		onIntent = {
+			it.putExtra(
+				ImageProcessorService.EXTRA_STYLE_URI, Uri.parse(styleUri)
+			)
+			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
+		}
 	)
 
 	private fun method(
