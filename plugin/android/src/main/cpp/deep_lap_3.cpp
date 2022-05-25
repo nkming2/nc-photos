@@ -21,7 +21,7 @@ using namespace tflite;
 
 namespace {
 
-constexpr const char *MODEL = "lite-model_mobilenetv2-dm05-coco_dr_1.tflite";
+constexpr const char *MODEL = "tf/lite-model_mobilenetv2-dm05-coco_dr_1.tflite";
 constexpr size_t WIDTH = 513;
 constexpr size_t HEIGHT = 513;
 constexpr unsigned LABEL_COUNT = 21;

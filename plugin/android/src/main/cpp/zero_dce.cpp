@@ -19,7 +19,7 @@ using namespace tflite;
 
 namespace {
 
-constexpr const char *MODEL = "zero_dce_lite_200x300_iter8_60.tflite";
+constexpr const char *MODEL = "tf/zero_dce_lite_200x300_iter8_60.tflite";
 constexpr size_t WIDTH = 300;
 constexpr size_t HEIGHT = 200;
 

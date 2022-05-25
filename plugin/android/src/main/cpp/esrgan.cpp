@@ -22,7 +22,7 @@ using namespace tflite;
 
 namespace {
 
-constexpr const char *MODEL = "esrgan-tf2_1-dr.tflite";
+constexpr const char *MODEL = "tf/esrgan-tf2_1-dr.tflite";
 constexpr const size_t TILE_SIZE = 118;
 constexpr const size_t TILE_PADDING = 10;
 
