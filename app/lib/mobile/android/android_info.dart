@@ -1,4 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:logging/logging.dart';
+import 'package:memory_info/memory_info.dart';
+import 'package:nc_photos/double_extension.dart';
 
 /// System info for Android
 ///
@@ -7,23 +10,38 @@ import 'package:device_info_plus/device_info_plus.dart';
 class AndroidInfo {
   factory AndroidInfo() => _inst;
 
-  AndroidInfo._({
+  const AndroidInfo._({
     required this.sdkInt,
+    required this.totalMemMb,
   });
 
   static Future<void> init() async {
     final info = await DeviceInfoPlugin().androidInfo;
     final sdkInt = info.version.sdkInt!;
 
+    final memInfo = await MemoryInfoPlugin().memoryInfo;
+    final totalMemMb = memInfo.totalMem!.toDouble();
+
     _inst = AndroidInfo._(
       sdkInt: sdkInt,
+      totalMemMb: totalMemMb,
     );
+    _log.info("[init] $_inst");
   }
+
+  @override
+  toString() => "$runtimeType {"
+      "sdkInt: $sdkInt, "
+      "totalMemMb: ${totalMemMb.toStringAsFixedTruncated(2)}, "
+      "}";
 
   static late final AndroidInfo _inst;
 
   /// Corresponding to Build.VERSION.SDK_INT
   final int sdkInt;
+  final double totalMemMb;
+
+  static final _log = Logger("mobile.android.android_info.AndroidInfo");
 }
 
 abstract class AndroidVersion {

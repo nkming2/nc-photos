@@ -71,6 +71,7 @@ dependencies:
   intl: ^0.17.0
   kiwi: ^4.0.1
   logging: ^1.0.1
+  memory_info: ^0.0.2
   mime: ^1.0.1
   mutex: ^3.0.0
   native_device_orientation: ^1.0.0
