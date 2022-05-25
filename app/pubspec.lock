@@ -18,10 +18,12 @@ packages:
   android_intent_plus:
     dependency: "direct main"
     description:
-      name: android_intent_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
+      path: "packages/android_intent_plus"
+      ref: "android_intent_plus-v3.1.1-nc-photos-1"
+      resolved-ref: f257f10641e907a94b83ff0e060e80590bf1dae5
+      url: "https://gitlab.com/nc-photos/plus_plugins"
+    source: git
+    version: "3.1.1"
   args:
     dependency: transitive
     description:

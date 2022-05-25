@@ -5,8 +5,29 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import java.io.InputStream
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 fun Bitmap.aspectRatio() = width / height.toFloat()
+
+/**
+ * Recycle the bitmap after @c block returns.
+ *
+ * @param block
+ * @return
+ */
+@OptIn(ExperimentalContracts::class)
+inline fun <T> Bitmap.use(block: (Bitmap) -> T): T {
+	contract {
+		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+	}
+	try {
+		return block(this)
+	} finally {
+		recycle()
+	}
+}
 
 enum class BitmapResizeMethod {
 	FIT,

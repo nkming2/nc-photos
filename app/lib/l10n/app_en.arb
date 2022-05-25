@@ -1213,6 +1213,10 @@
 	"@enhanceSuperResolution4xTitle": {
 		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
 	},
+	"enhanceStyleTransferTitle": "Style transfer",
+	"@enhanceStyleTransferTitle": {
+		"description": "Transfer the image style from a reference image to a photo"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
