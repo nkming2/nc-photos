@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import java.io.InputStream
 
 fun Bitmap.aspectRatio() = width / height.toFloat()
 
@@ -113,10 +114,20 @@ interface BitmapUtil {
 			}
 		}
 
+		private fun openUriInputStream(
+			context: Context, uri: Uri
+		): InputStream? {
+			return if (UriUtil.isAssetUri(uri)) {
+				context.assets.open(UriUtil.getAssetUriPath(uri))
+			} else {
+				context.contentResolver.openInputStream(uri)
+			}
+		}
+
 		private fun loadImageBounds(
 			context: Context, uri: Uri
 		): BitmapFactory.Options {
-			context.contentResolver.openInputStream(uri)!!.use {
+			openUriInputStream(context, uri)!!.use {
 				val opt = BitmapFactory.Options().apply {
 					inJustDecodeBounds = true
 				}
@@ -128,7 +139,7 @@ interface BitmapUtil {
 		private fun loadImage(
 			context: Context, uri: Uri, opt: BitmapFactory.Options
 		): Bitmap {
-			context.contentResolver.openInputStream(uri)!!.use {
+			openUriInputStream(context, uri)!!.use {
 				return BitmapFactory.decodeStream(it, null, opt)!!
 			}
 		}
