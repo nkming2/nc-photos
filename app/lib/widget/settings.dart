@@ -32,6 +32,7 @@ import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
+import 'package:nc_photos/widget/update_checker.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tuple/tuple.dart';
 
@@ -225,6 +226,12 @@ class _SettingsState extends State<Settings> {
                       _isShowDevSettings = true;
                     });
                   }
+                },
+              ),
+              ListTile(
+                title: const Text("Check for updates"),
+                onTap: () {
+                  Navigator.of(context).pushNamed(UpdateChecker.routeName);
                 },
               ),
               ListTile(

@@ -36,6 +36,7 @@ import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
+import 'package:nc_photos/widget/update_checker.dart';
 import 'package:nc_photos/widget/viewer.dart';
 
 class MyApp extends StatefulWidget {
@@ -167,6 +168,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
+    route ??= _handleUpdateCheckerRoute(settings);
     return route;
   }
 
@@ -568,6 +570,17 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleChangelogRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleUpdateCheckerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == UpdateChecker.routeName) {
+        return UpdateChecker.buildRoute();
+      }
+    } catch (e) {
+      _log.severe("[_handleUpdateCheckerRoute] Failed while handling route", e);
     }
     return null;
   }
