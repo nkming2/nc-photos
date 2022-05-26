@@ -16,7 +16,7 @@ enum UpdateCheckerResult {
 class UpdateChecker {
   Future<UpdateCheckerResult> call() async {
     try {
-      final uri = Uri.https("bit.ly", "3pb2oG9");
+      final uri = Uri.https("nc-photos.web.app", "link/version2");
       final req = http.Request("GET", uri);
       final response =
           await http.Response.fromStream(await http.Client().send(req));
@@ -50,7 +50,7 @@ class UpdateChecker {
   String? _updateUrl;
   String? _versionStr;
 
-  static const _buildVariant = "";
+  static const _buildVariant = "web";
 
   static final _log = Logger("update_checker.UpdateChecker");
 }
