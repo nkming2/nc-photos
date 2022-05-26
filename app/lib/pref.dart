@@ -199,6 +199,15 @@ class Pref {
   Future<bool> setFirstRunTime(int value) => _set<int>(
       PrefKey.firstRunTime, value, (key, value) => provider.setInt(key, value));
 
+  bool? isPhotosTabSortByName() =>
+      provider.getBool(PrefKey.isPhotosTabSortByName);
+  bool isPhotosTabSortByNameOr([bool def = false]) =>
+      isPhotosTabSortByName() ?? def;
+  Future<bool> setPhotosTabSortByName(bool value) => _set<bool>(
+      PrefKey.isPhotosTabSortByName,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -492,6 +501,7 @@ enum PrefKey {
   enhanceMaxHeight,
   hasShownEnhanceInfo,
   firstRunTime,
+  isPhotosTabSortByName,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -554,6 +564,8 @@ extension on PrefKey {
         return "hasShownEnhanceInfo";
       case PrefKey.firstRunTime:
         return "firstRunTime";
+      case PrefKey.isPhotosTabSortByName:
+        return "isPhotosTabSortByName";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

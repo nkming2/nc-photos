@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:collection/collection.dart' show compareNatural;
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -436,6 +437,13 @@ class _HomePhotosState extends State<HomePhotos>
       } else {
         _stopMetadataTask();
       }
+    } else if (ev.key == PrefKey.isPhotosTabSortByName) {
+      if (_bloc.state is! ScanAccountDirBlocInit) {
+        _log.info("[_onPrefUpdated] Update view after changing sort option");
+        setState(() {
+          _transformItems(_bloc.state.files);
+        });
+      }
     }
   }
 
@@ -484,6 +492,30 @@ class _HomePhotosState extends State<HomePhotos>
 
   /// Transform a File list to grid items
   void _transformItems(List<File> files) {
+    if (!Pref().isPhotosTabSortByNameOr()) {
+      _transformItemsByDate(files);
+    } else {
+      _transformItemsByName(files);
+    }
+  }
+
+  void _transformItemsByName(List<File> files) {
+    _backingFiles = files
+        .where((f) => f.isArchived != true)
+        .sorted((a, b) => compareNatural(b.filename, a.filename));
+
+    itemStreamListItems = () sync* {
+      for (int i = 0; i < _backingFiles.length; ++i) {
+        final item = _transformItemToListItem(i, _backingFiles[i]);
+        if (item != null) {
+          yield item;
+        }
+      }
+    }()
+        .toList();
+  }
+
+  void _transformItemsByDate(List<File> files) {
     _backingFiles = files
         .where((f) => f.isArchived != true)
         .sorted(compareFileDateTimeDescending);
@@ -503,31 +535,39 @@ class _HomePhotosState extends State<HomePhotos>
         }
         memoryAlbumHelper.addFile(f);
 
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: k.photoThumbSize, height: k.photoThumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else {
-          _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
+        final item = _transformItemToListItem(i, f);
+        if (item != null) {
+          yield item;
         }
       }
     }()
         .toList();
     _smartAlbums = memoryAlbumHelper
         .build((year) => L10n.global().memoryAlbumName(today.year - year));
+  }
+
+  _ListItem? _transformItemToListItem(int i, File f) {
+    final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
+        width: k.photoThumbSize, height: k.photoThumbSize);
+    if (file_util.isSupportedImageFormat(f)) {
+      return _ImageListItem(
+        file: f,
+        account: widget.account,
+        previewUrl: previewUrl,
+        onTap: () => _onItemTap(i),
+      );
+    } else if (file_util.isSupportedVideoFormat(f)) {
+      return _VideoListItem(
+        file: f,
+        account: widget.account,
+        previewUrl: previewUrl,
+        onTap: () => _onItemTap(i),
+      );
+    } else {
+      _log.shout(
+          "[_transformItemToListItem] Unsupported file format: ${f.contentType}");
+      return null;
+    }
   }
 
   void _reqQuery() {

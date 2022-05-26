@@ -66,6 +66,14 @@ class _SettingsState extends State<Settings> {
 
     final settings = AccountPref.of(widget.account);
     _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
+
+    _prefUpdatedListener.begin();
+  }
+
+  @override
+  dispose() {
+    _prefUpdatedListener.end();
+    super.dispose();
   }
 
   @override
@@ -107,7 +115,9 @@ class _SettingsState extends State<Settings> {
                 title: Text(L10n.global().settingsMemoriesTitle),
                 subtitle: Text(L10n.global().settingsMemoriesSubtitle),
                 value: _isEnableMemoryAlbum,
-                onChanged: _onEnableMemoryAlbumChanged,
+                onChanged: Pref().isPhotosTabSortByNameOr()
+                    ? null
+                    : _onEnableMemoryAlbumChanged,
               ),
               _buildSubSettings(
                 context,
@@ -156,6 +166,15 @@ class _SettingsState extends State<Settings> {
                 label: L10n.global().settingsThemeTitle,
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
+              ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.emoji_symbols_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().settingsMiscellaneousTitle,
+                builder: () => const _MiscSettings(),
               ),
               if (_enabledExperiments.isNotEmpty)
                 _buildSubSettings(
@@ -365,6 +384,12 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  void _onPrefUpdated(PrefUpdatedEvent ev) {
+    if (ev.key == PrefKey.isPhotosTabSortByName) {
+      setState(() {});
+    }
+  }
+
   Future<void> _setExifSupport(bool value) async {
     final oldValue = _isEnableExif;
     setState(() {
@@ -384,6 +409,9 @@ class _SettingsState extends State<Settings> {
 
   late bool _isEnableExif;
   late bool _isEnableMemoryAlbum;
+
+  late final _prefUpdatedListener =
+      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 
   static final _log = Logger("widget.settings._SettingsState");
 
@@ -1285,6 +1313,75 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
   late bool _isUseBlackInDarkTheme;
 
   static final _log = Logger("widget.settings._ThemeSettingsState");
+}
+
+class _MiscSettings extends StatefulWidget {
+  const _MiscSettings({Key? key}) : super(key: key);
+
+  @override
+  createState() => _MiscSettingsState();
+}
+
+class _MiscSettingsState extends State<_MiscSettings> {
+  @override
+  initState() {
+    super.initState();
+    _isPhotosTabSortByName = Pref().isPhotosTabSortByNameOr();
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsMiscellaneousPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SwitchListTile(
+                title: Text(L10n.global().settingsPhotosTabSortByNameTitle),
+                value: _isPhotosTabSortByName,
+                onChanged: (value) => _onPhotosTabSortByNameChanged(value),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onPhotosTabSortByNameChanged(bool value) async {
+    final oldValue = _isPhotosTabSortByName;
+    setState(() {
+      _isPhotosTabSortByName = value;
+    });
+    if (!await Pref().setPhotosTabSortByName(value)) {
+      _log.severe("[_onPhotosTabSortByNameChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isPhotosTabSortByName = oldValue;
+      });
+    }
+  }
+
+  late bool _isPhotosTabSortByName;
+
+  static final _log = Logger("widget.settings._MiscSettingsState");
 }
 
 class _ExperimentalSettings extends StatefulWidget {

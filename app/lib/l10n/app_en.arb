@@ -394,6 +394,12 @@
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
+	"settingsMiscellaneousTitle": "Miscellaneous",
+	"settingsMiscellaneousPageTitle": "Miscellaneous settings",
+	"settingsPhotosTabSortByNameTitle": "Sort by filename in Photos",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
+	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Features that are not ready for everyday use",
 	"settingsExperimentalPageTitle": "Experimental settings",
