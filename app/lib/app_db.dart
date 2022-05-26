@@ -24,10 +24,6 @@ class AppDb {
   static const dirStoreName = "dirs";
   static const metaStoreName = "meta";
 
-  factory AppDb() => _inst;
-
-  AppDb._();
-
   /// Run [fn] with an opened database instance
   ///
   /// This function guarantees that:
@@ -215,8 +211,6 @@ class AppDb {
       await transaction.completed;
     }
   }
-
-  static late final _inst = AppDb._();
 
   static const _fileDbStoreName = "filesDb";
   static const _fileStoreName = "files";
