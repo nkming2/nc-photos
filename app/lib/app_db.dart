@@ -15,7 +15,6 @@ import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/type.dart';
-import 'package:synchronized/synchronized.dart';
 
 class AppDb {
   static const dbName = "app.db";
@@ -54,7 +53,7 @@ class AppDb {
 
   Future<void> delete() async {
     _log.warning("[delete] Deleting database");
-    return await _lock.synchronized(() async {
+    return await platform.Lock.synchronized(k.appDbLockId, () async {
       final dbFactory = platform.getDbFactory();
       await dbFactory.deleteDatabase(dbName);
     });
@@ -218,7 +217,6 @@ class AppDb {
   }
 
   static late final _inst = AppDb._();
-  final _lock = Lock(reentrant: true);
 
   static const _fileDbStoreName = "filesDb";
   static const _fileStoreName = "files";
