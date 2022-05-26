@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -17,6 +18,9 @@ abstract class AlbumSortProvider with EquatableMixin {
         return AlbumNullSortProvider.fromJson(content.cast<String, dynamic>());
       case AlbumTimeSortProvider._type:
         return AlbumTimeSortProvider.fromJson(content.cast<String, dynamic>());
+      case AlbumFilenameSortProvider._type:
+        return AlbumFilenameSortProvider.fromJson(
+            content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -29,6 +33,8 @@ abstract class AlbumSortProvider with EquatableMixin {
         return AlbumNullSortProvider._type;
       } else if (this is AlbumTimeSortProvider) {
         return AlbumTimeSortProvider._type;
+      } else if (this is AlbumFilenameSortProvider) {
+        return AlbumFilenameSortProvider._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -156,4 +162,55 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   }
 
   static const _type = "time";
+}
+
+/// Sort based on the name of the files
+class AlbumFilenameSortProvider extends AlbumReversibleSortProvider {
+  const AlbumFilenameSortProvider({
+    required bool isAscending,
+  }) : super(isAscending: isAscending);
+
+  factory AlbumFilenameSortProvider.fromJson(JsonObj json) {
+    return AlbumFilenameSortProvider(
+      isAscending: json["isAscending"] ?? true,
+    );
+  }
+
+  @override
+  toString() => "$runtimeType {"
+      "super: ${super.toString()}, "
+      "}";
+
+  @override
+  sort(List<AlbumItem> items) {
+    String? prevFilename;
+    return items
+        .map((e) {
+          if (e is AlbumFileItem) {
+            // take the file name
+            prevFilename = e.file.filename;
+          }
+          // for non file items, use the sibling file's name
+          return Tuple2(prevFilename, e);
+        })
+        .stableSorted((x, y) {
+          if (x.item1 == null && y.item1 == null) {
+            return 0;
+          } else if (x.item1 == null) {
+            return -1;
+          } else if (y.item1 == null) {
+            return 1;
+          } else {
+            if (isAscending) {
+              return compareNatural(x.item1!, y.item1!);
+            } else {
+              return compareNatural(y.item1!, x.item1!);
+            }
+          }
+        })
+        .map((e) => e.item2)
+        .toList();
+  }
+
+  static const _type = "filename";
 }

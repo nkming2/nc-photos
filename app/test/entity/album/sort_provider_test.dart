@@ -27,6 +27,19 @@ void main() {
       test("head", _timeNonFileHead);
     });
   });
+
+  group("AlbumFilenameSortProvider", () {
+    group("AlbumFileItem", () {
+      test("ascending", _filenameFileAscending);
+      test("descending", _filenameFileDescending);
+      test("natural", _filenameFileNatural);
+    });
+    group("w/ non AlbumFileItem", () {
+      test("ascending", _filenameNonFileAscending);
+      test("descending", _filenameNonFileDescending);
+      test("head", _filenameNonFileHead);
+    });
+  });
 }
 
 void _timeFromJson() {
@@ -216,4 +229,211 @@ void _timeNonFileHead() {
   );
   const sort = AlbumTimeSortProvider(isAscending: true);
   expect(sort.sort(items), [items[0], items[2], items[1], items[3]]);
+}
+
+/// Sort files by filename
+///
+/// Expect: items sorted
+void _filenameFileAscending() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        ))
+      .build()
+      .mapWithIndex((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  const sort = AlbumFilenameSortProvider(isAscending: true);
+  expect(sort.sort(items), [items[1], items[2], items[0]]);
+}
+
+/// Sort files by filename, descending
+///
+/// Expect: items sorted
+void _filenameFileDescending() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        ))
+      .build()
+      .mapWithIndex((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  const sort = AlbumFilenameSortProvider(isAscending: false);
+  expect(sort.sort(items), [items[0], items[2], items[1]]);
+}
+
+/// Sort files by filename
+///
+/// Expect: items sorted in natural order
+void _filenameFileNatural() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test033_2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test033_1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test033_3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test11.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        )
+        ..addJpeg(
+          "admin/test2_999.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        ))
+      .build()
+      .mapWithIndex((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  const sort = AlbumFilenameSortProvider(isAscending: true);
+  expect(
+    sort.sort(items),
+    [items[4], items[5], items[3], items[1], items[0], items[2]],
+  );
+}
+
+/// Sort files + non files by filename
+///
+/// Expect: file sorted, non file stick with the prev file
+void _filenameNonFileAscending() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        ))
+      .build()
+      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  items.insert(
+    2,
+    AlbumLabelItem(
+      addedBy: CiString("admin"),
+      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      text: "test",
+    ),
+  );
+  const sort = AlbumFilenameSortProvider(isAscending: true);
+  expect(sort.sort(items), [items[1], items[2], items[3], items[0]]);
+}
+
+/// Sort files + non files by filename, descending
+///
+/// Expect: file sorted, non file stick with the prev file
+void _filenameNonFileDescending() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        ))
+      .build()
+      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  items.insert(
+    2,
+    AlbumLabelItem(
+      addedBy: CiString("admin"),
+      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      text: "test",
+    ),
+  );
+  const sort = AlbumFilenameSortProvider(isAscending: false);
+  expect(sort.sort(items), [items[0], items[3], items[1], items[2]]);
+}
+
+/// Sort files + non files by filename, with the head being a non file
+///
+/// Expect: file sorted, non file stick at the head
+void _filenameNonFileHead() {
+  final items = (util.FilesBuilder()
+        ..addJpeg(
+          "admin/test3.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
+        )
+        ..addJpeg(
+          "admin/test1.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 0),
+        )
+        ..addJpeg(
+          "admin/test2.jpg",
+          lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
+        ))
+      .build()
+      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+            addedBy: CiString("admin"),
+            addedAt: f.lastModified!,
+            file: f,
+          ))
+      .toList();
+  items.insert(
+    0,
+    AlbumLabelItem(
+      addedBy: CiString("admin"),
+      addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      text: "test",
+    ),
+  );
+  const sort = AlbumFilenameSortProvider(isAscending: true);
+  expect(sort.sort(items), [items[0], items[2], items[3], items[1]]);
 }

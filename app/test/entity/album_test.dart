@@ -292,6 +292,46 @@ void main() {
             ));
       });
 
+      test("AlbumFilenameSortProvider", () {
+        final json = <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "filename",
+            "content": <String, dynamic>{
+              "isAscending": true,
+            },
+          },
+        };
+        expect(
+            Album.fromJson(
+              json,
+              upgraderFactory: const _NullAlbumUpgraderFactory(),
+            ),
+            Album(
+              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+              name: "",
+              provider: AlbumStaticProvider(
+                items: [],
+              ),
+              coverProvider: AlbumAutoCoverProvider(),
+              sortProvider: const AlbumFilenameSortProvider(
+                isAscending: true,
+              ),
+            ));
+      });
+
       test("shares", _fromJsonShares);
 
       test("albumFile", () {
@@ -580,6 +620,41 @@ void main() {
         });
       });
 
+      test("AlbumFilenameSortProvider", () {
+        final album = Album(
+          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+          name: "",
+          provider: AlbumStaticProvider(
+            items: [],
+          ),
+          coverProvider: AlbumAutoCoverProvider(),
+          sortProvider: const AlbumFilenameSortProvider(
+            isAscending: true,
+          ),
+        );
+        expect(album.toAppDbJson(), <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "filename",
+            "content": <String, dynamic>{
+              "isAscending": true,
+            },
+          },
+        });
+      });
+
       test("shares", _toRemoteJsonShares);
     });
 
@@ -824,6 +899,41 @@ void main() {
           },
           "sortProvider": <String, dynamic>{
             "type": "time",
+            "content": <String, dynamic>{
+              "isAscending": true,
+            },
+          },
+        });
+      });
+
+      test("AlbumFilenameSortProvider", () {
+        final album = Album(
+          lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+          name: "",
+          provider: AlbumStaticProvider(
+            items: [],
+          ),
+          coverProvider: AlbumAutoCoverProvider(),
+          sortProvider: const AlbumFilenameSortProvider(
+            isAscending: true,
+          ),
+        );
+        expect(album.toAppDbJson(), <String, dynamic>{
+          "version": Album.version,
+          "lastUpdated": "2020-01-02T03:04:05.678901Z",
+          "name": "",
+          "provider": <String, dynamic>{
+            "type": "static",
+            "content": <String, dynamic>{
+              "items": [],
+            },
+          },
+          "coverProvider": <String, dynamic>{
+            "type": "auto",
+            "content": <String, dynamic>{},
+          },
+          "sortProvider": <String, dynamic>{
+            "type": "filename",
             "content": <String, dynamic>{
               "isAscending": true,
             },
@@ -1788,4 +1898,6 @@ class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   buildV5() => null;
   @override
   buildV6() => null;
+  @override
+  buildV7() => null;
 }

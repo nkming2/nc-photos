@@ -607,6 +607,14 @@
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
 	},
+	"sortOptionFilenameAscendingLabel": "Filename",
+	"@sortOptionFilenameAscendingLabel": {
+		"description": "Sort by filename, in ascending order"
+	},
+	"sortOptionFilenameDescendingLabel": "Filename (descending)",
+	"@sortOptionFilenameDescendingLabel": {
+		"description": "Sort by filename, in descending order"
+	},
 	"sortOptionAlbumNameLabel": "Album name",
 	"@sortOptionAlbumNameLabel": {
 		"description": "Sort by album name, in ascending order"

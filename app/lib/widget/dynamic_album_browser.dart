@@ -499,6 +499,24 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
               Navigator.of(context).pop();
             },
           ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionFilenameAscendingLabel,
+            isSelected: sortProvider is AlbumFilenameSortProvider &&
+                sortProvider.isAscending,
+            onSelect: () {
+              _onEditSortFilenamePressed();
+              Navigator.of(context).pop();
+            },
+          ),
+          FancyOptionPickerItem(
+            label: L10n.global().sortOptionFilenameDescendingLabel,
+            isSelected: sortProvider is AlbumFilenameSortProvider &&
+                !sortProvider.isAscending,
+            onSelect: () {
+              _onEditSortFilenameDescendingPressed();
+              Navigator.of(context).pop();
+            },
+          ),
         ],
       ),
     );
@@ -516,6 +534,24 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   void _onEditSortNewestPressed() {
     _editAlbum = _editAlbum!.copyWith(
       sortProvider: const AlbumTimeSortProvider(isAscending: false),
+    );
+    setState(() {
+      _transformItems(_sortedItems);
+    });
+  }
+
+  void _onEditSortFilenamePressed() {
+    _editAlbum = _editAlbum!.copyWith(
+      sortProvider: const AlbumFilenameSortProvider(isAscending: true),
+    );
+    setState(() {
+      _transformItems(_sortedItems);
+    });
+  }
+
+  void _onEditSortFilenameDescendingPressed() {
+    _editAlbum = _editAlbum!.copyWith(
+      sortProvider: const AlbumFilenameSortProvider(isAscending: false),
     );
     setState(() {
       _transformItems(_sortedItems);
