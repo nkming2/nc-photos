@@ -41,7 +41,7 @@ class UpdateChecker {
     }
   }
 
-  static const _buildVariant = "";
+  static const _buildVariant = "web";
 
   static final _log = Logger("update_checker.UpdateChecker");
 }
