@@ -21,14 +21,17 @@ class ScanDirOffline {
           AppDbFile2Entry.toStrippedPathIndexLowerKeyForDir(account, root),
           AppDbFile2Entry.toStrippedPathIndexUpperKeyForDir(account, root),
         );
-        return await index
-            .openCursor(range: range, autoAdvance: true)
-            .map((c) => c.value)
-            .cast<Map>()
-            .map(
-                (e) => AppDbFile2Entry.fromJson(e.cast<String, dynamic>()).file)
-            .where((f) => file_util.isSupportedFormat(f))
-            .toList();
+        final product = <File>[];
+        await for (final c
+            in index.openCursor(range: range, autoAdvance: false)) {
+          final e = AppDbFile2Entry.fromJson(
+              (c.value as Map).cast<String, dynamic>());
+          if (file_util.isSupportedFormat(e.file)) {
+            product.add(e.file);
+          }
+          c.next();
+        }
+        return product;
       },
     );
   }
