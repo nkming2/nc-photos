@@ -6,6 +6,8 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
@@ -24,13 +26,15 @@ class ResyncAlbum {
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
       (transaction) async {
         final store = transaction.objectStore(AppDb.file2StoreName);
-        return await Future.wait(fileIds.map(
-          (id) async => MapEntry(
-            id,
-            await store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))
-                as Map?,
-          ),
-        ));
+        return await fileIds
+            .mapStream(
+                (id) async => MapEntry(
+                      id,
+                      await store.getObject(
+                          AppDbFile2Entry.toPrimaryKey(account, id)) as Map?,
+                    ),
+                k.simultaneousQuery)
+            .toList();
       },
     ));
     return items.map((i) {

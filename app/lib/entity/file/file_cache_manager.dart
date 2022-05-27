@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/touch_token_manager.dart';
@@ -132,9 +133,10 @@ class FileCacheUpdater {
         final fileStore = transaction.objectStore(AppDb.file2StoreName);
 
         // add files to db
-        await Future.wait(remote.map((f) => fileStore.put(
-            AppDbFile2Entry.fromFile(account, f).toJson(),
-            AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
+        await remote.forEachAsync(
+            (f) => fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
+                AppDbFile2Entry.toPrimaryKeyForFile(account, f)),
+            k.simultaneousQuery);
 
         // results from remote also contain the dir itself
         final resultGroup =

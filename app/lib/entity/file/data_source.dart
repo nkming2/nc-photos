@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
@@ -282,7 +283,7 @@ class FileAppDbDataSource implements FileDataSource {
         }
         final dirEntry =
             AppDbDirEntry.fromJson(dirItem.cast<String, dynamic>());
-        final entries = await Future.wait(dirEntry.children.map((c) async {
+        final entries = await dirEntry.children.mapStream((c) async {
           final fileItem = await fileStore
               .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
           if (fileItem == null) {
@@ -291,7 +292,7 @@ class FileAppDbDataSource implements FileDataSource {
             throw CacheNotFoundException("No entry for dir child: $c");
           }
           return AppDbFile2Entry.fromJson(fileItem.cast<String, dynamic>());
-        }));
+        }, k.simultaneousQuery).toList();
         // we need to add dir to match the remote query
         return [dirEntry.dir] +
             entries.map((e) => e.file).where((f) => _validateFile(f)).toList();

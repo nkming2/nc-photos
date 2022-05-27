@@ -3,6 +3,8 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:quiver/iterables.dart';
 
 class FindFile {
@@ -23,8 +25,12 @@ class FindFile {
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
       (transaction) async {
         final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        return await Future.wait(fileIds.map((id) =>
-            fileStore.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
+        return await fileIds
+            .mapStream(
+                (id) => fileStore
+                    .getObject(AppDbFile2Entry.toPrimaryKey(account, id)),
+                k.simultaneousQuery)
+            .toList();
       },
     );
     final files = <File>[];

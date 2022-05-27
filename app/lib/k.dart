@@ -37,3 +37,5 @@ const coverSize = 512;
 /// AppDb lock ID
 const appDbLockId = 1;
 
+/// Number of async query task that can be called simultaneously
+const simultaneousQuery = 20;

@@ -9,6 +9,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/use_case/list_favorite_offline.dart';
 
@@ -41,7 +42,7 @@ class CacheFavorite {
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
       (transaction) async {
         final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await Future.wait(newFavorites.map((f) async {
+        await newFavorites.forEachAsync((f) async {
           _log.info("[call] New favorite: ${f.path}");
           try {
             await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
@@ -52,8 +53,8 @@ class CacheFavorite {
                 e,
                 stackTrace);
           }
-        }));
-        await Future.wait(removedFavorites.map((f) async {
+        }, k.simultaneousQuery);
+        await removedFavorites.forEachAsync((f) async {
           _log.info("[call] Remove favorite: ${f.path}");
           try {
             await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
@@ -64,7 +65,7 @@ class CacheFavorite {
                 e,
                 stackTrace);
           }
-        }));
+        }, k.simultaneousQuery);
       },
     );
 
