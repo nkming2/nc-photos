@@ -196,4 +196,9 @@ Features:
   - Super-resolution (upscale image to 4x)
 - (Localization) Update Finnish (by pHamala)
 """,
+  // v44
+  """44.0
+- (Android) New photo enhancement algorithms:
+  - Style transfer
+""",
 ];
