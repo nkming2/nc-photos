@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -177,20 +178,19 @@ class ScanAccountDirBloc
   Stream<ScanAccountDirBlocState> _onEventQuery(
       ScanAccountDirBlocQueryBase ev) async* {
     yield ScanAccountDirBlocLoading(state.files);
-    bool hasContent = state.files.isNotEmpty;
+    final hasContent = state.files.isNotEmpty;
 
-    List<File> cacheFiles = [];
+    final stopwatch = Stopwatch()..start();
+    final cacheFiles = await _queryOffline(ev);
+    _log.info(
+        "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
     if (!hasContent) {
       // show something instantly on first load
-      final stopwatch = Stopwatch()..start();
-      cacheFiles = await _queryOffline(ev);
-      _log.info(
-          "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
-      yield ScanAccountDirBlocLoading(cacheFiles);
-      hasContent = cacheFiles.isNotEmpty;
+      yield ScanAccountDirBlocLoading(
+          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList());
     }
 
-    yield* _queryOnline(ev, hasContent ? cacheFiles : null);
+    yield* _queryOnline(ev, cacheFiles);
   }
 
   Stream<ScanAccountDirBlocState> _onExternalEvent(
@@ -323,7 +323,8 @@ class ScanAccountDirBloc
     for (final r in account.roots) {
       try {
         final dir = File(path: file_util.unstripPath(account, r));
-        files.addAll(await ScanDirOffline(c)(account, dir));
+        files.addAll(await ScanDirOffline(c)(account, dir,
+            isOnlySupportedFormat: false));
       } catch (e, stackTrace) {
         _log.shout(
             "[_queryOffline] Failed while ScanDirOffline: ${logFilename(r)}",
@@ -335,24 +336,29 @@ class ScanAccountDirBloc
   }
 
   Stream<ScanAccountDirBlocState> _queryOnline(
-      ScanAccountDirBlocQueryBase ev, List<File>? cache) async* {
+      ScanAccountDirBlocQueryBase ev, List<File> cache) async* {
     // 1st pass: scan for new files
     var files = <File>[];
+    final cacheMap = FileForwardCacheManager.prepareFileMap(cache);
     {
       final stopwatch = Stopwatch()..start();
       final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
-          forwardCacheManager: FileForwardCacheManager(AppDb())));
+          forwardCacheManager: FileForwardCacheManager(AppDb(), cacheMap)));
       final fileRepoNoCache = FileRepo(FileCachedDataSource(AppDb()));
       await for (final event in _queryWithFileRepo(fileRepo, ev,
           fileRepoForShareDir: fileRepoNoCache)) {
         if (event is ExceptionEvent) {
           _log.shout("[_queryOnline] Exception while request (1st pass)",
               event.error, event.stackTrace);
-          yield ScanAccountDirBlocFailure(cache ?? files, event.error);
+          yield ScanAccountDirBlocFailure(
+              cache.isEmpty
+                  ? files
+                  : cache.where((f) => file_util.isSupportedFormat(f)).toList(),
+              event.error);
           return;
         }
         files.addAll(event);
-        if (cache == null) {
+        if (cache.isEmpty) {
           // only emit partial results if there's no cache
           yield ScanAccountDirBlocLoading(files);
         }
@@ -367,13 +373,13 @@ class ScanAccountDirBloc
         _shouldCheckCache = false;
 
         // announce the result of the 1st pass
-        // if cache == null, we have already emitted the results in the loop
-        if (cache != null || files.isEmpty) {
+        // if cache is empty, we have already emitted the results in the loop
+        if (cache.isNotEmpty || files.isEmpty) {
           // emit results from remote
           yield ScanAccountDirBlocLoading(files);
         }
 
-        files = await _queryOnlinePass2(ev, files);
+        files = await _queryOnlinePass2(ev, cacheMap, files);
       }
     } catch (e, stackTrace) {
       _log.shout(
@@ -382,12 +388,16 @@ class ScanAccountDirBloc
     yield ScanAccountDirBlocSuccess(files);
   }
 
-  Future<List<File>> _queryOnlinePass2(
-      ScanAccountDirBlocQueryBase ev, List<File> pass1Files) async {
+  Future<List<File>> _queryOnlinePass2(ScanAccountDirBlocQueryBase ev,
+      Map<int, File> cacheMap, List<File> pass1Files) async {
     const touchTokenManager = TouchTokenManager();
+    // combine the file maps because [pass1Files] doesn't contain non-supported
+    // files
+    final pass2CacheMap = CombinedMapView(
+        [FileForwardCacheManager.prepareFileMap(pass1Files), cacheMap]);
     final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
         shouldCheckCache: true,
-        forwardCacheManager: FileForwardCacheManager(AppDb())));
+        forwardCacheManager: FileForwardCacheManager(AppDb(), pass2CacheMap)));
     final remoteTouchEtag =
         await touchTokenManager.getRemoteRootEtag(fileRepo, account);
     if (remoteTouchEtag == null) {

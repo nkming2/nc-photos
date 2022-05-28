@@ -14,6 +14,7 @@ import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
@@ -565,7 +566,14 @@ class FileCachedDataSource implements FileDataSource {
 /// passed to us in one transaction. For this reason, this should only be used
 /// when it's necessary to query everything
 class FileForwardCacheManager {
-  FileForwardCacheManager(this.appDb);
+  FileForwardCacheManager(this.appDb, this.knownFiles);
+
+  /// Transform a list of files to a map suitable to be passed as the
+  /// [knownFiles] argument
+  static Map<int, File> prepareFileMap(List<File> knownFiles) => knownFiles
+      .where((f) => f.fileId != null)
+      .map((e) => MapEntry(e.fileId!, e))
+      .run((obj) => Map.fromEntries(obj));
 
   Future<List<File>> list(Account account, File dir) async {
     // check cache
@@ -618,20 +626,43 @@ class FileForwardCacheManager {
     // cache files
     final fileIds = dirs.map((e) => e.children).fold<List<int>>(
         [], (previousValue, element) => previousValue + element);
-    final fileItems = await appDb.use(
-      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.file2StoreName);
-        return await Future.wait(fileIds.map((id) =>
-            store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
-      },
-    );
-    final files = fileItems
-        .cast<Map?>()
-        .whereType<Map>()
-        .map((i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()))
-        .toList();
-    _fileCache.addEntries(files.map((e) => MapEntry(e.file.fileId!, e.file)));
+
+    final needQuery = <int>[];
+    final files = <File>[];
+    // check files already known to us
+    if (knownFiles.isNotEmpty) {
+      for (final id in fileIds) {
+        final f = knownFiles[id];
+        if (f != null) {
+          files.add(f);
+        } else {
+          needQuery.add(id);
+        }
+      }
+    } else {
+      needQuery.addAll(fileIds);
+    }
+    _log.info(
+        "[_cacheDir] ${files.length} files known, ${needQuery.length} files need querying");
+
+    // query other files
+    if (needQuery.isNotEmpty) {
+      final fileItems = await appDb.use(
+        (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
+        (transaction) async {
+          final store = transaction.objectStore(AppDb.file2StoreName);
+          return await needQuery
+              .mapStream(
+                  (id) => store
+                      .getObject(AppDbFile2Entry.toPrimaryKey(account, id)),
+                  k.simultaneousQuery)
+              .toList();
+        },
+      );
+      files.addAll(fileItems.cast<Map?>().whereType<Map>().map(
+          (i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()).file));
+    }
+    _fileCache.addEntries(files.map((f) => MapEntry(f.fileId!, f)));
     _log.info(
         "[_cacheDir] Cached ${files.length} files under ${logFilename(dir.path)}");
   }
@@ -650,6 +681,7 @@ class FileForwardCacheManager {
   }
 
   final AppDb appDb;
+  final Map<int, File> knownFiles;
   final _dirCache = <String, AppDbDirEntry>{};
   final _fileCache = <int, File>{};
 

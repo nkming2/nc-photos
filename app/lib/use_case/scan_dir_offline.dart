@@ -11,7 +11,11 @@ class ScanDirOffline {
   static bool require(DiContainer c) => DiContainer.has(c, DiType.appDb);
 
   /// List all files under a dir recursively from the local DB
-  Future<List<File>> call(Account account, File root) async {
+  Future<List<File>> call(
+    Account account,
+    File root, {
+    bool isOnlySupportedFormat = true,
+  }) async {
     return await _c.appDb.use(
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
       (transaction) async {
@@ -26,7 +30,7 @@ class ScanDirOffline {
             in index.openCursor(range: range, autoAdvance: false)) {
           final e = AppDbFile2Entry.fromJson(
               (c.value as Map).cast<String, dynamic>());
-          if (file_util.isSupportedFormat(e.file)) {
+          if (!isOnlySupportedFormat || file_util.isSupportedFormat(e.file)) {
             product.add(e.file);
           }
           c.next();
