@@ -891,7 +891,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     super.initState();
     _screenBrightness = Pref().getViewerScreenBrightnessOr(-1);
     _isForceRotation = Pref().isViewerForceRotationOr(false);
-    _gpsMapProvider = GpsMapProvider.values[Pref().getGpsMapProviderOr(0)];
+    _gpsMapProvider = GpsMapProvider.values[Pref().getGpsMapProviderOr(1)];
   }
 
   @override

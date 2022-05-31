@@ -35,7 +35,7 @@ class GpsMap extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    // if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
+    // if (GpsMapProvider.values[Pref().getGpsMapProviderOr(1)] ==
     //     GpsMapProvider.osm) {
     return _OsmGpsMap(
       center: center,
