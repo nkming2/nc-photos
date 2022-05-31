@@ -254,7 +254,7 @@ class PrefController {
   late final _isViewerForceRotationController =
       BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
   late final _gpsMapProviderController = BehaviorSubject.seeded(
-      GpsMapProvider.values[_c.pref.getGpsMapProviderOr(0)]);
+      GpsMapProvider.values[_c.pref.getGpsMapProviderOr(1)]);
   late final _isAlbumBrowserShowDateController =
       BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
   late final _isDoubleTapExitController =
