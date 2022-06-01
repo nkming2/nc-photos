@@ -407,6 +407,9 @@ class PrefController {
             ViewerAppBarButtonType.download,
             ViewerAppBarButtonType.delete,
           ]);
+  @npSubjectAccessor
+  late final _isAutoUpdateCheckAvailableController =
+      BehaviorSubject.seeded(pref.isAutoUpdateCheckAvailableOr(false));
 }
 
 extension PrefControllerExtension on PrefController {

@@ -252,6 +252,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       viewerBottomAppBarButtons.distinct().skip(1);
   List<ViewerAppBarButtonType> get viewerBottomAppBarButtonsValue =>
       _viewerBottomAppBarButtonsController.value;
+// _isAutoUpdateCheckAvailableController
+  ValueStream<bool> get isAutoUpdateCheckAvailable =>
+      _isAutoUpdateCheckAvailableController.stream;
+  Stream<bool> get isAutoUpdateCheckAvailableNew =>
+      isAutoUpdateCheckAvailable.skip(1);
+  Stream<bool> get isAutoUpdateCheckAvailableChange =>
+      isAutoUpdateCheckAvailable.distinct().skip(1);
+  bool get isAutoUpdateCheckAvailableValue =>
+      _isAutoUpdateCheckAvailableController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {
