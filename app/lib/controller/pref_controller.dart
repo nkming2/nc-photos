@@ -237,6 +237,9 @@ class PrefController {
   @NpSubjectAccessor(type: "Color?")
   late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
       _c.pref.getSecondarySeedColor()?.run(Color.new));
+  @npSubjectAccessor
+  late final _isAutoUpdateCheckAvailableController =
+      BehaviorSubject.seeded(_c.pref.isAutoUpdateCheckAvailableOr(false));
 }
 
 @npSubjectAccessor
