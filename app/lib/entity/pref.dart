@@ -120,6 +120,9 @@ enum PrefKey implements PrefKeyInterface {
   homeCollectionsNavBarButtons,
   lastDonationDialogTime,
   shouldRemindDonationLater,
+  lastAutoUpdateCheckTime,
+  isAutoUpdateCheckAvailable,
+  isEnableAutoUpdateCheck,
   ;
 
   @override
@@ -224,6 +227,12 @@ enum PrefKey implements PrefKeyInterface {
         return "lastDonationDialogTime";
       case PrefKey.shouldRemindDonationLater:
         return "shouldRemindDonationLater";
+      case PrefKey.lastAutoUpdateCheckTime:
+        return "lastAutoUpdateCheckTime";
+      case PrefKey.isAutoUpdateCheckAvailable:
+        return "isAutoUpdateCheckAvailable";
+      case PrefKey.isEnableAutoUpdateCheck:
+        return "isEnableAutoUpdateCheck";
     }
   }
 }

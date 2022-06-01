@@ -266,6 +266,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
           homeCollectionsNavBarButtons.distinct().skip(1);
   List<PrefHomeCollectionsNavButton> get homeCollectionsNavBarButtonsValue =>
       _homeCollectionsNavBarButtonsController.value;
+// _isAutoUpdateCheckAvailableController
+  ValueStream<bool> get isAutoUpdateCheckAvailable =>
+      _isAutoUpdateCheckAvailableController.stream;
+  Stream<bool> get isAutoUpdateCheckAvailableNew =>
+      isAutoUpdateCheckAvailable.skip(1);
+  Stream<bool> get isAutoUpdateCheckAvailableChange =>
+      isAutoUpdateCheckAvailable.distinct().skip(1);
+  bool get isAutoUpdateCheckAvailableValue =>
+      _isAutoUpdateCheckAvailableController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {
