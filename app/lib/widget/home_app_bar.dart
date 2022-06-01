@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
@@ -11,7 +13,7 @@ import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
 import 'package:np_ui/np_ui.dart';
 
 /// AppBar for home screens
-class HomeSliverAppBar extends StatelessWidget {
+class HomeSliverAppBar extends StatefulWidget {
   const HomeSliverAppBar({
     Key? key,
     required this.account,
@@ -22,47 +24,7 @@ class HomeSliverAppBar extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return TranslucentSliverAppBar(
-      title: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (_) => const AccountPickerDialog(),
-          );
-        },
-        child: _TitleView(account: account),
-      ),
-      scrolledUnderBackgroundColor:
-          Theme.of(context).homeNavigationBarBackgroundColor,
-      floating: true,
-      automaticallyImplyLeading: false,
-      actions: [
-        ...actions ?? [],
-        if (menuActions?.isNotEmpty == true)
-          PopupMenuButton<int>(
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-            itemBuilder: (_) => menuActions!,
-            onSelected: (option) {
-              if (option >= 0) {
-                onSelectedMenuActions?.call(option);
-              }
-            },
-          ),
-        _ProfileIconView(
-          account: account,
-          isProcessing: isShowProgressIcon,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) => const AccountPickerDialog(),
-            );
-          },
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
-  }
+  State<StatefulWidget> createState() => _HomeSliverAppBarState();
 
   final Account account;
 
@@ -74,6 +36,98 @@ class HomeSliverAppBar extends StatelessWidget {
   final List<PopupMenuEntry<int>>? menuActions;
   final void Function(int)? onSelectedMenuActions;
   final bool isShowProgressIcon;
+}
+
+class _HomeSliverAppBarState extends State<HomeSliverAppBar> {
+  @override
+  initState() {
+    super.initState();
+    _prefUpdatedListener.begin();
+  }
+
+  @override
+  dispose() {
+    _prefUpdatedListener.end();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TranslucentSliverAppBar(
+      title: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) => const AccountPickerDialog(),
+          );
+        },
+        child: _TitleView(account: widget.account),
+      ),
+      scrolledUnderBackgroundColor:
+          Theme.of(context).homeNavigationBarBackgroundColor,
+      floating: true,
+      automaticallyImplyLeading: false,
+      actions: [
+        ...widget.actions ?? [],
+        if (widget.menuActions?.isNotEmpty == true)
+          PopupMenuButton<int>(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            itemBuilder: (_) => widget.menuActions!,
+            onSelected: (option) {
+              if (option >= 0) {
+                widget.onSelectedMenuActions?.call(option);
+              }
+            },
+          ),
+        Stack(
+          fit: StackFit.passthrough,
+          children: [
+            _ProfileIconView(
+              account: widget.account,
+              isProcessing: widget.isShowProgressIcon,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => const AccountPickerDialog(),
+                );
+              },
+            ),
+            if (Pref().isAutoUpdateCheckAvailableOr())
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                end: 0,
+                top: 0,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.red,
+                  ),
+                  child: const Icon(
+                    Icons.upload,
+                    color: Colors.white,
+                    size: 12,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
+
+  void _onPrefUpdated(PrefUpdatedEvent ev) {
+    if (ev.key == PrefKey.isAutoUpdateCheckAvailable) {
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  late final _prefUpdatedListener =
+      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 }
 
 class _TitleView extends StatelessWidget {
