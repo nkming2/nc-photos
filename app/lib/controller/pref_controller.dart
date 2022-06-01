@@ -337,6 +337,9 @@ class PrefController {
   @npSubjectAccessor
   late final _mapDefaultCustomRangeController = BehaviorSubject.seeded(
       pref.getMapDefaultCustomRange() ?? const Duration(days: 30));
+  @npSubjectAccessor
+  late final _isAutoUpdateCheckAvailableController =
+      BehaviorSubject.seeded(pref.isAutoUpdateCheckAvailableOr(false));
 }
 
 extension PrefControllerExtension on PrefController {

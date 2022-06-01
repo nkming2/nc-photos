@@ -206,6 +206,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       mapDefaultCustomRange.distinct().skip(1);
   Duration get mapDefaultCustomRangeValue =>
       _mapDefaultCustomRangeController.value;
+// _isAutoUpdateCheckAvailableController
+  ValueStream<bool> get isAutoUpdateCheckAvailable =>
+      _isAutoUpdateCheckAvailableController.stream;
+  Stream<bool> get isAutoUpdateCheckAvailableNew =>
+      isAutoUpdateCheckAvailable.skip(1);
+  Stream<bool> get isAutoUpdateCheckAvailableChange =>
+      isAutoUpdateCheckAvailable.distinct().skip(1);
+  bool get isAutoUpdateCheckAvailableValue =>
+      _isAutoUpdateCheckAvailableController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {
