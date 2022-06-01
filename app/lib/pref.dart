@@ -283,6 +283,31 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  int? getLastAutoUpdateCheckTime() =>
+      provider.getInt(PrefKey.lastAutoUpdateCheckTime);
+  int getLastAutoUpdateCheckTimeOr(int def) =>
+      getLastAutoUpdateCheckTime() ?? def;
+  Future<bool> setLastAutoUpdateCheckTime(int value) =>
+      provider.setInt(PrefKey.lastAutoUpdateCheckTime, value);
+
+  bool? isAutoUpdateCheckAvailable() =>
+      provider.getBool(PrefKey.isAutoUpdateCheckAvailable);
+  bool isAutoUpdateCheckAvailableOr([bool def = false]) =>
+      isAutoUpdateCheckAvailable() ?? def;
+  Future<bool> setIsAutoUpdateCheckAvailable(bool value) => _set<bool>(
+      PrefKey.isAutoUpdateCheckAvailable,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  bool? isEnableAutoUpdateCheck() =>
+      provider.getBool(PrefKey.isEnableAutoUpdateCheck);
+  bool isEnableAutoUpdateCheckOr([bool def = true]) =>
+      isEnableAutoUpdateCheck() ?? def;
+  Future<bool> setIsEnableAutoUpdateCheck(bool value) => _set<bool>(
+      PrefKey.isEnableAutoUpdateCheck,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -599,6 +624,9 @@ enum PrefKey {
   hasShownSaveEditResultDialog,
   lastDonationDialogTime,
   shouldRemindDonationLater,
+  lastAutoUpdateCheckTime,
+  isAutoUpdateCheckAvailable,
+  isEnableAutoUpdateCheck,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -678,6 +706,12 @@ extension on PrefKey {
         return "lastDonationDialogTime";
       case PrefKey.shouldRemindDonationLater:
         return "shouldRemindDonationLater";
+      case PrefKey.lastAutoUpdateCheckTime:
+        return "lastAutoUpdateCheckTime";
+      case PrefKey.isAutoUpdateCheckAvailable:
+        return "isAutoUpdateCheckAvailable";
+      case PrefKey.isEnableAutoUpdateCheck:
+        return "isEnableAutoUpdateCheck";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

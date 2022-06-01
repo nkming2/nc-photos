@@ -73,6 +73,7 @@ class _SettingsState extends State<Settings> {
     super.initState();
     _isEnableExif = Pref().isEnableExifOr();
     _shouldProcessExifWifiOnly = Pref().shouldProcessExifWifiOnlyOr();
+    _isEnableAutoUpdateCheck = Pref().isEnableAutoUpdateCheckOr();
 
     _prefUpdatedListener.begin();
   }
@@ -246,10 +247,33 @@ class _SettingsState extends State<Settings> {
                 },
               ),
               ListTile(
+                trailing: Pref().isAutoUpdateCheckAvailableOr()
+                    ? Stack(
+                        fit: StackFit.passthrough,
+                        children: [
+                          const Icon(Icons.upload),
+                          Positioned.directional(
+                            textDirection: Directionality.of(context),
+                            end: 0,
+                            top: 0,
+                            child: const Icon(
+                              Icons.circle,
+                              color: Colors.red,
+                              size: 8,
+                            ),
+                          ),
+                        ],
+                      )
+                    : null,
                 title: const Text("Check for updates"),
                 onTap: () {
                   Navigator.of(context).pushNamed(UpdateChecker.routeName);
                 },
+              ),
+              SwitchListTile(
+                title: const Text("Check for updates automatically"),
+                value: _isEnableAutoUpdateCheck,
+                onChanged: _onEnableAutoUpdateCheckChanged,
               ),
               ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
@@ -453,6 +477,35 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  Future<void> _onEnableAutoUpdateCheckChanged(bool value) async {
+    _log.info("[_onEnableAutoUpdateCheckChanged] New value: $value");
+    final oldValue = _isEnableAutoUpdateCheck;
+    setState(() {
+      _isEnableAutoUpdateCheck = value;
+    });
+    if (!await Pref().setIsEnableAutoUpdateCheck(value)) {
+      _log.severe("[_onEnableAutoUpdateCheckChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableAutoUpdateCheck = oldValue;
+      });
+    } else {
+      if (!value) {
+        // reset state after disabling
+        if (mounted) {
+          setState(() {
+            Pref()
+              ..setIsAutoUpdateCheckAvailable(false)
+              ..setLastAutoUpdateCheckTime(0);
+          });
+        }
+      }
+    }
+  }
+
   Future<void> _setExifSupport(bool value) async {
     final oldValue = _isEnableExif;
     setState(() {
@@ -472,6 +525,7 @@ class _SettingsState extends State<Settings> {
 
   late bool _isEnableExif;
   late bool _shouldProcessExifWifiOnly;
+  late bool _isEnableAutoUpdateCheck;
 
   var _devSettingsUnlockCount = 3;
   var _isShowDevSettings = false;

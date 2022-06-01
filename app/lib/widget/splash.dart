@@ -10,6 +10,7 @@ import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/update_checker.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/widget/changelog.dart';
@@ -45,12 +46,16 @@ class _SplashState extends State<Splash> {
       setState(() {
         _isUpgrading = true;
       });
+      unawaited(Pref().setIsAutoUpdateCheckAvailable(false));
       await _handleUpgrade();
       setState(() {
         _isUpgrading = false;
       });
     }
     unawaited(_exit());
+    if (Pref().isEnableAutoUpdateCheckOr()) {
+      unawaited(const AutoUpdateChecker()());
+    }
   }
 
   @override
