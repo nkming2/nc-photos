@@ -427,6 +427,9 @@ class PrefController {
                   .map(PrefHomeCollectionsNavButton.fromJson)
                   .toList()) ??
           _homeCollectionsNavBarButtonsDefault);
+  @npSubjectAccessor
+  late final _isAutoUpdateCheckAvailableController =
+      BehaviorSubject.seeded(pref.isAutoUpdateCheckAvailableOr(false));
 }
 
 extension PrefControllerExtension on PrefController {
