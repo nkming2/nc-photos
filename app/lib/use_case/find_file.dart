@@ -1,11 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/k.dart' as k;
-import 'package:quiver/iterables.dart';
 
 class FindFile {
   FindFile(this._c) : assert(require(_c));
@@ -25,31 +23,33 @@ class FindFile {
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
       (transaction) async {
         final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        return await fileIds
-            .mapStream(
-                (id) => fileStore
-                    .getObject(AppDbFile2Entry.toPrimaryKey(account, id)),
-                k.simultaneousQuery)
-            .toList();
+        return await Future.wait(fileIds.map((id) =>
+            fileStore.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
       },
     );
+    final fileMap = await compute(_covertFileMap, dbItems);
     final files = <File>[];
-    for (final pair in zip([fileIds, dbItems])) {
-      final dbItem = pair[1] as Map?;
-      if (dbItem == null) {
+    for (final id in fileIds) {
+      final f = fileMap[id];
+      if (f == null) {
         if (onFileNotFound == null) {
-          throw StateError("File ID not found: ${pair[0]}");
+          throw StateError("File ID not found: $id");
         } else {
-          onFileNotFound(pair[0] as int);
+          onFileNotFound(id);
         }
       } else {
-        final dbEntry =
-            AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
-        files.add(dbEntry.file);
+        files.add(f);
       }
     }
     return files;
   }
 
   final DiContainer _c;
+}
+
+Map<int, File> _covertFileMap(List<Object?> dbItems) {
+  return Map.fromEntries(dbItems
+      .whereType<Map>()
+      .map((j) => AppDbFile2Entry.fromJson(j.cast<String, dynamic>()).file)
+      .map((f) => MapEntry(f.fileId!, f)));
 }

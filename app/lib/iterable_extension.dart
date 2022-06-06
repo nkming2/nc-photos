@@ -114,4 +114,34 @@ extension IterableExtension<T> on Iterable<T> {
       yield e;
     }
   }
+
+  Future<List<U>> computeAll<U>(ComputeCallback<T, U> callback) async {
+    return await compute(
+        _computeAllImpl<T, U>, _ComputeAllMessage(callback, asList()));
+  }
+
+  /// Return a list containing elements in this iterable
+  ///
+  /// If this Iterable is itself a list, this will be returned directly with no
+  /// copying
+  List<T> asList() {
+    if (this is List) {
+      return this as List<T>;
+    } else {
+      return toList();
+    }
+  }
+}
+
+class _ComputeAllMessage<T, U> {
+  const _ComputeAllMessage(this.callback, this.data);
+
+  final ComputeCallback<T, U> callback;
+  final List<T> data;
+}
+
+Future<List<U>> _computeAllImpl<T, U>(_ComputeAllMessage<T, U> message) async {
+  final result = await Future.wait(
+      message.data.map((e) async => await message.callback(e)));
+  return result;
 }
