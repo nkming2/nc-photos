@@ -64,7 +64,7 @@ class FileWebdavDataSource implements FileDataSource {
     }
 
     final xml = XmlDocument.parse(response.body);
-    var files = WebdavResponseParser().parseFiles(xml);
+    var files = await WebdavResponseParser().parseFiles(xml);
     // _log.fine("[list] Parsed files: [$files]");
     bool hasNoMediaMarker = false;
     files = files
