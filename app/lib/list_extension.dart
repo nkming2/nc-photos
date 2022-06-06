@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
+
 extension ListExtension<T> on List<T> {
   Iterable<T> takeIndex(List<int> indexes) => indexes.map((e) => this[e]);
 
@@ -19,5 +21,9 @@ extension ListExtension<T> on List<T> {
     } else {
       return sublist(start, math.min(stop, length));
     }
+  }
+
+  void stableSort([int Function(T a, T b)? compare]) {
+    mergeSort(this, compare: compare);
   }
 }

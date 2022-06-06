@@ -9,11 +9,8 @@ extension IterableExtension<T> on Iterable<T> {
   List<T> sorted([int Function(T a, T b)? compare]) => toList()..sort(compare);
 
   /// Return a new stable sorted list
-  List<T> stableSorted([int Function(T a, T b)? compare]) {
-    final tmp = toList();
-    mergeSort(tmp, compare: compare);
-    return tmp;
-  }
+  List<T> stableSorted([int Function(T a, T b)? compare]) =>
+      toList()..stableSort(compare);
 
   /// Return a string representation of this iterable by joining the result of
   /// toString for each items
