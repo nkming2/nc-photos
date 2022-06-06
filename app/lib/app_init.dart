@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -50,9 +49,6 @@ Future<void> initAppLaunch() async {
 }
 
 void _initLog() {
-  if (kDebugMode) {
-    debugPrintGestureArenaDiagnostics = true;
-  }
   Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
   Logger.root.onRecord.listen((record) {
     // dev.log(
