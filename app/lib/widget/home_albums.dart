@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -80,6 +81,11 @@ class _HomeAlbumsState extends State<HomeAlbums>
         builder: (context, state) => _buildContent(context, state),
       ),
     );
+  }
+
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<_ListItem>()?.onTap?.call();
   }
 
   void _initBloc() {
@@ -547,6 +553,8 @@ abstract class _ListItem implements SelectableItem {
   }) : _myOnTap = onTap;
 
   @override
+  get isTappable => _myOnTap != null;
+
   get onTap => _myOnTap;
 
   @override

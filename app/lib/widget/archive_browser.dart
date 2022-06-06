@@ -1,23 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
+import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -81,6 +83,18 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     );
   }
 
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<PhotoListFileItem>()?.run((fileItem) {
+      Navigator.pushNamed(
+        context,
+        Viewer.routeName,
+        arguments:
+            ViewerArguments(widget.account, _backingFiles, fileItem.fileIndex),
+      );
+    });
+  }
+
   void _initBloc() {
     if (_bloc.state is ScanAccountDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
@@ -96,7 +110,9 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   }
 
   Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
-    if (state is ScanAccountDirBlocSuccess && itemStreamListItems.isEmpty) {
+    if (state is ScanAccountDirBlocSuccess &&
+        !_buildItemQueue.isProcessing &&
+        itemStreamListItems.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -132,7 +148,8 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
               ),
             ),
           ),
-          if (state is ScanAccountDirBlocLoading)
+          if (state is ScanAccountDirBlocLoading ||
+              _buildItemQueue.isProcessing)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -207,11 +224,6 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     }
   }
 
-  void _onItemTap(int index) {
-    Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, index));
-  }
-
   Future<void> _onSelectionAppBarUnarchivePressed() async {
     SnackBarManager().showSnackBar(SnackBar(
       content: Text(L10n.global()
@@ -219,7 +231,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       duration: k.snackBarDurationShort,
     ));
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -254,37 +266,25 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
   }
 
   void _transformItems(List<File> files) {
-    _backingFiles = files
-        .where((f) => f.isArchived == true)
-        .sorted(compareFileDateTimeDescending);
-
-    itemStreamListItems = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: k.photoThumbSize, height: k.photoThumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else {
-          _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
+    _buildItemQueue.addJob(
+      PhotoListItemBuilderArguments(
+        widget.account,
+        files,
+        isArchived: true,
+        sorter: photoListFileDateTimeSorter,
+        locale: language_util.getSelectedLocale() ??
+            PlatformDispatcher.instance.locale,
+      ),
+      buildPhotoListItem,
+      (result) {
+        if (mounted) {
+          setState(() {
+            _backingFiles = result.backingFiles;
+            itemStreamListItems = result.listItems;
+          });
         }
-      }
-    }()
-        .toList();
+      },
+    );
   }
 
   void _reqQuery() {
@@ -295,83 +295,11 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   var _backingFiles = <File>[];
 
+  final _buildItemQueue =
+      ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
+
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   static final _log = Logger("widget.archive_browser._ArchiveBrowserState");
-}
-
-abstract class _ListItem implements SelectableItem {
-  _ListItem({
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
-
-  @override
-  get onTap => _onTap;
-
-  @override
-  get isSelectable => true;
-
-  @override
-  get staggeredTile => const StaggeredTile.count(1, 1);
-
-  final VoidCallback? _onTap;
-}
-
-abstract class _FileListItem extends _ListItem {
-  _FileListItem({
-    required this.file,
-    VoidCallback? onTap,
-  }) : super(onTap: onTap);
-
-  @override
-  operator ==(Object other) {
-    return other is _FileListItem && file.path == other.file.path;
-  }
-
-  @override
-  get hashCode => file.path.hashCode;
-
-  final File file;
-}
-
-class _ImageListItem extends _FileListItem {
-  _ImageListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
-}
-
-class _VideoListItem extends _FileListItem {
-  _VideoListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListVideo(
-      account: account,
-      previewUrl: previewUrl,
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
 }

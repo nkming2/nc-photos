@@ -14,9 +14,11 @@ import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
 
 abstract class SelectableItem {
+  const SelectableItem();
+
   Widget buildWidget(BuildContext context);
 
-  VoidCallback? get onTap => null;
+  bool get isTappable => false;
   bool get isSelectable => false;
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
@@ -27,6 +29,9 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     super.initState();
     _keyboardFocus.requestFocus();
   }
+
+  @protected
+  void onItemTap(SelectableItem item, int index);
 
   @protected
   Widget buildItemStreamListOuter(
@@ -170,7 +175,9 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         }
       }
     } else {
-      item.onTap?.call();
+      if (item.isTappable) {
+        onItemTap(item, index);
+      }
     }
   }
 

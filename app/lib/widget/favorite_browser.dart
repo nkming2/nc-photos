@@ -1,23 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_favorite.dart';
+import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -84,6 +86,18 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
     );
   }
 
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<PhotoListFileItem>()?.run((fileItem) {
+      Navigator.pushNamed(
+        context,
+        Viewer.routeName,
+        arguments:
+            ViewerArguments(widget.account, _backingFiles, fileItem.fileIndex),
+      );
+    });
+  }
+
   void _initBloc() {
     if (_bloc.state is ListFavoriteBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
@@ -99,7 +113,9 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
   }
 
   Widget _buildContent(BuildContext context, ListFavoriteBlocState state) {
-    if (state is ListFavoriteBlocSuccess && itemStreamListItems.isEmpty) {
+    if (state is ListFavoriteBlocSuccess &&
+        !_buildItemQueue.isProcessing &&
+        itemStreamListItems.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -142,7 +158,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
               ),
             ),
           ),
-          if (state is ListFavoriteBlocLoading)
+          if (state is ListFavoriteBlocLoading || _buildItemQueue.isProcessing)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -211,9 +227,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
           minZoom: -1,
           maxZoom: 2,
           onZoomChanged: (value) {
-            setState(() {
-              _setThumbZoomLevel(value.round());
-            });
+            _setThumbZoomLevel(value.round());
             Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
           },
         ),
@@ -234,11 +248,6 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
         duration: k.snackBarDurationNormal,
       ));
     }
-  }
-
-  void _onItemTap(int index) {
-    Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, index));
   }
 
   void _onRefreshSelected() {
@@ -265,7 +274,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   void _onSelectionSharePressed(BuildContext context) {
     final selected = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
@@ -283,7 +292,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
       context: context,
       account: widget.account,
       selectedFiles: selectedListItems
-          .whereType<_FileListItem>()
+          .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
       clearSelection: () {
@@ -298,7 +307,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   void _onSelectionDownloadPressed() {
     final selected = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     DownloadHandler().downloadFiles(widget.account, selected);
@@ -309,7 +318,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -323,7 +332,7 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -336,46 +345,26 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
     );
   }
 
-  void _transformItems(List<File> files) {
-    _backingFiles = files
-        .where((f) => f.isArchived != true)
-        .sorted(compareFileDateTimeDescending);
-
-    final isMonthOnly = _thumbZoomLevel < 0;
-    final dateHelper = photo_list_util.DateGroupHelper(
-      isMonthOnly: isMonthOnly,
+  void _transformItems(List<File> files, {bool isSorted = false}) {
+    _buildItemQueue.addJob(
+      PhotoListItemBuilderArguments(
+        widget.account,
+        files,
+        sorter: isSorted ? null : photoListFileDateTimeSorter,
+        grouper: PhotoListFileDateGrouper(isMonthOnly: _thumbZoomLevel < 0),
+        locale: language_util.getSelectedLocale() ??
+            PlatformDispatcher.instance.locale,
+      ),
+      buildPhotoListItem,
+      (result) {
+        if (mounted) {
+          setState(() {
+            _backingFiles = result.backingFiles;
+            itemStreamListItems = result.listItems;
+          });
+        }
+      },
     );
-    itemStreamListItems = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-        final date = dateHelper.onFile(f);
-        if (date != null) {
-          yield _DateListItem(date: date, isMonthOnly: isMonthOnly);
-        }
-
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: k.photoThumbSize, height: k.photoThumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else {
-          _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
-        }
-      }
-    }()
-        .toList();
   }
 
   void _reqQuery() {
@@ -397,9 +386,13 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   void _setThumbZoomLevel(int level) {
     final prevLevel = _thumbZoomLevel;
-    _thumbZoomLevel = level;
     if ((prevLevel >= 0) != (level >= 0)) {
-      _transformItems(_backingFiles);
+      _thumbZoomLevel = level;
+      _transformItems(_backingFiles, isSorted: true);
+    } else {
+      setState(() {
+        _thumbZoomLevel = level;
+      });
     }
   }
 
@@ -407,109 +400,13 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
 
   var _backingFiles = <File>[];
 
+  final _buildItemQueue =
+      ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
+
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   static final _log = Logger("widget.archive_browser._FavoriteBrowserState");
-}
-
-abstract class _ListItem implements SelectableItem {
-  _ListItem({
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
-
-  @override
-  get onTap => _onTap;
-
-  @override
-  get isSelectable => true;
-
-  @override
-  get staggeredTile => const StaggeredTile.count(1, 1);
-
-  final VoidCallback? _onTap;
-}
-
-class _DateListItem extends _ListItem {
-  _DateListItem({
-    required this.date,
-    this.isMonthOnly = false,
-  });
-
-  @override
-  get isSelectable => false;
-
-  @override
-  get staggeredTile => const StaggeredTile.extent(99, 32);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListDate(
-      date: date,
-      isMonthOnly: isMonthOnly,
-    );
-  }
-
-  final DateTime date;
-  final bool isMonthOnly;
-}
-
-abstract class _FileListItem extends _ListItem {
-  _FileListItem({
-    required this.file,
-    VoidCallback? onTap,
-  }) : super(onTap: onTap);
-
-  @override
-  operator ==(Object other) {
-    return other is _FileListItem && file.path == other.file.path;
-  }
-
-  @override
-  get hashCode => file.path.hashCode;
-
-  final File file;
-}
-
-class _ImageListItem extends _FileListItem {
-  _ImageListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
-}
-
-class _VideoListItem extends _FileListItem {
-  _VideoListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListVideo(
-      account: account,
-      previewUrl: previewUrl,
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
 }
 
 enum _SelectionMenuOption {

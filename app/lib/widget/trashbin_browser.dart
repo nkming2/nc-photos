@@ -1,23 +1,25 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
+import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
+import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -82,6 +84,18 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     );
   }
 
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<PhotoListFileItem>()?.run((fileItem) {
+      Navigator.pushNamed(
+        context,
+        TrashbinViewer.routeName,
+        arguments: TrashbinViewerArguments(
+            widget.account, _backingFiles, fileItem.fileIndex),
+      );
+    });
+  }
+
   void _initBloc() {
     _bloc = LsTrashbinBloc.of(widget.account);
     if (_bloc.state is LsTrashbinBlocInit) {
@@ -99,7 +113,9 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   Widget _buildContent(BuildContext context, LsTrashbinBlocState state) {
-    if (state is LsTrashbinBlocSuccess && itemStreamListItems.isEmpty) {
+    if (state is LsTrashbinBlocSuccess &&
+        !_buildItemQueue.isProcessing &&
+        itemStreamListItems.isEmpty) {
       return Column(
         children: [
           AppBar(
@@ -135,7 +151,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
               ),
             ),
           ),
-          if (state is LsTrashbinBlocLoading)
+          if (state is LsTrashbinBlocLoading || _buildItemQueue.isProcessing)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -250,12 +266,6 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     }
   }
 
-  void _onItemTap(int index) {
-    Navigator.pushNamed(context, TrashbinViewer.routeName,
-        arguments:
-            TrashbinViewerArguments(widget.account, _backingFiles, index));
-  }
-
   void _onEmptyTrashPressed(BuildContext context) async {
     showDialog(
       context: context,
@@ -282,7 +292,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       duration: k.snackBarDurationShort,
     ));
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -335,51 +345,29 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   void _transformItems(List<File> files) {
-    _backingFiles = files.sorted((a, b) {
-      if (a.trashbinDeletionTime == null && b.trashbinDeletionTime == null) {
-        // ?
-        return 0;
-      } else if (a.trashbinDeletionTime == null) {
-        return -1;
-      } else if (b.trashbinDeletionTime == null) {
-        return 1;
-      } else {
-        return b.trashbinDeletionTime!.compareTo(a.trashbinDeletionTime!);
-      }
-    });
-
-    itemStreamListItems = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-
-        final previewUrl = api_util.getFilePreviewUrl(widget.account, f,
-            width: k.photoThumbSize, height: k.photoThumbSize);
-        if (file_util.isSupportedImageFormat(f)) {
-          yield _ImageListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else if (file_util.isSupportedVideoFormat(f)) {
-          yield _VideoListItem(
-            file: f,
-            account: widget.account,
-            previewUrl: previewUrl,
-            onTap: () => _onItemTap(i),
-          );
-        } else {
-          _log.shout(
-              "[_transformItems] Unsupported file format: ${f.contentType}");
+    _buildItemQueue.addJob(
+      PhotoListItemBuilderArguments(
+        widget.account,
+        files,
+        sorter: _fileSorter,
+        locale: language_util.getSelectedLocale() ??
+            PlatformDispatcher.instance.locale,
+      ),
+      buildPhotoListItem,
+      (result) {
+        if (mounted) {
+          setState(() {
+            _backingFiles = result.backingFiles;
+            itemStreamListItems = result.listItems;
+          });
         }
-      }
-    }()
-        .toList();
+      },
+    );
   }
 
   Future<void> _deleteSelected() async {
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -404,85 +392,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   var _backingFiles = <File>[];
 
+  final _buildItemQueue =
+      ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
+
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
   static final _log = Logger("widget.trashbin_browser._TrashbinBrowserState");
-}
-
-abstract class _ListItem implements SelectableItem {
-  _ListItem({
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
-
-  @override
-  get onTap => _onTap;
-
-  @override
-  get isSelectable => true;
-
-  @override
-  get staggeredTile => const StaggeredTile.count(1, 1);
-
-  final VoidCallback? _onTap;
-}
-
-abstract class _FileListItem extends _ListItem {
-  _FileListItem({
-    required this.file,
-    VoidCallback? onTap,
-  }) : super(onTap: onTap);
-
-  @override
-  operator ==(Object other) {
-    return other is _FileListItem && file.path == other.file.path;
-  }
-
-  @override
-  get hashCode => file.path.hashCode;
-
-  final File file;
-}
-
-class _ImageListItem extends _FileListItem {
-  _ImageListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
-}
-
-class _VideoListItem extends _FileListItem {
-  _VideoListItem({
-    required File file,
-    required this.account,
-    required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListVideo(
-      account: account,
-      previewUrl: previewUrl,
-    );
-  }
-
-  final Account account;
-  final String previewUrl;
 }
 
 enum _AppBarMenuOption {
@@ -491,4 +407,17 @@ enum _AppBarMenuOption {
 
 enum _SelectionAppBarMenuOption {
   delete,
+}
+
+int _fileSorter(File a, File b) {
+  if (a.trashbinDeletionTime == null && b.trashbinDeletionTime == null) {
+    // ?
+    return 0;
+  } else if (a.trashbinDeletionTime == null) {
+    return -1;
+  } else if (b.trashbinDeletionTime == null) {
+    return 1;
+  } else {
+    return b.trashbinDeletionTime!.compareTo(a.trashbinDeletionTime!);
+  }
 }
