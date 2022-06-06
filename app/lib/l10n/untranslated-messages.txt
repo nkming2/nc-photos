@@ -105,6 +105,7 @@
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -228,6 +229,7 @@
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -406,6 +408,7 @@
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -434,7 +437,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "fi": [
@@ -444,7 +448,8 @@
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "fr": [
@@ -472,7 +477,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "pl": [
@@ -517,7 +523,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "pt": [
@@ -541,7 +548,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "ru": [
@@ -565,7 +573,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "zh": [
@@ -589,7 +598,8 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "zh_Hant": [
@@ -613,6 +623,7 @@
     "enhancePortraitBlurTitle",
     "enhancePortraitBlurParamBlurLabel",
     "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle"
+    "enhanceStyleTransferTitle",
+    "enhanceStyleTransferStyleDialogTitle"
   ]
 }

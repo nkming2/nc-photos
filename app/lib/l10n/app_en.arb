@@ -1231,6 +1231,10 @@
 	"@enhanceStyleTransferTitle": {
 		"description": "Transfer the image style from a reference image to a photo"
 	},
+	"enhanceStyleTransferStyleDialogTitle": "Pick a style",
+	"@enhanceStyleTransferStyleDialogTitle": {
+		"description": "Pick a reference image for the style transfer algorithm"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

@@ -420,7 +420,7 @@ class _StylePickerState extends State<_StylePicker> {
   build(BuildContext context) {
     return AppTheme(
       child: AlertDialog(
-        title: Text("Pick a style"),
+        title: Text(L10n.global().enhanceStyleTransferStyleDialogTitle),
         contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
