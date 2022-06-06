@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
+import 'package:nc_photos/int_extension.dart';
 
 extension ListExtension<T> on List<T> {
   Iterable<T> takeIndex(List<int> indexes) => indexes.map((e) => this[e]);
@@ -25,5 +26,16 @@ extension ListExtension<T> on List<T> {
 
   void stableSort([int Function(T a, T b)? compare]) {
     mergeSort(this, compare: compare);
+  }
+
+  /// In-place transform and return this
+  ///
+  /// Since the elements are in-place transformed, they have to share the same
+  /// type
+  List<T> transform(T Function(T element) fn) {
+    for (final i in 0.until(length)) {
+      this[i] = fn(this[i]);
+    }
+    return this;
   }
 }
