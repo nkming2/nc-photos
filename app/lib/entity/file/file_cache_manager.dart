@@ -123,31 +123,37 @@ class FileCacheUpdater {
     }
   }
 
-  Future<void> _cacheRemote(Account account, File dir, List<File> remote) {
-    return appDb.use(
-      (db) => db.transaction(
-          [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite),
-      (transaction) async {
-        final dirStore = transaction.objectStore(AppDb.dirStoreName);
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
+  Future<void> _cacheRemote(
+      Account account, File dir, List<File> remote) async {
+    final s = Stopwatch()..start();
+    try {
+      await appDb.use(
+        (db) => db.transaction(
+            [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadWrite),
+        (transaction) async {
+          final dirStore = transaction.objectStore(AppDb.dirStoreName);
+          final fileStore = transaction.objectStore(AppDb.file2StoreName);
 
-        // add files to db
-        await Future.wait(remote.map((f) => fileStore.put(
-            AppDbFile2Entry.fromFile(account, f).toJson(),
-            AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
+          // add files to db
+          await Future.wait(remote.map((f) => fileStore.put(
+              AppDbFile2Entry.fromFile(account, f).toJson(),
+              AppDbFile2Entry.toPrimaryKeyForFile(account, f))));
 
-        // results from remote also contain the dir itself
-        final resultGroup =
-            remote.groupListsBy((f) => f.compareServerIdentity(dir));
-        final remoteDir = resultGroup[true]!.first;
-        final remoteChildren = resultGroup[false] ?? [];
-        // add dir to db
-        await dirStore.put(
-            AppDbDirEntry.fromFiles(account, remoteDir, remoteChildren)
-                .toJson(),
-            AppDbDirEntry.toPrimaryKeyForDir(account, remoteDir));
-      },
-    );
+          // results from remote also contain the dir itself
+          final resultGroup =
+              remote.groupListsBy((f) => f.compareServerIdentity(dir));
+          final remoteDir = resultGroup[true]!.first;
+          final remoteChildren = resultGroup[false] ?? [];
+          // add dir to db
+          await dirStore.put(
+              AppDbDirEntry.fromFiles(account, remoteDir, remoteChildren)
+                  .toJson(),
+              AppDbDirEntry.toPrimaryKeyForDir(account, remoteDir));
+        },
+      );
+    } finally {
+      _log.info("[_cacheRemote] Elapsed time: ${s.elapsedMilliseconds}ms");
+    }
   }
 
   /// Remove extra entries from local cache based on remote contents
