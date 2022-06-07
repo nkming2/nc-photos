@@ -52,11 +52,11 @@ class UpdateMissingMetadata {
       try {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
-        await ensureWifi();
-        await ensureBattery();
+        await _ensureWifi();
+        await _ensureBattery();
         KiwiContainer().resolve<EventBus>().fire(
             const MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
-        if (!shouldRun) {
+        if (!_shouldRun) {
           return;
         }
         _log.fine("[call] Updating metadata for ${file.path}");
@@ -86,13 +86,13 @@ class UpdateMissingMetadata {
   }
 
   void stop() {
-    shouldRun = false;
+    _shouldRun = false;
   }
 
-  Future<void> ensureWifi() async {
+  Future<void> _ensureWifi() async {
     var count = 0;
     while (!await connectivity_util.isWifi()) {
-      if (!shouldRun) {
+      if (!_shouldRun) {
         throw const InterruptedException();
       }
       // give a chance to reconnect with the WiFi network
@@ -105,9 +105,9 @@ class UpdateMissingMetadata {
     }
   }
 
-  Future<void> ensureBattery() async {
+  Future<void> _ensureBattery() async {
     while (await Battery().batteryLevel <= 15) {
-      if (!shouldRun) {
+      if (!_shouldRun) {
         throw const InterruptedException();
       }
       KiwiContainer().resolve<EventBus>().fire(
@@ -118,7 +118,7 @@ class UpdateMissingMetadata {
 
   final FileRepo fileRepo;
 
-  bool shouldRun = true;
+  bool _shouldRun = true;
 
   static final _log =
       Logger("use_case.update_missing_metadata.UpdateMissingMetadata");
