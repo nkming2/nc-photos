@@ -42,7 +42,7 @@ Future<void> startService() async {
 void stopService() {
   _log.info("[stopService] Stopping service");
   FlutterBackgroundService().sendData({
-    "stop": true,
+    _dataKeyEvent: _eventStop,
   });
 }
 
@@ -101,12 +101,15 @@ class _Service {
 
   void _onReceiveData(Map<String, dynamic> data) {
     try {
-      for (final e in data.entries) {
-        switch (e.key) {
-          case "stop":
-            _stopSelf();
-            break;
-        }
+      final event = data[_dataKeyEvent];
+      switch (event) {
+        case _eventStop:
+          _stopSelf();
+          break;
+
+        default:
+          _log.severe("[_onReceiveData] Unknown event: $event");
+          break;
       }
     } catch (e, stackTrace) {
       _log.shout("[_onReceiveData] Uncaught exception", e, stackTrace);
@@ -291,5 +294,8 @@ class _MetadataTask {
 
   static final _log = Logger("service._MetadataTask");
 }
+
+const _dataKeyEvent = "event";
+const _eventStop = "stop";
 
 final _log = Logger("service");
