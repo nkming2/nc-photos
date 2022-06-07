@@ -17,6 +17,8 @@ class LogcatChannelHandler : MethodChannel.MethodCallHandler {
 					result.error("systemException", e.toString(), null)
 				}
 			}
+
+			else -> result.notImplemented()
 		}
 	}
 
