@@ -96,7 +96,7 @@ class UpdateMissingMetadata {
         throw const InterruptedException();
       }
       // give a chance to reconnect with the WiFi network
-      if (++count >= 12) {
+      if (++count >= 6) {
         KiwiContainer().resolve<EventBus>().fire(
             const MetadataTaskStateChangedEvent(
                 MetadataTaskState.waitingForWifi));
