@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
+import 'package:nc_photos/future_extension.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
@@ -35,6 +36,9 @@ Future<void> startService() async {
       onBackground: () => throw UnimplementedError(),
     ),
   );
+  // sync settings
+  await ServiceConfig.setProcessExifWifiOnly(
+      Pref().shouldProcessExifWifiOnlyOr());
   await service.start();
 }
 
@@ -52,6 +56,12 @@ void serviceMain() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await _Service()();
+}
+
+class ServiceConfig {
+  static Future<void> setProcessExifWifiOnly(bool flag) async {
+    await Preference.setBool(_servicePref, _servicePrefProcessWifiOnly, flag);
+  }
 }
 
 class _Service {
@@ -229,7 +239,8 @@ class _MetadataTask {
     for (final r in account.roots) {
       final dir = File(path: file_util.unstripPath(account, r));
       hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
-      final updater = UpdateMissingMetadata(fileRepo);
+      final updater = UpdateMissingMetadata(
+          fileRepo, const _UpdateMissingMetadataConfigProvider());
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         updater.stop();
@@ -247,7 +258,8 @@ class _MetadataTask {
       }
     }
     if (!hasScanShareFolder) {
-      final shareUpdater = UpdateMissingMetadata(fileRepo);
+      final shareUpdater = UpdateMissingMetadata(
+          fileRepo, const _UpdateMissingMetadataConfigProvider());
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         shareUpdater.stop();
@@ -295,7 +307,20 @@ class _MetadataTask {
   static final _log = Logger("service._MetadataTask");
 }
 
+class _UpdateMissingMetadataConfigProvider
+    implements UpdateMissingMetadataConfigProvider {
+  const _UpdateMissingMetadataConfigProvider();
+
+  @override
+  isWifiOnly() =>
+      Preference.getBool(_servicePref, _servicePrefProcessWifiOnly, true)
+          .notNull();
+}
+
 const _dataKeyEvent = "event";
 const _eventStop = "stop";
+
+const _servicePref = "service";
+const _servicePrefProcessWifiOnly = "shouldProcessWifiOnly";
 
 final _log = Logger("service");
