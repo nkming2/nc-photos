@@ -56,12 +56,13 @@ void serviceMain() async {
 
 class _Service {
   Future<void> call() async {
+    final service = FlutterBackgroundService();
+    service.setForegroundMode(true);
+
     await app_init.initAppLaunch();
     await _L10n().init();
 
     _log.info("[call] Service started");
-    final service = FlutterBackgroundService();
-    service.setForegroundMode(true);
     final onCancelSubscription = service.onCancel.listen((_) {
       _log.info("[call] User canceled");
       _stopSelf();
