@@ -15,6 +15,7 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
@@ -63,6 +64,7 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     _isEnableExif = Pref().isEnableExifOr();
+    _shouldProcessExifWifiOnly = Pref().shouldProcessExifWifiOnlyOr();
 
     final settings = AccountPref.of(widget.account);
     _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
@@ -111,6 +113,15 @@ class _SettingsState extends State<Settings> {
                 value: _isEnableExif,
                 onChanged: (value) => _onExifSupportChanged(context, value),
               ),
+              if (platform_k.isMobile)
+                SwitchListTile(
+                  title: Text(L10n.global().settingsExifWifiOnlyTitle),
+                  subtitle: _shouldProcessExifWifiOnly
+                      ? null
+                      : Text(L10n.global().settingsExifWifiOnlyFalseSubtitle),
+                  value: _shouldProcessExifWifiOnly,
+                  onChanged: _isEnableExif ? _onExifWifiOnlyChanged : null,
+                ),
               SwitchListTile(
                 title: Text(L10n.global().settingsMemoriesTitle),
                 subtitle: Text(L10n.global().settingsMemoriesSubtitle),
@@ -322,6 +333,26 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  Future<void> _onExifWifiOnlyChanged(bool value) async {
+    _log.info("[_onExifWifiOnlyChanged] New value: $value");
+    final oldValue = _shouldProcessExifWifiOnly;
+    setState(() {
+      _shouldProcessExifWifiOnly = value;
+    });
+    if (!await Pref().setProcessExifWifiOnly(value)) {
+      _log.severe("[_onExifWifiOnlyChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _shouldProcessExifWifiOnly = oldValue;
+      });
+    } else {
+      ServiceConfig.setProcessExifWifiOnly(value);
+    }
+  }
+
   Future<void> _onEnableMemoryAlbumChanged(bool value) async {
     _log.info("[_onEnableMemoryAlbumChanged] New value: $value");
     final oldValue = _isEnableMemoryAlbum;
@@ -408,6 +439,7 @@ class _SettingsState extends State<Settings> {
   }
 
   late bool _isEnableExif;
+  late bool _shouldProcessExifWifiOnly;
   late bool _isEnableMemoryAlbum;
 
   late final _prefUpdatedListener =

@@ -105,6 +105,14 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 			LogcatChannelHandler.METHOD_CHANNEL
 		)
 		logcatMethodChannel.setMethodCallHandler(logcatChannelHandler)
+
+		val preferenceChannelHandler =
+			PreferenceChannelHandler(flutterPluginBinding.applicationContext)
+		preferenceMethodChannel = MethodChannel(
+			flutterPluginBinding.binaryMessenger,
+			PreferenceChannelHandler.METHOD_CHANNEL
+		)
+		preferenceMethodChannel.setMethodCallHandler(preferenceChannelHandler)
 	}
 
 	override fun onDetachedFromEngine(
@@ -122,6 +130,7 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 		permissionChannel.setStreamHandler(null)
 		permissionMethodChannel.setMethodCallHandler(null)
 		logcatMethodChannel.setMethodCallHandler(null)
+		preferenceMethodChannel.setMethodCallHandler(null)
 	}
 
 	override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -209,6 +218,7 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	private lateinit var permissionChannel: EventChannel
 	private lateinit var permissionMethodChannel: MethodChannel
 	private lateinit var logcatMethodChannel: MethodChannel
+	private lateinit var preferenceMethodChannel: MethodChannel
 
 	private lateinit var lockChannelHandler: LockChannelHandler
 	private lateinit var mediaStoreChannelHandler: MediaStoreChannelHandler

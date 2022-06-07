@@ -32,7 +32,8 @@ class MetadataTask {
       for (final r in account.roots) {
         final dir = File(path: file_util.unstripPath(account, r));
         hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
-        final op = UpdateMissingMetadata(fileRepo);
+        final op = UpdateMissingMetadata(
+            fileRepo, const _UpdateMissingMetadataConfigProvider());
         await for (final _ in op(account, dir)) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
@@ -42,7 +43,8 @@ class MetadataTask {
         }
       }
       if (!hasScanShareFolder) {
-        final op = UpdateMissingMetadata(fileRepo);
+        final op = UpdateMissingMetadata(
+            fileRepo, const _UpdateMissingMetadataConfigProvider());
         await for (final _ in op(
           account,
           shareFolder,
@@ -116,4 +118,12 @@ class MetadataTaskManager {
   static final _log = Logger("metadata_task_manager.MetadataTaskManager");
 
   static MetadataTaskManager? _inst;
+}
+
+class _UpdateMissingMetadataConfigProvider
+    implements UpdateMissingMetadataConfigProvider {
+  const _UpdateMissingMetadataConfigProvider();
+
+  @override
+  isWifiOnly() async => Pref().shouldProcessExifWifiOnlyOr();
 }

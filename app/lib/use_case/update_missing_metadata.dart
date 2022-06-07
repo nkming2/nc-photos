@@ -14,8 +14,12 @@ import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 
+abstract class UpdateMissingMetadataConfigProvider {
+  Future<bool> isWifiOnly();
+}
+
 class UpdateMissingMetadata {
-  UpdateMissingMetadata(this.fileRepo);
+  UpdateMissingMetadata(this.fileRepo, this.configProvider);
 
   /// Update metadata for all files that support one under a dir
   ///
@@ -91,7 +95,8 @@ class UpdateMissingMetadata {
 
   Future<void> _ensureWifi() async {
     var count = 0;
-    while (!await connectivity_util.isWifi()) {
+    while (await configProvider.isWifiOnly() &&
+        !await connectivity_util.isWifi()) {
       if (!_shouldRun) {
         throw const InterruptedException();
       }
@@ -117,6 +122,7 @@ class UpdateMissingMetadata {
   }
 
   final FileRepo fileRepo;
+  final UpdateMissingMetadataConfigProvider configProvider;
 
   bool _shouldRun = true;
 

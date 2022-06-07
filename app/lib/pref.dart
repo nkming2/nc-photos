@@ -208,6 +208,15 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  bool? shouldProcessExifWifiOnly() =>
+      provider.getBool(PrefKey.shouldProcessExifWifiOnly);
+  bool shouldProcessExifWifiOnlyOr([bool def = true]) =>
+      shouldProcessExifWifiOnly() ?? def;
+  Future<bool> setProcessExifWifiOnly(bool value) => _set<bool>(
+      PrefKey.shouldProcessExifWifiOnly,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -502,6 +511,7 @@ enum PrefKey {
   hasShownEnhanceInfo,
   firstRunTime,
   isPhotosTabSortByName,
+  shouldProcessExifWifiOnly,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -566,6 +576,8 @@ extension on PrefKey {
         return "firstRunTime";
       case PrefKey.isPhotosTabSortByName:
         return "isPhotosTabSortByName";
+      case PrefKey.shouldProcessExifWifiOnly:
+        return "shouldProcessExifWifiOnly";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:
