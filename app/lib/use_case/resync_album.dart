@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:idb_shim/idb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -6,8 +7,7 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/entity/file.dart';
 
 /// Resync files inside an album with the file db
 class ResyncAlbum {
@@ -20,31 +20,21 @@ class ResyncAlbum {
           "Resync only make sense for static albums: ${album.name}");
     }
     final items = AlbumStaticProvider.of(album).items;
-    final fileIds =
-        items.whereType<AlbumFileItem>().map((i) => i.file.fileId!).toList();
-    final dbItems = Map.fromEntries(await appDb.use(
+    final dbItems = await appDb.use(
       (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
       (transaction) async {
         final store = transaction.objectStore(AppDb.file2StoreName);
-        return await fileIds
-            .mapStream(
-                (id) async => MapEntry(
-                      id,
-                      await store.getObject(
-                          AppDbFile2Entry.toPrimaryKey(account, id)) as Map?,
-                    ),
-                k.simultaneousQuery)
-            .toList();
+        return await Future.wait(items.whereType<AlbumFileItem>().map((i) =>
+            store.getObject(
+                AppDbFile2Entry.toPrimaryKey(account, i.file.fileId!))));
       },
-    ));
+    );
+    final fileMap = await compute(_covertFileMap, dbItems);
     return items.map((i) {
       if (i is AlbumFileItem) {
         try {
-          final dbItem = dbItems[i.file.fileId]!;
-          final dbEntry =
-              AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
           return i.copyWith(
-            file: dbEntry.file,
+            file: fileMap[i.file.fileId]!,
           );
         } catch (e, stackTrace) {
           _log.shout(
@@ -62,4 +52,11 @@ class ResyncAlbum {
   final AppDb appDb;
 
   static final _log = Logger("use_case.resync_album.ResyncAlbum");
+}
+
+Map<int, File> _covertFileMap(List<Object?> dbItems) {
+  return Map.fromEntries(dbItems
+      .whereType<Map>()
+      .map((j) => AppDbFile2Entry.fromJson(j.cast<String, dynamic>()).file)
+      .map((f) => MapEntry(f.fileId!, f)));
 }

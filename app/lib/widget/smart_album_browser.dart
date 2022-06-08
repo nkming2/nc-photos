@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
@@ -74,6 +75,11 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
         ),
       ),
     );
+  }
+
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<_ListItem>()?.onTap?.call();
   }
 
   @override
@@ -324,11 +330,11 @@ enum _SelectionMenuOption {
 abstract class _ListItem implements SelectableItem {
   const _ListItem({
     required this.index,
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
+    this.onTap,
+  });
 
   @override
-  get onTap => _onTap;
+  get isTappable => onTap != null;
 
   @override
   get isSelectable => true;
@@ -345,7 +351,7 @@ abstract class _ListItem implements SelectableItem {
 
   final int index;
 
-  final VoidCallback? _onTap;
+  final VoidCallback? onTap;
 }
 
 abstract class _FileListItem extends _ListItem {

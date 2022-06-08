@@ -9,6 +9,9 @@ abstract class LocalFile with EquatableMixin {
   /// careful that this does NOT mean that the two objects are identical
   bool compareIdentity(LocalFile other);
 
+  /// hashCode to be used with [compareIdentity]
+  int get identityHashCode;
+
   String get logTag;
 
   String get filename;
@@ -40,6 +43,9 @@ class LocalUriFile with EquatableMixin implements LocalFile {
       return uri == other.uri;
     }
   }
+
+  @override
+  get identityHashCode => uri.hashCode;
 
   @override
   toString() {

@@ -18,6 +18,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/session_storage.dart';
@@ -115,6 +116,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         ),
       ),
     );
+  }
+
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<_ListItem>()?.onTap?.call();
   }
 
   @override
@@ -888,19 +894,18 @@ enum _SelectionMenuOption {
 abstract class _ListItem implements SelectableItem, DraggableItem {
   const _ListItem({
     required this.index,
-    VoidCallback? onTap,
+    this.onTap,
     DragTargetAccept<DraggableItem>? onDropBefore,
     DragTargetAccept<DraggableItem>? onDropAfter,
     VoidCallback? onDragStarted,
     VoidCallback? onDragEndedAny,
-  })  : _onTap = onTap,
-        _onDropBefore = onDropBefore,
+  })  : _onDropBefore = onDropBefore,
         _onDropAfter = onDropAfter,
         _onDragStarted = onDragStarted,
         _onDragEndedAny = onDragEndedAny;
 
   @override
-  get onTap => _onTap;
+  get isTappable => onTap != null;
 
   @override
   get isSelectable => true;
@@ -935,7 +940,7 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
 
   final int index;
 
-  final VoidCallback? _onTap;
+  final VoidCallback? onTap;
   final DragTargetAccept<DraggableItem>? _onDropBefore;
   final DragTargetAccept<DraggableItem>? _onDropAfter;
   final VoidCallback? _onDragStarted;

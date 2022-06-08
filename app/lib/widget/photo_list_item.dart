@@ -1,12 +1,194 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+
+abstract class PhotoListFileItem extends SelectableItem {
+  const PhotoListFileItem({
+    required this.fileIndex,
+    required this.file,
+    required this.shouldShowFavoriteBadge,
+  });
+
+  @override
+  get isTappable => true;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  operator ==(Object other) =>
+      other is PhotoListFileItem && file.compareServerIdentity(other.file);
+
+  @override
+  get hashCode => file.path.hashCode;
+
+  @override
+  toString() => "$runtimeType {"
+        "fileIndex: $fileIndex, "
+        "file: ${file.path}, "
+        "shouldShowFavoriteBadge: $shouldShowFavoriteBadge, "
+        "}";
+
+  final int fileIndex;
+  final File file;
+  final bool shouldShowFavoriteBadge;
+}
+
+class PhotoListImageItem extends PhotoListFileItem {
+  const PhotoListImageItem({
+    required int fileIndex,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    required bool shouldShowFavoriteBadge,
+  }) : super(
+          fileIndex: fileIndex,
+          file: file,
+          shouldShowFavoriteBadge: shouldShowFavoriteBadge,
+        );
+
+  @override
+  buildWidget(BuildContext context) => PhotoListImage(
+        account: account,
+        previewUrl: previewUrl,
+        isGif: file.contentType == "image/gif",
+        isFavorite: shouldShowFavoriteBadge && file.isFavorite == true,
+      );
+
+  final Account account;
+  final String previewUrl;
+}
+
+class PhotoListVideoItem extends PhotoListFileItem {
+  const PhotoListVideoItem({
+    required int fileIndex,
+    required File file,
+    required this.account,
+    required this.previewUrl,
+    required bool shouldShowFavoriteBadge,
+  }) : super(
+          fileIndex: fileIndex,
+          file: file,
+          shouldShowFavoriteBadge: shouldShowFavoriteBadge,
+        );
+
+  @override
+  buildWidget(BuildContext context) => PhotoListVideo(
+        account: account,
+        previewUrl: previewUrl,
+        isFavorite: shouldShowFavoriteBadge && file.isFavorite == true,
+      );
+
+  final Account account;
+  final String previewUrl;
+}
+
+class PhotoListDateItem extends SelectableItem {
+  const PhotoListDateItem({
+    required this.date,
+    this.isMonthOnly = false,
+  });
+
+  @override
+  get isTappable => false;
+
+  @override
+  get isSelectable => false;
+
+  @override
+  get staggeredTile => const StaggeredTile.extent(99, 32);
+
+  @override
+  buildWidget(BuildContext context) => PhotoListDate(
+        date: date,
+        isMonthOnly: isMonthOnly,
+      );
+
+  final DateTime date;
+  final bool isMonthOnly;
+}
+
+abstract class PhotoListLocalFileItem extends SelectableItem {
+  const PhotoListLocalFileItem({
+    required this.fileIndex,
+    required this.file,
+  });
+
+  @override
+  get isTappable => true;
+
+  @override
+  get isSelectable => true;
+
+  @override
+  operator ==(Object other) =>
+      other is PhotoListLocalFileItem && file.compareIdentity(other.file);
+
+  @override
+  get hashCode => file.identityHashCode;
+
+  final int fileIndex;
+  final LocalFile file;
+}
+
+class PhotoListLocalImageItem extends PhotoListLocalFileItem {
+  const PhotoListLocalImageItem({
+    required int fileIndex,
+    required LocalFile file,
+  }) : super(
+          fileIndex: fileIndex,
+          file: file,
+        );
+
+  @override
+  buildWidget(BuildContext context) {
+    final ImageProvider provider;
+    if (file is LocalUriFile) {
+      provider = ContentUriImage((file as LocalUriFile).uri);
+    } else {
+      throw ArgumentError("Invalid file");
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(2),
+      child: FittedBox(
+        clipBehavior: Clip.hardEdge,
+        fit: BoxFit.cover,
+        child: Container(
+          // arbitrary size here
+          constraints: BoxConstraints.tight(const Size(128, 128)),
+          color: AppTheme.getListItemBackgroundColor(context),
+          child: Image(
+            image: ResizeImage.resizeIfNeeded(k.photoThumbSize, null, provider),
+            filterQuality: FilterQuality.high,
+            fit: BoxFit.cover,
+            errorBuilder: (context, e, stackTrace) {
+              return Center(
+                child: Icon(
+                  Icons.image_not_supported,
+                  size: 64,
+                  color: Colors.white.withOpacity(.8),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class PhotoListImage extends StatelessWidget {
   const PhotoListImage({

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_local_dir.dart';
+import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
-import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -20,6 +21,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
+import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
@@ -91,6 +93,17 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     );
   }
 
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<PhotoListLocalFileItem>()?.run((fileItem) {
+      Navigator.pushNamed(
+        context,
+        LocalFileViewer.routeName,
+        arguments: LocalFileViewerArguments(_backingFiles, fileItem.fileIndex),
+      );
+    });
+  }
+
   void _initBloc() {
     if (_bloc.state is ScanLocalDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
@@ -123,6 +136,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         ],
       );
     } else if (state is ScanLocalDirBlocSuccess &&
+        !_buildItemQueue.isProcessing &&
         itemStreamListItems.isEmpty) {
       return Column(
         children: [
@@ -159,7 +173,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
               ),
             ),
           ),
-          if (state is ScanLocalDirBlocLoading)
+          if (state is ScanLocalDirBlocLoading || _buildItemQueue.isProcessing)
             const Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(),
@@ -237,7 +251,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
 
   Future<void> _onSelectionSharePressed(BuildContext context) async {
     final selected = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListLocalFileItem>()
         .map((e) => e.file)
         .toList();
     await ShareHandler(
@@ -285,7 +299,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     }
 
     final selectedFiles = selectedListItems
-        .whereType<_FileListItem>()
+        .whereType<PhotoListLocalFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
@@ -294,29 +308,17 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     await const DeleteLocalSelectionHandler()(selectedFiles: selectedFiles);
   }
 
-  void _onItemTap(int index) {
-    Navigator.pushNamed(context, LocalFileViewer.routeName,
-        arguments: LocalFileViewerArguments(_backingFiles, index));
-  }
-
   void _transformItems(List<LocalFile> files) {
-    // we use last modified here to keep newly enhanced photo at the top
-    _backingFiles =
-        files.stableSorted((a, b) => b.lastModified.compareTo(a.lastModified));
-
-    itemStreamListItems = () sync* {
-      for (int i = 0; i < _backingFiles.length; ++i) {
-        final f = _backingFiles[i];
-        if (file_util.isSupportedImageMime(f.mime ?? "")) {
-          yield _ImageListItem(
-            file: f,
-            onTap: () => _onItemTap(i),
-          );
-        }
-      }
-    }()
-        .toList();
-    _log.info("[_transformItems] Length: ${itemStreamListItems.length}");
+    _buildItemQueue.addJob(
+      _BuilderArguments(files),
+      _buildPhotoListItem,
+      (result) {
+        setState(() {
+          _backingFiles = result.backingFiles;
+          itemStreamListItems = result.listItems;
+        });
+      },
+    );
   }
 
   void _openInitialImage(String filename) {
@@ -361,6 +363,8 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
 
   var _backingFiles = <LocalFile>[];
 
+  final _buildItemQueue = ComputeQueue<_BuilderArguments, _BuilderResult>();
+
   var _isFirstRun = true;
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
@@ -370,76 +374,67 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
       Logger("widget.enhanced_photo_browser._EnhancedPhotoBrowserState");
 }
 
-abstract class _ListItem implements SelectableItem {
-  _ListItem({
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
-
-  @override
-  get onTap => _onTap;
-
-  @override
-  get isSelectable => true;
-
-  @override
-  get staggeredTile => const StaggeredTile.count(1, 1);
-
-  final VoidCallback? _onTap;
-}
-
-abstract class _FileListItem extends _ListItem {
-  _FileListItem({
-    required this.file,
-    VoidCallback? onTap,
-  }) : super(onTap: onTap);
-
-  final LocalFile file;
-}
-
-class _ImageListItem extends _FileListItem {
-  _ImageListItem({
-    required LocalFile file,
-    VoidCallback? onTap,
-  }) : super(file: file, onTap: onTap);
-
-  @override
-  buildWidget(BuildContext context) {
-    final ImageProvider provider;
-    if (file is LocalUriFile) {
-      provider = ContentUriImage((file as LocalUriFile).uri);
-    } else {
-      throw ArgumentError("Invalid file");
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: Container(
-          // arbitrary size here
-          constraints: BoxConstraints.tight(const Size(128, 128)),
-          color: AppTheme.getListItemBackgroundColor(context),
-          child: Image(
-            image: ResizeImage.resizeIfNeeded(k.photoThumbSize, null, provider),
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.cover,
-            errorBuilder: (context, e, stackTrace) {
-              return Center(
-                child: Icon(
-                  Icons.image_not_supported,
-                  size: 64,
-                  color: Colors.white.withOpacity(.8),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 enum _SelectionMenuOption {
   delete,
+}
+
+class _BuilderResult {
+  const _BuilderResult(this.backingFiles, this.listItems);
+
+  final List<LocalFile> backingFiles;
+  final List<SelectableItem> listItems;
+}
+
+class _BuilderArguments {
+  const _BuilderArguments(this.files);
+
+  final List<LocalFile> files;
+}
+
+class _Builder {
+  _BuilderResult call(List<LocalFile> files) {
+    final s = Stopwatch()..start();
+    try {
+      return _fromSortedItems(_sortItems(files));
+    } finally {
+      _log.info("[call] Elapsed time: ${s.elapsedMilliseconds}ms");
+    }
+  }
+
+  List<LocalFile> _sortItems(List<LocalFile> files) {
+    // we use last modified here to keep newly enhanced photo at the top
+    return files
+        .stableSorted((a, b) => b.lastModified.compareTo(a.lastModified));
+  }
+
+  _BuilderResult _fromSortedItems(List<LocalFile> files) {
+    final listItems = <SelectableItem>[];
+    for (int i = 0; i < files.length; ++i) {
+      final f = files[i];
+      final item = _buildListItem(i, f);
+      if (item != null) {
+        listItems.add(item);
+      }
+    }
+    return _BuilderResult(files, listItems);
+  }
+
+  SelectableItem? _buildListItem(int i, LocalFile file) {
+    if (file_util.isSupportedImageMime(file.mime ?? "")) {
+      return PhotoListLocalImageItem(
+        fileIndex: i,
+        file: file,
+      );
+    } else {
+      _log.shout("[_buildListItem] Unsupported file format: ${file.mime}");
+      return null;
+    }
+  }
+
+  static final _log = Logger("widget.enhanced_photo_browser._Builder");
+}
+
+_BuilderResult _buildPhotoListItem(_BuilderArguments arg) {
+  app_init.initLog();
+  return _Builder()(arg.files);
 }

@@ -13,12 +13,12 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:path/path.dart' as path_lib;
+import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
@@ -64,7 +64,7 @@ class FileWebdavDataSource implements FileDataSource {
     }
 
     final xml = XmlDocument.parse(response.body);
-    var files = WebdavResponseParser().parseFiles(xml);
+    var files = await WebdavResponseParser().parseFiles(xml);
     // _log.fine("[list] Parsed files: [$files]");
     bool hasNoMediaMarker = false;
     files = files
@@ -269,9 +269,9 @@ class FileAppDbDataSource implements FileDataSource {
   const FileAppDbDataSource(this.appDb);
 
   @override
-  list(Account account, File dir) {
+  list(Account account, File dir) async {
     _log.info("[list] ${dir.path}");
-    return appDb.use(
+    final dbItems = await appDb.use(
       (db) => db.transaction(
           [AppDb.dirStoreName, AppDb.file2StoreName], idbModeReadOnly),
       (transaction) async {
@@ -284,21 +284,31 @@ class FileAppDbDataSource implements FileDataSource {
         }
         final dirEntry =
             AppDbDirEntry.fromJson(dirItem.cast<String, dynamic>());
-        final entries = await dirEntry.children.mapStream((c) async {
-          final fileItem = await fileStore
-              .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
-          if (fileItem == null) {
-            _log.warning(
-                "[list] Missing file ($c) in db for dir: ${logFilename(dir.path)}");
-            throw CacheNotFoundException("No entry for dir child: $c");
-          }
-          return AppDbFile2Entry.fromJson(fileItem.cast<String, dynamic>());
-        }, k.simultaneousQuery).toList();
-        // we need to add dir to match the remote query
-        return [dirEntry.dir] +
-            entries.map((e) => e.file).where((f) => _validateFile(f)).toList();
+        return Tuple2(
+          dirEntry.dir,
+          await Future.wait(
+            dirEntry.children.map((c) async {
+              final fileItem = await fileStore
+                  .getObject(AppDbFile2Entry.toPrimaryKey(account, c)) as Map?;
+              if (fileItem == null) {
+                _log.warning(
+                    "[list] Missing file ($c) in db for dir: ${logFilename(dir.path)}");
+                throw CacheNotFoundException("No entry for dir child: $c");
+              } else {
+                return fileItem;
+              }
+            }),
+            eagerError: true,
+          ),
+        );
       },
     );
+    // we need to add dir to match the remote query
+    return [
+      dbItems.item1,
+      ...(await dbItems.item2.computeAll(_covertAppDbFile2Entry))
+          .where((f) => _validateFile(f))
+    ];
   }
 
   @override
@@ -647,20 +657,16 @@ class FileForwardCacheManager {
 
     // query other files
     if (needQuery.isNotEmpty) {
-      final fileItems = await appDb.use(
+      final dbItems = await appDb.use(
         (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
         (transaction) async {
           final store = transaction.objectStore(AppDb.file2StoreName);
-          return await needQuery
-              .mapStream(
-                  (id) => store
-                      .getObject(AppDbFile2Entry.toPrimaryKey(account, id)),
-                  k.simultaneousQuery)
-              .toList();
+          return await Future.wait(needQuery.map((id) =>
+              store.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
         },
       );
-      files.addAll(fileItems.cast<Map?>().whereType<Map>().map(
-          (i) => AppDbFile2Entry.fromJson(i.cast<String, dynamic>()).file));
+      files.addAll(
+          await dbItems.whereType<Map>().computeAll(_covertAppDbFile2Entry));
     }
     _fileCache.addEntries(files.map((f) => MapEntry(f.fileId!, f)));
     _log.info(
@@ -692,3 +698,6 @@ bool _validateFile(File f) {
   // See: https://gitlab.com/nkming2/nc-photos/-/issues/9
   return f.lastModified != null;
 }
+
+File _covertAppDbFile2Entry(Map json) =>
+    AppDbFile2Entry.fromJson(json.cast<String, dynamic>()).file;

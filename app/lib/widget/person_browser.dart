@@ -22,6 +22,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -104,6 +105,11 @@ class _PersonBrowserState extends State<PersonBrowser>
         ),
       ),
     );
+  }
+
+  @override
+  onItemTap(SelectableItem item, int index) {
+    item.as<_ListItem>()?.onTap?.call();
   }
 
   void _initBloc() {
@@ -463,11 +469,11 @@ class _ListItem implements SelectableItem {
     required this.file,
     required this.account,
     required this.previewUrl,
-    VoidCallback? onTap,
-  }) : _onTap = onTap;
+    this.onTap,
+  });
 
   @override
-  get onTap => _onTap;
+  get isTappable => onTap != null;
 
   @override
   get isSelectable => true;
@@ -503,7 +509,7 @@ class _ListItem implements SelectableItem {
   final File file;
   final Account account;
   final String previewUrl;
-  final VoidCallback? _onTap;
+  final VoidCallback? onTap;
 }
 
 enum _SelectionMenuOption {

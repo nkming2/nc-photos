@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/override_comparator.dart';
 import 'package:tuple/tuple.dart';
 
@@ -20,56 +21,6 @@ extension IterableExtension<T> on Iterable<T> {
     int i = 0;
     for (final e in this) {
       yield fn(i++, e);
-    }
-  }
-
-  /// The current elements of this iterable modified by async function [fn].
-  ///
-  /// The result of [fn] will be emitted by the returned stream in the same
-  /// order as this iterable.
-  ///
-  /// If [simultaneousFuture] > 1, [fn] will be called multiple times before
-  /// awaiting their results.
-  Stream<U> mapStream<U>(
-    Future<U> Function(T element) fn, [
-    simultaneousFuture = 1,
-  ]) async* {
-    final container = <Future<U>>[];
-    for (final e in this) {
-      container.add(fn(e));
-      if (container.length >= simultaneousFuture) {
-        for (final result in await Future.wait(container)) {
-          yield result;
-        }
-        container.clear();
-      }
-    }
-    if (container.isNotEmpty) {
-      for (final result in await Future.wait(container)) {
-        yield result;
-      }
-    }
-  }
-
-  /// Invokes async function [fn] on each element of this iterable in iteration
-  /// order.
-  ///
-  /// If [simultaneousFuture] > 1, [fn] will be called multiple times before
-  /// awaiting their results.
-  Future<void> forEachAsync(
-    Future Function(T element) fn, [
-    simultaneousFuture = 1,
-  ]) async {
-    final container = <Future>[];
-    for (final e in this) {
-      container.add(fn(e));
-      if (container.length >= simultaneousFuture) {
-        await Future.wait(container);
-        container.clear();
-      }
-    }
-    if (container.isNotEmpty) {
-      await Future.wait(container);
     }
   }
 
@@ -114,4 +65,34 @@ extension IterableExtension<T> on Iterable<T> {
       yield e;
     }
   }
+
+  Future<List<U>> computeAll<U>(ComputeCallback<T, U> callback) async {
+    return await compute(
+        _computeAllImpl<T, U>, _ComputeAllMessage(callback, asList()));
+  }
+
+  /// Return a list containing elements in this iterable
+  ///
+  /// If this Iterable is itself a list, this will be returned directly with no
+  /// copying
+  List<T> asList() {
+    if (this is List) {
+      return this as List<T>;
+    } else {
+      return toList();
+    }
+  }
+}
+
+class _ComputeAllMessage<T, U> {
+  const _ComputeAllMessage(this.callback, this.data);
+
+  final ComputeCallback<T, U> callback;
+  final List<T> data;
+}
+
+Future<List<U>> _computeAllImpl<T, U>(_ComputeAllMessage<T, U> message) async {
+  final result = await Future.wait(
+      message.data.map((e) async => await message.callback(e)));
+  return result;
 }

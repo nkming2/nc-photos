@@ -20,4 +20,7 @@ extension ObjectExtension<T> on T {
   Future<U> runFuture<U>(FutureOr<U> Function(T obj) fn) async {
     return await fn(this);
   }
+
+  /// Cast this as U, or null if this is not an object of U
+  U? as<U>() => this is U ? this as U : null;
 }

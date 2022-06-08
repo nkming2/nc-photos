@@ -35,7 +35,12 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
 
 Future<void> initAppLaunch() async {
-  _initLog();
+  if (_hasInitedInThisIsolate) {
+    _log.warning("[initAppLaunch] Already initialized in this isolate");
+    return;
+  }
+
+  initLog();
   _initKiwi();
   await _initPref();
   await _initAccountPrefs();
@@ -46,9 +51,15 @@ Future<void> initAppLaunch() async {
     _initSelfSignedCertManager();
   }
   _initDiContainer();
+
+  _hasInitedInThisIsolate = true;
 }
 
-void _initLog() {
+void initLog() {
+  if (_hasInitedInThisIsolate) {
+    return;
+  }
+
   Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
   Logger.root.onRecord.listen((record) {
     // dev.log(
@@ -162,6 +173,7 @@ void _initDiContainer() {
 }
 
 final _log = Logger("app_init");
+var _hasInitedInThisIsolate = false;
 
 class _BlocObserver extends BlocObserver {
   @override

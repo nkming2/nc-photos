@@ -18,7 +18,7 @@ void main() {
   });
 }
 
-void _files() {
+Future<void> _files() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -42,7 +42,7 @@ void _files() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
@@ -57,7 +57,7 @@ void _files() {
   ]);
 }
 
-void _files404props() {
+Future<void> _files404props() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -88,7 +88,7 @@ void _files404props() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
@@ -103,7 +103,7 @@ void _files404props() {
   ]);
 }
 
-void _filesMetadata() {
+Future<void> _filesMetadata() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -128,7 +128,7 @@ void _filesMetadata() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
@@ -149,7 +149,7 @@ void _filesMetadata() {
   ]);
 }
 
-void _filesIsArchived() {
+Future<void> _filesIsArchived() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -173,7 +173,7 @@ void _filesIsArchived() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
@@ -188,7 +188,7 @@ void _filesIsArchived() {
   ]);
 }
 
-void _filesOverrideDateTime() {
+Future<void> _filesOverrideDateTime() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -212,7 +212,7 @@ void _filesOverrideDateTime() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
@@ -227,7 +227,7 @@ void _filesOverrideDateTime() {
   ]);
 }
 
-void _filesMultiple() {
+Future<void> _filesMultiple() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -267,7 +267,7 @@ void _filesMultiple() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
@@ -298,7 +298,7 @@ void _filesMultiple() {
   ]);
 }
 
-void _filesDir() {
+Future<void> _filesDir() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -330,7 +330,7 @@ void _filesDir() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Photos",
@@ -343,7 +343,7 @@ void _filesDir() {
   ]);
 }
 
-void _filesServerHostedInSubdir() {
+Future<void> _filesServerHostedInSubdir() async {
   final xml = XmlDocument.parse("""
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
@@ -367,7 +367,7 @@ void _filesServerHostedInSubdir() {
 	</d:response>
 </d:multistatus>
 """);
-  final results = WebdavResponseParser().parseFiles(xml);
+  final results = await WebdavResponseParser().parseFiles(xml);
   expect(results, [
     File(
       path: "remote.php/dav/files/admin/Nextcloud intro.mp4",

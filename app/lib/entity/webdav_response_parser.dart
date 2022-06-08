@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -11,17 +13,29 @@ import 'package:nc_photos/string_extension.dart';
 import 'package:xml/xml.dart';
 
 class WebdavResponseParser {
-  List<File> parseFiles(XmlDocument xml) => _parse<File>(xml, _toFile);
+  Future<List<File>> parseFiles(XmlDocument xml) =>
+      compute(_parseFilesIsolate, xml);
 
-  List<Favorite> parseFavorites(XmlDocument xml) =>
-      _parse<Favorite>(xml, _toFavorite);
+  Future<List<Favorite>> parseFavorites(XmlDocument xml) =>
+      compute(_parseFavoritesIsolate, xml);
 
-  List<Tag> parseTags(XmlDocument xml) => _parse<Tag>(xml, _toTag);
+  Future<List<Tag>> parseTags(XmlDocument xml) =>
+      compute(_parseTagsIsolate, xml);
 
-  List<TaggedFile> parseTaggedFiles(XmlDocument xml) =>
-      _parse<TaggedFile>(xml, _toTaggedFile);
+  Future<List<TaggedFile>> parseTaggedFiles(XmlDocument xml) =>
+      compute(_parseTaggedFilesIsolate, xml);
 
   Map<String, String> get namespaces => _namespaces;
+
+  List<File> _parseFiles(XmlDocument xml) => _parse<File>(xml, _toFile);
+
+  List<Favorite> _parseFavorites(XmlDocument xml) =>
+      _parse<Favorite>(xml, _toFavorite);
+
+  List<Tag> _parseTags(XmlDocument xml) => _parse<Tag>(xml, _toTag);
+
+  List<TaggedFile> _parseTaggedFiles(XmlDocument xml) =>
+      _parse<TaggedFile>(xml, _toTaggedFile);
 
   List<T> _parse<T>(XmlDocument xml, T? Function(XmlElement) mapper) {
     _namespaces = _parseNamespaces(xml);
@@ -500,4 +514,24 @@ extension on XmlElement {
                 .where((element2) => element2.value == prefix)
                 .any((element) => element.key == name.prefix));
   }
+}
+
+List<File> _parseFilesIsolate(XmlDocument xml) {
+  app_init.initLog();
+  return WebdavResponseParser()._parseFiles(xml);
+}
+
+List<Favorite> _parseFavoritesIsolate(XmlDocument xml) {
+  app_init.initLog();
+  return WebdavResponseParser()._parseFavorites(xml);
+}
+
+List<Tag> _parseTagsIsolate(XmlDocument xml) {
+  app_init.initLog();
+  return WebdavResponseParser()._parseTags(xml);
+}
+
+List<TaggedFile> _parseTaggedFilesIsolate(XmlDocument xml) {
+  app_init.initLog();
+  return WebdavResponseParser()._parseTaggedFiles(xml);
 }
