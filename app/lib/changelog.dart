@@ -201,4 +201,9 @@ Features:
 - (Android) New photo enhancement algorithms:
   - Style transfer
 """,
+  // v45
+  """45.0
+- Toggle between processing EXIF over Wi-Fi only or any network in Settings
+- (Localization) Update Greek (by Chris Karasoulis)
+""",
 ];
