@@ -14,6 +14,7 @@ import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -159,15 +160,16 @@ class _SettingsState extends State<Settings> {
                 description: L10n.global().settingsAlbumDescription,
                 builder: () => _AlbumSettings(),
               ),
-              _buildSubSettings(
-                context,
-                leading: Icon(
-                  Icons.auto_fix_high_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
+              if (features.isSupportEnhancement)
+                _buildSubSettings(
+                  context,
+                  leading: Icon(
+                    Icons.auto_fix_high_outlined,
+                    color: AppTheme.getUnfocusedIconColor(context),
+                  ),
+                  label: L10n.global().settingsPhotoEnhancementTitle,
+                  builder: () => const EnhancementSettings(),
                 ),
-                label: L10n.global().settingsPhotoEnhancementTitle,
-                builder: () => const EnhancementSettings(),
-              ),
               _buildSubSettings(
                 context,
                 leading: Icon(
