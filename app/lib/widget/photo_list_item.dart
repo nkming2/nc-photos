@@ -36,10 +36,10 @@ abstract class PhotoListFileItem extends SelectableItem {
 
   @override
   toString() => "$runtimeType {"
-        "fileIndex: $fileIndex, "
-        "file: ${file.path}, "
-        "shouldShowFavoriteBadge: $shouldShowFavoriteBadge, "
-        "}";
+      "fileIndex: $fileIndex, "
+      "file: ${file.path}, "
+      "shouldShowFavoriteBadge: $shouldShowFavoriteBadge, "
+      "}";
 
   final int fileIndex;
   final File file;
