@@ -33,6 +33,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
+import 'package:visibility_detector/visibility_detector.dart';
 
 Future<void> initAppLaunch() async {
   if (_hasInitedInThisIsolate) {
@@ -51,6 +52,7 @@ Future<void> initAppLaunch() async {
     _initSelfSignedCertManager();
   }
   _initDiContainer();
+  _initVisibilityDetector();
 
   _hasInitedInThisIsolate = true;
 }
@@ -170,6 +172,10 @@ void _initDiContainer() {
     appDb: AppDb(),
     pref: Pref(),
   ));
+}
+
+void _initVisibilityDetector() {
+  VisibilityDetectorController.instance.updateInterval = Duration.zero;
 }
 
 final _log = Logger("app_init");

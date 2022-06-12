@@ -12,6 +12,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 abstract class SelectableItem {
   const SelectableItem();
@@ -32,6 +33,10 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   @protected
   void onItemTap(SelectableItem item, int index);
+
+  @protected
+  void onVisibilityChanged(
+      VisibilityInfo info, int index, SelectableItem item) {}
 
   @protected
   Widget buildItemStreamListOuter(
@@ -57,6 +62,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     required double maxCrossAxisExtent,
     double mainAxisSpacing = 0,
     ValueChanged<double?>? onMaxExtentChanged,
+    bool isEnableVisibilityCallback = false,
   }) {
     final Widget content;
     if (onMaxExtentChanged != null) {
@@ -64,7 +70,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         key: _listKey,
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
-        itemBuilder: _buildItem,
+        itemBuilder: (context, i) =>
+            _buildItem(context, i, isEnableVisibilityCallback),
         staggeredTileBuilder: (index) => _items[index].staggeredTile,
         mainAxisSpacing: mainAxisSpacing,
         onMaxExtentChanged: onMaxExtentChanged,
@@ -74,7 +81,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         key: ObjectKey(maxCrossAxisExtent),
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
-        itemBuilder: _buildItem,
+        itemBuilder: (context, i) =>
+            _buildItem(context, i, isEnableVisibilityCallback),
         staggeredTileBuilder: (index) => _items[index].staggeredTile,
         mainAxisSpacing: mainAxisSpacing,
       );
@@ -127,11 +135,12 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
             ?.updateListHeight());
   }
 
-  Widget _buildItem(BuildContext context, int index) {
+  Widget _buildItem(
+      BuildContext context, int index, bool isEnableVisibilityCallback) {
     final item = _items[index];
-    final content = item.buildWidget(context);
+    Widget content = item.buildWidget(context);
     if (item.isSelectable) {
-      return Selectable(
+      content = Selectable(
         isSelected: _selectedItems.contains(item),
         iconSize: 32,
         onTap: () => _onItemTap(item, index),
@@ -140,9 +149,15 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
             : () => _onItemLongPress(item, index),
         child: content,
       );
-    } else {
-      return content;
     }
+    if (isEnableVisibilityCallback) {
+      content = VisibilityDetector(
+        key: Key("$index"),
+        child: content,
+        onVisibilityChanged: (info) => onVisibilityChanged(info, index, item),
+      );
+    }
+    return content;
   }
 
   void _onItemTap(SelectableItem item, int index) {
