@@ -3,7 +3,6 @@
 #include <android/asset_manager.h>
 #include <cstdint>
 #include <functional>
-#include <omp.h>
 #include <string>
 #include <tensorflow/lite/c/c_api.h>
 #include <vector>

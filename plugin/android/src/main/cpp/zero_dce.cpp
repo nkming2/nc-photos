@@ -10,7 +10,6 @@
 #include <cassert>
 #include <exception>
 #include <jni.h>
-#include <omp.h>
 #include <tensorflow/lite/c/c_api.h>
 
 using namespace plugin;
