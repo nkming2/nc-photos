@@ -1,5 +1,6 @@
 #include "util.h"
 #include "log.h"
+#include "math_util.h"
 #include <RenderScriptToolkit.h>
 #include <algorithm>
 #include <android/asset_manager.h>

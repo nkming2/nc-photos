@@ -57,10 +57,6 @@ private:
   AAsset *asset = nullptr;
 };
 
-template <typename T> inline T clamp(const T &min, const T &x, const T &max) {
-  return std::max(min, std::min(x, max));
-}
-
 void initOpenMp();
 int getNumberOfProcessors();
 
