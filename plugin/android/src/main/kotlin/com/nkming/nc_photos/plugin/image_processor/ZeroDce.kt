@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
+import com.nkming.nc_photos.plugin.use
 
 class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int, iteration: Int) {
 	fun infer(imageUri: Uri): Bitmap {
@@ -14,12 +15,10 @@ class ZeroDce(context: Context, maxWidth: Int, maxHeight: Int, iteration: Int) {
 		val rgb8Image = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
 			isAllowSwapSide = true, shouldUpscale = false
-		).let {
+		).use {
 			width = it.width
 			height = it.height
-			val rgb8 = TfLiteHelper.bitmapToRgb8Array(it)
-			it.recycle()
-			rgb8
+			TfLiteHelper.bitmapToRgb8Array(it)
 		}
 		val am = context.assets
 

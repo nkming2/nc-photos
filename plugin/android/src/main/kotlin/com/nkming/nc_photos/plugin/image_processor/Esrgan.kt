@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
+import com.nkming.nc_photos.plugin.use
 
 class Esrgan(context: Context, maxWidth: Int, maxHeight: Int) {
 	fun infer(imageUri: Uri): Bitmap {
@@ -15,12 +16,10 @@ class Esrgan(context: Context, maxWidth: Int, maxHeight: Int) {
 			context, imageUri, maxWidth / 4, maxHeight / 4,
 			BitmapResizeMethod.FIT, isAllowSwapSide = true,
 			shouldUpscale = false
-		).let {
+		).use {
 			width = it.width
 			height = it.height
-			val rgb8 = TfLiteHelper.bitmapToRgb8Array(it)
-			it.recycle()
-			rgb8
+			TfLiteHelper.bitmapToRgb8Array(it)
 		}
 		val am = context.assets
 

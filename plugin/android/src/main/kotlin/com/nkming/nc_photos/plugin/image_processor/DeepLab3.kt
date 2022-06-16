@@ -2,10 +2,11 @@ package com.nkming.nc_photos.plugin.image_processor
 
 import android.content.Context
 import android.content.res.AssetManager
-import android.graphics.*
+import android.graphics.Bitmap
 import android.net.Uri
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
+import com.nkming.nc_photos.plugin.use
 
 /**
  * DeepLab is a state-of-art deep learning model for semantic image
@@ -23,12 +24,10 @@ class DeepLab3Portrait(
 		val rgb8Image = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
 			isAllowSwapSide = true, shouldUpscale = false
-		).let {
+		).use {
 			width = it.width
 			height = it.height
-			val rgb8 = TfLiteHelper.bitmapToRgb8Array(it)
-			it.recycle()
-			rgb8
+			TfLiteHelper.bitmapToRgb8Array(it)
 		}
 		val am = context.assets
 
