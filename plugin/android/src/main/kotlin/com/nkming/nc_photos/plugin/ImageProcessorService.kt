@@ -528,36 +528,35 @@ private open class ImageProcessorCommandTask(context: Context) :
 		handleCancel()
 		return try {
 			val fileUri = Uri.fromFile(file)
-			val output = measureTime(
-				TAG, "[handleCommand] Elapsed time", {
-					when (cmd.method) {
-						ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
-							context, cmd.maxWidth, cmd.maxHeight,
-							cmd.args["iteration"] as? Int ?: 8
-						).infer(
-							fileUri
-						)
+			val output = measureTime(TAG, "[handleCommand] Elapsed time", {
+				when (cmd.method) {
+					ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
+						context, cmd.maxWidth, cmd.maxHeight,
+						cmd.args["iteration"] as? Int ?: 8
+					).infer(
+						fileUri
+					)
 
-						ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
-							context, cmd.maxWidth, cmd.maxHeight,
-							cmd.args["radius"] as? Int ?: 16
-						).infer(fileUri)
+					ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
+						context, cmd.maxWidth, cmd.maxHeight,
+						cmd.args["radius"] as? Int ?: 16
+					).infer(fileUri)
 
-						ImageProcessorService.METHOD_ESRGAN -> Esrgan(
-							context, cmd.maxWidth, cmd.maxHeight
-						).infer(fileUri)
+					ImageProcessorService.METHOD_ESRGAN -> Esrgan(
+						context, cmd.maxWidth, cmd.maxHeight
+					).infer(fileUri)
 
-						ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
-							context, cmd.maxWidth, cmd.maxHeight,
-							cmd.args["styleUri"] as Uri,
-							cmd.args["weight"] as Float
-						).infer(fileUri)
+					ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
+						context, cmd.maxWidth, cmd.maxHeight,
+						cmd.args["styleUri"] as Uri,
+						cmd.args["weight"] as Float
+					).infer(fileUri)
 
-						else -> throw IllegalArgumentException(
-							"Unknown method: ${cmd.method}"
-						)
-					}
-				})
+					else -> throw IllegalArgumentException(
+						"Unknown method: ${cmd.method}"
+					)
+				}
+			})
 			handleCancel()
 			saveBitmap(output, cmd.filename, file)
 		} finally {
