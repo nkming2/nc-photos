@@ -97,7 +97,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter-plugins
       ref: video_player-v2.2.6-nc-photos-2
       path: packages/video_player/video_player
-  visibility_detector: ^0.2.2
+  visibility_detector: ^0.3.3
   wakelock: ^0.5.2
   woozy_search: ^2.0.3
   xml: ^5.0.2
