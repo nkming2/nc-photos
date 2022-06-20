@@ -186,7 +186,7 @@ class _RootPickerState extends State<RootPicker> {
       return;
     }
     _isInitDialogShown = true;
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       showDialog(
         barrierDismissible: false,
         context: context,

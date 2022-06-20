@@ -53,7 +53,7 @@ class _LocalImageViewerState extends State<LocalImageViewer> {
         image: provider,
         fit: BoxFit.contain,
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          WidgetsBinding.instance!.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
             _onItemLoaded();
           });
           return child;
@@ -126,7 +126,7 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
           filterQuality: FilterQuality.high,
           imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
           imageBuilder: (context, child, imageProvider) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               _onItemLoaded();
             });
             SizeChangedLayoutNotification().dispatch(context);
@@ -185,7 +185,7 @@ class _ImageViewerState extends State<_ImageViewer>
         alignment: Alignment.center,
         child: NotificationListener<SizeChangedLayoutNotification>(
           onNotification: (_) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               if (_key.currentContext != null) {
                 widget.onHeightChanged?.call(_key.currentContext!.size!.height);
               }

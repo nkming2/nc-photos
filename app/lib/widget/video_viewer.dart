@@ -103,7 +103,7 @@ class _VideoViewerState extends State<VideoViewer>
       );
       await _controller.initialize();
       widget.onLoaded?.call();
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_key.currentContext != null) {
           widget.onHeightChanged?.call(_key.currentContext!.size!.height);
         }
@@ -125,7 +125,7 @@ class _VideoViewerState extends State<VideoViewer>
 
   Widget _buildPlayer(BuildContext context) {
     if (_controller.value.isPlaying && !widget.canPlay) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _pause();
       });
     }

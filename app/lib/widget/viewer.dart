@@ -475,7 +475,7 @@ class _ViewerState extends State<Viewer>
   /// Called when the page is being built after previously moved out of view
   void _onRecreatePageAfterMovedOut(BuildContext context, int index) {
     if (_isShowDetailPane && !_isClosingDetailPane) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_pageStates[index]!.itemHeight != null) {
           setState(() {
             _openDetailPane(index);
@@ -483,7 +483,7 @@ class _ViewerState extends State<Viewer>
         }
       });
     } else {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _pageStates[index]!.scrollController.jumpTo(0);
       });
     }

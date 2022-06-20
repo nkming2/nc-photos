@@ -33,7 +33,7 @@ class _MeasureSizeRenderObject extends RenderProxyBox {
     if (newSize == null || oldSize == newSize) return;
 
     oldSize = newSize;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       onChange(newSize);
     });
   }
@@ -67,7 +67,7 @@ class _SliverMeasureExtentRenderObject extends RenderProxySliver {
     }
 
     _oldExtent = newExent;
-    WidgetsBinding.instance!.addPostFrameCallback((_) => onChange(newExent));
+    WidgetsBinding.instance.addPostFrameCallback((_) => onChange(newExent));
   }
 
   final void Function(double) onChange;

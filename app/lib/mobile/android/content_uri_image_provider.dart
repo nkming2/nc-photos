@@ -38,7 +38,7 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
 
     if (bytes.lengthInBytes == 0) {
       // The file may become available later.
-      PaintingBinding.instance!.imageCache!.evict(key);
+      PaintingBinding.instance.imageCache.evict(key);
       throw StateError("$uri is empty and cannot be loaded as an image.");
     }
 

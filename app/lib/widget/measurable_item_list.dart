@@ -37,21 +37,21 @@ class _MeasurableItemListState extends State<MeasurableItemList>
   initState() {
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _prevOrientation = MediaQuery.of(context).orientation;
-      WidgetsBinding.instance!.addObserver(this);
+      WidgetsBinding.instance.addObserver(this);
     });
   }
 
   @override
   dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   didChangeMetrics() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final orientation = MediaQuery.of(context).orientation;
       if (orientation != _prevOrientation) {
         _log.info(
@@ -70,8 +70,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
       _prevListWidth ??= constraints.crossAxisExtent;
       if (constraints.crossAxisExtent != _prevListWidth) {
         _log.info("[build] updateListHeight: list viewport width changed");
-        WidgetsBinding.instance!
-            .addPostFrameCallback((_) => updateListHeight());
+        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
         _prevListWidth = constraints.crossAxisExtent;
       }
 
@@ -80,8 +79,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
       _prevCellSize ??= cellSize;
       if (cellSize != _prevCellSize) {
         _log.info("[build] updateListHeight: cell size changed");
-        WidgetsBinding.instance!
-            .addPostFrameCallback((_) => updateListHeight());
+        WidgetsBinding.instance.addPostFrameCallback((_) => updateListHeight());
         _prevCellSize = cellSize;
       }
       _gridKey = _GridKey("$_uniqueToken $cellSize");
