@@ -129,7 +129,7 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _onItemLoaded();
             });
-            SizeChangedLayoutNotification().dispatch(context);
+            const SizeChangedLayoutNotification().dispatch(context);
             return child;
           },
         ),
