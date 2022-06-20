@@ -78,7 +78,7 @@ dependencies:
   memory_info: ^0.0.2
   mime: ^1.0.1
   mutex: ^3.0.0
-  native_device_orientation: ^1.0.0
+  native_device_orientation: 1.1.0
   nc_photos_plugin:
     path: ../plugin
   page_view_indicators: ^2.0.0
