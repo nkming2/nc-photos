@@ -35,7 +35,10 @@ class Exif with EquatableMixin {
       // content is proprietary and thus useless to us anyway
       // UserComment is now also ignored as its size could be very large
       data.entries
-          .where((e) => e.key != "MakerNote" && e.key != "UserComment")
+          .where((e) =>
+              e.key != "MakerNote" &&
+              e.key != "UserComment" &&
+              e.key != "ImageDescription")
           .map((e) {
         dynamic jsonValue;
         if (e.value is Rational) {
