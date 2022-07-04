@@ -310,11 +310,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "1.1.0"
-      resolved-ref: "3b5712b23252e695c4767eb1be044af18668570d"
+      ref: "1.2.0"
+      resolved-ref: "00a736248819f9d878624b780d23b6b0893f3d94"
       url: "https://gitlab.com/nc-photos/exifdart.git"
     source: git
-    version: "1.1.0"
+    version: "1.2.0"
   fake_async:
     dependency: transitive
     description:

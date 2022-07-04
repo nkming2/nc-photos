@@ -12,46 +12,66 @@ void main() {
         final exif = Exif(<String, dynamic>{
           "ImageWidth": 1024,
         });
-        expect(exif.equals(Exif(<String, dynamic>{
-          "ImageWidth": 1024,
-        }), isDeep: true), true);
+        expect(
+            exif.equals(
+                Exif(<String, dynamic>{
+                  "ImageWidth": 1024,
+                }),
+                isDeep: true),
+            true);
       });
 
       test("deep unequal", () {
         final exif = Exif(<String, dynamic>{
           "ImageWidth": 1024,
         });
-        expect(exif.equals(Exif(<String, dynamic>{
-          "ImageWidth": 2048,
-        }), isDeep: true), false);
+        expect(
+            exif.equals(
+                Exif(<String, dynamic>{
+                  "ImageWidth": 2048,
+                }),
+                isDeep: true),
+            false);
       });
 
       test("shallow equal", () {
         final exif = Exif(<String, dynamic>{
           "ImageWidth": 1024,
         });
-        expect(exif.equals(Exif(<String, dynamic>{
-          "ImageWidth": 1024,
-        }), isDeep: false), true);
+        expect(
+            exif.equals(
+                Exif(<String, dynamic>{
+                  "ImageWidth": 1024,
+                }),
+                isDeep: false),
+            true);
       });
 
       test("shallow equal (different value)", () {
         final exif = Exif(<String, dynamic>{
           "ImageWidth": 1024,
         });
-        expect(exif.equals(Exif(<String, dynamic>{
-          "ImageWidth": 2048,
-        }), isDeep: false), true);
+        expect(
+            exif.equals(
+                Exif(<String, dynamic>{
+                  "ImageWidth": 2048,
+                }),
+                isDeep: false),
+            true);
       });
 
       test("shallow unequal", () {
         final exif = Exif(<String, dynamic>{
           "ImageWidth": 1024,
         });
-        expect(exif.equals(Exif(<String, dynamic>{
-          "ImageWidth": 1024,
-          "ImageHeight": 1024,
-        }), isDeep: false), false);
+        expect(
+            exif.equals(
+                Exif(<String, dynamic>{
+                  "ImageWidth": 1024,
+                  "ImageHeight": 1024,
+                }),
+                isDeep: false),
+            false);
       });
     });
 
@@ -79,7 +99,7 @@ void main() {
           "XResolution": Rational(72, 1),
         });
         expect(exif.toJson(), <String, dynamic>{
-          "XResolution": {"numerator": 72, "denominator": 1},
+          "XResolution": {"n": 72, "d": 1},
         });
       });
 
@@ -98,9 +118,9 @@ void main() {
         });
         expect(exif.toJson(), <String, dynamic>{
           "GPSLatitude": [
-            {"numerator": 2, "denominator": 1},
-            {"numerator": 3, "denominator": 1},
-            {"numerator": 4, "denominator": 100},
+            {"n": 2, "d": 1},
+            {"n": 3, "d": 1},
+            {"n": 4, "d": 100},
           ],
         });
       });
@@ -114,7 +134,8 @@ void main() {
 
       test("UserComment", () {
         final exif = Exif(<String, dynamic>{
-          "UserComment": Uint8List.fromList([0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF]),
+          "UserComment":
+              Uint8List.fromList([0x00, 0x33, 0x66, 0x99, 0xCC, 0xFF]),
         });
         expect(exif.toJson(), <String, dynamic>{});
       });
