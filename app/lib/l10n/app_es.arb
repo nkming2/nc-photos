@@ -4,7 +4,7 @@
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
-	"photosTabLabel": "Fotos",
+	"photosTabLabel": "Línea temporal",
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
@@ -16,7 +16,7 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Actualizar",
+	"refreshMenuLabel": "Sincronizar",
 	"@refreshMenuLabel": {
 		"description": "Label of the refresh entry in menu"
 	},
@@ -309,6 +309,14 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsExifWifiOnlyTitle": "Proceso EXIF sólo conectado por Wi-Fi",
+	"@settingsExifWifiOnlyTitle": {
+		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+	},
+	"settingsExifWifiOnlyFalseSubtitle": "Podría hacerse uso de datos móviles",
+	"@settingsExifWifiOnlyFalseSubtitle": {
+		"description": "Shown when users allow processing exif data over any network"
+	},
 	"settingsMemoriesTitle": "Recuerdos",
 	"@settingsMemoriesTitle": {
 		"description": "Memory albums contain photos taken in a specific time range in the past"
@@ -364,10 +372,17 @@
 		"description": "Dedicated page for album settings"
 	},
 	"settingsShowDateInAlbumTitle": "Agrupar fotos por fecha",
-	"settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado por fecha",
-	"settingsThemeTitle": "Tema",
-	"settingsThemeDescription": "Personaliza la apariencia de la aplicación",
-	"settingsThemePageTitle": "Ajustes de tema",
+	"settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado time",
+	"settingsPhotoEnhancementTitle": "Mejorar fotos",
+	"settingsPhotoEnhancementPageTitle": "Configurar mejoras de fotos",
+	"@settingsPhotoEnhancementPageTitle": {
+		"description": "Dedicated page for photo enhancement settings"
+	},
+	"settingsEnhanceMaxResolutionTitle": "Resolución máxima al guardar",
+	"settingsEnhanceMaxResolutionDescription": "Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga o cierra mientras mejora fotos.",
+	"settingsThemeTitle": "Temas",
+	"settingsThemeDescription": "Personaliza la apariencia de la app",
+	"settingsThemePageTitle": "Configuración de tema",
 	"@settingsThemePageTitle": {
 		"description": "Dedicated page for theme settings"
 	},
@@ -386,6 +401,12 @@
 	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris oscuro con el tema oscuro",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
+	},
+	"settingsMiscellaneousTitle": "Otros ajustes",
+	"settingsMiscellaneousPageTitle": "Otros ajustes",
+	"settingsPhotosTabSortByNameTitle": "Ordenar por nombre de archivo en Fotos",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
 	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Características que no están listas para uso diario",
@@ -594,6 +615,14 @@
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
 	},
+	"sortOptionFilenameAscendingLabel": "Nombre de archivo",
+	"@sortOptionFilenameAscendingLabel": {
+		"description": "Sort by filename, in ascending order"
+	},
+	"sortOptionFilenameDescendingLabel": "Nombre de archivo (inverso)",
+	"@sortOptionFilenameDescendingLabel": {
+		"description": "Sort by filename, in descending order"
+	},
 	"sortOptionAlbumNameLabel": "Nombre del álbum",
 	"@sortOptionAlbumNameLabel": {
 		"description": "Sort by album name, in ascending order"
@@ -721,6 +750,7 @@
 	"configButtonLabel": "CONFIGURAR",
 	"useAsAlbumCoverTooltip": "Usar como portada del álbum",
 	"helpTooltip": "Ayuda",
+	"helpButtonLabel": "AYUDA",
 	"removeFromAlbumTooltip": "Quitar del álbum",
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
@@ -1161,6 +1191,57 @@
 	"tagPickerNoTagSelectedNotification": "Por favor añade al menos 1 etiqueta",
 	"@tagPickerNoTagSelectedNotification": {
 		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+	},
+	"backgroundServiceStopping": "Deteniendo servicio",
+	"@backgroundServiceStopping": {
+		"description": "The background service is stopping itself"
+	},
+	"metadataTaskPauseLowBatteryNotification": "Batería baja",
+	"@metadataTaskPauseLowBatteryNotification": {
+		"description": "Shown when the app has paused reading image metadata due to low battery"
+	},
+	"enhanceTooltip": "Mejorar",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceButtonLabel": "MEJORAR",
+	"enhanceIntroDialogTitle": "Mejora tus fotos",
+	"enhanceIntroDialogDescription": "Tus fotos son procesadas localmente en tu dispositivo. Por defecto, son reducidas a 2048x1536. Puedes ajustar la resolución de guardado en Ajustes",
+	"enhanceLowLightTitle": "Mejorar poca luz",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
+	"enhanceLowLightParamBrightnessLabel": "Brillo",
+	"@enhanceLowLightParamBrightnessLabel": {
+		"description": "This parameter sets how much brighter the output will be"
+	},
+	"collectionEnhancedPhotosLabel": "Mejorada",
+	"@collectionEnhancedPhotosLabel": {
+		"description": "List photos enhanced by the app"
+	},
+	"deletePermanentlyLocalConfirmationDialogContent": "Las fotos seleccionadas se eliminarán permanentemente del dispositivo.\n\nÉsta acción es irreversible",
+	"@deletePermanentlyLocalConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items from the current device"
+	},
+	"enhancePortraitBlurTitle": "Desenfoque de retrato",
+	"@enhancePortraitBlurTitle": {
+		"description": "Blur the background of a photo"
+	},
+	"enhancePortraitBlurParamBlurLabel": "Desenfoque",
+	"@enhancePortraitBlurParamBlurLabel": {
+		"description": "This parameter sets the radius of the blur filter"
+	},
+	"enhanceSuperResolution4xTitle": "Super-resolución (4x)",
+	"@enhanceSuperResolution4xTitle": {
+		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+	},
+	"enhanceStyleTransferTitle": "Transferencia de estilo",
+	"@enhanceStyleTransferTitle": {
+		"description": "Transfer the image style from a reference image to a photo"
+	},
+	"enhanceStyleTransferStyleDialogTitle": "Elige un estilo",
+	"@enhanceStyleTransferStyleDialogTitle": {
+		"description": "Pick a reference image for the style transfer algorithm"
 	},
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
