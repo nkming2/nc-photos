@@ -353,8 +353,8 @@ class _HomePhotosState extends State<HomePhotos>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
           text,
-          style: TextStyle(
-            color: AppTheme.getPrimaryTextColorInverse(context),
+          style: const TextStyle(
+            color: AppTheme.primaryTextColorLight,
           ),
         ),
       );
