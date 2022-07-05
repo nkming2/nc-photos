@@ -4,7 +4,6 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
@@ -76,6 +75,15 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     with
         SelectableItemStreamListMixin<DynamicAlbumBrowser>,
         AlbumBrowserMixin<DynamicAlbumBrowser> {
+  _DynamicAlbumBrowserState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    assert(PreProcessAlbum.require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.albumRepo);
+
   @override
   initState() {
     super.initState();
@@ -139,11 +147,10 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
         setState(() {
           _album = newAlbum;
         });
-        UpdateAlbum(albumRepo)(
+        UpdateAlbum(_c.albumRepo)(
           widget.account,
           newAlbum,
         ).catchError((e, stackTrace) {
@@ -171,7 +178,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     final List<AlbumItem> items;
     final Album album;
     try {
-      items = await PreProcessAlbum(AppDb())(widget.account, widget.album);
+      items = await PreProcessAlbum(_c)(widget.account, widget.album);
       album = await _updateAlbumPostPopulate(widget.album, items);
     } catch (e, stackTrace) {
       _log.severe("[_initAlbum] Failed while PreProcessAlbum", e, stackTrace);
@@ -350,9 +357,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
     _log.info(
         "[_onConvertBasicPressed] Converting album '${_album!.name}' to static");
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     try {
-      await UpdateAlbum(albumRepo)(
+      await UpdateAlbum(_c.albumRepo)(
           widget.account,
           _album!.copyWith(
             provider: AlbumStaticProvider(
@@ -632,10 +638,11 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   Future<Album> _updateAlbumPostPopulate(
       Album album, List<AlbumItem> items) async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    return await UpdateAlbumWithActualItems(albumRepo)(
+    return await UpdateAlbumWithActualItems(_c.albumRepo)(
         widget.account, album, items);
   }
+
+  late final DiContainer _c;
 
   Album? _album;
   var _sortedItems = <AlbumItem>[];

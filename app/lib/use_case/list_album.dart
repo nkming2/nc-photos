@@ -1,4 +1,4 @@
-import 'package:logging/logging.dart';
+import 'package:collection/collection.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -50,30 +50,22 @@ class ListAlbum {
       yield ExceptionEvent(e, stackTrace);
       return;
     }
-    final albumFiles =
+    final List<File?> albumFiles =
         ls.where((element) => element.isCollection != true).toList();
+    // migrate files
     for (var i = 0; i < albumFiles.length; ++i) {
-      var f = albumFiles[i];
+      var f = albumFiles[i]!;
       try {
         if (CompatV25.isAlbumFileNeedMigration(f)) {
-          f = await CompatV25.migrateAlbumFile(_c, account, f);
+          albumFiles[i] = await CompatV25.migrateAlbumFile(_c, account, f);
         }
-        albumFiles[i] = f;
-        yield await _c.albumRepo.get(account, f);
       } catch (e, stackTrace) {
         yield ExceptionEvent(e, stackTrace);
+        albumFiles[i] = null;
       }
     }
-    try {
-      _c.albumRepo.cleanUp(
-          account, remote_storage_util.getRemoteAlbumsDir(account), albumFiles);
-    } catch (e, stacktrace) {
-      // not important, log and ignore
-      _log.shout("[_call] Failed while cleanUp", e, stacktrace);
-    }
+    yield* _c.albumRepo.getAll(account, albumFiles.whereNotNull().toList());
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.list_album.ListAlbum");
 }

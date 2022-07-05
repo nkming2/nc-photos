@@ -15,10 +15,10 @@ import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 class RemoveFromAlbum {
   RemoveFromAlbum(this._c)
       : assert(require(_c)),
-        assert(UnshareFileFromAlbum.require(_c));
+        assert(UnshareFileFromAlbum.require(_c)),
+        assert(PreProcessAlbum.require(_c));
 
-  static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.albumRepo) && DiContainer.has(c, DiType.appDb);
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.albumRepo);
 
   /// Remove a list of AlbumItems from [album]
   ///
@@ -91,7 +91,7 @@ class RemoveFromAlbum {
     _log.info(
         "[_fixAlbumPostRemove] Resync as interesting item is being removed");
     // need to update the album properties
-    final newItemsSynced = await PreProcessAlbum(_c.appDb)(account, newAlbum);
+    final newItemsSynced = await PreProcessAlbum(_c)(account, newAlbum);
     newAlbum = await UpdateAlbumWithActualItems(null)(
       account,
       newAlbum,

@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          apply_converters_on_variables: true
+          generate_values_in_copy_with: true
+          new_sql_code_generation: true
+          scoped_dart_components: true
+          generate_connect_constructor: true

@@ -737,8 +737,9 @@ class _Web {
   }
 
   void startMetadataTask(int missingMetadataCount) {
+    final c = KiwiContainer().resolve<DiContainer>();
     MetadataTaskManager().addTask(MetadataTask(
-        state.widget.account, AccountPref.of(state.widget.account)));
+        c, state.widget.account, AccountPref.of(state.widget.account)));
     _metadataTaskProcessTotalCount = missingMetadataCount;
   }
 

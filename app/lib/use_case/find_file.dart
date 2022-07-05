@@ -1,14 +1,14 @@
-import 'package:flutter/foundation.dart';
-import 'package:idb_shim/idb_client.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/iterable_extension.dart';
 
 class FindFile {
   FindFile(this._c) : assert(require(_c));
 
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.appDb);
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
 
   /// Find list of files in the DB by [fileIds]
   ///
@@ -19,37 +19,34 @@ class FindFile {
     List<int> fileIds, {
     void Function(int fileId)? onFileNotFound,
   }) async {
-    final dbItems = await _c.appDb.use(
-      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
-      (transaction) async {
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        return await Future.wait(fileIds.map((id) =>
-            fileStore.getObject(AppDbFile2Entry.toPrimaryKey(account, id))));
-      },
-    );
-    final fileMap = await compute(_covertFileMap, dbItems);
-    final files = <File>[];
-    for (final id in fileIds) {
-      final f = fileMap[id];
-      if (f == null) {
-        if (onFileNotFound == null) {
-          throw StateError("File ID not found: $id");
-        } else {
-          onFileNotFound(id);
-        }
-      } else {
-        files.add(f);
-      }
+    _log.info("[call] fileIds: ${fileIds.toReadableString()}");
+    final dbFiles = await _c.sqliteDb.use((db) async {
+      return await db.completeFilesByFileIds(fileIds, appAccount: account);
+    });
+    final files = await dbFiles.convertToAppFile(account);
+    final fileMap = <int, File>{};
+    for (final f in files) {
+      fileMap[f.fileId!] = f;
     }
-    return files;
+
+    return () sync* {
+      for (final id in fileIds) {
+        final f = fileMap[id];
+        if (f == null) {
+          if (onFileNotFound == null) {
+            throw StateError("File ID not found: $id");
+          } else {
+            onFileNotFound(id);
+          }
+        } else {
+          yield fileMap[id]!;
+        }
+      }
+    }()
+        .toList();
   }
 
   final DiContainer _c;
-}
 
-Map<int, File> _covertFileMap(List<Object?> dbItems) {
-  return Map.fromEntries(dbItems
-      .whereType<Map>()
-      .map((j) => AppDbFile2Entry.fromJson(j.cast<String, dynamic>()).file)
-      .map((f) => MapEntry(f.fileId!, f)));
+  static final _log = Logger("use_case.find_file.FindFile");
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -60,6 +61,12 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
     with
         SelectableItemStreamListMixin<SmartAlbumBrowser>,
         AlbumBrowserMixin<SmartAlbumBrowser> {
+  _SmartAlbumBrowserState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(PreProcessAlbum.require(c));
+    _c = c;
+  }
+
   @override
   initState() {
     super.initState();
@@ -89,7 +96,7 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   Future<void> _initAlbum() async {
     assert(widget.album.provider is AlbumSmartProvider);
     _log.info("[_initAlbum] ${widget.album}");
-    final items = await PreProcessAlbum(AppDb())(widget.account, widget.album);
+    final items = await PreProcessAlbum(_c)(widget.account, widget.album);
     if (mounted) {
       setState(() {
         _album = widget.album;
@@ -313,6 +320,8 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
     }()
         .toList();
   }
+
+  late final DiContainer _c;
 
   Album? _album;
   var _sortedItems = <AlbumItem>[];

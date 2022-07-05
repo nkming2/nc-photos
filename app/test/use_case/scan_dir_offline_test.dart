@@ -1,11 +1,10 @@
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
 import 'package:test/test.dart';
 
-import '../mock_type.dart';
 import '../test_util.dart' as util;
 
 void main() {
@@ -33,10 +32,13 @@ Future<void> _root() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   // convert to set because ScanDirOffline does not guarantee order
   expect(
@@ -59,10 +61,13 @@ Future<void> _subDir() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   expect(
     (await ScanDirOffline(c)(
@@ -84,10 +89,13 @@ Future<void> _unsupportedFile() async {
         ..addGenericFile("admin/test2.pdf", "application/pdf"))
       .build();
   final c = DiContainer(
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   // convert to set because ScanDirOffline does not guarantee order
   expect(
@@ -118,11 +126,15 @@ Future<void> _multiAccountRoot() async {
         ..addJpeg("user1/test/test2.jpg", ownerId: "user1"))
       .build();
   final c = DiContainer(
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-      await util.fillAppDb(obj, user1Account, user1Files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await c.sqliteDb.insertAccountOf(user1Account);
+    await util.insertFiles(c.sqliteDb, user1Account, user1Files);
+  });
 
   expect(
     (await ScanDirOffline(c)(

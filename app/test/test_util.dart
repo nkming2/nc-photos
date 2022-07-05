@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart' as sql;
+import 'package:drift/native.dart' as sql;
 import 'package:flutter/foundation.dart';
-import 'package:idb_shim/idb.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -13,8 +13,12 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_converter.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/type.dart';
+import 'package:nc_photos/or_null.dart';
+import 'package:tuple/tuple.dart';
 
 class FilesBuilder {
   FilesBuilder({
@@ -29,21 +33,25 @@ class FilesBuilder {
     String relativePath, {
     int? contentLength,
     String? contentType,
+    String? etag,
     DateTime? lastModified,
     bool isCollection = false,
     bool hasPreview = true,
     String ownerId = "admin",
+    Metadata? metadata,
   }) {
     files.add(File(
       path: "remote.php/dav/files/$relativePath",
       contentLength: contentLength,
       contentType: contentType,
+      etag: etag,
       lastModified:
           lastModified ?? DateTime.utc(2020, 1, 2, 3, 4, 5 + files.length),
       isCollection: isCollection,
       hasPreview: hasPreview,
       fileId: fileId++,
       ownerId: ownerId.toCi(),
+      metadata: metadata,
     ));
   }
 
@@ -51,6 +59,7 @@ class FilesBuilder {
     String relativePath,
     String contentType, {
     int contentLength = 1024,
+    String? etag,
     DateTime? lastModified,
     bool hasPreview = true,
     String ownerId = "admin",
@@ -59,6 +68,7 @@ class FilesBuilder {
         relativePath,
         contentLength: contentLength,
         contentType: contentType,
+        etag: etag,
         lastModified: lastModified,
         hasPreview: hasPreview,
         ownerId: ownerId,
@@ -67,29 +77,58 @@ class FilesBuilder {
   void addJpeg(
     String relativePath, {
     int contentLength = 1024,
+    String? etag,
     DateTime? lastModified,
     bool hasPreview = true,
     String ownerId = "admin",
+    OrNull<Metadata>? metadata,
   }) =>
       add(
         relativePath,
         contentLength: contentLength,
         contentType: "image/jpeg",
+        etag: etag,
         lastModified: lastModified,
         hasPreview: hasPreview,
         ownerId: ownerId,
+        metadata: metadata?.obj ??
+            Metadata(
+              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+              imageWidth: 640,
+              imageHeight: 480,
+            ),
       );
 
   void addDir(
     String relativePath, {
     int contentLength = 1024,
+    String? etag,
     DateTime? lastModified,
     String ownerId = "admin",
   }) =>
       add(
         relativePath,
+        etag: etag,
         lastModified: lastModified,
         isCollection: true,
+        hasPreview: false,
+        ownerId: ownerId,
+      );
+
+  void addAlbumJson(
+    String homeDir,
+    String filename, {
+    int contentLength = 1024,
+    String? etag,
+    DateTime? lastModified,
+    String ownerId = "admin",
+  }) =>
+      add(
+        "$homeDir/.com.nkming.nc_photos/albums/$filename.nc_album.json",
+        contentLength: contentLength,
+        contentType: "application/json",
+        etag: etag,
+        lastModified: lastModified,
         hasPreview: false,
         ownerId: ownerId,
       );
@@ -339,45 +378,189 @@ Sharee buildSharee({
       shareWith: shareWith,
     );
 
-Future<void> fillAppDb(
-    AppDb appDb, Account account, Iterable<File> files) async {
-  await appDb.use(
-    (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
-    (transaction) async {
-      final file2Store = transaction.objectStore(AppDb.file2StoreName);
-      for (final f in files) {
-        await file2Store.put(AppDbFile2Entry.fromFile(account, f).toJson(),
-            AppDbFile2Entry.toPrimaryKeyForFile(account, f));
-      }
-    },
+sql.SqliteDb buildTestDb() {
+  sql.driftRuntimeOptions.debugPrint = _debugPrintSql;
+  return sql.SqliteDb(
+    executor: sql.NativeDatabase.memory(
+      logStatements: true,
+    ),
   );
 }
 
-Future<void> fillAppDbDir(
-    AppDb appDb, Account account, File dir, List<File> children) async {
-  await appDb.use(
-    (db) => db.transaction(AppDb.dirStoreName, idbModeReadWrite),
-    (transaction) async {
-      final dirStore = transaction.objectStore(AppDb.dirStoreName);
-      await dirStore.put(
-          AppDbDirEntry.fromFiles(account, dir, children).toJson(),
-          AppDbDirEntry.toPrimaryKeyForDir(account, dir));
-    },
-  );
+Future<void> insertFiles(
+    sql.SqliteDb db, Account account, Iterable<File> files) async {
+  final dbAccount = await db.accountOf(account);
+  for (final f in files) {
+    final sharedQuery = db.selectOnly(db.files).join([
+      sql.innerJoin(
+          db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId),
+          useColumns: false),
+    ])
+      ..addColumns([db.files.rowId])
+      ..where(db.accountFiles.account.equals(dbAccount.rowId).not())
+      ..where(db.files.fileId.equals(f.fileId!));
+    var rowId = (await sharedQuery.map((r) => r.read(db.files.rowId)).get())
+        .firstOrNull;
+    final insert = SqliteFileConverter.toSql(dbAccount, f);
+    if (rowId == null) {
+      final dbFile = await db.into(db.files).insertReturning(insert.file);
+      rowId = dbFile.rowId;
+    }
+    final dbAccountFile = await db
+        .into(db.accountFiles)
+        .insertReturning(insert.accountFile.copyWith(file: sql.Value(rowId)));
+    if (insert.image != null) {
+      await db.into(db.images).insert(
+          insert.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
+    }
+    if (insert.trash != null) {
+      await db
+          .into(db.trashes)
+          .insert(insert.trash!.copyWith(file: sql.Value(rowId)));
+    }
+  }
 }
 
-Future<List<T>> listAppDb<T>(
-    AppDb appDb, String storeName, T Function(JsonObj) transform) {
-  return appDb.use(
-    (db) => db.transaction(storeName, idbModeReadOnly),
-    (transaction) async {
-      final store = transaction.objectStore(storeName);
-      return await store
-          .openCursor(autoAdvance: true)
-          .map((c) => c.value)
-          .cast<Map>()
-          .map((e) => transform(e.cast<String, dynamic>()))
-          .toList();
-    },
-  );
+Future<void> insertDirRelation(
+    sql.SqliteDb db, Account account, File dir, Iterable<File> children) async {
+  final dbAccount = await db.accountOf(account);
+  final dirRowIds = (await db
+          .accountFileRowIdsByFileIds([dir.fileId!], sqlAccount: dbAccount))
+      .first;
+  final childRowIds = await db.accountFileRowIdsByFileIds(
+      [dir, ...children].map((f) => f.fileId!),
+      sqlAccount: dbAccount);
+  await db.batch((batch) {
+    batch.insertAll(
+      db.dirFiles,
+      childRowIds.map((c) => sql.DirFilesCompanion.insert(
+            dir: dirRowIds.fileRowId,
+            child: c.fileRowId,
+          )),
+    );
+  });
+}
+
+Future<void> insertAlbums(
+    sql.SqliteDb db, Account account, Iterable<Album> albums) async {
+  final dbAccount = await db.accountOf(account);
+  for (final a in albums) {
+    final rowIds =
+        await db.accountFileRowIdsOf(a.albumFile!, sqlAccount: dbAccount);
+    final insert = SqliteAlbumConverter.toSql(a, rowIds.fileRowId);
+    final dbAlbum = await db.into(db.albums).insertReturning(insert.album);
+    for (final s in insert.albumShares) {
+      await db
+          .into(db.albumShares)
+          .insert(s.copyWith(album: sql.Value(dbAlbum.rowId)));
+    }
+  }
+}
+
+Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
+  final query = db.select(db.files).join([
+    sql.innerJoin(
+        db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
+    sql.innerJoin(
+        db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
+    sql.leftOuterJoin(
+        db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
+    sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
+  ]);
+  return (await query
+          .map((r) => SqliteFileConverter.fromSql(
+                r.readTable(db.accounts).userId,
+                sql.CompleteFile(
+                  r.readTable(db.files),
+                  r.readTable(db.accountFiles),
+                  r.readTableOrNull(db.images),
+                  r.readTableOrNull(db.trashes),
+                ),
+              ))
+          .get())
+      .toSet();
+}
+
+Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
+  final query = db.select(db.files).join([
+    sql.innerJoin(
+        db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
+    sql.innerJoin(
+        db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
+    sql.leftOuterJoin(
+        db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
+    sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
+  ]);
+  final fileMap = Map.fromEntries(await query.map((r) {
+    final f = sql.CompleteFile(
+      r.readTable(db.files),
+      r.readTable(db.accountFiles),
+      r.readTableOrNull(db.images),
+      r.readTableOrNull(db.trashes),
+    );
+    return MapEntry(
+      f.file.rowId,
+      SqliteFileConverter.fromSql(r.readTable(db.accounts).userId, f),
+    );
+  }).get());
+
+  final dirQuery = db.select(db.dirFiles);
+  final dirs = await dirQuery.map((r) => Tuple2(r.dir, r.child)).get();
+  final result = <File, Set<File>>{};
+  for (final d in dirs) {
+    (result[fileMap[d.item1]!] ??= <File>{}).add(fileMap[d.item2]!);
+  }
+  return result;
+}
+
+Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
+  final albumQuery = db.select(db.albums).join([
+    sql.innerJoin(db.files, db.files.rowId.equalsExp(db.albums.file)),
+    sql.innerJoin(
+        db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
+    sql.innerJoin(
+        db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
+  ]);
+  final albums = await albumQuery.map((r) {
+    final albumFile = SqliteFileConverter.fromSql(
+      r.readTable(db.accounts).userId,
+      sql.CompleteFile(
+        r.readTable(db.files),
+        r.readTable(db.accountFiles),
+        null,
+        null,
+      ),
+    );
+    return Tuple2(
+      r.read(db.albums.rowId),
+      SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
+    );
+  }).get();
+
+  final results = <Album>{};
+  for (final a in albums) {
+    final shareQuery = db.select(db.albumShares)
+      ..where((t) => t.album.equals(a.item1));
+    final dbShares = await shareQuery.get();
+    results.add(a.item2.copyWith(
+      lastUpdated: OrNull(null),
+      shares: dbShares.isEmpty
+          ? null
+          : OrNull(dbShares
+              .map((s) => AlbumShare(
+                  userId: s.userId.toCi(),
+                  displayName: s.displayName,
+                  sharedAt: s.sharedAt))
+              .toList()),
+    ));
+  }
+  return results;
+}
+
+bool shouldPrintSql = false;
+
+void _debugPrintSql(String log) {
+  if (shouldPrintSql) {
+    debugPrint(log, wrapWidth: 1024);
+  }
 }

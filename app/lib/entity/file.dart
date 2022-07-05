@@ -379,7 +379,7 @@ class File with EquatableMixin {
     String? path,
     int? contentLength,
     String? contentType,
-    String? etag,
+    OrNull<String>? etag,
     DateTime? lastModified,
     bool? isCollection,
     int? usedBytes,
@@ -398,7 +398,7 @@ class File with EquatableMixin {
       path: path ?? this.path,
       contentLength: contentLength ?? this.contentLength,
       contentType: contentType ?? this.contentType,
-      etag: etag ?? this.etag,
+      etag: etag == null ? this.etag : etag.obj,
       lastModified: lastModified ?? this.lastModified,
       isCollection: isCollection ?? this.isCollection,
       usedBytes: usedBytes ?? this.usedBytes,
@@ -447,7 +447,6 @@ class File with EquatableMixin {
   final bool? isCollection;
   final int? usedBytes;
   final bool? hasPreview;
-  // maybe null when loaded from old cache
   final int? fileId;
   final bool? isFavorite;
   final CiString? ownerId;

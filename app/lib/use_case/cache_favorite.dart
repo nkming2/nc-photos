@@ -1,12 +1,12 @@
+import 'package:drift/drift.dart' as sql;
 import 'package:event_bus/event_bus.dart';
-import 'package:idb_shim/idb_client.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
@@ -17,7 +17,7 @@ class CacheFavorite {
       : assert(require(_c)),
         assert(ListFavoriteOffline.require(_c));
 
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.appDb);
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
 
   /// Cache favorites
   Future<void> call(
@@ -34,39 +34,45 @@ class CacheFavorite {
     final newFavorites = result.item1;
     final removedFavorites =
         result.item2.map((f) => f.copyWith(isFavorite: false)).toList();
-    if (newFavorites.isEmpty && removedFavorites.isEmpty) {
+    final newFileIds = newFavorites.map((f) => f.fileId!).toList();
+    final removedFileIds = removedFavorites.map((f) => f.fileId!).toList();
+    if (newFileIds.isEmpty && removedFileIds.isEmpty) {
       return;
     }
-    await _c.appDb.use(
-      (db) => db.transaction(AppDb.file2StoreName, idbModeReadWrite),
-      (transaction) async {
-        final fileStore = transaction.objectStore(AppDb.file2StoreName);
-        await Future.wait(newFavorites.map((f) async {
-          _log.info("[call] New favorite: ${f.path}");
+    await _c.sqliteDb.use((db) async {
+      final rowIds = await db.accountFileRowIdsByFileIds(
+        newFileIds + removedFileIds,
+        appAccount: account,
+      );
+      final rowIdsMap =
+          Map.fromEntries(rowIds.map((e) => MapEntry(e.fileId, e)));
+      await db.batch((batch) {
+        for (final id in newFileIds) {
           try {
-            await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
-                AppDbFile2Entry.toPrimaryKeyForFile(account, f));
+            batch.update(
+              db.accountFiles,
+              const sql.AccountFilesCompanion(isFavorite: sql.Value(true)),
+              where: (sql.$AccountFilesTable t) =>
+                  t.rowId.equals(rowIdsMap[id]!.accountFileRowId),
+            );
           } catch (e, stackTrace) {
-            _log.shout(
-                "[call] Failed while writing new favorite to AppDb: ${logFilename(f.path)}",
-                e,
-                stackTrace);
+            _log.shout("[call] File not found in DB: $id", e, stackTrace);
           }
-        }));
-        await Future.wait(removedFavorites.map((f) async {
-          _log.info("[call] Remove favorite: ${f.path}");
+        }
+        for (final id in removedFileIds) {
           try {
-            await fileStore.put(AppDbFile2Entry.fromFile(account, f).toJson(),
-                AppDbFile2Entry.toPrimaryKeyForFile(account, f));
+            batch.update(
+              db.accountFiles,
+              const sql.AccountFilesCompanion(isFavorite: sql.Value(null)),
+              where: (sql.$AccountFilesTable t) =>
+                  t.rowId.equals(rowIdsMap[id]!.accountFileRowId),
+            );
           } catch (e, stackTrace) {
-            _log.shout(
-                "[call] Failed while writing removed favorite to AppDb: ${logFilename(f.path)}",
-                e,
-                stackTrace);
+            _log.shout("[call] File not found in DB: $id", e, stackTrace);
           }
-        }));
-      },
-    );
+        }
+      });
+    });
 
     KiwiContainer()
         .resolve<EventBus>()

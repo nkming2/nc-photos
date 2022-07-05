@@ -9,7 +9,7 @@ import 'package:tuple/tuple.dart';
 /// The first returned list contains items exist in [b] but not [a], the second
 /// returned list contains items exist in [a] but not [b]
 Tuple2<List<T>, List<T>> diffWith<T>(
-    List<T> a, List<T> b, int Function(T a, T b) comparator) {
+    Iterable<T> a, Iterable<T> b, int Function(T a, T b) comparator) {
   final aIt = a.iterator, bIt = b.iterator;
   final aMissing = <T>[], bMissing = <T>[];
   while (true) {
@@ -31,7 +31,8 @@ Tuple2<List<T>, List<T>> diffWith<T>(
   }
 }
 
-Tuple2<List<T>, List<T>> diff<T extends Comparable>(List<T> a, List<T> b) =>
+Tuple2<List<T>, List<T>> diff<T extends Comparable>(
+        Iterable<T> a, Iterable<T> b) =>
     diffWith(a, b, Comparable.compare);
 
 Tuple2<List<T>, List<T>> _diffUntilEqual<T>(

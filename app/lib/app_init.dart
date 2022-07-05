@@ -1,12 +1,13 @@
+import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/face/data_source.dart';
 import 'package:nc_photos/entity/favorite.dart';
@@ -21,6 +22,8 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_isolate.dart' as sql_isolate;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
@@ -34,13 +37,19 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:visibility_detector/visibility_detector.dart';
 
-Future<void> initAppLaunch() async {
+enum InitIsolateType {
+  main,
+  service,
+}
+
+Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
     _log.warning("[initAppLaunch] Already initialized in this isolate");
     return;
   }
 
   initLog();
+  _initDrift();
   _initKiwi();
   await _initPref();
   await _initAccountPrefs();
@@ -49,7 +58,7 @@ Future<void> initAppLaunch() async {
   if (features.isSupportSelfSignedCert) {
     _initSelfSignedCertManager();
   }
-  _initDiContainer();
+  await _initDiContainer(isolateType);
   _initVisibilityDetector();
 
   _hasInitedInThisIsolate = true;
@@ -99,6 +108,10 @@ void initLog() {
   });
 }
 
+void _initDrift() {
+  driftRuntimeOptions.debugPrint = _debugPrintSql;
+}
+
 Future<void> _initPref() async {
   final provider = PrefSharedPreferencesProvider();
   await provider.init();
@@ -146,30 +159,55 @@ void _initSelfSignedCertManager() {
   SelfSignedCertManager().init();
 }
 
-void _initDiContainer() {
-  LocalFileRepo? localFileRepo;
+Future<void> _initDiContainer(InitIsolateType isolateType) async {
+  final c = DiContainer.late();
+  c.pref = Pref();
+  c.sqliteDb = await _createDb(isolateType);
+
+  c.albumRepo = AlbumRepo(AlbumCachedDataSource(c));
+  c.albumRepoLocal = AlbumRepo(AlbumSqliteDbDataSource(c));
+  c.faceRepo = const FaceRepo(FaceRemoteDataSource());
+  c.fileRepo = FileRepo(FileCachedDataSource(c));
+  c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
+  c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
+  c.personRepo = const PersonRepo(PersonRemoteDataSource());
+  c.shareRepo = ShareRepo(ShareRemoteDataSource());
+  c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
+  c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());
+  c.tagRepo = const TagRepo(TagRemoteDataSource());
+  c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
+
   if (platform_k.isAndroid) {
     // local file currently only supported on Android
-    localFileRepo = const LocalFileRepo(LocalFileMediaStoreDataSource());
+    c.localFileRepo = const LocalFileRepo(LocalFileMediaStoreDataSource());
   }
-  KiwiContainer().registerInstance<DiContainer>(DiContainer(
-    albumRepo: AlbumRepo(AlbumCachedDataSource(AppDb())),
-    faceRepo: const FaceRepo(FaceRemoteDataSource()),
-    fileRepo: FileRepo(FileCachedDataSource(AppDb())),
-    personRepo: const PersonRepo(PersonRemoteDataSource()),
-    shareRepo: ShareRepo(ShareRemoteDataSource()),
-    shareeRepo: ShareeRepo(ShareeRemoteDataSource()),
-    favoriteRepo: const FavoriteRepo(FavoriteRemoteDataSource()),
-    tagRepo: const TagRepo(TagRemoteDataSource()),
-    taggedFileRepo: const TaggedFileRepo(TaggedFileRemoteDataSource()),
-    localFileRepo: localFileRepo,
-    appDb: AppDb(),
-    pref: Pref(),
-  ));
+
+  KiwiContainer().registerInstance<DiContainer>(c);
 }
 
 void _initVisibilityDetector() {
   VisibilityDetectorController.instance.updateInterval = Duration.zero;
+}
+
+Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
+  switch (isolateType) {
+    case InitIsolateType.main:
+      // use driftIsolate to prevent DB blocking the UI thread
+      if (platform_k.isWeb) {
+        // no isolate support on web
+        return sql.SqliteDb();
+      } else {
+        return sql_isolate.createDb();
+      }
+
+    case InitIsolateType.service:
+      // service already runs in an isolate
+      return sql.SqliteDb();
+  }
+}
+
+void _debugPrintSql(String log) {
+  _log.finer(log);
 }
 
 final _log = Logger("app_init");

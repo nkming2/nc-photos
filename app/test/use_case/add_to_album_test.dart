@@ -8,7 +8,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
@@ -44,13 +44,17 @@ Future<void> _addFile() async {
   final album = util.AlbumBuilder().build();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, [file]);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, [file]);
+  });
 
   await AddToAlbum(c)(
     account,
@@ -80,7 +84,7 @@ Future<void> _addFile() async {
               addedBy: "admin".toCi(),
               addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
               file: file,
-            ),
+            ).minimize(),
           ],
           latestItemTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
         ),
@@ -106,13 +110,17 @@ Future<void> _addExistingFile() async {
   final newFile = files[0].copyWith();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await AddToAlbum(c)(
     account,
@@ -188,14 +196,19 @@ Future<void> _addExistingSharedFile() async {
   final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-      await util.fillAppDb(obj, user1Account, user1Files);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccountOf(user1Account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertFiles(c.sqliteDb, user1Account, user1Files);
+  });
 
   await AddToAlbum(c)(
     account,
@@ -247,17 +260,21 @@ Future<void> _addFileToSharedAlbumOwned() async {
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, [file]);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, [file]);
+  });
 
   await AddToAlbum(c)(
     account,
@@ -290,17 +307,21 @@ Future<void> _addFileOwnedByUserToSharedAlbumOwned() async {
   final album = (util.AlbumBuilder()..addShare("user1")).build();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, [file]);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, [file]);
+  });
 
   await AddToAlbum(c)(
     account,
@@ -335,6 +356,7 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
       .build();
   final albumFile = album.albumFile!;
   final c = DiContainer(
+    fileRepo: MockFileMemoryRepo(),
     albumRepo: MockAlbumMemoryRepo([album]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(
@@ -342,13 +364,16 @@ Future<void> _addFileToMultiuserSharedAlbumNotOwned() async {
       util.buildShare(
           id: "1", file: albumFile, uidOwner: "user1", shareWith: "user2"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, [file]);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, [file]);
+  });
 
   await AddToAlbum(c)(
     account,

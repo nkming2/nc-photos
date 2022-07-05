@@ -1,33 +1,16 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:equatable/equatable.dart';
-import 'package:idb_sqflite/idb_sqflite.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/int_util.dart' as int_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/type.dart';
-import 'package:nc_photos/use_case/get_file_binary.dart';
-import 'package:nc_photos/use_case/ls_single_file.dart';
-import 'package:nc_photos/use_case/put_file_binary.dart';
-import 'package:quiver/iterables.dart';
-import 'package:tuple/tuple.dart';
 
 /// Immutable object that represents an album
 class Album with EquatableMixin {
@@ -229,6 +212,8 @@ class Album with EquatableMixin {
 
   /// versioning of this class, use to upgrade old persisted album
   static const version = 8;
+
+  static final _log = Logger("entity.album.Album");
 }
 
 class AlbumShare with EquatableMixin {
@@ -299,6 +284,10 @@ class AlbumRepo {
   Future<Album> get(Account account, File albumFile) =>
       dataSrc.get(account, albumFile);
 
+  /// See [AlbumDataSource.getAll]
+  Stream<dynamic> getAll(Account account, List<File> albumFiles) =>
+      dataSrc.getAll(account, albumFiles);
+
   /// See [AlbumDataSource.create]
   Future<Album> create(Account account, Album album) =>
       dataSrc.create(account, album);
@@ -307,11 +296,6 @@ class AlbumRepo {
   Future<void> update(Account account, Album album) =>
       dataSrc.update(account, album);
 
-  /// See [AlbumDataSource.cleanUp]
-  Future<void> cleanUp(
-          Account account, String rootDir, List<File> albumFiles) =>
-      dataSrc.cleanUp(account, rootDir, albumFiles);
-
   final AlbumDataSource dataSrc;
 }
 
@@ -319,292 +303,12 @@ abstract class AlbumDataSource {
   /// Return the album defined by [albumFile]
   Future<Album> get(Account account, File albumFile);
 
+  /// Emit albums defined by [albumFiles] or ExceptionEvent
+  Stream<dynamic> getAll(Account account, List<File> albumFiles);
+
   // Create a new album
   Future<Album> create(Account account, Album album);
 
   /// Update an album
   Future<void> update(Account account, Album album);
-
-  /// Clean up cached albums
-  ///
-  /// Remove dangling albums in cache not listed in [albumFiles] and located
-  /// inside [rootDir]. Do nothing if this data source does not cache previous
-  /// results
-  Future<void> cleanUp(Account account, String rootDir, List<File> albumFiles);
 }
-
-class AlbumRemoteDataSource implements AlbumDataSource {
-  @override
-  get(Account account, File albumFile) async {
-    _log.info("[get] ${albumFile.path}");
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    final data = await GetFileBinary(fileRepo)(account, albumFile);
-    try {
-      return Album.fromJson(
-        jsonDecode(utf8.decode(data)),
-        upgraderFactory: DefaultAlbumUpgraderFactory(
-          account: account,
-          albumFile: albumFile,
-          logFilePath: albumFile.path,
-        ),
-      )!
-          .copyWith(
-        lastUpdated: OrNull(null),
-        albumFile: OrNull(albumFile),
-      );
-    } catch (e, stacktrace) {
-      dynamic d = data;
-      try {
-        d = utf8.decode(data);
-      } catch (_) {}
-      _log.severe("[get] Invalid json data: $d", e, stacktrace);
-      throw const FormatException("Invalid album format");
-    }
-  }
-
-  @override
-  create(Account account, Album album) async {
-    _log.info("[create]");
-    final fileName = _makeAlbumFileName();
-    final filePath =
-        "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    await PutFileBinary(fileRepo)(account, filePath,
-        const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
-        shouldCreateMissingDir: true);
-    // query album file
-    final newFile = await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
-        account, filePath);
-    return album.copyWith(albumFile: OrNull(newFile));
-  }
-
-  @override
-  update(Account account, Album album) async {
-    _log.info("[update] ${album.albumFile!.path}");
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    await PutFileBinary(fileRepo)(account, album.albumFile!.path,
-        const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())));
-  }
-
-  @override
-  cleanUp(Account account, String rootDir, List<File> albumFiles) async {}
-
-  String _makeAlbumFileName() {
-    // just make up something
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final random = Random().nextInt(0xFFFFFF);
-    return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.nc_album.json";
-  }
-
-  static final _log = Logger("entity.album.AlbumRemoteDataSource");
-}
-
-class AlbumAppDbDataSource implements AlbumDataSource {
-  const AlbumAppDbDataSource(this.appDb);
-
-  @override
-  get(Account account, File albumFile) {
-    _log.info("[get] ${albumFile.path}");
-    return appDb.use(
-      (db) => db.transaction(AppDb.albumStoreName, idbModeReadOnly),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.albumStoreName);
-        final index = store.index(AppDbAlbumEntry.indexName);
-        final path = AppDbAlbumEntry.toPathFromFile(account, albumFile);
-        final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-        final List results = await index.getAll(range);
-        if (results.isNotEmpty == true) {
-          final entries = results.map((e) =>
-              AppDbAlbumEntry.fromJson(e.cast<String, dynamic>(), account));
-          if (entries.length > 1) {
-            final items = entries.map((e) {
-              _log.info("[get] ${e.path}[${e.index}]");
-              return AlbumStaticProvider.of(e.album).items;
-            }).reduce((value, element) => value + element);
-            return entries.first.album.copyWith(
-              lastUpdated: OrNull(null),
-              provider: AlbumStaticProvider.of(entries.first.album).copyWith(
-                items: items,
-              ),
-            );
-          } else {
-            return entries.first.album;
-          }
-        } else {
-          throw CacheNotFoundException("No entry: $path");
-        }
-      },
-    );
-  }
-
-  @override
-  create(Account account, Album album) async {
-    _log.info("[create]");
-    throw UnimplementedError();
-  }
-
-  @override
-  update(Account account, Album album) {
-    _log.info("[update] ${album.albumFile!.path}");
-    return appDb.use(
-      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.albumStoreName);
-        await _cacheAlbum(store, account, album);
-      },
-    );
-  }
-
-  @override
-  cleanUp(Account account, String rootDir, List<File> albumFiles) async {}
-
-  final AppDb appDb;
-
-  static final _log = Logger("entity.album.AlbumAppDbDataSource");
-}
-
-class AlbumCachedDataSource implements AlbumDataSource {
-  AlbumCachedDataSource(this.appDb) : _appDbSrc = AlbumAppDbDataSource(appDb);
-
-  @override
-  get(Account account, File albumFile) async {
-    try {
-      final cache = await _appDbSrc.get(account, albumFile);
-      if (cache.albumFile!.etag?.isNotEmpty == true &&
-          cache.albumFile!.etag == albumFile.etag) {
-        // cache is good
-        _log.fine(
-            "[get] etag matched for ${AppDbAlbumEntry.toPathFromFile(account, albumFile)}");
-        return cache;
-      }
-      _log.info(
-          "[get] Remote content updated for ${AppDbAlbumEntry.toPathFromFile(account, albumFile)}");
-    } on CacheNotFoundException catch (_) {
-      // normal when there's no cache
-    } catch (e, stacktrace) {
-      _log.shout("[get] Cache failure", e, stacktrace);
-    }
-
-    // no cache
-    final remote = await _remoteSrc.get(account, albumFile);
-    await _cacheResult(account, remote);
-    return remote;
-  }
-
-  @override
-  update(Account account, Album album) async {
-    await _remoteSrc.update(account, album);
-    await _appDbSrc.update(account, album);
-  }
-
-  @override
-  create(Account account, Album album) => _remoteSrc.create(account, album);
-
-  @override
-  cleanUp(Account account, String rootDir, List<File> albumFiles) async {
-    appDb.use(
-      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.albumStoreName);
-        final index = store.index(AppDbAlbumEntry.indexName);
-        final rootPath = AppDbAlbumEntry.toPath(account, rootDir);
-        final range = KeyRange.bound(
-            ["$rootPath/", 0], ["$rootPath/\uffff", int_util.int32Max]);
-        final danglingKeys = await index
-            // get all albums for this account
-            .openKeyCursor(range: range, autoAdvance: true)
-            .map((cursor) => Tuple2((cursor.key as List)[0], cursor.primaryKey))
-            // and pick the dangling ones
-            .where((pair) => !albumFiles.any((f) =>
-                pair.item1 == AppDbAlbumEntry.toPathFromFile(account, f)))
-            // map to primary keys
-            .map((pair) => pair.item2)
-            .toList();
-        for (final k in danglingKeys) {
-          _log.fine("[cleanUp] Removing albumStore entry: $k");
-          try {
-            await store.delete(k);
-          } catch (e, stackTrace) {
-            _log.shout(
-                "[cleanUp] Failed removing albumStore entry", e, stackTrace);
-          }
-        }
-      },
-    );
-  }
-
-  Future<void> _cacheResult(Account account, Album result) {
-    return appDb.use(
-      (db) => db.transaction(AppDb.albumStoreName, idbModeReadWrite),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.albumStoreName);
-        await _cacheAlbum(store, account, result);
-      },
-    );
-  }
-
-  final AppDb appDb;
-  final _remoteSrc = AlbumRemoteDataSource();
-  final AlbumAppDbDataSource _appDbSrc;
-
-  static final _log = Logger("entity.album.AlbumCachedDataSource");
-}
-
-Future<void> _cacheAlbum(
-    ObjectStore store, Account account, Album album) async {
-  final index = store.index(AppDbAlbumEntry.indexName);
-  final path = AppDbAlbumEntry.toPathFromFile(account, album.albumFile!);
-  final range = KeyRange.bound([path, 0], [path, int_util.int32Max]);
-  // count number of entries for this album
-  final count = await index.count(range);
-
-  // cut large album into smaller pieces, needed to workaround Android DB
-  // limitation
-  final entries = <AppDbAlbumEntry>[];
-  if (album.provider is AlbumStaticProvider) {
-    var albumItemLists = partition(
-            AlbumStaticProvider.of(album).items, AppDbAlbumEntry.maxDataSize)
-        .toList();
-    if (albumItemLists.isEmpty) {
-      albumItemLists = [<AlbumItem>[]];
-    }
-    entries.addAll(albumItemLists.withIndex().map((pair) => AppDbAlbumEntry(
-        path,
-        pair.item1,
-        album.copyWith(
-          lastUpdated: OrNull(null),
-          provider: AlbumStaticProvider.of(album).copyWith(
-            items: pair.item2,
-          ),
-        ))));
-  } else {
-    entries.add(AppDbAlbumEntry(path, 0, album));
-  }
-
-  for (final e in entries) {
-    _log.info("[_cacheAlbum] Caching ${e.path}[${e.index}]");
-    await store.put(e.toJson(),
-        AppDbAlbumEntry.toPrimaryKey(account, e.album.albumFile!, e.index));
-  }
-
-  if (count > entries.length) {
-    // index is 0-based
-    final rmRange =
-        KeyRange.bound([path, entries.length], [path, int_util.int32Max]);
-    final rmKeys = await index
-        .openKeyCursor(range: rmRange, autoAdvance: true)
-        .map((cursor) => cursor.primaryKey)
-        .toList();
-    for (final k in rmKeys) {
-      _log.fine("[_cacheAlbum] Removing albumStore entry: $k");
-      try {
-        await store.delete(k);
-      } catch (e, stackTrace) {
-        _log.shout(
-            "[_cacheAlbum] Failed removing albumStore entry", e, stackTrace);
-      }
-    }
-  }
-}
-
-final _log = Logger("entity.album");

@@ -3,8 +3,8 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
@@ -175,9 +175,9 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
   }
 
   Future<List<File>> _query(LsTrashbinBlocQuery ev) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     // caching contents in trashbin doesn't sounds useful
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    final files = await LsTrashbin(fileRepo)(ev.account);
+    final files = await LsTrashbin(c.fileRepoRemote)(ev.account);
     return files.where((f) => file_util.isSupportedFormat(f)).toList();
   }
 

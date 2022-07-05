@@ -67,8 +67,13 @@ extension IterableExtension<T> on Iterable<T> {
   }
 
   Future<List<U>> computeAll<U>(ComputeCallback<T, U> callback) async {
-    return await compute(
-        _computeAllImpl<T, U>, _ComputeAllMessage(callback, asList()));
+    final list = asList();
+    if (list.isEmpty) {
+      return [];
+    } else {
+      return await compute(
+          _computeAllImpl<T, U>, _ComputeAllMessage(callback, list));
+    }
   }
 
   /// Return a list containing elements in this iterable

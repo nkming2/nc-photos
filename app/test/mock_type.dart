@@ -3,26 +3,22 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:event_bus/event_bus.dart';
-import 'package:idb_shim/idb.dart';
-import 'package:idb_shim/idb_client_memory.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/future_util.dart' as future_util;
 import 'package:nc_photos/or_null.dart';
+import 'package:path/path.dart' as path_lib;
 
 /// Mock of [AlbumRepo] where all methods will throw UnimplementedError
 class MockAlbumRepo implements AlbumRepo {
-  @override
-  Future<void> cleanUp(Account account, String rootDir, List<File> albumFiles) {
-    throw UnimplementedError();
-  }
-
   @override
   Future<Album> create(Account account, Album album) {
     throw UnimplementedError();
@@ -33,6 +29,11 @@ class MockAlbumRepo implements AlbumRepo {
 
   @override
   Future<Album> get(Account account, File albumFile) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<dynamic> getAll(Account account, List<File> albumFiles) {
     throw UnimplementedError();
   }
 
@@ -55,6 +56,17 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
   }
 
   @override
+  getAll(Account account, List<File> albumFiles) async* {
+    final results = await future_util.waitOr(
+      albumFiles.map((f) => get(account, f)),
+      (error, stackTrace) => ExceptionEvent(error, stackTrace),
+    );
+    for (final r in results) {
+      yield r;
+    }
+  }
+
+  @override
   update(Account account, Album album) async {
     final i = albums.indexWhere((element) =>
         element.albumFile?.compareServerIdentity(album.albumFile!) == true);
@@ -65,120 +77,6 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
       albums.firstWhere((element) => element.albumFile?.path == path);
 
   final List<Album> albums;
-}
-
-/// Each MockAppDb instance contains a unique memory database
-class MockAppDb implements AppDb {
-  static Future<MockAppDb> create({
-    bool hasAlbumStore = true,
-    bool hasFileDb2Store = true,
-    bool hasDirStore = true,
-    bool hasMetaStore = true,
-    // compat
-    bool hasFileStore = false,
-    bool hasFileDbStore = false,
-  }) async {
-    final inst = MockAppDb();
-    final db = await inst._dbFactory.open(
-      "test.db",
-      version: 1,
-      onUpgradeNeeded: (event) async {
-        final db = event.database;
-        _createDb(
-          db,
-          hasAlbumStore: hasAlbumStore,
-          hasFileDb2Store: hasFileDb2Store,
-          hasDirStore: hasDirStore,
-          hasMetaStore: hasMetaStore,
-          hasFileStore: hasFileStore,
-          hasFileDbStore: hasFileDbStore,
-        );
-      },
-    );
-    db.close();
-    return inst;
-  }
-
-  @override
-  Future<T> use<T>(Transaction Function(Database db) transactionBuilder,
-      FutureOr<T> Function(Transaction transaction) fn) async {
-    final db = await _dbFactory.open(
-      "test.db",
-      version: 1,
-      onUpgradeNeeded: (event) async {
-        final db = event.database;
-        _createDb(db);
-      },
-    );
-
-    Transaction? transaction;
-    try {
-      transaction = transactionBuilder(db);
-      return await fn(transaction);
-    } finally {
-      if (transaction != null) {
-        await transaction.completed;
-      }
-      db.close();
-    }
-  }
-
-  @override
-  Future<void> delete() async {
-    await _dbFactory.deleteDatabase("test.db");
-  }
-
-  static void _createDb(
-    Database db, {
-    bool hasAlbumStore = true,
-    bool hasFileDb2Store = true,
-    bool hasDirStore = true,
-    bool hasMetaStore = true,
-    // compat
-    bool hasFileStore = false,
-    bool hasFileDbStore = false,
-  }) {
-    if (hasAlbumStore) {
-      final albumStore = db.createObjectStore(AppDb.albumStoreName);
-      albumStore.createIndex(
-          AppDbAlbumEntry.indexName, AppDbAlbumEntry.keyPath);
-    }
-    if (hasFileDb2Store) {
-      final file2Store = db.createObjectStore(AppDb.file2StoreName);
-      file2Store.createIndex(AppDbFile2Entry.strippedPathIndexName,
-          AppDbFile2Entry.strippedPathKeyPath);
-      file2Store.createIndex(AppDbFile2Entry.dateTimeEpochMsIndexName,
-          AppDbFile2Entry.dateTimeEpochMsKeyPath);
-    }
-    if (hasDirStore) {
-      db.createObjectStore(AppDb.dirStoreName);
-    }
-    if (hasMetaStore) {
-      db.createObjectStore(AppDb.metaStoreName,
-          keyPath: AppDbMetaEntry.keyPath);
-    }
-
-    // compat
-    if (hasFileStore) {
-      final fileStore = db.createObjectStore(_fileStoreName);
-      fileStore.createIndex(_fileIndexName, _fileKeyPath);
-    }
-    if (hasFileDbStore) {
-      final fileDbStore = db.createObjectStore(_fileDbStoreName);
-      fileDbStore.createIndex(_fileDbIndexName, _fileDbKeyPath, unique: false);
-    }
-  }
-
-  late final _dbFactory = newIdbFactoryMemory();
-
-  // compat only
-  static const _fileDbStoreName = "filesDb";
-  static const _fileDbIndexName = "fileDbStore_namespacedFileId";
-  static const _fileDbKeyPath = "namespacedFileId";
-
-  static const _fileStoreName = "files";
-  static const _fileIndexName = "fileStore_path_index";
-  static const _fileKeyPath = ["path", "index"];
 }
 
 /// EventBus that ignore all events
@@ -200,10 +98,10 @@ class MockEventBus implements EventBus {
   final _streamController = StreamController.broadcast();
 }
 
-/// Mock of [FileRepo] where all methods will throw UnimplementedError
-class MockFileRepo implements FileRepo {
+/// Mock of [FileDataSource] where all methods will throw UnimplementedError
+class MockFileDataSource implements FileDataSource {
   @override
-  Future<void> copy(Object account, File f, String destination,
+  Future<void> copy(Account account, File f, String destination,
       {bool? shouldOverwrite}) {
     throw UnimplementedError();
   }
@@ -214,20 +112,17 @@ class MockFileRepo implements FileRepo {
   }
 
   @override
-  FileDataSource get dataSrc => throw UnimplementedError();
-
-  @override
-  Future<Uint8List> getBinary(Account account, File file) {
+  Future<Uint8List> getBinary(Account account, File f) {
     throw UnimplementedError();
   }
 
   @override
-  Future<List<File>> list(Account account, File root) async {
+  Future<List<File>> list(Account account, File dir) {
     throw UnimplementedError();
   }
 
   @override
-  Future<File> listSingle(Account account, File root) async {
+  Future<File> listSingle(Account account, File f) {
     throw UnimplementedError();
   }
 
@@ -243,14 +138,14 @@ class MockFileRepo implements FileRepo {
   }
 
   @override
-  Future<void> remove(Account account, File file) {
+  Future<void> remove(Account account, File f) {
     throw UnimplementedError();
   }
 
   @override
   Future<void> updateProperty(
     Account account,
-    File file, {
+    File f, {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
@@ -260,9 +155,9 @@ class MockFileRepo implements FileRepo {
   }
 }
 
-/// [FileRepo] mock that support some ops with an internal List
-class MockFileMemoryRepo extends MockFileRepo {
-  MockFileMemoryRepo([
+/// [FileDataSource] mock that support some ops with an internal List
+class MockFileMemoryDataSource extends MockFileDataSource {
+  MockFileMemoryDataSource([
     List<File> initialData = const [],
   ]) : files = initialData.map((f) => f.copyWith()).toList() {
     _id = files
@@ -274,7 +169,12 @@ class MockFileMemoryRepo extends MockFileRepo {
 
   @override
   list(Account account, File root) async {
-    return files.where((f) => file_util.isOrUnderDir(f, root)).toList();
+    return files.where((f) => path_lib.dirname(f.path) == root.path).toList();
+  }
+
+  @override
+  listSingle(Account account, File file) async {
+    return files.where((f) => f.strippedPath == file.strippedPath).first;
   }
 
   @override
@@ -289,7 +189,76 @@ class MockFileMemoryRepo extends MockFileRepo {
   }
 
   final List<File> files;
+  // ignore: unused_field
   var _id = 0;
+}
+
+class MockFileWebdavDataSource implements FileWebdavDataSource {
+  const MockFileWebdavDataSource(this.src);
+
+  @override
+  copy(Account account, File f, String destination, {bool? shouldOverwrite}) =>
+      src.copy(account, f, destination, shouldOverwrite: shouldOverwrite);
+
+  @override
+  createDir(Account account, String path) => src.createDir(account, path);
+
+  @override
+  getBinary(Account account, File f) => src.getBinary(account, f);
+
+  @override
+  list(Account account, File dir, {int? depth}) async {
+    if (depth == 0) {
+      return [await src.listSingle(account, dir)];
+    } else {
+      return src.list(account, dir);
+    }
+  }
+
+  @override
+  listSingle(Account account, File f) => src.listSingle(account, f);
+
+  @override
+  move(Account account, File f, String destination, {bool? shouldOverwrite}) =>
+      src.move(account, f, destination, shouldOverwrite: shouldOverwrite);
+
+  @override
+  putBinary(Account account, String path, Uint8List content) =>
+      src.putBinary(account, path, content);
+
+  @override
+  remove(Account account, File f) => src.remove(account, f);
+
+  @override
+  updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
+  }) =>
+      src.updateProperty(
+        account,
+        f,
+        metadata: metadata,
+        isArchived: isArchived,
+        overrideDateTime: overrideDateTime,
+        favorite: favorite,
+      );
+
+  final MockFileMemoryDataSource src;
+}
+
+/// [FileRepo] mock that support some ops with an internal List
+class MockFileMemoryRepo extends FileRepo {
+  MockFileMemoryRepo([
+    List<File> initialData = const [],
+  ]) : super(MockFileMemoryDataSource(initialData));
+
+  List<File> get files {
+    return (dataSrc as MockFileMemoryDataSource).files;
+  }
 }
 
 /// Mock of [ShareRepo] where all methods will throw UnimplementedError
@@ -426,6 +395,4 @@ extension MockDiContainerExtension on DiContainer {
   MockShareMemoryRepo get shareMemoryRepo => shareRepo as MockShareMemoryRepo;
   MockShareeMemoryRepo get shareeMemoryRepo =>
       shareeRepo as MockShareeMemoryRepo;
-
-  MockAppDb get appMemeoryDb => appDb as MockAppDb;
 }

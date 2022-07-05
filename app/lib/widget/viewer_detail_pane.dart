@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
@@ -17,7 +16,6 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -59,6 +57,16 @@ class ViewerDetailPane extends StatefulWidget {
 }
 
 class _ViewerDetailPaneState extends State<ViewerDetailPane> {
+  _ViewerDetailPaneState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.albumRepo);
+
   @override
   initState() {
     super.initState();
@@ -380,8 +388,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-          await UpdateAlbum(albumRepo)(
+          await UpdateAlbum(_c.albumRepo)(
               widget.account,
               widget.album!.copyWith(
                 coverProvider: AlbumManualCoverProvider(
@@ -427,8 +434,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     try {
       await NotifiedAction(
         () async {
-          final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-          await UpdateProperty(fileRepo)
+          await UpdateProperty(_c.fileRepo)
               .updateIsArchived(widget.account, widget.file, false);
           if (mounted) {
             Navigator.of(context).pop();
@@ -464,9 +470,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       if (value == null || value is! DateTime) {
         return;
       }
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       try {
-        await UpdateProperty(fileRepo)
+        await UpdateProperty(_c.fileRepo)
             .updateOverrideDateTime(widget.account, widget.file, value);
         if (mounted) {
           setState(() {
@@ -519,6 +524,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     } catch (_) {}
     return false;
   }
+
+  late final DiContainer _c;
 
   late DateTime _dateTime;
   // EXIF data

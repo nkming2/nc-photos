@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -253,6 +256,10 @@ class _SignInState extends State<SignIn> {
       return;
     }
     // we've got a good account
+    final c = KiwiContainer().resolve<DiContainer>();
+    await c.sqliteDb.use((db) async {
+      await db.insertAccountOf(account!);
+    });
     // only signing in with app password would trigger distinct
     final accounts = (Pref().getAccounts3Or([])..add(account)).distinct();
     try {

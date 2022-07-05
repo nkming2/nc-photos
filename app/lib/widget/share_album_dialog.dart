@@ -5,7 +5,6 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_sharee.dart';
@@ -13,8 +12,6 @@ import 'package:nc_photos/bloc/search_suggestion.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -41,6 +38,16 @@ class ShareAlbumDialog extends StatefulWidget {
 }
 
 class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
+  _ShareAlbumDialogState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.albumRepo) &&
+      DiContainer.has(c, DiType.shareRepo);
+
   @override
   initState() {
     super.initState();
@@ -227,12 +234,10 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   }
 
   Future<bool> _createShare(Sharee sharee) async {
-    final shareRepo = ShareRepo(ShareRemoteDataSource());
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
     var hasFailure = false;
     try {
       _album = await _editMutex.protect(() async {
-        return await ShareAlbumWithUser(shareRepo, albumRepo)(
+        return await ShareAlbumWithUser(_c.shareRepo, _c.albumRepo)(
           widget.account,
           _album,
           sharee,
@@ -319,6 +324,8 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       _shareeBloc.add(ListShareeBlocQuery(widget.account));
     }
   }
+
+  late final DiContainer _c;
 
   late final _shareeBloc = ListShareeBloc.of(widget.account);
   final _suggestionBloc = SearchSuggestionBloc<Sharee>(

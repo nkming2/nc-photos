@@ -8,7 +8,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_face.dart';
 import 'package:nc_photos/cache_manager_util.dart';
@@ -76,6 +75,14 @@ class PersonBrowser extends StatefulWidget {
 
 class _PersonBrowserState extends State<PersonBrowser>
     with SelectableItemStreamListMixin<PersonBrowser> {
+  _PersonBrowserState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+
   @override
   initState() {
     super.initState();
@@ -414,7 +421,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _transformItems(List<Face> items) async {
-    final files = await PopulatePerson(AppDb())(widget.account, items);
+    final files = await PopulatePerson(_c)(widget.account, items);
     _backingFiles = files
         .sorted(compareFileDateTimeDescending)
         .where((element) =>
@@ -441,6 +448,8 @@ class _PersonBrowserState extends State<PersonBrowser>
   void _reqQuery() {
     _bloc.add(ListFaceBlocQuery(widget.account, widget.person));
   }
+
+  late final DiContainer _c;
 
   final ListFaceBloc _bloc = ListFaceBloc();
   List<File>? _backingFiles;

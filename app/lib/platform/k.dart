@@ -8,3 +8,4 @@ final isMobile = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 final isAndroid = !kIsWeb && Platform.isAndroid;
 final isDesktop =
     !kIsWeb && (Platform.isLinux || Platform.isMacOS || Platform.isWindows);
+final isUnitTest = !kIsWeb && Platform.environment.containsKey("FLUTTER_TEST");

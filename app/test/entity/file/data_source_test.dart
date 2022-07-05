@@ -1,16 +1,15 @@
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/list_extension.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:test/test.dart';
 
-import '../../mock_type.dart';
 import '../../test_util.dart' as util;
 
 void main() {
-  group("FileAppDbDataSource", () {
+  group("FileSqliteDbDataSource", () {
     test("list", _list);
     test("listSingle", _listSingle);
     group("remove", () {
@@ -19,7 +18,12 @@ void main() {
       test("dir w/ file", _removeDir);
       test("dir w/ sub dir", _removeDirWithSubDir);
     });
-    test("updateProperty", _updateProperty);
+    group("updateProperty", () {
+      test("file properties", _updateFileProperty);
+      test("update metadata", _updateMetadata);
+      test("add metadata", _updateAddMetadata);
+      test("delete metadata", _updateDeleteMetadata);
+    });
   });
 }
 
@@ -38,12 +42,19 @@ Future<void> _list() async {
         ..addDir("admin/test")
         ..addJpeg("admin/test/test2.jpg"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], files.slice(1, 3));
-    await util.fillAppDbDir(obj, account, files[2], [files[3]]);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(
+        c.sqliteDb, account, files[0], files.slice(1, 3));
+    await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   expect(await src.list(account, files[0]), files.slice(0, 3));
   expect(await src.list(account, files[2]), files.slice(2, 4));
 }
@@ -54,69 +65,83 @@ Future<void> _list() async {
 Future<void> _listSingle() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()..addDir("admin")).build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDbDir(obj, account, files[0], []);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], const []);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   expect(() async => await src.listSingle(account, files[0]),
       throwsUnimplementedError);
 }
 
 /// Remove a file
 ///
-/// Expect: entry removed from file2Store
+/// Expect: entry removed from Files table
 Future<void> _removeFile() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], [files[1]]);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   await src.remove(account, files[1]);
   expect(
-    (await util.listAppDb(
-            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
-        .map((e) => e.file)
-        .toList(),
-    [files[0]],
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0]},
   );
 }
 
 /// Remove an empty dir
 ///
-/// Expect: dir entry removed from dirStore;
-/// no changes to parent dir entry
+/// Expect: entry removed from DirFiles table
 Future<void> _removeEmptyDir() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addDir("admin/test"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], [files[1]]);
-    await util.fillAppDbDir(obj, account, files[1], []);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[1], const []);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   await src.remove(account, files[1]);
   // parent dir is not updated, parent dir is only updated when syncing with
   // remote
   expect(
-    await util.listAppDb(
-        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
-    [
-      AppDbDirEntry.fromFiles(account, files[0], [files[1]]),
-    ],
+    await util.listSqliteDbDirs(c.sqliteDb),
+    {
+      files[0]: {files[0]},
+    },
   );
 }
 
 /// Remove a dir with file
 ///
-/// Expect: file entries under the dir removed from file2Store
+/// Expect: file entries under the dir removed from Files table
 Future<void> _removeDir() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
@@ -124,25 +149,28 @@ Future<void> _removeDir() async {
         ..addDir("admin/test")
         ..addJpeg("admin/test/test1.jpg"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], [files[1]]);
-    await util.fillAppDbDir(obj, account, files[1], [files[2]]);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[1], [files[2]]);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   await src.remove(account, files[1]);
   expect(
-    (await util.listAppDb(
-            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
-        .map((e) => e.file)
-        .toList(),
-    [files[0]],
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0]},
   );
 }
 
 /// Remove a dir with file
 ///
-/// Expect: file entries under the dir removed from file2Store
+/// Expect: file entries under the dir removed from Files table
 Future<void> _removeDirWithSubDir() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
@@ -151,75 +179,192 @@ Future<void> _removeDirWithSubDir() async {
         ..addDir("admin/test/test2")
         ..addJpeg("admin/test/test2/test3.jpg"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], [files[1]]);
-    await util.fillAppDbDir(obj, account, files[1], [files[2]]);
-    await util.fillAppDbDir(obj, account, files[2], [files[3]]);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[1], [files[2]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
   await src.remove(account, files[1]);
   expect(
-    await util.listAppDb(
-        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
-    [
-      AppDbDirEntry.fromFiles(account, files[0], [files[1]]),
-    ],
+    await util.listSqliteDbDirs(c.sqliteDb),
+    {
+      files[0]: {files[0]}
+    },
   );
   expect(
-    (await util.listAppDb(
-            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
-        .map((e) => e.file)
-        .toList(),
-    [files[0]],
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0]},
   );
 }
 
 /// Update the properties of a file
 ///
-/// Expect: file's property updated in file2Store;
-/// file's property updated in dirStore
-Future<void> _updateProperty() async {
+/// Expect: file's property updated in Files table
+Future<void> _updateFileProperty() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg"))
       .build();
-  final appDb = await MockAppDb().applyFuture((obj) async {
-    await util.fillAppDb(obj, account, files);
-    await util.fillAppDbDir(obj, account, files[0], [files[1]]);
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
-  final src = FileAppDbDataSource(appDb);
+
+  final src = FileSqliteDbDataSource(c);
+  await src.updateProperty(
+    account,
+    files[1],
+    isArchived: OrNull(true),
+    overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+  );
+  final expectFile = files[1].copyWith(
+    isArchived: OrNull(true),
+    overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
+  );
+  expect(
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0], expectFile},
+  );
+}
+
+/// Update metadata of a file
+///
+/// Expect: Metadata updated in Images table
+Future<void> _updateMetadata() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  files[1] = files[1].copyWith(
+    metadata: OrNull(Metadata(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      imageWidth: 123,
+    )),
+  );
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+  });
+
+  final src = FileSqliteDbDataSource(c);
   await src.updateProperty(
     account,
     files[1],
     metadata: OrNull(Metadata(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678),
-      imageWidth: 123,
+      lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5),
+      imageWidth: 321,
+      imageHeight: 123,
     )),
-    isArchived: OrNull(true),
-    overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5, 678)),
   );
   final expectFile = files[1].copyWith(
     metadata: OrNull(Metadata(
-      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678),
+      lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5),
+      imageWidth: 321,
+      imageHeight: 123,
+    )),
+  );
+  expect(
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0], expectFile},
+  );
+}
+
+/// Add metadata to a file
+///
+/// Expect: Metadata added to Images table
+Future<void> _updateAddMetadata() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+  });
+
+  final src = FileSqliteDbDataSource(c);
+  await src.updateProperty(
+    account,
+    files[1],
+    metadata: OrNull(Metadata(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       imageWidth: 123,
     )),
-    isArchived: OrNull(true),
-    overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5, 678)),
+  );
+  final expectFile = files[1].copyWith(
+    metadata: OrNull(Metadata(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      imageWidth: 123,
+    )),
   );
   expect(
-    await util.listAppDb(
-        appDb, AppDb.dirStoreName, (e) => AppDbDirEntry.fromJson(e)),
-    [
-      AppDbDirEntry.fromFiles(account, files[0], [expectFile]),
-    ],
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0], expectFile},
+  );
+}
+
+/// Delete metadata of a file
+///
+/// Expect: Metadata deleted from Images table
+Future<void> _updateDeleteMetadata() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  files[1] = files[1].copyWith(
+    metadata: OrNull(Metadata(
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      imageWidth: 123,
+    )),
+  );
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
+  });
+
+  final src = FileSqliteDbDataSource(c);
+  await src.updateProperty(
+    account,
+    files[1],
+    metadata: OrNull(null),
+  );
+  final expectFile = files[1].copyWith(
+    metadata: OrNull(null),
   );
   expect(
-    (await util.listAppDb(
-            appDb, AppDb.file2StoreName, (e) => AppDbFile2Entry.fromJson(e)))
-        .map((e) => e.file)
-        .toList(),
-    [files[0], expectFile],
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0], expectFile},
   );
 }
