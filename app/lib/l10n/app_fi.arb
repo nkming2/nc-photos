@@ -309,6 +309,14 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
+	"settingsExifWifiOnlyTitle": "Prosessoi vain kun WIFI-yhteys on käytettävissä",
+	"@settingsExifWifiOnlyTitle": {
+		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+	},
+	"settingsExifWifiOnlyFalseSubtitle": "Toimenpiteestä voi aiheutua data-maksuja",
+	"@settingsExifWifiOnlyFalseSubtitle": {
+		"description": "Shown when users allow processing exif data over any network"
+	},
 	"settingsMemoriesTitle": "Muistot",
 	"@settingsMemoriesTitle": {
 		"description": "Memory albums contain photos taken in a specific time range in the past"
@@ -393,6 +401,12 @@
 	"settingsUseBlackInDarkThemeFalseDescription": "Käytä tumman harmaata tummassa teemassa",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
+	},
+	"settingsMiscellaneousTitle": "Sekalaiset",
+	"settingsMiscellaneousPageTitle": "Sekalaiset asetukset",
+	"settingsPhotosTabSortByNameTitle": "Järjestä tiedostonimen mukaan",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
 	},
 	"settingsExperimentalTitle": "Kokeellinen",
 	"settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
@@ -600,6 +614,14 @@
 	"sortOptionTimeDescendingLabel": "Uusin ensin",
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
+	},
+	"sortOptionFilenameAscendingLabel": "Tiedostonimi",
+	"@sortOptionFilenameAscendingLabel": {
+		"description": "Sort by filename, in ascending order"
+	},
+	"sortOptionFilenameDescendingLabel": "Tiedostonimi (laskeutuva)",
+	"@sortOptionFilenameDescendingLabel": {
+		"description": "Sort by filename, in descending order"
 	},
 	"sortOptionAlbumNameLabel": "Albumin nimi",
 	"@sortOptionAlbumNameLabel": {
@@ -1208,6 +1230,18 @@
 	"enhancePortraitBlurParamBlurLabel": "Sumennus",
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
+	},
+	"enhanceSuperResolution4xTitle": "Super-resoluutio (4x)",
+	"@enhanceSuperResolution4xTitle": {
+		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+	},
+	"enhanceStyleTransferTitle": "Tyylin siirto",
+	"@enhanceStyleTransferTitle": {
+		"description": "Transfer the image style from a reference image to a photo"
+	},
+	"enhanceStyleTransferStyleDialogTitle": "Valitse tyyli",
+	"@enhanceStyleTransferStyleDialogTitle": {
+		"description": "Pick a reference image for the style transfer algorithm"
 	},
 
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",

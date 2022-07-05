@@ -275,16 +275,7 @@
   ],
 
   "fi": [
-    "settingsExifWifiOnlyTitle",
-    "settingsExifWifiOnlyFalseSubtitle",
-    "settingsMiscellaneousTitle",
-    "settingsMiscellaneousPageTitle",
-    "settingsPhotosTabSortByNameTitle",
-    "sortOptionFilenameAscendingLabel",
-    "sortOptionFilenameDescendingLabel",
-    "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle",
-    "enhanceStyleTransferStyleDialogTitle"
+  
   ],
 
   "fr": [
