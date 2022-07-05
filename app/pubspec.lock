@@ -294,8 +294,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.0-nc-photos-3"
-      resolved-ref: "805fb925a6129f693abaa8f30ebb11900543ffc8"
+      ref: "v0.1.0-nc-photos-5"
+      resolved-ref: a1a34c57a069dc1cffa9759f86ffab2e0c7420ca
       url: "https://gitlab.com/nc-photos/flutter-draggable-scrollbar"
     source: git
     version: "0.1.0"
@@ -1199,6 +1199,13 @@ packages:
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.0.4"
+  visibility_detector:
+    dependency: "direct main"
+    description:
+      name: visibility_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   vm_service:
     dependency: transitive
     description:

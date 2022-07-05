@@ -1,9 +1,12 @@
+import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -31,6 +34,7 @@ import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
@@ -46,6 +50,7 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class HomePhotos extends StatefulWidget {
   const HomePhotos({
@@ -105,6 +110,17 @@ class _HomePhotosState extends State<HomePhotos>
     });
   }
 
+  @override
+  onVisibilityChanged(VisibilityInfo info, int index, SelectableItem item) {
+    if (info.visibleFraction >= 0.2) {
+      _visibleItems.add(_VisibleItem(index, item));
+    } else {
+      _visibleItems.remove(_VisibleItem(index, item));
+    }
+    _visibilityThrottler.trigger(
+        maxResponceTime: const Duration(milliseconds: 500));
+  }
+
   void _initBloc() {
     if (_bloc.state is ScanAccountDirBlocInit) {
       _log.info("[_initBloc] Initialize bloc");
@@ -138,6 +154,8 @@ class _HomePhotosState extends State<HomePhotos>
                 // status bar + app bar
                 topOffset: _calcAppBarExtent(context),
                 bottomOffset: _calcBottomAppBarExtent(context),
+                labelTextBuilder: (_) => _buildScrollLabel(context),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 24),
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
@@ -163,6 +181,7 @@ class _HomePhotosState extends State<HomePhotos>
                               _itemListMaxExtent = value;
                             });
                           },
+                          isEnableVisibilityCallback: true,
                         ),
                         SliverToBoxAdapter(
                           child: SizedBox(
@@ -316,6 +335,32 @@ class _HomePhotosState extends State<HomePhotos>
         ),
       ),
     );
+  }
+
+  Widget _buildScrollLabel(BuildContext context) {
+    final date = _visibleItems
+        .sorted()
+        .firstWhereOrNull((e) => e.item is PhotoListFileItem)
+        ?.item
+        .as<PhotoListFileItem>()
+        ?.file
+        .bestDateTime;
+    if (date != null) {
+      final text = DateFormat(DateFormat.YEAR_ABBR_MONTH,
+              Localizations.localeOf(context).languageCode)
+          .format(date.toLocal());
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: AppTheme.primaryTextColorLight,
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 
   void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
@@ -640,6 +685,16 @@ class _HomePhotosState extends State<HomePhotos>
 
   double? _itemListMaxExtent;
 
+  final _visibleItems = HashSet<_VisibleItem>();
+  late final _visibilityThrottler = Throttler(onTriggered: (_) {
+    // label text is always 1 frame behind, so we need to update the text for
+    // the last frame
+    if (mounted) {
+      _log.fine("[_visibilityThrottler] Update screen");
+      setState(() {});
+    }
+  });
+
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 
@@ -945,4 +1000,20 @@ enum _SelectionMenuOption {
   archive,
   delete,
   download,
+}
+
+class _VisibleItem implements Comparable<_VisibleItem> {
+  const _VisibleItem(this.index, this.item);
+
+  @override
+  operator ==(Object other) => other is _VisibleItem && other.index == index;
+
+  @override
+  compareTo(_VisibleItem other) => index.compareTo(other.index);
+
+  @override
+  get hashCode => index.hashCode;
+
+  final int index;
+  final SelectableItem item;
 }
