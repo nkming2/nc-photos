@@ -18,8 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.45.0+4500
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
-  flutter: ">=2.10.4"
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
@@ -35,7 +35,7 @@ dependencies:
       path: packages/android_intent_plus
   battery_plus: ^2.1.3
   bloc: ^7.0.0
-  cached_network_image: ^3.0.0
+  cached_network_image: ^3.2.1
   collection: ^1.15.0
   connectivity_plus: ^2.0.2
   devicelocale: ^0.5.0
@@ -60,7 +60,7 @@ dependencies:
     git:
       url: https://gitlab.com/nc-photos/flutter_staggered_grid_view
       ref: v0.4.0-nc-photos-1
-  flutter_typeahead: ^3.2.1
+  flutter_typeahead: ^4.0.0
   # android/ios only
   google_maps_flutter: ^2.1.0
   http: ^0.13.1
@@ -78,7 +78,7 @@ dependencies:
   memory_info: ^0.0.2
   mime: ^1.0.1
   mutex: ^3.0.0
-  native_device_orientation: ^1.0.0
+  native_device_orientation: 1.1.0
   nc_photos_plugin:
     path: ../plugin
   page_view_indicators: ^2.0.0
@@ -97,7 +97,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter-plugins
       ref: video_player-v2.2.6-nc-photos-2
       path: packages/video_player/video_player
-  visibility_detector: ^0.2.2
+  visibility_detector: ^0.3.3
   wakelock: ^0.5.2
   woozy_search: ^2.0.3
   xml: ^5.0.2

@@ -130,7 +130,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     _lastSelectPosition = newLastSelectPosition;
 
     _log.info("[itemStreamListItems] updateListHeight: list item changed");
-    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
         (_listKey.currentState as MeasurableItemListState?)
             ?.updateListHeight());
   }
