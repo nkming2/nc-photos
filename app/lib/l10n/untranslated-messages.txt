@@ -244,38 +244,7 @@
   ],
 
   "es": [
-    "settingsExifWifiOnlyTitle",
-    "settingsExifWifiOnlyFalseSubtitle",
-    "settingsPhotoEnhancementTitle",
-    "settingsPhotoEnhancementPageTitle",
-    "settingsEnhanceMaxResolutionTitle",
-    "settingsEnhanceMaxResolutionDescription",
-    "settingsMiscellaneousTitle",
-    "settingsMiscellaneousPageTitle",
-    "settingsPhotosTabSortByNameTitle",
-    "rootPickerSkipConfirmationDialogContent2",
-    "sortOptionFilenameAscendingLabel",
-    "sortOptionFilenameDescendingLabel",
-    "helpButtonLabel",
-    "backgroundServiceStopping",
-    "metadataTaskPauseLowBatteryNotification",
-    "enhanceTooltip",
-    "enhanceButtonLabel",
-    "enhanceIntroDialogTitle",
-    "enhanceIntroDialogDescription",
-    "enhanceLowLightTitle",
-    "enhanceLowLightParamBrightnessLabel",
-    "collectionEnhancedPhotosLabel",
-    "deletePermanentlyLocalConfirmationDialogContent",
-    "enhancePortraitBlurTitle",
-    "enhancePortraitBlurParamBlurLabel",
-    "enhanceSuperResolution4xTitle",
-    "enhanceStyleTransferTitle",
-    "enhanceStyleTransferStyleDialogTitle"
-  ],
-
-  "fi": [
-  
+    "rootPickerSkipConfirmationDialogContent2"
   ],
 
   "fr": [
