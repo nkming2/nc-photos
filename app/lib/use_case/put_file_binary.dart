@@ -21,7 +21,7 @@ class PutFileBinary {
       await fileRepo.putBinary(account, path, content);
     } catch (e) {
       if (e is ApiException &&
-          e.response.statusCode == 404 &&
+          (e.response.statusCode == 404 || e.response.statusCode == 409) &&
           shouldCreateMissingDir) {
         // no dir
         _log.info("[call] Auto creating parent dirs");
