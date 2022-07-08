@@ -10,10 +10,10 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in";

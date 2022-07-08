@@ -18,9 +18,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/person_browser.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PeopleBrowserArguments {
   PeopleBrowserArguments(this.account);

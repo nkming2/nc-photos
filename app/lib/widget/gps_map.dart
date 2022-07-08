@@ -4,8 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:tuple/tuple.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 enum GpsMapProvider {
   // the order must not be changed
