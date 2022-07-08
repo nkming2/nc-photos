@@ -84,6 +84,14 @@ extension IterableExtension<T> on Iterable<T> {
   }
 }
 
+extension IterableFlattenExtension<T> on Iterable<Iterable<T>> {
+  /// Flattens an [Iterable] of [Iterable] values of type [T] to a [Iterable] of
+  /// values of type [T].
+  ///
+  /// This function originated in the xml package
+  Iterable<T> flatten() => expand((values) => values);
+}
+
 class _ComputeAllMessage<T, U> {
   const _ComputeAllMessage(this.callback, this.data);
 

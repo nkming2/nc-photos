@@ -99,7 +99,7 @@ dependencies:
   visibility_detector: ^0.3.3
   wakelock: ^0.5.2
   woozy_search: ^2.0.3
-  xml: ^5.0.2
+  xml: ^6.1.0
 
 dev_dependencies:
   test: any
