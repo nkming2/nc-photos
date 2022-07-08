@@ -634,7 +634,7 @@ packages:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   mocktail:
     dependency: transitive
     description:
