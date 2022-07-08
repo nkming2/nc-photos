@@ -39,7 +39,7 @@ dependencies:
   collection: ^1.15.0
   connectivity_plus: ^2.0.2
   devicelocale: ^0.5.0
-  device_info_plus: ^3.1.0
+  device_info_plus: ^4.0.0
   draggable_scrollbar:
     git:
       url: https://gitlab.com/nc-photos/flutter-draggable-scrollbar
