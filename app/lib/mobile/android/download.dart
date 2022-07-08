@@ -12,7 +12,7 @@ class DownloadEvent {
   static const _downloadCancelChannel = EventChannel(
       "com.nkming.nc_photos/download_event/action_download_cancel");
 
-  static late final _cancelStream = _downloadCancelChannel
+  static final _cancelStream = _downloadCancelChannel
       .receiveBroadcastStream()
       .map((data) => DownloadCancelEvent(
             data["notificationId"],

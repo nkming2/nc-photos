@@ -44,13 +44,13 @@ mixin DraggableItemListMixin<T extends StatefulWidget> on State<T> {
     final item = _items[index];
     return my.Draggable(
       data: item,
-      child: item.buildWidget(context),
       feedback: item.buildDragFeedbackWidget(context),
       onDropBefore: item.onDropBefore,
       onDropAfter: item.onDropAfter,
       onDragStarted: item.onDragStarted,
       onDragEndedAny: item.onDragEndedAny,
       feedbackSize: Size(_maxCrossAxisExtent * .65, _maxCrossAxisExtent * .65),
+      child: item.buildWidget(context),
     );
   }
 

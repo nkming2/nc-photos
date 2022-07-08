@@ -1,9 +1,9 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
-import 'package:/nc_photos/mobile/ui_hack.dart' if (dart.library.html) 'dart:ui'
-    as ui;
 import 'package:flutter/widgets.dart';
+import 'package:nc_photos/mobile/ui_hack.dart' if (dart.library.html) 'dart:ui'
+    as ui;
 import 'package:tuple/tuple.dart';
 
 class GoogleGpsMap extends StatefulWidget {

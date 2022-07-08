@@ -172,7 +172,9 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
         content: Text(L10n.global().restoreSuccessNotification),
         duration: k.snackBarDurationNormal,
       ));
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     } catch (e, stacktrace) {
       _log.shout("Failed while restore trashbin: ${logFilename(file.path)}", e,
           stacktrace);
@@ -314,7 +316,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       shouldCleanupAlbum: false,
       isRemoveOpened: true,
     );
-    if (count > 0) {
+    if (count > 0 && mounted) {
       Navigator.of(context).pop();
     }
   }

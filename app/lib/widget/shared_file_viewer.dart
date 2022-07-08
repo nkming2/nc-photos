@@ -226,7 +226,9 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
             }
           }
         } finally {
-          Navigator.of(context).pop();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         }
       } else {
         setState(() {

@@ -33,6 +33,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
             Row(
               children: [
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().dateYearInputHint,
@@ -51,10 +52,10 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     },
                     initialValue: "${widget.initialDateTime.year}",
                   ),
-                  flex: 1,
                 ),
                 const SizedBox(width: 4),
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().dateMonthInputHint,
@@ -72,10 +73,10 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     initialValue:
                         widget.initialDateTime.month.toString().padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
                 const SizedBox(width: 4),
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().dateDayInputHint,
@@ -93,7 +94,6 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     initialValue:
                         widget.initialDateTime.day.toString().padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
               ],
             ),
@@ -105,6 +105,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
             Row(
               children: [
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().timeHourInputHint,
@@ -122,10 +123,10 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                     initialValue:
                         widget.initialDateTime.hour.toString().padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
                 const SizedBox(width: 4),
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().timeMinuteInputHint,
@@ -144,12 +145,11 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
                         .toString()
                         .padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
                 const SizedBox(width: 4),
                 const Flexible(
-                  child: SizedBox(),
                   flex: 1,
+                  child: SizedBox(),
                 ),
               ],
             ),

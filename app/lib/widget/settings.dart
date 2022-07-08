@@ -1504,6 +1504,6 @@ enum _Experiment {
   sharedAlbum,
 }
 
-late final _enabledExperiments = [
+final _enabledExperiments = [
   _Experiment.sharedAlbum,
 ];

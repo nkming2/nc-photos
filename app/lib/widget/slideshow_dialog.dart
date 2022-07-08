@@ -73,6 +73,7 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
             Row(
               children: [
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().timeMinuteInputHint,
@@ -98,12 +99,12 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
                     initialValue:
                         widget.duration.inMinutes.toString().padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
                 const SizedBox(width: 4),
                 const Text(":"),
                 const SizedBox(width: 4),
                 Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: L10n.global().timeSecondInputHint,
@@ -130,7 +131,6 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
                         .toString()
                         .padLeft(2, "0"),
                   ),
-                  flex: 1,
                 ),
               ],
             ),

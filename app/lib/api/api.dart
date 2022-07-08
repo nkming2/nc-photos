@@ -31,10 +31,10 @@ class Response {
 class Api {
   Api(this._account);
 
-  _Files files() => _Files(this);
-  _Ocs ocs() => _Ocs(this);
-  _Systemtags systemtags() => _Systemtags(this);
-  _SystemtagsRelations systemtagsRelations() => _SystemtagsRelations(this);
+  ApiFiles files() => ApiFiles(this);
+  ApiOcs ocs() => ApiOcs(this);
+  ApiSystemtags systemtags() => ApiSystemtags(this);
+  ApiSystemtagsRelations systemtagsRelations() => ApiSystemtagsRelations(this);
 
   static String getAuthorizationHeaderValue(Account account) {
     final auth =
@@ -108,8 +108,8 @@ class Api {
 
 bool _isHttpStatusGood(int status) => status ~/ 100 == 2;
 
-class _Files {
-  _Files(this._api);
+class ApiFiles {
+  ApiFiles(this._api);
 
   final Api _api;
 
@@ -447,26 +447,26 @@ class _Files {
   static final _log = Logger("api.api._Files");
 }
 
-class _Ocs {
-  _Ocs(this._api);
+class ApiOcs {
+  ApiOcs(this._api);
 
-  _OcsDav dav() => _OcsDav(this);
-  _OcsFacerecognition facerecognition() => _OcsFacerecognition(this);
-  _OcsFilesSharing filesSharing() => _OcsFilesSharing(this);
+  ApiOcsDav dav() => ApiOcsDav(this);
+  ApiOcsFacerecognition facerecognition() => ApiOcsFacerecognition(this);
+  ApiOcsFilesSharing filesSharing() => ApiOcsFilesSharing(this);
 
   final Api _api;
 }
 
-class _OcsDav {
-  _OcsDav(this._ocs);
+class ApiOcsDav {
+  ApiOcsDav(this._ocs);
 
-  _OcsDavDirect direct() => _OcsDavDirect(this);
+  ApiOcsDavDirect direct() => ApiOcsDavDirect(this);
 
-  final _Ocs _ocs;
+  final ApiOcs _ocs;
 }
 
-class _OcsDavDirect {
-  _OcsDavDirect(this._dav);
+class ApiOcsDavDirect {
+  ApiOcsDavDirect(this._dav);
 
   Future<Response> post({
     required int fileId,
@@ -490,23 +490,23 @@ class _OcsDavDirect {
     }
   }
 
-  final _OcsDav _dav;
+  final ApiOcsDav _dav;
 
   static final _log = Logger("api.api._OcsDavDirect");
 }
 
-class _OcsFacerecognition {
-  _OcsFacerecognition(this._ocs);
+class ApiOcsFacerecognition {
+  ApiOcsFacerecognition(this._ocs);
 
-  _OcsFacerecognitionPersons persons() => _OcsFacerecognitionPersons(this);
-  _OcsFacerecognitionPerson person(String name) =>
-      _OcsFacerecognitionPerson(this, name);
+  ApiOcsFacerecognitionPersons persons() => ApiOcsFacerecognitionPersons(this);
+  ApiOcsFacerecognitionPerson person(String name) =>
+      ApiOcsFacerecognitionPerson(this, name);
 
-  final _Ocs _ocs;
+  final ApiOcs _ocs;
 }
 
-class _OcsFacerecognitionPersons {
-  _OcsFacerecognitionPersons(this._facerecognition);
+class ApiOcsFacerecognitionPersons {
+  ApiOcsFacerecognitionPersons(this._facerecognition);
 
   Future<Response> get() async {
     try {
@@ -526,23 +526,23 @@ class _OcsFacerecognitionPersons {
     }
   }
 
-  final _OcsFacerecognition _facerecognition;
+  final ApiOcsFacerecognition _facerecognition;
 
   static final _log = Logger("api.api._OcsFacerecognitionPersons");
 }
 
-class _OcsFacerecognitionPerson {
-  _OcsFacerecognitionPerson(this._facerecognition, this._name);
+class ApiOcsFacerecognitionPerson {
+  ApiOcsFacerecognitionPerson(this._facerecognition, this._name);
 
-  _OcsFacerecognitionPersonFaces faces() =>
-      _OcsFacerecognitionPersonFaces(this);
+  ApiOcsFacerecognitionPersonFaces faces() =>
+      ApiOcsFacerecognitionPersonFaces(this);
 
-  final _OcsFacerecognition _facerecognition;
+  final ApiOcsFacerecognition _facerecognition;
   final String _name;
 }
 
-class _OcsFacerecognitionPersonFaces {
-  _OcsFacerecognitionPersonFaces(this._person);
+class ApiOcsFacerecognitionPersonFaces {
+  ApiOcsFacerecognitionPersonFaces(this._person);
 
   Future<Response> get() async {
     try {
@@ -562,24 +562,24 @@ class _OcsFacerecognitionPersonFaces {
     }
   }
 
-  final _OcsFacerecognitionPerson _person;
+  final ApiOcsFacerecognitionPerson _person;
 
   static final _log = Logger("api.api._OcsFacerecognitionPersonFaces");
 }
 
-class _OcsFilesSharing {
-  _OcsFilesSharing(this._ocs);
+class ApiOcsFilesSharing {
+  ApiOcsFilesSharing(this._ocs);
 
-  _OcsFilesSharingShares shares() => _OcsFilesSharingShares(this);
-  _OcsFilesSharingShare share(String shareId) =>
-      _OcsFilesSharingShare(this, shareId);
-  _OcsFilesSharingSharees sharees() => _OcsFilesSharingSharees(this);
+  ApiOcsFilesSharingShares shares() => ApiOcsFilesSharingShares(this);
+  ApiOcsFilesSharingShare share(String shareId) =>
+      ApiOcsFilesSharingShare(this, shareId);
+  ApiOcsFilesSharingSharees sharees() => ApiOcsFilesSharingSharees(this);
 
-  final _Ocs _ocs;
+  final ApiOcs _ocs;
 }
 
-class _OcsFilesSharingShares {
-  _OcsFilesSharingShares(this._filesSharing);
+class ApiOcsFilesSharingShares {
+  ApiOcsFilesSharingShares(this._filesSharing);
 
   /// Get Shares from a specific file or folder
   ///
@@ -652,19 +652,19 @@ class _OcsFilesSharingShares {
     }
   }
 
-  final _OcsFilesSharing _filesSharing;
+  final ApiOcsFilesSharing _filesSharing;
 
   static final _log = Logger("api.api._OcsFilesSharingShares");
 }
 
-class _OcsFilesSharingShare {
-  _OcsFilesSharingShare(this._filesSharing, this._shareId);
+class ApiOcsFilesSharingShare {
+  ApiOcsFilesSharingShare(this._filesSharing, this._shareId);
 
   /// Remove the given share
   ///
   /// See: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-share-api.html#delete-share
   /// * The type of share ID is listed as int in the document, however, the
-  /// share ID returned in [_OcsFilesSharingShares.get] is actually a string. To
+  /// share ID returned in [ApiOcsFilesSharingShares.get] is actually a string. To
   /// keep it consistent, we'll use string instead
   Future<Response> delete() async {
     try {
@@ -681,14 +681,14 @@ class _OcsFilesSharingShare {
     }
   }
 
-  final _OcsFilesSharing _filesSharing;
+  final ApiOcsFilesSharing _filesSharing;
   final String _shareId;
 
   static final _log = Logger("api.api._OcsFilesSharingShare");
 }
 
-class _OcsFilesSharingSharees {
-  _OcsFilesSharingSharees(this._filesSharing);
+class ApiOcsFilesSharingSharees {
+  ApiOcsFilesSharingSharees(this._filesSharing);
 
   /// Get all sharees matching a search term
   ///
@@ -720,13 +720,13 @@ class _OcsFilesSharingSharees {
     }
   }
 
-  final _OcsFilesSharing _filesSharing;
+  final ApiOcsFilesSharing _filesSharing;
 
   static final _log = Logger("api.api._OcsFilesSharingSharees");
 }
 
-class _Systemtags {
-  const _Systemtags(this.api);
+class ApiSystemtags {
+  const ApiSystemtags(this.api);
 
   Future<Response> propfind({
     id,
@@ -791,17 +791,17 @@ class _Systemtags {
   static final _log = Logger("api.api._Systemtags");
 }
 
-class _SystemtagsRelations {
-  const _SystemtagsRelations(this.api);
+class ApiSystemtagsRelations {
+  const ApiSystemtagsRelations(this.api);
 
-  _SystemtagsRelationsFiles files(int fileId) =>
-      _SystemtagsRelationsFiles(this, fileId);
+  ApiSystemtagsRelationsFiles files(int fileId) =>
+      ApiSystemtagsRelationsFiles(this, fileId);
 
   final Api api;
 }
 
-class _SystemtagsRelationsFiles {
-  const _SystemtagsRelationsFiles(this.systemtagsRelations, this.fileId);
+class ApiSystemtagsRelationsFiles {
+  const ApiSystemtagsRelationsFiles(this.systemtagsRelations, this.fileId);
 
   /// List systemtags associated with a file
   ///
@@ -864,7 +864,7 @@ class _SystemtagsRelationsFiles {
     }
   }
 
-  final _SystemtagsRelations systemtagsRelations;
+  final ApiSystemtagsRelations systemtagsRelations;
   final int fileId;
 
   static final _log = Logger("api.api._SystemtagsRelationsFiles");

@@ -84,6 +84,7 @@ dependencies:
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.6
+  quiver: ^3.1.0
   screen_brightness:  ^0.1.1
   shared_preferences: ^2.0.8
   # android/ios only
@@ -91,6 +92,7 @@ dependencies:
   synchronized: ^3.0.0
   tuple: ^2.0.0
   url_launcher: ^6.0.3
+  uuid: ^3.0.6
   video_player:
     git:
       url: https://gitlab.com/nc-photos/flutter-plugins
@@ -104,7 +106,7 @@ dependencies:
 dev_dependencies:
   test: any
   bloc_test: any
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   # flutter_test:
   #   sdk: flutter
   # integration_test:

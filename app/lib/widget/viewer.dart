@@ -599,7 +599,7 @@ class _ViewerState extends State<Viewer>
       isRemoveOpened: true,
       isMoveToTrash: true,
     );
-    if (count > 0) {
+    if (count > 0 && mounted) {
       Navigator.of(context).pop();
     }
   }
