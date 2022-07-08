@@ -99,7 +99,7 @@ dependencies:
       ref: video_player-v2.2.6-nc-photos-2
       path: packages/video_player/video_player
   visibility_detector: ^0.3.3
-  wakelock: ^0.5.2
+  wakelock: ^0.6.2
   woozy_search: ^2.0.3
   xml: ^6.1.0
 
