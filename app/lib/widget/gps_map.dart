@@ -88,15 +88,14 @@ class _OsmGpsMap extends StatelessWidget {
             enableScrollWheel: false,
             interactiveFlags: InteractiveFlag.none,
           ),
+          nonRotatedChildren: [
+            AttributionWidget.defaultWidget(
+              source: "OpenStreetMap contributors",
+            ),
+          ],
           layers: [
             TileLayerOptions(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              attributionBuilder: (_) {
-                return const Text(
-                  "© OpenStreetMap contributors",
-                  style: TextStyle(color: Colors.black),
-                );
-              },
             ),
             MarkerLayerOptions(
               markers: [
