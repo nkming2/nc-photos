@@ -233,7 +233,7 @@ packages:
       name: dbus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.6"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -270,12 +270,12 @@ packages:
     source: hosted
     version: "2.1.0"
   device_info_plus_windows:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: device_info_plus_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "3.0.0"
   devicelocale:
     dependency: "direct main"
     description:
@@ -335,7 +335,7 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "2.0.1"
   file:
     dependency: transitive
     description:
@@ -767,7 +767,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.1.0"
   pedantic:
     dependency: transitive
     description:
@@ -1282,7 +1282,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.1"
+    version: "2.7.0"
   wkt_parser:
     dependency: transitive
     description:
