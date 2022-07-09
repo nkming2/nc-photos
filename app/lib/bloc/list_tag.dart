@@ -67,7 +67,9 @@ class ListTagBloc extends Bloc<ListTagBlocEvent, ListTagBlocState> {
   ListTagBloc(this._c)
       : assert(require(_c)),
         assert(ListTag.require(_c)),
-        super(const ListTagBlocInit());
+        super(const ListTagBlocInit()) {
+    on<ListTagBlocEvent>(_onEvent);
+  }
 
   static bool require(DiContainer c) => true;
 
@@ -85,21 +87,22 @@ class ListTagBloc extends Bloc<ListTagBlocEvent, ListTagBlocState> {
     }
   }
 
-  @override
-  mapEventToState(ListTagBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListTagBlocEvent event, Emitter<ListTagBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListTagBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListTagBlocState> _onEventQuery(ListTagBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListTagBlocQuery ev, Emitter<ListTagBlocState> emit) async {
     try {
-      yield ListTagBlocLoading(ev.account, state.items);
-      yield ListTagBlocSuccess(ev.account, await _query(ev));
+      emit(ListTagBlocLoading(ev.account, state.items));
+      emit(ListTagBlocSuccess(ev.account, await _query(ev)));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListTagBlocFailure(ev.account, state.items, e);
+      emit(ListTagBlocFailure(ev.account, state.items, e));
     }
   }
 

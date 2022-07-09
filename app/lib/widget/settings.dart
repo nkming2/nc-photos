@@ -19,6 +19,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/home.dart';
@@ -28,7 +29,6 @@ import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tuple/tuple.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SettingsArguments {
   SettingsArguments(this.account);
@@ -1504,6 +1504,6 @@ enum _Experiment {
   sharedAlbum,
 }
 
-late final _enabledExperiments = [
+final _enabledExperiments = [
   _Experiment.sharedAlbum,
 ];

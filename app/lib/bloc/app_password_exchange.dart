@@ -60,27 +60,30 @@ class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
 
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
-  AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit());
+  AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit()) {
+    on<AppPasswordExchangeBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(AppPasswordExchangeBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(AppPasswordExchangeBlocEvent event,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is AppPasswordExchangeBlocConnect) {
-      yield* _exchangePassword(event.account);
+      await _onEventConnect(event, emit);
     }
   }
 
-  Stream<AppPasswordExchangeBlocState> _exchangePassword(
-      Account account) async* {
+  Future<void> _onEventConnect(AppPasswordExchangeBlocConnect ev,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    final account = ev.account;
     try {
       final appPwd = await api_util.exchangePassword(account);
-      yield AppPasswordExchangeBlocSuccess(appPwd);
+      emit(AppPasswordExchangeBlocSuccess(appPwd));
     } on InvalidBaseUrlException catch (e) {
       _log.warning("[_exchangePassword] Invalid base url");
-      yield AppPasswordExchangeBlocFailure(e);
+      emit(AppPasswordExchangeBlocFailure(e));
     } on HandshakeException catch (e) {
       _log.info("[_exchangePassword] Self-signed cert");
-      yield AppPasswordExchangeBlocFailure(e);
+      emit(AppPasswordExchangeBlocFailure(e));
     } catch (e, stacktrace) {
       if (e is ApiException && e.response.statusCode == 401) {
         // wrong password, normal
@@ -90,7 +93,7 @@ class AppPasswordExchangeBloc
         _log.shout("[_exchangePassword] Failed while exchanging password", e,
             stacktrace);
       }
-      yield AppPasswordExchangeBlocFailure(e);
+      emit(AppPasswordExchangeBlocFailure(e));
     }
   }
 

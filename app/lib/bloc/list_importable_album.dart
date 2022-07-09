@@ -89,21 +89,23 @@ class ListImportableAlbumBloc
   ListImportableAlbumBloc(this._c)
       : assert(require(_c)),
         assert(ListAlbum.require(_c)),
-        super(ListImportableAlbumBlocInit());
+        super(ListImportableAlbumBlocInit()) {
+    on<ListImportableAlbumBlocEvent>(_onEvent);
+  }
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
-  @override
-  mapEventToState(ListImportableAlbumBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(ListImportableAlbumBlocEvent event,
+      Emitter<ListImportableAlbumBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListImportableAlbumBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListImportableAlbumBlocState> _onEventQuery(
-      ListImportableAlbumBlocQuery ev) async* {
-    yield const ListImportableAlbumBlocLoading([]);
+  Future<void> _onEventQuery(ListImportableAlbumBlocQuery ev,
+      Emitter<ListImportableAlbumBlocState> emit) async {
+    emit(const ListImportableAlbumBlocLoading([]));
     try {
       final albums = (await ListAlbum(_c)(ev.account)
               .where((event) => event is Album)
@@ -128,15 +130,15 @@ class ListImportableAlbumBloc
             products.add(ev);
             // don't emit events too frequently
             if (++count >= 5) {
-              yield ListImportableAlbumBlocLoading(products);
+              emit(ListImportableAlbumBlocLoading(products));
             }
           }
         }
       }
-      yield ListImportableAlbumBlocSuccess(products);
+      emit(ListImportableAlbumBlocSuccess(products));
     } catch (e) {
       _log.severe("[_onEventQuery] Exception while request", e);
-      yield ListImportableAlbumBlocFailure(state.items, e);
+      emit(ListImportableAlbumBlocFailure(state.items, e));
     }
   }
 

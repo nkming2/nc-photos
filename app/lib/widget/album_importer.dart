@@ -178,7 +178,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
         icon: AnimatedSwitcher(
           duration: k.animationDurationShort,
           transitionBuilder: (child, animation) =>
-              ScaleTransition(child: child, scale: animation),
+              ScaleTransition(scale: animation, child: child),
           child: Icon(
             isPicked ? Icons.check_box : Icons.check_box_outline_blank,
             key: ValueKey(isPicked),
@@ -218,7 +218,9 @@ class _AlbumImporterState extends State<AlbumImporter> {
       // make sure we dismiss the dialog in any cases
       Navigator.of(context).pop();
     }
-    Navigator.of(context).pop();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _createAllAlbums(BuildContext context) async {

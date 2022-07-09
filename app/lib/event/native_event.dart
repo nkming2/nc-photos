@@ -25,7 +25,7 @@ class NativeEventListener<T> {
     _subscription = null;
   }
 
-  static late final _mappedStream =
+  static final _mappedStream =
       NativeEvent.stream.whereType<NativeEventObject>().map((ev) {
     switch (ev.event) {
       case FileExifUpdatedEvent._id:

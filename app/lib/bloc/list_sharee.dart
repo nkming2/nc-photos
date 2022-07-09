@@ -70,7 +70,9 @@ class ListShareeBlocFailure extends ListShareeBlocState {
 
 /// List all sharees of this account
 class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
-  ListShareeBloc() : super(ListShareeBlocInit());
+  ListShareeBloc() : super(ListShareeBlocInit()) {
+    on<ListShareeBlocEvent>(_onEvent);
+  }
 
   static ListShareeBloc of(Account account) {
     final name = bloc_util.getInstNameForAccount("ListShareeBloc", account);
@@ -86,21 +88,22 @@ class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
     }
   }
 
-  @override
-  mapEventToState(ListShareeBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListShareeBlocEvent event, Emitter<ListShareeBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListShareeBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListShareeBlocState> _onEventQuery(ListShareeBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListShareeBlocQuery ev, Emitter<ListShareeBlocState> emit) async {
     try {
-      yield ListShareeBlocLoading(ev.account, state.items);
-      yield ListShareeBlocSuccess(ev.account, await _query(ev));
+      emit(ListShareeBlocLoading(ev.account, state.items));
+      emit(ListShareeBlocSuccess(ev.account, await _query(ev)));
     } catch (e, stackTrace) {
       _log.shout("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListShareeBlocFailure(ev.account, state.items, e);
+      emit(ListShareeBlocFailure(ev.account, state.items, e));
     }
   }
 

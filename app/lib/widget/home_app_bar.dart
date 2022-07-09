@@ -7,9 +7,9 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/settings.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {

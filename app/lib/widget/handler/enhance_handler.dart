@@ -20,11 +20,11 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class EnhanceHandler {
   const EnhanceHandler({

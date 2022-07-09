@@ -22,8 +22,8 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ConnectArguments {
   ConnectArguments(this.account);

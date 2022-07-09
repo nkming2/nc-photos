@@ -210,7 +210,7 @@ class _L10n {
     }
   }
 
-  static late final _inst = _L10n._();
+  static final _inst = _L10n._();
   late AppLocalizations _l10n;
 
   static final _log = Logger("service._L10n");

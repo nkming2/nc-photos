@@ -70,23 +70,26 @@ class ListFaceBlocFailure extends ListFaceBlocState {
 
 /// List all people recognized in an account
 class ListFaceBloc extends Bloc<ListFaceBlocEvent, ListFaceBlocState> {
-  ListFaceBloc() : super(ListFaceBlocInit());
+  ListFaceBloc() : super(ListFaceBlocInit()) {
+    on<ListFaceBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(ListFaceBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListFaceBlocEvent event, Emitter<ListFaceBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListFaceBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListFaceBlocState> _onEventQuery(ListFaceBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListFaceBlocQuery ev, Emitter<ListFaceBlocState> emit) async {
     try {
-      yield ListFaceBlocLoading(ev.account, state.items);
-      yield ListFaceBlocSuccess(ev.account, await _query(ev));
+      emit(ListFaceBlocLoading(ev.account, state.items));
+      emit(ListFaceBlocSuccess(ev.account, await _query(ev)));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListFaceBlocFailure(ev.account, state.items, e);
+      emit(ListFaceBlocFailure(ev.account, state.items, e));
     }
   }
 

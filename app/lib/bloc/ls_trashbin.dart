@@ -106,6 +106,8 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
       },
       logTag: "LsTrashbinBloc.refresh",
     );
+
+    on<LsTrashbinBlocEvent>(_onEvent);
   }
 
   static LsTrashbinBloc of(Account account) {
@@ -122,29 +124,30 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
     }
   }
 
-  @override
-  mapEventToState(LsTrashbinBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      LsTrashbinBlocEvent event, Emitter<LsTrashbinBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is LsTrashbinBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     } else if (event is _LsTrashbinBlocExternalEvent) {
-      yield* _onExternalEvent(event);
+      await _onExternalEvent(event, emit);
     }
   }
 
-  Stream<LsTrashbinBlocState> _onEventQuery(LsTrashbinBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      LsTrashbinBlocQuery ev, Emitter<LsTrashbinBlocState> emit) async {
     try {
-      yield LsTrashbinBlocLoading(ev.account, state.items);
-      yield LsTrashbinBlocSuccess(ev.account, await _query(ev));
+      emit(LsTrashbinBlocLoading(ev.account, state.items));
+      emit(LsTrashbinBlocSuccess(ev.account, await _query(ev)));
     } catch (e) {
       _log.severe("[_onEventQuery] Exception while request", e);
-      yield LsTrashbinBlocFailure(ev.account, state.items, e);
+      emit(LsTrashbinBlocFailure(ev.account, state.items, e));
     }
   }
 
-  Stream<LsTrashbinBlocState> _onExternalEvent(
-      _LsTrashbinBlocExternalEvent ev) async* {
-    yield LsTrashbinBlocInconsistent(state.account, state.items);
+  Future<void> _onExternalEvent(_LsTrashbinBlocExternalEvent ev,
+      Emitter<LsTrashbinBlocState> emit) async {
+    emit(LsTrashbinBlocInconsistent(state.account, state.items));
   }
 
   void _onFileRemovedEvent(FileRemovedEvent ev) {

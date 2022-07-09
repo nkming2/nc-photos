@@ -55,20 +55,22 @@ class AlbumSearchBlocSuccess extends AlbumSearchBlocState {
 }
 
 class AlbumSearchBloc extends Bloc<AlbumSearchBlocEvent, AlbumSearchBlocState> {
-  AlbumSearchBloc() : super(const AlbumSearchBlocInit());
+  AlbumSearchBloc() : super(const AlbumSearchBlocInit()) {
+    on<AlbumSearchBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(AlbumSearchBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      AlbumSearchBlocEvent event, Emitter<AlbumSearchBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is AlbumSearchBlocSearchEvent) {
-      yield* _onEventSearch(event);
+      await _onEventSearch(event, emit);
     } else if (event is AlbumSearchBlocUpdateItemsEvent) {
-      yield* _onEventUpdateItems(event);
+      await _onEventUpdateItems(event, emit);
     }
   }
 
-  Stream<AlbumSearchBlocState> _onEventSearch(
-      AlbumSearchBlocSearchEvent ev) async* {
+  Future<void> _onEventSearch(
+      AlbumSearchBlocSearchEvent ev, Emitter<AlbumSearchBlocState> emit) async {
     final matches = _albums
         .where((element) =>
             element.name.toLowerCase().contains(ev.phrase.toLowerCase()))
@@ -82,16 +84,16 @@ class AlbumSearchBloc extends Bloc<AlbumSearchBlocEvent, AlbumSearchBlocState> {
         return a.name.compareTo(b.name);
       }
     });
-    yield AlbumSearchBlocSuccess(matches);
+    emit(AlbumSearchBlocSuccess(matches));
     _lastSearch = ev;
   }
 
-  Stream<AlbumSearchBlocState> _onEventUpdateItems(
-      AlbumSearchBlocUpdateItemsEvent ev) async* {
+  Future<void> _onEventUpdateItems(AlbumSearchBlocUpdateItemsEvent ev,
+      Emitter<AlbumSearchBlocState> emit) async {
     _albums = ev.albums;
     if (_lastSearch != null) {
       // search again
-      yield* _onEventSearch(_lastSearch!);
+      await _onEventSearch(_lastSearch!, emit);
     }
   }
 

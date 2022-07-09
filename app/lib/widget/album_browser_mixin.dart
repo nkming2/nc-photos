@@ -231,11 +231,11 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
       )();
     } catch (e, stackTrace) {
       _log.shout(
-          "[_onAddToCollectionPressed] Failed while ImportPendingSharedAlbum: ${logFilename(album.albumFile?.path)}",
+          "[_onAddToCollectionPressed] Failed while _onAddToCollectionPressed: ${logFilename(album.albumFile?.path)}",
           e,
           stackTrace);
     }
-    if (newAlbum != null) {
+    if (newAlbum != null && mounted) {
       album_browser_util.pushReplacement(context, account, newAlbum!);
     }
   }

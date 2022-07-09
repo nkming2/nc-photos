@@ -180,23 +180,25 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
   ListAlbumShareOutlierBloc(this._c)
       : assert(require(_c)),
         assert(ListShare.require(_c)),
-        super(ListAlbumShareOutlierBlocInit());
+        super(ListAlbumShareOutlierBlocInit()) {
+    on<ListAlbumShareOutlierBlocEvent>(_onEvent);
+  }
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.shareeRepo);
 
-  @override
-  mapEventToState(ListAlbumShareOutlierBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(ListAlbumShareOutlierBlocEvent event,
+      Emitter<ListAlbumShareOutlierBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListAlbumShareOutlierBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListAlbumShareOutlierBlocState> _onEventQuery(
-      ListAlbumShareOutlierBlocQuery ev) async* {
+  Future<void> _onEventQuery(ListAlbumShareOutlierBlocQuery ev,
+      Emitter<ListAlbumShareOutlierBlocState> emit) async {
     try {
       assert(ev.album.provider is AlbumStaticProvider);
-      yield ListAlbumShareOutlierBlocLoading(ev.account, state.items);
+      emit(ListAlbumShareOutlierBlocLoading(ev.account, state.items));
 
       final albumShares = await () async {
         var temp = (ev.album.shares ?? [])
@@ -222,14 +224,14 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
           await _processAlbumItems(ev.account, ev.album, albumShares, errors));
 
       if (errors.isEmpty) {
-        yield ListAlbumShareOutlierBlocSuccess(ev.account, products);
+        emit(ListAlbumShareOutlierBlocSuccess(ev.account, products));
       } else {
-        yield ListAlbumShareOutlierBlocFailure(
-            ev.account, products, errors.first);
+        emit(ListAlbumShareOutlierBlocFailure(
+            ev.account, products, errors.first));
       }
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListAlbumShareOutlierBlocFailure(ev.account, state.items, e);
+      emit(ListAlbumShareOutlierBlocFailure(ev.account, state.items, e));
     }
   }
 

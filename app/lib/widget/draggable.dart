@@ -57,11 +57,11 @@ class Draggable<T extends Object> extends StatelessWidget {
                 ),
               ),
             ),
-            child: child,
             childWhenDragging: Opacity(
               opacity: .25,
               child: child,
             ),
+            child: child,
           ),
         ),
         if (onDropBefore != null || onDropAfter != null)

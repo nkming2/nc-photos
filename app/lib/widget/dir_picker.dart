@@ -95,11 +95,11 @@ class DirPickerState extends State<DirPicker> {
       duration: k.animationDurationNormal,
       // see AnimatedSwitcher.defaultLayoutBuilder
       layoutBuilder: (currentChild, previousChildren) => Stack(
+        alignment: Alignment.topLeft,
         children: <Widget>[
           ...previousChildren,
           if (currentChild != null) currentChild,
         ],
-        alignment: Alignment.topLeft,
       ),
       // needed to prevent background color overflowing the parent bound, see:
       // https://github.com/flutter/flutter/issues/86584
@@ -171,7 +171,7 @@ class DirPickerState extends State<DirPicker> {
               icon: AnimatedSwitcher(
                 duration: k.animationDurationShort,
                 transitionBuilder: (child, animation) =>
-                    ScaleTransition(child: child, scale: animation),
+                    ScaleTransition(scale: animation, child: child),
                 child: Icon(
                   iconData,
                   key: ValueKey(pickState),

@@ -100,6 +100,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       );
     }
     return SimpleDialogOption(
+      onPressed: isProcessing ? () {} : () => _onShareItemPressed(share),
       child: ListTile(
         title: Text(share.displayName),
         subtitle: Text(share.shareWith.toString()),
@@ -108,7 +109,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           child: trailing,
         ),
       ),
-      onPressed: isProcessing ? () {} : () => _onShareItemPressed(share),
     );
   }
 

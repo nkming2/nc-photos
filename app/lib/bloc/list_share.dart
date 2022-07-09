@@ -73,23 +73,26 @@ class ListShareBlocFailure extends ListShareBlocState {
 
 /// List all shares from a given file
 class ListShareBloc extends Bloc<ListShareBlocEvent, ListShareBlocState> {
-  ListShareBloc() : super(ListShareBlocInit());
+  ListShareBloc() : super(ListShareBlocInit()) {
+    on<ListShareBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(ListShareBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListShareBlocEvent event, Emitter<ListShareBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListShareBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListShareBlocState> _onEventQuery(ListShareBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListShareBlocQuery ev, Emitter<ListShareBlocState> emit) async {
     try {
-      yield ListShareBlocLoading(ev.account, ev.file, state.items);
-      yield ListShareBlocSuccess(ev.account, ev.file, await _query(ev));
+      emit(ListShareBlocLoading(ev.account, ev.file, state.items));
+      emit(ListShareBlocSuccess(ev.account, ev.file, await _query(ev)));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListShareBlocFailure(ev.account, ev.file, state.items, e);
+      emit(ListShareBlocFailure(ev.account, ev.file, state.items, e));
     }
   }
 
