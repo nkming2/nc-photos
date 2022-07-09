@@ -66,21 +66,23 @@ class SearchSuggestionBloc<T>
     extends Bloc<SearchSuggestionBlocEvent, SearchSuggestionBlocState<T>> {
   SearchSuggestionBloc({
     required this.itemToKeywords,
-  }) : super(SearchSuggestionBlocInit<T>());
+  }) : super(SearchSuggestionBlocInit<T>()) {
+    on<SearchSuggestionBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(SearchSuggestionBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(SearchSuggestionBlocEvent event,
+      Emitter<SearchSuggestionBlocState<T>> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is SearchSuggestionBlocSearchEvent) {
-      yield* _onEventSearch(event);
+      await _onEventSearch(event, emit);
     } else if (event is SearchSuggestionBlocUpdateItemsEvent<T>) {
-      yield* _onEventUpdateItems(event);
+      await _onEventUpdateItems(event, emit);
     }
   }
 
-  Stream<SearchSuggestionBlocState<T>> _onEventSearch(
-      SearchSuggestionBlocSearchEvent ev) async* {
-    yield SearchSuggestionBlocLoading(state.results);
+  Future<void> _onEventSearch(SearchSuggestionBlocSearchEvent ev,
+      Emitter<SearchSuggestionBlocState<T>> emit) async {
+    emit(SearchSuggestionBlocLoading(state.results));
     // doesn't work with upper case
     final results = _search.search(ev.phrase.toCaseInsensitiveString());
     if (kDebugMode) {
@@ -106,12 +108,12 @@ class SearchSuggestionBloc<T>
         )
         .map((e) => e.item2)
         .toList();
-    yield SearchSuggestionBlocSuccess(matches);
+    emit(SearchSuggestionBlocSuccess(matches));
     _lastSearch = ev;
   }
 
-  Stream<SearchSuggestionBlocState<T>> _onEventUpdateItems(
-      SearchSuggestionBlocUpdateItemsEvent<T> ev) async* {
+  Future<void> _onEventUpdateItems(SearchSuggestionBlocUpdateItemsEvent<T> ev,
+      Emitter<SearchSuggestionBlocState<T>> emit) async {
     _search.setEntries([]);
     for (final a in ev.items) {
       for (final k in itemToKeywords(a)) {
@@ -120,7 +122,7 @@ class SearchSuggestionBloc<T>
     }
     if (_lastSearch != null) {
       // search again
-      yield* _onEventSearch(_lastSearch!);
+      await _onEventSearch(_lastSearch!, emit);
     }
   }
 

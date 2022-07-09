@@ -117,6 +117,19 @@ class ScanAccountDirBloc
     _accountPrefUpdatedEventListener.begin();
 
     _nativeFileExifUpdatedListener?.begin();
+
+    on<ScanAccountDirBlocEvent>(_onEvent, transformer: ((events, mapper) {
+      return events.asyncExpand(mapper).distinct((a, b) {
+        // only handle ScanAccountDirBlocQuery
+        final r = a is ScanAccountDirBlocQuery &&
+            b is ScanAccountDirBlocQuery &&
+            a == b;
+        if (r) {
+          _log.fine("[on] Skip identical ScanAccountDirBlocQuery event");
+        }
+        return r;
+      });
+    }));
   }
 
   static ScanAccountDirBloc of(Account account) {
@@ -131,31 +144,6 @@ class ScanAccountDirBloc
       final bloc = ScanAccountDirBloc._(account);
       KiwiContainer().registerInstance<ScanAccountDirBloc>(bloc, name: name);
       return bloc;
-    }
-  }
-
-  @override
-  transformEvents(Stream<ScanAccountDirBlocEvent> events, transitionFn) {
-    return super.transformEvents(events.distinct((a, b) {
-      // only handle ScanAccountDirBlocQuery
-      final r = a is ScanAccountDirBlocQuery &&
-          b is ScanAccountDirBlocQuery &&
-          a == b;
-      if (r) {
-        _log.fine(
-            "[transformEvents] Skip identical ScanAccountDirBlocQuery event");
-      }
-      return r;
-    }), transitionFn);
-  }
-
-  @override
-  mapEventToState(ScanAccountDirBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
-    if (event is ScanAccountDirBlocQueryBase) {
-      yield* _onEventQuery(event);
-    } else if (event is _ScanAccountDirBlocExternalEvent) {
-      yield* _onExternalEvent(event);
     }
   }
 
@@ -175,9 +163,20 @@ class ScanAccountDirBloc
     return super.close();
   }
 
-  Stream<ScanAccountDirBlocState> _onEventQuery(
-      ScanAccountDirBlocQueryBase ev) async* {
-    yield ScanAccountDirBlocLoading(state.files);
+  Future<void> _onEvent(ScanAccountDirBlocEvent event,
+      Emitter<ScanAccountDirBlocState> emit) async {
+    _log.info("[_onEvent] $event");
+    if (event is ScanAccountDirBlocQueryBase) {
+      await _onEventQuery(event, emit);
+    } else if (event is _ScanAccountDirBlocExternalEvent) {
+      await _onExternalEvent(event, emit);
+    }
+  }
+
+  Future<void> _onEventQuery(ScanAccountDirBlocQueryBase ev,
+      Emitter<ScanAccountDirBlocState> emit) async {
+    _log.info("[_onEventQuery] $ev");
+    emit(ScanAccountDirBlocLoading(state.files));
     final hasContent = state.files.isNotEmpty;
 
     final stopwatch = Stopwatch()..start();
@@ -186,16 +185,16 @@ class ScanAccountDirBloc
         "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
     if (!hasContent) {
       // show something instantly on first load
-      yield ScanAccountDirBlocLoading(
-          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList());
+      emit(ScanAccountDirBlocLoading(
+          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList()));
     }
 
-    yield* _queryOnline(ev, cacheFiles);
+    await _queryOnline(ev, emit, cacheFiles);
   }
 
-  Stream<ScanAccountDirBlocState> _onExternalEvent(
-      _ScanAccountDirBlocExternalEvent ev) async* {
-    yield ScanAccountDirBlocInconsistent(state.files);
+  Future<void> _onExternalEvent(_ScanAccountDirBlocExternalEvent ev,
+      Emitter<ScanAccountDirBlocState> emit) async {
+    emit(ScanAccountDirBlocInconsistent(state.files));
   }
 
   void _onFileRemovedEvent(FileRemovedEvent ev) {
@@ -335,8 +334,8 @@ class ScanAccountDirBloc
     return files;
   }
 
-  Stream<ScanAccountDirBlocState> _queryOnline(
-      ScanAccountDirBlocQueryBase ev, List<File> cache) async* {
+  Future<void> _queryOnline(ScanAccountDirBlocQueryBase ev,
+      Emitter<ScanAccountDirBlocState> emit, List<File> cache) async {
     // 1st pass: scan for new files
     var files = <File>[];
     final cacheMap = FileForwardCacheManager.prepareFileMap(cache);
@@ -350,17 +349,17 @@ class ScanAccountDirBloc
         if (event is ExceptionEvent) {
           _log.shout("[_queryOnline] Exception while request (1st pass)",
               event.error, event.stackTrace);
-          yield ScanAccountDirBlocFailure(
+          emit(ScanAccountDirBlocFailure(
               cache.isEmpty
                   ? files
                   : cache.where((f) => file_util.isSupportedFormat(f)).toList(),
-              event.error);
+              event.error));
           return;
         }
         files.addAll(event);
         if (cache.isEmpty) {
           // only emit partial results if there's no cache
-          yield ScanAccountDirBlocLoading(files);
+          emit(ScanAccountDirBlocLoading(files));
         }
       }
       _log.info(
@@ -376,7 +375,7 @@ class ScanAccountDirBloc
         // if cache is empty, we have already emitted the results in the loop
         if (cache.isNotEmpty || files.isEmpty) {
           // emit results from remote
-          yield ScanAccountDirBlocLoading(files);
+          emit(ScanAccountDirBlocLoading(files));
         }
 
         files = await _queryOnlinePass2(ev, cacheMap, files);
@@ -385,7 +384,7 @@ class ScanAccountDirBloc
       _log.shout(
           "[_queryOnline] Failed while _queryOnlinePass2", e, stackTrace);
     }
-    yield ScanAccountDirBlocSuccess(files);
+    emit(ScanAccountDirBlocSuccess(files));
   }
 
   Future<List<File>> _queryOnlinePass2(ScanAccountDirBlocQueryBase ev,

@@ -148,23 +148,26 @@ class LsDirBlocFailure extends LsDirBlocState {
 
 /// A bloc that return all directories under a dir recursively
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
-  LsDirBloc(this.fileRepo) : super(LsDirBlocInit());
+  LsDirBloc(this.fileRepo) : super(LsDirBlocInit()) {
+    on<LsDirBlocEvent>(_onEvent);
+  }
 
-  @override
-  mapEventToState(LsDirBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      LsDirBlocEvent event, Emitter<LsDirBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is LsDirBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<LsDirBlocState> _onEventQuery(LsDirBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      LsDirBlocQuery ev, Emitter<LsDirBlocState> emit) async {
     try {
-      yield LsDirBlocLoading(ev.account, ev.root, state.items);
-      yield LsDirBlocSuccess(ev.account, ev.root, await _query(ev));
+      emit(LsDirBlocLoading(ev.account, ev.root, state.items));
+      emit(LsDirBlocSuccess(ev.account, ev.root, await _query(ev)));
     } catch (e) {
       _log.severe("[_onEventQuery] Exception while request", e);
-      yield LsDirBlocFailure(ev.account, ev.root, state.items, e);
+      emit(LsDirBlocFailure(ev.account, ev.root, state.items, e));
     }
   }
 

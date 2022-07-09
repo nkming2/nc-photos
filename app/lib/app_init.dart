@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_db.dart';
@@ -46,7 +45,6 @@ Future<void> initAppLaunch() async {
   await _initPref();
   await _initAccountPrefs();
   await _initDeviceInfo();
-  _initBloc();
   _initEquatable();
   if (features.isSupportSelfSignedCert) {
     _initSelfSignedCertManager();
@@ -135,10 +133,6 @@ Future<void> _initDeviceInfo() async {
   }
 }
 
-void _initBloc() {
-  Bloc.observer = _BlocObserver();
-}
-
 void _initKiwi() {
   final kiwi = KiwiContainer();
   kiwi.registerInstance<EventBus>(EventBus());
@@ -180,13 +174,3 @@ void _initVisibilityDetector() {
 
 final _log = Logger("app_init");
 var _hasInitedInThisIsolate = false;
-
-class _BlocObserver extends BlocObserver {
-  @override
-  onChange(BlocBase bloc, Change change) {
-    super.onChange(bloc, change);
-    _log.finer("${bloc.runtimeType} $change");
-  }
-
-  static final _log = Logger("app_init._BlocObserver");
-}

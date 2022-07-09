@@ -166,6 +166,8 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
       },
       logTag: "ListSharingBloc.refresh",
     );
+
+    on<ListSharingBlocEvent>(_onEvent);
   }
 
   static bool require(DiContainer c) =>
@@ -196,48 +198,50 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
     return super.close();
   }
 
-  @override
-  mapEventToState(ListSharingBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListSharingBlocEvent event, Emitter<ListSharingBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListSharingBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     } else if (event is _ListSharingBlocShareRemoved) {
-      yield* _onEventShareRemoved(event);
+      await _onEventShareRemoved(event, emit);
     } else if (event is _ListSharingBlocPendingSharedAlbumMoved) {
-      yield* _onEventPendingSharedAlbumMoved(event);
+      await _onEventPendingSharedAlbumMoved(event, emit);
     }
   }
 
-  Stream<ListSharingBlocState> _onEventQuery(ListSharingBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListSharingBlocQuery ev, Emitter<ListSharingBlocState> emit) async {
     try {
-      yield ListSharingBlocLoading(ev.account, state.items);
-      yield ListSharingBlocSuccess(ev.account, await _query(ev));
+      emit(ListSharingBlocLoading(ev.account, state.items));
+      emit(ListSharingBlocSuccess(ev.account, await _query(ev)));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListSharingBlocFailure(ev.account, state.items, e);
+      emit(ListSharingBlocFailure(ev.account, state.items, e));
     }
   }
 
-  Stream<ListSharingBlocState> _onEventShareRemoved(
-      _ListSharingBlocShareRemoved ev) async* {
+  Future<void> _onEventShareRemoved(_ListSharingBlocShareRemoved ev,
+      Emitter<ListSharingBlocState> emit) async {
     if (state is! ListSharingBlocSuccess && state is! ListSharingBlocFailure) {
       return;
     }
     final newItems =
         state.items.where((i) => !ev.shares.contains(i.share)).toList();
     // i love hacks :)
-    yield (state as dynamic).copyWith(
+    emit((state as dynamic).copyWith(
       items: newItems,
-    ) as ListSharingBlocState;
+    ) as ListSharingBlocState);
   }
 
-  Stream<ListSharingBlocState> _onEventPendingSharedAlbumMoved(
-      _ListSharingBlocPendingSharedAlbumMoved ev) async* {
+  Future<void> _onEventPendingSharedAlbumMoved(
+      _ListSharingBlocPendingSharedAlbumMoved ev,
+      Emitter<ListSharingBlocState> emit) async {
     if (state.items.isEmpty) {
       return;
     }
     try {
-      yield ListSharingBlocLoading(ev.account, state.items);
+      emit(ListSharingBlocLoading(ev.account, state.items));
 
       final items = List.of(state.items);
       items.removeWhere(
@@ -250,11 +254,11 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         items.add(ListSharingAlbum(s, newAlbum));
       }
 
-      yield ListSharingBlocSuccess(ev.account, items);
+      emit(ListSharingBlocSuccess(ev.account, items));
     } catch (e, stackTrace) {
       _log.severe("[_onEventPendingSharedAlbumMoved] Exception while request",
           e, stackTrace);
-      yield ListSharingBlocFailure(ev.account, state.items, e);
+      emit(ListSharingBlocFailure(ev.account, state.items, e));
     }
   }
 

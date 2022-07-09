@@ -70,7 +70,9 @@ class ListPersonBlocFailure extends ListPersonBlocState {
 
 /// List all people recognized in an account
 class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
-  ListPersonBloc() : super(ListPersonBlocInit());
+  ListPersonBloc() : super(ListPersonBlocInit()) {
+    on<ListPersonBlocEvent>(_onEvent);
+  }
 
   static ListPersonBloc of(Account account) {
     final name = bloc_util.getInstNameForAccount("ListPersonBloc", account);
@@ -86,21 +88,22 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
     }
   }
 
-  @override
-  mapEventToState(ListPersonBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListPersonBlocEvent event, Emitter<ListPersonBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListPersonBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListPersonBlocState> _onEventQuery(ListPersonBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListPersonBlocQuery ev, Emitter<ListPersonBlocState> emit) async {
     try {
-      yield ListPersonBlocLoading(ev.account, state.items);
-      yield ListPersonBlocSuccess(ev.account, await _query(ev));
+      emit(ListPersonBlocLoading(ev.account, state.items));
+      emit(ListPersonBlocSuccess(ev.account, await _query(ev)));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListPersonBlocFailure(ev.account, state.items, e);
+      emit(ListPersonBlocFailure(ev.account, state.items, e));
     }
   }
 

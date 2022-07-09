@@ -137,6 +137,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       },
       logTag: "ListAlbumBloc.refresh",
     );
+
+    on<ListAlbumBlocEvent>(_onEvent);
   }
 
   static bool require(DiContainer c) => true;
@@ -161,16 +163,6 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   }
 
   @override
-  mapEventToState(ListAlbumBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
-    if (event is ListAlbumBlocQuery) {
-      yield* _onEventQuery(event);
-    } else if (event is _ListAlbumBlocExternalEvent) {
-      yield* _onExternalEvent(event);
-    }
-  }
-
-  @override
   close() {
     _albumUpdatedListener.end();
     _fileRemovedListener.end();
@@ -182,31 +174,42 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
     return super.close();
   }
 
-  Stream<ListAlbumBlocState> _onEventQuery(ListAlbumBlocQuery ev) async* {
-    yield ListAlbumBlocLoading(ev.account, state.items);
+  Future<void> _onEvent(
+      ListAlbumBlocEvent event, Emitter<ListAlbumBlocState> emit) async {
+    _log.info("[_onEvent] $event");
+    if (event is ListAlbumBlocQuery) {
+      await _onEventQuery(event, emit);
+    } else if (event is _ListAlbumBlocExternalEvent) {
+      await _onExternalEvent(event, emit);
+    }
+  }
+
+  Future<void> _onEventQuery(
+      ListAlbumBlocQuery ev, Emitter<ListAlbumBlocState> emit) async {
+    emit(ListAlbumBlocLoading(ev.account, state.items));
     bool hasContent = state.items.isNotEmpty;
 
     if (!hasContent) {
       // show something instantly on first load
       final cacheState = await _queryOffline(ev);
-      yield ListAlbumBlocLoading(ev.account, cacheState.items);
+      emit(ListAlbumBlocLoading(ev.account, cacheState.items));
       hasContent = cacheState.items.isNotEmpty;
     }
 
     final newState = await _queryOnline(ev);
     if (newState is ListAlbumBlocFailure) {
-      yield ListAlbumBlocFailure(
+      emit(ListAlbumBlocFailure(
           ev.account,
           newState.items.isNotEmpty ? newState.items : state.items,
-          newState.exception);
+          newState.exception));
     } else {
-      yield newState;
+      emit(newState);
     }
   }
 
-  Stream<ListAlbumBlocState> _onExternalEvent(
-      _ListAlbumBlocExternalEvent ev) async* {
-    yield ListAlbumBlocInconsistent(state.account, state.items);
+  Future<void> _onExternalEvent(
+      _ListAlbumBlocExternalEvent ev, Emitter<ListAlbumBlocState> emit) async {
+    emit(ListAlbumBlocInconsistent(state.account, state.items));
   }
 
   void _onAlbumUpdatedEvent(AlbumUpdatedEvent ev) {

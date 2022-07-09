@@ -71,7 +71,9 @@ class ListFavoriteBloc
   ListFavoriteBloc(this._c)
       : assert(require(_c)),
         assert(ListFavorite.require(_c)),
-        super(const ListFavoriteBlocInit());
+        super(const ListFavoriteBlocInit()) {
+    on<ListFavoriteBlocEvent>(_onEvent);
+  }
 
   static bool require(DiContainer c) => true;
 
@@ -90,24 +92,25 @@ class ListFavoriteBloc
     }
   }
 
-  @override
-  mapEventToState(ListFavoriteBlocEvent event) async* {
-    _log.info("[mapEventToState] $event");
+  Future<void> _onEvent(
+      ListFavoriteBlocEvent event, Emitter<ListFavoriteBlocState> emit) async {
+    _log.info("[_onEvent] $event");
     if (event is ListFavoriteBlocQuery) {
-      yield* _onEventQuery(event);
+      await _onEventQuery(event, emit);
     }
   }
 
-  Stream<ListFavoriteBlocState> _onEventQuery(ListFavoriteBlocQuery ev) async* {
+  Future<void> _onEventQuery(
+      ListFavoriteBlocQuery ev, Emitter<ListFavoriteBlocState> emit) async {
     List<File>? cache;
     try {
-      yield ListFavoriteBlocLoading(ev.account, state.items);
+      emit(ListFavoriteBlocLoading(ev.account, state.items));
       cache = await _queryOffline(ev);
       if (cache != null) {
-        yield ListFavoriteBlocLoading(ev.account, cache);
+        emit(ListFavoriteBlocLoading(ev.account, cache));
       }
       final remote = await _queryOnline(ev);
-      yield ListFavoriteBlocSuccess(ev.account, remote);
+      emit(ListFavoriteBlocSuccess(ev.account, remote));
 
       if (cache != null) {
         CacheFavorite(_c)(ev.account, remote, cache: cache)
@@ -118,7 +121,7 @@ class ListFavoriteBloc
       }
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      yield ListFavoriteBlocFailure(ev.account, cache ?? state.items, e);
+      emit(ListFavoriteBlocFailure(ev.account, cache ?? state.items, e));
     }
   }
 
