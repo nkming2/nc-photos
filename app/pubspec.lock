@@ -322,13 +322,6 @@ packages:
       url: "https://gitlab.com/nc-photos/exifdart.git"
     source: git
     version: "1.2.0"
-  fake_async:
-    dependency: transitive
-    description:
-      name: fake_async
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   ffi:
     dependency: transitive
     description:
@@ -434,11 +427,6 @@ packages:
       url: "https://gitlab.com/nc-photos/flutter_staggered_grid_view"
     source: git
     version: "0.4.0"
-  flutter_test:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_typeahead:
     dependency: "direct main"
     description:
@@ -1182,30 +1170,40 @@ packages:
   video_player:
     dependency: "direct main"
     description:
-      path: "packages/video_player/video_player"
-      ref: "video_player-v2.2.6-nc-photos-2"
-      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
+      name: video_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.5"
+  video_player_android:
+    dependency: "direct overridden"
+    description:
+      path: "packages/video_player/video_player_android"
+      ref: "video_player-v2.4.5-nc-photos-1"
+      resolved-ref: fade05907d60e1076c270cd41a5f2b842c4a4d00
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
-    version: "2.2.6"
+    version: "2.3.6"
+  video_player_avfoundation:
+    dependency: transitive
+    description:
+      name: video_player_avfoundation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.5"
   video_player_platform_interface:
     dependency: transitive
     description:
-      path: "packages/video_player/video_player_platform_interface"
-      ref: "video_player-v2.2.6-nc-photos-2"
-      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
-      url: "https://gitlab.com/nc-photos/flutter-plugins"
-    source: git
-    version: "4.2.0"
+      name: video_player_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.3"
   video_player_web:
     dependency: transitive
     description:
-      path: "packages/video_player/video_player_web"
-      ref: "video_player-v2.2.6-nc-photos-2"
-      resolved-ref: "176a4e719a376c8f686a0ed73900b171cf92ebf0"
-      url: "https://gitlab.com/nc-photos/flutter-plugins"
-    source: git
-    version: "2.0.4"
+      name: video_player_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.10"
   visibility_detector:
     dependency: "direct main"
     description:

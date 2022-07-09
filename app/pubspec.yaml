@@ -94,11 +94,7 @@ dependencies:
   tuple: ^2.0.0
   url_launcher: ^6.0.3
   uuid: ^3.0.6
-  video_player:
-    git:
-      url: https://gitlab.com/nc-photos/flutter-plugins
-      ref: video_player-v2.2.6-nc-photos-2
-      path: packages/video_player/video_player
+  video_player: 2.4.5
   visibility_detector: ^0.3.3
   wakelock: ^0.6.2
   woozy_search: ^2.0.3
@@ -108,6 +104,11 @@ dependency_overrides:
   # the dependency of device_info_plus_windows was set incorrectly in
   # device_info_plus, this is a workaround until it's fixed in upstream
   device_info_plus_windows: ^3.0.0
+  video_player_android:
+    git:
+      url: https://gitlab.com/nc-photos/flutter-plugins
+      ref: video_player-v2.4.5-nc-photos-1
+      path: packages/video_player/video_player_android
 
 dev_dependencies:
   test: any
