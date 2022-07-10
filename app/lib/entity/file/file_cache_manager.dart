@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -40,8 +41,12 @@ class FileCacheLoader {
           cache.firstWhere((f) => f.compareServerIdentity(dir)).etag!;
       // compare the etag to see if the content has been updated
       var remoteEtag = dir.etag;
-      // if no etag supplied, we need to query it form remote
-      remoteEtag ??= (await remoteSrc.list(account, dir, depth: 0)).first.etag;
+      if (remoteEtag == null) {
+        // if no etag supplied, we need to query it form remote
+        _log.info(
+            "[call] etag missing from input, querying remote: ${logFilename(dir.path)}");
+        remoteEtag = (await remoteSrc.list(account, dir, depth: 0)).first.etag;
+      }
       if (cacheEtag == remoteEtag) {
         if (shouldCheckCache) {
           await _checkTouchToken(account, dir, cache);
