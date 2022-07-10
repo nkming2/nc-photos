@@ -330,6 +330,11 @@
 	"@settingsAccountPageTitle": {
 		"description": "Dedicated page for account settings"
 	},
+	"settingsAccountLabelTitle": "Label",
+	"@settingsAccountLabelTitle": {
+		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+	},
+	"settingsAccountLabelDescription": "Set a label to be shown in place of the server URL",
 	"settingsIncludedFoldersTitle": "Included folders",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"

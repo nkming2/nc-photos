@@ -26,6 +26,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
+import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tuple/tuple.dart';
@@ -495,6 +496,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     final settings = AccountPref.of(_account);
     _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionAppOr();
     _shareFolder = settings.getShareFolderOr();
+    _label = settings.getAccountLabel();
   }
 
   @override
@@ -528,6 +530,12 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
             delegate: SliverChildListDelegate(
               [
                 ListTile(
+                  title: Text(L10n.global().settingsAccountLabelTitle),
+                  subtitle: Text(
+                      _label ?? L10n.global().settingsAccountLabelDescription),
+                  onTap: () => _onLabelPressed(context),
+                ),
+                ListTile(
                   title: Text(L10n.global().settingsIncludedFoldersTitle),
                   subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
                   onTap: _onIncludedFoldersPressed,
@@ -558,6 +566,24 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       (route) => false,
       arguments: HomeArguments(_account),
     );
+  }
+
+  Future<void> _onLabelPressed(BuildContext context) async {
+    final result = await showDialog<String>(
+        context: context,
+        builder: (context) => SimpleInputDialog(
+              titleText: L10n.global().settingsAccountLabelTitle,
+              buttonText: MaterialLocalizations.of(context).okButtonLabel,
+              initialText: _label ?? "",
+            ));
+    if (result == null) {
+      return;
+    }
+    if (result.isEmpty) {
+      _setLabel(null);
+    } else {
+      _setLabel(result);
+    }
   }
 
   Future<void> _onIncludedFoldersPressed() async {
@@ -650,6 +676,24 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
     }
   }
 
+  Future<void> _setLabel(String? value) async {
+    _log.info("[_setLabel] New value: $value");
+    final oldValue = _label;
+    setState(() {
+      _label = value;
+    });
+    if (!await AccountPref.of(_account).setAccountLabel(value)) {
+      _log.severe("[_setLabel] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _label = oldValue;
+      });
+    }
+  }
+
   Future<void> _setShareFolder(String value) async {
     _log.info("[_setShareFolder] New value: $value");
     final oldValue = _shareFolder;
@@ -672,6 +716,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   late Account _account;
   late bool _isEnableFaceRecognitionApp;
   late String _shareFolder;
+  late String? _label;
 
   static final _log = Logger("widget.settings._AccountSettingsState");
 }

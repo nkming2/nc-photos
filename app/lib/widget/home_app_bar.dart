@@ -23,6 +23,7 @@ class HomeSliverAppBar extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+    final accountLabel = AccountPref.of(account).getAccountLabel();
     return SliverAppBar(
       title: InkWell(
         onTap: () {
@@ -57,16 +58,17 @@ class HomeSliverAppBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      account.url.substring(account.scheme.length + 3),
+                      accountLabel ?? account.address,
                       style: const TextStyle(fontSize: 16),
                     ),
-                    Text(
-                      account.username.toString(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.getSecondaryTextColor(context),
+                    if (accountLabel == null)
+                      Text(
+                        account.username.toString(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.getSecondaryTextColor(context),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

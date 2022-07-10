@@ -33,26 +33,27 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
 
   @override
   build(BuildContext context) {
-    final otherAccountOptions = _accounts
-        .where((a) => a != widget.account)
-        .map((a) => SimpleDialogOption(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              onPressed: () => _onItemPressed(a),
-              child: ListTile(
-                dense: true,
-                title: Text(a.url),
-                subtitle: Text(a.username.toString()),
-                trailing: IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
-                  tooltip: L10n.global().deleteTooltip,
-                  onPressed: () => _onRemoveItemPressed(a),
-                ),
-              ),
-            ))
-        .toList();
+    final otherAccountOptions =
+        _accounts.where((a) => a != widget.account).map((a) {
+      final label = AccountPref.of(a).getAccountLabel();
+      return SimpleDialogOption(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        onPressed: () => _onItemPressed(a),
+        child: ListTile(
+          dense: true,
+          title: Text(label ?? a.url),
+          subtitle: label == null ? Text(a.username.toString()) : null,
+          trailing: IconButton(
+            icon: Icon(
+              Icons.close,
+              color: AppTheme.getUnfocusedIconColor(context),
+            ),
+            tooltip: L10n.global().deleteTooltip,
+            onPressed: () => _onRemoveItemPressed(a),
+          ),
+        ),
+      );
+    }).toList();
     final addAccountOptions = [
       SimpleDialogOption(
         padding: const EdgeInsets.all(8),
@@ -72,18 +73,21 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         ),
       ),
     ];
+    final accountLabel = AccountPref.of(widget.account).getAccountLabel();
     return AppTheme(
       child: SimpleDialog(
         title: ListTile(
           dense: true,
           title: Text(
-            widget.account.url,
+            accountLabel ?? widget.account.url,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          subtitle: Text(
-            widget.account.username.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          subtitle: accountLabel == null
+              ? Text(
+                  widget.account.username.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              : null,
           trailing: IconButton(
             icon: Icon(
               Icons.settings_outlined,

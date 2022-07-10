@@ -6,6 +6,8 @@
     "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsIncludedFoldersTitle",
     "settingsShareFolderTitle",
     "settingsShareFolderDialogTitle",
@@ -118,6 +120,8 @@
     "settingsMemoriesSubtitle",
     "settingsAccountTitle",
     "settingsAccountPageTitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsIncludedFoldersTitle",
     "settingsShareFolderTitle",
     "settingsShareFolderDialogTitle",
@@ -240,17 +244,28 @@
   "el": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "enhanceStyleTransferStyleDialogTitle"
   ],
 
   "es": [
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "rootPickerSkipConfirmationDialogContent2"
+  ],
+
+  "fi": [
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription"
   ],
 
   "fr": [
     "collectionsTooltip",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",
@@ -281,6 +296,8 @@
   "pl": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",
@@ -329,6 +346,8 @@
   "pt": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",
@@ -356,6 +375,8 @@
   "ru": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",
@@ -383,6 +404,8 @@
   "zh": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",
@@ -410,6 +433,8 @@
   "zh_Hant": [
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
+    "settingsAccountLabelTitle",
+    "settingsAccountLabelDescription",
     "settingsPhotoEnhancementTitle",
     "settingsPhotoEnhancementPageTitle",
     "settingsEnhanceMaxResolutionTitle",

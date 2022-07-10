@@ -289,6 +289,17 @@ class AccountPref {
       (key, value) => provider.setString(key, value));
   Future<bool> removeTouchRootEtag() => _remove(PrefKey.touchRootEtag);
 
+  String? getAccountLabel() => provider.getString(PrefKey.accountLabel);
+  String getAccountLabelOr([String def = ""]) => getAccountLabel() ?? def;
+  Future<bool> setAccountLabel(String? value) {
+    if (value == null) {
+      return _remove(PrefKey.accountLabel);
+    } else {
+      return _set<String>(PrefKey.accountLabel, value,
+          (key, value) => provider.setString(key, value));
+    }
+  }
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -519,6 +530,7 @@ enum PrefKey {
   hasNewSharedAlbum,
   isEnableMemoryAlbum,
   touchRootEtag,
+  accountLabel,
 }
 
 extension on PrefKey {
@@ -590,6 +602,8 @@ extension on PrefKey {
         return "isEnableMemoryAlbum";
       case PrefKey.touchRootEtag:
         return "touchRootEtag";
+      case PrefKey.accountLabel:
+        return "accountLabel";
     }
   }
 }
