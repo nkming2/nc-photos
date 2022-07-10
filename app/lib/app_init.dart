@@ -94,7 +94,7 @@ void initLog() {
       }
       msg = "\x1B[${color}m$msg\x1B[0m";
     }
-    debugPrint(msg);
+    debugPrint(msg, wrapWidth: 1024);
     LogCapturer().onLog(msg);
   });
 }
