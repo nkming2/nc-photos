@@ -423,6 +423,12 @@ class FileSqliteDbDataSource implements FileDataSource {
     // do nothing
   }
 
+  /// Remove all children of [dir] but not [dir] itself
+  Future<void> emptyDir(Account account, File dir) {
+    _log.info("[emptyDir] ${dir.path}");
+    return FileSqliteCacheEmptier(_c)(account, dir);
+  }
+
   final DiContainer _c;
 
   static final _log = Logger("entity.file.data_source.FileSqliteDbDataSource");
@@ -475,7 +481,9 @@ class FileCachedDataSource implements FileDataSource {
       } else if (e.response.statusCode == 403) {
         _log.info("[list] E2E encrypted dir: $dir");
         if (cache != null) {
-          await _sqliteDbSrc.remove(account, dir);
+          // we need to keep the dir itself as it'll be inserted again on next
+          // listing of its parent
+          await _sqliteDbSrc.emptyDir(account, dir);
         }
         return [];
       } else {

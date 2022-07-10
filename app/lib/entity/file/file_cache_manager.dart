@@ -320,6 +320,39 @@ class FileSqliteCacheRemover {
   final DiContainer _c;
 }
 
+class FileSqliteCacheEmptier {
+  FileSqliteCacheEmptier(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+
+  /// Empty a dir from cache
+  Future<void> call(Account account, File dir) async {
+    await _c.sqliteDb.use((db) async {
+      final dbAccount = await db.accountOf(account);
+      final rowIds = await db.accountFileRowIdsOf(dir, sqlAccount: dbAccount);
+
+      // remove children
+      final childIdsQuery = db.selectOnly(db.dirFiles)
+        ..addColumns([db.dirFiles.child])
+        ..where(db.dirFiles.dir.equals(rowIds.fileRowId));
+      final childIds =
+          await childIdsQuery.map((r) => r.read(db.dirFiles.child)!).get();
+      childIds.removeWhere((id) => id == rowIds.fileRowId);
+      if (childIds.isNotEmpty) {
+        await _removeSqliteFiles(db, dbAccount, childIds);
+        await _cleanUpRemovedFile(db, dbAccount);
+      }
+
+      // remove dir in DirFiles
+      await (db.delete(db.dirFiles)
+            ..where((t) => t.dir.equals(rowIds.fileRowId)))
+          .go();
+    });
+  }
+
+  final DiContainer _c;
+}
+
 /// Remove a files from the cache db
 ///
 /// If a file is a dir, its children will also be recursively removed

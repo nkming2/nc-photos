@@ -30,6 +30,7 @@ void main() {
     test("delete shared file", _updaterDeleteSharedFile);
     test("delete shared dir", _updaterDeleteSharedDir);
   });
+  test("FileSqliteCacheEmptier", _emptier);
 }
 
 /// Load dir: no cache
@@ -498,5 +499,46 @@ Future<void> _updaterDeleteSharedDir() async {
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
     {...files, user1Files[0]},
+  );
+}
+
+/// Empty dir in cache
+///
+/// Expect: dir removed from DirFiles table;
+/// dir remains in Files table
+Future<void> _emptier() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addDir("admin/testA")
+        ..addJpeg("admin/testA/test1.jpg")
+        ..addDir("admin/testB")
+        ..addJpeg("admin/testB/test2.jpg"))
+      .build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util
+        .insertDirRelation(c.sqliteDb, account, files[0], [files[1], files[3]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[1], [files[2]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[3], [files[4]]);
+  });
+
+  final emptier = FileSqliteCacheEmptier(c);
+  await emptier(account, files[1]);
+  expect(
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {files[0], files[1], files[3], files[4]},
+  );
+  expect(
+    await util.listSqliteDbDirs(c.sqliteDb),
+    {
+      files[0]: {files[0], files[1], files[3]},
+      files[3]: {files[3], files[4]},
+    },
   );
 }
