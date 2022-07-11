@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/ls.dart';
 
@@ -158,7 +159,9 @@ class ListImportableAlbumBloc
       if (count >= 5) {
         yield ListImportableAlbumBlocItem(dir, count);
       }
-      for (final d in files.where((f) => f.isCollection == true)) {
+      for (final d in files.where((f) =>
+          f.isCollection == true &&
+          !f.path.endsWith(remote_storage_util.getRemoteStorageDir(account)))) {
         yield* _queryDir(account, importedDirs, d);
       }
     } catch (e, stacktrace) {
