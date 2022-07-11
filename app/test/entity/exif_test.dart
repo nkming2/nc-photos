@@ -197,6 +197,21 @@ void main() {
             [_Rational(2, 1), _Rational(3, 1), _Rational(4, 100)]);
       });
     });
+
+    group("dateTimeOriginal", () {
+      test("problematic value", () {
+        final exif = Exif({
+          "DateTimeOriginal": " ",
+        });
+        expect(exif.dateTimeOriginal, null);
+      });
+      test("empty value", () {
+        final exif = Exif({
+          "DateTimeOriginal": "",
+        });
+        expect(exif.dateTimeOriginal, null);
+      });
+    });
   });
 }
 
