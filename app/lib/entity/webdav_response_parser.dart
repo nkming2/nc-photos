@@ -94,6 +94,7 @@ class WebdavResponseParser {
     int? fileId;
     bool? isFavorite;
     CiString? ownerId;
+    String? ownerDisplayName;
     Metadata? metadata;
     bool? isArchived;
     DateTime? overrideDateTime;
@@ -131,6 +132,7 @@ class WebdavResponseParser {
         fileId = propParser.fileId;
         isFavorite = propParser.isFavorite;
         ownerId = propParser.ownerId;
+        ownerDisplayName = propParser.ownerDisplayName;
         metadata = propParser.metadata;
         isArchived = propParser.isArchived;
         overrideDateTime = propParser.overrideDateTime;
@@ -152,6 +154,7 @@ class WebdavResponseParser {
       fileId: fileId,
       isFavorite: isFavorite,
       ownerId: ownerId,
+      ownerDisplayName: ownerDisplayName,
       metadata: metadata,
       isArchived: isArchived,
       overrideDateTime: overrideDateTime,
@@ -338,6 +341,9 @@ class _FilePropParser {
       } else if (child.matchQualifiedName("owner-id",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _ownerId = child.innerText.toCi();
+      } else if (child.matchQualifiedName("owner-display-name",
+          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
+        _ownerDisplayName = child.innerText;
       } else if (child.matchQualifiedName("trashbin-filename",
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _trashbinFilename = child.innerText;
@@ -385,6 +391,7 @@ class _FilePropParser {
   int? get fileId => _fileId;
   bool? get isFavorite => _isFavorite;
   CiString? get ownerId => _ownerId;
+  String? get ownerDisplayName => _ownerDisplayName;
   Metadata? get metadata => _metadata;
   bool? get isArchived => _isArchived;
   DateTime? get overrideDateTime => _overrideDateTime;
@@ -407,6 +414,7 @@ class _FilePropParser {
   int? _fileId;
   bool? _isFavorite;
   CiString? _ownerId;
+  String? _ownerDisplayName;
   Metadata? _metadata;
   bool? _isArchived;
   DateTime? _overrideDateTime;

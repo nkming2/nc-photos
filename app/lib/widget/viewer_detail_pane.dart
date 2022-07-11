@@ -203,7 +203,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   color: AppTheme.getSecondaryTextColor(context),
                 ),
               ),
-              title: Text(widget.file.ownerId!.toString()),
+              title: Text(widget.file.ownerDisplayName ??
+                  widget.file.ownerId!.toString()),
               subtitle: Text(L10n.global().fileSharedByDescription),
             ),
           if (_tags.isNotEmpty)

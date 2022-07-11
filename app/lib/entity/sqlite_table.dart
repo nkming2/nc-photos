@@ -36,6 +36,7 @@ class Files extends Table {
   IntColumn get usedBytes => integer().nullable()();
   BoolColumn get hasPreview => boolean().nullable()();
   TextColumn get ownerId => text().nullable()();
+  TextColumn get ownerDisplayName => text().nullable()();
 
   @override
   get uniqueKeys => [

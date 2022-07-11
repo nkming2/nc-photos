@@ -406,6 +406,7 @@ class File extends DataClass implements Insertable<File> {
   final int? usedBytes;
   final bool? hasPreview;
   final String? ownerId;
+  final String? ownerDisplayName;
   File(
       {required this.rowId,
       required this.server,
@@ -417,7 +418,8 @@ class File extends DataClass implements Insertable<File> {
       this.isCollection,
       this.usedBytes,
       this.hasPreview,
-      this.ownerId});
+      this.ownerId,
+      this.ownerDisplayName});
   factory File.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return File(
@@ -443,6 +445,8 @@ class File extends DataClass implements Insertable<File> {
           .mapFromDatabaseResponse(data['${effectivePrefix}has_preview']),
       ownerId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}owner_id']),
+      ownerDisplayName: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}owner_display_name']),
     );
   }
   @override
@@ -477,6 +481,9 @@ class File extends DataClass implements Insertable<File> {
     if (!nullToAbsent || ownerId != null) {
       map['owner_id'] = Variable<String?>(ownerId);
     }
+    if (!nullToAbsent || ownerDisplayName != null) {
+      map['owner_display_name'] = Variable<String?>(ownerDisplayName);
+    }
     return map;
   }
 
@@ -507,6 +514,9 @@ class File extends DataClass implements Insertable<File> {
       ownerId: ownerId == null && nullToAbsent
           ? const Value.absent()
           : Value(ownerId),
+      ownerDisplayName: ownerDisplayName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ownerDisplayName),
     );
   }
 
@@ -525,6 +535,7 @@ class File extends DataClass implements Insertable<File> {
       usedBytes: serializer.fromJson<int?>(json['usedBytes']),
       hasPreview: serializer.fromJson<bool?>(json['hasPreview']),
       ownerId: serializer.fromJson<String?>(json['ownerId']),
+      ownerDisplayName: serializer.fromJson<String?>(json['ownerDisplayName']),
     );
   }
   @override
@@ -542,6 +553,7 @@ class File extends DataClass implements Insertable<File> {
       'usedBytes': serializer.toJson<int?>(usedBytes),
       'hasPreview': serializer.toJson<bool?>(hasPreview),
       'ownerId': serializer.toJson<String?>(ownerId),
+      'ownerDisplayName': serializer.toJson<String?>(ownerDisplayName),
     };
   }
 
@@ -556,7 +568,8 @@ class File extends DataClass implements Insertable<File> {
           Value<bool?> isCollection = const Value.absent(),
           Value<int?> usedBytes = const Value.absent(),
           Value<bool?> hasPreview = const Value.absent(),
-          Value<String?> ownerId = const Value.absent()}) =>
+          Value<String?> ownerId = const Value.absent(),
+          Value<String?> ownerDisplayName = const Value.absent()}) =>
       File(
         rowId: rowId ?? this.rowId,
         server: server ?? this.server,
@@ -572,6 +585,9 @@ class File extends DataClass implements Insertable<File> {
         usedBytes: usedBytes.present ? usedBytes.value : this.usedBytes,
         hasPreview: hasPreview.present ? hasPreview.value : this.hasPreview,
         ownerId: ownerId.present ? ownerId.value : this.ownerId,
+        ownerDisplayName: ownerDisplayName.present
+            ? ownerDisplayName.value
+            : this.ownerDisplayName,
       );
   @override
   String toString() {
@@ -586,7 +602,8 @@ class File extends DataClass implements Insertable<File> {
           ..write('isCollection: $isCollection, ')
           ..write('usedBytes: $usedBytes, ')
           ..write('hasPreview: $hasPreview, ')
-          ..write('ownerId: $ownerId')
+          ..write('ownerId: $ownerId, ')
+          ..write('ownerDisplayName: $ownerDisplayName')
           ..write(')'))
         .toString();
   }
@@ -603,7 +620,8 @@ class File extends DataClass implements Insertable<File> {
       isCollection,
       usedBytes,
       hasPreview,
-      ownerId);
+      ownerId,
+      ownerDisplayName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -618,7 +636,8 @@ class File extends DataClass implements Insertable<File> {
           other.isCollection == this.isCollection &&
           other.usedBytes == this.usedBytes &&
           other.hasPreview == this.hasPreview &&
-          other.ownerId == this.ownerId);
+          other.ownerId == this.ownerId &&
+          other.ownerDisplayName == this.ownerDisplayName);
 }
 
 class FilesCompanion extends UpdateCompanion<File> {
@@ -633,6 +652,7 @@ class FilesCompanion extends UpdateCompanion<File> {
   final Value<int?> usedBytes;
   final Value<bool?> hasPreview;
   final Value<String?> ownerId;
+  final Value<String?> ownerDisplayName;
   const FilesCompanion({
     this.rowId = const Value.absent(),
     this.server = const Value.absent(),
@@ -645,6 +665,7 @@ class FilesCompanion extends UpdateCompanion<File> {
     this.usedBytes = const Value.absent(),
     this.hasPreview = const Value.absent(),
     this.ownerId = const Value.absent(),
+    this.ownerDisplayName = const Value.absent(),
   });
   FilesCompanion.insert({
     this.rowId = const Value.absent(),
@@ -658,6 +679,7 @@ class FilesCompanion extends UpdateCompanion<File> {
     this.usedBytes = const Value.absent(),
     this.hasPreview = const Value.absent(),
     this.ownerId = const Value.absent(),
+    this.ownerDisplayName = const Value.absent(),
   })  : server = Value(server),
         fileId = Value(fileId);
   static Insertable<File> custom({
@@ -672,6 +694,7 @@ class FilesCompanion extends UpdateCompanion<File> {
     Expression<int?>? usedBytes,
     Expression<bool?>? hasPreview,
     Expression<String?>? ownerId,
+    Expression<String?>? ownerDisplayName,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -685,6 +708,7 @@ class FilesCompanion extends UpdateCompanion<File> {
       if (usedBytes != null) 'used_bytes': usedBytes,
       if (hasPreview != null) 'has_preview': hasPreview,
       if (ownerId != null) 'owner_id': ownerId,
+      if (ownerDisplayName != null) 'owner_display_name': ownerDisplayName,
     });
   }
 
@@ -699,7 +723,8 @@ class FilesCompanion extends UpdateCompanion<File> {
       Value<bool?>? isCollection,
       Value<int?>? usedBytes,
       Value<bool?>? hasPreview,
-      Value<String?>? ownerId}) {
+      Value<String?>? ownerId,
+      Value<String?>? ownerDisplayName}) {
     return FilesCompanion(
       rowId: rowId ?? this.rowId,
       server: server ?? this.server,
@@ -712,6 +737,7 @@ class FilesCompanion extends UpdateCompanion<File> {
       usedBytes: usedBytes ?? this.usedBytes,
       hasPreview: hasPreview ?? this.hasPreview,
       ownerId: ownerId ?? this.ownerId,
+      ownerDisplayName: ownerDisplayName ?? this.ownerDisplayName,
     );
   }
 
@@ -753,6 +779,9 @@ class FilesCompanion extends UpdateCompanion<File> {
     if (ownerId.present) {
       map['owner_id'] = Variable<String?>(ownerId.value);
     }
+    if (ownerDisplayName.present) {
+      map['owner_display_name'] = Variable<String?>(ownerDisplayName.value);
+    }
     return map;
   }
 
@@ -769,7 +798,8 @@ class FilesCompanion extends UpdateCompanion<File> {
           ..write('isCollection: $isCollection, ')
           ..write('usedBytes: $usedBytes, ')
           ..write('hasPreview: $hasPreview, ')
-          ..write('ownerId: $ownerId')
+          ..write('ownerId: $ownerId, ')
+          ..write('ownerDisplayName: $ownerDisplayName')
           ..write(')'))
         .toString();
   }
@@ -849,6 +879,12 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   late final GeneratedColumn<String?> ownerId = GeneratedColumn<String?>(
       'owner_id', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _ownerDisplayNameMeta =
+      const VerificationMeta('ownerDisplayName');
+  @override
+  late final GeneratedColumn<String?> ownerDisplayName =
+      GeneratedColumn<String?>('owner_display_name', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
@@ -861,7 +897,8 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
         isCollection,
         usedBytes,
         hasPreview,
-        ownerId
+        ownerId,
+        ownerDisplayName
       ];
   @override
   String get aliasedName => _alias ?? 'files';
@@ -924,6 +961,12 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
     if (data.containsKey('owner_id')) {
       context.handle(_ownerIdMeta,
           ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta));
+    }
+    if (data.containsKey('owner_display_name')) {
+      context.handle(
+          _ownerDisplayNameMeta,
+          ownerDisplayName.isAcceptableOrUnknown(
+              data['owner_display_name']!, _ownerDisplayNameMeta));
     }
     return context;
   }

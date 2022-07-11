@@ -92,6 +92,7 @@ class SqliteFileConverter {
       fileId: f.file.fileId,
       isFavorite: f.accountFile.isFavorite,
       ownerId: f.file.ownerId?.toCi(),
+      ownerDisplayName: f.file.ownerDisplayName,
       trashbinFilename: f.trash?.filename,
       trashbinOriginalLocation: f.trash?.originalLocation,
       trashbinDeletionTime: f.trash?.deletionTime,
@@ -113,6 +114,7 @@ class SqliteFileConverter {
       usedBytes: Value(file.usedBytes),
       hasPreview: Value(file.hasPreview),
       ownerId: Value(file.ownerId!.toCaseInsensitiveString()),
+      ownerDisplayName: Value(file.ownerDisplayName),
     );
     final dbAccountFile = sql.AccountFilesCompanion(
       account: account == null ? const Value.absent() : Value(account.rowId),

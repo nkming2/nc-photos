@@ -231,6 +231,7 @@ class File with EquatableMixin {
     this.fileId,
     this.isFavorite,
     this.ownerId,
+    this.ownerDisplayName,
     this.metadata,
     this.isArchived,
     this.overrideDateTime,
@@ -268,6 +269,7 @@ class File with EquatableMixin {
       fileId: json["fileId"],
       isFavorite: json_util.boolFromJson(json["isFavorite"]),
       ownerId: json["ownerId"] == null ? null : CiString(json["ownerId"]),
+      ownerDisplayName: json["ownerDisplayName"],
       trashbinFilename: json["trashbinFilename"],
       trashbinOriginalLocation: json["trashbinOriginalLocation"],
       trashbinDeletionTime: json["trashbinDeletionTime"] == null
@@ -327,6 +329,9 @@ class File with EquatableMixin {
     if (ownerId != null) {
       product += "ownerId: '$ownerId', ";
     }
+    if (ownerDisplayName != null) {
+      product += "ownerDisplayName: '$ownerDisplayName', ";
+    }
     if (trashbinFilename != null) {
       product += "trashbinFilename: '$trashbinFilename', ";
     }
@@ -362,6 +367,7 @@ class File with EquatableMixin {
       if (fileId != null) "fileId": fileId,
       if (isFavorite != null) "isFavorite": json_util.boolToJson(isFavorite),
       if (ownerId != null) "ownerId": ownerId.toString(),
+      if (ownerDisplayName != null) "ownerDisplayName": ownerDisplayName,
       if (trashbinFilename != null) "trashbinFilename": trashbinFilename,
       if (trashbinOriginalLocation != null)
         "trashbinOriginalLocation": trashbinOriginalLocation,
@@ -386,6 +392,7 @@ class File with EquatableMixin {
     int? fileId,
     bool? isFavorite,
     CiString? ownerId,
+    String? ownerDisplayName,
     String? trashbinFilename,
     String? trashbinOriginalLocation,
     DateTime? trashbinDeletionTime,
@@ -405,6 +412,7 @@ class File with EquatableMixin {
       fileId: fileId ?? this.fileId,
       isFavorite: isFavorite ?? this.isFavorite,
       ownerId: ownerId ?? this.ownerId,
+      ownerDisplayName: ownerDisplayName ?? this.ownerDisplayName,
       trashbinFilename: trashbinFilename ?? this.trashbinFilename,
       trashbinOriginalLocation:
           trashbinOriginalLocation ?? this.trashbinOriginalLocation,
@@ -430,6 +438,7 @@ class File with EquatableMixin {
         fileId,
         isFavorite,
         ownerId,
+        ownerDisplayName,
         trashbinFilename,
         trashbinOriginalLocation,
         trashbinDeletionTime,
@@ -449,6 +458,7 @@ class File with EquatableMixin {
   final int? fileId;
   final bool? isFavorite;
   final CiString? ownerId;
+  final String? ownerDisplayName;
   final String? trashbinFilename;
   final String? trashbinOriginalLocation;
   final DateTime? trashbinDeletionTime;
