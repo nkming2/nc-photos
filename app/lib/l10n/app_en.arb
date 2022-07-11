@@ -409,6 +409,10 @@
 	},
 	"settingsMiscellaneousTitle": "Miscellaneous",
 	"settingsMiscellaneousPageTitle": "Miscellaneous settings",
+	"settingsDoubleTapExitTitle": "Double tap to exit",
+	"@settingsDoubleTapExitTitle": {
+		"description": "If enabled, users need to tap the back button twice to exit app"
+	},
 	"settingsPhotosTabSortByNameTitle": "Sort by filename in Photos",
 	"@settingsPhotosTabSortByNameTitle": {
 		"description": "Sort photos listed in the Photos tab by filename (descending)"
@@ -1247,6 +1251,10 @@
 	"enhanceStyleTransferStyleDialogTitle": "Pick a style",
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
+	},
+	"doubleTapExitNotification": "Tap again to exit",
+	"@doubleTapExitNotification": {
+		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

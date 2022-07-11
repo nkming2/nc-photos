@@ -89,7 +89,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     }
     if (platform_k.isAndroid) {
       return WillPopScope(
-        onWillPop: _onBackButton,
+        onWillPop: onBackButtonPressed,
         child: content,
       );
     } else {
@@ -133,6 +133,18 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         (_listKey.currentState as MeasurableItemListState?)
             ?.updateListHeight());
+  }
+
+  @protected
+  Future<bool> onBackButtonPressed() async {
+    if (!isSelectionMode) {
+      return true;
+    } else {
+      setState(() {
+        clearSelectedItems();
+      });
+      return false;
+    }
   }
 
   Widget _buildItem(
@@ -229,17 +241,6 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         ));
         SessionStorage().hasShowRangeSelectNotification = true;
       }
-    }
-  }
-
-  Future<bool> _onBackButton() async {
-    if (!isSelectionMode) {
-      return true;
-    } else {
-      setState(() {
-        clearSelectedItems();
-      });
-      return false;
     }
   }
 

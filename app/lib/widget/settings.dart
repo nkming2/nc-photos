@@ -1406,6 +1406,7 @@ class _MiscSettingsState extends State<_MiscSettings> {
   initState() {
     super.initState();
     _isPhotosTabSortByName = Pref().isPhotosTabSortByNameOr();
+    _isDoubleTapExit = Pref().isDoubleTapExitOr();
   }
 
   @override
@@ -1430,6 +1431,11 @@ class _MiscSettingsState extends State<_MiscSettings> {
           delegate: SliverChildListDelegate(
             [
               SwitchListTile(
+                title: Text(L10n.global().settingsDoubleTapExitTitle),
+                value: _isDoubleTapExit,
+                onChanged: (value) => _onDoubleTapExitChanged(value),
+              ),
+              SwitchListTile(
                 title: Text(L10n.global().settingsPhotosTabSortByNameTitle),
                 value: _isPhotosTabSortByName,
                 onChanged: (value) => _onPhotosTabSortByNameChanged(value),
@@ -1439,6 +1445,23 @@ class _MiscSettingsState extends State<_MiscSettings> {
         ),
       ],
     );
+  }
+
+  Future<void> _onDoubleTapExitChanged(bool value) async {
+    final oldValue = _isDoubleTapExit;
+    setState(() {
+      _isDoubleTapExit = value;
+    });
+    if (!await Pref().setDoubleTapExit(value)) {
+      _log.severe("[_onDoubleTapExitChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isDoubleTapExit = oldValue;
+      });
+    }
   }
 
   void _onPhotosTabSortByNameChanged(bool value) async {
@@ -1459,6 +1482,7 @@ class _MiscSettingsState extends State<_MiscSettings> {
   }
 
   late bool _isPhotosTabSortByName;
+  late bool _isDoubleTapExit;
 
   static final _log = Logger("widget.settings._MiscSettingsState");
 }

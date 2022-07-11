@@ -32,6 +32,7 @@ import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/favorite_browser.dart';
+import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -86,6 +87,15 @@ class _HomeAlbumsState extends State<HomeAlbums>
   @override
   onItemTap(SelectableItem item, int index) {
     item.as<_ListItem>()?.onTap?.call();
+  }
+
+  @override
+  onBackButtonPressed() async {
+    if (isSelectionMode) {
+      return super.onBackButtonPressed();
+    } else {
+      return DoubleTapExitHandler()();
+    }
   }
 
   void _initBloc() {

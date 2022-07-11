@@ -40,6 +40,7 @@ import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
+import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -119,6 +120,15 @@ class _HomePhotosState extends State<HomePhotos>
     }
     _visibilityThrottler.trigger(
         maxResponceTime: const Duration(milliseconds: 500));
+  }
+
+  @override
+  onBackButtonPressed() async {
+    if (isSelectionMode) {
+      return super.onBackButtonPressed();
+    } else {
+      return DoubleTapExitHandler()();
+    }
   }
 
   void _initBloc() {
