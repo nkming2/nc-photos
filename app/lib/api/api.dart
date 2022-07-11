@@ -38,7 +38,7 @@ class Api {
 
   static String getAuthorizationHeaderValue(Account account) {
     final auth =
-        base64.encode(utf8.encode("${account.username}:${account.password}"));
+        base64.encode(utf8.encode("${account.username2}:${account.password}"));
     return "Basic $auth";
   }
 

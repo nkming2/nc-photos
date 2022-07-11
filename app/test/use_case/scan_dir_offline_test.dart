@@ -116,7 +116,7 @@ Future<void> _unsupportedFile() async {
 /// Expect: user1/test1.jpg, user1/test/test2.jpg
 Future<void> _multiAccountRoot() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder()
         ..addJpeg("admin/test1.jpg")
         ..addJpeg("admin/test/test2.jpg"))

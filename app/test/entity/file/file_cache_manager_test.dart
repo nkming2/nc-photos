@@ -347,7 +347,7 @@ Future<void> _updaterUpdateFile() async {
 /// Expect: file added to AccountFiles table
 Future<void> _updaterNewSharedFile() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg")
@@ -385,7 +385,7 @@ Future<void> _updaterNewSharedFile() async {
 /// Expect: file added to AccountFiles table
 Future<void> _updaterNewSharedDir() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg", ownerId: "user1")
@@ -423,7 +423,7 @@ Future<void> _updaterNewSharedDir() async {
 /// file remained in Files table
 Future<void> _updaterDeleteSharedFile() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg")
@@ -465,7 +465,7 @@ Future<void> _updaterDeleteSharedFile() async {
 /// file remained in Files table
 Future<void> _updaterDeleteSharedDir() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder()
         ..addDir("admin")
         ..addJpeg("admin/test1.jpg")

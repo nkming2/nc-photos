@@ -328,7 +328,7 @@ class MockShareMemoryRepo extends MockShareRepo {
     return shares.where((s) {
       if (s.itemSource != file.fileId) {
         return false;
-      } else if (isIncludeReshare == true || s.uidOwner == account.username) {
+      } else if (isIncludeReshare == true || s.uidOwner == account.userId) {
         return true;
       } else {
         return false;
@@ -342,8 +342,8 @@ class MockShareMemoryRepo extends MockShareRepo {
       id: (_id++).toString(),
       shareType: ShareType.user,
       stime: DateTime.utc(2020, 1, 2, 3, 4, 5),
-      uidOwner: account.username,
-      displaynameOwner: account.username.toString(),
+      uidOwner: account.userId,
+      displaynameOwner: account.username2,
       uidFileOwner: file.ownerId!,
       path: file.strippedPath,
       itemType: ShareItemType.file,
@@ -383,7 +383,7 @@ class MockShareeMemoryRepo extends MockShareeRepo {
 
   @override
   list(Account account) async {
-    return sharees.where((s) => s.shareWith != account.username).toList();
+    return sharees.where((s) => s.shareWith != account.userId).toList();
   }
 
   final List<Sharee> sharees;

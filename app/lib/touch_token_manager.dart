@@ -108,9 +108,9 @@ class TouchTokenManager {
   String _getLocalStorageName(Account account, File file) {
     final strippedPath = file.strippedPath;
     if (strippedPath == ".") {
-      return "touch/${account.url.replaceFirst('://', '_')}/${account.username}/token";
+      return "touch/${account.url.replaceFirst('://', '_')}/${account.userId}/token";
     } else {
-      return "touch/${account.url.replaceFirst('://', '_')}/${account.username}/${file.strippedPath}/token";
+      return "touch/${account.url.replaceFirst('://', '_')}/${account.userId}/${file.strippedPath}/token";
     }
   }
 

@@ -65,10 +65,10 @@ String getFileUrlRelative(File file) {
 }
 
 String getWebdavRootUrlRelative(Account account) =>
-    "remote.php/dav/files/${account.homeDir}";
+    "remote.php/dav/files/${account.userId}";
 
 String getTrashbinPath(Account account) =>
-    "remote.php/dav/trashbin/${account.homeDir}/trash";
+    "remote.php/dav/trashbin/${account.userId}/trash";
 
 /// Return the face image URL. See [getFacePreviewUrlRelative]
 String getFacePreviewUrl(

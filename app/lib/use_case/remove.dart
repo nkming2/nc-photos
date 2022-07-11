@@ -65,8 +65,8 @@ class Remove {
         final itemsToRemove = provider.items
             .whereType<AlbumFileItem>()
             .where((i) =>
-                (i.file.isOwned(account.username) ||
-                    i.addedBy == account.username) &&
+                (i.file.isOwned(account.userId) ||
+                    i.addedBy == account.userId) &&
                 removes.any((r) => r.compareServerIdentity(i.file)))
             .toList();
         if (itemsToRemove.isEmpty) {
@@ -76,7 +76,7 @@ class Remove {
           final key = FileServerIdentityComparator(i.file);
           final value = (a.shares?.map((s) => s.userId).toList() ?? [])
             ..add(a.albumFile!.ownerId!)
-            ..remove(account.username);
+            ..remove(account.userId);
           (unshares[key] ??= <CiString>{}).addAll(value);
         }
         _log.fine(

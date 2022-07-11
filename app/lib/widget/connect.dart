@@ -198,10 +198,10 @@ class _ConnectState extends State<Connect> {
 
   Future<void> _onCheckWebDavUrlFailed(
       BuildContext context, Account account) async {
-    final altHomeDir = await _askWebDavUrl(context, account);
-    if (altHomeDir != null) {
+    final userId = await _askWebDavUrl(context, account);
+    if (userId != null) {
       final newAccount = account.copyWith(
-        altHomeDir: OrNull(altHomeDir.toCi()),
+        userId: userId.toCi(),
       );
       return _checkWebDavUrl(context, newAccount);
     }
@@ -286,9 +286,9 @@ class _WebDavUrlDialogState extends State<_WebDavUrlDialog> {
                 return L10n.global().homeFolderInputInvalidEmpty;
               },
               onSaved: (value) {
-                _formValue.altHomeDir = value!.trimAny("/");
+                _formValue.userId = value!.trimAny("/");
               },
-              initialValue: widget.account.homeDir.toString(),
+              initialValue: widget.account.userId.toString(),
             ),
           ],
         ),
@@ -309,7 +309,7 @@ class _WebDavUrlDialogState extends State<_WebDavUrlDialog> {
   void _onOkPressed() {
     if (_formKey.currentState?.validate() == true) {
       _formKey.currentState!.save();
-      Navigator.of(context).pop(_formValue.altHomeDir);
+      Navigator.of(context).pop(_formValue.userId);
     }
   }
 
@@ -322,5 +322,5 @@ class _WebDavUrlDialogState extends State<_WebDavUrlDialog> {
 }
 
 class _FormValue {
-  late String altHomeDir;
+  late String userId;
 }

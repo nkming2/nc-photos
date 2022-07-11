@@ -103,8 +103,8 @@ class RemoveFromAlbum {
   Future<void> _unshareFiles(
       Account account, Album album, List<File> files) async {
     final albumShares = (album.shares!.map((e) => e.userId).toList()
-          ..add(album.albumFile!.ownerId ?? account.username))
-        .where((element) => element != account.username)
+          ..add(album.albumFile!.ownerId ?? account.userId))
+        .where((element) => element != account.userId)
         .toList();
     if (albumShares.isNotEmpty) {
       await UnshareFileFromAlbum(_c)(account, album, files, albumShares);

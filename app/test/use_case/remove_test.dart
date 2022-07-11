@@ -238,7 +238,7 @@ Future<void> _removeSharedAlbumFile() async {
 /// file share (admin -> user2) deleted
 Future<void> _removeSharedAlbumSharedFile() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();

@@ -465,7 +465,7 @@ extension FileExtension on File {
       lastModified ??
       DateTime.now().toUtc();
 
-  bool isOwned(CiString username) => ownerId == null || ownerId == username;
+  bool isOwned(CiString userId) => ownerId == null || ownerId == userId;
 
   /// Return the path of this file with the DAV part stripped
   ///

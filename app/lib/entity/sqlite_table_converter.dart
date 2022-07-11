@@ -72,7 +72,7 @@ class SqliteAlbumConverter {
 }
 
 class SqliteFileConverter {
-  static File fromSql(String homeDir, sql.CompleteFile f) {
+  static File fromSql(String userId, sql.CompleteFile f) {
     final metadata = f.image?.run((obj) => Metadata(
           lastUpdated: obj.lastUpdated,
           fileEtag: obj.fileEtag,
@@ -81,7 +81,7 @@ class SqliteFileConverter {
           exif: obj.exifRaw?.run((e) => Exif.fromJson(jsonDecode(e))),
         ));
     return File(
-      path: "remote.php/dav/files/$homeDir/${f.accountFile.relativePath}",
+      path: "remote.php/dav/files/$userId/${f.accountFile.relativePath}",
       contentLength: f.file.contentLength,
       contentType: f.file.contentType,
       etag: f.file.etag,

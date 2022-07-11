@@ -72,8 +72,8 @@ class AddToAlbum {
   Future<void> _shareFiles(
       Account account, Album album, List<File> files) async {
     final albumShares = (album.shares!.map((e) => e.userId).toList()
-          ..add(album.albumFile!.ownerId ?? account.username))
-        .where((element) => element != account.username)
+          ..add(album.albumFile!.ownerId ?? account.userId))
+        .where((element) => element != account.userId)
         .toSet();
     if (albumShares.isEmpty) {
       return;

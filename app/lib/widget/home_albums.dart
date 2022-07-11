@@ -462,7 +462,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     final failures = <Album>[];
     for (final a in selected) {
       try {
-        if (a.albumFile?.isOwned(widget.account.username) == true) {
+        if (a.albumFile?.isOwned(widget.account.userId) == true) {
           // delete owned albums
           await RemoveAlbum(KiwiContainer().resolve<DiContainer>())(
               widget.account, a);

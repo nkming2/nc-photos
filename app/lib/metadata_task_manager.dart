@@ -49,7 +49,7 @@ class MetadataTask {
           account,
           shareFolder,
           isRecursive: false,
-          filter: (f) => f.ownerId != account.username,
+          filter: (f) => f.ownerId != account.userId,
         )) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");

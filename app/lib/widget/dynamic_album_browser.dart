@@ -127,7 +127,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   @override
   @protected
-  get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
+  get canEdit => _album?.albumFile?.isOwned(widget.account.userId) == true;
 
   @override
   enterEditMode() {

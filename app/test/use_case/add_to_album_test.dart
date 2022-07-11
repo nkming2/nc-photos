@@ -187,7 +187,7 @@ Future<void> _addExistingFile() async {
 /// Expect: file not added to album
 Future<void> _addExistingSharedFile() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final user1Files = [

@@ -1484,7 +1484,7 @@ void main() {
     });
 
     group("AlbumUpgraderV5", () {
-      final account = util.buildAccount(username: "user1");
+      final account = util.buildAccount(userId: "user1");
 
       test("w/ ownerId", () {
         final json = <String, dynamic>{

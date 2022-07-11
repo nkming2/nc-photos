@@ -35,7 +35,7 @@ class CompleteFileCompanion {
 extension CompleteFileListExtension on List<CompleteFile> {
   Future<List<app.File>> convertToAppFile(app.Account account) {
     return map((f) => {
-          "homeDir": account.homeDir.toString(),
+          "userId": account.userId.toString(),
           "completeFile": f,
         }).computeAll(_covertSqliteDbFile);
   }
@@ -141,7 +141,7 @@ extension SqliteDbExtension on SqliteDb {
     await into(accounts).insert(
       AccountsCompanion.insert(
         server: dbServer.rowId,
-        userId: account.username.toCaseInsensitiveString(),
+        userId: account.userId.toCaseInsensitiveString(),
       ),
       mode: InsertMode.insertOrIgnore,
     );
@@ -153,8 +153,7 @@ extension SqliteDbExtension on SqliteDb {
           useColumns: false)
     ])
       ..where(servers.address.equals(account.url))
-      ..where(
-          accounts.userId.equals(account.username.toCaseInsensitiveString()))
+      ..where(accounts.userId.equals(account.userId.toCaseInsensitiveString()))
       ..limit(1);
     return query.map((r) => r.readTable(accounts)).getSingle();
   }
@@ -522,7 +521,7 @@ class FilesQueryBuilder {
       query
         ..where(db.servers.address.equals(_appAccount!.url))
         ..where(db.accounts.userId
-            .equals(_appAccount!.username.toCaseInsensitiveString()));
+            .equals(_appAccount!.userId.toCaseInsensitiveString()));
     }
 
     if (_byRowId != null) {
@@ -585,9 +584,9 @@ class FilesQueryBuilder {
 }
 
 app.File _covertSqliteDbFile(Map map) {
-  final homeDir = map["homeDir"] as String;
+  final userId = map["userId"] as String;
   final file = map["completeFile"] as CompleteFile;
-  return SqliteFileConverter.fromSql(homeDir, file);
+  return SqliteFileConverter.fromSql(userId, file);
 }
 
 CompleteFileCompanion _convertAppFile(Map map) {

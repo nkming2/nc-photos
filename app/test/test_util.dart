@@ -286,11 +286,12 @@ Account buildAccount({
   String id = "123456-000000",
   String scheme = "http",
   String address = "example.com",
-  String username = "admin",
+  String userId = "admin",
+  String username2 = "admin",
   String password = "pass",
   List<String> roots = const [""],
 }) =>
-    Account(id, scheme, address, username.toCi(), password, null, roots);
+    Account(id, scheme, address, userId.toCi(), username2, password, roots);
 
 /// Build a mock [File] pointing to a album JSON file
 ///

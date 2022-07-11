@@ -181,10 +181,10 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
         final CiString addedBy;
         if (result.containsKey("albumFile")) {
           addedBy = result["albumFile"]["ownerId"] == null
-              ? account.username
+              ? account.userId
               : CiString(result["albumFile"]["ownerId"]);
         } else {
-          addedBy = albumFile?.ownerId ?? account.username;
+          addedBy = albumFile?.ownerId ?? account.userId;
         }
         item["addedBy"] = addedBy.toString();
         item["addedAt"] = result["lastUpdated"];

@@ -225,7 +225,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   void _transformShareeItems(List<Sharee> sharees) {
     final candidates = sharees
         .where((s) =>
-            s.shareWith != widget.account.username &&
+            s.shareWith != widget.account.userId &&
             // remove users already shared with
             !_items.any((i) => i.shareWith == s.shareWith))
         .toList();
