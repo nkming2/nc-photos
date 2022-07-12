@@ -1,0 +1,178 @@
+#include <cstdint>
+#include <exception>
+#include <jni.h>
+#include <vector>
+
+#include "../exception.h"
+#include "../log.h"
+#include "../math_util.h"
+#include "../util.h"
+
+using namespace plugin;
+using namespace std;
+
+namespace {
+
+constexpr float INPUT_AMPLITUDE = .4f;
+constexpr uint8_t OUTPUT_AMPLITUDE = 100;
+
+class WhitePoint {
+public:
+  std::vector<uint8_t> apply(const uint8_t *rgba8, const size_t width,
+                             const size_t height, const float weight);
+
+private:
+  static uint8_t applyInputLevel(const uint8_t p, const float weight) {
+    const auto pf = p / 255.f;
+    const auto max = 1 - weight * INPUT_AMPLITUDE;
+    return clamp<int>(0, clamp(0.f, pf, max) / max * 255.f, 255);
+  }
+
+  static uint8_t applyOutputLevel(const uint8_t p, const float weight) {
+    return clamp<int>(0, p / 255.f * (255 - weight * OUTPUT_AMPLITUDE), 255);
+  }
+
+  static std::vector<uint8_t> buildLut(const float weight);
+
+  static constexpr const char *TAG = "WhitePoint";
+};
+
+class BlackPoint {
+public:
+  std::vector<uint8_t> apply(const uint8_t *rgba8, const size_t width,
+                             const size_t height, const float weight);
+
+private:
+  static inline uint8_t applyInputLevel(const uint8_t p, const float weight) {
+    const auto pf = p / 255.f;
+    const auto min = weight * INPUT_AMPLITUDE;
+    return clamp<int>(0, (clamp(min, pf, 1.f) - min) / (1 - min) * 255.f, 255);
+  }
+
+  static inline uint8_t applyOutputLevel(const uint8_t p, const float weight) {
+    const auto x = weight * OUTPUT_AMPLITUDE;
+    return clamp<int>(0, p / 255.f * (255 - x) + x, 255);
+  }
+
+  static std::vector<uint8_t> buildLut(const float weight);
+
+  static constexpr const char *TAG = "BlackPoint";
+};
+
+} // namespace
+
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_com_nkming_nc_1photos_plugin_image_1processor_WhitePoint_applyNative(
+    JNIEnv *env, jobject *thiz, jbyteArray rgba8, jint width, jint height,
+    jfloat weight) {
+  try {
+    initOpenMp();
+    RaiiContainer<jbyte> cRgba8(
+        [&]() { return env->GetByteArrayElements(rgba8, nullptr); },
+        [&](jbyte *obj) {
+          env->ReleaseByteArrayElements(rgba8, obj, JNI_ABORT);
+        });
+    const auto result = WhitePoint().apply(
+        reinterpret_cast<uint8_t *>(cRgba8.get()), width, height, weight);
+    auto resultAry = env->NewByteArray(result.size());
+    env->SetByteArrayRegion(resultAry, 0, result.size(),
+                            reinterpret_cast<const int8_t *>(result.data()));
+    return resultAry;
+  } catch (const exception &e) {
+    throwJavaException(env, e.what());
+    return nullptr;
+  }
+}
+
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_com_nkming_nc_1photos_plugin_image_1processor_BlackPoint_applyNative(
+    JNIEnv *env, jobject *thiz, jbyteArray rgba8, jint width, jint height,
+    jfloat weight) {
+  try {
+    initOpenMp();
+    RaiiContainer<jbyte> cRgba8(
+        [&]() { return env->GetByteArrayElements(rgba8, nullptr); },
+        [&](jbyte *obj) {
+          env->ReleaseByteArrayElements(rgba8, obj, JNI_ABORT);
+        });
+    const auto result = BlackPoint().apply(
+        reinterpret_cast<uint8_t *>(cRgba8.get()), width, height, weight);
+    auto resultAry = env->NewByteArray(result.size());
+    env->SetByteArrayRegion(resultAry, 0, result.size(),
+                            reinterpret_cast<const int8_t *>(result.data()));
+    return resultAry;
+  } catch (const exception &e) {
+    throwJavaException(env, e.what());
+    return nullptr;
+  }
+}
+
+namespace {
+
+vector<uint8_t> WhitePoint::apply(const uint8_t *rgba8, const size_t width,
+                                  const size_t height, const float weight) {
+  LOGI(TAG, "[apply] weight: %.2f", weight);
+  if (weight == 0) {
+    // shortcut
+    return vector<uint8_t>(rgba8, rgba8 + width * height * 4);
+  }
+
+  const auto lut = buildLut(weight);
+  vector<uint8_t> output(width * height * 4);
+#pragma omp parallel for
+  for (size_t i = 0; i < width * height; ++i) {
+    const auto p = i * 4;
+    output[p + 0] = lut[rgba8[p + 0]];
+    output[p + 1] = lut[rgba8[p + 1]];
+    output[p + 2] = lut[rgba8[p + 2]];
+    output[p + 3] = rgba8[p + 3];
+  }
+  return output;
+}
+
+vector<uint8_t> WhitePoint::buildLut(const float weight) {
+  vector<uint8_t> product(256);
+  const float weightAbs = std::abs(weight);
+  const auto fn =
+      weight > 0 ? &WhitePoint::applyInputLevel : &WhitePoint::applyOutputLevel;
+#pragma omp parallel for
+  for (size_t i = 0; i < 256; ++i) {
+    product[i] = fn(i, weightAbs);
+  }
+  return product;
+}
+
+vector<uint8_t> BlackPoint::apply(const uint8_t *rgba8, const size_t width,
+                                  const size_t height, const float weight) {
+  LOGI(TAG, "[apply] weight: %.2f", weight);
+  if (weight == 0) {
+    // shortcut
+    return vector<uint8_t>(rgba8, rgba8 + width * height * 4);
+  }
+
+  const auto lut = buildLut(weight);
+  vector<uint8_t> output(width * height * 4);
+#pragma omp parallel for
+  for (size_t i = 0; i < width * height; ++i) {
+    const auto p = i * 4;
+    output[p + 0] = lut[rgba8[p + 0]];
+    output[p + 1] = lut[rgba8[p + 1]];
+    output[p + 2] = lut[rgba8[p + 2]];
+    output[p + 3] = rgba8[p + 3];
+  }
+  return output;
+}
+
+vector<uint8_t> BlackPoint::buildLut(const float weight) {
+  vector<uint8_t> product(256);
+  const float weightAbs = std::abs(weight);
+  const auto fn =
+      weight > 0 ? &BlackPoint::applyInputLevel : &BlackPoint::applyOutputLevel;
+#pragma omp parallel for
+  for (size_t i = 0; i < 256; ++i) {
+    product[i] = fn(i, weightAbs);
+  }
+  return product;
+}
+
+} // namespace

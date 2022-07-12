@@ -17,11 +17,9 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.exifinterface.media.ExifInterface
-import com.nkming.nc_photos.plugin.image_processor.ArbitraryStyleTransfer
-import com.nkming.nc_photos.plugin.image_processor.DeepLab3Portrait
-import com.nkming.nc_photos.plugin.image_processor.Esrgan
-import com.nkming.nc_photos.plugin.image_processor.ZeroDce
+import com.nkming.nc_photos.plugin.image_processor.*
 import java.io.File
+import java.io.Serializable
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -32,6 +30,7 @@ class ImageProcessorService : Service() {
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ESRGAN = "Esrgan"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
+		const val METHOD_COLOR_FILTER = "ColorFilter"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -41,6 +40,17 @@ class ImageProcessorService : Service() {
 		const val EXTRA_ITERATION = "iteration"
 		const val EXTRA_STYLE_URI = "styleUri"
 		const val EXTRA_WEIGHT = "weight"
+		const val EXTRA_FILTERS = "filters"
+
+		val ENHANCE_METHODS = listOf(
+			METHOD_ZERO_DCE,
+			METHOD_DEEP_LAP_PORTRAIT,
+			METHOD_ESRGAN,
+			METHOD_ARBITRARY_STYLE_TRANSFER,
+		)
+		val EDIT_METHODS = listOf(
+			METHOD_COLOR_FILTER,
+		)
 
 		private const val ACTION_CANCEL = "cancel"
 
@@ -116,6 +126,7 @@ class ImageProcessorService : Service() {
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
 				startId, intent.extras!!
 			)
+			METHOD_COLOR_FILTER -> onColorFilter(startId, intent.extras!!)
 			else -> {
 				logE(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
@@ -155,6 +166,18 @@ class ImageProcessorService : Service() {
 			args = mapOf(
 				"styleUri" to extras.getParcelable<Uri>(EXTRA_STYLE_URI),
 				"weight" to extras.getFloat(EXTRA_WEIGHT),
+			)
+		)
+	}
+
+	private fun onColorFilter(startId: Int, extras: Bundle) {
+		val filters = extras.getSerializable(EXTRA_FILTERS)!!
+			.asType<ArrayList<Serializable>>()
+			.map { it.asType<HashMap<String, Any>>() }
+		return onMethod(
+			startId, extras, METHOD_COLOR_FILTER,
+			args = mapOf(
+				"filters" to filters,
 			)
 		)
 	}
@@ -231,7 +254,7 @@ class ImageProcessorService : Service() {
 		)
 		return NotificationCompat.Builder(this, CHANNEL_ID).run {
 			setSmallIcon(R.drawable.outline_image_white_24)
-			setContentTitle("Successfully enhanced image")
+			setContentTitle("Successfully processed image")
 			setContentText("Tap to view the result")
 			setContentIntent(pi)
 			setAutoCancel(true)
@@ -244,7 +267,7 @@ class ImageProcessorService : Service() {
 	): Notification {
 		return NotificationCompat.Builder(this, CHANNEL_ID).run {
 			setSmallIcon(R.drawable.outline_error_outline_white_24)
-			setContentTitle("Failed enhancing image")
+			setContentTitle("Failed processing image")
 			setContentText(exception.message)
 			build()
 		}
@@ -260,7 +283,7 @@ class ImageProcessorService : Service() {
 		)
 		return NotificationCompat.Builder(this, CHANNEL_ID).run {
 			setSmallIcon(R.drawable.outline_auto_fix_high_white_24)
-			setContentTitle("Preparing to restart photo enhancement")
+			setContentTitle("Preparing to restart photo processing")
 			addAction(
 				0, getString(android.R.string.cancel), cancelPendingIntent
 			)
@@ -552,13 +575,28 @@ private open class ImageProcessorCommandTask(context: Context) :
 						cmd.args["weight"] as Float
 					).infer(fileUri)
 
+					ImageProcessorService.METHOD_COLOR_FILTER -> {
+						@Suppress("Unchecked_cast")
+						ColorFilterProcessor(
+							context, cmd.maxWidth, cmd.maxHeight,
+							cmd.args["filters"] as List<Map<String, Any>>,
+						).apply(fileUri)
+					}
+
 					else -> throw IllegalArgumentException(
 						"Unknown method: ${cmd.method}"
 					)
 				}
 			})
 			handleCancel()
-			saveBitmap(output, cmd.filename, file)
+			saveBitmap(
+				output, cmd.filename, file,
+				if (cmd.method in ImageProcessorService.EDIT_METHODS) {
+					"Edited Photos"
+				} else {
+					"Enhanced Photos"
+				}
+			)
 		} finally {
 			file.delete()
 		}
@@ -598,7 +636,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	}
 
 	private fun saveBitmap(
-		bitmap: Bitmap, filename: String, srcFile: File
+		bitmap: Bitmap, filename: String, srcFile: File, subDir: String
 	): Uri {
 		logI(TAG, "[saveBitmap] $filename")
 		val outFile = File.createTempFile("out", null, getTempDir(context))
@@ -619,7 +657,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 		// move file to user accessible storage
 		val uri = MediaStoreUtil.copyFileToDownload(
 			context, Uri.fromFile(outFile), filename,
-			"Photos (for Nextcloud)/Enhanced Photos"
+			"Photos (for Nextcloud)/$subDir"
 		)
 		outFile.delete()
 		return uri

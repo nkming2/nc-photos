@@ -3,6 +3,7 @@ package com.nkming.nc_photos.plugin
 import android.app.PendingIntent
 import android.os.Build
 import android.os.Bundle
+import java.io.Serializable
 import java.net.HttpURLConnection
 
 fun getPendingIntentFlagImmutable(): Int {
@@ -40,3 +41,6 @@ inline fun <T> measureTime(tag: String, message: String, block: () -> T): T {
 }
 
 fun Bundle.getIntOrNull(key: String) = get(key) as? Int
+
+@Suppress("Unchecked_cast")
+fun <T> Serializable.asType() = this as T

@@ -112,6 +112,18 @@
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
     "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -242,6 +254,18 @@
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
     "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle",
     "errorAlbumDowngrade"
   ],
 
@@ -252,11 +276,50 @@
     "settingsAccountLabelDescription",
     "settingsDoubleTapExitTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "es": [
-    "rootPickerSkipConfirmationDialogContent2"
+    "rootPickerSkipConfirmationDialogContent2",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
+  ],
+
+  "fi": [
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "fr": [
@@ -291,7 +354,19 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "pl": [
@@ -343,7 +418,19 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "pt": [
@@ -374,7 +461,19 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "ru": [
@@ -405,7 +504,19 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "zh": [
@@ -436,7 +547,19 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ],
 
   "zh_Hant": [
@@ -467,6 +590,18 @@
     "enhanceSuperResolution4xTitle",
     "enhanceStyleTransferTitle",
     "enhanceStyleTransferStyleDialogTitle",
-    "doubleTapExitNotification"
+    "doubleTapExitNotification",
+    "imageEditDiscardDialogTitle",
+    "imageEditDiscardDialogContent",
+    "discardButtonLabel",
+    "saveTooltip",
+    "imageEditColorBrightness",
+    "imageEditColorContrast",
+    "imageEditColorWhitePoint",
+    "imageEditColorBlackPoint",
+    "imageEditColorSaturation",
+    "imageEditColorWarmth",
+    "imageEditColorTint",
+    "imageEditTitle"
   ]
 }
