@@ -27,6 +27,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 31
+    ndkVersion "23.2.8568313"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -48,11 +49,6 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        externalNativeBuild {
-            cmake {
-                cppFlags ''
-            }
-        }
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
         }
