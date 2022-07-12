@@ -243,7 +243,7 @@ class ImageProcessorService : Service() {
 		exception: Throwable
 	): Notification {
 		return NotificationCompat.Builder(this, CHANNEL_ID).run {
-			setSmallIcon(R.drawable.outline_image_white_24)
+			setSmallIcon(R.drawable.outline_error_outline_white_24)
 			setContentTitle("Failed enhancing image")
 			setContentText(exception.message)
 			build()
