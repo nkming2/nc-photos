@@ -30,6 +30,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						result
 					)
 				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
 					result.error("systemException", e.toString(), null)
 				}
 			}
@@ -46,6 +47,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						result
 					)
 				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
 					result.error("systemException", e.toString(), null)
 				}
 			}
@@ -61,6 +63,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						result
 					)
 				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
 					result.error("systemException", e.toString(), null)
 				}
 			}
@@ -78,6 +81,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						result
 					)
 				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
 					result.error("systemException", e.toString(), null)
 				}
 			}
