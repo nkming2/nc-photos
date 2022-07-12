@@ -1,6 +1,7 @@
 package com.nkming.nc_photos.plugin.image_processor
 
 import android.graphics.Bitmap
+import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
 interface TfLiteHelper {
@@ -23,6 +24,18 @@ interface TfLiteHelper {
 				}
 			}
 			return rgb8
+		}
+
+		/**
+		 * Convert an ARGB_8888 Android bitmap to a RGBA byte array
+		 *
+		 * @param bitmap
+		 * @return
+		 */
+		fun bitmapToRgba8Array(bitmap: Bitmap): ByteArray {
+			val buffer = ByteBuffer.allocate(bitmap.width * bitmap.height * 4)
+			bitmap.copyPixelsToBuffer(buffer)
+			return buffer.array()
 		}
 
 		/**
