@@ -14,13 +14,13 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
-import 'package:nc_photos/mobile/android/permission_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -40,7 +40,7 @@ class EnhanceHandler {
       await _showInfo(context);
     }
 
-    if (!await _ensurePermission()) {
+    if (!await const PermissionHandler().ensureStorageWritePermission()) {
       return;
     }
 
@@ -141,28 +141,6 @@ class EnhanceHandler {
       ),
     );
     Pref().setHasShownEnhanceInfo(true);
-  }
-
-  Future<bool> _ensurePermission() async {
-    if (platform_k.isAndroid) {
-      if (AndroidInfo().sdkInt < AndroidVersion.R &&
-          !await Permission.hasWriteExternalStorage()) {
-        final results = await requestPermissionsForResult([
-          Permission.WRITE_EXTERNAL_STORAGE,
-        ]);
-        if (results[Permission.WRITE_EXTERNAL_STORAGE] !=
-            PermissionRequestResult.granted) {
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(L10n.global().errorNoStoragePermission),
-            duration: k.snackBarDurationNormal,
-          ));
-          return false;
-        } else {
-          return true;
-        }
-      }
-    }
-    return true;
   }
 
   Future<_Algorithm?> _pickAlgorithm(BuildContext context) =>
