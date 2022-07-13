@@ -3,7 +3,7 @@ test:
   stage: test
   except:
     - triage
-  image: "cirrusci/flutter:2.10.4"
+  image: "cirrusci/flutter:3.0.4"
   before_script:
     - pub global activate junitreport
     - export PATH="$PATH":"$HOME/.pub-cache/bin"
