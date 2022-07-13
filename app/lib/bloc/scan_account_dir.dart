@@ -186,6 +186,17 @@ class ScanAccountDirBloc
     final hasContent = state.files.isNotEmpty;
 
     final stopwatch = Stopwatch()..start();
+    if (!hasContent) {
+      try {
+        emit(ScanAccountDirBlocLoading(await _queryOfflineMini(ev)));
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_onEventQuery] Failed while _queryOfflineMini", e, stackTrace);
+      }
+      _log.info(
+          "[_onEventQuery] Elapsed time (_queryOfflineMini): ${stopwatch.elapsedMilliseconds}ms");
+      stopwatch.reset();
+    }
     final cacheFiles = await _queryOffline(ev);
     _log.info(
         "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
@@ -319,6 +330,16 @@ class ScanAccountDirBloc
     _refreshThrottler.trigger(
       maxResponceTime: const Duration(seconds: 3),
       maxPendingCount: 10,
+    );
+  }
+
+  /// Query a small amount of files to give an illusion of quick startup
+  Future<List<File>> _queryOfflineMini(ScanAccountDirBlocQueryBase ev) async {
+    return await ScanDirOfflineMini(_c)(
+      account,
+      account.roots.map((r) => File(path: file_util.unstripPath(account, r))),
+      100,
+      isOnlySupportedFormat: true,
     );
   }
 

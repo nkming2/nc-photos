@@ -308,15 +308,12 @@ class FileSqliteDbDataSource implements FileDataSource {
       Account account, int fromEpochMs, int toEpochMs) async {
     _log.info("[listByDate] [$fromEpochMs, $toEpochMs]");
     final dbFiles = await _c.sqliteDb.use((db) async {
-      final dateTime = sql.coalesce([
-        db.accountFiles.overrideDateTime,
-        db.images.dateTimeOriginal,
-        db.files.lastModified,
-      ]).secondsSinceEpoch;
-      final queryBuilder = db.queryFiles()
-        ..setQueryMode(sql.FilesQueryMode.completeFile)
-        ..setAppAccount(account);
-      final query = queryBuilder.build();
+      final query = db.queryFiles().run((q) {
+        q.setQueryMode(sql.FilesQueryMode.completeFile);
+        q.setAppAccount(account);
+        return q.build();
+      });
+      final dateTime = db.accountFiles.bestDateTime.secondsSinceEpoch;
       query
         ..where(dateTime.isBetweenValues(
             fromEpochMs ~/ 1000, (toEpochMs ~/ 1000) - 1))

@@ -122,6 +122,7 @@ class SqliteFileConverter {
       isFavorite: Value(file.isFavorite),
       isArchived: Value(file.isArchived),
       overrideDateTime: Value(file.overrideDateTime),
+      bestDateTime: Value(file.bestDateTime),
     );
     final dbImage = file.metadata?.run((m) => sql.ImagesCompanion.insert(
           lastUpdated: m.lastUpdated,

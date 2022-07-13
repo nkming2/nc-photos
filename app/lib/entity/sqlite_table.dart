@@ -58,6 +58,8 @@ class AccountFiles extends Table {
   BoolColumn get isArchived => boolean().nullable()();
   DateTimeColumn get overrideDateTime =>
       dateTime().map(const _DateTimeConverter()).nullable()();
+  DateTimeColumn get bestDateTime =>
+      dateTime().map(const _DateTimeConverter())();
 
   @override
   get uniqueKeys => [
@@ -186,6 +188,8 @@ class SqliteDb extends _$SqliteDb {
               "CREATE INDEX account_files_file_index ON account_files(file);"));
           await m.createIndex(Index("account_files_relative_path_index",
               "CREATE INDEX account_files_relative_path_index ON account_files(relative_path);"));
+          await m.createIndex(Index("account_files_best_date_time_index",
+              "CREATE INDEX account_files_best_date_time_index ON account_files(best_date_time);"));
 
           await m.createIndex(Index("dir_files_dir_index",
               "CREATE INDEX dir_files_dir_index ON dir_files(dir);"));

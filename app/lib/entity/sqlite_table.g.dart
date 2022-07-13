@@ -1000,6 +1000,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
   final bool? isFavorite;
   final bool? isArchived;
   final DateTime? overrideDateTime;
+  final DateTime bestDateTime;
   AccountFile(
       {required this.rowId,
       required this.account,
@@ -1007,7 +1008,8 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       required this.relativePath,
       this.isFavorite,
       this.isArchived,
-      this.overrideDateTime});
+      this.overrideDateTime,
+      required this.bestDateTime});
   factory AccountFile.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return AccountFile(
@@ -1026,6 +1028,9 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       overrideDateTime: $AccountFilesTable.$converter0.mapToDart(
           const DateTimeType().mapFromDatabaseResponse(
               data['${effectivePrefix}override_date_time'])),
+      bestDateTime: $AccountFilesTable.$converter1.mapToDart(
+          const DateTimeType().mapFromDatabaseResponse(
+              data['${effectivePrefix}best_date_time']))!,
     );
   }
   @override
@@ -1046,6 +1051,11 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       map['override_date_time'] =
           Variable<DateTime?>(converter.mapToSql(overrideDateTime));
     }
+    {
+      final converter = $AccountFilesTable.$converter1;
+      map['best_date_time'] =
+          Variable<DateTime>(converter.mapToSql(bestDateTime)!);
+    }
     return map;
   }
 
@@ -1064,6 +1074,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       overrideDateTime: overrideDateTime == null && nullToAbsent
           ? const Value.absent()
           : Value(overrideDateTime),
+      bestDateTime: Value(bestDateTime),
     );
   }
 
@@ -1079,6 +1090,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       isArchived: serializer.fromJson<bool?>(json['isArchived']),
       overrideDateTime:
           serializer.fromJson<DateTime?>(json['overrideDateTime']),
+      bestDateTime: serializer.fromJson<DateTime>(json['bestDateTime']),
     );
   }
   @override
@@ -1092,6 +1104,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       'isFavorite': serializer.toJson<bool?>(isFavorite),
       'isArchived': serializer.toJson<bool?>(isArchived),
       'overrideDateTime': serializer.toJson<DateTime?>(overrideDateTime),
+      'bestDateTime': serializer.toJson<DateTime>(bestDateTime),
     };
   }
 
@@ -1102,7 +1115,8 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
           String? relativePath,
           Value<bool?> isFavorite = const Value.absent(),
           Value<bool?> isArchived = const Value.absent(),
-          Value<DateTime?> overrideDateTime = const Value.absent()}) =>
+          Value<DateTime?> overrideDateTime = const Value.absent(),
+          DateTime? bestDateTime}) =>
       AccountFile(
         rowId: rowId ?? this.rowId,
         account: account ?? this.account,
@@ -1113,6 +1127,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
         overrideDateTime: overrideDateTime.present
             ? overrideDateTime.value
             : this.overrideDateTime,
+        bestDateTime: bestDateTime ?? this.bestDateTime,
       );
   @override
   String toString() {
@@ -1123,14 +1138,15 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
           ..write('relativePath: $relativePath, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
-          ..write('overrideDateTime: $overrideDateTime')
+          ..write('overrideDateTime: $overrideDateTime, ')
+          ..write('bestDateTime: $bestDateTime')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(rowId, account, file, relativePath,
-      isFavorite, isArchived, overrideDateTime);
+      isFavorite, isArchived, overrideDateTime, bestDateTime);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1141,7 +1157,8 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
           other.relativePath == this.relativePath &&
           other.isFavorite == this.isFavorite &&
           other.isArchived == this.isArchived &&
-          other.overrideDateTime == this.overrideDateTime);
+          other.overrideDateTime == this.overrideDateTime &&
+          other.bestDateTime == this.bestDateTime);
 }
 
 class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
@@ -1152,6 +1169,7 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
   final Value<bool?> isFavorite;
   final Value<bool?> isArchived;
   final Value<DateTime?> overrideDateTime;
+  final Value<DateTime> bestDateTime;
   const AccountFilesCompanion({
     this.rowId = const Value.absent(),
     this.account = const Value.absent(),
@@ -1160,6 +1178,7 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.overrideDateTime = const Value.absent(),
+    this.bestDateTime = const Value.absent(),
   });
   AccountFilesCompanion.insert({
     this.rowId = const Value.absent(),
@@ -1169,9 +1188,11 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.overrideDateTime = const Value.absent(),
+    required DateTime bestDateTime,
   })  : account = Value(account),
         file = Value(file),
-        relativePath = Value(relativePath);
+        relativePath = Value(relativePath),
+        bestDateTime = Value(bestDateTime);
   static Insertable<AccountFile> custom({
     Expression<int>? rowId,
     Expression<int>? account,
@@ -1180,6 +1201,7 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
     Expression<bool?>? isFavorite,
     Expression<bool?>? isArchived,
     Expression<DateTime?>? overrideDateTime,
+    Expression<DateTime>? bestDateTime,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -1189,6 +1211,7 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (isArchived != null) 'is_archived': isArchived,
       if (overrideDateTime != null) 'override_date_time': overrideDateTime,
+      if (bestDateTime != null) 'best_date_time': bestDateTime,
     });
   }
 
@@ -1199,7 +1222,8 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       Value<String>? relativePath,
       Value<bool?>? isFavorite,
       Value<bool?>? isArchived,
-      Value<DateTime?>? overrideDateTime}) {
+      Value<DateTime?>? overrideDateTime,
+      Value<DateTime>? bestDateTime}) {
     return AccountFilesCompanion(
       rowId: rowId ?? this.rowId,
       account: account ?? this.account,
@@ -1208,6 +1232,7 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       isFavorite: isFavorite ?? this.isFavorite,
       isArchived: isArchived ?? this.isArchived,
       overrideDateTime: overrideDateTime ?? this.overrideDateTime,
+      bestDateTime: bestDateTime ?? this.bestDateTime,
     );
   }
 
@@ -1237,6 +1262,11 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       map['override_date_time'] =
           Variable<DateTime?>(converter.mapToSql(overrideDateTime.value));
     }
+    if (bestDateTime.present) {
+      final converter = $AccountFilesTable.$converter1;
+      map['best_date_time'] =
+          Variable<DateTime>(converter.mapToSql(bestDateTime.value)!);
+    }
     return map;
   }
 
@@ -1249,7 +1279,8 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
           ..write('relativePath: $relativePath, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
-          ..write('overrideDateTime: $overrideDateTime')
+          ..write('overrideDateTime: $overrideDateTime, ')
+          ..write('bestDateTime: $bestDateTime')
           ..write(')'))
         .toString();
   }
@@ -1310,6 +1341,14 @@ class $AccountFilesTable extends AccountFiles
               'override_date_time', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
           .withConverter<DateTime>($AccountFilesTable.$converter0);
+  final VerificationMeta _bestDateTimeMeta =
+      const VerificationMeta('bestDateTime');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
+      bestDateTime = GeneratedColumn<DateTime?>(
+              'best_date_time', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<DateTime>($AccountFilesTable.$converter1);
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
@@ -1318,7 +1357,8 @@ class $AccountFilesTable extends AccountFiles
         relativePath,
         isFavorite,
         isArchived,
-        overrideDateTime
+        overrideDateTime,
+        bestDateTime
       ];
   @override
   String get aliasedName => _alias ?? 'account_files';
@@ -1366,6 +1406,7 @@ class $AccountFilesTable extends AccountFiles
               data['is_archived']!, _isArchivedMeta));
     }
     context.handle(_overrideDateTimeMeta, const VerificationResult.success());
+    context.handle(_bestDateTimeMeta, const VerificationResult.success());
     return context;
   }
 
@@ -1387,6 +1428,8 @@ class $AccountFilesTable extends AccountFiles
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
+      const _DateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converter1 =
       const _DateTimeConverter();
 }
 

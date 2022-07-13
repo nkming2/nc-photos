@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as sql;
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -53,6 +54,56 @@ class ScanDirOffline {
           .map((f) => SqliteFileConverter.fromSql(account.userId.toString(), f))
           .toList();
     });
+  }
+
+  final DiContainer _c;
+}
+
+class ScanDirOfflineMini {
+  ScanDirOfflineMini(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+
+  Future<List<File>> call(
+    Account account,
+    Iterable<File> roots,
+    int limit, {
+    bool isOnlySupportedFormat = true,
+  }) async {
+    final dbFiles = await _c.sqliteDb.use((db) async {
+      final query = db.queryFiles().run((q) {
+        q
+          ..setQueryMode(sql.FilesQueryMode.completeFile)
+          ..setAppAccount(account);
+        for (final r in roots) {
+          final path = r.strippedPathWithEmpty;
+          if (path.isEmpty) {
+            break;
+          }
+          q.byRelativePathPattern("$path/%");
+        }
+        if (isOnlySupportedFormat) {
+          q
+            ..byMimePattern("image/%")
+            ..byMimePattern("video/%");
+        }
+        return q.build();
+      });
+      query
+        ..orderBy([sql.OrderingTerm.desc(db.accountFiles.bestDateTime)])
+        ..limit(limit);
+      return await query
+          .map((r) => sql.CompleteFile(
+                r.readTable(db.files),
+                r.readTable(db.accountFiles),
+                r.readTableOrNull(db.images),
+                r.readTableOrNull(db.trashes),
+              ))
+          .get();
+    });
+    return dbFiles
+        .map((f) => SqliteFileConverter.fromSql(account.userId.toString(), f))
+        .toList();
   }
 
   final DiContainer _c;
