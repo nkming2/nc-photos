@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/int_util.dart';
 
@@ -56,17 +55,30 @@ class Throttler<T> {
     _currentResponseTime = null;
     _count = 0;
     _maxCount = null;
+    // _data may be used else where, thus we must not call List.clear() here
     _data = <T>[];
   }
 
-  void _doTrigger() {
-    onTriggered?.call(_data);
-    clear();
+  Future<void> triggerNow() async {
+    if (_hasPendingEvent) {
+      _log.info("[triggerNow]$_logTag Triggered");
+      return _doTrigger();
+    }
   }
+
+  Future<void> _doTrigger() async {
+    if (_hasPendingEvent) {
+      final data = _data;
+      clear();
+      await onTriggered?.call(data);
+    }
+  }
+
+  bool get _hasPendingEvent => _count > 0;
 
   String get _logTag => logTag == null ? "" : "[$logTag]";
 
-  final ValueChanged<List<T>>? onTriggered;
+  final FutureOr<void> Function(List<T>)? onTriggered;
 
   /// Extra tag printed with logs from this class
   final String? logTag;

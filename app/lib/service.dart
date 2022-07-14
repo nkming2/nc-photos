@@ -10,6 +10,7 @@ import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
@@ -229,6 +230,12 @@ class _MetadataTask {
     if (_processedIds.isNotEmpty) {
       NativeEvent.fire(FileExifUpdatedEvent(_processedIds).toEvent());
       _processedIds = [];
+    }
+
+    final c = KiwiContainer().resolve<DiContainer>();
+    if (c.fileRepo.dataSrc is FileCachedDataSource) {
+      await (c.fileRepo.dataSrc as FileCachedDataSource)
+          .updateRemoteTouchTokenNow();
     }
   }
 

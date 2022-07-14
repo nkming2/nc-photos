@@ -17,6 +17,7 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:path/path.dart' as path_lib;
@@ -539,13 +540,18 @@ class FileCachedDataSource implements FileDataSource {
 
     // generate a new random token
     final token = const Uuid().v4().replaceAll("-", "");
-    const tokenManager = TouchTokenManager();
     final dir = File(path: path_lib.dirname(f.path));
-    await tokenManager.setLocalToken(account, dir, token);
-    final fileRepo = FileRepo(this);
-    await tokenManager.setRemoteToken(fileRepo, account, dir, token);
-    _log.info(
-        "[updateMetadata] New touch token '$token' for dir '${dir.path}'");
+    await const TouchTokenManager().setLocalToken(account, dir, token);
+    // don't update remote token that frequently
+    (_touchTokenThrottlers["${account.url}/${dir.path}"] ??= Throttler(
+      onTriggered: _updateRemoteTouchToken,
+      logTag: "FileCachedDataSource._touchTokenThrottlers",
+    ))
+        .trigger(
+      maxResponceTime: const Duration(seconds: 20),
+      maxPendingCount: 20,
+      data: _TouchTokenThrottlerData(account, dir, token),
+    );
   }
 
   @override
@@ -575,6 +581,25 @@ class FileCachedDataSource implements FileDataSource {
     await _remoteSrc.createDir(account, path);
   }
 
+  Future<void> updateRemoteTouchTokenNow() async {
+    for (final t in _touchTokenThrottlers.values) {
+      await t.triggerNow();
+    }
+  }
+
+  Future<void> _updateRemoteTouchToken(
+      List<_TouchTokenThrottlerData> data) async {
+    try {
+      final fileRepo = FileRepo(this);
+      final d = data.last;
+      await const TouchTokenManager()
+          .setRemoteToken(fileRepo, d.account, d.dir, d.token);
+    } catch (e, stackTrace) {
+      _log.shout("[_updateRemoteTouchToken] Failed while setRemoteToken", e,
+          stackTrace);
+    }
+  }
+
   final DiContainer _c;
   final bool shouldCheckCache;
   final FileForwardCacheManager? forwardCacheManager;
@@ -582,7 +607,17 @@ class FileCachedDataSource implements FileDataSource {
   final _remoteSrc = const FileWebdavDataSource();
   final FileSqliteDbDataSource _sqliteDbSrc;
 
+  final _touchTokenThrottlers = <String, Throttler<_TouchTokenThrottlerData>>{};
+
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
+}
+
+class _TouchTokenThrottlerData {
+  const _TouchTokenThrottlerData(this.account, this.dir, this.token);
+
+  final Account account;
+  final File dir;
+  final String token;
 }
 
 /// Forward cache for listing AppDb dirs
