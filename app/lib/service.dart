@@ -244,6 +244,7 @@ class _MetadataTask {
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         updater.stop();
+        _shouldRun = false;
       }
 
       _Service._shouldRun.addListener(onServiceStop);
@@ -256,6 +257,9 @@ class _MetadataTask {
       } finally {
         _Service._shouldRun.removeListener(onServiceStop);
       }
+      if (!_shouldRun) {
+        return;
+      }
     }
     if (!hasScanShareFolder) {
       final shareUpdater = UpdateMissingMetadata(
@@ -263,6 +267,7 @@ class _MetadataTask {
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         shareUpdater.stop();
+        _shouldRun = false;
       }
 
       _Service._shouldRun.addListener(onServiceStop);
@@ -279,6 +284,9 @@ class _MetadataTask {
         }
       } finally {
         _Service._shouldRun.removeListener(onServiceStop);
+      }
+      if (!_shouldRun) {
+        return;
       }
     }
   }
@@ -301,6 +309,7 @@ class _MetadataTask {
   final Account account;
   final AccountPref accountPref;
 
+  var _shouldRun = true;
   var _count = 0;
   var _processedIds = <int>[];
 
