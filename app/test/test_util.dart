@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as sql;
 import 'package:drift/native.dart' as sql;
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -239,6 +240,16 @@ class AlbumBuilder {
   final items = <AlbumItem>[];
   File? cover;
   final shares = <AlbumShare>[];
+}
+
+class SqlAccountWithServer with EquatableMixin {
+  const SqlAccountWithServer(this.server, this.account);
+
+  @override
+  get props => [server, account];
+
+  final sql.Server server;
+  final sql.Account account;
 }
 
 void initLog() {
@@ -555,6 +566,19 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
     ));
   }
   return results;
+}
+
+Future<Set<SqlAccountWithServer>> listSqliteDbServerAccounts(
+    sql.SqliteDb db) async {
+  final query = db.select(db.servers).join([
+    sql.leftOuterJoin(
+        db.accounts, db.accounts.server.equalsExp(db.servers.rowId)),
+  ]);
+  return (await query
+          .map((r) => SqlAccountWithServer(
+              r.readTable(db.servers), r.readTable(db.accounts)))
+          .get())
+      .toSet();
 }
 
 bool shouldPrintSql = false;
