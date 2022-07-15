@@ -170,6 +170,7 @@ class SqliteDb extends _$SqliteDb {
   @override
   get migration => MigrationStrategy(
         onCreate: (m) async {
+          await customStatement("PRAGMA journal_mode=WAL");
           await m.createAll();
 
           await m.createIndex(Index("files_server_index",
