@@ -157,7 +157,7 @@ class FileSqliteCacheUpdater {
       if (diff.item2.isNotEmpty) {
         // delete obsolete children
         await _removeSqliteFiles(db, dbAccount, diff.item2);
-        await _cleanUpRemovedFile(db, dbAccount);
+        await db.cleanUpDanglingFiles();
       }
     });
   }
@@ -313,7 +313,7 @@ class FileSqliteCacheRemover {
       final dbAccount = await db.accountOf(account);
       final rowIds = await db.accountFileRowIdsOf(f, sqlAccount: dbAccount);
       await _removeSqliteFiles(db, dbAccount, [rowIds.fileRowId]);
-      await _cleanUpRemovedFile(db, dbAccount);
+      await db.cleanUpDanglingFiles();
     });
   }
 
@@ -340,7 +340,7 @@ class FileSqliteCacheEmptier {
       childIds.removeWhere((id) => id == rowIds.fileRowId);
       if (childIds.isNotEmpty) {
         await _removeSqliteFiles(db, dbAccount, childIds);
-        await _cleanUpRemovedFile(db, dbAccount);
+        await db.cleanUpDanglingFiles();
       }
 
       // remove dir in DirFiles
@@ -380,25 +380,3 @@ Future<void> _removeSqliteFiles(
     return;
   }
 }
-
-Future<void> _cleanUpRemovedFile(sql.SqliteDb db, sql.Account dbAccount) async {
-  // delete dangling files: entries in Files w/o a corresponding entry in
-  // AccountFiles
-  final danglingFileQuery = db.selectOnly(db.files).join([
-    sql.leftOuterJoin(
-        db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId),
-        useColumns: false),
-  ])
-    ..addColumns([db.files.rowId])
-    ..where(db.accountFiles.relativePath.isNull());
-  final danglingFileRowIds =
-      await danglingFileQuery.map((r) => r.read(db.files.rowId)!).get();
-  if (danglingFileRowIds.isNotEmpty) {
-    __log.info(
-        "[_cleanUpRemovedFile] Delete ${danglingFileRowIds.length} files");
-    await (db.delete(db.files)..where((t) => t.rowId.isIn(danglingFileRowIds)))
-        .go();
-  }
-}
-
-final __log = Logger("entity.file.file_cache_manager");

@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/entity/file.dart' as app;
 import 'package:nc_photos/entity/sqlite_table.dart';
@@ -156,6 +157,45 @@ extension SqliteDbExtension on SqliteDb {
           accounts.userId.equals(account.username.toCaseInsensitiveString()))
       ..limit(1);
     return query.map((r) => r.readTable(accounts)).getSingle();
+  }
+
+  /// Delete Account by app Account
+  ///
+  /// If the deleted Account is the last one associated with a Server, then the
+  /// Server will also be deleted
+  Future<void> deleteAccountOf(app.Account account) async {
+    final dbAccount = await accountOf(account);
+    _log.info("[deleteAccountOf] Remove account: ${dbAccount.rowId}");
+    await (delete(accounts)..where((t) => t.rowId.equals(dbAccount.rowId)))
+        .go();
+    final accountCountExp =
+        accounts.rowId.count(filter: accounts.server.equals(dbAccount.server));
+    final accountCountQuery = selectOnly(accounts)
+      ..addColumns([accountCountExp]);
+    final accountCount =
+        await accountCountQuery.map((r) => r.read(accountCountExp)).getSingle();
+    _log.info("[deleteAccountOf] Remaining accounts in server: $accountCount");
+    if (accountCount == 0) {
+      _log.info("[deleteAccountOf] Remove server: ${dbAccount.server}");
+      await (delete(servers)..where((t) => t.rowId.equals(dbAccount.server)))
+          .go();
+    }
+    await cleanUpDanglingFiles();
+  }
+
+  /// Delete Files without a corresponding entry in AccountFiles
+  Future<void> cleanUpDanglingFiles() async {
+    final query = selectOnly(files).join([
+      leftOuterJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+          useColumns: false),
+    ])
+      ..addColumns([files.rowId])
+      ..where(accountFiles.relativePath.isNull());
+    final fileRowIds = await query.map((r) => r.read(files.rowId)!).get();
+    if (fileRowIds.isNotEmpty) {
+      _log.info("[cleanUpDanglingFiles] Delete ${fileRowIds.length} files");
+      await (delete(files)..where((t) => t.rowId.isIn(fileRowIds))).go();
+    }
   }
 
   FilesQueryBuilder queryFiles() => FilesQueryBuilder(this);
@@ -346,6 +386,8 @@ extension SqliteDbExtension on SqliteDb {
             ))
         .get();
   }
+
+  static final _log = Logger("entity.sqlite_table_extension.SqliteDbExtension");
 }
 
 enum FilesQueryMode {
