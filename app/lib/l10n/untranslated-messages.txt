@@ -256,11 +256,7 @@
   ],
 
   "es": [
-    "settingsAccountLabelTitle",
-    "settingsAccountLabelDescription",
-    "settingsDoubleTapExitTitle",
-    "rootPickerSkipConfirmationDialogContent2",
-    "doubleTapExitNotification"
+    "rootPickerSkipConfirmationDialogContent2"
   ],
 
   "fi": [
