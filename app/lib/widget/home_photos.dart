@@ -165,7 +165,7 @@ class _HomePhotosState extends State<HomePhotos>
                 topOffset: _calcAppBarExtent(context),
                 bottomOffset: _calcBottomAppBarExtent(context),
                 labelTextBuilder: (_) => _buildScrollLabel(context),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 24),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 40),
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
@@ -365,6 +365,7 @@ class _HomePhotosState extends State<HomePhotos>
           text,
           style: const TextStyle(
             color: AppTheme.primaryTextColorLight,
+            fontSize: 16,
           ),
         ),
       );
