@@ -14,6 +14,7 @@ import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_picker.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
+import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
@@ -165,6 +166,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
+    route ??= _handleChangelogRoute(settings);
     return route;
   }
 
@@ -550,6 +552,22 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleImageEditorRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleChangelogRoute(RouteSettings settings) {
+    try {
+      if (settings.name == Changelog.routeName) {
+        if (settings.arguments != null) {
+          final args = settings.arguments as ChangelogArguments;
+          return Changelog.buildRoute(args);
+        } else {
+          return MaterialPageRoute(builder: (_) => const Changelog());
+        }
+      }
+    } catch (e) {
+      _log.severe("[_handleChangelogRoute] Failed while handling route", e);
     }
     return null;
   }

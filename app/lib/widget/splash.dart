@@ -3,15 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/changelog.dart' as changelog;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
+import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
-import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 
@@ -40,9 +39,15 @@ class _SplashState extends State<Splash> {
       await Pref().setFirstRunTime(DateTime.now().millisecondsSinceEpoch);
     }
     if (_shouldUpgrade()) {
+      setState(() {
+        _isUpgrading = true;
+      });
       await _handleUpgrade();
+      setState(() {
+        _isUpgrading = false;
+      });
     }
-    _initTimedExit();
+    _exit();
   }
 
   @override
@@ -58,29 +63,50 @@ class _SplashState extends State<Splash> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Icon(
-              Icons.cloud,
-              size: 96,
-              color: Theme.of(context).colorScheme.primary,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cloud,
+                  size: 96,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  L10n.global().appTitle,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              L10n.global().appTitle,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline4,
-            )
+            if (_isUpgrading)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 64,
+                child: Column(
+                  children: const [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(),
+                    ),
+                    SizedBox(height: 8),
+                    Text("Updating"),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Future<void> _initTimedExit() async {
-    await Future.delayed(const Duration(seconds: 1));
+  Future<void> _exit() async {
+    _log.info("[_exit]");
     final account = Pref().getCurrentAccount();
     if (isNeedSetup()) {
       Navigator.pushReplacementNamed(context, Setup.routeName);
@@ -106,30 +132,15 @@ class _SplashState extends State<Splash> {
   Future<void> _handleUpgrade() async {
     try {
       final lastVersion = Pref().getLastVersionOr(k.version);
-      await _upgrade(lastVersion);
-
-      final change = _gatherChangelog(lastVersion);
-      if (change.isNotEmpty) {
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(L10n.global().changelogTitle),
-            content: SingleChildScrollView(
-              child: Text(
-                change,
-                style: const TextStyle(fontSize: 14),
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(MaterialLocalizations.of(context).okButtonLabel),
-              )
-            ],
-          ),
-        );
+      _showChangelogIfAvailable(lastVersion);
+      // begin upgrade while showing the changelog
+      try {
+        _log.info("[_handleUpgrade] Upgrade: $lastVersion -> ${k.version}");
+        await _upgrade(lastVersion);
+        _log.info("[_handleUpgrade] Upgrade done");
+      } finally {
+        // ensure user has closed the changelog
+        await _changelogCompleter.future;
       }
     } catch (e, stackTrace) {
       _log.shout("[_handleUpgrade] Failed while upgrade", e, stackTrace);
@@ -139,25 +150,8 @@ class _SplashState extends State<Splash> {
   }
 
   Future<void> _upgrade(int lastVersion) async {
-    bool isShowDialog = false;
-    void showUpdateDialog() {
-      if (!isShowDialog) {
-        isShowDialog = true;
-        showDialog(
-          context: context,
-          builder: (_) => ProcessingDialog(
-            text: L10n.global().genericProcessingDialogContent,
-          ),
-        );
-      }
-    }
-
     if (lastVersion < 290) {
-      showUpdateDialog();
       await _upgrade29(lastVersion);
-    }
-    if (isShowDialog) {
-      Navigator.of(context).pop();
     }
   }
 
@@ -171,23 +165,24 @@ class _SplashState extends State<Splash> {
     }
   }
 
-  String _gatherChangelog(int from) {
-    if (from < 100) {
-      from *= 10;
-    }
-    final fromMajor = from ~/ 10;
-    try {
-      return changelog.contents
-          .sublist(fromMajor)
-          .reversed
-          .whereType<String>()
-          .map((e) => e.trim())
-          .join("\n\n");
-    } catch (e, stacktrace) {
-      _log.severe("[_gatherChangelog] Failed", e, stacktrace);
-      return "";
+  Future<void> _showChangelogIfAvailable(int lastVersion) async {
+    if (Changelog.hasContent(lastVersion)) {
+      try {
+        await Navigator.of(context).pushNamed(Changelog.routeName,
+            arguments: ChangelogArguments(lastVersion));
+      } catch (e, stackTrace) {
+        _log.severe(
+            "[_showChangelogIfAvailable] Uncaught exception", e, stackTrace);
+      } finally {
+        _changelogCompleter.complete();
+      }
+    } else {
+      _changelogCompleter.complete();
     }
   }
+
+  final _changelogCompleter = Completer();
+  var _isUpgrading = false;
 
   static final _log = Logger("widget.splash._SplashState");
 }

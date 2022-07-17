@@ -1,4 +1,120 @@
-const contents = [
+import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+import 'package:nc_photos/theme.dart';
+
+class ChangelogArguments {
+  const ChangelogArguments(this.fromVersion);
+
+  final int fromVersion;
+}
+
+class Changelog extends StatelessWidget {
+  static const routeName = "/changelog";
+
+  static Route buildRoute(ChangelogArguments args) => MaterialPageRoute(
+        builder: (context) => Changelog.fromArgs(args),
+      );
+
+  static bool hasContent(int fromVersion) =>
+      _changelogs.keys.first > fromVersion;
+
+  const Changelog({
+    Key? key,
+    this.fromVersion,
+  }) : super(key: key);
+
+  Changelog.fromArgs(ChangelogArguments args, {Key? key})
+      : this(
+          key: key,
+          fromVersion: args.fromVersion,
+        );
+
+  @override
+  build(BuildContext context) => AppTheme(
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: Builder(builder: (context) => _buildContent(context)),
+        ),
+      );
+
+  AppBar _buildAppBar() => AppBar(
+        title: const Text("Changelog"),
+      );
+
+  Widget _buildContent(BuildContext context) => ListView.builder(
+        itemCount: _changelogs.length,
+        itemBuilder: _buildItem,
+      );
+
+  Widget _buildItem(BuildContext context, int i) {
+    try {
+      final version = _changelogs.keys.elementAt(i);
+      return ExpansionTile(
+        key: PageStorageKey(i),
+        title: Text((version / 10).toStringAsFixed(1)),
+        initiallyExpanded:
+            fromVersion == null ? (i == 0) : (version > fromVersion!),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        expandedAlignment: Alignment.topLeft,
+        childrenPadding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        children: _changelogs[version]!(context),
+      );
+    } catch (e, stackTrace) {
+      _log.severe("[_buildItem] Uncaught exception", e, stackTrace);
+      return const SizedBox();
+    }
+  }
+
+  final int? fromVersion;
+
+  static final _log = Logger("widget.changelog.Changelog");
+}
+
+List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
+  var change = _oldChangelogs[majorVersion - 1];
+  if (change != null) {
+    try {
+      // remove the 1st line showing the version number repeatedly
+      change = change.substring(change.indexOf("\n")).trim();
+    } catch (_) {
+      change = _oldChangelogs[majorVersion - 1];
+    }
+  }
+  return [Text(change ?? "n/a")];
+}
+
+final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  450: (context) => _buildChangelogCompat(context, 45),
+  440: (context) => _buildChangelogCompat(context, 44),
+  430: (context) => _buildChangelogCompat(context, 43),
+  420: (context) => _buildChangelogCompat(context, 42),
+  410: (context) => _buildChangelogCompat(context, 41),
+  400: (context) => _buildChangelogCompat(context, 40),
+  380: (context) => _buildChangelogCompat(context, 38),
+  370: (context) => _buildChangelogCompat(context, 37),
+  360: (context) => _buildChangelogCompat(context, 36),
+  350: (context) => _buildChangelogCompat(context, 35),
+  340: (context) => _buildChangelogCompat(context, 34),
+  320: (context) => _buildChangelogCompat(context, 32),
+  310: (context) => _buildChangelogCompat(context, 31),
+  300: (context) => _buildChangelogCompat(context, 30),
+  290: (context) => _buildChangelogCompat(context, 29),
+  280: (context) => _buildChangelogCompat(context, 28),
+  270: (context) => _buildChangelogCompat(context, 27),
+  260: (context) => _buildChangelogCompat(context, 26),
+  240: (context) => _buildChangelogCompat(context, 24),
+  230: (context) => _buildChangelogCompat(context, 23),
+  200: (context) => _buildChangelogCompat(context, 20),
+  190: (context) => _buildChangelogCompat(context, 19),
+  180: (context) => _buildChangelogCompat(context, 18),
+  170: (context) => _buildChangelogCompat(context, 17),
+  150: (context) => _buildChangelogCompat(context, 15),
+  130: (context) => _buildChangelogCompat(context, 13),
+  80: (context) => _buildChangelogCompat(context, 8),
+  70: (context) => _buildChangelogCompat(context, 7),
+};
+
+const _oldChangelogs = [
   // v1
   null,
   // v2
