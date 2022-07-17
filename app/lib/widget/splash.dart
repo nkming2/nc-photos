@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
+import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -153,6 +156,9 @@ class _SplashState extends State<Splash> {
     if (lastVersion < 290) {
       await _upgrade29(lastVersion);
     }
+    if (lastVersion < 460) {
+      await _upgrade46(lastVersion);
+    }
   }
 
   Future<void> _upgrade29(int lastVersion) async {
@@ -162,6 +168,35 @@ class _SplashState extends State<Splash> {
     } catch (e, stackTrace) {
       _log.shout("[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
       // just leave the cache then
+    }
+  }
+
+  Future<void> _upgrade46(int lastVersion) async {
+    try {
+      _log.info("[_upgrade46] insertDbAccounts");
+      final c = KiwiContainer().resolve<DiContainer>();
+      await CompatV46.insertDbAccounts(Pref(), c.sqliteDb);
+    } catch (e, stackTrace) {
+      _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
+      Pref()
+        ..setAccounts3(null)
+        ..setCurrentAccountIndex(null);
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Error"),
+          content: const Text(
+              "Failed upgrading app, please sign in to your servers again"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(MaterialLocalizations.of(context).okButtonLabel),
+            ),
+          ],
+        ),
+      );
     }
   }
 

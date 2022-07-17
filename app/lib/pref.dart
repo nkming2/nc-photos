@@ -44,17 +44,25 @@ class Pref {
   }
 
   List<Account> getAccounts3Or(List<Account> def) => getAccounts3() ?? def;
-  Future<bool> setAccounts3(List<Account> value) {
-    final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
-    return provider.setStringList(PrefKey.accounts3, jsons);
+  Future<bool> setAccounts3(List<Account>? value) {
+    if (value == null) {
+      return _remove(PrefKey.accounts3);
+    } else {
+      final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
+      return provider.setStringList(PrefKey.accounts3, jsons);
+    }
   }
 
   int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
   int getCurrentAccountIndexOr(int def) => getCurrentAccountIndex() ?? def;
-  Future<bool> setCurrentAccountIndex(int value) => _set<int>(
-      PrefKey.currentAccountIndex,
-      value,
-      (key, value) => provider.setInt(key, value));
+  Future<bool> setCurrentAccountIndex(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.currentAccountIndex);
+    } else {
+      return _set<int>(PrefKey.currentAccountIndex, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
 
   int? getHomePhotosZoomLevel() => provider.getInt(PrefKey.homePhotosZoomLevel);
   int getHomePhotosZoomLevelOr(int def) => getHomePhotosZoomLevel() ?? def;
@@ -245,6 +253,8 @@ class Pref {
       return false;
     }
   }
+
+  Future<bool> _remove(PrefKey key) => provider.remove(key);
 
   final PrefProvider provider;
 
