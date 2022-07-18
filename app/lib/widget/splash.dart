@@ -57,7 +57,10 @@ class _SplashState extends State<Splash> {
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
+        body: WillPopScope(
+          onWillPop: () => Future.value(false),
+          child: Builder(builder: (context) => _buildContent(context)),
+        ),
       ),
     );
   }
