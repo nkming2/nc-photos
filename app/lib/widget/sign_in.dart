@@ -40,100 +40,121 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return SafeArea(
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Text(
-                          L10n.global().signInHeaderText,
-                          style: Theme.of(context).textTheme.headline5,
-                          textAlign: TextAlign.center,
+    if (_isConnecting) {
+      return Stack(
+        children: const [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 64,
+            child: Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return SafeArea(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            L10n.global().signInHeaderText,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            constraints: const BoxConstraints(
+                                maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: _buildForm(context),
+                          ),
+                        ),
+                        Container(
+                          alignment: AlignmentDirectional.centerStart,
                           constraints: const BoxConstraints(
                               maxWidth: AppTheme.widthLimitedContentMaxWidth),
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: _buildForm(context),
-                        ),
-                      ),
-                      Container(
-                        alignment: AlignmentDirectional.centerStart,
-                        constraints: const BoxConstraints(
-                            maxWidth: AppTheme.widthLimitedContentMaxWidth),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: InkWell(
-                          onTap: () {
-                            launch(help_utils.twoFactorAuthUrl);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 16),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.help_outline, size: 16),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(L10n.global().signIn2faHintText),
-                                ),
-                              ],
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: InkWell(
+                            onTap: () {
+                              launch(help_utils.twoFactorAuthUrl);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.help_outline, size: 16),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child:
+                                        Text(L10n.global().signIn2faHintText),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      if (!platform_k.isWeb) Expanded(child: Container()),
-                      Container(
-                        constraints: const BoxConstraints(
-                            maxWidth: AppTheme.widthLimitedContentMaxWidth),
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if (!ModalRoute.of(context)!.isFirst)
-                              TextButton(
+                        if (!platform_k.isWeb) Expanded(child: Container()),
+                        Container(
+                          constraints: const BoxConstraints(
+                              maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (!ModalRoute.of(context)!.isFirst)
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(MaterialLocalizations.of(context)
+                                      .cancelButtonLabel),
+                                )
+                              else
+                                Container(),
+                              ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  if (_formKey.currentState?.validate() ==
+                                      true) {
+                                    _connect();
+                                  }
                                 },
-                                child: Text(MaterialLocalizations.of(context)
-                                    .cancelButtonLabel),
-                              )
-                            else
-                              Container(),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState?.validate() == true) {
-                                  _connect();
-                                }
-                              },
-                              child: Text(L10n.global().connectButtonLabel),
-                            ),
-                          ],
+                                child: Text(L10n.global().connectButtonLabel),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-      ),
-    );
+            );
+          },
+        ),
+      );
+    }
   }
 
   Widget _buildForm(BuildContext context) {
@@ -256,9 +277,26 @@ class _SignInState extends State<SignIn> {
       return;
     }
     // we've got a good account
+    setState(() {
+      _isConnecting = true;
+    });
+    try {
+      await _persistAccount(account);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.routeName, (route) => false,
+          arguments: HomeArguments(account));
+    } catch (_) {
+      setState(() {
+        _isConnecting = false;
+      });
+      rethrow;
+    }
+  }
+
+  Future<void> _persistAccount(Account account) async {
     final c = KiwiContainer().resolve<DiContainer>();
     await c.sqliteDb.use((db) async {
-      await db.insertAccountOf(account!);
+      await db.insertAccountOf(account);
     });
     // only signing in with app password would trigger distinct
     final accounts = (Pref().getAccounts3Or([])..add(account)).distinct();
@@ -272,12 +310,11 @@ class _SignInState extends State<SignIn> {
     Pref()
       ..setAccounts3(accounts)
       ..setCurrentAccountIndex(accounts.indexOf(account));
-    Navigator.pushNamedAndRemoveUntil(context, Home.routeName, (route) => false,
-        arguments: HomeArguments(account));
   }
 
   final _formKey = GlobalKey<FormState>();
   var _scheme = _Scheme.https;
+  var _isConnecting = false;
 
   final _formValue = _FormValue();
 
