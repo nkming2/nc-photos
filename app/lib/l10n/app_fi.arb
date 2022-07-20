@@ -330,11 +330,16 @@
 	"@settingsAccountPageTitle": {
 		"description": "Dedicated page for account settings"
 	},
+	"settingsAccountLabelTitle": "Tilin tunniste",
+	"@settingsAccountLabelTitle": {
+		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+	},
+	"settingsAccountLabelDescription": "Aseta tunniste, joka näytetään palvelimen URL:n sijasta",
 	"settingsIncludedFoldersTitle": "Sisällytetyt kansiot",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
-	"settingsShareFolderTitle": "Jaettu kansio",
+	"settingsShareFolderTitle": "Jaa kansio",
 	"@settingsShareFolderTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
@@ -354,9 +359,9 @@
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
 	},
-	"settingsViewerTitle": "Katselija",
+	"settingsViewerTitle": "Katselin",
 	"settingsViewerDescription": "Muokkaa kuva/video -katselinta",
-	"settingsViewerPageTitle": "Viewer settings",
+	"settingsViewerPageTitle": "Katselimen asetukset",
 	"@settingsViewerPageTitle": {
 		"description": "Dedicated page for viewer settings"
 	},
@@ -372,7 +377,7 @@
 		"description": "Dedicated page for album settings"
 	},
 	"settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
-	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
+	"settingsShowDateInAlbumDescription": "Käytä vain kun albumi on lajiteltu ajan mukaan",
 	"settingsPhotoEnhancementTitle": "Kuvan parannus",
 	"settingsPhotoEnhancementPageTitle": "Kuvan parannuksen asetukset",
 	"@settingsPhotoEnhancementPageTitle": {
@@ -404,6 +409,10 @@
 	},
 	"settingsMiscellaneousTitle": "Sekalaiset",
 	"settingsMiscellaneousPageTitle": "Sekalaiset asetukset",
+	"settingsDoubleTapExitTitle": "Napauta kahdesti poistuaksesi",
+	"@settingsDoubleTapExitTitle": {
+		"description": "If enabled, users need to tap the back button twice to exit app"
+	},
 	"settingsPhotosTabSortByNameTitle": "Järjestä tiedostonimen mukaan",
 	"@settingsPhotosTabSortByNameTitle": {
 		"description": "Sort photos listed in the Photos tab by filename (descending)"
@@ -1243,7 +1252,11 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
-
+	"doubleTapExitNotification": "Napauta uudelleen poistuaksesi",
+	"@doubleTapExitNotification": {
+		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+	},
+	
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
