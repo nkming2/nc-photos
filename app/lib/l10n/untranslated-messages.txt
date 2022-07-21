@@ -259,10 +259,6 @@
     "rootPickerSkipConfirmationDialogContent2"
   ],
 
-  "fi": [
-    
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsExifWifiOnlyTitle",
