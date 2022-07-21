@@ -260,10 +260,7 @@
   ],
 
   "fi": [
-    "settingsAccountLabelTitle",
-    "settingsAccountLabelDescription",
-    "settingsDoubleTapExitTitle",
-    "doubleTapExitNotification"
+    
   ],
 
   "fr": [
