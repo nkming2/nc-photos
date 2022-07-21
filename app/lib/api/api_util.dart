@@ -118,7 +118,7 @@ Future<String> exchangePassword(Account account) async {
         "[exchangePassword] Failed while requesting app password: $response");
     throw ApiException(
         response: response,
-        message: "Failed communicating with server: ${response.statusCode}");
+        message: "Server responed with an error: HTTP ${response.statusCode}");
   }
 }
 

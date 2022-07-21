@@ -11,7 +11,7 @@ String toUserString(dynamic exception) {
     if (exception.response.statusCode == 401) {
       return L10n.global().errorUnauthenticated;
     } else if (exception.response.statusCode == 404) {
-      return "404 not found";
+      return "HTTP 404 not found";
     } else if (exception.response.statusCode == 423) {
       return L10n.global().errorLocked;
     } else if (exception.response.statusCode == 500) {

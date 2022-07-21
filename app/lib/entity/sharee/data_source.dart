@@ -20,7 +20,8 @@ class ShareeRemoteDataSource implements ShareeDataSource {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final json = jsonDecode(response.body);

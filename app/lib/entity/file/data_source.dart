@@ -63,7 +63,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final xml = XmlDocument.parse(response.body);
@@ -114,7 +115,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[remove] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -126,7 +128,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[getBinary] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
     return response.body;
   }
@@ -140,7 +143,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[putBinary] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -185,7 +189,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[updateProperty] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -206,12 +211,14 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[copy] Failed requesting sever: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     } else if (response.statusCode == 204) {
       // conflict
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -232,7 +239,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[move] Failed requesting sever: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -246,7 +254,8 @@ class FileWebdavDataSource implements FileDataSource {
       _log.severe("[createDir] Failed requesting sever: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 

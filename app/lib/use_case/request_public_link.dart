@@ -16,7 +16,8 @@ class RequestPublicLink {
       _log.severe("[call] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
     final JsonObj json = jsonDecode(response.body)["ocs"];
     if (json["meta"]["statuscode"] != 200) {
@@ -25,7 +26,7 @@ class RequestPublicLink {
       throw ApiException(
           response: response,
           message:
-              "Failed communicating with server: ${json["meta"]["message"]}");
+              "Server responed with an error: HTTP ${json["meta"]["statuscode"]} ${json["meta"]["message"]}");
     }
     return json["data"]["url"];
   }

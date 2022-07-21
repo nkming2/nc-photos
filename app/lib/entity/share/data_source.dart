@@ -72,7 +72,8 @@ class ShareRemoteDataSource implements ShareDataSource {
       _log.severe("[create] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final json = jsonDecode(response.body);
@@ -96,7 +97,8 @@ class ShareRemoteDataSource implements ShareDataSource {
       _log.severe("[create] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final json = jsonDecode(response.body);
@@ -113,7 +115,8 @@ class ShareRemoteDataSource implements ShareDataSource {
       _log.severe("[delete] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
   }
 
@@ -122,7 +125,8 @@ class ShareRemoteDataSource implements ShareDataSource {
       _log.severe("[_onListResult] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final json = jsonDecode(response.body);

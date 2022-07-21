@@ -24,7 +24,8 @@ class TagRemoteDataSource implements TagDataSource {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final xml = XmlDocument.parse(response.body);
@@ -46,7 +47,8 @@ class TagRemoteDataSource implements TagDataSource {
       _log.severe("[listByFile] Failed requesting server: $response");
       throw ApiException(
           response: response,
-          message: "Failed communicating with server: ${response.statusCode}");
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
     }
 
     final xml = XmlDocument.parse(response.body);
