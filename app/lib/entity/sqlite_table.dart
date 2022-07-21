@@ -144,6 +144,7 @@ class AlbumShares extends Table {
   get primaryKey => {album, userId};
 }
 
+// remember to also update the truncate method after adding a new table
 @DriftDatabase(
   tables: [
     Servers,

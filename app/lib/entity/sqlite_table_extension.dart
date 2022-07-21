@@ -387,6 +387,23 @@ extension SqliteDbExtension on SqliteDb {
         .get();
   }
 
+  Future<void> truncate() async {
+    await delete(servers).go();
+    // technically deleting Servers table is enough to clear the followings, but
+    // just in case
+    await delete(accounts).go();
+    await delete(files).go();
+    await delete(images).go();
+    await delete(trashes).go();
+    await delete(accountFiles).go();
+    await delete(dirFiles).go();
+    await delete(albums).go();
+    await delete(albumShares).go();
+
+    // reset the auto increment counter
+    await customStatement("UPDATE sqlite_sequence SET seq=0;");
+  }
+
   static final _log = Logger("entity.sqlite_table_extension.SqliteDbExtension");
 }
 

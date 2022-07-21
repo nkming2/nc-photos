@@ -20,6 +20,7 @@ void main() {
       test("same server shared file", _deleteAccountSameServerSharedFile);
     });
     test("cleanUpDanglingFiles", _cleanUpDanglingFiles);
+    test("truncate", _truncate);
   });
 }
 
@@ -276,4 +277,65 @@ Future<void> _cleanUpDanglingFiles() async {
     await c.sqliteDb.select(c.sqliteDb.files).map((f) => f.fileId).get(),
     [0, 1],
   );
+}
+
+/// Truncate the db
+///
+/// Expect: All tables emptied;
+/// Auto-increment counters reset to 0
+Future<void> _truncate() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addJpeg("admin/test1.jpg"))
+      .build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
+
+  await c.sqliteDb.use((db) async {
+    await db.truncate();
+  });
+  await c.sqliteDb.use((db) async {
+    final tables = await db
+        .customSelect(
+            "SELECT name FROM sqlite_schema WHERE type='table' AND name NOT LIKE 'sqlite_%';")
+        .map((r) => r.read<String>("name"))
+        .get();
+    // this check is to make sure that we are testing all tables
+    expect(tables.toSet(), {
+      "servers",
+      "accounts",
+      "files",
+      "images",
+      "trashes",
+      "account_files",
+      "dir_files",
+      "albums",
+      "album_shares",
+    });
+    for (final t in tables) {
+      expect(
+        await db
+            .customSelect("SELECT COUNT(*) AS c FROM $t;")
+            .map((r) => r.read<int>("c"))
+            .getSingle(),
+        0,
+        reason: "Table '$t' is not empty",
+      );
+    }
+    expect(
+      (await db
+              .customSelect("SELECT seq FROM sqlite_sequence;")
+              .map((r) => r.read<int>("seq"))
+              .get())
+          .every((e) => e == 0),
+      true,
+    );
+  });
 }
