@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.ContextCompat
+import com.nkming.nc_photos.plugin.image_processor.*
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.io.Serializable
 
 class ImageProcessorChannelHandler(context: Context) :
 	MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
@@ -86,6 +88,36 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"colorFilter" -> {
+				try {
+					colorFilter(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
+						call.argument("filters")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
+			"filterPreview" -> {
+				try {
+					filterPreview(
+						call.argument("rgba8")!!,
+						call.argument("filters")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> result.notImplemented()
 		}
 	}
@@ -142,6 +174,34 @@ class ImageProcessorChannelHandler(context: Context) :
 		}
 	)
 
+	private fun colorFilter(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		maxWidth: Int, maxHeight: Int, filters: List<Map<String, Any>>,
+		result: MethodChannel.Result
+	) {
+		// convert to serializable
+		val l = arrayListOf<Serializable>()
+		filters.mapTo(l, { HashMap(it) })
+		method(
+			fileUrl, headers, filename, maxWidth, maxHeight,
+			ImageProcessorService.METHOD_COLOR_FILTER, result,
+			onIntent = {
+				it.putExtra(ImageProcessorService.EXTRA_FILTERS, l)
+			}
+		)
+	}
+
+	private fun filterPreview(
+		rgba8: Map<String, Any>, filters: List<Map<String, Any>>,
+		result: MethodChannel.Result
+	) {
+		var img = Rgba8Image.fromJson(rgba8)
+		for (f in filters.map(ColorFilter::fromJson)) {
+			img = f.apply(img)
+		}
+		result.success(img.toJson())
+	}
+
 	private fun method(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
 		maxWidth: Int, maxHeight: Int, method: String,
@@ -164,4 +224,25 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private val context = context
 	private var eventSink: EventChannel.EventSink? = null
+}
+
+interface ColorFilter {
+	companion object {
+		fun fromJson(json: Map<String, Any>): ColorFilter {
+			return when (json["type"]) {
+				"brightness" -> Brightness((json["weight"] as Double).toFloat())
+				"contrast" -> Contrast((json["weight"] as Double).toFloat())
+				"whitePoint" -> WhitePoint((json["weight"] as Double).toFloat())
+				"blackPoint" -> BlackPoint((json["weight"] as Double).toFloat())
+				"saturation" -> Saturation((json["weight"] as Double).toFloat())
+				"warmth" -> Warmth((json["weight"] as Double).toFloat())
+				"tint" -> Tint((json["weight"] as Double).toFloat())
+				else -> throw IllegalArgumentException(
+					"Unknown type: ${json["type"]}"
+				)
+			}
+		}
+	}
+
+	fun apply(rgba8: Rgba8Image): Rgba8Image
 }

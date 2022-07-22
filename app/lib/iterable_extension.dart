@@ -82,6 +82,22 @@ extension IterableExtension<T> on Iterable<T> {
       return toList();
     }
   }
+
+  /// The first index of [element] in this iterable
+  ///
+  /// Searches the list from index start to the end of the list. The first time
+  /// an object o is encountered so that o == element, the index of o is
+  /// returned. Returns -1 if element is not found.
+  int indexOf(T element, [int start = 0]) {
+    var i = 0;
+    for (final e in this) {
+      if (e == element) {
+        return i;
+      }
+      ++i;
+    }
+    return -1;
+  }
 }
 
 extension IterableFlattenExtension<T> on Iterable<Iterable<T>> {

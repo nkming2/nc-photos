@@ -19,6 +19,7 @@ import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home.dart';
+import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
@@ -163,6 +164,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleEnhancementSettingsRoute(settings);
+    route ??= _handleImageEditorRoute(settings);
     return route;
   }
 
@@ -535,6 +537,19 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleEnhancementSettingsRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleImageEditorRoute(RouteSettings settings) {
+    try {
+      if (settings.name == ImageEditor.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as ImageEditorArguments;
+        return ImageEditor.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handleImageEditorRoute] Failed while handling route", e);
     }
     return null;
   }

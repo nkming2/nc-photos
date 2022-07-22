@@ -110,8 +110,8 @@ class AppTheme extends StatelessWidget {
 
   static Color getUnfocusedIconColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light
-        ? Colors.black54
-        : Colors.white70;
+        ? unfocusedIconColorLight
+        : unfocusedIconColorDark;
   }
 
   static ThemeData buildLightThemeData() {
@@ -180,6 +180,9 @@ class AppTheme extends StatelessWidget {
 
   static const primaryTextColorLight = Colors.black87;
   static final primaryTextColorDark = Colors.white.withOpacity(.87);
+
+  static const unfocusedIconColorLight = Colors.black54;
+  static const unfocusedIconColorDark = Colors.white70;
 
   static const widthLimitedContentMaxWidth = 550.0;
 

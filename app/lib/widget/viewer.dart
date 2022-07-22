@@ -26,6 +26,7 @@ import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/enhance_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
+import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/slideshow_dialog.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
@@ -212,7 +213,15 @@ class _ViewerState extends State<Viewer>
                 onPressed: () => _onSharePressed(context),
               ),
               if (features.isSupportEnhancement &&
-                  EnhanceHandler.isSupportedFormat(file))
+                  EnhanceHandler.isSupportedFormat(file)) ...[
+                IconButton(
+                  icon: Icon(
+                    Icons.tune_outlined,
+                    color: Colors.white.withOpacity(.87),
+                  ),
+                  tooltip: L10n.global().editTooltip,
+                  onPressed: () => _onEditPressed(context),
+                ),
                 IconButton(
                   icon: Icon(
                     Icons.auto_fix_high_outlined,
@@ -221,6 +230,7 @@ class _ViewerState extends State<Viewer>
                   tooltip: L10n.global().enhanceTooltip,
                   onPressed: () => _onEnhancePressed(context),
                 ),
+              ],
               IconButton(
                 icon: Icon(
                   Icons.download_outlined,
@@ -568,6 +578,18 @@ class _ViewerState extends State<Viewer>
     ShareHandler(
       context: context,
     ).shareFiles(widget.account, [file]);
+  }
+
+  void _onEditPressed(BuildContext context) {
+    final file = widget.streamFiles[_viewerController.currentPage];
+    if (!file_util.isSupportedImageFormat(file)) {
+      _log.shout("[_onEditPressed] Video file not supported");
+      return;
+    }
+
+    _log.info("[_onEditPressed] Edit file: ${file.path}");
+    Navigator.of(context).pushNamed(ImageEditor.routeName,
+        arguments: ImageEditorArguments(widget.account, file));
   }
 
   void _onEnhancePressed(BuildContext context) {

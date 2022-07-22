@@ -1256,6 +1256,51 @@
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
 	},
+	"imageEditDiscardDialogTitle": "Discard changes?",
+	"@imageEditDiscardDialogTitle": {
+		"description": "Warn before dismissing image editor (e.g., user pressing back button)"
+	},
+	"imageEditDiscardDialogContent": "Your changes are not saved",
+	"discardButtonLabel": "DISCARD",
+	"@discardButtonLabel": {
+		"description": "Discard the current unsaved content"
+	},
+	"saveTooltip": "Save",
+	"@saveTooltip": {
+		"description": "Save the current content"
+	},
+	"imageEditColorBrightness": "Brightness",
+	"@imageEditColorBrightness": {
+		"description": "Adjust the brightness of an image"
+	},
+	"imageEditColorContrast": "Contrast",
+	"@imageEditColorContrast": {
+		"description": "Adjust the contrast of an image"
+	},
+	"imageEditColorWhitePoint": "White point",
+	"@imageEditColorWhitePoint": {
+		"description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+	},
+	"imageEditColorBlackPoint": "Black point",
+	"@imageEditColorBlackPoint": {
+		"description": "Adjust the black point of an image"
+	},
+	"imageEditColorSaturation": "Saturation",
+	"@imageEditColorSaturation": {
+		"description": "Adjust the color saturation of an image"
+	},
+	"imageEditColorWarmth": "Warmth",
+	"@imageEditColorWarmth": {
+		"description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+	},
+	"imageEditColorTint": "Tint",
+	"@imageEditColorTint": {
+		"description": "Shift colors from a green to a magenta tint"
+	},
+	"imageEditTitle": "Preview edits",
+	"@imageEditTitle": {
+		"description": "Title of the image editor"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
