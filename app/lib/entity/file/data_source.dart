@@ -501,8 +501,14 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  listSingle(Account account, File f) {
-    return _remoteSrc.listSingle(account, f);
+  listSingle(Account account, File f) async {
+    final remote = await _remoteSrc.listSingle(account, f);
+    if (remote.isCollection != true) {
+      // only update regular files
+      _log.info("[listSingle] Cache single file: ${logFilename(f.path)}");
+      await FileSqliteCacheUpdater(_c).updateSingle(account, remote);
+    }
+    return remote;
   }
 
   @override

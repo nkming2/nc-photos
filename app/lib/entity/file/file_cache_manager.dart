@@ -6,6 +6,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
@@ -131,6 +132,18 @@ class FileSqliteCacheUpdater {
     }
   }
 
+  Future<void> updateSingle(Account account, File remoteFile) async {
+    final sqlFile = SqliteFileConverter.toSql(null, remoteFile);
+    await _c.sqliteDb.use((db) async {
+      final dbAccount = await db.accountOf(account);
+      final inserts =
+          await _updateCache(db, dbAccount, [sqlFile], [remoteFile], null);
+      if (inserts.isNotEmpty) {
+        await _insertCache(db, dbAccount, inserts, null);
+      }
+    });
+  }
+
   Future<void> _cacheRemote(
       Account account, File dir, List<File> remote) async {
     final sqlFiles = await remote.convertToFileCompanion(null);
@@ -176,7 +189,7 @@ class FileSqliteCacheUpdater {
     sql.Account dbAccount,
     Iterable<sql.CompleteFileCompanion> sqlFiles,
     Iterable<File> remoteFiles,
-    File dir,
+    File? dir,
   ) async {
     // query list of rowIds for files in [remoteFiles]
     final rowIds = await db.accountFileRowIdsByFileIds(
@@ -232,7 +245,7 @@ class FileSqliteCacheUpdater {
   }
 
   Future<void> _insertCache(sql.SqliteDb db, sql.Account dbAccount,
-      List<sql.CompleteFileCompanion> sqlFiles, File dir) async {
+      List<sql.CompleteFileCompanion> sqlFiles, File? dir) async {
     _log.info("[_insertCache] Insert ${sqlFiles.length} files");
     // check if the files exist in the db in other accounts
     final query = db.queryFiles().run((q) {
@@ -282,9 +295,11 @@ class FileSqliteCacheUpdater {
     );
   }
 
-  void _onRowCached(int rowId, sql.CompleteFileCompanion dbFile, File dir) {
-    if (_compareIdentity(dbFile, dir)) {
-      _dirRowId = rowId;
+  void _onRowCached(int rowId, sql.CompleteFileCompanion dbFile, File? dir) {
+    if (dir != null) {
+      if (_compareIdentity(dbFile, dir)) {
+        _dirRowId = rowId;
+      }
     }
     _childRowIds.add(rowId);
   }
