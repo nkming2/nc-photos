@@ -45,6 +45,7 @@ dependencies:
     git:
       url: https://gitlab.com/nc-photos/flutter-draggable-scrollbar
       ref: v0.1.0-nc-photos-5
+  drift: ^1.7.1
   equatable: ^2.0.0
   event_bus: ^2.0.0
   exifdart:
@@ -65,9 +66,6 @@ dependencies:
   # android/ios only
   google_maps_flutter: ^2.1.0
   http: ^0.13.1
-  idb_shim: ^2.0.0
-  # android/ios only
-  idb_sqflite: ^1.0.0
   image_size_getter:
     git:
       url: https://gitlab.com/nc-photos/dart_image_size_getter
@@ -88,8 +86,7 @@ dependencies:
   quiver: ^3.1.0
   screen_brightness:  ^0.2.1
   shared_preferences: ^2.0.8
-  # android/ios only
-  sqflite: ^2.0.0
+  sqlite3_flutter_libs: ^0.5.8
   synchronized: ^3.0.0
   tuple: ^2.0.0
   url_launcher: ^6.0.3
@@ -113,6 +110,8 @@ dependency_overrides:
 dev_dependencies:
   test: any
   bloc_test: any
+  build_runner: ^2.1.11
+  drift_dev: ^1.7.0
   flutter_lints: ^2.0.1
   # flutter_test:
   #   sdk: flutter

@@ -4,7 +4,6 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -82,6 +81,15 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         SelectableItemStreamListMixin<AlbumBrowser>,
         DraggableItemListMixin<AlbumBrowser>,
         AlbumBrowserMixin<AlbumBrowser> {
+  _AlbumBrowserState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    assert(PreProcessAlbum.require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.albumRepo);
+
   @override
   initState() {
     super.initState();
@@ -156,11 +164,10 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       if (newAlbum.copyWith(lastUpdated: OrNull(_album!.lastUpdated)) !=
           _album) {
         _log.info("[doneEditMode] Album modified: $newAlbum");
-        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
         setState(() {
           _album = newAlbum;
         });
-        UpdateAlbum(albumRepo)(
+        UpdateAlbum(_c.albumRepo)(
           widget.account,
           newAlbum,
         ).catchError((e, stackTrace) {
@@ -184,15 +191,14 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Future<void> _initAlbum() async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    var album = await albumRepo.get(widget.account, widget.album.albumFile!);
+    var album = await _c.albumRepo.get(widget.account, widget.album.albumFile!);
     if (widget.album.shares?.isNotEmpty == true) {
       try {
-        final file = await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
-            widget.account, album.albumFile!.path);
+        final file =
+            await LsSingleFile(_c)(widget.account, album.albumFile!.path);
         if (file.etag != album.albumFile!.etag) {
           _log.info("[_initAlbum] Album modified in remote, forcing download");
-          album = await albumRepo.get(widget.account, File(path: file.path));
+          album = await _c.albumRepo.get(widget.account, File(path: file.path));
         }
       } catch (e, stackTrace) {
         _log.warning("[_initAlbum] Failed while syncing remote album file", e,
@@ -815,7 +821,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<void> _setAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
-    final items = await PreProcessAlbum(AppDb())(widget.account, album);
+    final items = await PreProcessAlbum(_c)(widget.account, album);
     if (album.albumFile!.isOwned(widget.account.username)) {
       album = await _updateAlbumPostResync(album, items);
     }
@@ -835,8 +841,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   Future<Album> _updateAlbumPostResync(
       Album album, List<AlbumItem> items) async {
-    final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-    return await UpdateAlbumWithActualItems(albumRepo)(
+    return await UpdateAlbumWithActualItems(_c.albumRepo)(
         widget.account, album, items);
   }
 
@@ -865,6 +870,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   static List<AlbumItem> _getAlbumItemsOf(Album a) =>
       AlbumStaticProvider.of(a).items;
+
+  late final DiContainer _c;
 
   Album? _album;
   var _sortedItems = <AlbumItem>[];

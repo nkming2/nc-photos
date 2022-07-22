@@ -1,7 +1,7 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:test/test.dart';
@@ -35,9 +35,10 @@ Future<void> _removeAlbum() async {
     albumRepo: MockAlbumMemoryRepo([album1, album2]),
     fileRepo: MockFileMemoryRepo([albumFile1, albumFile2]),
     shareRepo: MockShareRepo(),
-    appDb: MockAppDb(),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
+  addTearDown(() => c.sqliteDb.close());
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile1.path));
@@ -65,11 +66,12 @@ Future<void> _removeSharedAlbum() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    appDb: MockAppDb(),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));
@@ -106,11 +108,12 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
       util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
     ]),
-    appDb: MockAppDb(),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFiles[0].path));
@@ -146,14 +149,19 @@ Future<void> _removeSharedAlbumResyncedFile() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-      await util.fillAppDb(obj, user1Account, user1Files);
-    }),
+    sqliteDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccountOf(user1Account);
+    await util.insertFiles(c.sqliteDb, account, files);
+
+    await util.insertFiles(c.sqliteDb, user1Account, user1Files);
+  });
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));

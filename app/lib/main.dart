@@ -9,7 +9,7 @@ import 'package:nc_photos/widget/my_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await app_init.initAppLaunch();
+  await app_init.init(app_init.InitIsolateType.main);
 
   if (platform_k.isMobile) {
     // reset orientation override just in case, see #59

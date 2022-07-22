@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:exifdart/exifdart.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/type.dart';
 
 class Exif with EquatableMixin {
@@ -96,10 +97,20 @@ class Exif with EquatableMixin {
   String? get model => data["Model"];
 
   /// 0x9003 DateTimeOriginal
-  DateTime? get dateTimeOriginal => data.containsKey("DateTimeOriginal") &&
-          (data["DateTimeOriginal"] as String).isNotEmpty
-      ? dateTimeFormat.parse(data["DateTimeOriginal"]).toUtc()
-      : null;
+  DateTime? get dateTimeOriginal {
+    try {
+      return data.containsKey("DateTimeOriginal") &&
+              (data["DateTimeOriginal"] as String).isNotEmpty
+          ? dateTimeFormat.parse(data["DateTimeOriginal"]).toUtc()
+          : null;
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[dateTimeOriginal] Non standard valie: ${data["DateTimeOriginal"]}",
+          e,
+          stackTrace);
+      return null;
+    }
+  }
 
   /// 0x829a ExposureTime
   Rational? get exposureTime => data["ExposureTime"];
@@ -127,4 +138,6 @@ class Exif with EquatableMixin {
   final Map<String, dynamic> data;
 
   static final dateTimeFormat = DateFormat("yyyy:MM:dd HH:mm:ss");
+
+  static final _log = Logger("entity.exif.Exif");
 }

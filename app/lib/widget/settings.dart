@@ -5,6 +5,8 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -12,9 +14,9 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
-import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -201,10 +203,27 @@ class _SettingsState extends State<Settings> {
                   description: L10n.global().settingsExperimentalDescription,
                   builder: () => _ExperimentalSettings(),
                 ),
+              if (_isShowDevSettings)
+                _buildSubSettings(
+                  context,
+                  leading: Icon(
+                    Icons.code_outlined,
+                    color: AppTheme.getUnfocusedIconColor(context),
+                  ),
+                  label: "Developer options",
+                  builder: () => _DevSettings(),
+                ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
                 title: Text(L10n.global().settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
+                onTap: () {
+                  if (!_isShowDevSettings && --_devSettingsUnlockCount <= 0) {
+                    setState(() {
+                      _isShowDevSettings = true;
+                    });
+                  }
+                },
               ),
               ListTile(
                 title: Text(L10n.global().settingsSourceCodeTitle),
@@ -444,6 +463,9 @@ class _SettingsState extends State<Settings> {
   late bool _isEnableExif;
   late bool _shouldProcessExifWifiOnly;
   late bool _isEnableMemoryAlbum;
+
+  var _devSettingsUnlockCount = 3;
+  var _isShowDevSettings = false;
 
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
@@ -1555,6 +1577,70 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
   late bool _isEnableSharedAlbum;
 
   static final _log = Logger("widget.settings._ExperimentalSettingsState");
+}
+
+class _DevSettings extends StatefulWidget {
+  @override
+  createState() => _DevSettingsState();
+}
+
+class _DevSettingsState extends State<_DevSettings> {
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          pinned: true,
+          title: Text("Developer options"),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              ListTile(
+                title: const Text("Clear cache database"),
+                onTap: () => _clearCacheDb(),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _clearCacheDb() async {
+    try {
+      final c = KiwiContainer().resolve<DiContainer>();
+      await c.sqliteDb.use((db) async {
+        await db.truncate();
+        final accounts = Pref().getAccounts3Or([]);
+        for (final a in accounts) {
+          await db.insertAccountOf(a);
+        }
+      });
+      SnackBarManager().showSnackBar(const SnackBar(
+        content: Text("Database cleared"),
+        duration: k.snackBarDurationShort,
+      ));
+    } catch (e, stackTrace) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+      _log.shout("[_clearCacheDb] Uncaught exception", e, stackTrace);
+    }
+  }
+
+  static final _log = Logger("widget.settings._DevSettingsState");
 }
 
 Widget _buildCaption(BuildContext context, String label) {

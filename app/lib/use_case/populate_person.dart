@@ -1,51 +1,38 @@
-import 'package:idb_shim/idb_client.dart';
+import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 
 class PopulatePerson {
-  const PopulatePerson(this.appDb);
+  PopulatePerson(this._c) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
 
   /// Return a list of files of the faces
   Future<List<File>> call(Account account, List<Face> faces) async {
-    return await appDb.use(
-      (db) => db.transaction(AppDb.file2StoreName, idbModeReadOnly),
-      (transaction) async {
-        final store = transaction.objectStore(AppDb.file2StoreName);
-        final products = <File>[];
-        for (final f in faces) {
-          try {
-            products.add(await _populateOne(account, f, fileStore: store));
-          } catch (e, stackTrace) {
-            _log.severe("[call] Failed populating file of face: ${f.fileId}", e,
-                stackTrace);
+    final fileIds = faces.map((f) => f.fileId).toList();
+    final dbFiles = await _c.sqliteDb.use((db) async {
+      return await db.completeFilesByFileIds(fileIds, appAccount: account);
+    });
+    final files = await dbFiles.convertToAppFile(account);
+    final fileMap = Map.fromEntries(files.map((f) => MapEntry(f.fileId, f)));
+    return faces
+        .map((f) {
+          final file = fileMap[f.fileId];
+          if (file == null) {
+            _log.warning(
+                "[call] File doesn't exist in DB, removed?: ${f.fileId}");
           }
-        }
-        return products;
-      },
-    );
+          return file;
+        })
+        .whereNotNull()
+        .toList();
   }
 
-  Future<File> _populateOne(
-    Account account,
-    Face face, {
-    required ObjectStore fileStore,
-  }) async {
-    final dbItem = await fileStore
-        .getObject(AppDbFile2Entry.toPrimaryKey(account, face.fileId)) as Map?;
-    if (dbItem == null) {
-      _log.warning(
-          "[_populateOne] File doesn't exist in DB, removed?: '${face.fileId}'");
-      throw CacheNotFoundException();
-    }
-    final dbEntry = AppDbFile2Entry.fromJson(dbItem.cast<String, dynamic>());
-    return dbEntry.file;
-  }
+  final DiContainer _c;
 
-  final AppDb appDb;
-
-  static final _log = Logger("use_case.populate_album.PopulatePerson");
+  static final _log = Logger("use_case.populate_person.PopulatePerson");
 }

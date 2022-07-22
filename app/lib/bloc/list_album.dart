@@ -5,8 +5,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
@@ -153,8 +151,8 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
       _log.info("[of] New bloc instance for account: $account");
       final c = KiwiContainer().resolve<DiContainer>();
       final offlineC = c.copyWith(
-        fileRepo: OrNull(FileRepo(FileAppDbDataSource(c.appDb))),
-        albumRepo: OrNull(AlbumRepo(AlbumAppDbDataSource(c.appDb))),
+        fileRepo: OrNull(c.fileRepoLocal),
+        albumRepo: OrNull(c.albumRepoLocal),
       );
       final bloc = ListAlbumBloc(c, offlineC);
       KiwiContainer().registerInstance<ListAlbumBloc>(bloc, name: name);

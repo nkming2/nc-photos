@@ -6,12 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
@@ -179,9 +177,9 @@ class ShareHandler {
       clearSelection?.call();
       isSelectionCleared = true;
 
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
-      final path = await _createDir(fileRepo, account, result.albumName);
-      await _copyFilesToDir(fileRepo, account, files, path);
+      final c = KiwiContainer().resolve<DiContainer>();
+      final path = await _createDir(c.fileRepo, account, result.albumName);
+      await _copyFilesToDir(c.fileRepo, account, files, path);
       controller?.close();
       return _shareFileAsLink(
         account,

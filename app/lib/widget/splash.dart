@@ -1,20 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/changelog.dart' as changelog;
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
-import 'package:nc_photos/use_case/compat/v37.dart';
-import 'package:nc_photos/use_case/db_compat/v5.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -47,7 +42,6 @@ class _SplashState extends State<Splash> {
     if (_shouldUpgrade()) {
       await _handleUpgrade();
     }
-    await _migrateDb();
     _initTimedExit();
   }
 
@@ -162,10 +156,6 @@ class _SplashState extends State<Splash> {
       showUpdateDialog();
       await _upgrade29(lastVersion);
     }
-    if (lastVersion < 370) {
-      showUpdateDialog();
-      await _upgrade37(lastVersion);
-    }
     if (isShowDialog) {
       Navigator.of(context).pop();
     }
@@ -178,53 +168,6 @@ class _SplashState extends State<Splash> {
     } catch (e, stackTrace) {
       _log.shout("[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
       // just leave the cache then
-    }
-  }
-
-  Future<void> _upgrade37(int lastVersion) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return CompatV37.setAppDbMigrationFlag(c.appDb);
-  }
-
-  Future<void> _migrateDb() async {
-    bool isShowDialog = false;
-    void showUpdateDialog() {
-      if (!isShowDialog) {
-        isShowDialog = true;
-        showDialog(
-          context: context,
-          builder: (_) => ProcessingDialog(
-            text: L10n.global().migrateDatabaseProcessingNotification,
-          ),
-        );
-      }
-    }
-
-    final c = KiwiContainer().resolve<DiContainer>();
-    if (await DbCompatV5.isNeedMigration(c.appDb)) {
-      showUpdateDialog();
-      try {
-        await DbCompatV5.migrate(c.appDb);
-      } catch (_) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().migrateDatabaseFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-      }
-    }
-    if (await CompatV37.isAppDbNeedMigration(c.appDb)) {
-      showUpdateDialog();
-      try {
-        await CompatV37.migrateAppDb(c.appDb);
-      } catch (_) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().migrateDatabaseFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-      }
-    }
-    if (isShowDialog) {
-      Navigator.of(context).pop();
     }
   }
 

@@ -4,9 +4,8 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
@@ -14,7 +13,9 @@ import 'package:nc_photos/use_case/update_missing_metadata.dart';
 
 /// Task to update metadata for missing files
 class MetadataTask {
-  MetadataTask(this.account, this.pref);
+  MetadataTask(this._c, this.account, this.pref) : assert(require(_c));
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   @override
   toString() {
@@ -28,12 +29,11 @@ class MetadataTask {
       final shareFolder =
           File(path: file_util.unstripPath(account, pref.getShareFolderOr()));
       bool hasScanShareFolder = false;
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
       for (final r in account.roots) {
         final dir = File(path: file_util.unstripPath(account, r));
         hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
         final op = UpdateMissingMetadata(
-            fileRepo, const _UpdateMissingMetadataConfigProvider());
+            _c.fileRepo, const _UpdateMissingMetadataConfigProvider());
         await for (final _ in op(account, dir)) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
@@ -44,7 +44,7 @@ class MetadataTask {
       }
       if (!hasScanShareFolder) {
         final op = UpdateMissingMetadata(
-            fileRepo, const _UpdateMissingMetadataConfigProvider());
+            _c.fileRepo, const _UpdateMissingMetadataConfigProvider());
         await for (final _ in op(
           account,
           shareFolder,
@@ -64,6 +64,8 @@ class MetadataTask {
           .fire(const MetadataTaskStateChangedEvent(MetadataTaskState.idle));
     }
   }
+
+  final DiContainer _c;
 
   final Account account;
   final AccountPref pref;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -37,6 +36,14 @@ class NewAlbumDialog extends StatefulWidget {
 }
 
 class _NewAlbumDialogState extends State<NewAlbumDialog> {
+  _NewAlbumDialogState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.albumRepo);
+
   @override
   initState() {
     super.initState();
@@ -139,8 +146,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
       );
       _log.info("[_onConfirmStaticAlbum] Creating static album: $album");
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final newAlbum = await CreateAlbum(albumRepo)(widget.account, album);
+      final newAlbum = await CreateAlbum(_c.albumRepo)(widget.account, album);
       Navigator.of(context).pop(newAlbum);
     } catch (e, stacktrace) {
       _log.shout("[_onConfirmStaticAlbum] Failed", e, stacktrace);
@@ -173,8 +179,7 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
       );
       _log.info("[_onConfirmDirAlbum] Creating dir album: $album");
-      final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-      final newAlbum = await CreateAlbum(albumRepo)(widget.account, album);
+      final newAlbum = await CreateAlbum(_c.albumRepo)(widget.account, album);
       Navigator.of(context).pop(newAlbum);
     } catch (e, stacktrace) {
       _log.shout("[_onConfirmDirAlbum] Failed", e, stacktrace);
@@ -219,6 +224,8 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
       Navigator.of(context).pop();
     }
   }
+
+  late final DiContainer _c;
 
   final _formKey = GlobalKey<FormState>();
   var _provider = _Provider.static;

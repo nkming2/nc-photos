@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
@@ -379,7 +378,7 @@ class File with EquatableMixin {
     String? path,
     int? contentLength,
     String? contentType,
-    String? etag,
+    OrNull<String>? etag,
     DateTime? lastModified,
     bool? isCollection,
     int? usedBytes,
@@ -398,7 +397,7 @@ class File with EquatableMixin {
       path: path ?? this.path,
       contentLength: contentLength ?? this.contentLength,
       contentType: contentType ?? this.contentType,
-      etag: etag ?? this.etag,
+      etag: etag == null ? this.etag : etag.obj,
       lastModified: lastModified ?? this.lastModified,
       isCollection: isCollection ?? this.isCollection,
       usedBytes: usedBytes ?? this.usedBytes,
@@ -447,7 +446,6 @@ class File with EquatableMixin {
   final bool? isCollection;
   final int? usedBytes;
   final bool? hasPreview;
-  // maybe null when loaded from old cache
   final int? fileId;
   final bool? isFavorite;
   final CiString? ownerId;
@@ -461,19 +459,11 @@ class File with EquatableMixin {
 }
 
 extension FileExtension on File {
-  DateTime get bestDateTime {
-    try {
-      return overrideDateTime ??
-          metadata?.exif?.dateTimeOriginal ??
-          lastModified ??
-          DateTime.now().toUtc();
-    } catch (e) {
-      _log.severe(
-          "[bestDateTime] Non standard EXIF DateTimeOriginal '${metadata?.exif?.data["DateTimeOriginal"]}' for file: ${logFilename(path)}",
-          e);
-      return lastModified ?? DateTime.now().toUtc();
-    }
-  }
+  DateTime get bestDateTime =>
+      overrideDateTime ??
+      metadata?.exif?.dateTimeOriginal ??
+      lastModified ??
+      DateTime.now().toUtc();
 
   bool isOwned(CiString username) => ownerId == null || ownerId == username;
 

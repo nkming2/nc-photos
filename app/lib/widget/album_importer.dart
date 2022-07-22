@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_importable_album.dart';
 import 'package:nc_photos/di_container.dart';
@@ -54,6 +53,15 @@ class AlbumImporter extends StatefulWidget {
 }
 
 class _AlbumImporterState extends State<AlbumImporter> {
+  _AlbumImporterState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    assert(PreProcessAlbum.require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.albumRepo);
+
   @override
   initState() {
     super.initState();
@@ -236,12 +244,11 @@ class _AlbumImporterState extends State<AlbumImporter> {
         );
         _log.info("[_createAllAlbums] Creating dir album: $album");
 
-        final items = await PreProcessAlbum(AppDb())(widget.account, album);
+        final items = await PreProcessAlbum(_c)(widget.account, album);
         album = await UpdateAlbumWithActualItems(null)(
             widget.account, album, items);
 
-        final albumRepo = AlbumRepo(AlbumCachedDataSource(AppDb()));
-        await CreateAlbum(albumRepo)(widget.account, album);
+        await CreateAlbum(_c.albumRepo)(widget.account, album);
       } catch (e, stacktrace) {
         _log.shout(
             "[_createAllAlbums] Failed creating dir album", e, stacktrace);
@@ -260,6 +267,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
         .toList();
   }
 
+  late final DiContainer _c;
   late ListImportableAlbumBloc _bloc;
 
   var _backingFiles = <File>[];

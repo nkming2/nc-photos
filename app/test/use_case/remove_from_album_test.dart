@@ -5,7 +5,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:test/test.dart';
@@ -52,10 +52,13 @@ Future<void> _removeLastFile() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, file1]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
@@ -100,10 +103,13 @@ Future<void> _remove1OfNFiles() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(account,
       c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
@@ -119,7 +125,7 @@ Future<void> _remove1OfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1], fileItems[2]],
+          items: [fileItems[1].minimize(), fileItems[2].minimize()],
           latestItemTime: files[2].lastModified,
         ),
         coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
@@ -154,10 +160,13 @@ Future<void> _removeLatestOfNFiles() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(account,
       c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
@@ -173,7 +182,7 @@ Future<void> _removeLatestOfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1], fileItems[2]],
+          items: [fileItems[1].minimize(), fileItems[2].minimize()],
           latestItemTime: files[1].lastModified,
         ),
         coverProvider: AlbumAutoCoverProvider(coverFile: files[1]),
@@ -205,10 +214,13 @@ Future<void> _removeManualCoverFile() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
     shareRepo: MockShareRepo(),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(account,
       c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItems[0]]);
@@ -224,7 +236,7 @@ Future<void> _removeManualCoverFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1], fileItems[2]],
+          items: [fileItems[1].minimize(), fileItems[2].minimize()],
           latestItemTime: files[2].lastModified,
         ),
         coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
@@ -256,10 +268,13 @@ Future<void> _removeFromSharedAlbumOwned() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: file1, shareWith: "user1"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
@@ -299,10 +314,14 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
       util.buildShare(
           id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, user1Account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccountOf(user1Account);
+    await util.insertFiles(c.sqliteDb, user1Account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
@@ -343,10 +362,13 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
       util.buildShare(id: "1", file: file1, shareWith: "user1"),
       util.buildShare(id: "2", file: file1, shareWith: "user2"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
@@ -389,10 +411,13 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
       util.buildShare(id: "2", file: files[0], shareWith: "user2"),
       util.buildShare(id: "3", file: album2File, shareWith: "user1"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(account,
       c.albumMemoryRepo.findAlbumByPath(album1File.path), [album1fileItems[0]]);
@@ -432,10 +457,13 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
       util.buildShare(id: "2", file: file1, shareWith: "user1"),
       util.buildShare(id: "3", file: file1, shareWith: "user2"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);
@@ -479,10 +507,13 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
       util.buildShare(
           id: "3", uidOwner: "user1", file: file1, shareWith: "user2"),
     ]),
-    appDb: await MockAppDb().applyFuture((obj) async {
-      await util.fillAppDb(obj, account, files);
-    }),
+    sqliteDb: util.buildTestDb(),
   );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+  });
 
   await RemoveFromAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path), [fileItem1]);

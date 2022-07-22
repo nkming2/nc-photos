@@ -3,13 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations_en.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
@@ -69,7 +69,7 @@ class _Service {
     final service = FlutterBackgroundService();
     service.setForegroundMode(true);
 
-    await app_init.initAppLaunch();
+    await app_init.init(app_init.InitIsolateType.service);
     await _L10n().init();
 
     _log.info("[call] Service started");
@@ -87,6 +87,7 @@ class _Service {
     }
     onCancelSubscription.cancel();
     onDataSubscription.cancel();
+    await KiwiContainer().resolve<DiContainer>().sqliteDb.close();
     service.stopBackgroundService();
     _log.info("[call] Service stopped");
   }
@@ -235,12 +236,12 @@ class _MetadataTask {
     final shareFolder = File(
         path: file_util.unstripPath(account, accountPref.getShareFolderOr()));
     bool hasScanShareFolder = false;
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb()));
+    final c = KiwiContainer().resolve<DiContainer>();
     for (final r in account.roots) {
       final dir = File(path: file_util.unstripPath(account, r));
       hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
       final updater = UpdateMissingMetadata(
-          fileRepo, const _UpdateMissingMetadataConfigProvider());
+          c.fileRepo, const _UpdateMissingMetadataConfigProvider());
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         updater.stop();
@@ -263,7 +264,7 @@ class _MetadataTask {
     }
     if (!hasScanShareFolder) {
       final shareUpdater = UpdateMissingMetadata(
-          fileRepo, const _UpdateMissingMetadataConfigProvider());
+          c.fileRepo, const _UpdateMissingMetadataConfigProvider());
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         shareUpdater.stop();

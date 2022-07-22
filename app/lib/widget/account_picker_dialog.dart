@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
@@ -154,6 +157,26 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
     Pref()
       ..setAccounts3(accounts)
       ..setCurrentAccountIndex(newAccountIndex);
+
+    // check if the same account (server + userId) still exists in known
+    // accounts
+    if (!accounts
+        .any((a) => a.url == account.url && a.userId == account.userId)) {
+      // account removed, clear cache db
+      await _removeAccountFromDb(account);
+    }
+  }
+
+  Future<void> _removeAccountFromDb(Account account) async {
+    try {
+      final c = KiwiContainer().resolve<DiContainer>();
+      await c.sqliteDb.use((db) async {
+        await db.deleteAccountOf(account);
+      });
+    } catch (e, stackTrace) {
+      _log.shout("[_removeAccountFromDb] Failed while removing account from db",
+          e, stackTrace);
+    }
   }
 
   late List<Account> _accounts;

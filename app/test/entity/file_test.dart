@@ -752,7 +752,7 @@ void main() {
       });
 
       test("etag", () {
-        final file = src.copyWith(etag: "000");
+        final file = src.copyWith(etag: OrNull("000"));
         expect(
             file,
             File(

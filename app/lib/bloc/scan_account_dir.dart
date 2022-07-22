@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/app_db.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
@@ -108,6 +107,11 @@ class ScanAccountDirBlocInconsistent extends ScanAccountDirBlocState {
 class ScanAccountDirBloc
     extends Bloc<ScanAccountDirBlocEvent, ScanAccountDirBlocState> {
   ScanAccountDirBloc._(this.account) : super(const ScanAccountDirBlocInit()) {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    assert(ScanDirOffline.require(c));
+    _c = c;
+
     _fileRemovedEventListener.begin();
     _filePropertyUpdatedEventListener.begin();
     _fileTrashbinRestoredEventListener.begin();
@@ -131,6 +135,8 @@ class ScanAccountDirBloc
       });
     }));
   }
+
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   static ScanAccountDirBloc of(Account account) {
     final name =
@@ -317,12 +323,11 @@ class ScanAccountDirBloc
   }
 
   Future<List<File>> _queryOffline(ScanAccountDirBlocQueryBase ev) async {
-    final c = KiwiContainer().resolve<DiContainer>();
     final files = <File>[];
     for (final r in account.roots) {
       try {
         final dir = File(path: file_util.unstripPath(account, r));
-        files.addAll(await ScanDirOffline(c)(account, dir,
+        files.addAll(await ScanDirOffline(_c)(account, dir,
             isOnlySupportedFormat: false));
       } catch (e, stackTrace) {
         _log.shout(
@@ -341,11 +346,12 @@ class ScanAccountDirBloc
     final cacheMap = FileForwardCacheManager.prepareFileMap(cache);
     {
       final stopwatch = Stopwatch()..start();
-      final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
-          forwardCacheManager: FileForwardCacheManager(AppDb(), cacheMap)));
-      final fileRepoNoCache = FileRepo(FileCachedDataSource(AppDb()));
+      final fileRepo = FileRepo(FileCachedDataSource(
+        _c,
+        forwardCacheManager: FileForwardCacheManager(_c, cacheMap),
+      ));
       await for (final event in _queryWithFileRepo(fileRepo, ev,
-          fileRepoForShareDir: fileRepoNoCache)) {
+          fileRepoForShareDir: _c.fileRepo)) {
         if (event is ExceptionEvent) {
           _log.shout("[_queryOnline] Exception while request (1st pass)",
               event.error, event.stackTrace);
@@ -378,7 +384,8 @@ class ScanAccountDirBloc
           emit(ScanAccountDirBlocLoading(files));
         }
 
-        files = await _queryOnlinePass2(ev, cacheMap, files);
+        // files = await _queryOnlinePass2(ev, cacheMap, files);
+        files = await _queryOnlinePass2(ev, {}, files);
       }
     } catch (e, stackTrace) {
       _log.shout(
@@ -394,9 +401,11 @@ class ScanAccountDirBloc
     // files
     final pass2CacheMap = CombinedMapView(
         [FileForwardCacheManager.prepareFileMap(pass1Files), cacheMap]);
-    final fileRepo = FileRepo(FileCachedDataSource(AppDb(),
-        shouldCheckCache: true,
-        forwardCacheManager: FileForwardCacheManager(AppDb(), pass2CacheMap)));
+    final fileRepo = FileRepo(FileCachedDataSource(
+      _c,
+      shouldCheckCache: true,
+      forwardCacheManager: FileForwardCacheManager(_c, pass2CacheMap),
+    ));
     final remoteTouchEtag =
         await touchTokenManager.getRemoteRootEtag(fileRepo, account);
     if (remoteTouchEtag == null) {
@@ -412,7 +421,7 @@ class ScanAccountDirBloc
 
     final stopwatch = Stopwatch()..start();
     final fileRepoNoCache =
-        FileRepo(FileCachedDataSource(AppDb(), shouldCheckCache: true));
+        FileRepo(FileCachedDataSource(_c, shouldCheckCache: true));
     final newFiles = <File>[];
     await for (final event in _queryWithFileRepo(fileRepo, ev,
         fileRepoForShareDir: fileRepoNoCache)) {
@@ -488,6 +497,8 @@ class ScanAccountDirBloc
     }
     return false;
   }
+
+  late final DiContainer _c;
 
   final Account account;
 

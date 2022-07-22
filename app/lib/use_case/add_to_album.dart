@@ -17,12 +17,12 @@ import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 class AddToAlbum {
   AddToAlbum(this._c)
       : assert(require(_c)),
-        assert(ListShare.require(_c));
+        assert(ListShare.require(_c)),
+        assert(PreProcessAlbum.require(_c));
 
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.albumRepo) &&
-      DiContainer.has(c, DiType.shareRepo) &&
-      DiContainer.has(c, DiType.appDb);
+      DiContainer.has(c, DiType.shareRepo);
 
   /// Add a list of AlbumItems to [album]
   Future<Album> call(
@@ -30,7 +30,7 @@ class AddToAlbum {
     _log.info("[call] Add ${items.length} items to album '${album.name}'");
     assert(album.provider is AlbumStaticProvider);
     // resync is needed to work out album cover and latest item
-    final oldItems = await PreProcessAlbum(_c.appDb)(account, album);
+    final oldItems = await PreProcessAlbum(_c)(account, album);
     final itemSet = oldItems
         .map((e) => OverrideComparator<AlbumItem>(
             e, _isItemFileEqual, _getItemHashCode))
