@@ -6,11 +6,13 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
@@ -139,6 +141,13 @@ class _ImageEditorState extends State<ImageEditor> {
               tooltip: L10n.global().saveTooltip,
               onPressed: () => _onSavePressed(context),
             ),
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            tooltip: L10n.global().helpTooltip,
+            onPressed: () {
+              launch(help_util.editPhotosUrl);
+            },
+          ),
         ],
       );
 
