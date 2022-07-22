@@ -277,7 +277,7 @@ class _MetadataTask {
           account,
           shareFolder,
           isRecursive: false,
-          filter: (f) => f.ownerId != account.username,
+          filter: (f) => f.ownerId != account.userId,
         )) {
           if (ev is File) {
             _onFileProcessed(ev);

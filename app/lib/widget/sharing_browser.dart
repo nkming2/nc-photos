@@ -202,7 +202,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
               ),
             ),
       label: shares.first.share.filename,
-      description: shares.first.share.uidOwner == widget.account.username
+      description: shares.first.share.uidOwner == widget.account.userId
           ? L10n.global().fileLastSharedDescription(dateStr)
           : L10n.global().fileLastSharedByOthersDescription(
               shares.first.share.displaynameOwner, dateStr),
@@ -260,7 +260,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
               ),
             ),
       label: firstItem.album.name,
-      description: shares.first.share.uidOwner == widget.account.username
+      description: shares.first.share.uidOwner == widget.account.userId
           ? L10n.global().fileLastSharedDescription(dateStr)
           : L10n.global().albumLastSharedByOthersDescription(
               shares.first.share.displaynameOwner, dateStr),
@@ -307,7 +307,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
     // group shares of the same file
     final map = <String, List<ListSharingItem>>{};
     for (final i in items) {
-      final isSharedByMe = (i.share.uidOwner == widget.account.username);
+      final isSharedByMe = (i.share.uidOwner == widget.account.userId);
       final groupKey = "${i.share.path}?$isSharedByMe";
       map[groupKey] ??= <ListSharingItem>[];
       map[groupKey]!.add(i);

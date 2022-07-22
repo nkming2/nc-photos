@@ -166,7 +166,7 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
       } else {
         try {
           final f = SqliteFileConverter.fromSql(
-              account.homeDir.toString(), item["file"]);
+              account.userId.toString(), item["file"]);
           yield SqliteAlbumConverter.fromSql(
               item["album"], f, item["shares"] ?? []);
         } catch (e, stackTrace) {

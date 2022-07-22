@@ -2,9 +2,8 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
-import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
 
@@ -14,9 +13,9 @@ class Account with EquatableMixin {
     this.id,
     this.scheme,
     String address,
-    this.username,
+    this.userId,
+    this.username2,
     this.password,
-    this.altHomeDir,
     List<String> roots,
   )   : address = address.trimRightAny("/"),
         _roots = roots.map((e) => e.trimRightAny("/")).toList() {
@@ -29,18 +28,18 @@ class Account with EquatableMixin {
     String? id,
     String? scheme,
     String? address,
-    CiString? username,
+    CiString? userId,
+    String? username2,
     String? password,
-    OrNull<CiString>? altHomeDir,
     List<String>? roots,
   }) {
     return Account(
       id ?? this.id,
       scheme ?? this.scheme,
       address ?? this.address,
-      username ?? this.username,
+      userId ?? this.userId,
+      username2 ?? this.username2,
       password ?? this.password,
-      altHomeDir == null ? this.altHomeDir : altHomeDir.obj,
       roots ?? List.of(_roots),
     );
   }
@@ -57,49 +56,68 @@ class Account with EquatableMixin {
         "id: '$id', "
         "scheme: '$scheme', "
         "address: '${kDebugMode ? address : "***"}', "
-        "username: '${kDebugMode ? username : "***"}', "
+        "userId: '${kDebugMode ? userId : "***"}', "
+        "username2: '${kDebugMode ? username2 : "***"}', "
         "password: '${password.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
-        "altHomeDir: '${altHomeDir == null || kDebugMode ? altHomeDir : "***"}', "
         "roots: List {'${roots.join('\', \'')}'}, "
         "}";
   }
 
-  Account.fromJson(JsonObj json)
-      : id = json["id"],
-        scheme = json["scheme"],
-        address = json["address"],
-        username = CiString(json["username"]),
-        password = json["password"],
-        altHomeDir = (json["altHomeDir"] as String?)?.run((v) => CiString(v)),
-        _roots = json["roots"].cast<String>();
+  static Account? fromJson(
+    JsonObj json, {
+    required AccountUpgraderV1? upgraderV1,
+  }) {
+    final jsonVersion = json["version"] ?? 1;
+    JsonObj? result = json;
+    if (jsonVersion < 2) {
+      result = upgraderV1?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    return Account(
+      result["id"],
+      result["scheme"],
+      result["address"],
+      CiString(result["userId"]),
+      result["username2"],
+      result["password"],
+      result["roots"].cast<String>(),
+    );
+  }
 
   JsonObj toJson() => {
+        "version": version,
         "id": id,
         "scheme": scheme,
         "address": address,
-        "username": username.toString(),
+        "userId": userId.toString(),
+        "username2": username2,
         "password": password,
-        "altHomeDir": altHomeDir?.toString(),
         "roots": _roots,
       };
 
   @override
-  get props => [id, scheme, address, username, password, altHomeDir, _roots];
+  get props => [id, scheme, address, userId, username2, password, _roots];
 
   List<String> get roots => _roots;
-
-  CiString get homeDir => altHomeDir ?? username;
 
   final String id;
   final String scheme;
   final String address;
-  final CiString username;
+  // For non LDAP users, this is the username used to sign in
+  final CiString userId;
+  // Username used to sign in. For non-LDAP users, this is identical to userId
+  final String username2;
   final String password;
 
-  /// Name of the user home dir. Normally [username] is used as the home dir
-  /// name, but for LDAP users, their home dir might be named differently
-  final CiString? altHomeDir;
   final List<String> _roots;
+
+  /// versioning of this class, use to upgrade old persisted accounts
+  static const version = 2;
+
+  static final _log = Logger("account.Account");
 }
 
 extension AccountExtension on Account {
@@ -113,6 +131,34 @@ extension AccountExtension on Account {
   bool compareServerIdentity(Account other) {
     return scheme == other.scheme &&
         address == other.address &&
-        username == other.username;
+        userId == other.userId;
   }
+}
+
+abstract class AccountUpgrader {
+  JsonObj? call(JsonObj json);
+}
+
+class AccountUpgraderV1 implements AccountUpgrader {
+  const AccountUpgraderV1({
+    this.logAccountId,
+  });
+
+  @override
+  call(JsonObj json) {
+    // clarify user id and display name v1
+    _log.fine("[call] Upgrade v1 Account: $logAccountId");
+    final result = JsonObj.of(json);
+    result["userId"] = json["altHomeDir"] ?? json["username"];
+    result["username2"] = json["username"];
+    result
+      ..remove("username")
+      ..remove("altHomeDir");
+    return result;
+  }
+
+  /// Account ID for logging only
+  final String? logAccountId;
+
+  static final _log = Logger("account.AccountUpgraderV1");
 }

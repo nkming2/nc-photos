@@ -39,6 +39,7 @@ class FilesBuilder {
     bool isCollection = false,
     bool hasPreview = true,
     String ownerId = "admin",
+    String? ownerDisplayName,
     Metadata? metadata,
   }) {
     files.add(File(
@@ -52,6 +53,7 @@ class FilesBuilder {
       hasPreview: hasPreview,
       fileId: fileId++,
       ownerId: ownerId.toCi(),
+      ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
       metadata: metadata,
     ));
   }
@@ -64,6 +66,7 @@ class FilesBuilder {
     DateTime? lastModified,
     bool hasPreview = true,
     String ownerId = "admin",
+    String? ownerDisplayName,
   }) =>
       add(
         relativePath,
@@ -73,6 +76,7 @@ class FilesBuilder {
         lastModified: lastModified,
         hasPreview: hasPreview,
         ownerId: ownerId,
+        ownerDisplayName: ownerDisplayName,
       );
 
   void addJpeg(
@@ -82,6 +86,7 @@ class FilesBuilder {
     DateTime? lastModified,
     bool hasPreview = true,
     String ownerId = "admin",
+    String? ownerDisplayName,
     OrNull<Metadata>? metadata,
   }) =>
       add(
@@ -92,6 +97,7 @@ class FilesBuilder {
         lastModified: lastModified,
         hasPreview: hasPreview,
         ownerId: ownerId,
+        ownerDisplayName: ownerDisplayName,
         metadata: metadata?.obj ??
             Metadata(
               lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
@@ -106,6 +112,7 @@ class FilesBuilder {
     String? etag,
     DateTime? lastModified,
     String ownerId = "admin",
+    String? ownerDisplayName,
   }) =>
       add(
         relativePath,
@@ -114,6 +121,7 @@ class FilesBuilder {
         isCollection: true,
         hasPreview: false,
         ownerId: ownerId,
+        ownerDisplayName: ownerDisplayName,
       );
 
   void addAlbumJson(
@@ -123,6 +131,7 @@ class FilesBuilder {
     String? etag,
     DateTime? lastModified,
     String ownerId = "admin",
+    String? ownerDisplayName,
   }) =>
       add(
         "$homeDir/.com.nkming.nc_photos/albums/$filename.nc_album.json",
@@ -132,6 +141,7 @@ class FilesBuilder {
         lastModified: lastModified,
         hasPreview: false,
         ownerId: ownerId,
+        ownerDisplayName: ownerDisplayName,
       );
 
   final files = <File>[];
@@ -286,11 +296,12 @@ Account buildAccount({
   String id = "123456-000000",
   String scheme = "http",
   String address = "example.com",
-  String username = "admin",
+  String userId = "admin",
+  String username2 = "admin",
   String password = "pass",
   List<String> roots = const [""],
 }) =>
-    Account(id, scheme, address, username.toCi(), password, null, roots);
+    Account(id, scheme, address, userId.toCi(), username2, password, roots);
 
 /// Build a mock [File] pointing to a album JSON file
 ///
@@ -301,6 +312,7 @@ File buildAlbumFile({
   DateTime? lastModified,
   required int fileId,
   String ownerId = "admin",
+  String? ownerDisplayName,
 }) =>
     File(
       path: path,
@@ -311,6 +323,7 @@ File buildAlbumFile({
       hasPreview: false,
       fileId: fileId,
       ownerId: ownerId.toCi(),
+      ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
     );
 
 String buildAlbumFilePath(
@@ -340,6 +353,7 @@ File buildJpegFile({
   bool hasPreview = true,
   required int fileId,
   String ownerId = "admin",
+  String? ownerDisplayName,
 }) =>
     File(
       path: path,
@@ -350,6 +364,7 @@ File buildJpegFile({
       hasPreview: hasPreview,
       fileId: fileId,
       ownerId: ownerId.toCi(),
+      ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
     );
 
 Share buildShare({

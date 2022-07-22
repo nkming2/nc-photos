@@ -202,9 +202,9 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
 
       final albumShares = await () async {
         var temp = (ev.album.shares ?? [])
-            .where((s) => s.userId != ev.account.username)
+            .where((s) => s.userId != ev.account.userId)
             .toList();
-        if (ev.album.albumFile!.ownerId != ev.account.username) {
+        if (ev.album.albumFile!.ownerId != ev.account.userId) {
           // add owner if the album is not owned by this account
           final ownerSharee = (await ListSharee(_c.shareeRepo)(ev.account))
               .firstWhere((s) => s.shareWith == ev.album.albumFile!.ownerId);
@@ -241,7 +241,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     Map<CiString, AlbumShare> albumShares,
     List<Object> errors,
   ) async {
-    if (!album.albumFile!.isOwned(account.username)) {
+    if (!album.albumFile!.isOwned(account.userId)) {
       // album file is always managed by the owner
       return [];
     }
@@ -335,7 +335,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     var missings = managedAlbumSharees
         .difference(allSharees)
         // Can't share to ourselves or the file owner
-        .where((s) => s != account.username && s != fileItem.file.ownerId)
+        .where((s) => s != account.userId && s != fileItem.file.ownerId)
         .toList();
     _log.info(
         "[_processSingleFileItem] Missing shares: ${missings.toReadableString()} for file: ${logFilename(fileItem.file.path)}");
@@ -348,7 +348,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     // check owned shares against all album sharees. Use all album sharees such
     // that non-managed sharees will not be listed
     final ownedSharees = shares
-        .where((s) => s.uidOwner == account.username)
+        .where((s) => s.uidOwner == account.userId)
         .map((s) => s.shareWith!)
         .toSet();
     final extras = ownedSharees.difference(albumSharees);
@@ -375,13 +375,13 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
 
   bool _isItemSharePairOfInterest(
       Account account, Album album, AlbumItem item, AlbumShare share) {
-    if (album.albumFile!.isOwned(account.username)) {
+    if (album.albumFile!.isOwned(account.userId)) {
       // album owner
-      return item.addedBy == account.username ||
+      return item.addedBy == account.userId ||
           item.addedAt.isBefore(share.sharedAt);
     } else {
       // non album owner
-      if (item.addedBy != account.username) {
+      if (item.addedBy != account.userId) {
         return false;
       } else {
         return share.userId == album.albumFile!.ownerId ||

@@ -149,7 +149,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     onPressed: () => _onRemoveFromAlbumPressed(context),
                   ),
                 if (widget.album != null &&
-                    widget.album!.albumFile?.isOwned(widget.account.username) ==
+                    widget.album!.albumFile?.isOwned(widget.account.userId) ==
                         true)
                   _DetailPaneButton(
                     icon: Icons.photo_album_outlined,
@@ -195,7 +195,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             title: Text(path_lib.basenameWithoutExtension(widget.file.path)),
             subtitle: Text(widget.file.strippedPath),
           ),
-          if (!widget.file.isOwned(widget.account.username))
+          if (!widget.file.isOwned(widget.account.userId))
             ListTile(
               leading: ListTileCenterLeading(
                 child: Icon(
@@ -203,7 +203,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   color: AppTheme.getSecondaryTextColor(context),
                 ),
               ),
-              title: Text(widget.file.ownerId!.toString()),
+              title: Text(widget.file.ownerDisplayName ??
+                  widget.file.ownerId!.toString()),
               subtitle: Text(L10n.global().fileSharedByDescription),
             ),
           if (_tags.isNotEmpty)
@@ -509,7 +510,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         widget.album!.provider is! AlbumStaticProvider) {
       return false;
     }
-    if (widget.album!.albumFile?.isOwned(widget.account.username) == true) {
+    if (widget.album!.albumFile?.isOwned(widget.account.userId) == true) {
       return true;
     }
     try {
@@ -518,7 +519,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           .whereType<AlbumFileItem>()
           .firstWhere(
               (element) => element.file.compareServerIdentity(widget.file));
-      if (thisItem.addedBy == widget.account.username) {
+      if (thisItem.addedBy == widget.account.userId) {
         return true;
       }
     } catch (_) {}

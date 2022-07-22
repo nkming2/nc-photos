@@ -51,7 +51,7 @@ class PopulateAlbum {
           continue;
         }
         products.addAll((result as List).cast<File>().map((f) => AlbumFileItem(
-              addedBy: account.username,
+              addedBy: account.userId,
               addedAt: DateTime.now(),
               file: f,
             )));
@@ -68,7 +68,7 @@ class PopulateAlbum {
     final c = KiwiContainer().resolve<DiContainer>();
     final files = await ListTaggedFile(c)(account, provider.tags);
     products.addAll(files.map((f) => AlbumFileItem(
-          addedBy: account.username,
+          addedBy: account.userId,
           addedAt: DateTime.now(),
           file: f,
         )));
@@ -87,7 +87,7 @@ class PopulateAlbum {
     return files
         .where((f) => file_util.isSupportedFormat(f))
         .map((f) => AlbumFileItem(
-              addedBy: account.username,
+              addedBy: account.userId,
               addedAt: DateTime.now(),
               file: f,
             ))

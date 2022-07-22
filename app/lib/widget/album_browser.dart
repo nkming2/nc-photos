@@ -133,7 +133,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   @override
   @protected
-  get canEdit => _album?.albumFile?.isOwned(widget.account.username) == true;
+  get canEdit => _album?.albumFile?.isOwned(widget.account.userId) == true;
 
   @override
   enterEditMode() {
@@ -274,7 +274,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         widget.account,
         _album!,
         actions: [
-          if (_album!.albumFile!.isOwned(widget.account.username) &&
+          if (_album!.albumFile!.isOwned(widget.account.userId) &&
               Pref().isLabEnableSharedAlbumOr(false))
             IconButton(
               onPressed: () => _onSharePressed(context),
@@ -462,8 +462,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         .takeIndex(selectedIndexes)
         // can only remove owned files
         .where((element) =>
-            _album!.albumFile!.isOwned(widget.account.username) == true ||
-            element.addedBy == widget.account.username)
+            _album!.albumFile!.isOwned(widget.account.userId) == true ||
+            element.addedBy == widget.account.userId)
         .toList();
     setState(() {
       clearSelectedItems();
@@ -668,7 +668,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         provider: AlbumStaticProvider.of(_editAlbum!).copyWith(
           items: [
             AlbumLabelItem(
-              addedBy: widget.account.username,
+              addedBy: widget.account.userId,
               addedAt: DateTime.now(),
               text: value,
             ),
@@ -822,7 +822,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   Future<void> _setAlbum(Album album) async {
     assert(album.provider is AlbumStaticProvider);
     final items = await PreProcessAlbum(_c)(widget.account, album);
-    if (album.albumFile!.isOwned(widget.account.username)) {
+    if (album.albumFile!.isOwned(widget.account.userId)) {
       album = await _updateAlbumPostResync(album, items);
     }
     album = album.copyWith(
@@ -858,14 +858,13 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   bool get _canRemoveSelection {
-    if (_album!.albumFile!.isOwned(widget.account.username) == true) {
+    if (_album!.albumFile!.isOwned(widget.account.userId) == true) {
       return true;
     }
     final selectedIndexes =
         selectedListItems.whereType<_ListItem>().map((e) => e.index).toList();
     final selectedItemsIt = _sortedItems.takeIndex(selectedIndexes);
-    return selectedItemsIt
-        .any((item) => item.addedBy == widget.account.username);
+    return selectedItemsIt.any((item) => item.addedBy == widget.account.userId);
   }
 
   static List<AlbumItem> _getAlbumItemsOf(Album a) =>

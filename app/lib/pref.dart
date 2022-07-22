@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/mobile/platform.dart'
@@ -26,7 +28,19 @@ class Pref {
 
   List<Account>? getAccounts3() {
     final jsonObjs = provider.getStringList(PrefKey.accounts3);
-    return jsonObjs?.map((e) => Account.fromJson(jsonDecode(e))).toList();
+    return jsonObjs
+        ?.map((e) => Account.fromJson(
+              jsonDecode(e),
+              upgraderV1: const AccountUpgraderV1(),
+            ))
+        .where((e) {
+          if (e == null) {
+            _log.shout("[getAccounts3] Failed upgrading account");
+          }
+          return true;
+        })
+        .whereNotNull()
+        .toList();
   }
 
   List<Account> getAccounts3Or(List<Account> def) => getAccounts3() ?? def;
@@ -235,6 +249,8 @@ class Pref {
   final PrefProvider provider;
 
   static Pref? _inst;
+
+  static final _log = Logger("pref.Pref");
 }
 
 class AccountPref {

@@ -45,7 +45,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         child: ListTile(
           dense: true,
           title: Text(label ?? a.url),
-          subtitle: label == null ? Text(a.username.toString()) : null,
+          subtitle: label == null ? Text(a.username2) : null,
           trailing: IconButton(
             icon: Icon(
               Icons.close,
@@ -87,7 +87,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           ),
           subtitle: accountLabel == null
               ? Text(
-                  widget.account.username.toString(),
+                  widget.account.username2,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )
               : null,

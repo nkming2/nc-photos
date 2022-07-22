@@ -51,8 +51,8 @@ class RemoveAlbum {
       return;
     }
     final albumShares = (album.shares!.map((e) => e.userId).toList()
-          ..add(album.albumFile!.ownerId ?? account.username))
-        .where((element) => element != account.username)
+          ..add(album.albumFile!.ownerId ?? account.userId))
+        .where((element) => element != account.userId)
         .toList();
     if (albumShares.isEmpty) {
       return;

@@ -34,7 +34,7 @@ class AddSelectionToAlbumHandler {
           assert(value.provider is AlbumStaticProvider);
           final selected = selectedFiles
               .map((f) => AlbumFileItem(
-                    addedBy: account.username,
+                    addedBy: account.userId,
                     addedAt: DateTime.now(),
                     file: f,
                   ))

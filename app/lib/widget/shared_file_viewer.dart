@@ -129,7 +129,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
             title: Text(widget.file.strippedPath),
           ),
         ),
-        if (widget.shares.first.uidOwner == widget.account.username) ...[
+        if (widget.shares.first.uidOwner == widget.account.userId) ...[
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),

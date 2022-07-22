@@ -254,7 +254,7 @@ void _testQuerySharedAlbumMissingManagedShareOtherAdded(String description) {
 /// Expect: emit empty list
 void _testQuerySharedAlbumMissingManagedShareOtherReshared(String description) {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final user1Files = [
@@ -450,7 +450,7 @@ void _testQuerySharedAlbumExtraShare(String description) {
 /// Expect: emit the file with extra share (admin -> user2)
 void _testQuerySharedAlbumExtraShareOtherAdded(String description) {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();
@@ -510,7 +510,7 @@ void _testQuerySharedAlbumExtraShareOtherAdded(String description) {
 /// Expect: emit empty list
 void _testQuerySharedAlbumExtraUnmanagedShare(String description) {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("admin/test1.jpg", ownerId: "user1"))
       .build();

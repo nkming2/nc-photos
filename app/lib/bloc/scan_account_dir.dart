@@ -469,7 +469,7 @@ class ScanAccountDirBloc
         );
         yield files
             .where((f) =>
-                file_util.isSupportedFormat(f) && !f.isOwned(account.username))
+                file_util.isSupportedFormat(f) && !f.isOwned(account.userId))
             .toList();
       } catch (e, stackTrace) {
         yield ExceptionEvent(e, stackTrace);

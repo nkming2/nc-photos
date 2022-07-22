@@ -28,7 +28,7 @@ class ListPotentialSharedAlbum {
     return results;
   }
 
-  bool _checkOwner(Account account, File f) => !f.isOwned(account.username);
+  bool _checkOwner(Account account, File f) => !f.isOwned(account.userId);
 
   bool _checkFileName(File f) {
     try {

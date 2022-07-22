@@ -291,7 +291,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
 /// unchanged
 Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
   final account = util.buildAccount();
-  final user1Account = util.buildAccount(username: "user1");
+  final user1Account = util.buildAccount(userId: "user1");
   final files = (util.FilesBuilder(initialFileId: 1)
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
       .build();

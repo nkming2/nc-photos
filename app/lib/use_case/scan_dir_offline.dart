@@ -50,8 +50,7 @@ class ScanDirOffline {
             .get();
       });
       return dbFiles
-          .map(
-              (f) => SqliteFileConverter.fromSql(account.homeDir.toString(), f))
+          .map((f) => SqliteFileConverter.fromSql(account.userId.toString(), f))
           .toList();
     });
   }
