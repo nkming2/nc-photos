@@ -524,8 +524,6 @@ extension FileExtension on File {
 
   /// hashCode to be used with [compareServerIdentity]
   int get identityHashCode => (fileId ?? path).hashCode;
-
-  static final _log = Logger("entity.file.FileExtension");
 }
 
 class FileServerIdentityComparator {
