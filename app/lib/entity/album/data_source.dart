@@ -71,13 +71,12 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final fileName = _makeAlbumFileName();
     final filePath =
         "${remote_storage_util.getRemoteAlbumsDir(account)}/$fileName";
-    const fileRepo = FileRepo(FileWebdavDataSource());
-    await PutFileBinary(fileRepo)(account, filePath,
+    final c = KiwiContainer().resolve<DiContainer>();
+    await PutFileBinary(c.fileRepo)(account, filePath,
         const Utf8Encoder().convert(jsonEncode(album.toRemoteJson())),
         shouldCreateMissingDir: true);
     // query album file
-    final newFile = await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
-        account, filePath);
+    final newFile = await LsSingleFile(c)(account, filePath);
     return album.copyWith(albumFile: OrNull(newFile));
   }
 

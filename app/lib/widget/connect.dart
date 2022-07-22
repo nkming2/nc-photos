@@ -9,15 +9,12 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/app_password_exchange.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/string_extension.dart';
@@ -210,10 +207,9 @@ class _ConnectState extends State<Connect> {
   Future<void> _checkWebDavUrl(BuildContext context, Account account) async {
     // check the WebDAV URL
     try {
-      final c = KiwiContainer().resolve<DiContainer>().copyWith(
-            fileRepo: OrNull(const FileRepo(FileWebdavDataSource())),
-          );
-      await LsSingleFile(c)(account, file_util.unstripPath(account, ""));
+      final c = KiwiContainer().resolve<DiContainer>();
+      await LsSingleFile(c.withRemoteFileRepo())(
+          account, file_util.unstripPath(account, ""));
       _log.info("[_checkWebDavUrl] Account is good: $account");
       Navigator.of(context).pop(account);
     } on ApiException catch (e) {
