@@ -355,8 +355,10 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   void _reqQuery() {
-    _bloc.add(const ScanLocalDirBlocQuery(
-        ["Download/Photos (for Nextcloud)/Enhanced Photos"]));
+    _bloc.add(const ScanLocalDirBlocQuery([
+      "Download/Photos (for Nextcloud)/Enhanced Photos",
+      "Download/Photos (for Nextcloud)/Edited Photos",
+    ]));
   }
 
   final _bloc = ScanLocalDirBloc();
