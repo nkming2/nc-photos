@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -11,6 +10,7 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
+import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:nc_photos/use_case/remove.dart';
 
@@ -23,12 +23,17 @@ import 'package:nc_photos/use_case/remove.dart';
 /// token requires downloading a file from the server so you may want to avoid
 /// doing it on every query
 class TouchTokenManager {
-  const TouchTokenManager();
+  TouchTokenManager(this._c) : assert(require(_c));
 
-  Future<String?> getRemoteRootEtag(FileRepo fileRepo, Account account) async {
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.fileRepoRemote);
+
+  Future<String?> getRemoteRootEtag(Account account) async {
     try {
-      final touchDir = await fileRepo.listSingle(
-          account, File(path: remote_storage_util.getRemoteTouchDir(account)));
+      // we use the remote repo here to prevent it caching the result
+      final touchDir = await LsSingleFile(_c.withRemoteFileRepo())(
+          account, remote_storage_util.getRemoteTouchDir(account));
       return touchDir.etag!;
     } catch (_) {
       // dir not found on server
@@ -48,16 +53,14 @@ class TouchTokenManager {
     return AccountPref.of(account).getTouchRootEtag();
   }
 
-  Future<void> setRemoteToken(
-      FileRepo fileRepo, Account account, File file, String? token) async {
+  Future<void> setRemoteToken(Account account, File file, String? token) async {
     _log.info(
         "[setRemoteToken] Set remote token for file '${file.path}': $token");
     final path = _getRemotePath(account, file);
     if (token == null) {
-      return Remove(KiwiContainer().resolve<DiContainer>())(account, [file],
-          shouldCleanUp: false);
+      return Remove(_c)(account, [file], shouldCleanUp: false);
     } else {
-      return PutFileBinary(fileRepo)(
+      return PutFileBinary(_c.fileRepo)(
           account, path, const Utf8Encoder().convert(token),
           shouldCreateMissingDir: true);
     }
@@ -65,11 +68,11 @@ class TouchTokenManager {
 
   /// Return the touch token for [file] from remote source, or null if no such
   /// file
-  Future<String?> getRemoteToken(
-      FileRepo fileRepo, Account account, File file) async {
+  Future<String?> getRemoteToken(Account account, File file) async {
     final path = _getRemotePath(account, file);
     try {
-      final content = await GetFileBinary(fileRepo)(account, File(path: path));
+      final content =
+          await GetFileBinary(_c.fileRepo)(account, File(path: path));
       return const Utf8Decoder().convert(content);
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
@@ -113,6 +116,8 @@ class TouchTokenManager {
       return "touch/${account.url.replaceFirst('://', '_')}/${account.userId}/${file.strippedPath}/token";
     }
   }
+
+  final DiContainer _c;
 
   static final _log = Logger("touch_token_manager.TouchTokenManager");
 }

@@ -53,12 +53,13 @@ class _RootPickerState extends State<RootPicker> {
   }
 
   void _initAccount() async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final files = <File>[];
     for (final r in widget.account.roots) {
       try {
         if (r.isNotEmpty) {
           _ensureInitDialog();
-          files.add(await LsSingleFile(KiwiContainer().resolve<DiContainer>())(
+          files.add(await LsSingleFile(c.withRemoteFileRepo())(
               widget.account, file_util.unstripPath(widget.account, r)));
         }
       } catch (e, stackTrace) {

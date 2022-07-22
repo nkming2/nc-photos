@@ -417,7 +417,7 @@ class ScanAccountDirBloc
 
   Future<List<File>> _queryOnlinePass2(ScanAccountDirBlocQueryBase ev,
       Map<int, File> cacheMap, List<File> pass1Files) async {
-    const touchTokenManager = TouchTokenManager();
+    final touchTokenManager = TouchTokenManager(_c);
     // combine the file maps because [pass1Files] doesn't contain non-supported
     // files
     final pass2CacheMap = CombinedMapView(
@@ -427,8 +427,7 @@ class ScanAccountDirBloc
       shouldCheckCache: true,
       forwardCacheManager: FileForwardCacheManager(_c, pass2CacheMap),
     ));
-    final remoteTouchEtag =
-        await touchTokenManager.getRemoteRootEtag(fileRepo, account);
+    final remoteTouchEtag = await touchTokenManager.getRemoteRootEtag(account);
     if (remoteTouchEtag == null) {
       _log.info("[_queryOnlinePass2] remoteTouchEtag == null");
       await touchTokenManager.setLocalRootEtag(account, null);

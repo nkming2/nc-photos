@@ -469,7 +469,7 @@ class FileCachedDataSource implements FileDataSource {
       await FileSqliteCacheUpdater(_c)(account, dir, remote: remote);
       if (shouldCheckCache) {
         // update our local touch token to match the remote one
-        const tokenManager = TouchTokenManager();
+        final tokenManager = TouchTokenManager(_c);
         try {
           await tokenManager.setLocalToken(
               account, dir, cacheLoader.remoteTouchToken);
@@ -556,7 +556,7 @@ class FileCachedDataSource implements FileDataSource {
     // generate a new random token
     final token = const Uuid().v4().replaceAll("-", "");
     final dir = File(path: path_lib.dirname(f.path));
-    await const TouchTokenManager().setLocalToken(account, dir, token);
+    await TouchTokenManager(_c).setLocalToken(account, dir, token);
     // don't update remote token that frequently
     (_touchTokenThrottlers["${account.url}/${dir.path}"] ??= Throttler(
       onTriggered: _updateRemoteTouchToken,
@@ -605,10 +605,8 @@ class FileCachedDataSource implements FileDataSource {
   Future<void> _updateRemoteTouchToken(
       List<_TouchTokenThrottlerData> data) async {
     try {
-      final fileRepo = FileRepo(this);
       final d = data.last;
-      await const TouchTokenManager()
-          .setRemoteToken(fileRepo, d.account, d.dir, d.token);
+      await TouchTokenManager(_c).setRemoteToken(d.account, d.dir, d.token);
     } catch (e, stackTrace) {
       _log.shout("[_updateRemoteTouchToken] Failed while setRemoteToken", e,
           stackTrace);

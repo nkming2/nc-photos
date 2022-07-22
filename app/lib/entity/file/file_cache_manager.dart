@@ -72,10 +72,10 @@ class FileCacheLoader {
       Account account, File f, List<File> cache) async {
     final touchPath =
         "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
-    const tokenManager = TouchTokenManager();
+    final tokenManager = TouchTokenManager(_c);
     String? remoteToken;
     try {
-      remoteToken = await tokenManager.getRemoteToken(_c.fileRepo, account, f);
+      remoteToken = await tokenManager.getRemoteToken(account, f);
     } catch (e, stacktrace) {
       _log.shout(
           "[_checkTouchToken] Failed getting remote token at '$touchPath'",

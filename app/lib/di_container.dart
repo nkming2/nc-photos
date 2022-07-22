@@ -251,3 +251,8 @@ class DiContainer {
   sql.SqliteDb? _sqliteDb;
   Pref? _pref;
 }
+
+extension DiContainerExtension on DiContainer {
+  DiContainer withRemoteFileRepo() =>
+      copyWith(fileRepo: OrNull(fileRepoRemote));
+}
