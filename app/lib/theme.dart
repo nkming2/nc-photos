@@ -5,21 +5,45 @@ class AppTheme extends StatelessWidget {
   const AppTheme({
     Key? key,
     required this.child,
+    this.brightnessOverride,
   }) : super(key: key);
+
+  factory AppTheme.light({
+    Key? key,
+    required Widget child,
+  }) =>
+      AppTheme(
+        key: key,
+        brightnessOverride: Brightness.light,
+        child: child,
+      );
+
+  factory AppTheme.dark({
+    Key? key,
+    required Widget child,
+  }) =>
+      AppTheme(
+        key: key,
+        brightnessOverride: Brightness.dark,
+        child: child,
+      );
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: buildThemeData(context),
-      child: child,
+      data: _buildThemeData(context),
+      child: DefaultTextStyle(
+        style: _buildTextStyle(context),
+        child: child,
+      ),
     );
   }
 
   static ThemeData buildThemeData(BuildContext context) {
     final theme = Theme.of(context);
     return theme.brightness == Brightness.light
-        ? _buildLightThemeData(context, theme)
-        : _buildDarkThemeData(context, theme);
+        ? buildLightThemeData()
+        : buildDarkThemeData();
   }
 
   static AppBarTheme getContextualAppBarTheme(BuildContext context) {
@@ -90,7 +114,11 @@ class AppTheme extends StatelessWidget {
         : Colors.white70;
   }
 
-  static ThemeData _buildLightThemeData(BuildContext context, ThemeData theme) {
+  static ThemeData buildLightThemeData() {
+    final theme = ThemeData(
+      brightness: Brightness.light,
+      primarySwatch: AppTheme.primarySwatchLight,
+    );
     final appBarTheme = theme.appBarTheme.copyWith(
       backgroundColor: theme.scaffoldBackgroundColor,
       foregroundColor: theme.colorScheme.onSurface,
@@ -98,7 +126,7 @@ class AppTheme extends StatelessWidget {
     return theme.copyWith(appBarTheme: appBarTheme);
   }
 
-  static ThemeData _buildDarkThemeData(BuildContext context, ThemeData theme) {
+  static ThemeData buildDarkThemeData() {
     final Color background;
     final Color popup;
     if (Pref().isUseBlackInDarkThemeOr(false)) {
@@ -111,27 +139,40 @@ class AppTheme extends StatelessWidget {
       popup = Colors.grey[800]!;
     }
 
+    final theme = ThemeData(
+      brightness: Brightness.dark,
+      primarySwatch: AppTheme.primarySwatchDark,
+      scaffoldBackgroundColor: background,
+      dialogBackgroundColor: popup,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: background,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: popup,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: _CheckboxDarkColorProperty(),
+      ),
+    );
     final appBarTheme = theme.appBarTheme.copyWith(
       backgroundColor: background,
       foregroundColor: theme.colorScheme.onSurface,
     );
-    final bottomNavigationBarTheme = theme.bottomNavigationBarTheme.copyWith(
-      backgroundColor: background,
-    );
-    final popupMenuTheme = theme.popupMenuTheme.copyWith(
-      color: popup,
-    );
-    final checkboxTheme = theme.checkboxTheme.copyWith(
-      fillColor: _CheckboxDarkColorProperty(),
-    );
-    return theme.copyWith(
-      scaffoldBackgroundColor: background,
-      appBarTheme: appBarTheme,
-      bottomNavigationBarTheme: bottomNavigationBarTheme,
-      popupMenuTheme: popupMenuTheme,
-      dialogBackgroundColor: popup,
-      checkboxTheme: checkboxTheme,
-    );
+    return theme.copyWith(appBarTheme: appBarTheme);
+  }
+
+  ThemeData _buildThemeData(BuildContext context) {
+    return (brightnessOverride ?? Theme.of(context).brightness) ==
+            Brightness.light
+        ? buildLightThemeData()
+        : buildDarkThemeData();
+  }
+
+  TextStyle _buildTextStyle(BuildContext context) {
+    return (brightnessOverride ?? Theme.of(context).brightness) ==
+            Brightness.light
+        ? const TextStyle(color: AppTheme.primaryTextColorLight)
+        : TextStyle(color: AppTheme.primaryTextColorDark);
   }
 
   static const primarySwatchLight = Colors.blue;
@@ -154,6 +195,7 @@ class AppTheme extends StatelessWidget {
   );
 
   final Widget child;
+  final Brightness? brightnessOverride;
 }
 
 class _CheckboxDarkColorProperty implements MaterialStateProperty<Color?> {

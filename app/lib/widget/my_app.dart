@@ -76,8 +76,8 @@ class _MyAppState extends State<MyApp>
     }
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      theme: _getLightTheme(),
-      darkTheme: _getDarkTheme(),
+      theme: AppTheme.buildLightThemeData(),
+      darkTheme: AppTheme.buildDarkThemeData(),
       themeMode: themeMode,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,
@@ -126,16 +126,6 @@ class _MyAppState extends State<MyApp>
 
   @override
   getNavigator() => _navigatorKey.currentState;
-
-  ThemeData _getLightTheme() => ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: AppTheme.primarySwatchLight,
-      );
-
-  ThemeData _getDarkTheme() => ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: AppTheme.primarySwatchDark,
-      );
 
   Map<String, WidgetBuilder> _getRouter() => {
         Setup.routeName: (context) => const Setup(),
