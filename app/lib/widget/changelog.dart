@@ -70,6 +70,47 @@ class Changelog extends StatelessWidget {
   static final _log = Logger("widget.changelog.Changelog");
 }
 
+List<Widget> _buildChangelog460(BuildContext context) {
+  return [
+    _subSectionHighlight("IMPORTANT"),
+    _bulletGroup(const Text(
+        "Completely reworked the cache database, the app will perform a full resync with server from scratch")),
+    _bulletGroup(const Text(
+        "(LDAP user only) Previously the username is used in place of user ID incorrectly, this is now fixed but albums created before may become broken. Please recreate them if that's the case. Sorry for your inconvenience")),
+    _sectionPadding(),
+    _subSection("Improvements"),
+    _bulletGroup(const Text(
+        "Improved performance working with a large collection of photos")),
+    _bulletGroup(
+      const Text("New image editor"),
+      [
+        const Text(
+            "Adjust image brightness, contrast, white point, black point, saturation, warmth and tint")
+      ],
+    ),
+    _bulletGroup(
+      const Text("Double tap to exit"),
+      [
+        const Text("Settings > Miscellaneous > Double tap to exit"),
+      ],
+    ),
+    _bulletGroup(
+      const Text("Replace account info in the app bar with customized label"),
+      [
+        const Text("Settings > Account > Label"),
+      ],
+    ),
+    _sectionPadding(),
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Finnish (by pHamala)")),
+    _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
+    _sectionPadding(),
+    _subSection("Known issues"),
+    _bulletGroup(const Text(
+        "Google Maps is temporarily disabled due to a bug in the Maps SDK. The app will use OSM as the only map provider until the bug is fixed")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -83,7 +124,50 @@ List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   return [Text(change ?? "n/a")];
 }
 
+Widget _sectionPadding() => const SizedBox(height: 16);
+
+Widget _subSection(String label) => Text(
+      label,
+      style: const TextStyle(fontSize: 16),
+    );
+
+Widget _subSectionHighlight(String label) => Text(
+      label,
+      style: const TextStyle(fontSize: 16, color: Colors.red),
+    );
+
+Widget _bulletGroup(Widget main, [List<Widget> children = const []]) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Column(
+        children: [
+          _bulletPoint(main),
+          ...children.map((s) => _subBulletPoint(s)),
+        ],
+      ),
+    );
+
+Widget _bulletPoint(Widget child) => Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(width: 4),
+        const Text(_bullet),
+        const SizedBox(width: 4),
+        Expanded(child: child),
+      ],
+    );
+
+Widget _subBulletPoint(Widget child) => Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(width: 24),
+        const Text(_bullet),
+        const SizedBox(width: 4),
+        Expanded(child: child),
+      ],
+    );
+
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  460: _buildChangelog460,
   450: (context) => _buildChangelogCompat(context, 45),
   440: (context) => _buildChangelogCompat(context, 44),
   430: (context) => _buildChangelogCompat(context, 43),
@@ -113,6 +197,8 @@ final _changelogs = <int, List<Widget> Function(BuildContext)>{
   80: (context) => _buildChangelogCompat(context, 8),
   70: (context) => _buildChangelogCompat(context, 7),
 };
+
+const _bullet = "\u2022";
 
 const _oldChangelogs = [
   // v1
