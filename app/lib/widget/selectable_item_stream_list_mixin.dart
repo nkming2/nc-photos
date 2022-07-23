@@ -12,6 +12,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
+import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 abstract class SelectableItem {
@@ -164,7 +165,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     }
     if (isEnableVisibilityCallback) {
       content = VisibilityDetector(
-        key: Key("$index"),
+        key: Key("$_itemKeyPrefix.$index"),
         child: content,
         onVisibilityChanged: (info) => onVisibilityChanged(info, index, item),
       );
@@ -271,6 +272,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   final _selectedItems = <SelectableItem>{};
 
   final _listKey = GlobalKey();
+  late final _itemKeyPrefix =
+      "widget.selectable_item_stream_list_mixin.SelectableItemStreamListMixin.${const Uuid().v4()}";
 
   /// used to gain focus on web for keyboard support
   final _keyboardFocus = FocusNode();
