@@ -35,20 +35,20 @@ class GpsMap extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
-        GpsMapProvider.osm) {
-      return _OsmGpsMap(
-        center: center,
-        zoom: zoom,
-        onTap: onTap,
-      );
-    } else {
-      return _GoogleGpsMap(
-        center: center,
-        zoom: zoom,
-        onTap: onTap,
-      );
-    }
+    // if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
+    //     GpsMapProvider.osm) {
+    return _OsmGpsMap(
+      center: center,
+      zoom: zoom,
+      onTap: onTap,
+    );
+    // } else {
+    //   return _GoogleGpsMap(
+    //     center: center,
+    //     zoom: zoom,
+    //     onTap: onTap,
+    //   );
+    // }
   }
 
   /// A pair of latitude and longitude coordinates, stored as degrees
