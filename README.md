@@ -1,7 +1,8 @@
 # Photos
 Browse your photos on Nextcloud servers
 
-[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" width="110" />](https://liberapay.com/nkming2/donate)
+[<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" height="40">](https://liberapay.com/nkming2/donate)
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="40">](https://www.buymeacoffee.com/nkming2)
 
 ## Get the app
 ### Android
