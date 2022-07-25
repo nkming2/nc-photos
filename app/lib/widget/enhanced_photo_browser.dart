@@ -231,13 +231,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     } else if (state is ScanLocalDirBlocLoading) {
       _transformItems(state.files);
     } else if (state is ScanLocalDirBlocSuccess) {
-      _transformItems(state.files);
-      if (_isFirstRun) {
-        _isFirstRun = false;
-        if (widget.filename != null) {
-          _openInitialImage(widget.filename!);
-        }
-      }
+      _transformItems(state.files, isSuccess: true);
     } else if (state is ScanLocalDirBlocFailure) {
       _transformItems(state.files);
       SnackBarManager().showSnackBar(SnackBar(
@@ -308,15 +302,26 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     await const DeleteLocalSelectionHandler()(selectedFiles: selectedFiles);
   }
 
-  void _transformItems(List<LocalFile> files) {
+  void _transformItems(
+    List<LocalFile> files, {
+    bool isSuccess = false,
+  }) {
     _buildItemQueue.addJob(
       _BuilderArguments(files),
       _buildPhotoListItem,
       (result) {
-        setState(() {
-          _backingFiles = result.backingFiles;
-          itemStreamListItems = result.listItems;
-        });
+        if (mounted) {
+          setState(() {
+            _backingFiles = result.backingFiles;
+            itemStreamListItems = result.listItems;
+          });
+          if (isSuccess && _isFirstRun) {
+            _isFirstRun = false;
+            if (widget.filename != null) {
+              _openInitialImage(widget.filename!);
+            }
+          }
+        }
       },
     );
   }
