@@ -386,7 +386,7 @@ class ScanAccountDirBloc
         files.addAll(event);
         if (cache.isEmpty) {
           // only emit partial results if there's no cache
-          emit(ScanAccountDirBlocLoading(files));
+          emit(ScanAccountDirBlocLoading(files.toList()));
         }
       }
       _log.info(

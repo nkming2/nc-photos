@@ -93,7 +93,7 @@ class ScanLocalDirBloc
       final products = <LocalFile>[];
       for (final p in event.relativePaths) {
         if (shouldEmitIntermediate) {
-          emit(ScanLocalDirBlocLoading(products));
+          emit(ScanLocalDirBlocLoading(products.toList()));
         }
         final files = await ScanLocalDir(c)(p);
         products.addAll(files);

@@ -131,7 +131,7 @@ class ListImportableAlbumBloc
             products.add(ev);
             // don't emit events too frequently
             if (++count >= 5) {
-              emit(ListImportableAlbumBlocLoading(products));
+              emit(ListImportableAlbumBlocLoading(products.toList()));
             }
           }
         }
