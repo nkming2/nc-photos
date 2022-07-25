@@ -234,12 +234,15 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     // show notification on first entry to selection mode each session
     if (!wasSelectionMode) {
       if (!SessionStorage().hasShowRangeSelectNotification) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(platform_k.isWeb
-              ? L10n.global().webSelectRangeNotification
-              : L10n.global().mobileSelectRangeNotification),
-          duration: k.snackBarDurationNormal,
-        ));
+        SnackBarManager().showSnackBar(
+          SnackBar(
+            content: Text(platform_k.isWeb
+                ? L10n.global().webSelectRangeNotification
+                : L10n.global().mobileSelectRangeNotification),
+            duration: k.snackBarDurationNormal,
+          ),
+          canBeReplaced: true,
+        );
         SessionStorage().hasShowRangeSelectNotification = true;
       }
     }
