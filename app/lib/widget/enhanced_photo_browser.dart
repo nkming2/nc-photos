@@ -410,15 +410,17 @@ class _Builder {
   }
 
   _BuilderResult _fromSortedItems(List<LocalFile> files) {
+    final backingFiles = <LocalFile>[];
     final listItems = <SelectableItem>[];
     for (int i = 0; i < files.length; ++i) {
       final f = files[i];
       final item = _buildListItem(i, f);
       if (item != null) {
+        backingFiles.add(f);
         listItems.add(item);
       }
     }
-    return _BuilderResult(files, listItems);
+    return _BuilderResult(backingFiles, listItems);
   }
 
   SelectableItem? _buildListItem(int i, LocalFile file) {
