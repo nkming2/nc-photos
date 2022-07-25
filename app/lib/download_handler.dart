@@ -157,13 +157,13 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
     String? parentDir,
   }) async {
     _log.info("[downloadFiles] Downloading ${files.length} file");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().downloadProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
+    SnackBarManager().showSnackBar(
+      SnackBar(
+        content: Text(L10n.global().downloadProcessingNotification),
+        duration: k.snackBarDurationShort,
+      ),
+      canBeReplaced: true,
+    );
     int successCount = 0;
     for (final f in files) {
       try {
@@ -175,7 +175,6 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
         ++successCount;
       } on PermissionException catch (_) {
         _log.warning("[downloadFiles] Permission not granted");
-        controller?.close();
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(L10n.global().errorNoStoragePermission),
           duration: k.snackBarDurationNormal,
@@ -186,7 +185,6 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
         break;
       } catch (e, stackTrace) {
         _log.shout("[downloadFiles] Failed while DownloadFile", e, stackTrace);
-        controller?.close();
         SnackBarManager().showSnackBar(SnackBar(
           content: Text("${L10n.global().downloadFailureNotification}: "
               "${exception_util.toUserString(e)}"),
@@ -195,7 +193,6 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
       }
     }
     if (successCount > 0) {
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().downloadSuccessNotification),
         duration: k.snackBarDurationShort,

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -9,7 +11,8 @@ import 'package:logging/logging.dart';
 class SnackBarManager {
   factory SnackBarManager() => _inst;
 
-  SnackBarManager._();
+  @visibleForTesting
+  SnackBarManager.scoped();
 
   void registerHandler(SnackBarHandler handler) {
     _handlers.add(handler);
@@ -19,42 +22,69 @@ class SnackBarManager {
     _handlers.remove(handler);
   }
 
-  /// Show a snack bar if possible
+  /// Queue a snack bar to be shown ASAP
   ///
-  /// If the snack bar can't be shown at this time, return null.
+  /// If the snack bar can't be shown, return null.
   ///
   /// If [canBeReplaced] is true, this snackbar will be dismissed by the next
   /// snack bar
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
+  void showSnackBar(
     SnackBar snackBar, {
     bool canBeReplaced = false,
   }) {
-    if (_canPrevBeReplaced) {
-      _prevController?.close();
+    _add(_Item(snackBar, canBeReplaced));
+    _ensureRunning();
+  }
+
+  void _ensureRunning() {
+    if (!_isRunning) {
+      _isRunning = true;
+      _next();
     }
-    _canPrevBeReplaced = canBeReplaced;
+  }
+
+  void _add(_Item item) {
+    _queue.add(item);
+    if (_currentItem?.canBeReplaced == true) {
+      _currentItem!.controller?.close();
+    }
+  }
+
+  Future<void> _next() async {
+    if (_queue.isEmpty) {
+      _isRunning = false;
+      return;
+    }
+    final item = _queue.removeFirst();
+    if (item.canBeReplaced && _queue.isNotEmpty) {
+      _log.info("[_next] Skip replaceable snack bar");
+      return _next();
+    }
+    // show item
     for (final h in _handlers.reversed) {
-      final result = h.showSnackBar(snackBar);
-      if (result != null) {
-        _prevController = result;
-        result.closed.whenComplete(() {
-          if (identical(_prevController, result)) {
-            _prevController = null;
-          }
-        });
-        return result;
+      final controller = h.showSnackBar(item.snackBar);
+      if (controller != null) {
+        item.controller = controller;
+        _currentItem = item;
+        try {
+          final reason = await controller.closed;
+          _log.fine("[_next] Snack bar closed: ${reason.name}");
+        } finally {
+          _currentItem = null;
+        }
+        return _next();
       }
     }
-    _log.warning("[showSnackBar] No handler available");
-    _prevController = null;
-    return null;
+    _log.warning("[_next] No handler available");
+    return _next();
   }
 
   final _handlers = <SnackBarHandler>[];
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _prevController;
-  var _canPrevBeReplaced = false;
+  final Queue<_Item> _queue = DoubleLinkedQueue();
+  var _isRunning = false;
+  _Item? _currentItem;
 
-  static final _inst = SnackBarManager._();
+  static final _inst = SnackBarManager.scoped();
 
   static final _log = Logger("snack_bar_manager.SnackBarManager");
 }
@@ -62,4 +92,12 @@ class SnackBarManager {
 abstract class SnackBarHandler {
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? showSnackBar(
       SnackBar snackBar);
+}
+
+class _Item {
+  _Item(this.snackBar, this.canBeReplaced);
+
+  final SnackBar snackBar;
+  final bool canBeReplaced;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
 }

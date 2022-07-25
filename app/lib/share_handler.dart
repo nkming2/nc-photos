@@ -166,21 +166,19 @@ class ShareHandler {
         return;
       }
       _log.info("[_shareAsLink] Share as folder: ${result.albumName}");
-      ScaffoldFeatureController? controller =
-          SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().createShareProgressText),
-        duration: k.snackBarDurationShort,
-      ));
-      controller?.closed.whenComplete(() {
-        controller = null;
-      });
+      SnackBarManager().showSnackBar(
+        SnackBar(
+          content: Text(L10n.global().createShareProgressText),
+          duration: k.snackBarDurationShort,
+        ),
+        canBeReplaced: true,
+      );
       clearSelection?.call();
       isSelectionCleared = true;
 
       final c = KiwiContainer().resolve<DiContainer>();
       final path = await _createDir(c.fileRepo, account, result.albumName);
       await _copyFilesToDir(c.fileRepo, account, files, path);
-      controller?.close();
       return _shareFileAsLink(
         account,
         File(

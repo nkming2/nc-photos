@@ -157,17 +157,16 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   void _onRestorePressed() async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onRestorePressed] Restoring file: ${file.path}");
-    var controller = SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global().restoreProcessingNotification),
-      duration: k.snackBarDurationShort,
-    ));
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
+    SnackBarManager().showSnackBar(
+      SnackBar(
+        content: Text(L10n.global().restoreProcessingNotification),
+        duration: k.snackBarDurationShort,
+      ),
+      canBeReplaced: true,
+    );
     try {
       await RestoreTrashbin(KiwiContainer().resolve<DiContainer>())(
           widget.account, file);
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().restoreSuccessNotification),
         duration: k.snackBarDurationNormal,
@@ -178,7 +177,6 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     } catch (e, stacktrace) {
       _log.shout("Failed while restore trashbin: ${logFilename(file.path)}", e,
           stacktrace);
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text("${L10n.global().restoreFailureNotification}: "
             "${exception_util.toUserString(e)}"),

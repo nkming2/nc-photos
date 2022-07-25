@@ -14,25 +14,22 @@ class NotifiedAction {
   });
 
   Future<void> call() async {
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
     if (processingText != null) {
-      controller = SnackBarManager().showSnackBar(SnackBar(
-        content: Text(processingText!),
-        duration: k.snackBarDurationShort,
-      ));
+      SnackBarManager().showSnackBar(
+        SnackBar(
+          content: Text(processingText!),
+          duration: k.snackBarDurationShort,
+        ),
+        canBeReplaced: true,
+      );
     }
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
     try {
       await action();
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(successText),
         duration: k.snackBarDurationNormal,
       ));
     } catch (e) {
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(
             (failureText?.isNotEmpty == true ? "$failureText: " : "") +
@@ -67,16 +64,15 @@ class NotifiedListAction<T> {
 
   /// Perform the action and return the success count
   Future<int> call() async {
-    ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? controller;
     if (processingText != null) {
-      controller = SnackBarManager().showSnackBar(SnackBar(
-        content: Text(processingText!),
-        duration: k.snackBarDurationShort,
-      ));
+      SnackBarManager().showSnackBar(
+        SnackBar(
+          content: Text(processingText!),
+          duration: k.snackBarDurationShort,
+        ),
+        canBeReplaced: true,
+      );
     }
-    controller?.closed.whenComplete(() {
-      controller = null;
-    });
     final failedItems = <T>[];
     for (final item in list) {
       try {
@@ -87,7 +83,6 @@ class NotifiedListAction<T> {
       }
     }
     if (failedItems.isEmpty) {
-      controller?.close();
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(successText),
         duration: k.snackBarDurationNormal,
@@ -95,7 +90,6 @@ class NotifiedListAction<T> {
     } else {
       final failureText = getFailureText?.call(failedItems);
       if (failureText?.isNotEmpty == true) {
-        controller?.close();
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(failureText!),
           duration: k.snackBarDurationNormal,
