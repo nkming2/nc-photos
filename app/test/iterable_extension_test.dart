@@ -79,6 +79,17 @@ void main() {
             _DistinctTest(6, 9),
           ]);
     });
+
+    group("indexOf", () {
+      test("start = 0", () {
+        expect([1, 2, 3, 4, 5].indexOf(3), 2);
+      });
+
+      test("start > 0", () {
+        expect([1, 2, 3, 4, 5].indexOf(3, 2), 2);
+        expect([1, 2, 3, 4, 5].indexOf(3, 3), -1);
+      });
+    });
   });
 }
 

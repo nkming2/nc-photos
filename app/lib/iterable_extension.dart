@@ -87,10 +87,13 @@ extension IterableExtension<T> on Iterable<T> {
   int indexOf(T element, [int start = 0]) {
     var i = 0;
     for (final e in this) {
-      if (e == element) {
-        return i;
+      final j = i++;
+      if (j < start) {
+        continue;
       }
-      ++i;
+      if (e == element) {
+        return j;
+      }
     }
     return -1;
   }
