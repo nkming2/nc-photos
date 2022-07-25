@@ -34,8 +34,9 @@ class FileWebdavDataSource implements FileDataSource {
     int? depth,
   }) async {
     _log.fine("[list] ${dir.path}");
-    final response = await Api(account).files().propfind(
-      path: dir.path,
+    return _listWithArgs(
+      account,
+      dir,
       depth: depth,
       getlastmodified: 1,
       resourcetype: 1,
@@ -59,52 +60,30 @@ class FileWebdavDataSource implements FileDataSource {
         "app:override-date-time"
       ],
     );
-    if (!response.isGood) {
-      _log.severe("[list] Failed requesting server: $response");
-      throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
-    }
-
-    final xml = XmlDocument.parse(response.body);
-    var files = await WebdavResponseParser().parseFiles(xml);
-    // _log.fine("[list] Parsed files: [$files]");
-    bool hasNoMediaMarker = false;
-    files = files
-        .forEachLazy((f) {
-          if (file_util.isNoMediaMarker(f)) {
-            hasNoMediaMarker = true;
-          }
-        })
-        .where((f) => _validateFile(f))
-        .map((e) {
-          if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
-            return e;
-          } else {
-            _log.info("[list] Ignore outdated metadata for ${e.path}");
-            return e.copyWith(metadata: OrNull(null));
-          }
-        })
-        .toList();
-
-    await _compatUpgrade(account, files);
-
-    if (hasNoMediaMarker) {
-      // return only the marker and the dir itself
-      return files
-          .where((f) =>
-              dir.compareServerIdentity(f) || file_util.isNoMediaMarker(f))
-          .toList();
-    } else {
-      return files;
-    }
   }
 
   @override
   listSingle(Account account, File f) async {
     _log.info("[listSingle] ${f.path}");
     return (await list(account, f, depth: 0)).first;
+  }
+
+  @override
+  listMinimal(
+    Account account,
+    File dir, {
+    int? depth,
+  }) {
+    _log.fine("[listMinimal] ${dir.path}");
+    return _listWithArgs(
+      account,
+      dir,
+      depth: depth,
+      getlastmodified: 1,
+      resourcetype: 1,
+      getcontenttype: 1,
+      fileid: 1,
+    );
   }
 
   @override
@@ -259,6 +238,103 @@ class FileWebdavDataSource implements FileDataSource {
     }
   }
 
+  Future<List<File>> _listWithArgs(
+    Account account,
+    File dir, {
+    int? depth,
+    getlastmodified,
+    getetag,
+    getcontenttype,
+    resourcetype,
+    getcontentlength,
+    id,
+    fileid,
+    favorite,
+    commentsHref,
+    commentsCount,
+    commentsUnread,
+    ownerId,
+    ownerDisplayName,
+    shareTypes,
+    checksums,
+    hasPreview,
+    size,
+    richWorkspace,
+    trashbinFilename,
+    trashbinOriginalLocation,
+    trashbinDeletionTime,
+    Map<String, String>? customNamespaces,
+    List<String>? customProperties,
+  }) async {
+    final response = await Api(account).files().propfind(
+          path: dir.path,
+          depth: depth,
+          getlastmodified: getlastmodified,
+          getetag: getetag,
+          getcontenttype: getcontenttype,
+          resourcetype: resourcetype,
+          getcontentlength: getcontentlength,
+          id: id,
+          fileid: fileid,
+          favorite: favorite,
+          commentsHref: commentsHref,
+          commentsCount: commentsCount,
+          commentsUnread: commentsUnread,
+          ownerId: ownerId,
+          ownerDisplayName: ownerDisplayName,
+          shareTypes: shareTypes,
+          checksums: checksums,
+          hasPreview: hasPreview,
+          size: size,
+          richWorkspace: richWorkspace,
+          trashbinFilename: trashbinFilename,
+          trashbinOriginalLocation: trashbinOriginalLocation,
+          trashbinDeletionTime: trashbinDeletionTime,
+          customNamespaces: customNamespaces,
+          customProperties: customProperties,
+        );
+    if (!response.isGood) {
+      _log.severe("[list] Failed requesting server: $response");
+      throw ApiException(
+          response: response,
+          message:
+              "Server responed with an error: HTTP ${response.statusCode}");
+    }
+
+    final xml = XmlDocument.parse(response.body);
+    var files = await WebdavResponseParser().parseFiles(xml);
+    // _log.fine("[list] Parsed files: [$files]");
+    bool hasNoMediaMarker = false;
+    files = files
+        .forEachLazy((f) {
+          if (file_util.isNoMediaMarker(f)) {
+            hasNoMediaMarker = true;
+          }
+        })
+        .where((f) => _validateFile(f))
+        .map((e) {
+          if (e.metadata == null || e.metadata!.fileEtag == e.etag) {
+            return e;
+          } else {
+            _log.info("[list] Ignore outdated metadata for ${e.path}");
+            return e.copyWith(metadata: OrNull(null));
+          }
+        })
+        .toList();
+
+    await _compatUpgrade(account, files);
+
+    if (hasNoMediaMarker) {
+      // return only the marker and the dir itself
+      return files
+          .where((f) =>
+              dir.compareServerIdentity(f) || file_util.isNoMediaMarker(f))
+          .toList();
+    } else {
+      return files;
+    }
+  }
+
   Future<void> _compatUpgrade(Account account, List<File> files) async {
     for (final f in files.where((element) => element.metadata?.exif != null)) {
       if (CompatV32.isExifNeedMigration(f.metadata!.exif!)) {
@@ -311,6 +387,9 @@ class FileSqliteDbDataSource implements FileDataSource {
     _log.severe("[listSingle] ${f.path}");
     throw UnimplementedError();
   }
+
+  @override
+  listMinimal(Account account, File dir) => list(account, dir);
 
   /// List files with date between [fromEpochMs] (inclusive) and [toEpochMs]
   /// (exclusive)
@@ -509,6 +588,11 @@ class FileCachedDataSource implements FileDataSource {
       await FileSqliteCacheUpdater(_c).updateSingle(account, remote);
     }
     return remote;
+  }
+
+  @override
+  listMinimal(Account account, File dir) {
+    return _remoteSrc.listMinimal(account, dir);
   }
 
   @override

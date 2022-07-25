@@ -19,3 +19,23 @@ class Ls {
 
   final FileRepo fileRepo;
 }
+
+class LsMinimal implements Ls {
+  const LsMinimal(this.fileRepo);
+
+  /// List all files under a dir with minimal data
+  ///
+  /// The dir itself is not included in the returned list
+  @override
+  Future<List<File>> call(Account account, File dir) async {
+    final products = await fileRepo.listMinimal(account, dir);
+    // filter out root file
+    final trimmedRootPath = dir.path.trimAny("/");
+    return products
+        .where((element) => element.path.trimAny("/") != trimmedRootPath)
+        .toList();
+  }
+
+  @override
+  final FileRepo fileRepo;
+}

@@ -557,6 +557,10 @@ class FileRepo {
   Future<File> listSingle(Account account, File root) =>
       dataSrc.listSingle(account, root);
 
+  /// See [FileDataSource.listMinimal]
+  Future<List<File>> listMinimal(Account account, File dir) =>
+      dataSrc.listMinimal(account, dir);
+
   /// See [FileDataSource.remove]
   Future<void> remove(Account account, File file) =>
       dataSrc.remove(account, file);
@@ -628,6 +632,16 @@ abstract class FileDataSource {
 
   /// List a single file [f]
   Future<File> listSingle(Account account, File f);
+
+  /// List all files under [dir] with minimal data
+  ///
+  /// Only the following file data is guaranteed to be returned:
+  /// - path
+  /// - contentType
+  /// - lastModified
+  /// - isCollection
+  /// - fileId
+  Future<List<File>> listMinimal(Account account, File dir);
 
   /// Remove file
   Future<void> remove(Account account, File f);

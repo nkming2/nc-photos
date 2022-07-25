@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_dir.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -397,7 +398,10 @@ class DirPickerState extends State<DirPicker> {
   late final String _rootDir =
       file_util.unstripPath(widget.account, widget.strippedRootDir);
 
-  final _bloc = LsDirBloc(const FileRepo(FileWebdavDataSource()));
+  late final _bloc = LsDirBloc(
+    KiwiContainer().resolve<DiContainer>().fileRepoRemote,
+    isListMinimal: true,
+  );
   late LsDirBlocItem _root;
 
   var _currentPath = "";

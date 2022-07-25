@@ -122,6 +122,11 @@ class MockFileDataSource implements FileDataSource {
   }
 
   @override
+  Future<List<File>> listMinimal(Account account, File dir) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<File> listSingle(Account account, File f) {
     throw UnimplementedError();
   }
@@ -214,6 +219,10 @@ class MockFileWebdavDataSource implements FileWebdavDataSource {
       return src.list(account, dir);
     }
   }
+
+  @override
+  listMinimal(Account account, File dir, {int? depth}) =>
+      list(account, dir, depth: depth);
 
   @override
   listSingle(Account account, File f) => src.listSingle(account, f);

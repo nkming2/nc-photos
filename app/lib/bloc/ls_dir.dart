@@ -148,7 +148,10 @@ class LsDirBlocFailure extends LsDirBlocState {
 
 /// A bloc that return all directories under a dir recursively
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
-  LsDirBloc(this.fileRepo) : super(LsDirBlocInit()) {
+  LsDirBloc(
+    this.fileRepo, {
+    this.isListMinimal = false,
+  }) : super(LsDirBlocInit()) {
     on<LsDirBlocEvent>(_onEvent);
   }
 
@@ -175,7 +178,8 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
     final product = <LsDirBlocItem>[];
     var files = _cache[ev.root.path];
     if (files == null) {
-      files = (await Ls(fileRepo)(ev.account, ev.root))
+      final op = isListMinimal ? LsMinimal(fileRepo) : Ls(fileRepo);
+      files = (await op(ev.account, ev.root))
           .where((f) => f.isCollection ?? false)
           .toList();
       _cache[ev.root.path] = files;
@@ -210,6 +214,7 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
   }
 
   final FileRepo fileRepo;
+  final bool isListMinimal;
 
   final _cache = <String, List<File>>{};
 
