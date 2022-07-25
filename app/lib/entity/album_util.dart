@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:tuple/tuple.dart';
 
 enum AlbumSort {

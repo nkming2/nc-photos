@@ -1,14 +1,12 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/override_comparator.dart';
 import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
-  /// Return a new sorted list
-  List<T> sorted([int Function(T a, T b)? compare]) => toList()..sort(compare);
-
   /// Return a new stable sorted list
   List<T> stableSorted([int Function(T a, T b)? compare]) =>
       toList()..stableSort(compare);
@@ -17,14 +15,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// toString for each items
   String toReadableString() => "[${join(', ')}]";
 
-  Iterable<U> mapWithIndex<U>(U Function(int index, T element) fn) sync* {
-    int i = 0;
-    for (final e in this) {
-      yield fn(i++, e);
-    }
-  }
-
-  Iterable<Tuple2<int, T>> withIndex() => mapWithIndex((i, e) => Tuple2(i, e));
+  Iterable<Tuple2<int, T>> withIndex() => mapIndexed((i, e) => Tuple2(i, e));
 
   /// Whether the collection contains an element equal to [element] using the
   /// equality function [equalFn]

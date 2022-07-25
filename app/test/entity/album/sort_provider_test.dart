@@ -1,7 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;
@@ -85,7 +85,7 @@ void _timeFileAscending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex((i, f) => AlbumFileItem(
+      .mapIndexed((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -113,7 +113,7 @@ void _timeFileDescending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex((i, f) => AlbumFileItem(
+      .mapIndexed((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -141,7 +141,7 @@ void _timeNonFileAscending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -177,7 +177,7 @@ void _timeNonFileDescending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -213,7 +213,7 @@ void _timeNonFileHead() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -249,7 +249,7 @@ void _filenameFileAscending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex((i, f) => AlbumFileItem(
+      .mapIndexed((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -277,7 +277,7 @@ void _filenameFileDescending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex((i, f) => AlbumFileItem(
+      .mapIndexed((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -317,7 +317,7 @@ void _filenameFileNatural() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 1),
         ))
       .build()
-      .mapWithIndex((i, f) => AlbumFileItem(
+      .mapIndexed((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -348,7 +348,7 @@ void _filenameNonFileAscending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -384,7 +384,7 @@ void _filenameNonFileDescending() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,
@@ -420,7 +420,7 @@ void _filenameNonFileHead() {
           lastModified: DateTime.utc(2020, 1, 2, 3, 4, 2),
         ))
       .build()
-      .mapWithIndex<AlbumItem>((i, f) => AlbumFileItem(
+      .mapIndexed<AlbumItem>((i, f) => AlbumFileItem(
             addedBy: CiString("admin"),
             addedAt: f.lastModified!,
             file: f,

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -9,7 +10,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/help_utils.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
@@ -423,7 +423,7 @@ class _StylePickerState extends State<_StylePicker> {
               runSpacing: 8,
               spacing: 8,
               children: [
-                ..._bundledStyles.mapWithIndex((i, e) => _buildItem(
+                ..._bundledStyles.mapIndexed((i, e) => _buildItem(
                       i,
                       Image(
                         image: ResizeImage.resizeIfNeeded(

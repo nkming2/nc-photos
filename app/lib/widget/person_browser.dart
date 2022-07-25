@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -429,7 +430,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         .toList();
     setState(() {
       itemStreamListItems = _backingFiles!
-          .mapWithIndex((i, f) => _ListItem(
+          .mapIndexed((i, f) => _ListItem(
                 index: i,
                 file: f,
                 account: widget.account,

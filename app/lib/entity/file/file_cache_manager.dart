@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -9,7 +10,6 @@ import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -164,7 +164,8 @@ class FileSqliteCacheUpdater {
         ..orderBy([sql.OrderingTerm.asc(db.dirFiles.rowId)]);
       final dirChildRowIds =
           await dirChildRowIdQuery.map((r) => r.read(db.dirFiles.child)!).get();
-      final diff = list_util.diff(dirChildRowIds, _childRowIds.sorted());
+      final diff = list_util.diff(
+          dirChildRowIds, _childRowIds.sorted(Comparable.compare));
       if (diff.item1.isNotEmpty) {
         await db.batch((batch) {
           // insert new children

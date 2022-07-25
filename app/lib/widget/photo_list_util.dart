@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/date_time_extension.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -5,7 +6,6 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/iterable_extension.dart';
 
 class DateGroupHelper {
   DateGroupHelper({

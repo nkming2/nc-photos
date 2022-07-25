@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as sql;
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
@@ -8,7 +9,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/use_case/list_favorite_offline.dart';
 

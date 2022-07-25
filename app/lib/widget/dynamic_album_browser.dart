@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
@@ -17,7 +18,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
@@ -465,7 +465,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       ));
     }
     if (successes.isNotEmpty) {
-      final indexes = successes.map((e) => e.index).sorted();
+      final indexes = successes.map((e) => e.index).sorted(Comparable.compare);
       setState(() {
         for (final i in indexes.reversed) {
           _sortedItems.removeAt(i);
