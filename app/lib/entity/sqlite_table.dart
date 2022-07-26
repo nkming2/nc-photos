@@ -201,6 +201,11 @@ class SqliteDb extends _$SqliteDb {
         },
         beforeOpen: (details) async {
           await customStatement("PRAGMA foreign_keys = ON;");
+          // technically we have a platform side lock to ensure only one
+          // transaction is running in any isolates, but for some reason we are
+          // still seeing database is locked error in crashlytics, let see if
+          // this helps
+          await customStatement("PRAGMA busy_timeout = 5000;");
         },
       );
 }
