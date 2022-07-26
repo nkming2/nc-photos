@@ -264,36 +264,32 @@ class FileSqliteCacheUpdater {
         .map((r) => MapEntry(r.read(db.files.fileId)!, r.read(db.files.rowId)!))
         .get());
 
-    await Future.wait(
-      sqlFiles.map((f) async {
-        var rowId = fileRowIdMap[f.file.fileId.value];
-        if (rowId != null) {
-          // shared file that exists in other accounts
-        } else {
-          final dbFile = await db.into(db.files).insertReturning(
-                f.file.copyWith(server: sql.Value(dbAccount.server)),
-              );
-          rowId = dbFile.rowId;
-        }
-        final dbAccountFile = await db
-            .into(db.accountFiles)
-            .insertReturning(f.accountFile.copyWith(
-              account: sql.Value(dbAccount.rowId),
-              file: sql.Value(rowId),
-            ));
-        if (f.image != null) {
-          await db.into(db.images).insert(
-              f.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
-        }
-        if (f.trash != null) {
-          await db
-              .into(db.trashes)
-              .insert(f.trash!.copyWith(file: sql.Value(rowId)));
-        }
-        _onRowCached(rowId, f, dir);
-      }),
-      eagerError: true,
-    );
+    await Future.wait(sqlFiles.map((f) async {
+      var rowId = fileRowIdMap[f.file.fileId.value];
+      if (rowId != null) {
+        // shared file that exists in other accounts
+      } else {
+        final dbFile = await db.into(db.files).insertReturning(
+              f.file.copyWith(server: sql.Value(dbAccount.server)),
+            );
+        rowId = dbFile.rowId;
+      }
+      final dbAccountFile =
+          await db.into(db.accountFiles).insertReturning(f.accountFile.copyWith(
+                account: sql.Value(dbAccount.rowId),
+                file: sql.Value(rowId),
+              ));
+      if (f.image != null) {
+        await db.into(db.images).insert(
+            f.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
+      }
+      if (f.trash != null) {
+        await db
+            .into(db.trashes)
+            .insert(f.trash!.copyWith(file: sql.Value(rowId)));
+      }
+      _onRowCached(rowId, f, dir);
+    }));
   }
 
   void _onRowCached(int rowId, sql.CompleteFileCompanion dbFile, File? dir) {
