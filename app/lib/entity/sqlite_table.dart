@@ -174,7 +174,7 @@ class SqliteDb extends _$SqliteDb {
   @override
   get migration => MigrationStrategy(
         onCreate: (m) async {
-          await customStatement("PRAGMA journal_mode=WAL");
+          await customStatement("PRAGMA journal_mode=WAL;");
           await m.createAll();
 
           await m.createIndex(Index("files_server_index",
@@ -200,7 +200,7 @@ class SqliteDb extends _$SqliteDb {
               "CREATE INDEX album_shares_album_index ON album_shares(album);"));
         },
         beforeOpen: (details) async {
-          await customStatement("PRAGMA foreign_keys = ON");
+          await customStatement("PRAGMA foreign_keys = ON;");
         },
       );
 }
