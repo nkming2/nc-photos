@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -96,6 +97,29 @@ class MockEventBus implements EventBus {
   StreamController get streamController => _streamController;
 
   final _streamController = StreamController.broadcast();
+}
+
+class MockFavoriteRepo implements FavoriteRepo {
+  @override
+  FavoriteDataSource get dataSrc => throw UnimplementedError();
+
+  @override
+  Future<List<Favorite>> list(Account account, File dir) {
+    throw UnimplementedError();
+  }
+}
+
+class MockFavoriteMemoryRepo extends MockFavoriteRepo {
+  MockFavoriteMemoryRepo([
+    List<Favorite> initialData = const [],
+  ]) : favorite = initialData.map((a) => a.copyWith()).toList();
+
+  @override
+  list(Account account, File dir) async {
+    return favorite.toList();
+  }
+
+  final List<Favorite> favorite;
 }
 
 /// Mock of [FileDataSource] where all methods will throw UnimplementedError

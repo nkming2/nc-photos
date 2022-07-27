@@ -12,6 +12,13 @@ class Favorite with EquatableMixin {
       "fileId: '$fileId', "
       "}";
 
+  Favorite copyWith({
+    int? fileId,
+  }) =>
+      Favorite(
+        fileId: fileId ?? this.fileId,
+      );
+
   @override
   get props => [
         fileId,

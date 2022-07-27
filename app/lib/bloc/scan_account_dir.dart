@@ -291,7 +291,7 @@ class ScanAccountDirBloc
       // no data in this bloc, ignore
       return;
     }
-    if ((ev.newFavorites + ev.removedFavorites).any(_isFileOfInterest)) {
+    if (ev.account.compareServerIdentity(account)) {
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,

@@ -1,22 +1,34 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/use_case/cache_favorite.dart';
-import 'package:nc_photos/use_case/list_favorite.dart';
 
 class SyncFavorite {
   SyncFavorite(this._c)
       : assert(require(_c)),
-        assert(CacheFavorite.require(_c)),
-        assert(ListFavorite.require(_c));
+        assert(CacheFavorite.require(_c));
 
-  static bool require(DiContainer c) => true;
+  static bool require(DiContainer c) => DiContainer.has(c, DiType.favoriteRepo);
 
-  /// Sync favorites in AppDb with remote server
-  Future<void> call(Account account) async {
+  /// Sync favorites in cache db with remote server
+  ///
+  /// Return number of files updated
+  Future<int> call(Account account) async {
     _log.info("[call] Sync favorites with remote");
-    final remote = await ListFavorite(_c)(account);
-    await CacheFavorite(_c)(account, remote);
+    final remote = await _getRemoteFavoriteFileIds(account);
+    return await CacheFavorite(_c)(account, remote);
+  }
+
+  Future<List<int>> _getRemoteFavoriteFileIds(Account account) async {
+    final fileIds = <int>[];
+    for (final r in account.roots) {
+      final favorites = await _c.favoriteRepo
+          .list(account, File(path: file_util.unstripPath(account, r)));
+      fileIds.addAll(favorites.map((f) => f.fileId));
+    }
+    return fileIds;
   }
 
   final DiContainer _c;

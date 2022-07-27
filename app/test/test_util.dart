@@ -38,6 +38,7 @@ class FilesBuilder {
     DateTime? lastModified,
     bool isCollection = false,
     bool hasPreview = true,
+    bool? isFavorite,
     String ownerId = "admin",
     String? ownerDisplayName,
     Metadata? metadata,
@@ -52,6 +53,7 @@ class FilesBuilder {
       isCollection: isCollection,
       hasPreview: hasPreview,
       fileId: fileId++,
+      isFavorite: isFavorite,
       ownerId: ownerId.toCi(),
       ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
       metadata: metadata,
@@ -65,6 +67,7 @@ class FilesBuilder {
     String? etag,
     DateTime? lastModified,
     bool hasPreview = true,
+    bool? isFavorite,
     String ownerId = "admin",
     String? ownerDisplayName,
   }) =>
@@ -75,6 +78,7 @@ class FilesBuilder {
         etag: etag,
         lastModified: lastModified,
         hasPreview: hasPreview,
+        isFavorite: isFavorite,
         ownerId: ownerId,
         ownerDisplayName: ownerDisplayName,
       );
@@ -85,6 +89,7 @@ class FilesBuilder {
     String? etag,
     DateTime? lastModified,
     bool hasPreview = true,
+    bool? isFavorite,
     String ownerId = "admin",
     String? ownerDisplayName,
     OrNull<Metadata>? metadata,
@@ -96,6 +101,7 @@ class FilesBuilder {
         etag: etag,
         lastModified: lastModified,
         hasPreview: hasPreview,
+        isFavorite: isFavorite,
         ownerId: ownerId,
         ownerDisplayName: ownerDisplayName,
         metadata: metadata?.obj ??
@@ -111,6 +117,7 @@ class FilesBuilder {
     int contentLength = 1024,
     String? etag,
     DateTime? lastModified,
+    bool? isFavorite,
     String ownerId = "admin",
     String? ownerDisplayName,
   }) =>
@@ -120,6 +127,7 @@ class FilesBuilder {
         lastModified: lastModified,
         isCollection: true,
         hasPreview: false,
+        isFavorite: isFavorite,
         ownerId: ownerId,
         ownerDisplayName: ownerDisplayName,
       );

@@ -113,10 +113,11 @@ class ListFavoriteBloc
       emit(ListFavoriteBlocSuccess(ev.account, remote));
 
       if (cache != null) {
-        CacheFavorite(_c)(ev.account, remote, cache: cache)
+        CacheFavorite(_c)(ev.account, remote.map((f) => f.fileId!))
             .onError((e, stackTrace) {
           _log.shout(
               "[_onEventQuery] Failed while CacheFavorite", e, stackTrace);
+          return -1;
         });
       }
     } catch (e, stackTrace) {

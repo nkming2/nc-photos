@@ -110,12 +110,9 @@ class ShareRemovedEvent {
 }
 
 class FavoriteResyncedEvent {
-  const FavoriteResyncedEvent(
-      this.account, this.newFavorites, this.removedFavorites);
+  const FavoriteResyncedEvent(this.account);
 
   final Account account;
-  final List<File> newFavorites;
-  final List<File> removedFavorites;
 }
 
 class ThemeChangedEvent {}
