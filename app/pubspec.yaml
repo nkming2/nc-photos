@@ -44,7 +44,7 @@ dependencies:
   draggable_scrollbar:
     git:
       url: https://gitlab.com/nc-photos/flutter-draggable-scrollbar
-      ref: v0.1.0-nc-photos-5
+      ref: v0.1.0-nc-photos-6
   drift: ^1.7.1
   equatable: ^2.0.0
   event_bus: ^2.0.0

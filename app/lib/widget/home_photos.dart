@@ -165,6 +165,7 @@ class _HomePhotosState extends State<HomePhotos>
                 bottomOffset: _calcBottomAppBarExtent(context),
                 labelTextBuilder: (_) => _buildScrollLabel(context),
                 labelPadding: const EdgeInsets.symmetric(horizontal: 40),
+                enabled: _isScrollbarVisible,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
@@ -380,10 +381,12 @@ class _HomePhotosState extends State<HomePhotos>
         state is ScanAccountDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanAccountDirBlocSuccess) {
+        _isScrollbarVisible = true;
         _startupSync();
         _tryStartMetadataTask();
       }
     } else if (state is ScanAccountDirBlocFailure) {
+      _isScrollbarVisible = true;
       _transformItems(state.files);
       if (isPageVisible()) {
         SnackBarManager().showSnackBar(SnackBar(
@@ -701,6 +704,8 @@ class _HomePhotosState extends State<HomePhotos>
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 
   late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
+
+  var _isScrollbarVisible = false;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
