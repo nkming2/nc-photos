@@ -111,6 +111,17 @@ List<Widget> _buildChangelog460(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog470(BuildContext context) {
+  return [
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
+    _sectionPadding(),
+    _subSection("Known issues"),
+    _bulletGroup(const Text(
+        "Google Maps is temporarily disabled due to a bug in the Maps SDK. The app will use OSM as the only map provider until the bug is fixed")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -167,6 +178,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  470: _buildChangelog470,
   460: _buildChangelog460,
   450: (context) => _buildChangelogCompat(context, 45),
   440: (context) => _buildChangelogCompat(context, 44),
