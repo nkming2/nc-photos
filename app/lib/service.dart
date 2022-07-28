@@ -70,7 +70,7 @@ class _Service {
     final service = FlutterBackgroundService();
     service.setForegroundMode(true);
 
-    await app_init.init(app_init.InitIsolateType.service);
+    await app_init.init(app_init.InitIsolateType.flutterIsolate);
     await _L10n().init();
 
     _log.info("[call] Service started");

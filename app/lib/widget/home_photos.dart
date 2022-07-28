@@ -21,7 +21,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -35,7 +34,7 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/use_case/sync_favorite.dart';
+import 'package:nc_photos/use_case/startup_sync.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -381,7 +380,7 @@ class _HomePhotosState extends State<HomePhotos>
         state is ScanAccountDirBlocLoading) {
       _transformItems(state.files);
       if (state is ScanAccountDirBlocSuccess) {
-        _syncFavorite();
+        _startupSync();
         _tryStartMetadataTask();
       }
     } else if (state is ScanAccountDirBlocFailure) {
@@ -536,18 +535,10 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  Future<void> _syncFavorite() async {
+  Future<void> _startupSync() async {
     if (!_hasResyncedFavorites.value) {
-      final c = KiwiContainer().resolve<DiContainer>();
-      try {
-        await SyncFavorite(c)(widget.account);
-      } catch (e, stackTrace) {
-        if (e is! ApiException) {
-          _log.shout(
-              "[_syncFavorite] Failed while SyncFavorite", e, stackTrace);
-        }
-      }
       _hasResyncedFavorites.value = true;
+      StartupSync.runInIsolate(widget.account);
     }
   }
 

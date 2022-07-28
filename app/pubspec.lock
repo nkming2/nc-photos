@@ -490,6 +490,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
+  flutter_isolate:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "2.0.2-nc-photos-1"
+      resolved-ref: "8d8516b169860caba762baed43a7888798c5b7d7"
+      url: "https://gitlab.com/nc-photos/flutter_isolate.git"
+    source: git
+    version: "2.0.2"
   flutter_keyboard_visibility:
     dependency: transitive
     description:

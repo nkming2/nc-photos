@@ -57,6 +57,10 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter_background_service.git
       ref: v0.2.6-nc-photos-2
   flutter_bloc: ^8.0.0
+  flutter_isolate:
+    git:
+      url: https://gitlab.com/nc-photos/flutter_isolate.git
+      ref: 2.0.2-nc-photos-1
   flutter_map: ^1.1.1
   flutter_staggered_grid_view:
     git:

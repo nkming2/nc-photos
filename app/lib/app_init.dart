@@ -39,7 +39,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
   main,
-  service,
+
+  /// Isolates with Flutter engine, e.g., those spawned by flutter_isolate or
+  /// flutter_background_service
+  flutterIsolate,
 }
 
 Future<void> init(InitIsolateType isolateType) async {
@@ -200,7 +203,7 @@ Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
         return sql_isolate.createDb();
       }
 
-    case InitIsolateType.service:
+    case InitIsolateType.flutterIsolate:
       // service already runs in an isolate
       return sql.SqliteDb();
   }
