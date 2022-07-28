@@ -52,7 +52,7 @@ Future<void> init(InitIsolateType isolateType) async {
   }
 
   initLog();
-  _initDrift();
+  initDrift();
   _initKiwi();
   await _initPref();
   await _initAccountPrefs();
@@ -111,8 +111,8 @@ void initLog() {
   });
 }
 
-void _initDrift() {
-  driftRuntimeOptions.debugPrint = _debugPrintSql;
+void initDrift() {
+  driftRuntimeOptions.debugPrint = (log) => debugPrint(log, wrapWidth: 1024);
 }
 
 Future<void> _initPref() async {
@@ -207,10 +207,6 @@ Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
       // service already runs in an isolate
       return sql.SqliteDb();
   }
-}
-
-void _debugPrintSql(String log) {
-  _log.finer(log);
 }
 
 final _log = Logger("app_init");

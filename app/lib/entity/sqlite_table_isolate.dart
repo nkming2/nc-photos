@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'package:drift/drift.dart';
 import 'package:drift/isolate.dart';
 import 'package:flutter/foundation.dart';
+import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/entity/sqlite_table.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -57,6 +58,8 @@ Future<DriftIsolate> _createDriftIsolate() async {
 }
 
 void _startBackground(_IsolateStartRequest request) {
+  app_init.initDrift();
+
   // this is the entry point from the background isolate! Let's create
   // the database from the path we received
   final executor = platform.openSqliteConnectionWithArgs(request.platformArgs);
@@ -73,6 +76,8 @@ void _startBackground(_IsolateStartRequest request) {
 }
 
 Future<U> _computeWithDbImpl<T, U>(_ComputeWithDbMessage<T, U> message) async {
+  app_init.initDrift();
+
   // we don't use driftIsolate because opening a DB normally is found to perform
   // better
   final sqliteDb = SqliteDb(
