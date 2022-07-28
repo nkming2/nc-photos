@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -253,7 +255,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
     }
     _setupSlideTransition(newPage);
 
-    SystemChrome.restoreSystemUIOverlays();
+    unawaited(SystemChrome.restoreSystemUIOverlays());
   }
 
   void _setupSlideTransition(int index) {

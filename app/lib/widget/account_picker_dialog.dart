@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -154,9 +156,8 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
       _log.shout(
           "[_removeAccount] Failed while removing account pref", e, stackTrace);
     }
-    Pref()
-      ..setAccounts3(accounts)
-      ..setCurrentAccountIndex(newAccountIndex);
+    unawaited(Pref().setAccounts3(accounts));
+    unawaited(Pref().setCurrentAccountIndex(newAccountIndex));
 
     // check if the same account (server + userId) still exists in known
     // accounts

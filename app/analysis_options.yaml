@@ -2,6 +2,7 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
+    unawaited_futures: true
     depend_on_referenced_packages: false
     prefer_interpolation_to_compose_strings: false
     no_leading_underscores_for_local_identifiers: false

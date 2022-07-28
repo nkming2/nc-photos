@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -113,12 +115,14 @@ class ListFavoriteBloc
       emit(ListFavoriteBlocSuccess(ev.account, remote));
 
       if (cache != null) {
-        CacheFavorite(_c)(ev.account, remote.map((f) => f.fileId!))
-            .onError((e, stackTrace) {
-          _log.shout(
-              "[_onEventQuery] Failed while CacheFavorite", e, stackTrace);
-          return -1;
-        });
+        unawaited(
+          CacheFavorite(_c)(ev.account, remote.map((f) => f.fileId!))
+              .onError((e, stackTrace) {
+            _log.shout(
+                "[_onEventQuery] Failed while CacheFavorite", e, stackTrace);
+            return -1;
+          }),
+        );
       }
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);

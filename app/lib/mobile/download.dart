@@ -85,7 +85,8 @@ class _AndroidDownload extends itf.Download {
           throw error!;
         }
       } finally {
-        fileWrite.close();
+        await fileWrite.flush();
+        await fileWrite.close();
       }
       if (shouldInterrupt) {
         throw JobCanceledException();
@@ -98,7 +99,7 @@ class _AndroidDownload extends itf.Download {
         subDir: parentDir,
       );
     } finally {
-      file.delete();
+      await file.delete();
     }
   }
 

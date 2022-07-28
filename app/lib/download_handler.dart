@@ -122,11 +122,11 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
             duration: k.snackBarDurationNormal,
           ));
         } finally {
-          itemSubscription?.cancel();
+          unawaited(itemSubscription?.cancel());
         }
       }
     } finally {
-      subscription?.cancel();
+      unawaited(subscription?.cancel());
       if (successes.isNotEmpty) {
         await _onDownloadSuccessful(successes.map((e) => e.item1).toList(),
             successes.map((e) => e.item2).toList(), id);

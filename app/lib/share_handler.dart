@@ -99,13 +99,15 @@ class ShareHandler {
   Future<void> _shareAsFile(Account account, List<File> files) async {
     assert(platform_k.isAndroid);
     final controller = StreamController<String>();
-    showDialog(
-      context: context,
-      builder: (context) => StreamBuilder(
-        stream: controller.stream,
-        builder: (context, snapshot) => ProcessingDialog(
-          text: L10n.global().shareDownloadingDialogContent +
-              (snapshot.hasData ? " ${snapshot.data}" : ""),
+    unawaited(
+      showDialog(
+        context: context,
+        builder: (context) => StreamBuilder(
+          stream: controller.stream,
+          builder: (context, snapshot) => ProcessingDialog(
+            text: L10n.global().shareDownloadingDialogContent +
+                (snapshot.hasData ? " ${snapshot.data}" : ""),
+          ),
         ),
       ),
     );
@@ -144,7 +146,7 @@ class ShareHandler {
     final share = AndroidFileShare(
         results.map((e) => e.item2 as String).toList(),
         results.map((e) => e.item1.contentType).toList());
-    share.share();
+    return share.share();
   }
 
   Future<void> _shareAsLink(
@@ -207,7 +209,7 @@ class ShareHandler {
 
       if (platform_k.isAndroid) {
         final textShare = AndroidTextShare(share.url!);
-        textShare.share();
+        await textShare.share();
       }
     } catch (e, stackTrace) {
       _log.shout(

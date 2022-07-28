@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -140,7 +141,7 @@ class EnhanceHandler {
         ],
       ),
     );
-    Pref().setHasShownEnhanceInfo(true);
+    unawaited(Pref().setHasShownEnhanceInfo(true));
   }
 
   Future<_Algorithm?> _pickAlgorithm(BuildContext context) =>

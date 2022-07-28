@@ -638,14 +638,15 @@ class _ViewerState extends State<Viewer>
     if (result == null) {
       return;
     }
-    Pref()
-      ..setSlideshowDuration(result.duration.inSeconds)
-      ..setSlideshowShuffle(result.isShuffle)
-      ..setSlideshowRepeat(result.isRepeat);
-    Navigator.of(context).pushNamed(
-      SlideshowViewer.routeName,
-      arguments: SlideshowViewerArguments(widget.account, widget.streamFiles,
-          _viewerController.currentPage, result),
+    unawaited(Pref().setSlideshowDuration(result.duration.inSeconds));
+    unawaited(Pref().setSlideshowShuffle(result.isShuffle));
+    unawaited(Pref().setSlideshowRepeat(result.isRepeat));
+    unawaited(
+      Navigator.of(context).pushNamed(
+        SlideshowViewer.routeName,
+        arguments: SlideshowViewerArguments(widget.account, widget.streamFiles,
+            _viewerController.currentPage, result),
+      ),
     );
   }
 

@@ -21,13 +21,15 @@ Future<List<T>> waitOr<T>(
   }
 
   for (final p in futures.withIndex()) {
-    p.item2.then((value) {
-      results[p.item1] = value;
-      onResult();
-    }).onError((error, stackTrace) {
-      results[p.item1] = onError(error!, stackTrace);
-      onResult();
-    });
+    unawaited(
+      p.item2.then((value) {
+        results[p.item1] = value;
+        onResult();
+      }).onError((error, stackTrace) {
+        results[p.item1] = onError(error!, stackTrace);
+        onResult();
+      }),
+    );
   }
   return completer.future;
 }

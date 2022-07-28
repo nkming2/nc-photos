@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -86,8 +88,8 @@ class _Service {
     } catch (e, stackTrace) {
       _log.shout("[call] Uncaught exception", e, stackTrace);
     }
-    onCancelSubscription.cancel();
-    onDataSubscription.cancel();
+    await onCancelSubscription.cancel();
+    await onDataSubscription.cancel();
     await KiwiContainer().resolve<DiContainer>().sqliteDb.close();
     service.stopBackgroundService();
     _log.info("[call] Service stopped");
@@ -228,7 +230,9 @@ class _MetadataTask {
       _log.shout("[call] Uncaught exception", e, stackTrace);
     }
     if (_processedIds.isNotEmpty) {
-      NativeEvent.fire(FileExifUpdatedEvent(_processedIds).toEvent());
+      unawaited(
+        NativeEvent.fire(FileExifUpdatedEvent(_processedIds).toEvent()),
+      );
       _processedIds = [];
     }
 

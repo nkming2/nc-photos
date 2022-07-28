@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -237,7 +239,9 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           stackTrace);
     }
     if (newAlbum != null && mounted) {
-      album_browser_util.pushReplacement(context, account, newAlbum!);
+      unawaited(
+        album_browser_util.pushReplacement(context, account, newAlbum!),
+      );
     }
   }
 

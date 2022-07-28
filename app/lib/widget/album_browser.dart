@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
@@ -212,7 +214,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
     await _setAlbum(album);
 
     if (album.shares?.isNotEmpty == true) {
-      _showSharedAlbumInfoDialog();
+      unawaited(_showSharedAlbumInfoDialog());
     }
   }
 

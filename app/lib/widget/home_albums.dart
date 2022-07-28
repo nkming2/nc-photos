@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -360,8 +361,10 @@ class _HomeAlbumsState extends State<HomeAlbums>
       if (album.provider is AlbumDynamicProvider) {
         // open the album automatically to refresh its content, otherwise it'll
         // be empty
-        Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
-            arguments: DynamicAlbumBrowserArguments(widget.account, album));
+        unawaited(
+          Navigator.of(context).pushNamed(DynamicAlbumBrowser.routeName,
+              arguments: DynamicAlbumBrowserArguments(widget.account, album)),
+        );
       }
     } catch (e, stacktrace) {
       _log.shout("[_onNewAlbumItemTap] Failed", e, stacktrace);

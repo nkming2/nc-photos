@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -188,20 +190,23 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   Future<void> _onDeletePressed(BuildContext context) async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDeletePressed] Deleting file permanently: ${file.path}");
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(L10n.global().deletePermanentlyConfirmationDialogTitle),
-        content: Text(L10n.global().deletePermanentlyConfirmationDialogContent),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _delete(context);
-            },
-            child: Text(L10n.global().confirmButtonLabel),
-          ),
-        ],
+    unawaited(
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(L10n.global().deletePermanentlyConfirmationDialogTitle),
+          content:
+              Text(L10n.global().deletePermanentlyConfirmationDialogContent),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _delete(context);
+              },
+              child: Text(L10n.global().confirmButtonLabel),
+            ),
+          ],
+        ),
       ),
     );
   }

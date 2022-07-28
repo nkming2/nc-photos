@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -102,7 +104,7 @@ class _ImageEditorState extends State<ImageEditor> {
   Widget _buildContent(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        _onBackButton(context);
+        unawaited(_onBackButton(context));
         return false;
       },
       child: ColoredBox(

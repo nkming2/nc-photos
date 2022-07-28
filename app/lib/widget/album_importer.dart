@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -215,11 +217,13 @@ class _AlbumImporterState extends State<AlbumImporter> {
   }
 
   void _onImportPressed(BuildContext context) async {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) =>
-          ProcessingDialog(text: L10n.global().albumImporterProgressText),
+    unawaited(
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) =>
+            ProcessingDialog(text: L10n.global().albumImporterProgressText),
+      ),
     );
     try {
       await _createAllAlbums(context);

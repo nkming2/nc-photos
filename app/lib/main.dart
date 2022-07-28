@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ void main() async {
 
   if (platform_k.isMobile) {
     // reset orientation override just in case, see #59
-    SystemChrome.setPreferredOrientations([]);
+    unawaited(SystemChrome.setPreferredOrientations([]));
   }
   BlocOverrides.runZoned(
     () => runApp(const MyApp()),

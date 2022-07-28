@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
@@ -371,7 +373,9 @@ class _SettingsState extends State<Settings> {
         _shouldProcessExifWifiOnly = oldValue;
       });
     } else {
-      ServiceConfig.setProcessExifWifiOnly(value);
+      // this is not very important since the config will be synced during
+      // service startup
+      ServiceConfig.setProcessExifWifiOnly(value).ignore();
     }
   }
 
@@ -602,9 +606,9 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
       return;
     }
     if (result.isEmpty) {
-      _setLabel(null);
+      return _setLabel(null);
     } else {
-      _setLabel(result);
+      return _setLabel(result);
     }
   }
 
@@ -872,7 +876,8 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
     );
   }
 
-  void _onScreenBrightnessChanged(BuildContext context, bool value) async {
+  Future<void> _onScreenBrightnessChanged(
+      BuildContext context, bool value) async {
     if (value) {
       var brightness = 0.5;
       try {
@@ -932,13 +937,13 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
         );
 
         if (value != null) {
-          _setScreenBrightness(value);
+          unawaited(_setScreenBrightness(value));
         }
       } finally {
-        ScreenBrightness().resetScreenBrightness();
+        unawaited(ScreenBrightness().resetScreenBrightness());
       }
     } else {
-      _setScreenBrightness(-1);
+      unawaited(_setScreenBrightness(-1));
     }
   }
 
@@ -1187,7 +1192,7 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
       return;
     }
 
-    _setMaxResolution(width, height);
+    unawaited(_setMaxResolution(width, height));
   }
 
   Future<void> _setMaxResolution(int width, int height) async {

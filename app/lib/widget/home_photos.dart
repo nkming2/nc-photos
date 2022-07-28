@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 import 'dart:ui';
@@ -542,7 +543,7 @@ class _HomePhotosState extends State<HomePhotos>
   Future<void> _startupSync() async {
     if (!_hasResyncedFavorites.value) {
       _hasResyncedFavorites.value = true;
-      StartupSync.runInIsolate(widget.account);
+      unawaited(StartupSync.runInIsolate(widget.account));
     }
   }
 

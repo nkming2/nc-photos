@@ -50,7 +50,7 @@ class _SplashState extends State<Splash> {
         _isUpgrading = false;
       });
     }
-    _exit();
+    unawaited(_exit());
   }
 
   @override
@@ -115,16 +115,18 @@ class _SplashState extends State<Splash> {
     _log.info("[_exit]");
     final account = Pref().getCurrentAccount();
     if (isNeedSetup()) {
-      Navigator.pushReplacementNamed(context, Setup.routeName);
+      unawaited(Navigator.pushReplacementNamed(context, Setup.routeName));
     } else if (account == null) {
-      Navigator.pushReplacementNamed(context, SignIn.routeName);
+      unawaited(Navigator.pushReplacementNamed(context, SignIn.routeName));
     } else {
-      Navigator.pushReplacementNamed(context, Home.routeName,
-          arguments: HomeArguments(account));
+      unawaited(
+        Navigator.pushReplacementNamed(context, Home.routeName,
+            arguments: HomeArguments(account)),
+      );
       if (platform_k.isAndroid) {
         final initialRoute = await Activity.consumeInitialRoute();
         if (initialRoute != null) {
-          Navigator.pushNamed(context, initialRoute);
+          unawaited(Navigator.pushNamed(context, initialRoute));
         }
       }
     }
@@ -138,7 +140,7 @@ class _SplashState extends State<Splash> {
   Future<void> _handleUpgrade() async {
     try {
       final lastVersion = Pref().getLastVersionOr(k.version);
-      _showChangelogIfAvailable(lastVersion);
+      unawaited(_showChangelogIfAvailable(lastVersion));
       // begin upgrade while showing the changelog
       try {
         _log.info("[_handleUpgrade] Upgrade: $lastVersion -> ${k.version}");
@@ -181,9 +183,8 @@ class _SplashState extends State<Splash> {
       await CompatV46.insertDbAccounts(Pref(), c.sqliteDb);
     } catch (e, stackTrace) {
       _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
-      Pref()
-        ..setAccounts3(null)
-        ..setCurrentAccountIndex(null);
+      unawaited(Pref().setAccounts3(null));
+      unawaited(Pref().setCurrentAccountIndex(null));
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(

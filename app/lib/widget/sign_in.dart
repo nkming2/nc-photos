@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -282,9 +284,11 @@ class _SignInState extends State<SignIn> {
     });
     try {
       await _persistAccount(account);
-      Navigator.pushNamedAndRemoveUntil(
-          context, Home.routeName, (route) => false,
-          arguments: HomeArguments(account));
+      unawaited(
+        Navigator.pushNamedAndRemoveUntil(
+            context, Home.routeName, (route) => false,
+            arguments: HomeArguments(account)),
+      );
     } catch (_) {
       setState(() {
         _isConnecting = false;
@@ -307,9 +311,8 @@ class _SignInState extends State<SignIn> {
       _log.shout("[_connect] Failed reading pref for account: $account", e,
           stackTrace);
     }
-    Pref()
-      ..setAccounts3(accounts)
-      ..setCurrentAccountIndex(accounts.indexOf(account));
+    unawaited(Pref().setAccounts3(accounts));
+    unawaited(Pref().setCurrentAccountIndex(accounts.indexOf(account)));
   }
 
   final _formKey = GlobalKey<FormState>();
