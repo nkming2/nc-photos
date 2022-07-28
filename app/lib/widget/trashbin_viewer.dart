@@ -156,7 +156,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
     );
   }
 
-  void _onRestorePressed() async {
+  Future<void> _onRestorePressed() async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onRestorePressed] Restoring file: ${file.path}");
     SnackBarManager().showSnackBar(

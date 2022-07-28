@@ -54,7 +54,7 @@ void stopService() {
 }
 
 @visibleForTesting
-void serviceMain() async {
+Future<void> serviceMain() async {
   _Service._shouldRun.value = true;
   WidgetsFlutterBinding.ensureInitialized();
 

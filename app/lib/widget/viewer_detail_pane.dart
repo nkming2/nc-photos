@@ -430,7 +430,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }
   }
 
-  void _onUnarchivePressed(BuildContext context) async {
+  Future<void> _onUnarchivePressed(BuildContext context) async {
     _log.info("[_onUnarchivePressed] Unarchive file: ${widget.file.path}");
     try {
       await NotifiedAction(

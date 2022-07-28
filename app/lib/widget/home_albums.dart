@@ -437,7 +437,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
     );
   }
 
-  void _onSortSelected(album_util.AlbumSort sort) async {
+  Future<void> _onSortSelected(album_util.AlbumSort sort) async {
     await Pref().setHomeAlbumsSort(sort.index);
     setState(() {
       _transformItems(_bloc.state.items);

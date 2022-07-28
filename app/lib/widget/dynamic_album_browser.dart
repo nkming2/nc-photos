@@ -424,7 +424,7 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     ).shareFiles(widget.account, selected);
   }
 
-  void _onSelectionDeletePressed() async {
+  Future<void> _onSelectionDeletePressed() async {
     SnackBarManager().showSnackBar(
       SnackBar(
         content: Text(L10n.global()

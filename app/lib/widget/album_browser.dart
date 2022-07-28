@@ -362,7 +362,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
             album: _album));
   }
 
-  void _onSharePressed(BuildContext context) async {
+  Future<void> _onSharePressed(BuildContext context) async {
     await _showSharedAlbumInfoDialog();
     await showDialog(
       context: context,

@@ -216,7 +216,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
     }
   }
 
-  void _onImportPressed(BuildContext context) async {
+  Future<void> _onImportPressed(BuildContext context) async {
     unawaited(
       showDialog(
         barrierDismissible: false,

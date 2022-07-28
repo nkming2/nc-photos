@@ -52,7 +52,7 @@ class _RootPickerState extends State<RootPicker> {
     _initAccount();
   }
 
-  void _initAccount() async {
+  Future<void> _initAccount() async {
     final c = KiwiContainer().resolve<DiContainer>();
     final files = <File>[];
     for (final r in widget.account.roots) {

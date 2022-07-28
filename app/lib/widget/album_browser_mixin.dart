@@ -220,7 +220,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     }
   }
 
-  void _onAddToCollectionPressed(
+  Future<void> _onAddToCollectionPressed(
       BuildContext context, Account account, Album album) async {
     Album? newAlbum;
     try {

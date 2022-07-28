@@ -267,7 +267,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     }
   }
 
-  void _onEmptyTrashPressed(BuildContext context) async {
+  Future<void> _onEmptyTrashPressed(BuildContext context) async {
     unawaited(
       showDialog(
         context: context,

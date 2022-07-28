@@ -612,7 +612,7 @@ class _ViewerState extends State<Viewer>
     DownloadHandler().downloadFiles(widget.account, [file]);
   }
 
-  void _onDeletePressed(BuildContext context) async {
+  Future<void> _onDeletePressed(BuildContext context) async {
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onDeletePressed] Removing file: ${file.path}");
     final count = await RemoveSelectionHandler()(
@@ -626,7 +626,7 @@ class _ViewerState extends State<Viewer>
     }
   }
 
-  void _onSlideshowPressed() async {
+  Future<void> _onSlideshowPressed() async {
     final result = await showDialog<SlideshowConfig>(
       context: context,
       builder: (_) => SlideshowDialog(

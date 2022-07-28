@@ -239,7 +239,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
     _setupSlideTransition(widget.startIndex);
   }
 
-  void _onSlideshowTick() async {
+  Future<void> _onSlideshowTick() async {
     if (!mounted) {
       return;
     }

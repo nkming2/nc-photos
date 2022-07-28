@@ -93,7 +93,7 @@ class _VideoViewerState extends State<VideoViewer>
     _controller.dispose();
   }
 
-  void _initController(String url) async {
+  Future<void> _initController(String url) async {
     try {
       _controller = VideoPlayerController.network(
         url,

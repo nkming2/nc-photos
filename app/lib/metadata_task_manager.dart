@@ -99,7 +99,7 @@ class MetadataTaskManager {
     }
   }
 
-  void _handleStream() async {
+  Future<void> _handleStream() async {
     await for (final task in _streamController.stream) {
       if (Pref().isEnableExifOr()) {
         _log.info("[_doTask] Executing task: $task");

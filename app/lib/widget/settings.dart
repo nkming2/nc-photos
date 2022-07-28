@@ -397,7 +397,7 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _onCaptureLogChanged(BuildContext context, bool value) async {
+  Future<void> _onCaptureLogChanged(BuildContext context, bool value) async {
     if (value) {
       final result = await showDialog<bool>(
         context: context,
@@ -1375,7 +1375,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     );
   }
 
-  void _onFollowSystemThemeChanged(bool value) async {
+  Future<void> _onFollowSystemThemeChanged(bool value) async {
     final oldValue = _isFollowSystemTheme;
     setState(() {
       _isFollowSystemTheme = value;
@@ -1394,7 +1394,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     }
   }
 
-  void _onUseBlackInDarkThemeChanged(BuildContext context, bool value) async {
+  Future<void> _onUseBlackInDarkThemeChanged(BuildContext context, bool value) async {
     final oldValue = _isUseBlackInDarkTheme;
     setState(() {
       _isUseBlackInDarkTheme = value;
@@ -1491,7 +1491,7 @@ class _MiscSettingsState extends State<_MiscSettings> {
     }
   }
 
-  void _onPhotosTabSortByNameChanged(bool value) async {
+  Future<void> _onPhotosTabSortByNameChanged(bool value) async {
     final oldValue = _isPhotosTabSortByName;
     setState(() {
       _isPhotosTabSortByName = value;

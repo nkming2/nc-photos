@@ -421,7 +421,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     );
   }
 
-  void _transformItems(List<Face> items) async {
+  Future<void> _transformItems(List<Face> items) async {
     final files = await PopulatePerson(_c)(widget.account, items);
     _backingFiles = files
         .sorted(compareFileDateTimeDescending)
