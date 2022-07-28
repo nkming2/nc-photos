@@ -166,6 +166,7 @@ class _HomePhotosState extends State<HomePhotos>
                 labelTextBuilder: (_) => _buildScrollLabel(context),
                 labelPadding: const EdgeInsets.symmetric(horizontal: 40),
                 enabled: _isScrollbarVisible,
+                heightScrollThumb: 60,
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
