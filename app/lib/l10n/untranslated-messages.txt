@@ -292,19 +292,7 @@
   ],
 
   "es": [
-    "rootPickerSkipConfirmationDialogContent2",
-    "imageEditDiscardDialogTitle",
-    "imageEditDiscardDialogContent",
-    "discardButtonLabel",
-    "saveTooltip",
-    "imageEditColorBrightness",
-    "imageEditColorContrast",
-    "imageEditColorWhitePoint",
-    "imageEditColorBlackPoint",
-    "imageEditColorSaturation",
-    "imageEditColorWarmth",
-    "imageEditColorTint",
-    "imageEditTitle"
+    "rootPickerSkipConfirmationDialogContent2"
   ],
 
   "fi": [
