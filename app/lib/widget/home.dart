@@ -73,6 +73,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         bottomNavigationBar: _buildBottomNavigationBar(context),
         body: Builder(builder: (context) => _buildContent(context)),
         extendBody: true,
+        resizeToAvoidBottomInset: false,
       ),
     );
   }
