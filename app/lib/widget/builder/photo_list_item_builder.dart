@@ -128,11 +128,10 @@ class _PhotoListItemBuilder {
     final listItems = <SelectableItem>[];
     for (int i = 0; i < files.length; ++i) {
       final f = files[i];
-      grouper?.onFile(f)?.run((item) => listItems.add(item));
-      memoryAlbumHelper?.addFile(f);
-
       final item = _buildListItem(i, account, f);
       if (item != null) {
+        grouper?.onFile(f)?.run((item) => listItems.add(item));
+        memoryAlbumHelper?.addFile(f);
         listItems.add(item);
       }
     }
