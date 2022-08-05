@@ -41,6 +41,7 @@ class StartupSync {
 
   Future<SyncResult> call(Account account) async {
     _log.info("[_run] Begin sync");
+    final stopwatch = Stopwatch()..start();
     late final int syncFavoriteCount;
     try {
       syncFavoriteCount = await SyncFavorite(_c)(account);
@@ -48,6 +49,7 @@ class StartupSync {
       _log.shout("[_run] Failed while SyncFavorite", e, stackTrace);
       syncFavoriteCount = -1;
     }
+    _log.info("[_run] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
     return SyncResult(syncFavoriteCount);
   }
 
