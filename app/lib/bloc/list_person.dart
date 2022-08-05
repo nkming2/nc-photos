@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/person/data_source.dart';
+import 'package:nc_photos/use_case/list_person.dart';
 
 abstract class ListPersonBlocEvent {
   const ListPersonBlocEvent();
@@ -68,10 +69,14 @@ class ListPersonBlocFailure extends ListPersonBlocState {
 
 /// List all people recognized in an account
 class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
-  ListPersonBloc() : super(ListPersonBlocInit()) {
+  ListPersonBloc(this._c)
+      : assert(require(_c)),
+        assert(ListPerson.require(_c)),
+        super(ListPersonBlocInit()) {
     on<ListPersonBlocEvent>(_onEvent);
   }
 
+  static bool require(DiContainer c) => true;
 
   Future<void> _onEvent(
       ListPersonBlocEvent event, Emitter<ListPersonBlocState> emit) async {
@@ -92,10 +97,10 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
     }
   }
 
-  Future<List<Person>> _query(ListPersonBlocQuery ev) {
-    const personRepo = PersonRepo(PersonRemoteDataSource());
-    return personRepo.list(ev.account);
-  }
+  Future<List<Person>> _query(ListPersonBlocQuery ev) =>
+      ListPerson(_c)(ev.account);
 
-  static final _log = Logger("bloc.list_personListPersonBloc");
+  final DiContainer _c;
+
+  static final _log = Logger("bloc.list_person.ListPersonBloc");
 }
