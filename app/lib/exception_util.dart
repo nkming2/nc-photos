@@ -6,7 +6,7 @@ import 'package:nc_photos/exception.dart';
 /// Convert an exception to a user-facing string
 ///
 /// Typically used with SnackBar to show a proper error message
-String toUserString(dynamic exception) {
+String toUserString(Object? exception) {
   if (exception is ApiException) {
     if (exception.response.statusCode == 401) {
       return L10n.global().errorUnauthenticated;
@@ -24,5 +24,5 @@ String toUserString(dynamic exception) {
   } else if (exception is AlbumDowngradeException) {
     return L10n.global().errorAlbumDowngrade;
   }
-  return exception.toString();
+  return exception?.toString() ?? "Unknown error";
 }
