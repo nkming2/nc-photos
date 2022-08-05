@@ -400,6 +400,11 @@ class FileSqliteDbDataSource implements FileDataSource {
       final query = db.queryFiles().run((q) {
         q.setQueryMode(sql.FilesQueryMode.completeFile);
         q.setAppAccount(account);
+        for (final r in account.roots) {
+          if (r.isNotEmpty) {
+            q.byOrRelativePathPattern("$r/%");
+          }
+        }
         return q.build();
       });
       final dateTime = db.accountFiles.bestDateTime.secondsSinceEpoch;
