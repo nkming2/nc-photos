@@ -163,6 +163,20 @@ class Tags extends Table {
       ];
 }
 
+class Persons extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get account =>
+      integer().references(Accounts, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get name => text()();
+  IntColumn get thumbFaceId => integer()();
+  IntColumn get count => integer()();
+
+  @override
+  get uniqueKeys => [
+        {account, name},
+      ];
+}
+
 // remember to also update the truncate method after adding a new table
 @DriftDatabase(
   tables: [
@@ -176,6 +190,7 @@ class Tags extends Table {
     Albums,
     AlbumShares,
     Tags,
+    Persons,
   ],
 )
 class SqliteDb extends _$SqliteDb {
@@ -224,6 +239,7 @@ class SqliteDb extends _$SqliteDb {
             await transaction(() async {
               if (from < 2) {
                 await m.createTable(tags);
+                await m.createTable(persons);
                 await _createIndexV2(m);
               }
             });
@@ -245,6 +261,8 @@ class SqliteDb extends _$SqliteDb {
   Future<void> _createIndexV2(Migrator m) async {
     await m.createIndex(Index("tags_server_index",
         "CREATE INDEX tags_server_index ON tags(server);"));
+    await m.createIndex(Index("persons_account_index",
+        "CREATE INDEX persons_account_index ON persons(account);"));
   }
 
   static final _log = Logger("entity.sqlite_table.SqliteDb");

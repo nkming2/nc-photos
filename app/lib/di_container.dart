@@ -20,6 +20,8 @@ enum DiType {
   fileRepoRemote,
   fileRepoLocal,
   personRepo,
+  personRepoRemote,
+  personRepoLocal,
   shareRepo,
   shareeRepo,
   favoriteRepo,
@@ -41,6 +43,8 @@ class DiContainer {
     FileRepo? fileRepoRemote,
     FileRepo? fileRepoLocal,
     PersonRepo? personRepo,
+    PersonRepo? personRepoRemote,
+    PersonRepo? personRepoLocal,
     ShareRepo? shareRepo,
     ShareeRepo? shareeRepo,
     FavoriteRepo? favoriteRepo,
@@ -58,6 +62,8 @@ class DiContainer {
         _fileRepoRemote = fileRepoRemote,
         _fileRepoLocal = fileRepoLocal,
         _personRepo = personRepo,
+        _personRepoRemote = personRepoRemote,
+        _personRepoLocal = personRepoLocal,
         _shareRepo = shareRepo,
         _shareeRepo = shareeRepo,
         _favoriteRepo = favoriteRepo,
@@ -87,6 +93,10 @@ class DiContainer {
         return contianer._fileRepoLocal != null;
       case DiType.personRepo:
         return contianer._personRepo != null;
+      case DiType.personRepoRemote:
+        return contianer._personRepoRemote != null;
+      case DiType.personRepoLocal:
+        return contianer._personRepoLocal != null;
       case DiType.shareRepo:
         return contianer._shareRepo != null;
       case DiType.shareeRepo:
@@ -148,6 +158,8 @@ class DiContainer {
   FileRepo get fileRepoRemote => _fileRepoRemote!;
   FileRepo get fileRepoLocal => _fileRepoLocal!;
   PersonRepo get personRepo => _personRepo!;
+  PersonRepo get personRepoRemote => _personRepoRemote!;
+  PersonRepo get personRepoLocal => _personRepoLocal!;
   ShareRepo get shareRepo => _shareRepo!;
   ShareeRepo get shareeRepo => _shareeRepo!;
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
@@ -193,6 +205,16 @@ class DiContainer {
   set personRepo(PersonRepo v) {
     assert(_personRepo == null);
     _personRepo = v;
+  }
+
+  set personRepoRemote(PersonRepo v) {
+    assert(_personRepoRemote == null);
+    _personRepoRemote = v;
+  }
+
+  set personRepoLocal(PersonRepo v) {
+    assert(_personRepoLocal == null);
+    _personRepoLocal = v;
   }
 
   set shareRepo(ShareRepo v) {
@@ -255,6 +277,8 @@ class DiContainer {
   // Explicitly request a FileRepo backed by local source
   FileRepo? _fileRepoLocal;
   PersonRepo? _personRepo;
+  PersonRepo? _personRepoRemote;
+  PersonRepo? _personRepoLocal;
   ShareRepo? _shareRepo;
   ShareeRepo? _shareeRepo;
   FavoriteRepo? _favoriteRepo;
@@ -274,6 +298,10 @@ extension DiContainerExtension on DiContainer {
   DiContainer withRemoteFileRepo() =>
       copyWith(fileRepo: OrNull(fileRepoRemote));
   DiContainer withLocalFileRepo() => copyWith(fileRepo: OrNull(fileRepoLocal));
+  DiContainer withRemotePersonRepo() =>
+      copyWith(personRepo: OrNull(personRepoRemote));
+  DiContainer withLocalPersonRepo() =>
+      copyWith(personRepo: OrNull(personRepoLocal));
   DiContainer withRemoteTagRepo() => copyWith(tagRepo: OrNull(tagRepoRemote));
   DiContainer withLocalTagRepo() => copyWith(tagRepo: OrNull(tagRepoLocal));
 }

@@ -174,6 +174,8 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
   c.personRepo = const PersonRepo(PersonRemoteDataSource());
+  c.personRepoRemote = const PersonRepo(PersonRemoteDataSource());
+  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
   c.shareRepo = ShareRepo(ShareRemoteDataSource());
   c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());

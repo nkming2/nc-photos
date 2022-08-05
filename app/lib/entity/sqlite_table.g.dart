@@ -3414,6 +3414,301 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   }
 }
 
+class Person extends DataClass implements Insertable<Person> {
+  final int rowId;
+  final int account;
+  final String name;
+  final int thumbFaceId;
+  final int count;
+  Person(
+      {required this.rowId,
+      required this.account,
+      required this.name,
+      required this.thumbFaceId,
+      required this.count});
+  factory Person.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return Person(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      account: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      thumbFaceId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}thumb_face_id'])!,
+      count: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}count'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['account'] = Variable<int>(account);
+    map['name'] = Variable<String>(name);
+    map['thumb_face_id'] = Variable<int>(thumbFaceId);
+    map['count'] = Variable<int>(count);
+    return map;
+  }
+
+  PersonsCompanion toCompanion(bool nullToAbsent) {
+    return PersonsCompanion(
+      rowId: Value(rowId),
+      account: Value(account),
+      name: Value(name),
+      thumbFaceId: Value(thumbFaceId),
+      count: Value(count),
+    );
+  }
+
+  factory Person.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Person(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      account: serializer.fromJson<int>(json['account']),
+      name: serializer.fromJson<String>(json['name']),
+      thumbFaceId: serializer.fromJson<int>(json['thumbFaceId']),
+      count: serializer.fromJson<int>(json['count']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'account': serializer.toJson<int>(account),
+      'name': serializer.toJson<String>(name),
+      'thumbFaceId': serializer.toJson<int>(thumbFaceId),
+      'count': serializer.toJson<int>(count),
+    };
+  }
+
+  Person copyWith(
+          {int? rowId,
+          int? account,
+          String? name,
+          int? thumbFaceId,
+          int? count}) =>
+      Person(
+        rowId: rowId ?? this.rowId,
+        account: account ?? this.account,
+        name: name ?? this.name,
+        thumbFaceId: thumbFaceId ?? this.thumbFaceId,
+        count: count ?? this.count,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Person(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('name: $name, ')
+          ..write('thumbFaceId: $thumbFaceId, ')
+          ..write('count: $count')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, account, name, thumbFaceId, count);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Person &&
+          other.rowId == this.rowId &&
+          other.account == this.account &&
+          other.name == this.name &&
+          other.thumbFaceId == this.thumbFaceId &&
+          other.count == this.count);
+}
+
+class PersonsCompanion extends UpdateCompanion<Person> {
+  final Value<int> rowId;
+  final Value<int> account;
+  final Value<String> name;
+  final Value<int> thumbFaceId;
+  final Value<int> count;
+  const PersonsCompanion({
+    this.rowId = const Value.absent(),
+    this.account = const Value.absent(),
+    this.name = const Value.absent(),
+    this.thumbFaceId = const Value.absent(),
+    this.count = const Value.absent(),
+  });
+  PersonsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int account,
+    required String name,
+    required int thumbFaceId,
+    required int count,
+  })  : account = Value(account),
+        name = Value(name),
+        thumbFaceId = Value(thumbFaceId),
+        count = Value(count);
+  static Insertable<Person> custom({
+    Expression<int>? rowId,
+    Expression<int>? account,
+    Expression<String>? name,
+    Expression<int>? thumbFaceId,
+    Expression<int>? count,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (account != null) 'account': account,
+      if (name != null) 'name': name,
+      if (thumbFaceId != null) 'thumb_face_id': thumbFaceId,
+      if (count != null) 'count': count,
+    });
+  }
+
+  PersonsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? account,
+      Value<String>? name,
+      Value<int>? thumbFaceId,
+      Value<int>? count}) {
+    return PersonsCompanion(
+      rowId: rowId ?? this.rowId,
+      account: account ?? this.account,
+      name: name ?? this.name,
+      thumbFaceId: thumbFaceId ?? this.thumbFaceId,
+      count: count ?? this.count,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (account.present) {
+      map['account'] = Variable<int>(account.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (thumbFaceId.present) {
+      map['thumb_face_id'] = Variable<int>(thumbFaceId.value);
+    }
+    if (count.present) {
+      map['count'] = Variable<int>(count.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('name: $name, ')
+          ..write('thumbFaceId: $thumbFaceId, ')
+          ..write('count: $count')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PersonsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _accountMeta = const VerificationMeta('account');
+  @override
+  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
+      'account', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _thumbFaceIdMeta =
+      const VerificationMeta('thumbFaceId');
+  @override
+  late final GeneratedColumn<int?> thumbFaceId = GeneratedColumn<int?>(
+      'thumb_face_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _countMeta = const VerificationMeta('count');
+  @override
+  late final GeneratedColumn<int?> count = GeneratedColumn<int?>(
+      'count', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [rowId, account, name, thumbFaceId, count];
+  @override
+  String get aliasedName => _alias ?? 'persons';
+  @override
+  String get actualTableName => 'persons';
+  @override
+  VerificationContext validateIntegrity(Insertable<Person> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    } else if (isInserting) {
+      context.missing(_accountMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('thumb_face_id')) {
+      context.handle(
+          _thumbFaceIdMeta,
+          thumbFaceId.isAcceptableOrUnknown(
+              data['thumb_face_id']!, _thumbFaceIdMeta));
+    } else if (isInserting) {
+      context.missing(_thumbFaceIdMeta);
+    }
+    if (data.containsKey('count')) {
+      context.handle(
+          _countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
+    } else if (isInserting) {
+      context.missing(_countMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {account, name},
+      ];
+  @override
+  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return Person.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $PersonsTable createAlias(String alias) {
+    return $PersonsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$SqliteDb extends GeneratedDatabase {
   _$SqliteDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   _$SqliteDb.connect(DatabaseConnection c) : super.connect(c);
@@ -3427,6 +3722,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
   late final $TagsTable tags = $TagsTable(this);
+  late final $PersonsTable persons = $PersonsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -3440,6 +3736,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         dirFiles,
         albums,
         albumShares,
-        tags
+        tags,
+        persons
       ];
 }

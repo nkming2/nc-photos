@@ -4,8 +4,11 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 
 class PersonRemoteDataSource implements PersonDataSource {
   const PersonRemoteDataSource();
@@ -29,6 +32,24 @@ class PersonRemoteDataSource implements PersonDataSource {
 
   static final _log =
       Logger("entity.person.data_source.PersonRemoteDataSource");
+}
+
+class PersonSqliteDbDataSource implements PersonDataSource {
+  const PersonSqliteDbDataSource(this.sqliteDb);
+
+  @override
+  list(Account account) async {
+    _log.info("[list] $account");
+    final dbPersons = await sqliteDb.use((db) async {
+      return await db.allPersons(appAccount: account);
+    });
+    return dbPersons.convertToAppPerson();
+  }
+
+  final sql.SqliteDb sqliteDb;
+
+  static final _log =
+      Logger("entity.person.data_source.PersonSqliteDbDataSource");
 }
 
 class _PersonParser {
