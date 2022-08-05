@@ -1,4 +1,6 @@
 import 'package:drift/drift.dart' as sql;
+import 'package:event_bus/event_bus.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
@@ -10,6 +12,8 @@ import '../mock_type.dart';
 import '../test_util.dart' as util;
 
 void main() {
+  KiwiContainer().registerInstance<EventBus>(MockEventBus());
+
   group("SyncFavorite", () {
     test("new", _new);
     test("remove", _remove);
@@ -43,7 +47,7 @@ Future<void> _new() async {
 
   await SyncFavorite(c)(account);
   expect(
-    await listSqliteDbFavoriteFileIds(c.sqliteDb),
+    await _listSqliteDbFavoriteFileIds(c.sqliteDb),
     {101, 102, 103, 104},
   );
 }
@@ -73,12 +77,12 @@ Future<void> _remove() async {
 
   await SyncFavorite(c)(account);
   expect(
-    await listSqliteDbFavoriteFileIds(c.sqliteDb),
+    await _listSqliteDbFavoriteFileIds(c.sqliteDb),
     {103, 104},
   );
 }
 
-Future<Set<int>> listSqliteDbFavoriteFileIds(sql.SqliteDb db) async {
+Future<Set<int>> _listSqliteDbFavoriteFileIds(sql.SqliteDb db) async {
   final query = db.selectOnly(db.files).join([
     sql.innerJoin(
         db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
