@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/future_util.dart' as future_util;
 import 'package:nc_photos/or_null.dart';
@@ -420,6 +421,34 @@ class MockShareeMemoryRepo extends MockShareeRepo {
   }
 
   final List<Sharee> sharees;
+}
+
+class MockTagRepo implements TagRepo {
+  @override
+  TagDataSource get dataSrc => throw UnimplementedError();
+
+  @override
+  Future<List<Tag>> list(Account account) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Tag>> listByFile(Account account, File file) {
+    throw UnimplementedError();
+  }
+}
+
+class MockTagMemoryRepo extends MockTagRepo {
+  MockTagMemoryRepo([
+    Map<String, List<Tag>> initialData = const {},
+  ]) : tags = initialData.map((key, value) => MapEntry(key, List.of(value)));
+
+  @override
+  list(Account account) async {
+    return tags[account.url]!;
+  }
+
+  final Map<String, List<Tag>> tags;
 }
 
 extension MockDiContainerExtension on DiContainer {

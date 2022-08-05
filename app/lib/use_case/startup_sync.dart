@@ -11,12 +11,14 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
+import 'package:nc_photos/use_case/sync_tag.dart';
 
 /// Sync various properties with server during startup
 class StartupSync {
   StartupSync(this._c)
       : assert(require(_c)),
-        assert(SyncFavorite.require(_c));
+        assert(SyncFavorite.require(_c)),
+        assert(SyncTag.require(_c));
 
   static bool require(DiContainer c) => true;
 
@@ -48,6 +50,11 @@ class StartupSync {
     } catch (e, stackTrace) {
       _log.shout("[_run] Failed while SyncFavorite", e, stackTrace);
       syncFavoriteCount = -1;
+    }
+    try {
+      await SyncTag(_c)(account);
+    } catch (e, stackTrace) {
+      _log.shout("[_run] Failed while SyncTag", e, stackTrace);
     }
     _log.info("[_run] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
     return SyncResult(syncFavoriteCount);

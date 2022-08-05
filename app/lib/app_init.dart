@@ -178,6 +178,8 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());
   c.tagRepo = const TagRepo(TagRemoteDataSource());
+  c.tagRepoRemote = const TagRepo(TagRemoteDataSource());
+  c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
 
   if (platform_k.isAndroid) {

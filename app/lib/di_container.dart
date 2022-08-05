@@ -24,6 +24,8 @@ enum DiType {
   shareeRepo,
   favoriteRepo,
   tagRepo,
+  tagRepoRemote,
+  tagRepoLocal,
   taggedFileRepo,
   localFileRepo,
   pref,
@@ -43,6 +45,8 @@ class DiContainer {
     ShareeRepo? shareeRepo,
     FavoriteRepo? favoriteRepo,
     TagRepo? tagRepo,
+    TagRepo? tagRepoRemote,
+    TagRepo? tagRepoLocal,
     TaggedFileRepo? taggedFileRepo,
     LocalFileRepo? localFileRepo,
     Pref? pref,
@@ -58,6 +62,8 @@ class DiContainer {
         _shareeRepo = shareeRepo,
         _favoriteRepo = favoriteRepo,
         _tagRepo = tagRepo,
+        _tagRepoRemote = tagRepoRemote,
+        _tagRepoLocal = tagRepoLocal,
         _taggedFileRepo = taggedFileRepo,
         _localFileRepo = localFileRepo,
         _pref = pref,
@@ -89,6 +95,10 @@ class DiContainer {
         return contianer._favoriteRepo != null;
       case DiType.tagRepo:
         return contianer._tagRepo != null;
+      case DiType.tagRepoRemote:
+        return contianer._tagRepoRemote != null;
+      case DiType.tagRepoLocal:
+        return contianer._tagRepoLocal != null;
       case DiType.taggedFileRepo:
         return contianer._taggedFileRepo != null;
       case DiType.localFileRepo:
@@ -142,6 +152,8 @@ class DiContainer {
   ShareeRepo get shareeRepo => _shareeRepo!;
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
   TagRepo get tagRepo => _tagRepo!;
+  TagRepo get tagRepoRemote => _tagRepoRemote!;
+  TagRepo get tagRepoLocal => _tagRepoLocal!;
   TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
   LocalFileRepo get localFileRepo => _localFileRepo!;
 
@@ -203,6 +215,16 @@ class DiContainer {
     _tagRepo = v;
   }
 
+  set tagRepoRemote(TagRepo v) {
+    assert(_tagRepoRemote == null);
+    _tagRepoRemote = v;
+  }
+
+  set tagRepoLocal(TagRepo v) {
+    assert(_tagRepoLocal == null);
+    _tagRepoLocal = v;
+  }
+
   set taggedFileRepo(TaggedFileRepo v) {
     assert(_taggedFileRepo == null);
     _taggedFileRepo = v;
@@ -237,6 +259,8 @@ class DiContainer {
   ShareeRepo? _shareeRepo;
   FavoriteRepo? _favoriteRepo;
   TagRepo? _tagRepo;
+  TagRepo? _tagRepoRemote;
+  TagRepo? _tagRepoLocal;
   TaggedFileRepo? _taggedFileRepo;
   LocalFileRepo? _localFileRepo;
 
@@ -250,4 +274,6 @@ extension DiContainerExtension on DiContainer {
   DiContainer withRemoteFileRepo() =>
       copyWith(fileRepo: OrNull(fileRepoRemote));
   DiContainer withLocalFileRepo() => copyWith(fileRepo: OrNull(fileRepoLocal));
+  DiContainer withRemoteTagRepo() => copyWith(tagRepo: OrNull(tagRepoRemote));
+  DiContainer withLocalTagRepo() => copyWith(tagRepo: OrNull(tagRepoLocal));
 }

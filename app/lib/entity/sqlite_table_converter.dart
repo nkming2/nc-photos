@@ -10,7 +10,25 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+
+extension SqlTagListExtension on List<sql.Tag> {
+  Future<List<Tag>> convertToAppTag() {
+    return computeAll(SqliteTagConverter.fromSql);
+  }
+}
+
+extension AppTagListExtension on List<Tag> {
+  Future<List<sql.TagsCompanion>> convertToTagCompanion(
+      sql.Account? dbAccount) {
+    return map((t) => {
+          "account": dbAccount,
+          "tag": t,
+        }).computeAll(_convertAppTag);
+  }
+}
 
 class SqliteAlbumConverter {
   static Album fromSql(
@@ -142,3 +160,29 @@ class SqliteFileConverter {
     return sql.CompleteFileCompanion(dbFile, dbAccountFile, dbImage, dbTrash);
   }
 }
+
+class SqliteTagConverter {
+  static Tag fromSql(sql.Tag tag) => Tag(
+        id: tag.tagId,
+        displayName: tag.displayName,
+        userVisible: tag.userVisible,
+        userAssignable: tag.userAssignable,
+      );
+
+  static sql.TagsCompanion toSql(sql.Account? dbAccount, Tag tag) =>
+      sql.TagsCompanion(
+        server:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.server),
+        tagId: Value(tag.id),
+        displayName: Value(tag.displayName),
+        userVisible: Value(tag.userVisible),
+        userAssignable: Value(tag.userAssignable),
+      );
+}
+
+sql.TagsCompanion _convertAppTag(Map map) {
+  final account = map["account"] as sql.Account?;
+  final tag = map["tag"] as Tag;
+  return SqliteTagConverter.toSql(account, tag);
+}
+
