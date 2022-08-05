@@ -102,11 +102,8 @@ class DiContainer {
 
   DiContainer copyWith({
     OrNull<AlbumRepo>? albumRepo,
-    OrNull<AlbumRepo>? albumRepoLocal,
     OrNull<FaceRepo>? faceRepo,
     OrNull<FileRepo>? fileRepo,
-    OrNull<FileRepo>? fileRepoRemote,
-    OrNull<FileRepo>? fileRepoLocal,
     OrNull<PersonRepo>? personRepo,
     OrNull<ShareRepo>? shareRepo,
     OrNull<ShareeRepo>? shareeRepo,
@@ -119,13 +116,8 @@ class DiContainer {
   }) {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
-      albumRepoLocal:
-          albumRepoLocal == null ? _albumRepoLocal : albumRepoLocal.obj,
       faceRepo: faceRepo == null ? _faceRepo : faceRepo.obj,
       fileRepo: fileRepo == null ? _fileRepo : fileRepo.obj,
-      fileRepoRemote:
-          fileRepoRemote == null ? _fileRepoRemote : fileRepoRemote.obj,
-      fileRepoLocal: fileRepoLocal == null ? _fileRepoLocal : fileRepoLocal.obj,
       personRepo: personRepo == null ? _personRepo : personRepo.obj,
       shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
       shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
@@ -253,6 +245,9 @@ class DiContainer {
 }
 
 extension DiContainerExtension on DiContainer {
+  DiContainer withLocalAlbumRepo() =>
+      copyWith(albumRepo: OrNull(albumRepoLocal));
   DiContainer withRemoteFileRepo() =>
       copyWith(fileRepo: OrNull(fileRepoRemote));
+  DiContainer withLocalFileRepo() => copyWith(fileRepo: OrNull(fileRepoLocal));
 }
