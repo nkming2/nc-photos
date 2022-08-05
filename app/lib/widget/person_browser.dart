@@ -140,7 +140,7 @@ class _PersonBrowserState extends State<PersonBrowser>
         ),
         child: CustomScrollView(
           slivers: [
-            _buildAppBar(context),
+            _buildAppBar(context, state),
             if (state is ListFaceFileBlocLoading ||
                 _buildItemQueue.isProcessing)
               const SliverToBoxAdapter(
@@ -158,15 +158,15 @@ class _PersonBrowserState extends State<PersonBrowser>
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, ListFaceFileBlocState state) {
     if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
-      return _buildNormalAppBar(context);
+      return _buildNormalAppBar(context, state);
     }
   }
 
-  Widget _buildNormalAppBar(BuildContext context) {
+  Widget _buildNormalAppBar(BuildContext context, ListFaceFileBlocState state) {
     return SliverAppBar(
       floating: true,
       titleSpacing: 0,
@@ -192,7 +192,8 @@ class _PersonBrowserState extends State<PersonBrowser>
                   softWrap: false,
                   overflow: TextOverflow.clip,
                 ),
-                if (_backingFiles != null)
+                if (state is! ListFaceFileBlocLoading &&
+                    !_buildItemQueue.isProcessing)
                   Text(
                     L10n.global()
                         .personPhotoCountText(itemStreamListItems.length),
