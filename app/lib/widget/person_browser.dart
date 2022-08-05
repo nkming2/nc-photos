@@ -1,34 +1,34 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/list_face.dart';
+import 'package:nc_photos/bloc/list_face_file.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -79,10 +79,11 @@ class _PersonBrowserState extends State<PersonBrowser>
   _PersonBrowserState() {
     final c = KiwiContainer().resolve<DiContainer>();
     assert(require(c));
+    assert(ListFaceFileBloc.require(c));
     _c = c;
   }
 
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+  static bool require(DiContainer c) => true;
 
   @override
   initState() {
@@ -103,12 +104,12 @@ class _PersonBrowserState extends State<PersonBrowser>
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: BlocListener<ListFaceBloc, ListFaceBlocState>(
+        body: BlocListener<ListFaceFileBloc, ListFaceFileBlocState>(
           bloc: _bloc,
           listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListFaceBloc, ListFaceBlocState>(
+          child: BlocBuilder<ListFaceFileBloc, ListFaceFileBlocState>(
             bloc: _bloc,
-            builder: (context, state) => _buildContent(context),
+            builder: (context, state) => _buildContent(context, state),
           ),
         ),
       ),
@@ -117,7 +118,10 @@ class _PersonBrowserState extends State<PersonBrowser>
 
   @override
   onItemTap(SelectableItem item, int index) {
-    item.as<_ListItem>()?.onTap?.call();
+    item.as<PhotoListFileItem>()?.run((fileItem) {
+      Navigator.pushNamed(context, Viewer.routeName,
+          arguments: ViewerArguments(widget.account, _backingFiles, index));
+    });
   }
 
   void _initBloc() {
@@ -125,36 +129,33 @@ class _PersonBrowserState extends State<PersonBrowser>
     _reqQuery();
   }
 
-  Widget _buildContent(BuildContext context) {
-    if (_backingFiles == null) {
-      return CustomScrollView(
-        slivers: [
-          _buildNormalAppBar(context),
-          const SliverToBoxAdapter(
-            child: LinearProgressIndicator(),
-          ),
-        ],
-      );
-    } else {
-      return buildItemStreamListOuter(
-        context,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              buildItemStreamList(
-                maxCrossAxisExtent: _thumbSize.toDouble(),
+  Widget _buildContent(BuildContext context, ListFaceFileBlocState state) {
+    return buildItemStreamListOuter(
+      context,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                secondary: AppTheme.getOverscrollIndicatorColor(context),
               ),
-            ],
-          ),
         ),
-      );
-    }
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            if (state is ListFaceFileBlocLoading ||
+                _buildItemQueue.isProcessing)
+              const SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: LinearProgressIndicator(),
+                ),
+              ),
+            buildItemStreamList(
+              maxCrossAxisExtent: _thumbSize.toDouble(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -310,23 +311,19 @@ class _PersonBrowserState extends State<PersonBrowser>
     );
   }
 
-  void _onStateChange(BuildContext context, ListFaceBlocState state) {
-    if (state is ListFaceBlocInit) {
-      _backingFiles = null;
-    } else if (state is ListFaceBlocSuccess || state is ListFaceBlocLoading) {
+  void _onStateChange(BuildContext context, ListFaceFileBlocState state) {
+    if (state is ListFaceFileBlocInit) {
+      itemStreamListItems = [];
+    } else if (state is ListFaceFileBlocSuccess ||
+        state is ListFaceFileBlocLoading) {
       _transformItems(state.items);
-    } else if (state is ListFaceBlocFailure) {
+    } else if (state is ListFaceFileBlocFailure) {
       _transformItems(state.items);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
     }
-  }
-
-  void _onItemTap(int index) {
-    Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles!, index));
   }
 
   void _onSelectionMenuSelected(
@@ -348,8 +345,10 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
-    final selected =
-        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    final selected = selectedListItems
+        .whereType<PhotoListFileItem>()
+        .map((e) => e.file)
+        .toList();
     ShareHandler(
       context: context,
       clearSelection: () {
@@ -364,8 +363,10 @@ class _PersonBrowserState extends State<PersonBrowser>
     return AddSelectionToAlbumHandler()(
       context: context,
       account: widget.account,
-      selectedFiles:
-          selectedListItems.whereType<_ListItem>().map((e) => e.file).toList(),
+      selectedFiles: selectedListItems
+          .whereType<PhotoListFileItem>()
+          .map((e) => e.file)
+          .toList(),
       clearSelection: () {
         if (mounted) {
           setState(() {
@@ -377,8 +378,10 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionDownloadPressed() {
-    final selected =
-        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    final selected = selectedListItems
+        .whereType<PhotoListFileItem>()
+        .map((e) => e.file)
+        .toList();
     DownloadHandler().downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
@@ -386,8 +389,10 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
-    final selectedFiles =
-        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    final selectedFiles = selectedListItems
+        .whereType<PhotoListFileItem>()
+        .map((e) => e.file)
+        .toList();
     setState(() {
       clearSelectedItems();
     });
@@ -398,8 +403,10 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
-    final selectedFiles =
-        selectedListItems.whereType<_ListItem>().map((e) => e.file).toList();
+    final selectedFiles = selectedListItems
+        .whereType<PhotoListFileItem>()
+        .map((e) => e.file)
+        .toList();
     setState(() {
       clearSelectedItems();
     });
@@ -411,7 +418,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
-    if (_backingFiles?.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
+    if (_backingFiles.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
         true) {
       return;
     }
@@ -421,39 +428,38 @@ class _PersonBrowserState extends State<PersonBrowser>
     );
   }
 
-  Future<void> _transformItems(List<Face> items) async {
-    final files = await PopulatePerson(_c)(widget.account, items);
-    _backingFiles = files
-        .sorted(compareFileDateTimeDescending)
-        .where((element) =>
-            file_util.isSupportedFormat(element) && element.isArchived != true)
-        .toList();
-    setState(() {
-      itemStreamListItems = _backingFiles!
-          .mapIndexed((i, f) => _ListItem(
-                index: i,
-                file: f,
-                account: widget.account,
-                previewUrl: api_util.getFilePreviewUrl(
-                  widget.account,
-                  f,
-                  width: k.photoThumbSize,
-                  height: k.photoThumbSize,
-                ),
-                onTap: () => _onItemTap(i),
-              ))
-          .toList();
-    });
+  Future<void> _transformItems(List<File> files) async {
+    _buildItemQueue.addJob(
+      PhotoListItemBuilderArguments(
+        widget.account,
+        files,
+        sorter: photoListFileDateTimeSorter,
+        locale: language_util.getSelectedLocale() ??
+            PlatformDispatcher.instance.locale,
+      ),
+      buildPhotoListItem,
+      (result) {
+        if (mounted) {
+          setState(() {
+            _backingFiles = result.backingFiles;
+            itemStreamListItems = result.listItems;
+          });
+        }
+      },
+    );
   }
 
   void _reqQuery() {
-    _bloc.add(ListFaceBlocQuery(widget.account, widget.person));
+    _bloc.add(ListFaceFileBlocQuery(widget.account, widget.person));
   }
 
   late final DiContainer _c;
 
-  final ListFaceBloc _bloc = ListFaceBloc();
-  List<File>? _backingFiles;
+  late final ListFaceFileBloc _bloc = ListFaceFileBloc(_c);
+  var _backingFiles = <File>[];
+
+  final _buildItemQueue =
+      ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
 
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
@@ -471,55 +477,6 @@ class _PersonBrowserState extends State<PersonBrowser>
       AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
 
   static final _log = Logger("widget.person_browser._PersonBrowserState");
-}
-
-class _ListItem implements SelectableItem {
-  _ListItem({
-    required this.index,
-    required this.file,
-    required this.account,
-    required this.previewUrl,
-    this.onTap,
-  });
-
-  @override
-  get isTappable => onTap != null;
-
-  @override
-  get isSelectable => true;
-
-  @override
-  get staggeredTile => const StaggeredTile.count(1, 1);
-
-  @override
-  operator ==(Object other) {
-    return other is _ListItem && file.path == other.file.path;
-  }
-
-  @override
-  get hashCode => file.path.hashCode;
-
-  @override
-  toString() {
-    return "$runtimeType {"
-        "index: $index, "
-        "}";
-  }
-
-  @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
-
-  final int index;
-  final File file;
-  final Account account;
-  final String previewUrl;
-  final VoidCallback? onTap;
 }
 
 enum _SelectionMenuOption {
