@@ -31,7 +31,7 @@ class ScanDirOffline {
             ..setAppAccount(account);
           root.strippedPathWithEmpty.run((p) {
             if (p.isNotEmpty) {
-              q.byRelativePathPattern("$p/%");
+              q.byOrRelativePathPattern("$p/%");
             }
           });
           if (isOnlySupportedFormat) {
@@ -80,7 +80,7 @@ class ScanDirOfflineMini {
           if (path.isEmpty) {
             break;
           }
-          q.byRelativePathPattern("$path/%");
+          q.byOrRelativePathPattern("$path/%");
         }
         if (isOnlySupportedFormat) {
           q

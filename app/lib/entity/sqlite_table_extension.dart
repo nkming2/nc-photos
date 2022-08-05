@@ -465,8 +465,8 @@ class FilesQueryBuilder {
     _byRelativePath = path;
   }
 
-  void byRelativePathPattern(String pattern) {
-    (_byRelativePathPatterns ??= []).add(pattern);
+  void byOrRelativePathPattern(String pattern) {
+    (_byOrRelativePathPatterns ??= []).add(pattern);
   }
 
   void byMimePattern(String pattern) {
@@ -536,11 +536,11 @@ class FilesQueryBuilder {
     if (_byRelativePath != null) {
       query.where(db.accountFiles.relativePath.equals(_byRelativePath));
     }
-    if (_byRelativePathPatterns?.isNotEmpty == true) {
-      final expression = _byRelativePathPatterns!
+    if (_byOrRelativePathPatterns?.isNotEmpty == true) {
+      final expression = _byOrRelativePathPatterns!
           .sublist(1)
           .fold<Expression<bool?>>(
-              db.accountFiles.relativePath.like(_byRelativePathPatterns![0]),
+              db.accountFiles.relativePath.like(_byOrRelativePathPatterns![0]),
               (previousValue, element) =>
                   previousValue | db.accountFiles.relativePath.like(element));
       query.where(expression);
@@ -582,7 +582,7 @@ class FilesQueryBuilder {
   int? _byFileId;
   Iterable<int>? _byFileIds;
   String? _byRelativePath;
-  List<String>? _byRelativePathPatterns;
+  List<String>? _byOrRelativePathPatterns;
   List<String>? _byMimePatterns;
   bool? _byFavorite;
   int? _byDirRowId;
