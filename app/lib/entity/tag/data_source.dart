@@ -18,7 +18,6 @@ class TagRemoteDataSource implements TagDataSource {
           displayName: 1,
           userVisible: 1,
           userAssignable: 1,
-          canAssign: 1,
         );
     if (!response.isGood) {
       _log.severe("[list] Failed requesting server: $response");
@@ -41,7 +40,6 @@ class TagRemoteDataSource implements TagDataSource {
               displayName: 1,
               userVisible: 1,
               userAssignable: 1,
-              canAssign: 1,
             );
     if (!response.isGood) {
       _log.severe("[listByFile] Failed requesting server: $response");

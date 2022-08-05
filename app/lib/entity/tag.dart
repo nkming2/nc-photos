@@ -11,7 +11,6 @@ class Tag with EquatableMixin {
     required this.displayName,
     this.userVisible,
     this.userAssignable,
-    this.canAssign,
   });
 
   factory Tag.fromJson(JsonObj json) => Tag(
@@ -19,7 +18,6 @@ class Tag with EquatableMixin {
         displayName: json["displayName"],
         userVisible: json_util.boolFromJson(json["userVisible"]),
         userAssignable: json_util.boolFromJson(json["userAssignable"]),
-        canAssign: json_util.boolFromJson(json["canAssign"]),
       );
 
   JsonObj toJson() => {
@@ -27,7 +25,6 @@ class Tag with EquatableMixin {
         "displayName": displayName,
         if (userVisible != null) "userVisible": userVisible,
         if (userAssignable != null) "userAssignable": userAssignable,
-        if (canAssign != null) "canAssign": canAssign,
       };
 
   @override
@@ -42,9 +39,6 @@ class Tag with EquatableMixin {
     if (userAssignable != null) {
       buffer.write("userAssignable: $userAssignable, ");
     }
-    if (canAssign != null) {
-      buffer.write("canAssign: $canAssign, ");
-    }
     buffer.write("}");
     return buffer.toString();
   }
@@ -54,7 +48,6 @@ class Tag with EquatableMixin {
     String? displayName,
     OrNull<bool>? userVisible,
     OrNull<bool>? userAssignable,
-    OrNull<bool>? canAssign,
   }) =>
       Tag(
         id: id ?? this.id,
@@ -62,7 +55,6 @@ class Tag with EquatableMixin {
         userVisible: userVisible == null ? this.userVisible : userVisible.obj,
         userAssignable:
             userAssignable == null ? this.userAssignable : userAssignable.obj,
-        canAssign: canAssign == null ? this.canAssign : canAssign.obj,
       );
 
   @override
@@ -71,14 +63,12 @@ class Tag with EquatableMixin {
         displayName,
         userVisible,
         userAssignable,
-        canAssign,
       ];
 
   final int id;
   final String displayName;
   final bool? userVisible;
   final bool? userAssignable;
-  final bool? canAssign;
 }
 
 extension TagExtension on Tag {

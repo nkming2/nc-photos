@@ -205,7 +205,6 @@ class WebdavResponseParser {
     String? displayName;
     bool? userVisible;
     bool? userAssignable;
-    bool? canAssign;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -231,7 +230,6 @@ class WebdavResponseParser {
         displayName = propParser.displayName;
         userVisible = propParser.userVisible;
         userAssignable = propParser.userAssignable;
-        canAssign = propParser.canAssign;
       }
     }
     if (id == null) {
@@ -244,7 +242,6 @@ class WebdavResponseParser {
       displayName: displayName!,
       userVisible: userVisible!,
       userAssignable: userAssignable!,
-      canAssign: canAssign!,
     );
   }
 
@@ -470,9 +467,6 @@ class _TagPropParser {
       } else if (child.matchQualifiedName("user-assignable",
           prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
         _userAssignable = child.innerText == "true";
-      } else if (child.matchQualifiedName("can-assign",
-          prefix: "http://owncloud.org/ns", namespaces: namespaces)) {
-        _canAssign = child.innerText == "true";
       }
     }
   }
@@ -481,7 +475,6 @@ class _TagPropParser {
   String? get displayName => _displayName;
   bool? get userVisible => _userVisible;
   bool? get userAssignable => _userAssignable;
-  bool? get canAssign => _canAssign;
 
   final Map<String, String> namespaces;
 
@@ -492,7 +485,6 @@ class _TagPropParser {
   String? _displayName;
   bool? _userVisible;
   bool? _userAssignable;
-  bool? _canAssign;
 }
 
 extension on XmlElement {
