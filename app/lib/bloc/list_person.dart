@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/data_source.dart';
 
@@ -74,19 +72,6 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
     on<ListPersonBlocEvent>(_onEvent);
   }
 
-  static ListPersonBloc of(Account account) {
-    final name = bloc_util.getInstNameForAccount("ListPersonBloc", account);
-    try {
-      _log.fine("[of] Resolving bloc for '$name'");
-      return KiwiContainer().resolve<ListPersonBloc>(name);
-    } catch (_) {
-      // no created instance for this account, make a new one
-      _log.info("[of] New bloc instance for account: $account");
-      final bloc = ListPersonBloc();
-      KiwiContainer().registerInstance<ListPersonBloc>(bloc, name: name);
-      return bloc;
-    }
-  }
 
   Future<void> _onEvent(
       ListPersonBlocEvent event, Emitter<ListPersonBlocState> emit) async {
