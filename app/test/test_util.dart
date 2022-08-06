@@ -274,7 +274,7 @@ void initLog() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
     String msg =
-        "[${record.loggerName}] ${record.level.name}: ${record.message}";
+        "[${record.loggerName}] ${record.level.name} ${record.time}: ${record.message}";
     if (record.error != null) {
       msg += " (throw: ${record.error.runtimeType} { ${record.error} })";
     }
