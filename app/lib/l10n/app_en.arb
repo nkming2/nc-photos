@@ -1301,6 +1301,71 @@
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
 	},
+	"categoriesLabel": "Categories",
+	"searchLandingPeopleListEmptyText": "Press help to learn how to setup",
+	"@searchLandingPeopleListEmptyText": {
+		"description": "Shown in the search landing page under the People section when there are no people"
+	},
+	"searchLandingCategoryVideosLabel": "Videos",
+	"@searchLandingCategoryVideosLabel": {
+		"description": "Search all videos"
+	},
+	"searchFilterButtonLabel": "FILTERS",
+	"@searchFilterButtonLabel": {
+		"description": "Modify search filters"
+	},
+	"searchFilterDialogTitle": "Search filters",
+	"@searchFilterDialogTitle": {
+		"description": "Dialog to modify search filters"
+	},
+	"applyButtonLabel": "APPLY",
+	"@applyButtonLabel": {
+		"description": "A confirmation button, typically in a dialog, that apply the current settings"
+	},
+	"searchFilterOptionAnyLabel": "Any",
+	"@searchFilterOptionAnyLabel": {
+		"description": "This is the default option for all search filters. Filters with this value will be ignored"
+	},
+	"searchFilterOptionTrueLabel": "True",
+	"@searchFilterOptionTrueLabel": {
+		"description": "Positive option for a boolean filter"
+	},
+	"searchFilterOptionFalseLabel": "False",
+	"@searchFilterOptionFalseLabel": {
+		"description": "Negative option for a boolean filter"
+	},
+	"searchFilterTypeLabel": "Type",
+	"@searchFilterTypeLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterTypeOptionImageLabel": "Image",
+	"@searchFilterTypeOptionImageLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeImageText": "images",
+	"@searchFilterBubbleTypeImageText": {
+		"description": "List of active search filters shown in the result page (by file type, image)"
+	},
+	"searchFilterTypeOptionVideoLabel": "Video",
+	"@searchFilterTypeOptionVideoLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeVideoText": "videos",
+	"@searchFilterBubbleTypeVideoText": {
+		"description": "List of active search filters shown in the result page (by file type, video)"
+	},
+	"searchFilterFavoriteLabel": "Favorite",
+	"@searchFilterFavoriteLabel": {
+		"description": "Filter search results by whether it's in favorites"
+	},
+	"searchFilterBubbleFavoriteTrueText": "favorites",
+	"@searchFilterBubbleFavoriteTrueText": {
+		"description": "List of active search filters shown in the result page (by favorites, true)"
+	},
+	"searchFilterBubbleFavoriteFalseText": "not favorites",
+	"@searchFilterBubbleFavoriteFalseText": {
+		"description": "List of active search filters shown in the result page (by favorites, false)"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

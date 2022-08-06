@@ -4,6 +4,7 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
@@ -30,6 +31,7 @@ enum DiType {
   tagRepoLocal,
   taggedFileRepo,
   localFileRepo,
+  searchRepo,
   pref,
   sqliteDb,
 }
@@ -53,6 +55,7 @@ class DiContainer {
     TagRepo? tagRepoLocal,
     TaggedFileRepo? taggedFileRepo,
     LocalFileRepo? localFileRepo,
+    SearchRepo? searchRepo,
     Pref? pref,
     sql.SqliteDb? sqliteDb,
   })  : _albumRepo = albumRepo,
@@ -72,6 +75,7 @@ class DiContainer {
         _tagRepoLocal = tagRepoLocal,
         _taggedFileRepo = taggedFileRepo,
         _localFileRepo = localFileRepo,
+        _searchRepo = searchRepo,
         _pref = pref,
         _sqliteDb = sqliteDb;
 
@@ -113,6 +117,8 @@ class DiContainer {
         return contianer._taggedFileRepo != null;
       case DiType.localFileRepo:
         return contianer._localFileRepo != null;
+      case DiType.searchRepo:
+        return contianer._searchRepo != null;
       case DiType.pref:
         return contianer._pref != null;
       case DiType.sqliteDb:
@@ -131,6 +137,7 @@ class DiContainer {
     OrNull<TagRepo>? tagRepo,
     OrNull<TaggedFileRepo>? taggedFileRepo,
     OrNull<LocalFileRepo>? localFileRepo,
+    OrNull<SearchRepo>? searchRepo,
     OrNull<Pref>? pref,
     OrNull<sql.SqliteDb>? sqliteDb,
   }) {
@@ -146,6 +153,7 @@ class DiContainer {
       taggedFileRepo:
           taggedFileRepo == null ? _taggedFileRepo : taggedFileRepo.obj,
       localFileRepo: localFileRepo == null ? _localFileRepo : localFileRepo.obj,
+      searchRepo: searchRepo == null ? _searchRepo : searchRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
     );
@@ -168,6 +176,7 @@ class DiContainer {
   TagRepo get tagRepoLocal => _tagRepoLocal!;
   TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
   LocalFileRepo get localFileRepo => _localFileRepo!;
+  SearchRepo get searchRepo => _searchRepo!;
 
   sql.SqliteDb get sqliteDb => _sqliteDb!;
   Pref get pref => _pref!;
@@ -257,6 +266,11 @@ class DiContainer {
     _localFileRepo = v;
   }
 
+  set searchRepo(SearchRepo v) {
+    assert(_searchRepo == null);
+    _searchRepo = v;
+  }
+
   set sqliteDb(sql.SqliteDb v) {
     assert(_sqliteDb == null);
     _sqliteDb = v;
@@ -287,12 +301,23 @@ class DiContainer {
   TagRepo? _tagRepoLocal;
   TaggedFileRepo? _taggedFileRepo;
   LocalFileRepo? _localFileRepo;
+  SearchRepo? _searchRepo;
 
   sql.SqliteDb? _sqliteDb;
   Pref? _pref;
 }
 
 extension DiContainerExtension on DiContainer {
+  /// Uses local repo if available
+  ///
+  /// Notice that not all repo support this
+  DiContainer withLocalRepo() => copyWith(
+        albumRepo: OrNull(albumRepoLocal),
+        fileRepo: OrNull(fileRepoLocal),
+        personRepo: OrNull(personRepoLocal),
+        tagRepo: OrNull(tagRepoLocal),
+      );
+
   DiContainer withLocalAlbumRepo() =>
       copyWith(albumRepo: OrNull(albumRepoLocal));
   DiContainer withRemoteFileRepo() =>

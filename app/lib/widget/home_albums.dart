@@ -26,7 +26,6 @@ import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/album_importer.dart';
-import 'package:nc_photos/widget/album_search_delegate.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
@@ -37,7 +36,6 @@ import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
@@ -207,13 +205,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
   Widget _buildNormalAppBar(BuildContext context) {
     return HomeSliverAppBar(
       account: widget.account,
-      actions: [
-        IconButton(
-          onPressed: () => _onSearchPressed(context),
-          icon: const Icon(Icons.search),
-          tooltip: L10n.global().searchTooltip,
-        ),
-      ],
       menuActions: [
         PopupMenuItem(
           value: _menuValueSort,
@@ -246,19 +237,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(FavoriteBrowser.routeName,
               arguments: FavoriteBrowserArguments(widget.account));
-        }
-      },
-    );
-  }
-
-  SelectableItem _buildPersonItem(BuildContext context) {
-    return _ButtonListItem(
-      icon: Icons.person_outlined,
-      label: L10n.global().collectionPeopleLabel,
-      onTap: () {
-        if (!isSelectionMode) {
-          Navigator.of(context).pushNamed(PeopleBrowser.routeName,
-              arguments: PeopleBrowserArguments(widget.account));
         }
       },
     );
@@ -377,17 +355,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
 
   void _onRefreshPressed() {
     _reqQuery();
-  }
-
-  void _onSearchPressed(BuildContext context) {
-    showSearch(
-      context: context,
-      delegate: AlbumSearchDelegate(context, widget.account),
-    ).then((value) {
-      if (value is Album) {
-        _openAlbum(context, value);
-      }
-    });
   }
 
   void _onSortPressed(BuildContext context) {
@@ -514,8 +481,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
         album_util.sorted(items.map((e) => e.album).toList(), sort);
     itemStreamListItems = [
       _buildFavoriteItem(context),
-      if (AccountPref.of(widget.account).isEnableFaceRecognitionAppOr())
-        _buildPersonItem(context),
       _buildSharingItem(context),
       if (features.isSupportEnhancement) _buildEnhancedPhotosItem(context),
       _buildArchiveItem(context),

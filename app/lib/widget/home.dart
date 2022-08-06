@@ -15,6 +15,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_albums.dart';
 import 'package:nc_photos/widget/home_photos.dart';
+import 'package:nc_photos/widget/home_search.dart';
 
 class HomeArguments {
   HomeArguments(this.account);
@@ -86,6 +87,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           label: L10n.global().photosTabLabel,
         ),
         BottomNavigationBarItem(
+          icon: const Icon(Icons.search),
+          label: L10n.global().searchTooltip,
+        ),
+        BottomNavigationBarItem(
           icon: const Icon(Icons.grid_view_outlined),
           label: L10n.global().collectionsTooltip,
         ),
@@ -100,7 +105,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return PageView.builder(
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 2,
+      itemCount: 3,
       itemBuilder: (context, index) => SlideTransition(
         position: Tween(
           begin: const Offset(0, .05),
@@ -120,6 +125,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         return _buildPhotosPage(context);
 
       case 1:
+        return _buildSearchPage(context);
+
+      case 2:
         return _buildAlbumsPage(context);
 
       default:
@@ -129,6 +137,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   Widget _buildPhotosPage(BuildContext context) {
     return HomePhotos(
+      account: widget.account,
+    );
+  }
+
+  Widget _buildSearchPage(BuildContext context) {
+    return HomeSearch(
       account: widget.account,
     );
   }
