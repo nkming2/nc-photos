@@ -982,11 +982,11 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "Delete folder?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "This folder was created by the app to share multiple files as a link. It is now no longer shared with any party, do you want to delete this folder?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"addToCollectionTooltip": "Add to collection",
@@ -1012,7 +1012,7 @@
 		}
 	},
 	"shareAlbumDialogTitle": "Share with user",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
 	"shareAlbumSuccessNotification": "Album shared with {user}",
@@ -1060,7 +1060,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "FIX",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Fix all",
