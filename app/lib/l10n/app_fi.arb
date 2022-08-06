@@ -368,7 +368,7 @@
 	"settingsScreenBrightnessTitle": "Näytön kirkkaus",
 	"settingsScreenBrightnessDescription": "Ohita järjestelmän määrittämä kirkkaus",
 	"settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
-	"settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty,
+	"settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty",
 	"settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
 	"settingsAlbumTitle": "Albumi",
 	"settingsAlbumDescription": "Muokkaa albumeita",
@@ -1301,7 +1301,7 @@
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
 	},
-	
+
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
