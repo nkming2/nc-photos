@@ -309,7 +309,7 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsExifWifiOnlyTitle": "Prosessoi vain kun WIFI-yhteys on käytettävissä",
+	"settingsExifWifiOnlyTitle": "Prosessoi tiedostoja vain kun WIFI-yhteys on käytettävissä",
 	"@settingsExifWifiOnlyTitle": {
 		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
 	},
@@ -366,9 +366,9 @@
 		"description": "Dedicated page for viewer settings"
 	},
 	"settingsScreenBrightnessTitle": "Näytön kirkkaus",
-	"settingsScreenBrightnessDescription": "Override system brightness level",
+	"settingsScreenBrightnessDescription": "Ohita järjestelmän määrittämä kirkkaus",
 	"settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
-	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
+	"settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty,
 	"settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
 	"settingsAlbumTitle": "Albumi",
 	"settingsAlbumDescription": "Muokkaa albumeita",
@@ -383,7 +383,7 @@
 	"@settingsPhotoEnhancementPageTitle": {
 		"description": "Dedicated page for photo enhancement settings"
 	},
-	"settingsEnhanceMaxResolutionTitle": "Ulostulon maksimiresoluutio",
+	"settingsEnhanceMaxResolutionTitle": "Kuvien maksimiresoluutio",
 	"settingsEnhanceMaxResolutionDescription": "Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.",
 	"settingsThemeTitle": "Teema",
 	"settingsThemeDescription": "Muokkaa sovelluksen ulkoasua",
@@ -1255,6 +1255,51 @@
 	"doubleTapExitNotification": "Napauta uudelleen poistuaksesi",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+	},
+	"imageEditDiscardDialogTitle": "Hylkää muutokset?",
+	"@imageEditDiscardDialogTitle": {
+		"description": "Warn before dismissing image editor (e.g., user pressing back button)"
+	},
+	"imageEditDiscardDialogContent": "Muutoksia ei tallennettu",
+	"discardButtonLabel": "HYLKÄÄ",
+	"@discardButtonLabel": {
+		"description": "Discard the current unsaved content"
+	},
+	"saveTooltip": "Save",
+	"@saveTooltip": {
+		"description": "Save the current content"
+	},
+	"imageEditColorBrightness": "Kirkkaus",
+	"@imageEditColorBrightness": {
+		"description": "Adjust the brightness of an image"
+	},
+	"imageEditColorContrast": "Kontrasti",
+	"@imageEditColorContrast": {
+		"description": "Adjust the contrast of an image"
+	},
+	"imageEditColorWhitePoint": "Valkoinen piste",
+	"@imageEditColorWhitePoint": {
+		"description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+	},
+	"imageEditColorBlackPoint": "Musta piste",
+	"@imageEditColorBlackPoint": {
+		"description": "Adjust the black point of an image"
+	},
+	"imageEditColorSaturation": "Saturaatio",
+	"@imageEditColorSaturation": {
+		"description": "Adjust the color saturation of an image"
+	},
+	"imageEditColorWarmth": "Lämpö",
+	"@imageEditColorWarmth": {
+		"description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+	},
+	"imageEditColorTint": "Värisävy",
+	"@imageEditColorTint": {
+		"description": "Shift colors from a green to a magenta tint"
+	},
+	"imageEditTitle": "Esikatsele muutoksia",
+	"@imageEditTitle": {
+		"description": "Title of the image editor"
 	},
 	
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
