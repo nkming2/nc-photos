@@ -13,6 +13,8 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 
+const maxByFileIdsSize = 30000;
+
 class CompleteFile {
   const CompleteFile(this.file, this.accountFile, this.image, this.trash);
 
@@ -193,7 +195,9 @@ extension SqliteDbExtension on SqliteDb {
     final fileRowIds = await query.map((r) => r.read(files.rowId)!).get();
     if (fileRowIds.isNotEmpty) {
       _log.info("[cleanUpDanglingFiles] Delete ${fileRowIds.length} files");
-      await (delete(files)..where((t) => t.rowId.isIn(fileRowIds))).go();
+      await fileRowIds.withPartitionNoReturn((sublist) async {
+        await (delete(files)..where((t) => t.rowId.isIn(sublist))).go();
+      }, maxByFileIdsSize);
     }
   }
 
@@ -280,29 +284,31 @@ extension SqliteDbExtension on SqliteDb {
     app.Account? appAccount,
   }) {
     assert((sqlAccount != null) != (appAccount != null));
-    final query = queryFiles().run((q) {
-      q.setQueryMode(FilesQueryMode.expression, expressions: [
-        accountFiles.rowId,
-        accountFiles.account,
-        accountFiles.file,
-        files.fileId,
-      ]);
-      if (sqlAccount != null) {
-        q.setSqlAccount(sqlAccount);
-      } else {
-        q.setAppAccount(appAccount!);
-      }
-      q.byFileIds(fileIds);
-      return q.build();
-    });
-    return query
-        .map((r) => AccountFileRowIdsWithFileId(
-              r.read(accountFiles.rowId)!,
-              r.read(accountFiles.account)!,
-              r.read(accountFiles.file)!,
-              r.read(files.fileId)!,
-            ))
-        .get();
+    return fileIds.withPartition((sublist) {
+      final query = queryFiles().run((q) {
+        q.setQueryMode(FilesQueryMode.expression, expressions: [
+          accountFiles.rowId,
+          accountFiles.account,
+          accountFiles.file,
+          files.fileId,
+        ]);
+        if (sqlAccount != null) {
+          q.setSqlAccount(sqlAccount);
+        } else {
+          q.setAppAccount(appAccount!);
+        }
+        q.byFileIds(sublist);
+        return q.build();
+      });
+      return query
+          .map((r) => AccountFileRowIdsWithFileId(
+                r.read(accountFiles.rowId)!,
+                r.read(accountFiles.account)!,
+                r.read(accountFiles.file)!,
+                r.read(files.fileId)!,
+              ))
+          .get();
+    }, maxByFileIdsSize);
   }
 
   /// Query CompleteFile by fileId
@@ -314,24 +320,26 @@ extension SqliteDbExtension on SqliteDb {
     app.Account? appAccount,
   }) {
     assert((sqlAccount != null) != (appAccount != null));
-    final query = queryFiles().run((q) {
-      q.setQueryMode(FilesQueryMode.completeFile);
-      if (sqlAccount != null) {
-        q.setSqlAccount(sqlAccount);
-      } else {
-        q.setAppAccount(appAccount!);
-      }
-      q.byFileIds(fileIds);
-      return q.build();
-    });
-    return query
-        .map((r) => CompleteFile(
-              r.readTable(files),
-              r.readTable(accountFiles),
-              r.readTableOrNull(images),
-              r.readTableOrNull(trashes),
-            ))
-        .get();
+    return fileIds.withPartition((sublist) {
+      final query = queryFiles().run((q) {
+        q.setQueryMode(FilesQueryMode.completeFile);
+        if (sqlAccount != null) {
+          q.setSqlAccount(sqlAccount);
+        } else {
+          q.setAppAccount(appAccount!);
+        }
+        q.byFileIds(sublist);
+        return q.build();
+      });
+      return query
+          .map((r) => CompleteFile(
+                r.readTable(files),
+                r.readTable(accountFiles),
+                r.readTableOrNull(images),
+                r.readTableOrNull(trashes),
+              ))
+          .get();
+    }, maxByFileIdsSize);
   }
 
   Future<List<CompleteFile>> completeFilesByDirRowId(

@@ -40,21 +40,38 @@ class CacheFavorite {
       if (newFileIds.isNotEmpty) {
         final rowIds = await db.accountFileRowIdsByFileIds(newFileIds,
             sqlAccount: dbAccount);
-        final count = await (db.update(db.accountFiles)
-              ..where(
-                  (t) => t.rowId.isIn(rowIds.map((id) => id.accountFileRowId))))
-            .write(
-                const sql.AccountFilesCompanion(isFavorite: sql.Value(true)));
+        final counts =
+            await rowIds.map((id) => id.accountFileRowId).withPartition(
+          (sublist) async {
+            return [
+              await (db.update(db.accountFiles)
+                    ..where((t) => t.rowId.isIn(sublist)))
+                  .write(const sql.AccountFilesCompanion(
+                      isFavorite: sql.Value(true))),
+            ];
+          },
+          sql.maxByFileIdsSize,
+        );
+        final count = counts.sum;
         _log.info("[call] Updated $count row (new)");
         updateCount += count;
       }
       if (removedFildIds.isNotEmpty) {
-        final count = await (db.update(db.accountFiles)
-              ..where((t) =>
-                  t.account.equals(dbAccount.rowId) &
-                  t.file.isIn(removedFildIds.map((id) => cacheMap[id]))))
-            .write(
-                const sql.AccountFilesCompanion(isFavorite: sql.Value(false)));
+        final counts =
+            await removedFildIds.map((id) => cacheMap[id]).withPartition(
+          (sublist) async {
+            return [
+              await (db.update(db.accountFiles)
+                    ..where((t) =>
+                        t.account.equals(dbAccount.rowId) &
+                        t.file.isIn(sublist)))
+                  .write(const sql.AccountFilesCompanion(
+                      isFavorite: sql.Value(false)))
+            ];
+          },
+          sql.maxByFileIdsSize,
+        );
+        final count = counts.sum;
         _log.info("[call] Updated $count row (remove)");
         updateCount += count;
       }

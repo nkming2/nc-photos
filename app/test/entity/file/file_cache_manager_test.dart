@@ -3,6 +3,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/int_extension.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:test/test.dart';
@@ -29,6 +30,8 @@ void main() {
     test("new shared dir", _updaterNewSharedDir);
     test("delete shared file", _updaterDeleteSharedFile);
     test("delete shared dir", _updaterDeleteSharedDir);
+    test("too many files", _updaterTooManyFiles,
+        timeout: const Timeout(Duration(minutes: 2)));
   });
   test("FileSqliteCacheEmptier", _emptier);
 }
@@ -500,6 +503,41 @@ Future<void> _updaterDeleteSharedDir() async {
     await util.listSqliteDbFiles(c.sqliteDb),
     {...files, user1Files[0]},
   );
+}
+
+/// Too many SQL variables
+///
+/// Expect: no error
+Future<void> _updaterTooManyFiles() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addJpeg("admin/test1.jpg")
+        ..addDir("admin/testMany")
+        ..addJpeg("admin/testMany/testtest.jpg"))
+      .build();
+  final newFilesBuilder = util.FilesBuilder(initialFileId: files.length);
+  // 250000 is the SQLITE_MAX_VARIABLE_NUMBER used in debian
+  for (final i in 0.until(250000)) {
+    newFilesBuilder.addJpeg("admin/testMany/test$i.jpg");
+  }
+  final newFiles = newFilesBuilder.build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(
+        c.sqliteDb, account, files[0], files.slice(1, 3));
+    await util.insertDirRelation(c.sqliteDb, account, files[2], files.slice(3));
+  });
+
+  final updater = FileSqliteCacheUpdater(c);
+  await updater(account, files[2], remote: [...files.slice(2), ...newFiles]);
+  // we are testing to make sure the above function won't throw, so nothing to
+  // expect here
 }
 
 /// Empty dir in cache

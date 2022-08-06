@@ -10,6 +10,7 @@ import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -249,20 +250,25 @@ class FileSqliteCacheUpdater {
       List<sql.CompleteFileCompanion> sqlFiles, File? dir) async {
     _log.info("[_insertCache] Insert ${sqlFiles.length} files");
     // check if the files exist in the db in other accounts
-    final query = db.queryFiles().run((q) {
-      q
-        ..setQueryMode(
-          sql.FilesQueryMode.expression,
-          expressions: [db.files.rowId, db.files.fileId],
-        )
-        ..setAccountless()
-        ..byServerRowId(dbAccount.server)
-        ..byFileIds(sqlFiles.map((f) => f.file.fileId.value));
-      return q.build();
-    });
-    final fileRowIdMap = Map.fromEntries(await query
-        .map((r) => MapEntry(r.read(db.files.fileId)!, r.read(db.files.rowId)!))
-        .get());
+    final entries =
+        await sqlFiles.map((f) => f.file.fileId.value).withPartition((sublist) {
+      final query = db.queryFiles().run((q) {
+        q
+          ..setQueryMode(
+            sql.FilesQueryMode.expression,
+            expressions: [db.files.rowId, db.files.fileId],
+          )
+          ..setAccountless()
+          ..byServerRowId(dbAccount.server)
+          ..byFileIds(sublist);
+        return q.build();
+      });
+      return query
+          .map((r) =>
+              MapEntry(r.read(db.files.fileId)!, r.read(db.files.rowId)!))
+          .get();
+    }, sql.maxByFileIdsSize);
+    final fileRowIdMap = Map.fromEntries(entries);
 
     await Future.wait(sqlFiles.map((f) async {
       var rowId = fileRowIdMap[f.file.fileId.value];
@@ -376,19 +382,22 @@ class FileSqliteCacheEmptier {
 Future<void> _removeSqliteFiles(
     sql.SqliteDb db, sql.Account dbAccount, List<int> fileRowIds) async {
   // query list of children, in case some of the files are dirs
-  final childQuery = db.selectOnly(db.dirFiles)
-    ..addColumns([db.dirFiles.child])
-    ..where(db.dirFiles.dir.isIn(fileRowIds));
-  final childRowIds =
-      await childQuery.map((r) => r.read(db.dirFiles.child)!).get();
+  final childRowIds = await fileRowIds.withPartition((sublist) {
+    final childQuery = db.selectOnly(db.dirFiles)
+      ..addColumns([db.dirFiles.child])
+      ..where(db.dirFiles.dir.isIn(sublist));
+    return childQuery.map((r) => r.read(db.dirFiles.child)!).get();
+  }, sql.maxByFileIdsSize);
   childRowIds.removeWhere((id) => fileRowIds.contains(id));
 
   // remove the files in AccountFiles table. We are not removing in Files table
   // because a file could be associated with multiple accounts
-  await (db.delete(db.accountFiles)
-        ..where(
-            (t) => t.account.equals(dbAccount.rowId) & t.file.isIn(fileRowIds)))
-      .go();
+  await fileRowIds.withPartitionNoReturn((sublist) async {
+    await (db.delete(db.accountFiles)
+          ..where(
+              (t) => t.account.equals(dbAccount.rowId) & t.file.isIn(sublist)))
+        .go();
+  }, sql.maxByFileIdsSize);
 
   if (childRowIds.isNotEmpty) {
     // remove children recursively

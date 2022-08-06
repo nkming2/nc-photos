@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/override_comparator.dart';
+import 'package:quiver/iterables.dart';
 import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
@@ -96,6 +97,24 @@ extension IterableExtension<T> on Iterable<T> {
       }
     }
     return -1;
+  }
+
+  Future<List<U>> withPartition<U>(
+      FutureOr<Iterable<U>> Function(Iterable<T> sublist) fn, int size) async {
+    final products = <U>[];
+    final sublists = partition(this, size);
+    for (final l in sublists) {
+      products.addAll(await fn(l));
+    }
+    return products;
+  }
+
+  Future<void> withPartitionNoReturn(
+      FutureOr<void> Function(Iterable<T> sublist) fn, int size) async {
+    final sublists = partition(this, size);
+    for (final l in sublists) {
+      await fn(l);
+    }
   }
 }
 
