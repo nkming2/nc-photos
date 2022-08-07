@@ -5,6 +5,8 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
 
 abstract class ListFaceFileBlocEvent {
@@ -22,6 +24,15 @@ class ListFaceFileBlocQuery extends ListFaceFileBlocEvent {
 
   final Account account;
   final Person person;
+}
+
+/// An external event has happened and may affect the state of this bloc
+class _ListFaceFileBlocExternalEvent extends ListFaceFileBlocEvent {
+  const _ListFaceFileBlocExternalEvent();
+
+  @override
+  toString() => "$runtimeType {"
+      "}";
 }
 
 abstract class ListFaceFileBlocState {
@@ -65,6 +76,13 @@ class ListFaceFileBlocFailure extends ListFaceFileBlocState {
   final Object exception;
 }
 
+/// The state of this bloc is inconsistent. This typically means that the data
+/// may have been changed externally
+class ListFaceFileBlocInconsistent extends ListFaceFileBlocState {
+  const ListFaceFileBlocInconsistent(Account? account, List<File> items)
+      : super(account, items);
+}
+
 /// List all people recognized in an account
 class ListFaceFileBloc
     extends Bloc<ListFaceFileBlocEvent, ListFaceFileBlocState> {
@@ -72,16 +90,28 @@ class ListFaceFileBloc
       : assert(require(_c)),
         assert(PopulatePerson.require(_c)),
         super(ListFaceFileBlocInit()) {
+    _fileRemovedEventListener.begin();
+    _filePropertyUpdatedEventListener.begin();
+
     on<ListFaceFileBlocEvent>(_onEvent);
   }
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.faceRepo);
+
+  @override
+  close() {
+    _fileRemovedEventListener.end();
+    _filePropertyUpdatedEventListener.end();
+    return super.close();
+  }
 
   Future<void> _onEvent(
       ListFaceFileBlocEvent event, Emitter<ListFaceFileBlocState> emit) async {
     _log.info("[_onEvent] $event");
     if (event is ListFaceFileBlocQuery) {
       await _onEventQuery(event, emit);
+    } else if (event is _ListFaceFileBlocExternalEvent) {
+      await _onExternalEvent(event, emit);
     }
   }
 
@@ -93,6 +123,59 @@ class ListFaceFileBloc
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
       emit(ListFaceFileBlocFailure(ev.account, state.items, e));
+    }
+  }
+
+  Future<void> _onExternalEvent(_ListFaceFileBlocExternalEvent ev,
+      Emitter<ListFaceFileBlocState> emit) async {
+    emit(ListFaceFileBlocInconsistent(state.account, state.items));
+  }
+
+  void _onFileRemovedEvent(FileRemovedEvent ev) {
+    if (state is ListFaceFileBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if (_isFileOfInterest(ev.file)) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    }
+  }
+
+  void _onFilePropertyUpdatedEvent(FilePropertyUpdatedEvent ev) {
+    if (!ev.hasAnyProperties([
+      FilePropertyUpdatedEvent.propMetadata,
+      FilePropertyUpdatedEvent.propIsArchived,
+      FilePropertyUpdatedEvent.propOverrideDateTime,
+      FilePropertyUpdatedEvent.propFavorite,
+    ])) {
+      // not interested
+      return;
+    }
+    if (state is ListFaceFileBlocInit) {
+      // no data in this bloc, ignore
+      return;
+    }
+    if (!_isFileOfInterest(ev.file)) {
+      return;
+    }
+
+    if (ev.hasAnyProperties([
+      FilePropertyUpdatedEvent.propIsArchived,
+      FilePropertyUpdatedEvent.propOverrideDateTime,
+      FilePropertyUpdatedEvent.propFavorite,
+    ])) {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 3),
+        maxPendingCount: 10,
+      );
+    } else {
+      _refreshThrottler.trigger(
+        maxResponceTime: const Duration(seconds: 10),
+        maxPendingCount: 10,
+      );
     }
   }
 
@@ -109,7 +192,33 @@ class ListFaceFileBloc
         .toList();
   }
 
+  bool _isFileOfInterest(File file) {
+    if (!file_util.isSupportedFormat(file)) {
+      return false;
+    }
+
+    for (final r in state.account?.roots ?? []) {
+      final dir = File(path: file_util.unstripPath(state.account!, r));
+      if (file_util.isUnderDir(file, dir)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   final DiContainer _c;
+
+  late final _fileRemovedEventListener =
+      AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
+  late final _filePropertyUpdatedEventListener =
+      AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdatedEvent);
+
+  late final _refreshThrottler = Throttler(
+    onTriggered: (_) {
+      add(const _ListFaceFileBlocExternalEvent());
+    },
+    logTag: "ListFaceFileBloc.refresh",
+  );
 
   static final _log = Logger("bloc.list_face_file.ListFaceFileBloc");
 }

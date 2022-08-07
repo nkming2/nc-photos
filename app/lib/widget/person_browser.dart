@@ -119,8 +119,12 @@ class _PersonBrowserState extends State<PersonBrowser>
   @override
   onItemTap(SelectableItem item, int index) {
     item.as<PhotoListFileItem>()?.run((fileItem) {
-      Navigator.pushNamed(context, Viewer.routeName,
-          arguments: ViewerArguments(widget.account, _backingFiles, index));
+      Navigator.pushNamed(
+        context,
+        Viewer.routeName,
+        arguments:
+            ViewerArguments(widget.account, _backingFiles, fileItem.fileIndex),
+      );
     });
   }
 
@@ -324,6 +328,8 @@ class _PersonBrowserState extends State<PersonBrowser>
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
+    } else if (state is ListFaceFileBlocInconsistent) {
+      _reqQuery();
     }
   }
 
@@ -430,11 +436,23 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   Future<void> _transformItems(List<File> files) async {
+    final PhotoListItemSorter? sorter;
+    final PhotoListItemGrouper? grouper;
+    if (Pref().isPhotosTabSortByNameOr()) {
+      sorter = photoListFilenameSorter;
+      grouper = null;
+    } else {
+      sorter = photoListFileDateTimeSorter;
+      grouper = PhotoListFileDateGrouper(isMonthOnly: _thumbZoomLevel < 0);
+    }
+
     _buildItemQueue.addJob(
       PhotoListItemBuilderArguments(
         widget.account,
         files,
-        sorter: photoListFileDateTimeSorter,
+        sorter: sorter,
+        grouper: grouper,
+        shouldShowFavoriteBadge: true,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
       ),
