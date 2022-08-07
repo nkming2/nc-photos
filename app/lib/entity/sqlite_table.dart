@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 
@@ -147,6 +148,35 @@ class AlbumShares extends Table {
   get primaryKey => {album, userId};
 }
 
+class Tags extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get server =>
+      integer().references(Servers, #rowId, onDelete: KeyAction.cascade)();
+  IntColumn get tagId => integer()();
+  TextColumn get displayName => text()();
+  BoolColumn get userVisible => boolean().nullable()();
+  BoolColumn get userAssignable => boolean().nullable()();
+
+  @override
+  get uniqueKeys => [
+        {server, tagId},
+      ];
+}
+
+class Persons extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get account =>
+      integer().references(Accounts, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get name => text()();
+  IntColumn get thumbFaceId => integer()();
+  IntColumn get count => integer()();
+
+  @override
+  get uniqueKeys => [
+        {account, name},
+      ];
+}
+
 // remember to also update the truncate method after adding a new table
 @DriftDatabase(
   tables: [
@@ -159,6 +189,8 @@ class AlbumShares extends Table {
     DirFiles,
     Albums,
     AlbumShares,
+    Tags,
+    Persons,
   ],
 )
 class SqliteDb extends _$SqliteDb {
@@ -169,7 +201,7 @@ class SqliteDb extends _$SqliteDb {
   SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
 
   @override
-  get schemaVersion => 1;
+  get schemaVersion => 2;
 
   @override
   get migration => MigrationStrategy(
@@ -198,6 +230,23 @@ class SqliteDb extends _$SqliteDb {
 
           await m.createIndex(Index("album_shares_album_index",
               "CREATE INDEX album_shares_album_index ON album_shares(album);"));
+
+          await _createIndexV2(m);
+        },
+        onUpgrade: (m, from, to) async {
+          _log.info("[onUpgrade] $from -> $to");
+          try {
+            await transaction(() async {
+              if (from < 2) {
+                await m.createTable(tags);
+                await m.createTable(persons);
+                await _createIndexV2(m);
+              }
+            });
+          } catch (e, stackTrace) {
+            _log.shout("[onUpgrade] Failed upgrading sqlite db", e, stackTrace);
+            rethrow;
+          }
         },
         beforeOpen: (details) async {
           await customStatement("PRAGMA foreign_keys = ON;");
@@ -208,6 +257,15 @@ class SqliteDb extends _$SqliteDb {
           await customStatement("PRAGMA busy_timeout = 5000;");
         },
       );
+
+  Future<void> _createIndexV2(Migrator m) async {
+    await m.createIndex(Index("tags_server_index",
+        "CREATE INDEX tags_server_index ON tags(server);"));
+    await m.createIndex(Index("persons_account_index",
+        "CREATE INDEX persons_account_index ON persons(account);"));
+  }
+
+  static final _log = Logger("entity.sqlite_table.SqliteDb");
 }
 
 class _DateTimeConverter extends TypeConverter<DateTime, DateTime> {

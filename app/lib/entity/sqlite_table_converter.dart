@@ -8,9 +8,44 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+
+extension SqlTagListExtension on List<sql.Tag> {
+  Future<List<Tag>> convertToAppTag() {
+    return computeAll(SqliteTagConverter.fromSql);
+  }
+}
+
+extension AppTagListExtension on List<Tag> {
+  Future<List<sql.TagsCompanion>> convertToTagCompanion(
+      sql.Account? dbAccount) {
+    return map((t) => {
+          "account": dbAccount,
+          "tag": t,
+        }).computeAll(_convertAppTag);
+  }
+}
+
+extension SqlPersonListExtension on List<sql.Person> {
+  Future<List<Person>> convertToAppPerson() {
+    return computeAll(SqlitePersonConverter.fromSql);
+  }
+}
+
+extension AppPersonListExtension on List<Person> {
+  Future<List<sql.PersonsCompanion>> convertToPersonCompanion(
+      sql.Account? dbAccount) {
+    return map((p) => {
+          "account": dbAccount,
+          "person": p,
+        }).computeAll(_convertAppPerson);
+  }
+}
 
 class SqliteAlbumConverter {
   static Album fromSql(
@@ -141,4 +176,52 @@ class SqliteFileConverter {
           );
     return sql.CompleteFileCompanion(dbFile, dbAccountFile, dbImage, dbTrash);
   }
+}
+
+class SqliteTagConverter {
+  static Tag fromSql(sql.Tag tag) => Tag(
+        id: tag.tagId,
+        displayName: tag.displayName,
+        userVisible: tag.userVisible,
+        userAssignable: tag.userAssignable,
+      );
+
+  static sql.TagsCompanion toSql(sql.Account? dbAccount, Tag tag) =>
+      sql.TagsCompanion(
+        server:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.server),
+        tagId: Value(tag.id),
+        displayName: Value(tag.displayName),
+        userVisible: Value(tag.userVisible),
+        userAssignable: Value(tag.userAssignable),
+      );
+}
+
+class SqlitePersonConverter {
+  static Person fromSql(sql.Person person) => Person(
+        name: person.name,
+        thumbFaceId: person.thumbFaceId,
+        count: person.count,
+      );
+
+  static sql.PersonsCompanion toSql(sql.Account? dbAccount, Person person) =>
+      sql.PersonsCompanion(
+        account:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
+        name: Value(person.name),
+        thumbFaceId: Value(person.thumbFaceId),
+        count: Value(person.count),
+      );
+}
+
+sql.TagsCompanion _convertAppTag(Map map) {
+  final account = map["account"] as sql.Account?;
+  final tag = map["tag"] as Tag;
+  return SqliteTagConverter.toSql(account, tag);
+}
+
+sql.PersonsCompanion _convertAppPerson(Map map) {
+  final account = map["account"] as sql.Account?;
+  final person = map["person"] as Person;
+  return SqlitePersonConverter.toSql(account, person);
 }

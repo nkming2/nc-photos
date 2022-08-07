@@ -6,12 +6,15 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/list_favorite.dart';
+import 'package:nc_photos/bloc/list_tag_file.dart';
 import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
@@ -19,8 +22,8 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
-import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -31,53 +34,73 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 
-class FavoriteBrowserArguments {
-  FavoriteBrowserArguments(this.account);
+class TagBrowserArguments {
+  TagBrowserArguments(this.account, this.tag);
 
   final Account account;
+  final Tag tag;
 }
 
-class FavoriteBrowser extends StatefulWidget {
-  static const routeName = "/favorite-browser";
+class TagBrowser extends StatefulWidget {
+  static const routeName = "/tag-browser";
 
-  static Route buildRoute(FavoriteBrowserArguments args) => MaterialPageRoute(
-        builder: (context) => FavoriteBrowser.fromArgs(args),
+  static Route buildRoute(TagBrowserArguments args) => MaterialPageRoute(
+        builder: (context) => TagBrowser.fromArgs(args),
       );
 
-  const FavoriteBrowser({
+  const TagBrowser({
     Key? key,
     required this.account,
+    required this.tag,
   }) : super(key: key);
 
-  FavoriteBrowser.fromArgs(FavoriteBrowserArguments args, {Key? key})
+  TagBrowser.fromArgs(TagBrowserArguments args, {Key? key})
       : this(
           key: key,
           account: args.account,
+          tag: args.tag,
         );
 
   @override
-  createState() => _FavoriteBrowserState();
+  createState() => _TagBrowserState();
 
   final Account account;
+  final Tag tag;
 }
 
-class _FavoriteBrowserState extends State<FavoriteBrowser>
-    with SelectableItemStreamListMixin<FavoriteBrowser> {
+class _TagBrowserState extends State<TagBrowser>
+    with SelectableItemStreamListMixin<TagBrowser> {
+  _TagBrowserState() {
+    final c = KiwiContainer().resolve<DiContainer>();
+    assert(require(c));
+    _c = c;
+  }
+
+  static bool require(DiContainer c) => true;
+
   @override
   initState() {
     super.initState();
     _initBloc();
     _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
+
+    _filePropertyUpdatedListener.begin();
+  }
+
+  @override
+  dispose() {
+    _filePropertyUpdatedListener.end();
+    super.dispose();
   }
 
   @override
   build(BuildContext context) {
     return AppTheme(
       child: Scaffold(
-        body: BlocListener<ListFavoriteBloc, ListFavoriteBlocState>(
+        body: BlocListener<ListTagFileBloc, ListTagFileBlocState>(
           bloc: _bloc,
           listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListFavoriteBloc, ListFavoriteBlocState>(
+          child: BlocBuilder<ListTagFileBloc, ListTagFileBlocState>(
             bloc: _bloc,
             builder: (context, state) => _buildContent(context, state),
           ),
@@ -99,84 +122,107 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
   }
 
   void _initBloc() {
-    if (_bloc.state is ListFavoriteBlocInit) {
-      _log.info("[_initBloc] Initialize bloc");
-      _reqQuery();
-    } else {
-      // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _onStateChange(context, _bloc.state);
-        });
-      });
-    }
+    _log.info("[_initBloc] Initialize bloc");
+    _reqQuery();
   }
 
-  Widget _buildContent(BuildContext context, ListFavoriteBlocState state) {
-    if (state is ListFavoriteBlocSuccess &&
-        !_buildItemQueue.isProcessing &&
-        itemStreamListItems.isEmpty) {
-      return Column(
-        children: [
-          AppBar(
-            title: Text(L10n.global().collectionFavoritesLabel),
-            elevation: 0,
-          ),
-          Expanded(
-            child: EmptyListIndicator(
-              icon: Icons.star_border,
-              text: L10n.global().listEmptyText,
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Stack(
-        children: [
-          buildItemStreamListOuter(
-            context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
+  Widget _buildContent(BuildContext context, ListTagFileBlocState state) {
+    return buildItemStreamListOuter(
+      context,
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                secondary: AppTheme.getOverscrollIndicatorColor(context),
               ),
-              child: RefreshIndicator(
-                backgroundColor: Colors.grey[100],
-                onRefresh: () async {
-                  _onRefreshSelected();
-                  await _waitRefresh();
-                },
-                child: CustomScrollView(
-                  slivers: [
-                    _buildAppBar(context),
-                    buildItemStreamList(
-                      maxCrossAxisExtent: _thumbSize.toDouble(),
-                    ),
-                  ],
+        ),
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context, state),
+            if (state is ListTagFileBlocLoading || _buildItemQueue.isProcessing)
+              const SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: LinearProgressIndicator(),
                 ),
               ),
+            buildItemStreamList(
+              maxCrossAxisExtent: _thumbSize.toDouble(),
             ),
-          ),
-          if (state is ListFavoriteBlocLoading || _buildItemQueue.isProcessing)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: LinearProgressIndicator(),
-            ),
-        ],
-      );
-    }
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, ListTagFileBlocState state) {
     if (isSelectionMode) {
       return _buildSelectionAppBar(context);
     } else {
-      return _buildNormalAppBar(context);
+      return _buildNormalAppBar(context, state);
     }
   }
 
-  Widget _buildSelectionAppBar(BuildContext conetxt) {
+  Widget _buildNormalAppBar(BuildContext context, ListTagFileBlocState state) {
+    return SliverAppBar(
+      floating: true,
+      titleSpacing: 0,
+      title: Row(
+        children: [
+          const SizedBox(
+            height: 40,
+            width: 40,
+            child: Center(
+              child: Icon(Icons.local_offer_outlined, size: 24),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.tag.displayName,
+                  style: TextStyle(
+                    color: AppTheme.getPrimaryTextColor(context),
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.clip,
+                ),
+                if (state is! ListTagFileBlocLoading &&
+                    !_buildItemQueue.isProcessing)
+                  Text(
+                    L10n.global()
+                        .personPhotoCountText(itemStreamListItems.length),
+                    style: TextStyle(
+                      color: AppTheme.getSecondaryTextColor(context),
+                      fontSize: 12,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      // ),
+      actions: [
+        ZoomMenuButton(
+          initialZoom: _thumbZoomLevel,
+          minZoom: 0,
+          maxZoom: 2,
+          onZoomChanged: (value) {
+            setState(() {
+              _thumbZoomLevel = value.round();
+            });
+            Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSelectionAppBar(BuildContext context) {
     return SelectionAppBar(
       count: selectedListItems.length,
       onClosePressed: () {
@@ -188,12 +234,16 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
         IconButton(
           icon: const Icon(Icons.share),
           tooltip: L10n.global().shareTooltip,
-          onPressed: () => _onSelectionSharePressed(context),
+          onPressed: () {
+            _onSelectionSharePressed(context);
+          },
         ),
         IconButton(
           icon: const Icon(Icons.add),
           tooltip: L10n.global().addToAlbumTooltip,
-          onPressed: () => _onSelectionAddToAlbumPressed(context),
+          onPressed: () {
+            _onSelectionAddToAlbumPressed(context);
+          },
         ),
         PopupMenuButton<_SelectionMenuOption>(
           tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
@@ -211,47 +261,29 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
               child: Text(L10n.global().deleteTooltip),
             ),
           ],
-          onSelected: (option) => _onSelectionMenuSelected(context, option),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNormalAppBar(BuildContext context) {
-    return SliverAppBar(
-      title: Text(L10n.global().collectionFavoritesLabel),
-      floating: true,
-      actions: [
-        ZoomMenuButton(
-          initialZoom: _thumbZoomLevel,
-          minZoom: -1,
-          maxZoom: 2,
-          onZoomChanged: (value) {
-            _setThumbZoomLevel(value.round());
-            Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+          onSelected: (option) {
+            _onSelectionMenuSelected(context, option);
           },
         ),
       ],
     );
   }
 
-  void _onStateChange(BuildContext context, ListFavoriteBlocState state) {
-    if (state is ListFavoriteBlocInit) {
+  void _onStateChange(BuildContext context, ListTagFileBlocState state) {
+    if (state is ListTagFileBlocInit) {
       itemStreamListItems = [];
-    } else if (state is ListFavoriteBlocSuccess ||
-        state is ListFavoriteBlocLoading) {
+    } else if (state is ListTagFileBlocSuccess ||
+        state is ListTagFileBlocLoading) {
       _transformItems(state.items);
-    } else if (state is ListFavoriteBlocFailure) {
+    } else if (state is ListTagFileBlocFailure) {
       _transformItems(state.items);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(state.exception)),
         duration: k.snackBarDurationNormal,
       ));
+    } else if (state is ListTagFileBlocInconsistent) {
+      _reqQuery();
     }
-  }
-
-  void _onRefreshSelected() {
-    _reqRefresh();
   }
 
   void _onSelectionMenuSelected(
@@ -345,13 +377,35 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
     );
   }
 
-  void _transformItems(List<File> files, {bool isSorted = false}) {
+  void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
+    if (_backingFiles.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
+        true) {
+      return;
+    }
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
+  }
+
+  Future<void> _transformItems(List<File> files) async {
+    final PhotoListItemSorter? sorter;
+    final PhotoListItemGrouper? grouper;
+    if (Pref().isPhotosTabSortByNameOr()) {
+      sorter = photoListFilenameSorter;
+      grouper = null;
+    } else {
+      sorter = photoListFileDateTimeSorter;
+      grouper = PhotoListFileDateGrouper(isMonthOnly: _thumbZoomLevel < 0);
+    }
+
     _buildItemQueue.addJob(
       PhotoListItemBuilderArguments(
         widget.account,
         files,
-        sorter: isSorted ? null : photoListFileDateTimeSorter,
-        grouper: PhotoListFileDateGrouper(isMonthOnly: _thumbZoomLevel < 0),
+        sorter: sorter,
+        grouper: grouper,
+        shouldShowFavoriteBadge: true,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
       ),
@@ -368,36 +422,12 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
   }
 
   void _reqQuery() {
-    _bloc.add(ListFavoriteBlocQuery(widget.account));
+    _bloc.add(ListTagFileBlocQuery(widget.account, widget.tag));
   }
 
-  void _reqRefresh() {
-    _bloc.add(ListFavoriteBlocQuery(widget.account));
-  }
+  late final DiContainer _c;
 
-  Future<void> _waitRefresh() async {
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (_bloc.state is! ListFavoriteBlocLoading) {
-        return;
-      }
-    }
-  }
-
-  void _setThumbZoomLevel(int level) {
-    final prevLevel = _thumbZoomLevel;
-    if ((prevLevel >= 0) != (level >= 0)) {
-      _thumbZoomLevel = level;
-      _transformItems(_backingFiles, isSorted: true);
-    } else {
-      setState(() {
-        _thumbZoomLevel = level;
-      });
-    }
-  }
-
-  late final _bloc = ListFavoriteBloc.of(widget.account);
-
+  late final ListTagFileBloc _bloc = ListTagFileBloc(_c);
   var _backingFiles = <File>[];
 
   final _buildItemQueue =
@@ -406,7 +436,19 @@ class _FavoriteBrowserState extends State<FavoriteBrowser>
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
 
-  static final _log = Logger("widget.archive_browser._FavoriteBrowserState");
+  late final Throttler _refreshThrottler = Throttler(
+    onTriggered: (_) {
+      if (mounted) {
+        _transformItems(_bloc.state.items);
+      }
+    },
+    logTag: "_TagBrowserState.refresh",
+  );
+
+  late final _filePropertyUpdatedListener =
+      AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
+
+  static final _log = Logger("widget.tag_browser._TagBrowserState");
 }
 
 enum _SelectionMenuOption {

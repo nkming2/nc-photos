@@ -2,6 +2,9 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite_table_converter.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
@@ -54,4 +57,27 @@ class TagRemoteDataSource implements TagDataSource {
   }
 
   static final _log = Logger("entity.tag.data_source.TagRemoteDataSource");
+}
+
+class TagSqliteDbDataSource implements TagDataSource {
+  const TagSqliteDbDataSource(this.sqliteDb);
+
+  @override
+  list(Account account) async {
+    _log.info("[list] $account");
+    final dbTags = await sqliteDb.use((db) async {
+      return await db.allTags(appAccount: account);
+    });
+    return dbTags.convertToAppTag();
+  }
+
+  @override
+  listByFile(Account account, File file) async {
+    _log.info("[listByFile] ${file.path}");
+    throw UnimplementedError();
+  }
+
+  final sql.SqliteDb sqliteDb;
+
+  static final _log = Logger("entity.tag.data_source.TagSqliteDbDataSource");
 }

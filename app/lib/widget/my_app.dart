@@ -18,11 +18,9 @@ import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
-import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
-import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -34,6 +32,7 @@ import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/splash.dart';
+import 'package:nc_photos/widget/tag_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -151,7 +150,6 @@ class _MyAppState extends State<MyApp>
     route ??= _handleAlbumImporterRoute(settings);
     route ??= _handleTrashbinBrowserRoute(settings);
     route ??= _handleTrashbinViewerRoute(settings);
-    route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePersonBrowserRoute(settings);
     route ??= _handleSlideshowViewerRoute(settings);
     route ??= _handleSharingBrowserRoute(settings);
@@ -161,12 +159,12 @@ class _MyAppState extends State<MyApp>
     route ??= _handleShareFolderPickerRoute(settings);
     route ??= _handleAlbumPickerRoute(settings);
     route ??= _handleSmartAlbumBrowserRoute(settings);
-    route ??= _handleFavoriteBrowserRoute(settings);
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
+    route ??= _handleTagBrowserRoute(settings);
     return route;
   }
 
@@ -345,19 +343,6 @@ class _MyAppState extends State<MyApp>
     return null;
   }
 
-  Route<dynamic>? _handlePeopleBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PeopleBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PeopleBrowserArguments;
-        return PeopleBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
   Route<dynamic>? _handlePersonBrowserRoute(RouteSettings settings) {
     try {
       if (settings.name == PersonBrowser.routeName &&
@@ -483,20 +468,6 @@ class _MyAppState extends State<MyApp>
     return null;
   }
 
-  Route<dynamic>? _handleFavoriteBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == FavoriteBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as FavoriteBrowserArguments;
-        return FavoriteBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleFavoriteBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
   Route<dynamic>? _handleEnhancedPhotoBrowserRoute(RouteSettings settings) {
     try {
       if (settings.name == EnhancedPhotoBrowser.routeName &&
@@ -568,6 +539,18 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleChangelogRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleTagBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == TagBrowser.routeName && settings.arguments != null) {
+        final args = settings.arguments as TagBrowserArguments;
+        return TagBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handleTagBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

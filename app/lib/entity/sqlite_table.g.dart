@@ -3070,6 +3070,645 @@ class $AlbumSharesTable extends AlbumShares
       const _DateTimeConverter();
 }
 
+class Tag extends DataClass implements Insertable<Tag> {
+  final int rowId;
+  final int server;
+  final int tagId;
+  final String displayName;
+  final bool? userVisible;
+  final bool? userAssignable;
+  Tag(
+      {required this.rowId,
+      required this.server,
+      required this.tagId,
+      required this.displayName,
+      this.userVisible,
+      this.userAssignable});
+  factory Tag.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return Tag(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      server: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}server'])!,
+      tagId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}tag_id'])!,
+      displayName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}display_name'])!,
+      userVisible: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_visible']),
+      userAssignable: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_assignable']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['server'] = Variable<int>(server);
+    map['tag_id'] = Variable<int>(tagId);
+    map['display_name'] = Variable<String>(displayName);
+    if (!nullToAbsent || userVisible != null) {
+      map['user_visible'] = Variable<bool?>(userVisible);
+    }
+    if (!nullToAbsent || userAssignable != null) {
+      map['user_assignable'] = Variable<bool?>(userAssignable);
+    }
+    return map;
+  }
+
+  TagsCompanion toCompanion(bool nullToAbsent) {
+    return TagsCompanion(
+      rowId: Value(rowId),
+      server: Value(server),
+      tagId: Value(tagId),
+      displayName: Value(displayName),
+      userVisible: userVisible == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userVisible),
+      userAssignable: userAssignable == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userAssignable),
+    );
+  }
+
+  factory Tag.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Tag(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      server: serializer.fromJson<int>(json['server']),
+      tagId: serializer.fromJson<int>(json['tagId']),
+      displayName: serializer.fromJson<String>(json['displayName']),
+      userVisible: serializer.fromJson<bool?>(json['userVisible']),
+      userAssignable: serializer.fromJson<bool?>(json['userAssignable']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'server': serializer.toJson<int>(server),
+      'tagId': serializer.toJson<int>(tagId),
+      'displayName': serializer.toJson<String>(displayName),
+      'userVisible': serializer.toJson<bool?>(userVisible),
+      'userAssignable': serializer.toJson<bool?>(userAssignable),
+    };
+  }
+
+  Tag copyWith(
+          {int? rowId,
+          int? server,
+          int? tagId,
+          String? displayName,
+          Value<bool?> userVisible = const Value.absent(),
+          Value<bool?> userAssignable = const Value.absent()}) =>
+      Tag(
+        rowId: rowId ?? this.rowId,
+        server: server ?? this.server,
+        tagId: tagId ?? this.tagId,
+        displayName: displayName ?? this.displayName,
+        userVisible: userVisible.present ? userVisible.value : this.userVisible,
+        userAssignable:
+            userAssignable.present ? userAssignable.value : this.userAssignable,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Tag(')
+          ..write('rowId: $rowId, ')
+          ..write('server: $server, ')
+          ..write('tagId: $tagId, ')
+          ..write('displayName: $displayName, ')
+          ..write('userVisible: $userVisible, ')
+          ..write('userAssignable: $userAssignable')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      rowId, server, tagId, displayName, userVisible, userAssignable);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Tag &&
+          other.rowId == this.rowId &&
+          other.server == this.server &&
+          other.tagId == this.tagId &&
+          other.displayName == this.displayName &&
+          other.userVisible == this.userVisible &&
+          other.userAssignable == this.userAssignable);
+}
+
+class TagsCompanion extends UpdateCompanion<Tag> {
+  final Value<int> rowId;
+  final Value<int> server;
+  final Value<int> tagId;
+  final Value<String> displayName;
+  final Value<bool?> userVisible;
+  final Value<bool?> userAssignable;
+  const TagsCompanion({
+    this.rowId = const Value.absent(),
+    this.server = const Value.absent(),
+    this.tagId = const Value.absent(),
+    this.displayName = const Value.absent(),
+    this.userVisible = const Value.absent(),
+    this.userAssignable = const Value.absent(),
+  });
+  TagsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int server,
+    required int tagId,
+    required String displayName,
+    this.userVisible = const Value.absent(),
+    this.userAssignable = const Value.absent(),
+  })  : server = Value(server),
+        tagId = Value(tagId),
+        displayName = Value(displayName);
+  static Insertable<Tag> custom({
+    Expression<int>? rowId,
+    Expression<int>? server,
+    Expression<int>? tagId,
+    Expression<String>? displayName,
+    Expression<bool?>? userVisible,
+    Expression<bool?>? userAssignable,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (server != null) 'server': server,
+      if (tagId != null) 'tag_id': tagId,
+      if (displayName != null) 'display_name': displayName,
+      if (userVisible != null) 'user_visible': userVisible,
+      if (userAssignable != null) 'user_assignable': userAssignable,
+    });
+  }
+
+  TagsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? server,
+      Value<int>? tagId,
+      Value<String>? displayName,
+      Value<bool?>? userVisible,
+      Value<bool?>? userAssignable}) {
+    return TagsCompanion(
+      rowId: rowId ?? this.rowId,
+      server: server ?? this.server,
+      tagId: tagId ?? this.tagId,
+      displayName: displayName ?? this.displayName,
+      userVisible: userVisible ?? this.userVisible,
+      userAssignable: userAssignable ?? this.userAssignable,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (server.present) {
+      map['server'] = Variable<int>(server.value);
+    }
+    if (tagId.present) {
+      map['tag_id'] = Variable<int>(tagId.value);
+    }
+    if (displayName.present) {
+      map['display_name'] = Variable<String>(displayName.value);
+    }
+    if (userVisible.present) {
+      map['user_visible'] = Variable<bool?>(userVisible.value);
+    }
+    if (userAssignable.present) {
+      map['user_assignable'] = Variable<bool?>(userAssignable.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TagsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('server: $server, ')
+          ..write('tagId: $tagId, ')
+          ..write('displayName: $displayName, ')
+          ..write('userVisible: $userVisible, ')
+          ..write('userAssignable: $userAssignable')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TagsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _serverMeta = const VerificationMeta('server');
+  @override
+  late final GeneratedColumn<int?> server = GeneratedColumn<int?>(
+      'server', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES servers (row_id) ON DELETE CASCADE');
+  final VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
+  @override
+  late final GeneratedColumn<int?> tagId = GeneratedColumn<int?>(
+      'tag_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _displayNameMeta =
+      const VerificationMeta('displayName');
+  @override
+  late final GeneratedColumn<String?> displayName = GeneratedColumn<String?>(
+      'display_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userVisibleMeta =
+      const VerificationMeta('userVisible');
+  @override
+  late final GeneratedColumn<bool?> userVisible = GeneratedColumn<bool?>(
+      'user_visible', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (user_visible IN (0, 1))');
+  final VerificationMeta _userAssignableMeta =
+      const VerificationMeta('userAssignable');
+  @override
+  late final GeneratedColumn<bool?> userAssignable = GeneratedColumn<bool?>(
+      'user_assignable', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (user_assignable IN (0, 1))');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [rowId, server, tagId, displayName, userVisible, userAssignable];
+  @override
+  String get aliasedName => _alias ?? 'tags';
+  @override
+  String get actualTableName => 'tags';
+  @override
+  VerificationContext validateIntegrity(Insertable<Tag> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('server')) {
+      context.handle(_serverMeta,
+          server.isAcceptableOrUnknown(data['server']!, _serverMeta));
+    } else if (isInserting) {
+      context.missing(_serverMeta);
+    }
+    if (data.containsKey('tag_id')) {
+      context.handle(
+          _tagIdMeta, tagId.isAcceptableOrUnknown(data['tag_id']!, _tagIdMeta));
+    } else if (isInserting) {
+      context.missing(_tagIdMeta);
+    }
+    if (data.containsKey('display_name')) {
+      context.handle(
+          _displayNameMeta,
+          displayName.isAcceptableOrUnknown(
+              data['display_name']!, _displayNameMeta));
+    } else if (isInserting) {
+      context.missing(_displayNameMeta);
+    }
+    if (data.containsKey('user_visible')) {
+      context.handle(
+          _userVisibleMeta,
+          userVisible.isAcceptableOrUnknown(
+              data['user_visible']!, _userVisibleMeta));
+    }
+    if (data.containsKey('user_assignable')) {
+      context.handle(
+          _userAssignableMeta,
+          userAssignable.isAcceptableOrUnknown(
+              data['user_assignable']!, _userAssignableMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {server, tagId},
+      ];
+  @override
+  Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return Tag.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $TagsTable createAlias(String alias) {
+    return $TagsTable(attachedDatabase, alias);
+  }
+}
+
+class Person extends DataClass implements Insertable<Person> {
+  final int rowId;
+  final int account;
+  final String name;
+  final int thumbFaceId;
+  final int count;
+  Person(
+      {required this.rowId,
+      required this.account,
+      required this.name,
+      required this.thumbFaceId,
+      required this.count});
+  factory Person.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return Person(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      account: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      thumbFaceId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}thumb_face_id'])!,
+      count: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}count'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['account'] = Variable<int>(account);
+    map['name'] = Variable<String>(name);
+    map['thumb_face_id'] = Variable<int>(thumbFaceId);
+    map['count'] = Variable<int>(count);
+    return map;
+  }
+
+  PersonsCompanion toCompanion(bool nullToAbsent) {
+    return PersonsCompanion(
+      rowId: Value(rowId),
+      account: Value(account),
+      name: Value(name),
+      thumbFaceId: Value(thumbFaceId),
+      count: Value(count),
+    );
+  }
+
+  factory Person.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Person(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      account: serializer.fromJson<int>(json['account']),
+      name: serializer.fromJson<String>(json['name']),
+      thumbFaceId: serializer.fromJson<int>(json['thumbFaceId']),
+      count: serializer.fromJson<int>(json['count']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'account': serializer.toJson<int>(account),
+      'name': serializer.toJson<String>(name),
+      'thumbFaceId': serializer.toJson<int>(thumbFaceId),
+      'count': serializer.toJson<int>(count),
+    };
+  }
+
+  Person copyWith(
+          {int? rowId,
+          int? account,
+          String? name,
+          int? thumbFaceId,
+          int? count}) =>
+      Person(
+        rowId: rowId ?? this.rowId,
+        account: account ?? this.account,
+        name: name ?? this.name,
+        thumbFaceId: thumbFaceId ?? this.thumbFaceId,
+        count: count ?? this.count,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Person(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('name: $name, ')
+          ..write('thumbFaceId: $thumbFaceId, ')
+          ..write('count: $count')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, account, name, thumbFaceId, count);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Person &&
+          other.rowId == this.rowId &&
+          other.account == this.account &&
+          other.name == this.name &&
+          other.thumbFaceId == this.thumbFaceId &&
+          other.count == this.count);
+}
+
+class PersonsCompanion extends UpdateCompanion<Person> {
+  final Value<int> rowId;
+  final Value<int> account;
+  final Value<String> name;
+  final Value<int> thumbFaceId;
+  final Value<int> count;
+  const PersonsCompanion({
+    this.rowId = const Value.absent(),
+    this.account = const Value.absent(),
+    this.name = const Value.absent(),
+    this.thumbFaceId = const Value.absent(),
+    this.count = const Value.absent(),
+  });
+  PersonsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int account,
+    required String name,
+    required int thumbFaceId,
+    required int count,
+  })  : account = Value(account),
+        name = Value(name),
+        thumbFaceId = Value(thumbFaceId),
+        count = Value(count);
+  static Insertable<Person> custom({
+    Expression<int>? rowId,
+    Expression<int>? account,
+    Expression<String>? name,
+    Expression<int>? thumbFaceId,
+    Expression<int>? count,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (account != null) 'account': account,
+      if (name != null) 'name': name,
+      if (thumbFaceId != null) 'thumb_face_id': thumbFaceId,
+      if (count != null) 'count': count,
+    });
+  }
+
+  PersonsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? account,
+      Value<String>? name,
+      Value<int>? thumbFaceId,
+      Value<int>? count}) {
+    return PersonsCompanion(
+      rowId: rowId ?? this.rowId,
+      account: account ?? this.account,
+      name: name ?? this.name,
+      thumbFaceId: thumbFaceId ?? this.thumbFaceId,
+      count: count ?? this.count,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (account.present) {
+      map['account'] = Variable<int>(account.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (thumbFaceId.present) {
+      map['thumb_face_id'] = Variable<int>(thumbFaceId.value);
+    }
+    if (count.present) {
+      map['count'] = Variable<int>(count.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PersonsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('name: $name, ')
+          ..write('thumbFaceId: $thumbFaceId, ')
+          ..write('count: $count')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PersonsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _accountMeta = const VerificationMeta('account');
+  @override
+  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
+      'account', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _thumbFaceIdMeta =
+      const VerificationMeta('thumbFaceId');
+  @override
+  late final GeneratedColumn<int?> thumbFaceId = GeneratedColumn<int?>(
+      'thumb_face_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _countMeta = const VerificationMeta('count');
+  @override
+  late final GeneratedColumn<int?> count = GeneratedColumn<int?>(
+      'count', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [rowId, account, name, thumbFaceId, count];
+  @override
+  String get aliasedName => _alias ?? 'persons';
+  @override
+  String get actualTableName => 'persons';
+  @override
+  VerificationContext validateIntegrity(Insertable<Person> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    } else if (isInserting) {
+      context.missing(_accountMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('thumb_face_id')) {
+      context.handle(
+          _thumbFaceIdMeta,
+          thumbFaceId.isAcceptableOrUnknown(
+              data['thumb_face_id']!, _thumbFaceIdMeta));
+    } else if (isInserting) {
+      context.missing(_thumbFaceIdMeta);
+    }
+    if (data.containsKey('count')) {
+      context.handle(
+          _countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
+    } else if (isInserting) {
+      context.missing(_countMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {account, name},
+      ];
+  @override
+  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return Person.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $PersonsTable createAlias(String alias) {
+    return $PersonsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$SqliteDb extends GeneratedDatabase {
   _$SqliteDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   _$SqliteDb.connect(DatabaseConnection c) : super.connect(c);
@@ -3082,6 +3721,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $DirFilesTable dirFiles = $DirFilesTable(this);
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
+  late final $TagsTable tags = $TagsTable(this);
+  late final $PersonsTable persons = $PersonsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -3094,6 +3735,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         trashes,
         dirFiles,
         albums,
-        albumShares
+        albumShares,
+        tags,
+        persons
       ];
 }

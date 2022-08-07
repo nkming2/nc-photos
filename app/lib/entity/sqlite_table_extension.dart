@@ -394,6 +394,48 @@ extension SqliteDbExtension on SqliteDb {
         .get();
   }
 
+  Future<List<Tag>> allTags({
+    Account? sqlAccount,
+    app.Account? appAccount,
+  }) {
+    assert((sqlAccount != null) != (appAccount != null));
+    if (sqlAccount != null) {
+      final query = select(tags)
+        ..where((t) => t.server.equals(sqlAccount.server));
+      return query.get();
+    } else {
+      final query = select(tags).join([
+        innerJoin(servers, servers.rowId.equalsExp(tags.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(appAccount!.url));
+      return query.map((r) => r.readTable(tags)).get();
+    }
+  }
+
+  Future<List<Person>> allPersons({
+    Account? sqlAccount,
+    app.Account? appAccount,
+  }) {
+    assert((sqlAccount != null) != (appAccount != null));
+    if (sqlAccount != null) {
+      final query = select(persons)
+        ..where((t) => t.account.equals(sqlAccount.rowId));
+      return query.get();
+    } else {
+      final query = select(persons).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(persons.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(appAccount!.url))
+        ..where(accounts.userId
+            .equals(appAccount.userId.toCaseInsensitiveString()));
+      return query.map((r) => r.readTable(persons)).get();
+    }
+  }
+
   Future<void> truncate() async {
     await delete(servers).go();
     // technically deleting Servers table is enough to clear the followings, but
@@ -406,6 +448,8 @@ extension SqliteDbExtension on SqliteDb {
     await delete(dirFiles).go();
     await delete(albums).go();
     await delete(albumShares).go();
+    await delete(tags).go();
+    await delete(persons).go();
 
     // reset the auto increment counter
     await customStatement("UPDATE sqlite_sequence SET seq=0;");

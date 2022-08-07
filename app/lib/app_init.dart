@@ -18,6 +18,8 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/data_source.dart';
+import 'package:nc_photos/entity/search.dart';
+import 'package:nc_photos/entity/search/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -174,11 +176,16 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
   c.personRepo = const PersonRepo(PersonRemoteDataSource());
+  c.personRepoRemote = const PersonRepo(PersonRemoteDataSource());
+  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
   c.shareRepo = ShareRepo(ShareRemoteDataSource());
   c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());
   c.tagRepo = const TagRepo(TagRemoteDataSource());
+  c.tagRepoRemote = const TagRepo(TagRemoteDataSource());
+  c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
+  c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c.sqliteDb));
 
   if (platform_k.isAndroid) {
     // local file currently only supported on Android
