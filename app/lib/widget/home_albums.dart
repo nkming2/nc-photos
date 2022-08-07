@@ -31,7 +31,6 @@ import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
-import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
@@ -224,19 +223,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
           case _menuValueImport:
             _onImportPressed(context);
             break;
-        }
-      },
-    );
-  }
-
-  SelectableItem _buildFavoriteItem(BuildContext context) {
-    return _ButtonListItem(
-      icon: Icons.star_border,
-      label: L10n.global().collectionFavoritesLabel,
-      onTap: () {
-        if (!isSelectionMode) {
-          Navigator.of(context).pushNamed(FavoriteBrowser.routeName,
-              arguments: FavoriteBrowserArguments(widget.account));
         }
       },
     );
@@ -480,7 +466,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
     final sortedAlbums =
         album_util.sorted(items.map((e) => e.album).toList(), sort);
     itemStreamListItems = [
-      _buildFavoriteItem(context),
       _buildSharingItem(context),
       if (features.isSupportEnhancement) _buildEnhancedPhotosItem(context),
       _buildArchiveItem(context),

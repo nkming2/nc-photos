@@ -18,7 +18,6 @@ import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
-import 'package:nc_photos/widget/favorite_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
@@ -160,7 +159,6 @@ class _MyAppState extends State<MyApp>
     route ??= _handleShareFolderPickerRoute(settings);
     route ??= _handleAlbumPickerRoute(settings);
     route ??= _handleSmartAlbumBrowserRoute(settings);
-    route ??= _handleFavoriteBrowserRoute(settings);
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleEnhancementSettingsRoute(settings);
@@ -466,20 +464,6 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleSmartAlbumBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleFavoriteBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == FavoriteBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as FavoriteBrowserArguments;
-        return FavoriteBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleFavoriteBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
