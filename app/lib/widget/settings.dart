@@ -1400,7 +1400,8 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     }
   }
 
-  Future<void> _onUseBlackInDarkThemeChanged(BuildContext context, bool value) async {
+  Future<void> _onUseBlackInDarkThemeChanged(
+      BuildContext context, bool value) async {
     final oldValue = _isUseBlackInDarkTheme;
     setState(() {
       _isUseBlackInDarkTheme = value;
