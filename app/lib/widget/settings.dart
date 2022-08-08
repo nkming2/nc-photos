@@ -107,6 +107,12 @@ class _SettingsState extends State<Settings> {
           delegate: SliverChildListDelegate(
             [
               ListTile(
+                leading: ListTileCenterLeading(
+                  child: Icon(
+                    Icons.translate_outlined,
+                    color: AppTheme.getUnfocusedIconColor(context),
+                  ),
+                ),
                 title: Text(L10n.global().settingsLanguageTitle),
                 subtitle: Text(language_util.getSelectedLanguage().nativeName),
                 onTap: () => _onLanguageTap(context),
