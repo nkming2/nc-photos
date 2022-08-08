@@ -1,17 +1,38 @@
 import 'package:flutter/widgets.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/pref.dart';
 
 class AppLanguage {
-  const AppLanguage(this.langId, this.nativeName, this.isoName, this.locale);
+  const AppLanguage(this.langId, this._nativeName, this.isoName, this.locale);
+
+  String get nativeName {
+    if (langId == _AppLanguageEnum.systemDefault.index) {
+      try {
+        return L10n.global().settingsLanguageOptionSystemDefaultLabel;
+      } catch (_) {
+        return _nativeName;
+      }
+    } else {
+      return _nativeName;
+    }
+  }
 
   final int langId;
-  final String nativeName;
+  final String _nativeName;
   final String? isoName;
   final Locale? locale;
 }
 
-String getSelectedLanguageName() => _getSelectedLanguage().nativeName;
-Locale? getSelectedLocale() => _getSelectedLanguage().locale;
+AppLanguage getSelectedLanguage() {
+  try {
+    final lang = Pref().getLanguageOr(0);
+    return supportedLanguages[lang]!;
+  } catch (_) {
+    return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;
+  }
+}
+
+Locale? getSelectedLocale() => getSelectedLanguage().locale;
 
 final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index: AppLanguage(
@@ -67,13 +88,4 @@ enum _AppLanguageEnum {
   portuguese,
   chineseHans,
   chineseHant,
-}
-
-AppLanguage _getSelectedLanguage() {
-  try {
-    final lang = Pref().getLanguageOr(0);
-    return supportedLanguages[lang]!;
-  } catch (_) {
-    return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;
-  }
 }

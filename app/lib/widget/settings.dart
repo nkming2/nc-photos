@@ -108,7 +108,7 @@ class _SettingsState extends State<Settings> {
             [
               ListTile(
                 title: Text(L10n.global().settingsLanguageTitle),
-                subtitle: Text(language_util.getSelectedLanguageName()),
+                subtitle: Text(language_util.getSelectedLanguage().nativeName),
                 onTap: () => _onLanguageTap(context),
               ),
               SwitchListTile(

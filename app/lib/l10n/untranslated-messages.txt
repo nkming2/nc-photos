@@ -1,5 +1,6 @@
 {
   "cs": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsMemoriesTitle",
@@ -145,6 +146,7 @@
   ],
 
   "de": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsMemoriesTitle",
@@ -304,6 +306,7 @@
   ],
 
   "el": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -343,6 +346,7 @@
   ],
 
   "es": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "rootPickerSkipConfirmationDialogContent2",
     "categoriesLabel",
     "searchLandingPeopleListEmptyText",
@@ -364,6 +368,7 @@
   ],
 
   "fi": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "categoriesLabel",
     "searchLandingPeopleListEmptyText",
     "searchLandingCategoryVideosLabel",
@@ -385,6 +390,7 @@
 
   "fr": [
     "collectionsTooltip",
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -448,6 +454,7 @@
   ],
 
   "pl": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -529,6 +536,7 @@
   ],
 
   "pt": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -589,6 +597,7 @@
   ],
 
   "ru": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -649,6 +658,7 @@
   ],
 
   "zh": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -709,6 +719,7 @@
   ],
 
   "zh_Hant": [
+    "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
