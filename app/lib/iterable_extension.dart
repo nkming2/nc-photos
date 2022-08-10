@@ -27,12 +27,11 @@ extension IterableExtension<T> on Iterable<T> {
   bool containsIdentical(T element) =>
       containsIf(element, (a, b) => identical(a, b));
 
-  Iterable<Tuple2<U, List<T>>> groupBy<U>({required U Function(T e) key}) {
-    final map = fold<Map<U, List<T>>>(
+  Map<U, List<T>> groupBy<U>({required U Function(T e) key}) {
+    return fold<Map<U, List<T>>>(
         {},
         (previousValue, element) =>
             previousValue..putIfAbsent(key(element), () => []).add(element));
-    return map.entries.map((e) => Tuple2(e.key, e.value));
   }
 
   /// Return a new list with only distinct elements
