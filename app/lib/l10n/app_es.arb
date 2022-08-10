@@ -896,7 +896,7 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Crea en el servidor un nuevo enlace protegido con contraseña",
-	"collectionSharingLabel": "Compartido",
+	"collectionSharingLabel": "Compartidos",
 	"@collectionSharingLabel": {
 		"description": "List items being shared by the current account"
 	},
@@ -1145,7 +1145,7 @@
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
 	},
-	"convertAlbumTooltip": "Convertir a álbum",
+	"convertAlbumTooltip": "Convertir a álbum independiente",
 	"@convertAlbumTooltip": {
 		"description": "Convert a non-album collection to an album"
 	},
@@ -1224,7 +1224,7 @@
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Retocadas",
+	"collectionEnhancedPhotosLabel": "Fotos retocadas",
 	"@collectionEnhancedPhotosLabel": {
 		"description": "List photos enhanced by the app"
 	},
@@ -1297,9 +1297,74 @@
 	"@imageEditColorTint": {
 		"description": "Shift colors from a green to a magenta tint"
 	},
-	"imageEditTitle": "Vista previa",
+	"imageEditTitle": "Editar imagen",
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
+	},
+	"categoriesLabel": "Categorías",
+	"searchLandingPeopleListEmptyText": "Toca ayuda para aprender cómo configurar",
+	"@searchLandingPeopleListEmptyText": {
+		"description": "Shown in the search landing page under the People section when there are no people"
+	},
+	"searchLandingCategoryVideosLabel": "Vídeos",
+	"@searchLandingCategoryVideosLabel": {
+		"description": "Search all videos"
+	},
+	"searchFilterButtonLabel": "FILTROS",
+	"@searchFilterButtonLabel": {
+		"description": "Modify search filters"
+	},
+	"searchFilterDialogTitle": "Filtros de búsqueda",
+	"@searchFilterDialogTitle": {
+		"description": "Dialog to modify search filters"
+	},
+	"applyButtonLabel": "APLICAR",
+	"@applyButtonLabel": {
+		"description": "A confirmation button, typically in a dialog, that apply the current settings"
+	},
+	"searchFilterOptionAnyLabel": "Cualquiera",
+	"@searchFilterOptionAnyLabel": {
+		"description": "This is the default option for all search filters. Filters with this value will be ignored"
+	},
+	"searchFilterOptionTrueLabel": "Verdadero",
+	"@searchFilterOptionTrueLabel": {
+		"description": "Positive option for a boolean filter"
+	},
+	"searchFilterOptionFalseLabel": "Falso",
+	"@searchFilterOptionFalseLabel": {
+		"description": "Negative option for a boolean filter"
+	},
+	"searchFilterTypeLabel": "Tipo",
+	"@searchFilterTypeLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterTypeOptionImageLabel": "Imagen",
+	"@searchFilterTypeOptionImageLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeImageText": "imágenes",
+	"@searchFilterBubbleTypeImageText": {
+		"description": "List of active search filters shown in the result page (by file type, image)"
+	},
+	"searchFilterTypeOptionVideoLabel": "Vídeo",
+	"@searchFilterTypeOptionVideoLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeVideoText": "vídeos",
+	"@searchFilterBubbleTypeVideoText": {
+		"description": "List of active search filters shown in the result page (by file type, video)"
+	},
+	"searchFilterFavoriteLabel": "Favorito",
+	"@searchFilterFavoriteLabel": {
+		"description": "Filter search results by whether it's in favorites"
+	},
+	"searchFilterBubbleFavoriteTrueText": "favoritos",
+	"@searchFilterBubbleFavoriteTrueText": {
+		"description": "List of active search filters shown in the result page (by favorites, true)"
+	},
+	"searchFilterBubbleFavoriteFalseText": "no favoritos",
+	"@searchFilterBubbleFavoriteFalseText": {
+		"description": "List of active search filters shown in the result page (by favorites, false)"
 	},
 
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
