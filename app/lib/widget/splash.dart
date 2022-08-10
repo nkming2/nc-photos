@@ -12,10 +12,12 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/use_case/compat/v55.dart';
 import 'package:nc_photos/widget/changelog.dart';
+import 'package:nc_photos/widget/handler/purchase_handler.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
@@ -43,6 +45,19 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+    PurchaseHandler()
+      ..pushOnSuccessListener((details) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().donationSuccessMessage),
+          duration: k.snackBarDurationNormal,
+        ));
+      })
+      ..pushOnFailureListener((details) {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().donationFailureMessage),
+          duration: k.snackBarDurationNormal,
+        ));
+      });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _doWork();
     });
