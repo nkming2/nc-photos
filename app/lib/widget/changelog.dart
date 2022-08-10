@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/widget/donation.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_ui/np_ui.dart';
 
@@ -68,6 +69,15 @@ class Changelog extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     return Column(
       children: [
+        _ChangelogBanner(
+          title: Text(L10n.global().donationShortMessage),
+          action: TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Donation.routeName);
+            },
+            child: Text(L10n.global().donationButtonLabel),
+          ),
+        ),
         Expanded(
           child: ListView.builder(
             itemCount: _changelogs.length,
