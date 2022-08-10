@@ -161,6 +161,7 @@ dependencies:
   woozy_search: ^2.0.3
 
   google_maps_flutter: 2.5.3
+  in_app_purchase: 3.2.0
 
 dependency_overrides:
   video_player:
