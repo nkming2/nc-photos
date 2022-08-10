@@ -122,6 +122,24 @@ List<Widget> _buildChangelog470(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog480(BuildContext context) {
+  return [
+    _subSectionHighlight("IMPORTANT"),
+    _bulletGroup(
+        const Text("Favorites and People are relocated to the Search tab")),
+    _subSection("Improvements"),
+    _bulletGroup(const Text("Search")),
+    _sectionPadding(),
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Finnish (by pHamala)")),
+    _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
+    _sectionPadding(),
+    _subSection("Known issues"),
+    _bulletGroup(const Text(
+        "Google Maps is temporarily disabled due to a bug in the Maps SDK. The app will use OSM as the only map provider until the bug is fixed")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -178,6 +196,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  480: _buildChangelog480,
   470: _buildChangelog470,
   460: _buildChangelog460,
   450: (context) => _buildChangelogCompat(context, 45),
