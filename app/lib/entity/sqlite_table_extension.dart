@@ -99,6 +99,17 @@ extension SqliteDbExtension on SqliteDb {
     });
   }
 
+  /// Run [block] after acquiring the database
+  ///
+  /// The [db] argument passed to [block] is identical to this
+  ///
+  /// This function does not start a transaction, see [use] instead
+  Future<T> useNoTransaction<T>(Future<T> Function(SqliteDb db) block) async {
+    return await platform.Lock.synchronized(k.appDbLockId, () async {
+      return await block(this);
+    });
+  }
+
   /// Start an isolate and run [callback] there, with access to the
   /// SQLite database
   Future<U> isolate<T, U>(T args, ComputeWithDbCallback<T, U> callback) async {

@@ -1622,6 +1622,10 @@ class _DevSettingsState extends State<_DevSettings> {
                 title: const Text("Clear cache database"),
                 onTap: () => _clearCacheDb(),
               ),
+              ListTile(
+                title: const Text("SQL:VACUUM"),
+                onTap: () => _runSqlVacuum(),
+              ),
             ],
           ),
         ),
@@ -1649,6 +1653,25 @@ class _DevSettingsState extends State<_DevSettings> {
         duration: k.snackBarDurationNormal,
       ));
       _log.shout("[_clearCacheDb] Uncaught exception", e, stackTrace);
+    }
+  }
+
+  Future<void> _runSqlVacuum() async {
+    try {
+      final c = KiwiContainer().resolve<DiContainer>();
+      await c.sqliteDb.useNoTransaction((db) async {
+        await db.customStatement("VACUUM;");
+      });
+      SnackBarManager().showSnackBar(const SnackBar(
+        content: Text("Finished successfully"),
+        duration: k.snackBarDurationShort,
+      ));
+    } catch (e, stackTrace) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(exception_util.toUserString(e)),
+        duration: k.snackBarDurationNormal,
+      ));
+      _log.shout("[_runSqlVacuum] Uncaught exception", e, stackTrace);
     }
   }
 
