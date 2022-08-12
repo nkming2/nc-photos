@@ -3,10 +3,13 @@ import 'dart:isolate';
 import 'package:drift/drift.dart';
 import 'package:drift/isolate.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite_table.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 
 typedef ComputeWithDbCallback<T, U> = Future<U> Function(
     SqliteDb db, T message);
@@ -23,11 +26,16 @@ Future<SqliteDb> createDb() async {
 
 Future<U> computeWithDb<T, U>(
     ComputeWithDbCallback<T, U> callback, T args) async {
-  return await compute(
-    _computeWithDbImpl<T, U>,
-    _ComputeWithDbMessage(
-        await platform.getSqliteConnectionArgs(), callback, args),
-  );
+  if (platform_k.isWeb) {
+    final c = KiwiContainer().resolve<DiContainer>();
+    return await callback(c.sqliteDb, args);
+  } else {
+    return await compute(
+      _computeWithDbImpl<T, U>,
+      _ComputeWithDbMessage(
+          await platform.getSqliteConnectionArgs(), callback, args),
+    );
+  }
 }
 
 class _IsolateStartRequest {
