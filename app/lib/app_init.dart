@@ -37,6 +37,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
+import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
@@ -54,11 +55,14 @@ Future<void> init(InitIsolateType isolateType) async {
   }
 
   initLog();
+  await _initDeviceInfo();
   initDrift();
+  if (isolateType == InitIsolateType.main) {
+    await _initDriftWorkaround();
+  }
   _initKiwi();
   await _initPref();
   await _initAccountPrefs();
-  await _initDeviceInfo();
   _initEquatable();
   if (features.isSupportSelfSignedCert) {
     _initSelfSignedCertManager();
@@ -115,6 +119,15 @@ void initLog() {
 
 void initDrift() {
   driftRuntimeOptions.debugPrint = (log) => debugPrint(log, wrapWidth: 1024);
+}
+
+Future<void> _initDriftWorkaround() async {
+  if (AndroidInfo().sdkInt < 24) {
+    _log.info("[_initDriftWorkaround] Workaround Android 6- bug");
+    // see: https://github.com/flutter/flutter/issues/73318 and
+    // https://github.com/simolus3/drift/issues/895
+    await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
+  }
 }
 
 Future<void> _initPref() async {
