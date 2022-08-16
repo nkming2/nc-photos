@@ -127,6 +127,7 @@ List<Widget> _buildChangelog480(BuildContext context) {
     _subSectionHighlight("IMPORTANT"),
     _bulletGroup(
         const Text("Favorites and People are relocated to the Search tab")),
+    _sectionPadding(),
     _subSection("Improvements"),
     _bulletGroup(const Text("Search")),
     _sectionPadding(),
