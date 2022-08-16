@@ -11,7 +11,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/album_browser.dart';
+import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/tag_browser.dart';
@@ -115,8 +115,7 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
 
   void _onAlbumPressed(_AlbumListItem item) {
     if (mounted) {
-      Navigator.of(context).pushNamed(AlbumBrowser.routeName,
-          arguments: AlbumBrowserArguments(widget.account, item.album));
+      album_browser_util.push(context, widget.account, item.album);
     }
   }
 
