@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -25,7 +26,11 @@ class ResyncAlbum {
 
     final files = await FindFile(_c)(
       account,
-      items.whereType<AlbumFileItem>().map((i) => i.file.fileId!).toList(),
+      items
+          .whereType<AlbumFileItem>()
+          .map((i) => i.file.fileId)
+          .whereNotNull()
+          .toList(),
       onFileNotFound: (_) {},
     );
     final fileIt = files.iterator;
