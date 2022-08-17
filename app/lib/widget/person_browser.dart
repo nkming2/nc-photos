@@ -199,8 +199,7 @@ class _PersonBrowserState extends State<PersonBrowser>
                 if (state is! ListFaceFileBlocLoading &&
                     !_buildItemQueue.isProcessing)
                   Text(
-                    L10n.global()
-                        .personPhotoCountText(itemStreamListItems.length),
+                    L10n.global().personPhotoCountText(_backingFiles.length),
                     style: TextStyle(
                       color: AppTheme.getSecondaryTextColor(context),
                       fontSize: 12,
