@@ -13,11 +13,9 @@ class ListPersonBlocQuery extends ListPersonBlocEvent {
   const ListPersonBlocQuery(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  toString() => "$runtimeType {"
+      "account: $account, "
+      "}";
 
   final Account account;
 }
@@ -26,12 +24,10 @@ abstract class ListPersonBlocState {
   const ListPersonBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  toString() => "$runtimeType {"
+      "account: $account, "
+      "items: List {length: ${items.length}}, "
+      "}";
 
   final Account? account;
   final List<Person> items;
@@ -57,14 +53,12 @@ class ListPersonBlocFailure extends ListPersonBlocState {
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  toString() => "$runtimeType {"
+      "super: ${super.toString()}, "
+      "exception: $exception, "
+      "}";
 
-  final dynamic exception;
+  final Object exception;
 }
 
 /// List all people recognized in an account
