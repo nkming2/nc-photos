@@ -142,6 +142,7 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -302,6 +303,7 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -342,12 +344,14 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "es": [
     "settingsLanguageOptionSystemDefaultLabel",
-    "rootPickerSkipConfirmationDialogContent2"
+    "rootPickerSkipConfirmationDialogContent2",
+    "showAllButtonLabel"
   ],
 
   "fi": [
@@ -368,7 +372,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "fr": [
@@ -433,7 +438,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "pl": [
@@ -515,7 +521,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "pt": [
@@ -576,7 +583,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "ru": [
@@ -637,7 +645,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "zh": [
@@ -698,7 +707,8 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ],
 
   "zh_Hant": [
@@ -759,6 +769,7 @@
     "searchFilterBubbleTypeVideoText",
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText"
+    "searchFilterBubbleFavoriteFalseText",
+    "showAllButtonLabel"
   ]
 }

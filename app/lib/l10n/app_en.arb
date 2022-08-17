@@ -1370,6 +1370,10 @@
 	"@searchFilterBubbleFavoriteFalseText": {
 		"description": "List of active search filters shown in the result page (by favorites, false)"
 	},
+	"showAllButtonLabel": "SHOW ALL",
+	"@showAllButtonLabel": {
+		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

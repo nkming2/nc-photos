@@ -21,6 +21,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 
 class SearchLanding extends StatefulWidget {
@@ -110,21 +111,30 @@ class _SearchLandingState extends State<SearchLanding> {
 
   List<Widget> _buildPeopleSection(
       BuildContext context, SearchLandingBlocState state) {
+    final isNoResult = (state is SearchLandingBlocSuccess ||
+            state is SearchLandingBlocFailure) &&
+        state.persons.isEmpty;
     return [
       ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         title: Text(L10n.global().collectionPeopleLabel),
-        trailing: IconButton(
-          onPressed: () {
-            launch(help_util.peopleUrl);
-          },
-          tooltip: L10n.global().helpTooltip,
-          icon: const Icon(Icons.help_outline),
-        ),
+        trailing: isNoResult
+            ? IconButton(
+                onPressed: () {
+                  launch(help_util.peopleUrl);
+                },
+                tooltip: L10n.global().helpTooltip,
+                icon: const Icon(Icons.help_outline),
+              )
+            : TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(PeopleBrowser.routeName,
+                      arguments: PeopleBrowserArguments(widget.account));
+                },
+                child: Text(L10n.global().showAllButtonLabel),
+              ),
       ),
-      if ((state is SearchLandingBlocSuccess ||
-              state is SearchLandingBlocFailure) &&
-          state.persons.isEmpty)
+      if (isNoResult)
         SizedBox(
           height: 48,
           child: Center(

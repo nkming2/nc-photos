@@ -92,7 +92,7 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
   }
 
   Future<List<Person>> _query(ListPersonBlocQuery ev) =>
-      ListPerson(_c)(ev.account);
+      ListPerson(_c.withLocalRepo())(ev.account);
 
   final DiContainer _c;
 

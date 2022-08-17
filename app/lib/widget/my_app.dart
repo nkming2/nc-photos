@@ -21,6 +21,7 @@ import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
+import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
@@ -165,6 +166,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
     route ??= _handleTagBrowserRoute(settings);
+    route ??= _handlePeopleBrowserRoute(settings);
     return route;
   }
 
@@ -551,6 +553,19 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleTagBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePeopleBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PeopleBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as PeopleBrowserArguments;
+        return PeopleBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
