@@ -28,3 +28,7 @@ QueryExecutor openSqliteConnection() {
     );
   });
 }
+
+Future<void> applyWorkaroundToOpenSqlite3OnOldAndroidVersions() async {
+  // not supported on web
+}

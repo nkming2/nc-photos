@@ -32,12 +32,13 @@ import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/tagged_file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
+import 'package:nc_photos/mobile/platform.dart'
+    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
@@ -122,11 +123,11 @@ void initDrift() {
 }
 
 Future<void> _initDriftWorkaround() async {
-  if (AndroidInfo().sdkInt < 24) {
+  if (platform_k.isAndroid && AndroidInfo().sdkInt < 24) {
     _log.info("[_initDriftWorkaround] Workaround Android 6- bug");
     // see: https://github.com/flutter/flutter/issues/73318 and
     // https://github.com/simolus3/drift/issues/895
-    await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
+    await platform.applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
   }
 }
 
