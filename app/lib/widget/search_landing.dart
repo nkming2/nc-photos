@@ -137,7 +137,7 @@ class _SearchLandingState extends State<SearchLanding> {
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: state.persons.length,
+            itemCount: _items.length,
             itemBuilder: (context, i) => _buildItem(context, i),
           ),
         ),
