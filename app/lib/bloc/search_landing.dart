@@ -65,6 +65,7 @@ class SearchLandingBloc
     extends Bloc<SearchLandingBlocEvent, SearchLandingBlocState> {
   SearchLandingBloc(this._c)
       : assert(require(_c)),
+        assert(ListPerson.require(_c)),
         super(SearchLandingBlocInit()) {
     on<SearchLandingBlocEvent>(_onEvent);
   }
