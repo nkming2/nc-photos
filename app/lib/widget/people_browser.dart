@@ -108,15 +108,13 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
                     child: LinearProgressIndicator(),
                   ),
                 ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverStaggeredGrid.extentBuilder(
-                  maxCrossAxisExtent: 160,
-                  mainAxisSpacing: 8,
-                  itemCount: _items.length,
-                  itemBuilder: _buildItem,
-                  staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
-                ),
+              SliverStaggeredGrid.extentBuilder(
+                maxCrossAxisExtent: 160,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                itemCount: _items.length,
+                itemBuilder: _buildItem,
+                staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
               ),
             ],
           ),
@@ -208,49 +206,81 @@ class _PersonListItem extends _ListItem {
 
   @override
   buildWidget(BuildContext context) {
-    final content = Padding(
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+    Widget content = Stack(
+      children: [
+        _buildFaceImage(context),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 24,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0),
+                      Colors.black.withOpacity(.55),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                color: Colors.black.withOpacity(.55),
+                constraints: const BoxConstraints(minWidth: double.infinity),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
+                child: Text(
+                  name,
+                  style: TextStyle(
+                    color: AppTheme.primaryTextColorDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+    if (onTap != null) {
+      content = Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: _buildFaceImage(context),
+          content,
+          Positioned.fill(
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                onTap: onTap,
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              name + "\n",
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: AppTheme.getPrimaryTextColor(context),
-                  ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
         ],
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.all(4),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          color: AppTheme.getListItemBackgroundColor(context),
+          constraints: const BoxConstraints.expand(),
+          child: content,
+        ),
       ),
     );
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        child: content,
-      );
-    } else {
-      return content;
-    }
   }
 
   Widget _buildFaceImage(BuildContext context) {
-    Widget cover;
     try {
-      cover = FittedBox(
+      return FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
         child: CachedNetworkImage(
@@ -269,21 +299,14 @@ class _PersonListItem extends _ListItem {
         ),
       );
     } catch (_) {
-      cover = Icon(
-        Icons.person,
-        color: Colors.white.withOpacity(.8),
-        size: 64,
+      return Center(
+        child: Icon(
+          Icons.person,
+          color: Colors.white.withOpacity(.8),
+          size: 80,
+        ),
       );
     }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(128),
-      child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
-        constraints: const BoxConstraints.expand(),
-        child: cover,
-      ),
-    );
   }
 
   final Account account;
