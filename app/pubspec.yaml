@@ -76,6 +76,7 @@ dependencies:
       ref: 1.0.0-nc-photos-2
       path: library
   intl: ^0.17.0
+  kdtree: ^0.2.0
   kiwi: ^4.0.1
   logging: ^1.0.1
   memory_info: ^0.0.2
@@ -90,6 +91,7 @@ dependencies:
   quiver: ^3.1.0
   screen_brightness:  ^0.2.1
   shared_preferences: ^2.0.8
+  sqlite3: any
   sqlite3_flutter_libs: ^0.5.8
   synchronized: ^3.0.0
   tuple: ^2.0.0
