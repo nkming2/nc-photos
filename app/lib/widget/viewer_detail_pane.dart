@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:android_intent_plus/android_intent.dart';
-import 'package:exifdart/exifdart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
@@ -15,6 +14,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
@@ -334,14 +334,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (exif.isoSpeedRatings != null) {
       _isoSpeedRatings = exif.isoSpeedRatings!;
     }
-    if (exif.gpsLatitudeRef != null &&
-        exif.gpsLatitude != null &&
-        exif.gpsLongitudeRef != null &&
-        exif.gpsLongitude != null) {
-      final lat = _gpsDmsToDouble(exif.gpsLatitude!) *
-          (exif.gpsLatitudeRef == "S" ? -1 : 1);
-      final lng = _gpsDmsToDouble(exif.gpsLongitude!) *
-          (exif.gpsLongitudeRef == "W" ? -1 : 1);
+    final lat = exif.gpsLatitudeDeg;
+    final lng = exif.gpsLongitudeDeg;
+    if (lat != null && lng != null) {
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
     }
@@ -492,17 +487,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     }).catchError((e, stacktrace) {
       _log.shout("[_onDateTimeTap] Failed while showDialog", e, stacktrace);
     });
-  }
-
-  static double _gpsDmsToDouble(List<Rational> dms) {
-    double product = dms[0].toDouble();
-    if (dms.length > 1) {
-      product += dms[1].toDouble() / 60;
-    }
-    if (dms.length > 2) {
-      product += dms[2].toDouble() / 3600;
-    }
-    return product;
   }
 
   bool _checkCanRemoveFromAlbum() {
