@@ -51,7 +51,7 @@ enum InitIsolateType {
 
 Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
-    _log.warning("[initAppLaunch] Already initialized in this isolate");
+    _log.warning("[init] Already initialized in this isolate");
     return;
   }
 
