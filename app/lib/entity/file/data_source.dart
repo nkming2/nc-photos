@@ -57,7 +57,7 @@ class FileWebdavDataSource implements FileDataSource {
       customProperties: [
         "app:metadata",
         "app:is-archived",
-        "app:override-date-time"
+        "app:override-date-time",
       ],
     );
   }
@@ -443,11 +443,14 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  updateProperty(Account account, File f,
-      {OrNull<Metadata>? metadata,
-      OrNull<bool>? isArchived,
-      OrNull<DateTime>? overrideDateTime,
-      bool? favorite}) async {
+  updateProperty(
+    Account account,
+    File f, {
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
+  }) async {
     _log.info("[updateProperty] ${f.path}");
     await _c.sqliteDb.use((db) async {
       final rowIds = await db.accountFileRowIdsOf(f, appAccount: account);
