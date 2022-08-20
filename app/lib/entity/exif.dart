@@ -126,9 +126,9 @@ class Exif with EquatableMixin {
 
   /// 0x8825 GPS tags
   String? get gpsLatitudeRef => data["GPSLatitudeRef"];
-  List<Rational>? get gpsLatitude => data["GPSLatitude"].cast<Rational>();
+  List<Rational>? get gpsLatitude => data["GPSLatitude"]?.cast<Rational>();
   String? get gpsLongitudeRef => data["GPSLongitudeRef"];
-  List<Rational>? get gpsLongitude => data["GPSLongitude"].cast<Rational>();
+  List<Rational>? get gpsLongitude => data["GPSLongitude"]?.cast<Rational>();
 
   @override
   get props => [
