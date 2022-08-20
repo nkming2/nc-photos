@@ -143,6 +143,9 @@
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
     "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -304,6 +307,9 @@
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
     "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
     "errorAlbumDowngrade"
   ],
 
@@ -345,13 +351,25 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "es": [
     "settingsLanguageOptionSystemDefaultLabel",
     "rootPickerSkipConfirmationDialogContent2",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
+  ],
+
+  "fi": [
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "fr": [
@@ -417,7 +435,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "pl": [
@@ -500,7 +521,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "pt": [
@@ -562,7 +586,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "ru": [
@@ -624,7 +651,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "zh": [
@@ -686,7 +716,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ],
 
   "zh_Hant": [
@@ -748,6 +781,9 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent"
   ]
 }

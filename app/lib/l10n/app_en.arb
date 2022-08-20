@@ -1374,6 +1374,21 @@
 	"@showAllButtonLabel": {
 		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
 	},
+	"gpsPlaceText": "Near {place}",
+	"@gpsPlaceText": {
+		"description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+		"placeholders": {
+			"place": {}
+		}
+	},
+	"gpsPlaceAboutDialogTitle": "About place",
+	"@gpsPlaceAboutDialogTitle": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"gpsPlaceAboutDialogContent": "The place shown here is only a rough estimation and not guaranteed to be accurate. It does not represent our views on any disputed areas.",
+	"@gpsPlaceAboutDialogContent": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

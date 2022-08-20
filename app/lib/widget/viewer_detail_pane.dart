@@ -17,7 +17,9 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/notified_action.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -291,6 +293,41 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               title: Text(_model!),
               subtitle: cameraSubStr.isNotEmpty ? Text(cameraSubStr) : null,
             ),
+          if (_location?.name != null)
+            ListTile(
+              leading: ListTileCenterLeading(
+                child: Icon(
+                  Icons.location_on_outlined,
+                  color: AppTheme.getSecondaryTextColor(context),
+                ),
+              ),
+              title: Text(L10n.global().gpsPlaceText(_location!.name!)),
+              subtitle: _location!.toSubtitle()?.run((obj) => Text(obj)),
+              trailing: Icon(
+                Icons.info_outline,
+                color: AppTheme.getSecondaryTextColor(context),
+              ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text(L10n.global().gpsPlaceAboutDialogTitle),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(L10n.global().gpsPlaceAboutDialogContent),
+                        const SizedBox(height: 16),
+                        const Divider(height: 16),
+                        const Text(
+                          "Based on GeoNames Gazetteer data by GeoNames, licensed under CC BY 4.0",
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           if (features.isSupportMapView && _gps != null)
             AnimatedVisibility(
               opacity: _shouldBlockGpsMap ? 0 : 1,
@@ -339,6 +376,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (lat != null && lng != null) {
       _log.fine("GPS: ($lat, $lng)");
       _gps = Tuple2(lat, lng);
+      _location = widget.file.location;
     }
   }
 
@@ -520,6 +558,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   double? _focalLength;
   int? _isoSpeedRatings;
   Tuple2<double, double>? _gps;
+  ImageLocation? _location;
 
   final _tags = <String>[];
 
@@ -588,4 +627,18 @@ String _byteSizeToString(int byteSize) {
     ++i;
   }
   return "${remain.toStringAsFixed(2)}${units[i]}";
+}
+
+extension on ImageLocation {
+  String? toSubtitle() {
+    if (countryCode == null) {
+      return null;
+    } else if (admin1 == null) {
+      return location_util.alpha2CodeToName(countryCode!);
+    } else if (admin2 == null) {
+      return "$admin1, ${location_util.alpha2CodeToName(countryCode!)}";
+    } else {
+      return "$admin2, $admin1, ${location_util.alpha2CodeToName(countryCode!)}";
+    }
+  }
 }
