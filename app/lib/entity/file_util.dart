@@ -87,6 +87,10 @@ bool isNoMediaMarkerPath(String path) {
   return filename == ".nomedia" || filename == ".noimage";
 }
 
+/// Return if there's missing metadata in [file]
+bool isMissingMetadata(File file) =>
+    isSupportedImageFormat(file) && file.metadata == null;
+
 final _supportedFormatMimes = [
   "image/jpeg",
   "image/png",

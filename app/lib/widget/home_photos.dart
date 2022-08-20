@@ -518,10 +518,8 @@ class _HomePhotosState extends State<HomePhotos>
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
-      final missingMetadataCount = _backingFiles
-          .where(
-              (f) => file_util.isSupportedImageFormat(f) && f.metadata == null)
-          .length;
+      final missingMetadataCount =
+          _backingFiles.where(file_util.isMissingMetadata).length;
       if (missingMetadataCount > 0) {
         if (_web != null) {
           _web!.startMetadataTask(missingMetadataCount);

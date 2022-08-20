@@ -33,7 +33,7 @@ class ScanMissingMetadata {
         yield d;
         continue;
       }
-      for (final f in (d as List<File>).where(_isMissing)) {
+      for (final f in (d as List<File>).where(file_util.isMissingMetadata)) {
         yield f;
       }
     }
@@ -41,13 +41,10 @@ class ScanMissingMetadata {
 
   Stream<dynamic> _doSingle(Account account, File root) async* {
     final files = await Ls(fileRepo)(account, root);
-    for (final f in files.where(_isMissing)) {
+    for (final f in files.where(file_util.isMissingMetadata)) {
       yield f;
     }
   }
-
-  bool _isMissing(File file) =>
-      file_util.isSupportedImageFormat(file) && file.metadata == null;
 
   final FileRepo fileRepo;
 }
