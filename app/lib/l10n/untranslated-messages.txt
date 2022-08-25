@@ -355,25 +355,7 @@
   ],
 
   "fi": [
-    "settingsLanguageOptionSystemDefaultLabel",
-    "categoriesLabel",
-    "searchLandingPeopleListEmptyText",
-    "searchLandingCategoryVideosLabel",
-    "searchFilterButtonLabel",
-    "searchFilterDialogTitle",
-    "applyButtonLabel",
-    "searchFilterOptionAnyLabel",
-    "searchFilterOptionTrueLabel",
-    "searchFilterOptionFalseLabel",
-    "searchFilterTypeLabel",
-    "searchFilterTypeOptionImageLabel",
-    "searchFilterBubbleTypeImageText",
-    "searchFilterTypeOptionVideoLabel",
-    "searchFilterBubbleTypeVideoText",
-    "searchFilterFavoriteLabel",
-    "searchFilterBubbleFavoriteTrueText",
-    "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+   
   ],
 
   "fr": [
