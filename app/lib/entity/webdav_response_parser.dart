@@ -101,6 +101,7 @@ class WebdavResponseParser {
     String? trashbinFilename;
     String? trashbinOriginalLocation;
     DateTime? trashbinDeletionTime;
+    ImageLocation? location;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -139,6 +140,7 @@ class WebdavResponseParser {
         trashbinFilename = propParser.trashbinFilename;
         trashbinOriginalLocation = propParser.trashbinOriginalLocation;
         trashbinDeletionTime = propParser.trashbinDeletionTime;
+        location = propParser.location;
       }
     }
 
@@ -161,6 +163,7 @@ class WebdavResponseParser {
       trashbinFilename: trashbinFilename,
       trashbinOriginalLocation: trashbinOriginalLocation,
       trashbinDeletionTime: trashbinDeletionTime,
+      location: location,
     );
   }
 
@@ -357,6 +360,9 @@ class _FilePropParser {
       } else if (child.matchQualifiedName("override-date-time",
           prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
         _overrideDateTime = DateTime.parse(child.innerText);
+      } else if (child.matchQualifiedName("location",
+          prefix: "com.nkming.nc_photos", namespaces: namespaces)) {
+        _location = ImageLocation.fromJson(jsonDecode(child.innerText));
       }
     }
     // 2nd pass that depends on data in 1st pass
@@ -395,6 +401,7 @@ class _FilePropParser {
   String? get trashbinFilename => _trashbinFilename;
   String? get trashbinOriginalLocation => _trashbinOriginalLocation;
   DateTime? get trashbinDeletionTime => _trashbinDeletionTime;
+  ImageLocation? get location => _location;
 
   final Map<String, String> namespaces;
 
@@ -418,6 +425,7 @@ class _FilePropParser {
   String? _trashbinFilename;
   String? _trashbinOriginalLocation;
   DateTime? _trashbinDeletionTime;
+  ImageLocation? _location;
 }
 
 class _FileIdPropParser {

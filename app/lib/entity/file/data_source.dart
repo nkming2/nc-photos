@@ -58,6 +58,7 @@ class FileWebdavDataSource implements FileDataSource {
         "app:metadata",
         "app:is-archived",
         "app:override-date-time",
+        "app:location",
       ],
     );
   }
@@ -135,6 +136,7 @@ class FileWebdavDataSource implements FileDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) async {
     _log.info("[updateProperty] ${f.path}");
     if (metadata?.obj != null && metadata!.obj!.fileEtag != f.etag) {
@@ -149,11 +151,14 @@ class FileWebdavDataSource implements FileDataSource {
         "app:override-date-time":
             overrideDateTime!.obj!.toUtc().toIso8601String(),
       if (favorite != null) "oc:favorite": favorite ? 1 : 0,
+      if (location?.obj != null)
+        "app:location": jsonEncode(location!.obj!.toJson()),
     };
     final removeProps = [
       if (OrNull.isSetNull(metadata)) "app:metadata",
       if (OrNull.isSetNull(isArchived)) "app:is-archived",
       if (OrNull.isSetNull(overrideDateTime)) "app:override-date-time",
+      if (OrNull.isSetNull(location)) "app:location",
     ];
     final response = await Api(account).files().proppatch(
           path: f.path,
@@ -417,6 +422,7 @@ class FileSqliteDbDataSource implements FileDataSource {
                 r.readTable(db.files),
                 r.readTable(db.accountFiles),
                 r.readTableOrNull(db.images),
+                r.readTableOrNull(db.imageLocations),
                 r.readTableOrNull(db.trashes),
               ))
           .get();
@@ -450,6 +456,7 @@ class FileSqliteDbDataSource implements FileDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) async {
     _log.info("[updateProperty] ${f.path}");
     await _c.sqliteDb.use((db) async {
@@ -487,6 +494,26 @@ class FileSqliteDbDataSource implements FileDataSource {
                     metadata.obj!.exif?.toJson().run((j) => jsonEncode(j))),
                 dateTimeOriginal:
                     sql.Value(metadata.obj!.exif?.dateTimeOriginal),
+              ));
+        }
+      }
+      if (location != null) {
+        if (location.obj == null) {
+          await (db.delete(db.imageLocations)
+                ..where((t) => t.accountFile.equals(rowIds.accountFileRowId)))
+              .go();
+        } else {
+          await db
+              .into(db.imageLocations)
+              .insertOnConflictUpdate(sql.ImageLocationsCompanion.insert(
+                accountFile: sql.Value(rowIds.accountFileRowId),
+                version: location.obj!.version,
+                name: sql.Value(location.obj!.name),
+                latitude: sql.Value(location.obj!.latitude),
+                longitude: sql.Value(location.obj!.longitude),
+                countryCode: sql.Value(location.obj!.countryCode),
+                admin1: sql.Value(location.obj!.admin1),
+                admin2: sql.Value(location.obj!.admin2),
               ));
         }
       }
@@ -627,6 +654,7 @@ class FileCachedDataSource implements FileDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) async {
     await _remoteSrc.updateProperty(
       account,
@@ -635,6 +663,7 @@ class FileCachedDataSource implements FileDataSource {
       isArchived: isArchived,
       overrideDateTime: overrideDateTime,
       favorite: favorite,
+      location: location,
     );
     await _sqliteDbSrc.updateProperty(
       account,
@@ -643,6 +672,7 @@ class FileCachedDataSource implements FileDataSource {
       isArchived: isArchived,
       overrideDateTime: overrideDateTime,
       favorite: favorite,
+      location: location,
     );
 
     // generate a new random token

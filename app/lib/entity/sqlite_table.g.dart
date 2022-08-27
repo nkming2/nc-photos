@@ -1820,6 +1820,416 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
       const _DateTimeConverter();
 }
 
+class ImageLocation extends DataClass implements Insertable<ImageLocation> {
+  final int accountFile;
+  final int version;
+  final String? name;
+  final double? latitude;
+  final double? longitude;
+  final String? countryCode;
+  final String? admin1;
+  final String? admin2;
+  ImageLocation(
+      {required this.accountFile,
+      required this.version,
+      this.name,
+      this.latitude,
+      this.longitude,
+      this.countryCode,
+      this.admin1,
+      this.admin2});
+  factory ImageLocation.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return ImageLocation(
+      accountFile: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_file'])!,
+      version: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      latitude: const RealType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
+      longitude: const RealType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
+      countryCode: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}country_code']),
+      admin1: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}admin1']),
+      admin2: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}admin2']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['account_file'] = Variable<int>(accountFile);
+    map['version'] = Variable<int>(version);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String?>(name);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double?>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double?>(longitude);
+    }
+    if (!nullToAbsent || countryCode != null) {
+      map['country_code'] = Variable<String?>(countryCode);
+    }
+    if (!nullToAbsent || admin1 != null) {
+      map['admin1'] = Variable<String?>(admin1);
+    }
+    if (!nullToAbsent || admin2 != null) {
+      map['admin2'] = Variable<String?>(admin2);
+    }
+    return map;
+  }
+
+  ImageLocationsCompanion toCompanion(bool nullToAbsent) {
+    return ImageLocationsCompanion(
+      accountFile: Value(accountFile),
+      version: Value(version),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      countryCode: countryCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(countryCode),
+      admin1:
+          admin1 == null && nullToAbsent ? const Value.absent() : Value(admin1),
+      admin2:
+          admin2 == null && nullToAbsent ? const Value.absent() : Value(admin2),
+    );
+  }
+
+  factory ImageLocation.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ImageLocation(
+      accountFile: serializer.fromJson<int>(json['accountFile']),
+      version: serializer.fromJson<int>(json['version']),
+      name: serializer.fromJson<String?>(json['name']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      countryCode: serializer.fromJson<String?>(json['countryCode']),
+      admin1: serializer.fromJson<String?>(json['admin1']),
+      admin2: serializer.fromJson<String?>(json['admin2']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'accountFile': serializer.toJson<int>(accountFile),
+      'version': serializer.toJson<int>(version),
+      'name': serializer.toJson<String?>(name),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'countryCode': serializer.toJson<String?>(countryCode),
+      'admin1': serializer.toJson<String?>(admin1),
+      'admin2': serializer.toJson<String?>(admin2),
+    };
+  }
+
+  ImageLocation copyWith(
+          {int? accountFile,
+          int? version,
+          Value<String?> name = const Value.absent(),
+          Value<double?> latitude = const Value.absent(),
+          Value<double?> longitude = const Value.absent(),
+          Value<String?> countryCode = const Value.absent(),
+          Value<String?> admin1 = const Value.absent(),
+          Value<String?> admin2 = const Value.absent()}) =>
+      ImageLocation(
+        accountFile: accountFile ?? this.accountFile,
+        version: version ?? this.version,
+        name: name.present ? name.value : this.name,
+        latitude: latitude.present ? latitude.value : this.latitude,
+        longitude: longitude.present ? longitude.value : this.longitude,
+        countryCode: countryCode.present ? countryCode.value : this.countryCode,
+        admin1: admin1.present ? admin1.value : this.admin1,
+        admin2: admin2.present ? admin2.value : this.admin2,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ImageLocation(')
+          ..write('accountFile: $accountFile, ')
+          ..write('version: $version, ')
+          ..write('name: $name, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('countryCode: $countryCode, ')
+          ..write('admin1: $admin1, ')
+          ..write('admin2: $admin2')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(accountFile, version, name, latitude,
+      longitude, countryCode, admin1, admin2);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ImageLocation &&
+          other.accountFile == this.accountFile &&
+          other.version == this.version &&
+          other.name == this.name &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.countryCode == this.countryCode &&
+          other.admin1 == this.admin1 &&
+          other.admin2 == this.admin2);
+}
+
+class ImageLocationsCompanion extends UpdateCompanion<ImageLocation> {
+  final Value<int> accountFile;
+  final Value<int> version;
+  final Value<String?> name;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<String?> countryCode;
+  final Value<String?> admin1;
+  final Value<String?> admin2;
+  const ImageLocationsCompanion({
+    this.accountFile = const Value.absent(),
+    this.version = const Value.absent(),
+    this.name = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    this.admin1 = const Value.absent(),
+    this.admin2 = const Value.absent(),
+  });
+  ImageLocationsCompanion.insert({
+    this.accountFile = const Value.absent(),
+    required int version,
+    this.name = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    this.admin1 = const Value.absent(),
+    this.admin2 = const Value.absent(),
+  }) : version = Value(version);
+  static Insertable<ImageLocation> custom({
+    Expression<int>? accountFile,
+    Expression<int>? version,
+    Expression<String?>? name,
+    Expression<double?>? latitude,
+    Expression<double?>? longitude,
+    Expression<String?>? countryCode,
+    Expression<String?>? admin1,
+    Expression<String?>? admin2,
+  }) {
+    return RawValuesInsertable({
+      if (accountFile != null) 'account_file': accountFile,
+      if (version != null) 'version': version,
+      if (name != null) 'name': name,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (countryCode != null) 'country_code': countryCode,
+      if (admin1 != null) 'admin1': admin1,
+      if (admin2 != null) 'admin2': admin2,
+    });
+  }
+
+  ImageLocationsCompanion copyWith(
+      {Value<int>? accountFile,
+      Value<int>? version,
+      Value<String?>? name,
+      Value<double?>? latitude,
+      Value<double?>? longitude,
+      Value<String?>? countryCode,
+      Value<String?>? admin1,
+      Value<String?>? admin2}) {
+    return ImageLocationsCompanion(
+      accountFile: accountFile ?? this.accountFile,
+      version: version ?? this.version,
+      name: name ?? this.name,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      countryCode: countryCode ?? this.countryCode,
+      admin1: admin1 ?? this.admin1,
+      admin2: admin2 ?? this.admin2,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (accountFile.present) {
+      map['account_file'] = Variable<int>(accountFile.value);
+    }
+    if (version.present) {
+      map['version'] = Variable<int>(version.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String?>(name.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double?>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double?>(longitude.value);
+    }
+    if (countryCode.present) {
+      map['country_code'] = Variable<String?>(countryCode.value);
+    }
+    if (admin1.present) {
+      map['admin1'] = Variable<String?>(admin1.value);
+    }
+    if (admin2.present) {
+      map['admin2'] = Variable<String?>(admin2.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImageLocationsCompanion(')
+          ..write('accountFile: $accountFile, ')
+          ..write('version: $version, ')
+          ..write('name: $name, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('countryCode: $countryCode, ')
+          ..write('admin1: $admin1, ')
+          ..write('admin2: $admin2')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ImageLocationsTable extends ImageLocations
+    with TableInfo<$ImageLocationsTable, ImageLocation> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ImageLocationsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _accountFileMeta =
+      const VerificationMeta('accountFile');
+  @override
+  late final GeneratedColumn<int?> accountFile = GeneratedColumn<int?>(
+      'account_file', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints:
+          'REFERENCES account_files (row_id) ON DELETE CASCADE');
+  final VerificationMeta _versionMeta = const VerificationMeta('version');
+  @override
+  late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
+      'version', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
+      'latitude', aliasedName, true,
+      type: const RealType(), requiredDuringInsert: false);
+  final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
+      'longitude', aliasedName, true,
+      type: const RealType(), requiredDuringInsert: false);
+  final VerificationMeta _countryCodeMeta =
+      const VerificationMeta('countryCode');
+  @override
+  late final GeneratedColumn<String?> countryCode = GeneratedColumn<String?>(
+      'country_code', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _admin1Meta = const VerificationMeta('admin1');
+  @override
+  late final GeneratedColumn<String?> admin1 = GeneratedColumn<String?>(
+      'admin1', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _admin2Meta = const VerificationMeta('admin2');
+  @override
+  late final GeneratedColumn<String?> admin2 = GeneratedColumn<String?>(
+      'admin2', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        accountFile,
+        version,
+        name,
+        latitude,
+        longitude,
+        countryCode,
+        admin1,
+        admin2
+      ];
+  @override
+  String get aliasedName => _alias ?? 'image_locations';
+  @override
+  String get actualTableName => 'image_locations';
+  @override
+  VerificationContext validateIntegrity(Insertable<ImageLocation> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('account_file')) {
+      context.handle(
+          _accountFileMeta,
+          accountFile.isAcceptableOrUnknown(
+              data['account_file']!, _accountFileMeta));
+    }
+    if (data.containsKey('version')) {
+      context.handle(_versionMeta,
+          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('country_code')) {
+      context.handle(
+          _countryCodeMeta,
+          countryCode.isAcceptableOrUnknown(
+              data['country_code']!, _countryCodeMeta));
+    }
+    if (data.containsKey('admin1')) {
+      context.handle(_admin1Meta,
+          admin1.isAcceptableOrUnknown(data['admin1']!, _admin1Meta));
+    }
+    if (data.containsKey('admin2')) {
+      context.handle(_admin2Meta,
+          admin2.isAcceptableOrUnknown(data['admin2']!, _admin2Meta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {accountFile};
+  @override
+  ImageLocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return ImageLocation.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $ImageLocationsTable createAlias(String alias) {
+    return $ImageLocationsTable(attachedDatabase, alias);
+  }
+}
+
 class Trash extends DataClass implements Insertable<Trash> {
   final int file;
   final String filename;
@@ -3717,6 +4127,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $FilesTable files = $FilesTable(this);
   late final $AccountFilesTable accountFiles = $AccountFilesTable(this);
   late final $ImagesTable images = $ImagesTable(this);
+  late final $ImageLocationsTable imageLocations = $ImageLocationsTable(this);
   late final $TrashesTable trashes = $TrashesTable(this);
   late final $DirFilesTable dirFiles = $DirFilesTable(this);
   late final $AlbumsTable albums = $AlbumsTable(this);
@@ -3732,6 +4143,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         files,
         accountFiles,
         images,
+        imageLocations,
         trashes,
         dirFiles,
         albums,

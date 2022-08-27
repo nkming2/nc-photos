@@ -447,6 +447,10 @@ Future<void> insertFiles(
       await db.into(db.images).insert(
           insert.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
     }
+    if (insert.imageLocation != null) {
+      await db.into(db.imageLocations).insert(insert.imageLocation!
+          .copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
+    }
     if (insert.trash != null) {
       await db
           .into(db.trashes)
@@ -499,6 +503,8 @@ Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
         db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
     sql.leftOuterJoin(
         db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
+    sql.leftOuterJoin(db.imageLocations,
+        db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
     sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
   ]);
   return (await query
@@ -508,6 +514,7 @@ Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
                   r.readTable(db.files),
                   r.readTable(db.accountFiles),
                   r.readTableOrNull(db.images),
+                  r.readTableOrNull(db.imageLocations),
                   r.readTableOrNull(db.trashes),
                 ),
               ))
@@ -523,6 +530,8 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
         db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
     sql.leftOuterJoin(
         db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
+    sql.leftOuterJoin(db.imageLocations,
+        db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
     sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
   ]);
   final fileMap = Map.fromEntries(await query.map((r) {
@@ -530,6 +539,7 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
       r.readTable(db.files),
       r.readTable(db.accountFiles),
       r.readTableOrNull(db.images),
+      r.readTableOrNull(db.imageLocations),
       r.readTableOrNull(db.trashes),
     );
     return MapEntry(
@@ -561,6 +571,7 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
       sql.CompleteFile(
         r.readTable(db.files),
         r.readTable(db.accountFiles),
+        null,
         null,
         null,
       ),

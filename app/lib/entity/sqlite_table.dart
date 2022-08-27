@@ -89,6 +89,22 @@ class Images extends Table {
   get primaryKey => {accountFile};
 }
 
+/// Estimated locations for images
+class ImageLocations extends Table {
+  IntColumn get accountFile =>
+      integer().references(AccountFiles, #rowId, onDelete: KeyAction.cascade)();
+  IntColumn get version => integer()();
+  TextColumn get name => text().nullable()();
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
+  TextColumn get countryCode => text().nullable()();
+  TextColumn get admin1 => text().nullable()();
+  TextColumn get admin2 => text().nullable()();
+
+  @override
+  get primaryKey => {accountFile};
+}
+
 /// A file inside trashbin
 @DataClassName("Trash")
 class Trashes extends Table {
@@ -184,6 +200,7 @@ class Persons extends Table {
     Accounts,
     Files,
     Images,
+    ImageLocations,
     Trashes,
     AccountFiles,
     DirFiles,
@@ -201,7 +218,7 @@ class SqliteDb extends _$SqliteDb {
   SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
 
   @override
-  get schemaVersion => 2;
+  get schemaVersion => 3;
 
   @override
   get migration => MigrationStrategy(
@@ -242,6 +259,10 @@ class SqliteDb extends _$SqliteDb {
                 await m.createTable(persons);
                 await _createIndexV2(m);
               }
+              if (from < 3) {
+                await m.createTable(imageLocations);
+                await _createIndexV3(m);
+              }
             });
           } catch (e, stackTrace) {
             _log.shout("[onUpgrade] Failed upgrading sqlite db", e, stackTrace);
@@ -263,6 +284,17 @@ class SqliteDb extends _$SqliteDb {
         "CREATE INDEX tags_server_index ON tags(server);"));
     await m.createIndex(Index("persons_account_index",
         "CREATE INDEX persons_account_index ON persons(account);"));
+  }
+
+  Future<void> _createIndexV3(Migrator m) async {
+    await m.createIndex(Index("image_locations_name_index",
+        "CREATE INDEX image_locations_name_index ON image_locations(name);"));
+    await m.createIndex(Index("image_locations_country_code_index",
+        "CREATE INDEX image_locations_country_code_index ON image_locations(country_code);"));
+    await m.createIndex(Index("image_locations_admin1_index",
+        "CREATE INDEX image_locations_admin1_index ON image_locations(admin1);"));
+    await m.createIndex(Index("image_locations_admin2_index",
+        "CREATE INDEX image_locations_admin2_index ON image_locations(admin2);"));
   }
 
   static final _log = Logger("entity.sqlite_table.SqliteDb");

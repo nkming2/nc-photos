@@ -181,6 +181,7 @@ class MockFileDataSource implements FileDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) {
     throw UnimplementedError();
   }
@@ -272,6 +273,7 @@ class MockFileWebdavDataSource implements FileWebdavDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) =>
       src.updateProperty(
         account,
@@ -280,6 +282,7 @@ class MockFileWebdavDataSource implements FileWebdavDataSource {
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
         favorite: favorite,
+        location: location,
       );
 
   final MockFileMemoryDataSource src;

@@ -226,6 +226,14 @@ class FileSqliteCacheUpdater {
                   t.accountFile.equals(thisRowIds.accountFileRowId),
             );
           }
+          if (f.imageLocation != null) {
+            batch.update(
+              db.imageLocations,
+              f.imageLocation!,
+              where: (sql.$ImageLocationsTable t) =>
+                  t.accountFile.equals(thisRowIds.accountFileRowId),
+            );
+          }
           if (f.trash != null) {
             batch.update(
               db.trashes,
@@ -288,6 +296,10 @@ class FileSqliteCacheUpdater {
       if (f.image != null) {
         await db.into(db.images).insert(
             f.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
+      }
+      if (f.imageLocation != null) {
+        await db.into(db.imageLocations).insert(f.imageLocation!
+            .copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
       }
       if (f.trash != null) {
         await db

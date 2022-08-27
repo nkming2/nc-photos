@@ -313,6 +313,7 @@ Future<void> _truncate() async {
       "accounts",
       "files",
       "images",
+      "image_locations",
       "trashes",
       "account_files",
       "dir_files",
