@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 
 /// Task to update metadata for missing files
@@ -29,11 +30,13 @@ class MetadataTask {
       final shareFolder =
           File(path: file_util.unstripPath(account, pref.getShareFolderOr()));
       bool hasScanShareFolder = false;
+      final geocoder = ReverseGeocoder();
+      await geocoder.init();
       for (final r in account.roots) {
         final dir = File(path: file_util.unstripPath(account, r));
         hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
-        final op = UpdateMissingMetadata(
-            _c.fileRepo, const _UpdateMissingMetadataConfigProvider());
+        final op = UpdateMissingMetadata(_c.fileRepo,
+            const _UpdateMissingMetadataConfigProvider(), geocoder);
         await for (final _ in op(account, dir)) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
@@ -43,8 +46,8 @@ class MetadataTask {
         }
       }
       if (!hasScanShareFolder) {
-        final op = UpdateMissingMetadata(
-            _c.fileRepo, const _UpdateMissingMetadataConfigProvider());
+        final op = UpdateMissingMetadata(_c.fileRepo,
+            const _UpdateMissingMetadataConfigProvider(), geocoder);
         await for (final _ in op(
           account,
           shareFolder,

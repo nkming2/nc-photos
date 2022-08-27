@@ -88,8 +88,11 @@ bool isNoMediaMarkerPath(String path) {
 }
 
 /// Return if there's missing metadata in [file]
+///
+/// Current this function will check both [File.metadata] and [File.location]
 bool isMissingMetadata(File file) =>
-    isSupportedImageFormat(file) && file.metadata == null;
+    isSupportedImageFormat(file) &&
+    (file.metadata == null || file.location == null);
 
 final _supportedFormatMimes = [
   "image/jpeg",
