@@ -161,7 +161,14 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
 
   void _transformItems(List<Person> items) {
     _items = items
-        .sorted((a, b) => a.name.compareTo(b.name))
+        .sorted((a, b) {
+          final countCompare = b.count.compareTo(a.count);
+          if (countCompare == 0) {
+            return a.name.compareTo(b.name);
+          } else {
+            return countCompare;
+          }
+        })
         .map((e) => _PersonListItem(
               account: widget.account,
               name: e.name,
