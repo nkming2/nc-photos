@@ -115,6 +115,15 @@ class SqliteFileConverter {
           imageHeight: obj.height,
           exif: obj.exifRaw?.run((e) => Exif.fromJson(jsonDecode(e))),
         ));
+    final location = f.imageLocation?.run((obj) => ImageLocation(
+          version: obj.version,
+          name: obj.name,
+          latitude: obj.latitude,
+          longitude: obj.longitude,
+          countryCode: obj.countryCode,
+          admin1: obj.admin1,
+          admin2: obj.admin2,
+        ));
     return File(
       path: "remote.php/dav/files/$userId/${f.accountFile.relativePath}",
       contentLength: f.file.contentLength,
@@ -134,6 +143,7 @@ class SqliteFileConverter {
       metadata: metadata,
       isArchived: f.accountFile.isArchived,
       overrideDateTime: f.accountFile.overrideDateTime,
+      location: location,
     );
   }
 
@@ -167,6 +177,16 @@ class SqliteFileConverter {
           exifRaw: Value(m.exif?.toJson().run((j) => jsonEncode(j))),
           dateTimeOriginal: Value(m.exif?.dateTimeOriginal),
         ));
+    final dbImageLocation =
+        file.location?.run((l) => sql.ImageLocationsCompanion.insert(
+              version: l.version,
+              name: Value(l.name),
+              latitude: Value(l.latitude),
+              longitude: Value(l.longitude),
+              countryCode: Value(l.countryCode),
+              admin1: Value(l.admin1),
+              admin2: Value(l.admin2),
+            ));
     final dbTrash = file.trashbinDeletionTime == null
         ? null
         : sql.TrashesCompanion.insert(
@@ -174,7 +194,8 @@ class SqliteFileConverter {
             originalLocation: file.trashbinOriginalLocation!,
             deletionTime: file.trashbinDeletionTime!,
           );
-    return sql.CompleteFileCompanion(dbFile, dbAccountFile, dbImage, dbTrash);
+    return sql.CompleteFileCompanion(
+        dbFile, dbAccountFile, dbImage, dbImageLocation, dbTrash);
   }
 }
 

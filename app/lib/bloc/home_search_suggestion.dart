@@ -11,6 +11,7 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/list_album.dart';
+import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
 import 'package:tuple/tuple.dart';
@@ -49,6 +50,17 @@ class HomeSearchPersonResult implements HomeSearchResult {
       "}";
 
   final Person person;
+}
+
+class HomeSearchLocationResult implements HomeSearchResult {
+  const HomeSearchLocationResult(this.location);
+
+  @override
+  toString() => "$runtimeType {"
+      "location: $location, "
+      "}";
+
+  final LocationGroup location;
 }
 
 abstract class HomeSearchSuggestionBlocEvent {
@@ -200,6 +212,19 @@ class HomeSearchSuggestionBloc
     } catch (e) {
       _log.warning("[_onEventPreloadData] Failed while ListPerson", e);
     }
+    try {
+      final locations = await ListLocationGroup(_c)(account);
+      // replace duplicated entries in name by the one in countryCode
+      final map = <String, LocationGroup>{};
+      for (final l in locations.name + locations.countryCode) {
+        map[l.place] = l;
+      }
+      product.addAll(map.values.map((e) => _LocationSearcheable(e)));
+      _log.info(
+          "[_onEventPreloadData] Loaded ${locations.name.length + locations.countryCode.length} locations");
+    } catch (e) {
+      _log.warning("[_onEventPreloadData] Failed while ListLocationGroup", e);
+    }
 
     _setSearchItems(product);
   }
@@ -261,4 +286,16 @@ class _PersonSearcheable implements _Searcheable {
   toResult() => HomeSearchPersonResult(person);
 
   final Person person;
+}
+
+class _LocationSearcheable implements _Searcheable {
+  const _LocationSearcheable(this.location);
+
+  @override
+  toKeywords() => [location.place.toCi()];
+
+  @override
+  toResult() => HomeSearchLocationResult(location);
+
+  final LocationGroup location;
 }

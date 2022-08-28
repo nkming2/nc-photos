@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
 
 abstract class SearchLandingBlocEvent {
@@ -21,36 +22,41 @@ class SearchLandingBlocQuery extends SearchLandingBlocEvent {
 }
 
 abstract class SearchLandingBlocState {
-  const SearchLandingBlocState(this.account, this.persons);
+  const SearchLandingBlocState(this.account, this.persons, this.locations);
 
   @override
   toString() => "$runtimeType {"
       "account: $account, "
       "persons: List {length: ${persons.length}}, "
+      "locations: $locations, "
       "}";
 
   final Account? account;
   final List<Person> persons;
+  final LocationGroupResult locations;
 }
 
 class SearchLandingBlocInit extends SearchLandingBlocState {
-  SearchLandingBlocInit() : super(null, const []);
+  SearchLandingBlocInit()
+      : super(null, const [], const LocationGroupResult([], [], [], []));
 }
 
 class SearchLandingBlocLoading extends SearchLandingBlocState {
-  const SearchLandingBlocLoading(Account? account, List<Person> persons)
-      : super(account, persons);
+  const SearchLandingBlocLoading(
+      Account? account, List<Person> persons, LocationGroupResult locations)
+      : super(account, persons, locations);
 }
 
 class SearchLandingBlocSuccess extends SearchLandingBlocState {
-  const SearchLandingBlocSuccess(Account? account, List<Person> persons)
-      : super(account, persons);
+  const SearchLandingBlocSuccess(
+      Account? account, List<Person> persons, LocationGroupResult locations)
+      : super(account, persons, locations);
 }
 
 class SearchLandingBlocFailure extends SearchLandingBlocState {
-  const SearchLandingBlocFailure(
-      Account? account, List<Person> persons, this.exception)
-      : super(account, persons);
+  const SearchLandingBlocFailure(Account? account, List<Person> persons,
+      LocationGroupResult locations, this.exception)
+      : super(account, persons, locations);
 
   @override
   toString() => "$runtimeType {"
@@ -83,16 +89,38 @@ class SearchLandingBloc
   Future<void> _onEventQuery(
       SearchLandingBlocQuery ev, Emitter<SearchLandingBlocState> emit) async {
     try {
-      emit(SearchLandingBlocLoading(ev.account, state.persons));
-      emit(SearchLandingBlocSuccess(ev.account, await _query(ev)));
+      emit(
+          SearchLandingBlocLoading(ev.account, state.persons, state.locations));
+
+      List<Person>? persons;
+      try {
+        persons = await _queryPeople(ev);
+      } catch (e, stackTrace) {
+        _log.shout("[_onEventQuery] Failed while _queryPeople", e, stackTrace);
+      }
+
+      LocationGroupResult? locations;
+      try {
+        locations = await _queryLocations(ev);
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_onEventQuery] Failed while _queryLocations", e, stackTrace);
+      }
+
+      emit(SearchLandingBlocSuccess(ev.account, persons ?? [],
+          locations ?? const LocationGroupResult([], [], [], [])));
     } catch (e, stackTrace) {
       _log.severe("[_onEventQuery] Exception while request", e, stackTrace);
-      emit(SearchLandingBlocFailure(ev.account, state.persons, e));
+      emit(SearchLandingBlocFailure(
+          ev.account, state.persons, state.locations, e));
     }
   }
 
-  Future<List<Person>> _query(SearchLandingBlocQuery ev) =>
+  Future<List<Person>> _queryPeople(SearchLandingBlocQuery ev) =>
       ListPerson(_c.withLocalRepo())(ev.account);
+
+  Future<LocationGroupResult> _queryLocations(SearchLandingBlocQuery ev) =>
+      ListLocationGroup(_c.withLocalRepo())(ev.account);
 
   final DiContainer _c;
 

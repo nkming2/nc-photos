@@ -143,6 +143,10 @@
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
     "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -304,6 +308,10 @@
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
     "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -345,13 +353,28 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "es": [
     "settingsLanguageOptionSystemDefaultLabel",
     "rootPickerSkipConfirmationDialogContent2",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
+  ],
+
+  "fi": [
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "fr": [
@@ -417,7 +440,11 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "pl": [
@@ -500,7 +527,11 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "pt": [
@@ -562,7 +593,11 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "ru": [
@@ -624,7 +659,11 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "zh": [
@@ -686,7 +725,11 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "zh_Hant": [
@@ -748,6 +791,10 @@
     "searchFilterFavoriteLabel",
     "searchFilterBubbleFavoriteTrueText",
     "searchFilterBubbleFavoriteFalseText",
-    "showAllButtonLabel"
+    "showAllButtonLabel",
+    "gpsPlaceText",
+    "gpsPlaceAboutDialogTitle",
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ]
 }

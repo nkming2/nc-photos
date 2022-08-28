@@ -46,6 +46,7 @@ class ScanDirOffline {
                   r.readTable(db.files),
                   r.readTable(db.accountFiles),
                   r.readTableOrNull(db.images),
+                  r.readTableOrNull(db.imageLocations),
                   r.readTableOrNull(db.trashes),
                 ))
             .get();
@@ -97,6 +98,7 @@ class ScanDirOfflineMini {
                 r.readTable(db.files),
                 r.readTable(db.accountFiles),
                 r.readTableOrNull(db.images),
+                r.readTableOrNull(db.imageLocations),
                 r.readTableOrNull(db.trashes),
               ))
           .get();

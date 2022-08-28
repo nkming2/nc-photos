@@ -4,11 +4,13 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
+import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
@@ -19,7 +21,7 @@ abstract class UpdateMissingMetadataConfigProvider {
 }
 
 class UpdateMissingMetadata {
-  UpdateMissingMetadata(this.fileRepo, this.configProvider);
+  UpdateMissingMetadata(this.fileRepo, this.configProvider, this.geocoder);
 
   /// Update metadata for all files that support one under a dir
   ///
@@ -43,6 +45,9 @@ class UpdateMissingMetadata {
       isRecursive: isRecursive,
     );
     await for (final d in dataStream) {
+      if (!_shouldRun) {
+        return;
+      }
       if (d is ExceptionEvent) {
         yield d;
         continue;
@@ -54,28 +59,58 @@ class UpdateMissingMetadata {
         continue;
       }
       try {
-        // since we need to download multiple images in their original size,
-        // we only do it with WiFi
-        await _ensureWifi();
-        await _ensureBattery();
-        KiwiContainer().resolve<EventBus>().fire(
-            const MetadataTaskStateChangedEvent(MetadataTaskState.prcoessing));
-        if (!_shouldRun) {
-          return;
+        OrNull<Metadata>? metadataUpdate;
+        OrNull<ImageLocation>? locationUpdate;
+        if (file.metadata == null) {
+          // since we need to download multiple images in their original size,
+          // we only do it with WiFi
+          await _ensureWifi();
+          await _ensureBattery();
+          KiwiContainer().resolve<EventBus>().fire(
+              const MetadataTaskStateChangedEvent(
+                  MetadataTaskState.prcoessing));
+          if (!_shouldRun) {
+            return;
+          }
+          _log.fine("[call] Updating metadata for ${file.path}");
+          final binary = await GetFileBinary(fileRepo)(account, file);
+          final metadata =
+              (await LoadMetadata().loadRemote(account, file, binary)).copyWith(
+            fileEtag: file.etag,
+          );
+          metadataUpdate = OrNull(metadata);
+        } else {
+          _log.finer("[call] Skip updating metadata for ${file.path}");
         }
-        _log.fine("[call] Updating metadata for ${file.path}");
-        final binary = await GetFileBinary(fileRepo)(account, file);
-        final metadata =
-            (await LoadMetadata().loadRemote(account, file, binary)).copyWith(
-          fileEtag: file.etag,
-        );
 
-        await UpdateProperty(fileRepo)(
-          account,
-          file,
-          metadata: OrNull(metadata),
-        );
-        yield file;
+        final lat =
+            (metadataUpdate?.obj ?? file.metadata)?.exif?.gpsLatitudeDeg;
+        final lng =
+            (metadataUpdate?.obj ?? file.metadata)?.exif?.gpsLongitudeDeg;
+        try {
+          ImageLocation? location;
+          if (lat != null && lng != null) {
+            _log.fine("[call] Reverse geocoding for ${file.path}");
+            final l = await geocoder(lat, lng);
+            if (l != null) {
+              location = l.toImageLocation();
+            }
+          }
+          locationUpdate = OrNull(location ?? ImageLocation.empty());
+        } catch (e, stackTrace) {
+          _log.severe("[call] Failed while reverse geocoding: ${file.path}", e,
+              stackTrace);
+        }
+
+        if (metadataUpdate != null || locationUpdate != null) {
+          await UpdateProperty(fileRepo)(
+            account,
+            file,
+            metadata: metadataUpdate,
+            location: locationUpdate,
+          );
+          yield file;
+        }
 
         // slow down a bit to give some space for the main isolate
         await Future.delayed(const Duration(milliseconds: 10));
@@ -123,6 +158,7 @@ class UpdateMissingMetadata {
 
   final FileRepo fileRepo;
   final UpdateMissingMetadataConfigProvider configProvider;
+  final ReverseGeocoder geocoder;
 
   bool _shouldRun = true;
 

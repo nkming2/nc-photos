@@ -679,6 +679,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.0"
+  kdtree:
+    dependency: "direct main"
+    description:
+      name: kdtree
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   kiwi:
     dependency: "direct main"
     description:
@@ -1161,7 +1168,7 @@ packages:
     source: hosted
     version: "2.2.1+1"
   sqlite3:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sqlite3
       url: "https://pub.dartlang.org"

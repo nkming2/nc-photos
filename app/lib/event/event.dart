@@ -71,6 +71,7 @@ class FilePropertyUpdatedEvent {
   static const propIsArchived = 0x02;
   static const propOverrideDateTime = 0x04;
   static const propFavorite = 0x08;
+  static const propImageLocation = 0x10;
 }
 
 class FileRemovedEvent {

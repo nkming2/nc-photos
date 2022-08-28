@@ -21,6 +21,81 @@ int compareFileDateTimeDescending(File x, File y) {
   }
 }
 
+class ImageLocation with EquatableMixin {
+  const ImageLocation({
+    this.version = appVersion,
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+    required this.countryCode,
+    this.admin1,
+    this.admin2,
+  });
+
+  factory ImageLocation.empty() => const ImageLocation(
+      name: null, latitude: null, longitude: null, countryCode: null);
+
+  static ImageLocation fromJson(JsonObj json) {
+    return ImageLocation(
+      version: json["v"],
+      name: json["name"],
+      latitude: json["lat"] == null ? null : json["lat"] / 10000,
+      longitude: json["lng"] == null ? null : json["lng"] / 10000,
+      countryCode: json["cc"],
+      admin1: json["admin1"],
+      admin2: json["admin2"],
+    );
+  }
+
+  JsonObj toJson() => {
+        "v": version,
+        if (name != null) "name": name,
+        if (latitude != null) "lat": (latitude! * 10000).round(),
+        if (longitude != null) "lng": (longitude! * 10000).round(),
+        if (countryCode != null) "cc": countryCode,
+        if (admin1 != null) "admin1": admin1,
+        if (admin2 != null) "admin2": admin2,
+      };
+
+  bool isEmpty() => name == null;
+
+  @override
+  toString() {
+    var product = "$runtimeType {"
+        "version: $version, ";
+    if (name != null) {
+      product += "name: $name, "
+          "latitude: $latitude, "
+          "longitude: $longitude, "
+          "countryCode: $countryCode, "
+          "admin1: $admin1, "
+          "admin2: $admin2, ";
+    }
+    return product + "}";
+  }
+
+  @override
+  get props => [
+        version,
+        name,
+        latitude,
+        longitude,
+        countryCode,
+        admin1,
+        admin2,
+      ];
+
+  final int version;
+  final String? name;
+  final double? latitude;
+  final double? longitude;
+  final String? countryCode;
+  final String? admin1;
+  final String? admin2;
+
+  static const appVersion = 1;
+}
+
 /// Immutable object that hold metadata of a [File]
 class Metadata with EquatableMixin {
   Metadata({
@@ -238,6 +313,7 @@ class File with EquatableMixin {
     this.trashbinFilename,
     this.trashbinOriginalLocation,
     this.trashbinDeletionTime,
+    this.location,
   }) : path = path.trimAny("/");
 
   @override
@@ -292,6 +368,9 @@ class File with EquatableMixin {
       overrideDateTime: json["overrideDateTime"] == null
           ? null
           : DateTime.parse(json["overrideDateTime"]),
+      location: json["location"] == null
+          ? null
+          : ImageLocation.fromJson(json["location"]),
     );
   }
 
@@ -350,6 +429,9 @@ class File with EquatableMixin {
     if (overrideDateTime != null) {
       product += "overrideDateTime: $overrideDateTime, ";
     }
+    if (location != null) {
+      product += "location: $location, ";
+    }
     return product + "}";
   }
 
@@ -377,6 +459,7 @@ class File with EquatableMixin {
       if (isArchived != null) "isArchived": isArchived,
       if (overrideDateTime != null)
         "overrideDateTime": overrideDateTime!.toUtc().toIso8601String(),
+      if (location != null) "location": location!.toJson(),
     };
   }
 
@@ -399,6 +482,7 @@ class File with EquatableMixin {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
+    OrNull<ImageLocation>? location,
   }) {
     return File(
       path: path ?? this.path,
@@ -422,6 +506,7 @@ class File with EquatableMixin {
       overrideDateTime: overrideDateTime == null
           ? this.overrideDateTime
           : overrideDateTime.obj,
+      location: location == null ? this.location : location.obj,
     );
   }
 
@@ -445,6 +530,7 @@ class File with EquatableMixin {
         // metadata is handled separately, see [equals]
         isArchived,
         overrideDateTime,
+        location,
       ];
 
   final String path;
@@ -466,6 +552,7 @@ class File with EquatableMixin {
   final Metadata? metadata;
   final bool? isArchived;
   final DateTime? overrideDateTime;
+  final ImageLocation? location;
 }
 
 extension FileExtension on File {
@@ -581,6 +668,7 @@ class FileRepo {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   }) =>
       dataSrc.updateProperty(
         account,
@@ -589,6 +677,7 @@ class FileRepo {
         isArchived: isArchived,
         overrideDateTime: overrideDateTime,
         favorite: favorite,
+        location: location,
       );
 
   /// See [FileDataSource.copy]
@@ -660,6 +749,7 @@ abstract class FileDataSource {
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
     bool? favorite,
+    OrNull<ImageLocation>? location,
   });
 
   /// Copy [f] to [destination]

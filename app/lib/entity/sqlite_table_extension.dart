@@ -16,21 +16,24 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 const maxByFileIdsSize = 30000;
 
 class CompleteFile {
-  const CompleteFile(this.file, this.accountFile, this.image, this.trash);
+  const CompleteFile(
+      this.file, this.accountFile, this.image, this.imageLocation, this.trash);
 
   final File file;
   final AccountFile accountFile;
   final Image? image;
+  final ImageLocation? imageLocation;
   final Trash? trash;
 }
 
 class CompleteFileCompanion {
   const CompleteFileCompanion(
-      this.file, this.accountFile, this.image, this.trash);
+      this.file, this.accountFile, this.image, this.imageLocation, this.trash);
 
   final FilesCompanion file;
   final AccountFilesCompanion accountFile;
   final ImagesCompanion? image;
+  final ImageLocationsCompanion? imageLocation;
   final TrashesCompanion? trash;
 }
 
@@ -347,6 +350,7 @@ extension SqliteDbExtension on SqliteDb {
                 r.readTable(files),
                 r.readTable(accountFiles),
                 r.readTableOrNull(images),
+                r.readTableOrNull(imageLocations),
                 r.readTableOrNull(trashes),
               ))
           .get();
@@ -374,6 +378,7 @@ extension SqliteDbExtension on SqliteDb {
               r.readTable(files),
               r.readTable(accountFiles),
               r.readTableOrNull(images),
+              r.readTableOrNull(imageLocations),
               r.readTableOrNull(trashes),
             ))
         .get();
@@ -400,6 +405,7 @@ extension SqliteDbExtension on SqliteDb {
               r.readTable(files),
               r.readTable(accountFiles),
               r.readTableOrNull(images),
+              r.readTableOrNull(imageLocations),
               r.readTableOrNull(trashes),
             ))
         .get();
@@ -454,6 +460,7 @@ extension SqliteDbExtension on SqliteDb {
     await delete(accounts).go();
     await delete(files).go();
     await delete(images).go();
+    await delete(imageLocations).go();
     await delete(trashes).go();
     await delete(accountFiles).go();
     await delete(dirFiles).go();
@@ -571,6 +578,8 @@ class FilesQueryBuilder {
       if (_queryMode == FilesQueryMode.completeFile) ...[
         leftOuterJoin(
             db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
+        leftOuterJoin(db.imageLocations,
+            db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
         leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
       ],
     ]) as JoinedSelectStatement;

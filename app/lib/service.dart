@@ -19,6 +19,7 @@ import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/future_extension.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
@@ -248,11 +249,13 @@ class _MetadataTask {
         path: file_util.unstripPath(account, accountPref.getShareFolderOr()));
     bool hasScanShareFolder = false;
     final c = KiwiContainer().resolve<DiContainer>();
+    final geocoder = ReverseGeocoder();
+    await geocoder.init();
     for (final r in account.roots) {
       final dir = File(path: file_util.unstripPath(account, r));
       hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
       final updater = UpdateMissingMetadata(
-          c.fileRepo, const _UpdateMissingMetadataConfigProvider());
+          c.fileRepo, const _UpdateMissingMetadataConfigProvider(), geocoder);
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         updater.stop();
@@ -275,7 +278,7 @@ class _MetadataTask {
     }
     if (!hasScanShareFolder) {
       final shareUpdater = UpdateMissingMetadata(
-          c.fileRepo, const _UpdateMissingMetadataConfigProvider());
+          c.fileRepo, const _UpdateMissingMetadataConfigProvider(), geocoder);
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         shareUpdater.stop();

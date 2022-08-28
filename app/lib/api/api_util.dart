@@ -56,6 +56,26 @@ String getFilePreviewUrlRelative(
   return url;
 }
 
+/// Return the preview image URL for [fileId]. See [getFilePreviewUrlRelative]
+String getFilePreviewUrlByFileId(
+  Account account,
+  int fileId, {
+  required int width,
+  required int height,
+  String? mode,
+  bool? a,
+}) {
+  String url = "${account.url}/index.php/core/preview?fileId=$fileId";
+  url = "$url&x=$width&y=$height";
+  if (mode != null) {
+    url = "$url&mode=$mode";
+  }
+  if (a != null) {
+    url = "$url&a=${a ? 1 : 0}";
+  }
+  return url;
+}
+
 String getFileUrl(Account account, File file) {
   return "${account.url}/${getFileUrlRelative(file)}";
 }
