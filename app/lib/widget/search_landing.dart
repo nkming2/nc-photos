@@ -256,6 +256,7 @@ class _SearchLandingState extends State<SearchLanding> {
             return countCompare;
           }
         })
+        .take(10)
         .map((e) => _LandingPersonItem(
               account: widget.account,
               name: e.name,
@@ -276,6 +277,7 @@ class _SearchLandingState extends State<SearchLanding> {
             return compare;
           }
         })
+        .take(10)
         .map((e) => _LandingLocationItem(
               account: widget.account,
               name: e.place,
