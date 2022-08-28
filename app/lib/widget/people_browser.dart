@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,11 +5,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_person.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
@@ -19,6 +15,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 
 class PeopleBrowserArguments {
@@ -110,8 +107,8 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
                 ),
               SliverStaggeredGrid.extentBuilder(
                 maxCrossAxisExtent: 160,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
+                mainAxisSpacing: 2,
+                crossAxisSpacing: 2,
                 itemCount: _items.length,
                 itemBuilder: _buildItem,
                 staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
@@ -205,111 +202,18 @@ class _PersonListItem extends _ListItem {
   }) : super(onTap: onTap);
 
   @override
-  buildWidget(BuildContext context) {
-    Widget content = Stack(
-      children: [
-        _buildFaceImage(context),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 24,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0),
-                      Colors.black.withOpacity(.55),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                color: Colors.black.withOpacity(.55),
-                constraints: const BoxConstraints(minWidth: double.infinity),
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
-                child: Text(
-                  name,
-                  style: TextStyle(
-                    color: AppTheme.primaryTextColorDark,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-    if (onTap != null) {
-      content = Stack(
-        fit: StackFit.expand,
-        children: [
-          content,
-          Positioned.fill(
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                onTap: onTap,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          color: AppTheme.getListItemBackgroundColor(context),
-          constraints: const BoxConstraints.expand(),
-          child: content,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFaceImage(BuildContext context) {
-    try {
-      return FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: CachedNetworkImage(
-          cacheManager: ThumbnailCacheManager.inst,
-          imageUrl: faceUrl!,
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(account),
-          },
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          errorWidget: (context, url, error) {
-            // just leave it empty
-            return Container();
-          },
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        ),
-      );
-    } catch (_) {
-      return Center(
-        child: Icon(
+  buildWidget(BuildContext context) => CollectionListSmall(
+        account: account,
+        label: name,
+        coverUrl: faceUrl,
+        fallbackBuilder: (_) => Icon(
           Icons.person,
           color: Colors.white.withOpacity(.8),
-          size: 80,
         ),
+        onTap: onTap,
       );
-    }
-  }
 
   final Account account;
   final String name;
-  final String? faceUrl;
+  final String faceUrl;
 }
