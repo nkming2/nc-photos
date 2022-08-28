@@ -233,7 +233,35 @@ class _LandingPersonItem {
     this.onTap,
   });
 
-  buildWidget(BuildContext context) {
+  Widget buildWidget(BuildContext context) => _LandingItemWidget(
+        account: account,
+        label: name,
+        coverUrl: faceUrl,
+        onTap: onTap,
+        fallbackBuilder: (_) => Icon(
+          Icons.person,
+          color: Colors.white.withOpacity(.8),
+        ),
+      );
+
+  final Account account;
+  final String name;
+  final String faceUrl;
+  final VoidCallback? onTap;
+}
+
+class _LandingItemWidget extends StatelessWidget {
+  const _LandingItemWidget({
+    Key? key,
+    required this.account,
+    required this.label,
+    required this.coverUrl,
+    required this.fallbackBuilder,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
     final content = Padding(
       padding: const EdgeInsets.all(4),
       child: Column(
@@ -243,7 +271,7 @@ class _LandingPersonItem {
             child: Center(
               child: AspectRatio(
                 aspectRatio: 1,
-                child: _buildFaceImage(context),
+                child: _buildCoverImage(context),
               ),
             ),
           ),
@@ -251,7 +279,7 @@ class _LandingPersonItem {
           SizedBox(
             width: 88,
             child: Text(
-              name + "\n",
+              label + "\n",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     color: AppTheme.getPrimaryTextColor(context),
                   ),
@@ -273,14 +301,11 @@ class _LandingPersonItem {
     }
   }
 
-  Widget _buildFaceImage(BuildContext context) {
+  Widget _buildCoverImage(BuildContext context) {
     Widget cover;
     Widget buildPlaceholder() => Padding(
           padding: const EdgeInsets.all(4),
-          child: Icon(
-            Icons.person,
-            color: Colors.white.withOpacity(.8),
-          ),
+          child: fallbackBuilder(context),
         );
     try {
       cover = FittedBox(
@@ -288,7 +313,7 @@ class _LandingPersonItem {
         fit: BoxFit.cover,
         child: CachedNetworkImage(
           cacheManager: ThumbnailCacheManager.inst,
-          imageUrl: faceUrl!,
+          imageUrl: coverUrl,
           httpHeaders: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
@@ -315,7 +340,8 @@ class _LandingPersonItem {
   }
 
   final Account account;
-  final String name;
-  final String? faceUrl;
+  final String label;
+  final String coverUrl;
+  final Widget Function(BuildContext context) fallbackBuilder;
   final VoidCallback? onTap;
 }
