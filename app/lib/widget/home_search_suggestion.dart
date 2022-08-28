@@ -11,9 +11,11 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/person_browser.dart';
+import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/tag_browser.dart';
 
 class HomeSearchSuggestionController {
@@ -133,6 +135,14 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
     }
   }
 
+  void _onLocationPressed(_LocationListItem item) {
+    if (mounted) {
+      Navigator.of(context).pushNamed(PlaceBrowser.routeName,
+          arguments: PlaceBrowserArguments(
+              widget.account, item.location.place, item.location.countryCode));
+    }
+  }
+
   void _transformItems(List<HomeSearchResult> results) {
     final items = () sync* {
       for (final r in results) {
@@ -142,6 +152,8 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
           yield _TagListItem(r.tag, onTap: _onTagPressed);
         } else if (r is HomeSearchPersonResult) {
           yield _PersonListItem(r.person, onTap: _onPersonPressed);
+        } else if (r is HomeSearchLocationResult) {
+          yield _LocationListItem(r.location, onTap: _onLocationPressed);
         } else {
           _log.warning("[_transformItems] Unknown type: ${r.runtimeType}");
         }
@@ -212,4 +224,21 @@ class _PersonListItem implements _ListItem {
 
   final Person person;
   final void Function(_PersonListItem)? onTap;
+}
+
+class _LocationListItem implements _ListItem {
+  const _LocationListItem(
+    this.location, {
+    this.onTap,
+  });
+
+  @override
+  buildWidget(BuildContext context) => ListTile(
+        leading: const Icon(Icons.location_on_outlined),
+        title: Text(location.place),
+        onTap: onTap == null ? null : () => onTap!(this),
+      );
+
+  final LocationGroup location;
+  final void Function(_LocationListItem)? onTap;
 }
