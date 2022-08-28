@@ -1389,6 +1389,10 @@
 	"@gpsPlaceAboutDialogContent": {
 		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
 	},
+	"collectionPlacesLabel": "Places",
+	"@collectionPlacesLabel": {
+		"description": "Browse photos grouped by place"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

@@ -23,6 +23,8 @@ import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
+import 'package:nc_photos/widget/place_browser.dart';
+import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -167,6 +169,8 @@ class _MyAppState extends State<MyApp>
     route ??= _handleChangelogRoute(settings);
     route ??= _handleTagBrowserRoute(settings);
     route ??= _handlePeopleBrowserRoute(settings);
+    route ??= _handlePlaceBrowserRoute(settings);
+    route ??= _handlePlacesBrowserRoute(settings);
     return route;
   }
 
@@ -566,6 +570,32 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePlaceBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PlaceBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as PlaceBrowserArguments;
+        return PlaceBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handlePlaceBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePlacesBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PlacesBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as PlacesBrowserArguments;
+        return PlacesBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handlePlacesBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

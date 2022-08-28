@@ -146,6 +146,7 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -310,6 +311,7 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -354,7 +356,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "es": [
@@ -363,13 +366,15 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "fi": [
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "fr": [
@@ -438,7 +443,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "pl": [
@@ -524,7 +530,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "pt": [
@@ -589,7 +596,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "ru": [
@@ -654,7 +662,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "zh": [
@@ -719,7 +728,8 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ],
 
   "zh_Hant": [
@@ -784,6 +794,7 @@
     "showAllButtonLabel",
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
-    "gpsPlaceAboutDialogContent"
+    "gpsPlaceAboutDialogContent",
+    "collectionPlacesLabel"
   ]
 }
