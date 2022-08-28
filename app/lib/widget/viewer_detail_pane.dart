@@ -28,6 +28,7 @@ import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -310,21 +311,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (_) => AlertDialog(
-                    title: Text(L10n.global().gpsPlaceAboutDialogTitle),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(L10n.global().gpsPlaceAboutDialogContent),
-                        const SizedBox(height: 16),
-                        const Divider(height: 16),
-                        const Text(
-                          "Based on GeoNames Gazetteer data by GeoNames, licensed under CC BY 4.0",
-                        ),
-                      ],
-                    ),
-                  ),
+                  builder: (_) => const AboutGeocodingDialog(),
                 );
               },
             ),

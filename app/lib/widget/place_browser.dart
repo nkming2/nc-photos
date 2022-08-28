@@ -20,6 +20,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -197,6 +198,15 @@ class _PlaceBrowserState extends State<PlaceBrowser>
             });
             Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
           },
+        ),
+        IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (_) => const AboutGeocodingDialog(),
+            );
+          },
+          icon: const Icon(Icons.info_outline),
         ),
       ],
     );

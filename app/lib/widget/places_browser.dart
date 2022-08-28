@@ -19,6 +19,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 
@@ -145,6 +146,17 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
     return SliverAppBar(
       title: Text(L10n.global().collectionPlacesLabel),
       floating: true,
+      actions: [
+        IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (_) => const AboutGeocodingDialog(),
+            );
+          },
+          icon: const Icon(Icons.info_outline),
+        ),
+      ],
     );
   }
 
