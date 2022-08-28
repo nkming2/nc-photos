@@ -191,11 +191,11 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
     }
 
     int sorter(LocationGroup a, LocationGroup b) {
-      final latestCompare = b.latest.compareTo(a.latest);
-      if (latestCompare == 0) {
+      final compare = b.count.compareTo(a.count);
+      if (compare == 0) {
         return a.place.compareTo(b.place);
       } else {
-        return latestCompare;
+        return compare;
       }
     }
 

@@ -269,11 +269,11 @@ class _SearchLandingState extends State<SearchLanding> {
   void _transformLocations(LocationGroupResult locations) {
     _locationItems = locations.name
         .sorted((a, b) {
-          final latestCompare = b.latest.compareTo(a.latest);
-          if (latestCompare == 0) {
+          final compare = b.count.compareTo(a.count);
+          if (compare == 0) {
             return a.place.compareTo(b.place);
           } else {
-            return latestCompare;
+            return compare;
           }
         })
         .map((e) => _LandingLocationItem(
