@@ -141,6 +141,27 @@ List<Widget> _buildChangelog480(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog500(BuildContext context) {
+  return [
+    _subSection("Changes"),
+    _bulletGroup(
+      const Text(
+          "Search and show places converted from GPS coordinates embedded in EXIF"),
+      [
+        const Text("The app will process your photos in the background"),
+      ],
+    ),
+    _bulletGroup(const Text("Google Maps is now re-enabled on some devices")),
+    _sectionPadding(),
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Finnish (by pHamala)")),
+    _sectionPadding(),
+    _subSection("Known issues"),
+    _bulletGroup(const Text(
+        "Google Maps is temporarily disabled on some devices due to a bug in the Maps SDK")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -197,6 +218,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  500: _buildChangelog500,
   480: _buildChangelog480,
   470: _buildChangelog470,
   460: _buildChangelog460,
