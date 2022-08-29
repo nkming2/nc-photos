@@ -214,9 +214,12 @@ class HomeSearchSuggestionBloc
     }
     try {
       final locations = await ListLocationGroup(_c)(account);
-      // replace duplicated entries in name by the one in countryCode
+      // make sure no duplicates
       final map = <String, LocationGroup>{};
-      for (final l in locations.name + locations.countryCode) {
+      for (final l in locations.name +
+          locations.admin1 +
+          locations.admin2 +
+          locations.countryCode) {
         map[l.place] = l;
       }
       product.addAll(map.values.map((e) => _LocationSearcheable(e)));
