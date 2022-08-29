@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/pref.dart';
@@ -35,20 +36,21 @@ class GpsMap extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    // if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
-    //     GpsMapProvider.osm) {
-    return _OsmGpsMap(
-      center: center,
-      zoom: zoom,
-      onTap: onTap,
-    );
-    // } else {
-    //   return _GoogleGpsMap(
-    //     center: center,
-    //     zoom: zoom,
-    //     onTap: onTap,
-    //   );
-    // }
+    if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
+            GpsMapProvider.osm ||
+        !app_init.isNewGMapsRenderer()) {
+      return _OsmGpsMap(
+        center: center,
+        zoom: zoom,
+        onTap: onTap,
+      );
+    } else {
+      return _GoogleGpsMap(
+        center: center,
+        zoom: zoom,
+        onTap: onTap,
+      );
+    }
   }
 
   /// A pair of latitude and longitude coordinates, stored as degrees

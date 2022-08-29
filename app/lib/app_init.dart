@@ -31,6 +31,7 @@ import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/tagged_file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -48,6 +49,8 @@ enum InitIsolateType {
   /// flutter_background_service
   flutterIsolate,
 }
+
+bool isNewGMapsRenderer() => _isNewGMapsRenderer;
 
 Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
@@ -70,6 +73,14 @@ Future<void> init(InitIsolateType isolateType) async {
   }
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
+
+  if (isolateType == InitIsolateType.main) {
+    try {
+      _isNewGMapsRenderer = await Activity.isNewGMapsRenderer();
+    } catch (e, stackTrace) {
+      _log.severe("[init] Failed while isNewGMapsRenderer", e, stackTrace);
+    }
+  }
 
   _hasInitedInThisIsolate = true;
 }
@@ -232,3 +243,4 @@ Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
 
 final _log = Logger("app_init");
 var _hasInitedInThisIsolate = false;
+var _isNewGMapsRenderer = false;
