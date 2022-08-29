@@ -354,10 +354,6 @@
     "showAllButtonLabel"
   ],
 
-  "fi": [
-   
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsLanguageOptionSystemDefaultLabel",
