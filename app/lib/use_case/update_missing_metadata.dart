@@ -81,6 +81,9 @@ class UpdateMissingMetadata {
           metadataUpdate = OrNull(metadata);
         } else {
           _log.finer("[call] Skip updating metadata for ${file.path}");
+          KiwiContainer().resolve<EventBus>().fire(
+              const MetadataTaskStateChangedEvent(
+                  MetadataTaskState.prcoessing));
         }
 
         final lat =

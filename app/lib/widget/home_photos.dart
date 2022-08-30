@@ -849,7 +849,10 @@ class _Web {
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
-    if (!ev.hasAnyProperties([FilePropertyUpdatedEvent.propMetadata])) {
+    if (!ev.hasAnyProperties([
+      FilePropertyUpdatedEvent.propMetadata,
+      FilePropertyUpdatedEvent.propImageLocation,
+    ])) {
       return;
     }
     // ignore: invalid_use_of_protected_member
