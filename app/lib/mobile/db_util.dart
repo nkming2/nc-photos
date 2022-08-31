@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
+import 'package:sqlite3/common.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart' as sql;
 
@@ -37,7 +38,7 @@ Future<void> applyWorkaroundToOpenSqlite3OnOldAndroidVersions() {
   return sql.applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
 }
 
-Future<Database> openRawSqliteDbFromAsset(
+Future<CommonDatabase> openRawSqliteDbFromAsset(
   String assetRelativePath,
   String outputFilename, {
   bool isReadOnly = false,
