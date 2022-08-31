@@ -135,6 +135,8 @@ class Albums extends Table {
   IntColumn get file => integer()
       .references(Files, #rowId, onDelete: KeyAction.cascade)
       .unique()();
+  // store the etag of the file when the album is cached in the db
+  TextColumn get fileEtag => text().nullable()();
   IntColumn get version => integer()();
   DateTimeColumn get lastUpdated =>
       dateTime().map(const _DateTimeConverter())();
@@ -218,7 +220,7 @@ class SqliteDb extends _$SqliteDb {
   SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
 
   @override
-  get schemaVersion => 3;
+  get schemaVersion => 4;
 
   @override
   get migration => MigrationStrategy(
@@ -262,6 +264,9 @@ class SqliteDb extends _$SqliteDb {
               if (from < 3) {
                 await m.createTable(imageLocations);
                 await _createIndexV3(m);
+              }
+              if (from < 4) {
+                await m.addColumn(albums, albums.fileEtag);
               }
             });
           } catch (e, stackTrace) {

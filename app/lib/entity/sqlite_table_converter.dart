@@ -14,6 +14,7 @@ import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 
 extension SqlTagListExtension on List<sql.Tag> {
   Future<List<Tag>> convertToAppTag() {
@@ -74,17 +75,20 @@ class SqliteAlbumConverter {
                     sharedAt: e.sharedAt.toUtc(),
                   ))
               .toList(),
-      albumFile: albumFile,
+      // replace with the original etag when this album was cached
+      albumFile: albumFile.copyWith(etag: OrNull(album.fileEtag)),
       savedVersion: album.version,
     );
   }
 
-  static sql.CompleteAlbumCompanion toSql(Album album, int albumFileRowId) {
+  static sql.CompleteAlbumCompanion toSql(
+      Album album, int albumFileRowId, String albumFileEtag) {
     final providerJson = album.provider.toJson();
     final coverProviderJson = album.coverProvider.toJson();
     final sortProviderJson = album.sortProvider.toJson();
     final dbAlbum = sql.AlbumsCompanion.insert(
       file: albumFileRowId,
+      fileEtag: Value(albumFileEtag),
       version: Album.version,
       lastUpdated: album.lastUpdated,
       name: album.name,

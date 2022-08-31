@@ -2671,6 +2671,7 @@ class $DirFilesTable extends DirFiles with TableInfo<$DirFilesTable, DirFile> {
 class Album extends DataClass implements Insertable<Album> {
   final int rowId;
   final int file;
+  final String? fileEtag;
   final int version;
   final DateTime lastUpdated;
   final String name;
@@ -2683,6 +2684,7 @@ class Album extends DataClass implements Insertable<Album> {
   Album(
       {required this.rowId,
       required this.file,
+      this.fileEtag,
       required this.version,
       required this.lastUpdated,
       required this.name,
@@ -2699,6 +2701,8 @@ class Album extends DataClass implements Insertable<Album> {
           .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
       file: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}file'])!,
+      fileEtag: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}file_etag']),
       version: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
       lastUpdated: $AlbumsTable.$converter0.mapToDart(const DateTimeType()
@@ -2724,6 +2728,9 @@ class Album extends DataClass implements Insertable<Album> {
     final map = <String, Expression>{};
     map['row_id'] = Variable<int>(rowId);
     map['file'] = Variable<int>(file);
+    if (!nullToAbsent || fileEtag != null) {
+      map['file_etag'] = Variable<String?>(fileEtag);
+    }
     map['version'] = Variable<int>(version);
     {
       final converter = $AlbumsTable.$converter0;
@@ -2744,6 +2751,9 @@ class Album extends DataClass implements Insertable<Album> {
     return AlbumsCompanion(
       rowId: Value(rowId),
       file: Value(file),
+      fileEtag: fileEtag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileEtag),
       version: Value(version),
       lastUpdated: Value(lastUpdated),
       name: Value(name),
@@ -2762,6 +2772,7 @@ class Album extends DataClass implements Insertable<Album> {
     return Album(
       rowId: serializer.fromJson<int>(json['rowId']),
       file: serializer.fromJson<int>(json['file']),
+      fileEtag: serializer.fromJson<String?>(json['fileEtag']),
       version: serializer.fromJson<int>(json['version']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
       name: serializer.fromJson<String>(json['name']),
@@ -2781,6 +2792,7 @@ class Album extends DataClass implements Insertable<Album> {
     return <String, dynamic>{
       'rowId': serializer.toJson<int>(rowId),
       'file': serializer.toJson<int>(file),
+      'fileEtag': serializer.toJson<String?>(fileEtag),
       'version': serializer.toJson<int>(version),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
       'name': serializer.toJson<String>(name),
@@ -2796,6 +2808,7 @@ class Album extends DataClass implements Insertable<Album> {
   Album copyWith(
           {int? rowId,
           int? file,
+          Value<String?> fileEtag = const Value.absent(),
           int? version,
           DateTime? lastUpdated,
           String? name,
@@ -2808,6 +2821,7 @@ class Album extends DataClass implements Insertable<Album> {
       Album(
         rowId: rowId ?? this.rowId,
         file: file ?? this.file,
+        fileEtag: fileEtag.present ? fileEtag.value : this.fileEtag,
         version: version ?? this.version,
         lastUpdated: lastUpdated ?? this.lastUpdated,
         name: name ?? this.name,
@@ -2823,6 +2837,7 @@ class Album extends DataClass implements Insertable<Album> {
     return (StringBuffer('Album(')
           ..write('rowId: $rowId, ')
           ..write('file: $file, ')
+          ..write('fileEtag: $fileEtag, ')
           ..write('version: $version, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('name: $name, ')
@@ -2840,6 +2855,7 @@ class Album extends DataClass implements Insertable<Album> {
   int get hashCode => Object.hash(
       rowId,
       file,
+      fileEtag,
       version,
       lastUpdated,
       name,
@@ -2855,6 +2871,7 @@ class Album extends DataClass implements Insertable<Album> {
       (other is Album &&
           other.rowId == this.rowId &&
           other.file == this.file &&
+          other.fileEtag == this.fileEtag &&
           other.version == this.version &&
           other.lastUpdated == this.lastUpdated &&
           other.name == this.name &&
@@ -2869,6 +2886,7 @@ class Album extends DataClass implements Insertable<Album> {
 class AlbumsCompanion extends UpdateCompanion<Album> {
   final Value<int> rowId;
   final Value<int> file;
+  final Value<String?> fileEtag;
   final Value<int> version;
   final Value<DateTime> lastUpdated;
   final Value<String> name;
@@ -2881,6 +2899,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   const AlbumsCompanion({
     this.rowId = const Value.absent(),
     this.file = const Value.absent(),
+    this.fileEtag = const Value.absent(),
     this.version = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.name = const Value.absent(),
@@ -2894,6 +2913,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   AlbumsCompanion.insert({
     this.rowId = const Value.absent(),
     required int file,
+    this.fileEtag = const Value.absent(),
     required int version,
     required DateTime lastUpdated,
     required String name,
@@ -2916,6 +2936,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   static Insertable<Album> custom({
     Expression<int>? rowId,
     Expression<int>? file,
+    Expression<String?>? fileEtag,
     Expression<int>? version,
     Expression<DateTime>? lastUpdated,
     Expression<String>? name,
@@ -2929,6 +2950,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
       if (file != null) 'file': file,
+      if (fileEtag != null) 'file_etag': fileEtag,
       if (version != null) 'version': version,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (name != null) 'name': name,
@@ -2946,6 +2968,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   AlbumsCompanion copyWith(
       {Value<int>? rowId,
       Value<int>? file,
+      Value<String?>? fileEtag,
       Value<int>? version,
       Value<DateTime>? lastUpdated,
       Value<String>? name,
@@ -2958,6 +2981,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     return AlbumsCompanion(
       rowId: rowId ?? this.rowId,
       file: file ?? this.file,
+      fileEtag: fileEtag ?? this.fileEtag,
       version: version ?? this.version,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       name: name ?? this.name,
@@ -2978,6 +3002,9 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     }
     if (file.present) {
       map['file'] = Variable<int>(file.value);
+    }
+    if (fileEtag.present) {
+      map['file_etag'] = Variable<String?>(fileEtag.value);
     }
     if (version.present) {
       map['version'] = Variable<int>(version.value);
@@ -3018,6 +3045,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     return (StringBuffer('AlbumsCompanion(')
           ..write('rowId: $rowId, ')
           ..write('file: $file, ')
+          ..write('fileEtag: $fileEtag, ')
           ..write('version: $version, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('name: $name, ')
@@ -3051,6 +3079,11 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
       type: const IntType(),
       requiredDuringInsert: true,
       defaultConstraints: 'UNIQUE REFERENCES files (row_id) ON DELETE CASCADE');
+  final VerificationMeta _fileEtagMeta = const VerificationMeta('fileEtag');
+  @override
+  late final GeneratedColumn<String?> fileEtag = GeneratedColumn<String?>(
+      'file_etag', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _versionMeta = const VerificationMeta('version');
   @override
   late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
@@ -3108,6 +3141,7 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
   List<GeneratedColumn> get $columns => [
         rowId,
         file,
+        fileEtag,
         version,
         lastUpdated,
         name,
@@ -3136,6 +3170,10 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
           _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
     } else if (isInserting) {
       context.missing(_fileMeta);
+    }
+    if (data.containsKey('file_etag')) {
+      context.handle(_fileEtagMeta,
+          fileEtag.isAcceptableOrUnknown(data['file_etag']!, _fileEtagMeta));
     }
     if (data.containsKey('version')) {
       context.handle(_versionMeta,

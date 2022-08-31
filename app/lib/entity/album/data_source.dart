@@ -189,7 +189,8 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
     await _c.sqliteDb.use((db) async {
       final rowIds =
           await db.accountFileRowIdsOf(album.albumFile!, appAccount: account);
-      final insert = SqliteAlbumConverter.toSql(album, rowIds.fileRowId);
+      final insert = SqliteAlbumConverter.toSql(
+          album, rowIds.fileRowId, album.albumFile!.etag!);
       var rowId = await _updateCache(db, rowIds.fileRowId, insert.album);
       if (rowId == null) {
         // new album, need insert
