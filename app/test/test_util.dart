@@ -321,6 +321,7 @@ File buildAlbumFile({
   required int fileId,
   String ownerId = "admin",
   String? ownerDisplayName,
+  String? etag,
 }) =>
     File(
       path: path,
@@ -332,6 +333,7 @@ File buildAlbumFile({
       fileId: fileId,
       ownerId: ownerId.toCi(),
       ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
+      etag: fileId.toString(),
     );
 
 String buildAlbumFilePath(
@@ -485,7 +487,8 @@ Future<void> insertAlbums(
   for (final a in albums) {
     final rowIds =
         await db.accountFileRowIdsOf(a.albumFile!, sqlAccount: dbAccount);
-    final insert = SqliteAlbumConverter.toSql(a, rowIds.fileRowId);
+    final insert =
+        SqliteAlbumConverter.toSql(a, rowIds.fileRowId, a.albumFile!.etag!);
     final dbAlbum = await db.into(db.albums).insertReturning(insert.album);
     for (final s in insert.albumShares) {
       await db
