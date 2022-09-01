@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:tuple/tuple.dart';
@@ -38,7 +39,7 @@ class GpsMap extends StatelessWidget {
   build(BuildContext context) {
     if (GpsMapProvider.values[Pref().getGpsMapProviderOr(0)] ==
             GpsMapProvider.osm ||
-        !app_init.isNewGMapsRenderer()) {
+        (platform_k.isAndroid && !app_init.isNewGMapsRenderer())) {
       return _OsmGpsMap(
         center: center,
         zoom: zoom,

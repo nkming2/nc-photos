@@ -74,11 +74,13 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
 
-  if (isolateType == InitIsolateType.main) {
-    try {
-      _isNewGMapsRenderer = await Activity.isNewGMapsRenderer();
-    } catch (e, stackTrace) {
-      _log.severe("[init] Failed while isNewGMapsRenderer", e, stackTrace);
+  if (platform_k.isAndroid) {
+    if (isolateType == InitIsolateType.main) {
+      try {
+        _isNewGMapsRenderer = await Activity.isNewGMapsRenderer();
+      } catch (e, stackTrace) {
+        _log.severe("[init] Failed while isNewGMapsRenderer", e, stackTrace);
+      }
     }
   }
 
