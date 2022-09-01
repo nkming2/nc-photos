@@ -682,9 +682,11 @@ packages:
   kdtree:
     dependency: "direct main"
     description:
-      name: kdtree
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "0.2.0-nc-photos-1"
+      resolved-ref: ada59475a643f75ca45c2ec20d2f5348728756ea
+      url: "https://gitlab.com/nc-photos/kd-tree-dart.git"
+    source: git
     version: "0.2.0"
   kiwi:
     dependency: "direct main"
