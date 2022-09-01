@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:sqlite3/wasm.dart';
 
