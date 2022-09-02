@@ -16,6 +16,15 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/web-a
 ### Compile yourself
 Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/development/build)
 
+## Screenshots
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="180" />
+
 ## Features
 - Support JPEG, PNG, WebP, HEIC, GIF images
 - Support MP4, WebM videos (codec support may vary between devices/browsers)
