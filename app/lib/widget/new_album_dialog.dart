@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -15,6 +17,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
+import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/tag_picker_dialog.dart';
 
 /// Dialog to create a new album
@@ -136,6 +139,15 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
   }
 
   Future<void> _onConfirmStaticAlbum() async {
+    setState(() {
+      _isVisible = false;
+    });
+    unawaited(showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) =>
+          ProcessingDialog(text: L10n.global().genericProcessingDialogContent),
+    ));
     try {
       final album = Album(
         name: _formValue.name,
@@ -147,14 +159,14 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
       );
       _log.info("[_onConfirmStaticAlbum] Creating static album: $album");
       final newAlbum = await CreateAlbum(_c.albumRepo)(widget.account, album);
-      Navigator.of(context).pop(newAlbum);
+      Navigator.of(context)..pop()..pop(newAlbum);
     } catch (e, stacktrace) {
       _log.shout("[_onConfirmStaticAlbum] Failed", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
-      Navigator.of(context).pop();
+      Navigator.of(context)..pop()..pop();
     }
   }
 
