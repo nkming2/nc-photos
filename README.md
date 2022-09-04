@@ -24,7 +24,9 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
 - Support MP4, WebM videos (codec support may vary between devices/browsers)
 - EXIF support (JPEG and HEIC only)
 - Organize photos with albums that are independent of your file hierarchy
-- Enhance photos
+- Reverse geocoding
+- Enhance photos with machine learning models
+- Adjust image color
 - Sign-in to multiple servers
 - Create shared albums with users on the same server (experimental)
 
