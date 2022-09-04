@@ -344,7 +344,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
         return null;
       }
       if (ev.account.roots
-          .every((r) => r.isNotEmpty && !s.path.startsWith("/$r/"))) {
+          .every((r) => r.isNotEmpty && !s.path.startsWith("$r/"))) {
         // ignore files not under root dirs
         return null;
       }
