@@ -1,5 +1,5 @@
 # Photos
-Browse your photos on Nextcloud servers
+The long-awaited modern gallery app for your Nextcloud server
 
 [<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg" height="40">](https://liberapay.com/nkming2/donate)
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="40">](https://www.buymeacoffee.com/nkming2)
@@ -20,15 +20,17 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/developmen
 <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="180" />
 
 ## Features
-- Support JPEG, PNG, WebP, HEIC, GIF images
-- Support MP4, WebM videos (codec support may vary between devices/browsers)
 - EXIF support (JPEG and HEIC only)
-- Organize photos with albums that are independent of your file hierarchy
+- Organize photos with actual albums that are NOT folders
 - Reverse geocoding
 - Enhance photos with machine learning models
 - Adjust image color
 - Sign-in to multiple servers
 - Create shared albums with users on the same server (experimental)
+
+## Supported formats
+- JPEG, PNG, WebP, HEIC, GIF
+- MP4, WebM (codec support may vary between devices)
 
 ## Supported Nextcloud apps
 - Face Recognition (require 0.8.5+)
