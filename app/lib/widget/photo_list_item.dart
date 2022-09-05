@@ -166,24 +166,40 @@ class PhotoListLocalImageItem extends PhotoListLocalFileItem {
       child: FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,
-        child: Container(
-          // arbitrary size here
-          constraints: BoxConstraints.tight(const Size(128, 128)),
-          color: AppTheme.getListItemBackgroundColor(context),
-          child: Image(
-            image: ResizeImage.resizeIfNeeded(k.photoThumbSize, null, provider),
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.cover,
-            errorBuilder: (context, e, stackTrace) {
-              return Center(
-                child: Icon(
-                  Icons.image_not_supported,
-                  size: 64,
-                  color: Colors.white.withOpacity(.8),
-                ),
-              );
-            },
-          ),
+        child: Stack(
+          children: [
+            Container(
+              // arbitrary size here
+              constraints: BoxConstraints.tight(const Size(128, 128)),
+              color: AppTheme.getListItemBackgroundColor(context),
+              child: Image(
+                image: ResizeImage.resizeIfNeeded(
+                    k.photoThumbSize, null, provider),
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.cover,
+                errorBuilder: (context, e, stackTrace) {
+                  return Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: Colors.white.withOpacity(.8),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container(
+              // arbitrary size here
+              constraints: BoxConstraints.tight(const Size(128, 128)),
+              alignment: AlignmentDirectional.bottomEnd,
+              padding: const EdgeInsets.all(8),
+              child: const Icon(
+                Icons.cloud_off,
+                size: 20,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );
