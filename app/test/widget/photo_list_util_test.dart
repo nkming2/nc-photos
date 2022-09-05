@@ -38,6 +38,13 @@ void main() {
     group("on dec 31", () {
       test("+jan 1", _onDec31AddJan1);
     });
+    group("on may 15, range=0", () {
+      test("+may 16", _onMay15AddMay16Range0);
+      test("+may 15", _onMay15AddMay15Range0);
+    });
+    group("on may 15, range<0", () {
+      test("+may 16", _onMay15AddMay16RangeNegative);
+    });
   });
 }
 
@@ -48,7 +55,7 @@ void main() {
 /// Expect: empty
 void _sameYear() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 2, 3));
   obj.addFile(file);
@@ -63,7 +70,7 @@ void _sameYear() {
 /// Expect: empty
 void _nextYear() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2022, 2, 3));
   obj.addFile(file);
@@ -77,7 +84,7 @@ void _nextYear() {
 /// Expect: [2020]
 void _prevYear() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 3));
   obj.addFile(file);
@@ -106,7 +113,7 @@ void _prevYear() {
 /// Expect: empty
 void _prevYear3DaysBefore() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 31));
   obj.addFile(file);
@@ -120,7 +127,7 @@ void _prevYear3DaysBefore() {
 /// Expect: [2020]
 void _prevYear2DaysBefore() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 1));
   obj.addFile(file);
@@ -149,7 +156,7 @@ void _prevYear2DaysBefore() {
 /// Expect: empty
 void _prevYear3DaysAfter() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 6));
   obj.addFile(file);
@@ -163,7 +170,7 @@ void _prevYear3DaysAfter() {
 /// Expect: [2020]
 void _prevYear2DaysAfter() {
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 5));
   obj.addFile(file);
@@ -192,7 +199,7 @@ void _prevYear2DaysAfter() {
 /// Expect: empty
 void _onFeb29AddFeb26() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 26));
   obj.addFile(file);
@@ -206,7 +213,7 @@ void _onFeb29AddFeb26() {
 /// Expect: [2019]
 void _onFeb29AddFeb27() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 27));
   obj.addFile(file);
@@ -235,7 +242,7 @@ void _onFeb29AddFeb27() {
 /// Expect: empty
 void _onFeb29AddMar4() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 4));
   obj.addFile(file);
@@ -249,7 +256,7 @@ void _onFeb29AddMar4() {
 /// Expect: [2019]
 void _onFeb29AddMar3() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 3));
   obj.addFile(file);
@@ -278,7 +285,7 @@ void _onFeb29AddMar3() {
 /// Expect: empty
 void _onFeb29AddMar3LeapYear() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 3));
   obj.addFile(file);
@@ -292,7 +299,7 @@ void _onFeb29AddMar3LeapYear() {
 /// Expect: [2016]
 void _onFeb29AddMar2LeapYear() {
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 2));
   obj.addFile(file);
@@ -321,7 +328,7 @@ void _onFeb29AddMar2LeapYear() {
 /// Expect: empty
 void _onJan1AddDec31() {
   final today = DateTime(2020, 1, 1);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 12, 31));
   obj.addFile(file);
@@ -335,7 +342,7 @@ void _onJan1AddDec31() {
 /// Expect: [2019]
 void _onJan1AddDec31PrevYear() {
   final today = DateTime(2020, 1, 1);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2018, 12, 31));
   obj.addFile(file);
@@ -364,7 +371,7 @@ void _onJan1AddDec31PrevYear() {
 /// Expect: [2019]
 void _onDec31AddJan1() {
   final today = DateTime(2020, 12, 31);
-  final obj = MemoryAlbumHelper(today);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 1));
   obj.addFile(file);
@@ -384,6 +391,63 @@ void _onDec31AddJan1() {
       ),
     ],
   );
+}
+
+/// Add a file with 0 day offset when range = 0
+///
+/// Today: 2022-05-15
+/// File: 2021-05-15
+/// Expect: [2022]
+void _onMay15AddMay15Range0() {
+  final today = DateTime(2022, 5, 15);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 0);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 15));
+  obj.addFile(file);
+  expect(
+    obj
+        .build(_nameBuilder)
+        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
+        .toList(),
+    [
+      Album(
+        name: "2021",
+        provider:
+            AlbumMemoryProvider(year: 2021, month: today.month, day: today.day),
+        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        sortProvider: const AlbumTimeSortProvider(isAscending: false),
+        lastUpdated: DateTime(2021),
+      ),
+    ],
+  );
+}
+
+/// Add a file with 1 day offset when range = 0
+///
+/// Today: 2022-05-15
+/// File: 2021-05-16
+/// Expect: []
+void _onMay15AddMay16Range0() {
+  final today = DateTime(2022, 5, 15);
+  final obj = MemoryAlbumHelper(today: today, dayRange: 0);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));
+  obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
+}
+
+/// Make sure the builder won't throw when range < 0
+///
+/// Today: 2022-05-15
+/// File: 2021-05-16
+/// Expect: []
+void _onMay15AddMay16RangeNegative() {
+  final today = DateTime(2022, 5, 15);
+  final obj = MemoryAlbumHelper(today: today, dayRange: -1);
+  final file = util.buildJpegFile(
+      path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));
+  obj.addFile(file);
+  expect(obj.build(_nameBuilder), []);
 }
 
 String _nameBuilder(int year) => "$year";

@@ -814,6 +814,7 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
   @override
   initState() {
     super.initState();
+    _memoriesRange = Pref().getMemoriesRangeOr();
 
     final settings = AccountPref.of(widget.account);
     _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
@@ -848,11 +849,50 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
                     ? null
                     : _onEnableMemoryAlbumChanged,
               ),
+              ListTile(
+                title: Text(L10n.global().settingsMemoriesRangeTitle),
+                subtitle: Text(L10n.global()
+                    .settingsMemoriesRangeValueText(_memoriesRange)),
+                onTap: () => _onMemoriesRangeTap(context),
+                enabled:
+                    !Pref().isPhotosTabSortByNameOr() && _isEnableMemoryAlbum,
+              ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _onMemoriesRangeTap(BuildContext context) async {
+    var memoriesRange = _memoriesRange;
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => AppTheme(
+        child: AlertDialog(
+          content: _MemoriesRangeSlider(
+            initialRange: _memoriesRange,
+            onChanged: (value) {
+              memoriesRange = value;
+            },
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(L10n.global().applyButtonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (result != true || memoriesRange == _memoriesRange) {
+      return;
+    }
+
+    unawaited(_setMemoriesRange(memoriesRange));
   }
 
   Future<void> _onEnableMemoryAlbumChanged(bool value) async {
@@ -873,9 +913,78 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
     }
   }
 
+  Future<void> _setMemoriesRange(int value) async {
+    _log.info("[_setMemoriesRange] New value: $value");
+    final oldValue = _memoriesRange;
+    setState(() {
+      _memoriesRange = value;
+    });
+    if (!await Pref().setMemoriesRange(value)) {
+      _log.severe("[_setMemoriesRange] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _memoriesRange = oldValue;
+      });
+    }
+  }
+
   late bool _isEnableMemoryAlbum;
+  late int _memoriesRange;
 
   static final _log = Logger("widget.settings._PhotosSettingsState");
+}
+
+class _MemoriesRangeSlider extends StatefulWidget {
+  const _MemoriesRangeSlider({
+    Key? key,
+    required this.initialRange,
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  createState() => _MemoriesRangeSliderState();
+
+  final int initialRange;
+  final ValueChanged<int>? onChanged;
+}
+
+class _MemoriesRangeSliderState extends State<_MemoriesRangeSlider> {
+  @override
+  initState() {
+    super.initState();
+    _memoriesRange = widget.initialRange;
+  }
+
+  @override
+  build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+              L10n.global().settingsMemoriesRangeValueText(_memoriesRange)),
+        ),
+        StatefulSlider(
+          initialValue: _memoriesRange.toDouble(),
+          min: 0,
+          max: 4,
+          divisions: 4,
+          onChangeEnd: (value) async {
+            setState(() {
+              _memoriesRange = value.toInt();
+            });
+            widget.onChanged?.call(_memoriesRange);
+          },
+        ),
+      ],
+    );
+  }
+
+  late int _memoriesRange;
 }
 
 class _ViewerSettings extends StatefulWidget {

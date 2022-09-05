@@ -80,8 +80,9 @@ class PopulateAlbum {
     assert(album.provider is AlbumMemoryProvider);
     final provider = album.provider as AlbumMemoryProvider;
     final date = DateTime(provider.year, provider.month, provider.day);
-    final from = date.subtract(const Duration(days: 2));
-    final to = date.add(const Duration(days: 3));
+    final dayRange = _c.pref.getMemoriesRangeOr();
+    final from = date.subtract(Duration(days: dayRange));
+    final to = date.add(Duration(days: dayRange + 1));
     final files = await FileSqliteDbDataSource(_c).listByDate(
         account, from.millisecondsSinceEpoch, to.millisecondsSinceEpoch);
     return files

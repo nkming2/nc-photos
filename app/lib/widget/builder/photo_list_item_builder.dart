@@ -15,6 +15,10 @@ import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 
+/// Arguments to the photo list item builder
+///
+/// If [smartAlbumConfig] != null, the builder will also build smart albums in
+/// the process
 class PhotoListItemBuilderArguments {
   const PhotoListItemBuilderArguments(
     this.account,
@@ -22,7 +26,7 @@ class PhotoListItemBuilderArguments {
     this.isArchived = false,
     required this.sorter,
     this.grouper,
-    this.shouldBuildSmartAlbums = false,
+    this.smartAlbumConfig,
     this.shouldShowFavoriteBadge = false,
     required this.locale,
   });
@@ -32,7 +36,7 @@ class PhotoListItemBuilderArguments {
   final bool isArchived;
   final PhotoListItemSorter? sorter;
   final PhotoListItemGrouper? grouper;
-  final bool shouldBuildSmartAlbums;
+  final PhotoListItemSmartAlbumConfig? smartAlbumConfig;
   final bool shouldShowFavoriteBadge;
 
   /// Locale is needed to get localized string
@@ -73,6 +77,12 @@ class PhotoListFileDateGrouper implements PhotoListItemGrouper {
   final DateGroupHelper helper;
 }
 
+class PhotoListItemSmartAlbumConfig {
+  const PhotoListItemSmartAlbumConfig(this.memoriesDayRange);
+
+  final int memoriesDayRange;
+}
+
 int photoListFileDateTimeSorter(File a, File b) =>
     compareFileDateTimeDescending(a, b);
 
@@ -86,7 +96,7 @@ PhotoListItemBuilderResult buildPhotoListItem(
     isArchived: arg.isArchived,
     sorter: arg.sorter,
     grouper: arg.grouper,
-    shouldBuildSmartAlbums: arg.shouldBuildSmartAlbums,
+    smartAlbumConfig: arg.smartAlbumConfig,
     shouldShowFavoriteBadge: arg.shouldShowFavoriteBadge,
     locale: arg.locale,
   )(arg.account, arg.files);
@@ -97,7 +107,7 @@ class _PhotoListItemBuilder {
     required this.isArchived,
     required this.sorter,
     required this.grouper,
-    required this.shouldBuildSmartAlbums,
+    required this.smartAlbumConfig,
     required this.shouldShowFavoriteBadge,
     required this.locale,
   });
@@ -123,8 +133,10 @@ class _PhotoListItemBuilder {
   PhotoListItemBuilderResult _fromSortedItems(
       Account account, List<File> files) {
     final today = DateTime.now();
-    final memoryAlbumHelper =
-        shouldBuildSmartAlbums ? MemoryAlbumHelper(today) : null;
+    final memoryAlbumHelper = smartAlbumConfig != null
+        ? MemoryAlbumHelper(
+            today: today, dayRange: smartAlbumConfig!.memoriesDayRange)
+        : null;
     final listItems = <SelectableItem>[];
     for (int i = 0; i < files.length; ++i) {
       final f = files[i];
@@ -173,7 +185,7 @@ class _PhotoListItemBuilder {
   final bool isArchived;
   final PhotoListItemSorter? sorter;
   final PhotoListItemGrouper? grouper;
-  final bool shouldBuildSmartAlbums;
+  final PhotoListItemSmartAlbumConfig? smartAlbumConfig;
   final bool shouldShowFavoriteBadge;
   final Locale locale;
 

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/date_time_extension.dart';
@@ -32,8 +34,11 @@ class DateGroupHelper {
 ///
 /// Feb 29 is treated as Mar 1 on non leap years
 class MemoryAlbumHelper {
-  MemoryAlbumHelper([DateTime? today])
-      : today = (today?.toLocal() ?? DateTime.now()).toMidnight();
+  MemoryAlbumHelper({
+    DateTime? today,
+    required int dayRange,
+  })  : today = (today?.toLocal() ?? DateTime.now()).toMidnight(),
+        dayRange = math.max(dayRange, 0);
 
   void addFile(File f) {
     final date = f.bestDateTime.toLocal().toMidnight();
@@ -43,7 +48,7 @@ class MemoryAlbumHelper {
     }
     for (final dy in [0, -1, 1]) {
       if (today.copyWith(year: date.year + dy).difference(date).abs().inDays <=
-          2) {
+          dayRange) {
         _log.fine(
             "[addFile] Add file (${f.bestDateTime}) to ${date.year + dy}");
         _addFileToYear(f, date.year + dy);
@@ -85,6 +90,7 @@ class MemoryAlbumHelper {
   }
 
   final DateTime today;
+  final int dayRange;
   final _data = <int, _MemoryAlbumHelperItem>{};
 
   static final _log = Logger("widget.photo_list_util.MemoryAlbumHelper");

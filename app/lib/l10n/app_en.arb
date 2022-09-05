@@ -371,6 +371,19 @@
 	"@settingsPhotosPageTitle": {
 		"description": "Dedicated page for settings related to the Photos tab"
 	},
+	"settingsMemoriesRangeTitle": "Memories range",
+	"@settingsMemoriesRangeTitle": {
+		"description": "How many adjacent days to be inclded in memories for a particular year"
+	},
+	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} day} other{+-{range} days}}",
+	"@settingsMemoriesRangeValueText": {
+		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+		"placeholders": {
+			"range": {
+				"example": "1"
+			}
+		}
+	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
 	"settingsViewerPageTitle": "Viewer settings",
@@ -1401,7 +1414,6 @@
 	"@collectionPlacesLabel": {
 		"description": "Browse photos grouped by place"
 	},
-
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

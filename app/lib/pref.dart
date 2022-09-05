@@ -244,6 +244,11 @@ class Pref {
   Future<bool> setDoubleTapExit(bool value) => _set<bool>(PrefKey.doubleTapExit,
       value, (key, value) => provider.setBool(key, value));
 
+  int? getMemoriesRange() => provider.getInt(PrefKey.memoriesRange);
+  int getMemoriesRangeOr([int def = 2]) => getMemoriesRange() ?? def;
+  Future<bool> setMemoriesRange(int value) => _set<int>(PrefKey.memoriesRange,
+      value, (key, value) => provider.setInt(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -555,6 +560,7 @@ enum PrefKey {
   isPhotosTabSortByName,
   shouldProcessExifWifiOnly,
   doubleTapExit,
+  memoriesRange,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -624,6 +630,8 @@ extension on PrefKey {
         return "shouldProcessExifWifiOnly";
       case PrefKey.doubleTapExit:
         return "doubleTapExit";
+      case PrefKey.memoriesRange:
+        return "memoriesRange";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

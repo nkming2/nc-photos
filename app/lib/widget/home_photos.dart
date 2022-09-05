@@ -509,6 +509,11 @@ class _HomePhotosState extends State<HomePhotos>
         _log.info("[_onPrefUpdated] Update view after changing sort option");
         _transformItems(_bloc.state.files);
       }
+    } else if (ev.key == PrefKey.memoriesRange) {
+      if (_bloc.state is! ScanAccountDirBlocInit) {
+        _log.info("[_onPrefUpdated] Update view after changing memories");
+        _transformItems(_bloc.state.files);
+      }
     }
   }
 
@@ -548,6 +553,7 @@ class _HomePhotosState extends State<HomePhotos>
   /// Transform a File list to grid items
   void _transformItems(List<File> files, {bool isSorted = false}) {
     _log.info("[_transformItems] Queue ${files.length} items");
+    final c = KiwiContainer().resolve<DiContainer>();
     final PhotoListItemSorter? sorter;
     final PhotoListItemGrouper? grouper;
     if (Pref().isPhotosTabSortByNameOr()) {
@@ -564,7 +570,8 @@ class _HomePhotosState extends State<HomePhotos>
         files,
         sorter: sorter,
         grouper: grouper,
-        shouldBuildSmartAlbums: true,
+        smartAlbumConfig:
+            PhotoListItemSmartAlbumConfig(c.pref.getMemoriesRangeOr()),
         shouldShowFavoriteBadge: true,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
