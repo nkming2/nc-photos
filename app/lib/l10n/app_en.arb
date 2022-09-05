@@ -363,6 +363,14 @@
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
 	},
+	"settingsPhotosDescription": "Customize contents shown in the Photos tab",
+	"@settingsPhotosDescription": {
+		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+	},
+	"settingsPhotosPageTitle": "Photos settings",
+	"@settingsPhotosPageTitle": {
+		"description": "Dedicated page for settings related to the Photos tab"
+	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
 	"settingsViewerPageTitle": "Viewer settings",

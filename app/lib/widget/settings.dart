@@ -72,9 +72,6 @@ class _SettingsState extends State<Settings> {
     _isEnableExif = Pref().isEnableExifOr();
     _shouldProcessExifWifiOnly = Pref().shouldProcessExifWifiOnlyOr();
 
-    final settings = AccountPref.of(widget.account);
-    _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
-
     _prefUpdatedListener.begin();
   }
 
@@ -134,14 +131,6 @@ class _SettingsState extends State<Settings> {
                   value: _shouldProcessExifWifiOnly,
                   onChanged: _isEnableExif ? _onExifWifiOnlyChanged : null,
                 ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsMemoriesTitle),
-                subtitle: Text(L10n.global().settingsMemoriesSubtitle),
-                value: _isEnableMemoryAlbum,
-                onChanged: Pref().isPhotosTabSortByNameOr()
-                    ? null
-                    : _onEnableMemoryAlbumChanged,
-              ),
               _buildSubSettings(
                 context,
                 leading: Icon(
@@ -150,6 +139,16 @@ class _SettingsState extends State<Settings> {
                 ),
                 label: L10n.global().settingsAccountTitle,
                 builder: () => AccountSettingsWidget(account: widget.account),
+              ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.image_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().photosTabLabel,
+                description: L10n.global().settingsPhotosDescription,
+                builder: () => _PhotosSettings(account: widget.account),
               ),
               _buildSubSettings(
                 context,
@@ -385,24 +384,6 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  Future<void> _onEnableMemoryAlbumChanged(bool value) async {
-    _log.info("[_onEnableMemoryAlbumChanged] New value: $value");
-    final oldValue = _isEnableMemoryAlbum;
-    setState(() {
-      _isEnableMemoryAlbum = value;
-    });
-    if (!await AccountPref.of(widget.account).setEnableMemoryAlbum(value)) {
-      _log.severe("[_onEnableMemoryAlbumChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isEnableMemoryAlbum = oldValue;
-      });
-    }
-  }
-
   Future<void> _onCaptureLogChanged(BuildContext context, bool value) async {
     if (value) {
       final result = await showDialog<bool>(
@@ -472,7 +453,6 @@ class _SettingsState extends State<Settings> {
 
   late bool _isEnableExif;
   late bool _shouldProcessExifWifiOnly;
-  late bool _isEnableMemoryAlbum;
 
   var _devSettingsUnlockCount = 3;
   var _isShowDevSettings = false;
@@ -816,6 +796,86 @@ class _ShareFolderDialogState extends State<_ShareFolderDialog> {
   late final _controller =
       TextEditingController(text: "/${widget.initialValue}");
   late String _path = widget.initialValue;
+}
+
+class _PhotosSettings extends StatefulWidget {
+  const _PhotosSettings({
+    Key? key,
+    required this.account,
+  }) : super(key: key);
+
+  @override
+  createState() => _PhotosSettingsState();
+
+  final Account account;
+}
+
+class _PhotosSettingsState extends State<_PhotosSettings> {
+  @override
+  initState() {
+    super.initState();
+
+    final settings = AccountPref.of(widget.account);
+    _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
+  }
+
+  @override
+  build(BuildContext context) {
+    return AppTheme(
+      child: Scaffold(
+        body: Builder(
+          builder: (context) => _buildContent(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          title: Text(L10n.global().settingsPhotosPageTitle),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              SwitchListTile(
+                title: Text(L10n.global().settingsMemoriesTitle),
+                subtitle: Text(L10n.global().settingsMemoriesSubtitle),
+                value: _isEnableMemoryAlbum,
+                onChanged: Pref().isPhotosTabSortByNameOr()
+                    ? null
+                    : _onEnableMemoryAlbumChanged,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onEnableMemoryAlbumChanged(bool value) async {
+    _log.info("[_onEnableMemoryAlbumChanged] New value: $value");
+    final oldValue = _isEnableMemoryAlbum;
+    setState(() {
+      _isEnableMemoryAlbum = value;
+    });
+    if (!await AccountPref.of(widget.account).setEnableMemoryAlbum(value)) {
+      _log.severe("[_onEnableMemoryAlbumChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isEnableMemoryAlbum = oldValue;
+      });
+    }
+  }
+
+  late bool _isEnableMemoryAlbum;
+
+  static final _log = Logger("widget.settings._PhotosSettingsState");
 }
 
 class _ViewerSettings extends StatefulWidget {
