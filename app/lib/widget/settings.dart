@@ -153,22 +153,22 @@ class _SettingsState extends State<Settings> {
               _buildSubSettings(
                 context,
                 leading: Icon(
-                  Icons.view_carousel_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
-                label: L10n.global().settingsViewerTitle,
-                description: L10n.global().settingsViewerDescription,
-                builder: () => _ViewerSettings(),
-              ),
-              _buildSubSettings(
-                context,
-                leading: Icon(
                   Icons.photo_album_outlined,
                   color: AppTheme.getUnfocusedIconColor(context),
                 ),
                 label: L10n.global().settingsAlbumTitle,
                 description: L10n.global().settingsAlbumDescription,
                 builder: () => _AlbumSettings(),
+              ),
+              _buildSubSettings(
+                context,
+                leading: Icon(
+                  Icons.view_carousel_outlined,
+                  color: AppTheme.getUnfocusedIconColor(context),
+                ),
+                label: L10n.global().settingsViewerTitle,
+                description: L10n.global().settingsViewerDescription,
+                builder: () => _ViewerSettings(),
               ),
               if (features.isSupportEnhancement)
                 _buildSubSettings(
