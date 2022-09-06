@@ -113,7 +113,7 @@ class ImageProcessor {
         "weight": weight,
       });
 
-  static Future<void> colorFilter(
+  static Future<void> filter(
     String fileUrl,
     String filename,
     int maxWidth,
@@ -121,7 +121,7 @@ class ImageProcessor {
     List<ImageFilter> filters, {
     Map<String, String>? headers,
   }) =>
-      _methodChannel.invokeMethod("colorFilter", <String, dynamic>{
+      _methodChannel.invokeMethod("filter", <String, dynamic>{
         "fileUrl": fileUrl,
         "headers": headers,
         "filename": filename,

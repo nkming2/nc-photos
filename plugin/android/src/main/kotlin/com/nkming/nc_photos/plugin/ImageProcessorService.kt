@@ -30,7 +30,7 @@ class ImageProcessorService : Service() {
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ESRGAN = "Esrgan"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
-		const val METHOD_COLOR_FILTER = "ColorFilter"
+		const val METHOD_FILTER = "Filter"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -49,7 +49,7 @@ class ImageProcessorService : Service() {
 			METHOD_ARBITRARY_STYLE_TRANSFER,
 		)
 		val EDIT_METHODS = listOf(
-			METHOD_COLOR_FILTER,
+			METHOD_FILTER,
 		)
 
 		private const val ACTION_CANCEL = "cancel"
@@ -126,7 +126,7 @@ class ImageProcessorService : Service() {
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
 				startId, intent.extras!!
 			)
-			METHOD_COLOR_FILTER -> onColorFilter(startId, intent.extras!!)
+			METHOD_FILTER -> onFilter(startId, intent.extras!!)
 			else -> {
 				logE(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
@@ -170,12 +170,12 @@ class ImageProcessorService : Service() {
 		)
 	}
 
-	private fun onColorFilter(startId: Int, extras: Bundle) {
+	private fun onFilter(startId: Int, extras: Bundle) {
 		val filters = extras.getSerializable(EXTRA_FILTERS)!!
 			.asType<ArrayList<Serializable>>()
 			.map { it.asType<HashMap<String, Any>>() }
 		return onMethod(
-			startId, extras, METHOD_COLOR_FILTER,
+			startId, extras, METHOD_FILTER,
 			args = mapOf(
 				"filters" to filters,
 			)

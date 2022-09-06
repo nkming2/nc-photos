@@ -189,7 +189,7 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   Future<void> _onSavePressed(BuildContext context) async {
-    await ImageProcessor.colorFilter(
+    await ImageProcessor.filter(
       "${widget.account.url}/${widget.file.path}",
       widget.file.filename,
       4096,

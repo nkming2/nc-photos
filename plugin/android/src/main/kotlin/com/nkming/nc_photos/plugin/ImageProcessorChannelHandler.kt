@@ -88,9 +88,9 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
-			"colorFilter" -> {
+			"filter" -> {
 				try {
-					colorFilter(
+					filter(
 						call.argument("fileUrl")!!,
 						call.argument("headers"),
 						call.argument("filename")!!,
@@ -174,7 +174,7 @@ class ImageProcessorChannelHandler(context: Context) :
 		}
 	)
 
-	private fun colorFilter(
+	private fun filter(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
 		maxWidth: Int, maxHeight: Int, filters: List<Map<String, Any>>,
 		result: MethodChannel.Result
@@ -184,7 +184,7 @@ class ImageProcessorChannelHandler(context: Context) :
 		filters.mapTo(l, { HashMap(it) })
 		method(
 			fileUrl, headers, filename, maxWidth, maxHeight,
-			ImageProcessorService.METHOD_COLOR_FILTER, result,
+			ImageProcessorService.METHOD_FILTER, result,
 			onIntent = {
 				it.putExtra(ImageProcessorService.EXTRA_FILTERS, l)
 			}
@@ -196,7 +196,7 @@ class ImageProcessorChannelHandler(context: Context) :
 		result: MethodChannel.Result
 	) {
 		var img = Rgba8Image.fromJson(rgba8)
-		for (f in filters.map(ColorFilter::fromJson)) {
+		for (f in filters.map(ImageFilter::fromJson)) {
 			img = f.apply(img)
 		}
 		result.success(img.toJson())
@@ -226,9 +226,9 @@ class ImageProcessorChannelHandler(context: Context) :
 	private var eventSink: EventChannel.EventSink? = null
 }
 
-interface ColorFilter {
+interface ImageFilter {
 	companion object {
-		fun fromJson(json: Map<String, Any>): ColorFilter {
+		fun fromJson(json: Map<String, Any>): ImageFilter {
 			return when (json["type"]) {
 				"brightness" -> Brightness((json["weight"] as Double).toFloat())
 				"contrast" -> Contrast((json["weight"] as Double).toFloat())

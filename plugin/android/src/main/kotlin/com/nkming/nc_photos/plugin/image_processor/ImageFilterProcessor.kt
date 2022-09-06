@@ -5,15 +5,15 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
-import com.nkming.nc_photos.plugin.ColorFilter
+import com.nkming.nc_photos.plugin.ImageFilter
 import com.nkming.nc_photos.plugin.use
 
-class ColorFilterProcessor(
+class ImageFilterProcessor(
 	context: Context, maxWidth: Int, maxHeight: Int,
 	filters: List<Map<String, Any>>
 ) {
 	companion object {
-		const val TAG = "ColorFilterProcessor"
+		const val TAG = "ImageFilterProcessor"
 	}
 
 	fun apply(imageUri: Uri): Bitmap {
@@ -24,7 +24,7 @@ class ColorFilterProcessor(
 			Rgba8Image(TfLiteHelper.bitmapToRgba8Array(it), it.width, it.height)
 		}
 
-		for (f in filters.map(ColorFilter::fromJson)) {
+		for (f in filters.map(ImageFilter::fromJson)) {
 			img = f.apply(img)
 		}
 		return img.toBitmap()
