@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/k.dart' as k;
 
+/// Button in the image editor toolbar
+///
+/// If [activationOrder] != null, this button is considered activated. And if
+/// [activationOrder] >= 0, a number will be drawn on top to represent its
+/// current order.
 class ToolbarButton extends StatelessWidget {
   const ToolbarButton({
     Key? key,
@@ -9,7 +14,7 @@ class ToolbarButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.isSelected = false,
-    this.activationOrder = -1,
+    this.activationOrder,
   }) : super(key: key);
 
   @override
@@ -49,13 +54,13 @@ class ToolbarButton extends StatelessWidget {
                           : AppTheme.unfocusedIconColorDark,
                     ),
                   ),
-                  if (isActivated)
+                  if (isActivated && activationOrder! >= 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
                       child: Align(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          (activationOrder + 1).toString(),
+                          (activationOrder! + 1).toString(),
                           style: TextStyle(
                             fontSize: 12,
                             color: isSelected
@@ -84,11 +89,11 @@ class ToolbarButton extends StatelessWidget {
     );
   }
 
-  bool get isActivated => activationOrder >= 0;
+  bool get isActivated => activationOrder != null;
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
   final bool isSelected;
-  final int activationOrder;
+  final int? activationOrder;
 }

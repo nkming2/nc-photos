@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -111,53 +112,63 @@ class _ColorToolbarState extends State<ColorToolbar> {
                 label: L10n.global().imageEditColorBrightness,
                 onPressed: _onBrightnessPressed,
                 isSelected: _selectedFilter == ColorToolType.brightness,
-                activationOrder:
-                    _filters.keys.indexOf(ColorToolType.brightness),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.brightness)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.contrast,
                 label: L10n.global().imageEditColorContrast,
                 onPressed: _onContrastPressed,
                 isSelected: _selectedFilter == ColorToolType.contrast,
-                activationOrder: _filters.keys.indexOf(ColorToolType.contrast),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.contrast)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.circle,
                 label: L10n.global().imageEditColorWhitePoint,
                 onPressed: _onWhitePointPressed,
                 isSelected: _selectedFilter == ColorToolType.whitePoint,
-                activationOrder:
-                    _filters.keys.indexOf(ColorToolType.whitePoint),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.whitePoint)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.circle_outlined,
                 label: L10n.global().imageEditColorBlackPoint,
                 onPressed: _onBlackPointPressed,
                 isSelected: _selectedFilter == ColorToolType.blackPoint,
-                activationOrder:
-                    _filters.keys.indexOf(ColorToolType.blackPoint),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.blackPoint)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.invert_colors,
                 label: L10n.global().imageEditColorSaturation,
                 onPressed: _onSaturationPressed,
                 isSelected: _selectedFilter == ColorToolType.saturation,
-                activationOrder:
-                    _filters.keys.indexOf(ColorToolType.saturation),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.saturation)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.thermostat,
                 label: L10n.global().imageEditColorWarmth,
                 onPressed: _onWarmthPressed,
                 isSelected: _selectedFilter == ColorToolType.warmth,
-                activationOrder: _filters.keys.indexOf(ColorToolType.warmth),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.warmth)
+                    .run((i) => i == -1 ? null : i),
               ),
               ToolbarButton(
                 icon: Icons.colorize,
                 label: L10n.global().imageEditColorTint,
                 onPressed: _onTintPressed,
                 isSelected: _selectedFilter == ColorToolType.tint,
-                activationOrder: _filters.keys.indexOf(ColorToolType.tint),
+                activationOrder: _filters.keys
+                    .indexOf(ColorToolType.tint)
+                    .run((i) => i == -1 ? null : i),
               ),
               const SizedBox(width: 16),
             ],
