@@ -221,10 +221,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.brightness] as _BrightnessArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.brightness] = _BrightnessArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.brightness, _BrightnessArguments(value)),
       );
 
   Widget _buildContrastOption(BuildContext context) => _buildSliderOption(
@@ -234,10 +232,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.contrast] as _ContrastArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.contrast] = _ContrastArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.contrast, _ContrastArguments(value)),
       );
 
   Widget _buildWhitePointOption(BuildContext context) => _buildSliderOption(
@@ -247,10 +243,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.whitePoint] as _WhitePointArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.whitePoint] = _WhitePointArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.whitePoint, _WhitePointArguments(value)),
       );
 
   Widget _buildBlackPointOption(BuildContext context) => _buildSliderOption(
@@ -260,10 +254,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.blackPoint] as _BlackPointArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.blackPoint] = _BlackPointArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.blackPoint, _BlackPointArguments(value)),
       );
 
   Widget _buildSaturationOption(BuildContext context) => _buildSliderOption(
@@ -273,10 +265,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.saturation] as _SaturationArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.saturation] = _SaturationArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.saturation, _SaturationArguments(value)),
       );
 
   Widget _buildWarmthOption(BuildContext context) => _buildSliderOption(
@@ -286,10 +276,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         max: 100,
         initialValue:
             (_filters[ColorToolType.warmth] as _WarmthArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.warmth] = _WarmthArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) => _onOptionValueChanged(
+            ColorToolType.warmth, _WarmthArguments(value)),
       );
 
   Widget _buildTintOption(BuildContext context) => _buildSliderOption(
@@ -298,10 +286,8 @@ class _ColorToolbarState extends State<ColorToolbar> {
         min: -100,
         max: 100,
         initialValue: (_filters[ColorToolType.tint] as _TintArguments).value,
-        onChangeEnd: (value) {
-          _filters[ColorToolType.tint] = _TintArguments(value);
-          _notifyFiltersChanged();
-        },
+        onChangeEnd: (value) =>
+            _onOptionValueChanged(ColorToolType.tint, _TintArguments(value)),
       );
 
   void _onFilterPressed(ColorToolType type, ColorArguments defArgs) {
@@ -334,6 +320,13 @@ class _ColorToolbarState extends State<ColorToolbar> {
       _onFilterPressed(ColorToolType.warmth, const _WarmthArguments(0));
   void _onTintPressed() =>
       _onFilterPressed(ColorToolType.tint, const _TintArguments(0));
+
+  void _onOptionValueChanged(ColorToolType type, ColorArguments args) {
+    setState(() {
+      _filters[type] = args;
+    });
+    _notifyFiltersChanged();
+  }
 
   void _notifyFiltersChanged() {
     widget.onActiveFiltersChanged.call(_filters.values);
