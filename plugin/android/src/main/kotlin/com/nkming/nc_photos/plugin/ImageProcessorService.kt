@@ -13,6 +13,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.IBinder
 import android.os.PowerManager
+import android.webkit.MimeTypeMap
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -617,6 +618,26 @@ private open class ImageProcessorCommandTask(context: Context) :
 	private fun handleCommand(cmd: ImageProcessorImageCommand): Uri {
 		val file = downloadFile(cmd.fileUrl, cmd.headers)
 		handleCancel()
+
+		// special case for lossless rotation
+		if (cmd is ImageProcessorFilterCommand) {
+			if (shouldTryLosslessRotate(cmd, cmd.filename)) {
+				val filter = cmd.filters.first() as Orientation
+				try {
+					return loselessRotate(
+						filter.degree, file, cmd.filename,
+						"Edited Photos"
+					)
+				} catch (e: Throwable) {
+					logE(
+						TAG,
+						"[handleCommand] Lossless rotation has failed, fallback to lossy",
+						e
+					)
+				}
+			}
+		}
+
 		return try {
 			val fileUri = Uri.fromFile(file)
 			val output = measureTime(TAG, "[handleCommand] Elapsed time", {
@@ -633,6 +654,53 @@ private open class ImageProcessorCommandTask(context: Context) :
 			)
 		} finally {
 			file.delete()
+		}
+	}
+
+	private fun shouldTryLosslessRotate(
+		cmd: ImageProcessorFilterCommand, srcFilename: String
+	): Boolean {
+		try {
+			if (cmd.filters.size != 1) {
+				return false
+			}
+			if (cmd.filters.first() !is Orientation) {
+				return false
+			}
+			// we can't use the content resolver here because the file we just
+			// downloaded does not exist in the media store
+			val ext = srcFilename.split('.').last()
+			val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+			logD(TAG, "[shouldTryLosslessRotate] ext: $ext -> mime: $mime")
+			return mime == "image/jpeg"
+		} catch (e: Throwable) {
+			logE(TAG, "[shouldTryLosslessRotate] Uncaught exception", e)
+			return false
+		}
+	}
+
+	private fun loselessRotate(
+		degree: Int, srcFile: File, outFilename: String, subDir: String
+	): Uri {
+		logI(TAG, "[loselessRotate] $outFilename")
+		val outFile = File.createTempFile("out", null, getTempDir(context))
+		try {
+			srcFile.copyTo(outFile, overwrite = true)
+			val iExif = ExifInterface(srcFile)
+			val oExif = ExifInterface(outFile)
+			copyExif(iExif, oExif)
+			LosslessRotator()(degree, iExif, oExif)
+			oExif.saveAttributes()
+
+			handleCancel()
+			// move file to user accessible storage
+			val uri = MediaStoreUtil.copyFileToDownload(
+				context, Uri.fromFile(outFile), outFilename,
+				"Photos (for Nextcloud)/$subDir"
+			)
+			return uri
+		} finally {
+			outFile.delete()
 		}
 	}
 
