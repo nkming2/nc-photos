@@ -15,6 +15,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
+import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
 class ImageEditorArguments {
@@ -120,13 +121,24 @@ class _ImageEditorState extends State<ImageEditor> {
                     )
                   : Container(),
             ),
-            ColorToolbar(
-              initialState: _colorFilters,
-              onActiveFiltersChanged: (colorFilters) {
-                _colorFilters = colorFilters.toList();
-                _applyFilters();
-              },
-            ),
+            if (_activeTool == _ToolType.color)
+              ColorToolbar(
+                initialState: _colorFilters,
+                onActiveFiltersChanged: (colorFilters) {
+                  _colorFilters = colorFilters.toList();
+                  _applyFilters();
+                },
+              )
+            else if (_activeTool == _ToolType.transform)
+              TransformToolbar(
+                initialState: _transformFilters,
+                onActiveFiltersChanged: (transformFilters) {
+                  _transformFilters = transformFilters.toList();
+                  _applyFilters();
+                },
+              ),
+            const SizedBox(height: 4),
+            _buildToolBar(context),
           ],
         ),
       ),
@@ -155,6 +167,41 @@ class _ImageEditorState extends State<ImageEditor> {
           ),
         ],
       );
+
+  Widget _buildToolBar(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            _ToolButton(
+              icon: Icons.palette_outlined,
+              label: L10n.global().imageEditToolbarColorLabel,
+              isSelected: _activeTool == _ToolType.color,
+              onPressed: () {
+                setState(() {
+                  _activeTool = _ToolType.color;
+                });
+              },
+            ),
+            _ToolButton(
+              icon: Icons.transform_outlined,
+              label: L10n.global().imageEditToolbarTransformLabel,
+              isSelected: _activeTool == _ToolType.transform,
+              onPressed: () {
+                setState(() {
+                  _activeTool = _ToolType.transform;
+                });
+              },
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+      ),
+    );
+  }
 
   Future<void> _onBackButton(BuildContext context) async {
     if (!_isModified) {
@@ -203,7 +250,10 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   List<ImageFilter> _buildFilterList() {
-    return _colorFilters.map((f) => f.toImageFilter()).toList();
+    return [
+      ..._transformFilters.map((f) => f.toImageFilter()),
+      ..._colorFilters.map((f) => f.toImageFilter()),
+    ];
   }
 
   Future<void> _applyFilters() async {
@@ -213,11 +263,79 @@ class _ImageEditorState extends State<ImageEditor> {
     });
   }
 
-  bool get _isModified => _colorFilters.isNotEmpty;
+  bool get _isModified =>
+      _transformFilters.isNotEmpty || _colorFilters.isNotEmpty;
 
   bool _isDoneInit = false;
   late final Rgba8Image _src;
   Rgba8Image? _dst;
+  var _activeTool = _ToolType.color;
 
   var _colorFilters = <ColorArguments>[];
+  var _transformFilters = <TransformArguments>[];
+}
+
+enum _ToolType {
+  color,
+  transform,
+}
+
+class _ToolButton extends StatelessWidget {
+  const _ToolButton({
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  @override
+  build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(24)),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: onPressed,
+            child: Container(
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.white24 : null,
+                // borderRadius: const BorderRadius.all(Radius.circular(24)),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: isSelected
+                        ? Colors.white
+                        : AppTheme.unfocusedIconColorDark,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : AppTheme.unfocusedIconColorDark,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+  final bool isSelected;
 }

@@ -1326,6 +1326,26 @@
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
 	},
+	"imageEditToolbarColorLabel": "Color",
+	"@imageEditToolbarColorLabel": {
+		"description": "Label of the color tools. These can be used to adjust the color of an image"
+	},
+	"imageEditToolbarTransformLabel": "Transform",
+	"@imageEditToolbarTransformLabel": {
+		"description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+	},
+	"imageEditTransformOrientation": "Orientation",
+	"@imageEditTransformOrientation": {
+		"description": "Change the orientation of the image, 90 degree per step"
+	},
+	"imageEditTransformOrientationClockwise": "cw",
+	"@imageEditTransformOrientationClockwise": {
+		"description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformOrientationCounterclockwise": "ccw",
+	"@imageEditTransformOrientationCounterclockwise": {
+		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+	},
 	"categoriesLabel": "Categories",
 	"searchLandingPeopleListEmptyText": "Press help to learn how to setup",
 	"@searchLandingPeopleListEmptyText": {
@@ -1414,6 +1434,7 @@
 	"@collectionPlacesLabel": {
 		"description": "Browse photos grouped by place"
 	},
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

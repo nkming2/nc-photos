@@ -44,6 +44,18 @@ class ColorTintFilter extends _SingleWeightFilter {
   const ColorTintFilter(double weight) : super("tint", weight);
 }
 
+class TransformOrientationFilter implements ImageFilter {
+  const TransformOrientationFilter(this.degree);
+
+  @override
+  toJson() => {
+        "type": "orientation",
+        "degree": degree,
+      };
+
+  final int degree;
+}
+
 class ImageProcessor {
   static Future<void> zeroDce(
     String fileUrl,

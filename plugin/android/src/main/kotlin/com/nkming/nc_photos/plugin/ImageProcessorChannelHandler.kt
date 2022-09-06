@@ -237,6 +237,7 @@ interface ImageFilter {
 				"saturation" -> Saturation((json["weight"] as Double).toFloat())
 				"warmth" -> Warmth((json["weight"] as Double).toFloat())
 				"tint" -> Tint((json["weight"] as Double).toFloat())
+				"orientation" -> Orientation(json["degree"] as Int)
 				else -> throw IllegalArgumentException(
 					"Unknown type: ${json["type"]}"
 				)

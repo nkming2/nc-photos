@@ -38,6 +38,7 @@ add_library( # Sets the name of the library.
              filter/contrast.cpp
              filter/curve.cpp
              filter/hslhsv.cpp
+             filter/orientation.cpp
              filter/saturation.cpp
              filter/tint.cpp
              filter/warmth.cpp
