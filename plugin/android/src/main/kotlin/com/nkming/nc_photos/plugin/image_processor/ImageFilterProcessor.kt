@@ -9,8 +9,7 @@ import com.nkming.nc_photos.plugin.ImageFilter
 import com.nkming.nc_photos.plugin.use
 
 class ImageFilterProcessor(
-	context: Context, maxWidth: Int, maxHeight: Int,
-	filters: List<Map<String, Any>>
+	context: Context, maxWidth: Int, maxHeight: Int, filters: List<ImageFilter>
 ) {
 	companion object {
 		const val TAG = "ImageFilterProcessor"
@@ -24,7 +23,7 @@ class ImageFilterProcessor(
 			Rgba8Image(TfLiteHelper.bitmapToRgba8Array(it), it.width, it.height)
 		}
 
-		for (f in filters.map(ImageFilter::fromJson)) {
+		for (f in filters) {
 			img = f.apply(img)
 		}
 		return img.toBitmap()

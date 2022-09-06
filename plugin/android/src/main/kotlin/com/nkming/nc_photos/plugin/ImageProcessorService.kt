@@ -173,11 +173,20 @@ class ImageProcessorService : Service() {
 	private fun onFilter(startId: Int, extras: Bundle) {
 		val filters = extras.getSerializable(EXTRA_FILTERS)!!
 			.asType<ArrayList<Serializable>>()
-			.map { it.asType<HashMap<String, Any>>() }
-		return onMethod(
-			startId, extras, METHOD_FILTER,
-			args = mapOf(
-				"filters" to filters,
+			.map { ImageFilter.fromJson(it.asType<HashMap<String, Any>>()) }
+
+		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
+
+		@Suppress("Unchecked_cast")
+		val headers =
+			extras.getSerializable(EXTRA_HEADERS) as HashMap<String, String>?
+		val filename = extras.getString(EXTRA_FILENAME)!!
+		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
+		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
+		addCommand(
+			ImageProcessorFilterCommand(
+				startId, fileUrl, headers, filename, maxWidth,
+				maxHeight, filters
 			)
 		)
 	}
@@ -300,7 +309,7 @@ class ImageProcessorService : Service() {
 
 	private fun runCommand() {
 		val cmd = cmds.first()
-		if (cmd is ImageProcessorEnhanceCommand) {
+		if (cmd is ImageProcessorImageCommand) {
 			runCommand(cmd)
 		} else if (cmd is ImageProcessorGracePeriodCommand) {
 			runCommand(cmd)
@@ -308,7 +317,7 @@ class ImageProcessorService : Service() {
 	}
 
 	@SuppressLint("StaticFieldLeak")
-	private fun runCommand(cmd: ImageProcessorEnhanceCommand) {
+	private fun runCommand(cmd: ImageProcessorImageCommand) {
 		notificationManager.notify(
 			NOTIFICATION_ID, buildNotification(cmd.filename)
 		)
@@ -402,7 +411,7 @@ class ImageProcessorService : Service() {
 
 private interface ImageProcessorCommand
 
-private class ImageProcessorEnhanceCommand(
+private abstract class ImageProcessorImageCommand(
 	val startId: Int,
 	val method: String,
 	val fileUrl: String,
@@ -410,14 +419,73 @@ private class ImageProcessorEnhanceCommand(
 	val filename: String,
 	val maxWidth: Int,
 	val maxHeight: Int,
+) : ImageProcessorCommand {
+	abstract fun apply(context: Context, fileUri: Uri): Bitmap
+}
+
+private class ImageProcessorEnhanceCommand(
+	startId: Int,
+	method: String,
+	fileUrl: String,
+	headers: Map<String, String>?,
+	filename: String,
+	maxWidth: Int,
+	maxHeight: Int,
 	val args: Map<String, Any?> = mapOf(),
-) : ImageProcessorCommand
+) : ImageProcessorImageCommand(
+	startId, method, fileUrl, headers, filename, maxWidth, maxHeight
+) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return when (method) {
+			ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
+				context, maxWidth, maxHeight,
+				args["iteration"] as? Int ?: 8
+			).infer(fileUri)
+
+			ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
+				context, maxWidth, maxHeight,
+				args["radius"] as? Int ?: 16
+			).infer(fileUri)
+
+			ImageProcessorService.METHOD_ESRGAN -> Esrgan(
+				context, maxWidth, maxHeight
+			).infer(fileUri)
+
+			ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
+				context, maxWidth, maxHeight,
+				args["styleUri"] as Uri,
+				args["weight"] as Float
+			).infer(fileUri)
+
+			else -> throw IllegalArgumentException("Unknown method: $method")
+		}
+	}
+}
+
+private class ImageProcessorFilterCommand(
+	startId: Int,
+	fileUrl: String,
+	headers: Map<String, String>?,
+	filename: String,
+	maxWidth: Int,
+	maxHeight: Int,
+	val filters: List<ImageFilter>,
+) : ImageProcessorImageCommand(
+	startId, ImageProcessorService.METHOD_FILTER, fileUrl, headers, filename,
+	maxWidth, maxHeight
+) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return ImageFilterProcessor(
+			context, maxWidth, maxHeight, filters
+		).apply(fileUri)
+	}
+}
 
 private class ImageProcessorGracePeriodCommand : ImageProcessorCommand
 
 @Suppress("Deprecation")
 private open class ImageProcessorCommandTask(context: Context) :
-	AsyncTask<ImageProcessorEnhanceCommand, Unit, MessageEvent>(),
+	AsyncTask<ImageProcessorImageCommand, Unit, MessageEvent>(),
 	AsyncTaskCancellable {
 	companion object {
 		private val exifTagOfInterests = listOf(
@@ -533,7 +601,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 	}
 
 	override fun doInBackground(
-		vararg params: ImageProcessorEnhanceCommand?
+		vararg params: ImageProcessorImageCommand?
 	): MessageEvent {
 		val cmd = params[0]!!
 		return try {
@@ -546,47 +614,13 @@ private open class ImageProcessorCommandTask(context: Context) :
 		}
 	}
 
-	private fun handleCommand(cmd: ImageProcessorEnhanceCommand): Uri {
+	private fun handleCommand(cmd: ImageProcessorImageCommand): Uri {
 		val file = downloadFile(cmd.fileUrl, cmd.headers)
 		handleCancel()
 		return try {
 			val fileUri = Uri.fromFile(file)
 			val output = measureTime(TAG, "[handleCommand] Elapsed time", {
-				when (cmd.method) {
-					ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
-						context, cmd.maxWidth, cmd.maxHeight,
-						cmd.args["iteration"] as? Int ?: 8
-					).infer(
-						fileUri
-					)
-
-					ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
-						context, cmd.maxWidth, cmd.maxHeight,
-						cmd.args["radius"] as? Int ?: 16
-					).infer(fileUri)
-
-					ImageProcessorService.METHOD_ESRGAN -> Esrgan(
-						context, cmd.maxWidth, cmd.maxHeight
-					).infer(fileUri)
-
-					ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
-						context, cmd.maxWidth, cmd.maxHeight,
-						cmd.args["styleUri"] as Uri,
-						cmd.args["weight"] as Float
-					).infer(fileUri)
-
-					ImageProcessorService.METHOD_COLOR_FILTER -> {
-						@Suppress("Unchecked_cast")
-						ColorFilterProcessor(
-							context, cmd.maxWidth, cmd.maxHeight,
-							cmd.args["filters"] as List<Map<String, Any>>,
-						).apply(fileUri)
-					}
-
-					else -> throw IllegalArgumentException(
-						"Unknown method: ${cmd.method}"
-					)
-				}
+				cmd.apply(context, fileUri)
 			})
 			handleCancel()
 			saveBitmap(
