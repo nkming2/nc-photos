@@ -1346,6 +1346,10 @@
 	"@imageEditTransformOrientationCounterclockwise": {
 		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
 	},
+	"imageEditTransformCrop": "Crop",
+	"@imageEditTransformCrop": {
+		"description": "Crop the image"
+	},
 	"categoriesLabel": "Categories",
 	"searchLandingPeopleListEmptyText": "Press help to learn how to setup",
 	"@searchLandingPeopleListEmptyText": {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
@@ -15,6 +16,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
+import 'package:nc_photos/widget/image_editor/crop_controller.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
@@ -113,12 +115,23 @@ class _ImageEditorState extends State<ImageEditor> {
             _buildAppBar(context),
             Expanded(
               child: _isDoneInit
-                  ? Image(
-                      image: (_dst ?? _src).run((obj) =>
-                          PixelImage(obj.pixel, obj.width, obj.height)),
-                      fit: BoxFit.contain,
-                      gaplessPlayback: true,
-                    )
+                  ? _isCropMode
+                      ? CropController(
+                          // crop always work on the src, otherwise we'll be
+                          // cropping repeatedly
+                          image: _src,
+                          initialState: _cropFilter,
+                          onCropChanged: (cropFilter) {
+                            _cropFilter = cropFilter;
+                            _applyFilters();
+                          },
+                        )
+                      : Image(
+                          image: (_dst ?? _src).run((obj) =>
+                              PixelImage(obj.pixel, obj.width, obj.height)),
+                          fit: BoxFit.contain,
+                          gaplessPlayback: true,
+                        )
                   : Container(),
             ),
             if (_activeTool == _ToolType.color)
@@ -134,6 +147,15 @@ class _ImageEditorState extends State<ImageEditor> {
                 initialState: _transformFilters,
                 onActiveFiltersChanged: (transformFilters) {
                   _transformFilters = transformFilters.toList();
+                  _applyFilters();
+                },
+                isCropModeChanged: (value) {
+                  setState(() {
+                    _isCropMode = value;
+                  });
+                },
+                onCropToolDeactivated: () {
+                  _cropFilter = null;
                   _applyFilters();
                 },
               ),
@@ -182,7 +204,7 @@ class _ImageEditorState extends State<ImageEditor> {
               isSelected: _activeTool == _ToolType.color,
               onPressed: () {
                 setState(() {
-                  _activeTool = _ToolType.color;
+                  _setActiveTool(_ToolType.color);
                 });
               },
             ),
@@ -192,7 +214,7 @@ class _ImageEditorState extends State<ImageEditor> {
               isSelected: _activeTool == _ToolType.transform,
               onPressed: () {
                 setState(() {
-                  _activeTool = _ToolType.transform;
+                  _setActiveTool(_ToolType.transform);
                 });
               },
             ),
@@ -249,9 +271,15 @@ class _ImageEditorState extends State<ImageEditor> {
     Navigator.of(context).pop();
   }
 
+  void _setActiveTool(_ToolType tool) {
+    _activeTool = tool;
+    _isCropMode = false;
+  }
+
   List<ImageFilter> _buildFilterList() {
     return [
-      ..._transformFilters.map((f) => f.toImageFilter()),
+      if (_cropFilter != null) _cropFilter!.toImageFilter()!,
+      ..._transformFilters.map((f) => f.toImageFilter()).whereNotNull(),
       ..._colorFilters.map((f) => f.toImageFilter()),
     ];
   }
@@ -264,15 +292,19 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   bool get _isModified =>
-      _transformFilters.isNotEmpty || _colorFilters.isNotEmpty;
+      _cropFilter != null ||
+      _transformFilters.isNotEmpty ||
+      _colorFilters.isNotEmpty;
 
   bool _isDoneInit = false;
   late final Rgba8Image _src;
   Rgba8Image? _dst;
   var _activeTool = _ToolType.color;
+  var _isCropMode = false;
 
   var _colorFilters = <ColorArguments>[];
   var _transformFilters = <TransformArguments>[];
+  TransformArguments? _cropFilter;
 }
 
 enum _ToolType {

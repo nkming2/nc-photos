@@ -44,6 +44,24 @@ class ColorTintFilter extends _SingleWeightFilter {
   const ColorTintFilter(double weight) : super("tint", weight);
 }
 
+class TransformCropFilter implements ImageFilter {
+  const TransformCropFilter(this.top, this.left, this.bottom, this.right);
+
+  @override
+  toJson() => {
+        "type": "crop",
+        "top": top,
+        "left": left,
+        "bottom": bottom,
+        "right": right,
+      };
+
+  final double top;
+  final double left;
+  final double bottom;
+  final double right;
+}
+
 class TransformOrientationFilter implements ImageFilter {
   const TransformOrientationFilter(this.degree);
 

@@ -238,6 +238,10 @@ interface ImageFilter {
 				"warmth" -> Warmth((json["weight"] as Double).toFloat())
 				"tint" -> Tint((json["weight"] as Double).toFloat())
 				"orientation" -> Orientation(json["degree"] as Int)
+				"crop" -> Crop(
+					json["top"] as Double, json["left"] as Double,
+					json["bottom"] as Double, json["right"] as Double
+				)
 				else -> throw IllegalArgumentException(
 					"Unknown type: ${json["type"]}"
 				)
