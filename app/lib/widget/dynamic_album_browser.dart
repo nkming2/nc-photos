@@ -680,11 +680,9 @@ abstract class _ListItem implements SelectableItem {
   get staggeredTile => const StaggeredTile.count(1, 1);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "index: $index, "
-        "}";
-  }
+  toString() => "$runtimeType {"
+      "index: $index, "
+      "}";
 
   final int index;
 
@@ -706,25 +704,19 @@ abstract class _FileListItem extends _ListItem {
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    required int index,
-    required File file,
+    required super.index,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(
-          index: index,
-          file: file,
-          onTap: onTap,
-        );
+    super.onTap,
+  });
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListImage(
+        account: account,
+        previewUrl: previewUrl,
+        isGif: file.contentType == "image/gif",
+      );
 
   final Account account;
   final String previewUrl;
@@ -732,24 +724,18 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    required int index,
-    required File file,
+    required super.index,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    VoidCallback? onTap,
-  }) : super(
-          index: index,
-          file: file,
-          onTap: onTap,
-        );
+    super.onTap,
+  });
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListVideo(
-      account: account,
-      previewUrl: previewUrl,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListVideo(
+        account: account,
+        previewUrl: previewUrl,
+      );
 
   final Account account;
   final String previewUrl;
@@ -767,11 +753,9 @@ class _DateListItem extends _ListItem {
   get staggeredTile => const StaggeredTile.extent(99, 32);
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListDate(
-      date: date,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListDate(
+        date: date,
+      );
 
   final DateTime date;
 }

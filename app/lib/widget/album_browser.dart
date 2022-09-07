@@ -903,14 +903,11 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
   const _ListItem({
     required this.index,
     this.onTap,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  })  : _onDropBefore = onDropBefore,
-        _onDropAfter = onDropAfter,
-        _onDragStarted = onDragStarted,
-        _onDragEndedAny = onDragEndedAny;
+    this.onDropBefore,
+    this.onDropAfter,
+    this.onDragStarted,
+    this.onDragEndedAny,
+  });
 
   @override
   get isTappable => onTap != null;
@@ -922,89 +919,62 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
   get isDraggable => true;
 
   @override
-  get onDropBefore => _onDropBefore;
-
-  @override
-  get onDropAfter => _onDropAfter;
-
-  @override
-  get onDragStarted => _onDragStarted;
-
-  @override
-  get onDragEndedAny => _onDragEndedAny;
-
-  @override
   get staggeredTile => const StaggeredTile.count(1, 1);
 
   @override
   buildDragFeedbackWidget(BuildContext context) => null;
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "index: $index, "
-        "}";
-  }
+  toString() => "$runtimeType {"
+      "index: $index, "
+      "}";
 
   final int index;
 
   final VoidCallback? onTap;
-  final DragTargetAccept<DraggableItem>? _onDropBefore;
-  final DragTargetAccept<DraggableItem>? _onDropAfter;
-  final VoidCallback? _onDragStarted;
-  final VoidCallback? _onDragEndedAny;
+  @override
+  final DragTargetAccept<DraggableItem>? onDropBefore;
+  @override
+  final DragTargetAccept<DraggableItem>? onDropAfter;
+  @override
+  final VoidCallback? onDragStarted;
+  @override
+  final VoidCallback? onDragEndedAny;
 }
 
 abstract class _FileListItem extends _ListItem {
   _FileListItem({
-    required int index,
+    required super.index,
     required this.file,
-    VoidCallback? onTap,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  }) : super(
-          index: index,
-          onTap: onTap,
-          onDropBefore: onDropBefore,
-          onDropAfter: onDropAfter,
-          onDragStarted: onDragStarted,
-          onDragEndedAny: onDragEndedAny,
-        );
+    super.onTap,
+    super.onDropBefore,
+    super.onDropAfter,
+    super.onDragStarted,
+    super.onDragEndedAny,
+  });
 
   final File file;
 }
 
 class _ImageListItem extends _FileListItem {
   _ImageListItem({
-    required int index,
-    required File file,
+    required super.index,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    VoidCallback? onTap,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  }) : super(
-          index: index,
-          file: file,
-          onTap: onTap,
-          onDropBefore: onDropBefore,
-          onDropAfter: onDropAfter,
-          onDragStarted: onDragStarted,
-          onDragEndedAny: onDragEndedAny,
-        );
+    super.onTap,
+    super.onDropBefore,
+    super.onDropAfter,
+    super.onDragStarted,
+    super.onDragEndedAny,
+  });
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListImage(
-      account: account,
-      previewUrl: previewUrl,
-      isGif: file.contentType == "image/gif",
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListImage(
+        account: account,
+        previewUrl: previewUrl,
+        isGif: file.contentType == "image/gif",
+      );
 
   final Account account;
   final String previewUrl;
@@ -1012,32 +982,22 @@ class _ImageListItem extends _FileListItem {
 
 class _VideoListItem extends _FileListItem {
   _VideoListItem({
-    required int index,
-    required File file,
+    required super.index,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    VoidCallback? onTap,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  }) : super(
-          index: index,
-          file: file,
-          onTap: onTap,
-          onDropBefore: onDropBefore,
-          onDropAfter: onDropAfter,
-          onDragStarted: onDragStarted,
-          onDragEndedAny: onDragEndedAny,
-        );
+    super.onTap,
+    super.onDropBefore,
+    super.onDropAfter,
+    super.onDragStarted,
+    super.onDragEndedAny,
+  });
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListVideo(
-      account: account,
-      previewUrl: previewUrl,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListVideo(
+        account: account,
+        previewUrl: previewUrl,
+      );
 
   final Account account;
   final String previewUrl;
@@ -1045,58 +1005,41 @@ class _VideoListItem extends _FileListItem {
 
 class _LabelListItem extends _ListItem {
   _LabelListItem({
-    required int index,
+    required super.index,
     required this.text,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  }) : super(
-          index: index,
-          onDropBefore: onDropBefore,
-          onDropAfter: onDropAfter,
-          onDragStarted: onDragStarted,
-          onDragEndedAny: onDragEndedAny,
-        );
+    super.onDropBefore,
+    super.onDropAfter,
+    super.onDragStarted,
+    super.onDragEndedAny,
+  });
 
   @override
   get staggeredTile => const StaggeredTile.extent(99, 56);
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListLabel(
-      text: text,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListLabel(
+        text: text,
+      );
 
   final String text;
 }
 
 class _EditLabelListItem extends _LabelListItem {
   _EditLabelListItem({
-    required int index,
-    required String text,
+    required super.index,
+    required super.text,
     required this.onEditPressed,
-    DragTargetAccept<DraggableItem>? onDropBefore,
-    DragTargetAccept<DraggableItem>? onDropAfter,
-    VoidCallback? onDragStarted,
-    VoidCallback? onDragEndedAny,
-  }) : super(
-          index: index,
-          text: text,
-          onDropBefore: onDropBefore,
-          onDropAfter: onDropAfter,
-          onDragStarted: onDragStarted,
-          onDragEndedAny: onDragEndedAny,
-        );
+    super.onDropBefore,
+    super.onDropAfter,
+    super.onDragStarted,
+    super.onDragEndedAny,
+  });
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListLabelEdit(
-      text: text,
-      onEditPressed: onEditPressed,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListLabelEdit(
+        text: text,
+        onEditPressed: onEditPressed,
+      );
 
   @override
   buildDragFeedbackWidget(BuildContext context) {
@@ -1118,11 +1061,9 @@ class _DateListItem extends _ListItem {
   get staggeredTile => const StaggeredTile.extent(99, 32);
 
   @override
-  buildWidget(BuildContext context) {
-    return PhotoListDate(
-      date: date,
-    );
-  }
+  buildWidget(BuildContext context) => PhotoListDate(
+        date: date,
+      );
 
   final DateTime date;
 }
