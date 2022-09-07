@@ -90,8 +90,8 @@ class _ImageEditorState extends State<ImageEditor> {
     ));
     _src = await ImageLoader.loadUri(
       "file://${fileInfo!.file.path}",
-      480,
-      360,
+      _previewWidth,
+      _previewHeight,
       ImageLoaderResizeMethod.fit,
       isAllowSwapSide: true,
     );
@@ -371,3 +371,6 @@ class _ToolButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isSelected;
 }
+
+const _previewWidth = 480;
+const _previewHeight = 360;
