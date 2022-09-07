@@ -41,10 +41,18 @@ class Changelog extends StatelessWidget {
         title: const Text("Changelog"),
       );
 
-  Widget _buildContent(BuildContext context) => ListView.builder(
-        itemCount: _changelogs.length,
-        itemBuilder: _buildItem,
-      );
+  Widget _buildContent(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: _changelogs.length,
+            itemBuilder: _buildItem,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildItem(BuildContext context, int i) {
     try {
@@ -162,6 +170,26 @@ List<Widget> _buildChangelog500(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog510(BuildContext context) {
+  return [
+    _subSection("Changes"),
+    _bulletGroup(
+      const Text("New image editing tools"),
+      [
+        const Text("Crop"),
+        const Text("Change the orientation (90°, 180°, 270°) of an image"),
+      ],
+    ),
+    _bulletGroup(const Text("Search now returns more relavant results")),
+    _bulletGroup(
+      const Text("Tweak how many days should be included in Memories"),
+      [
+        const Text("Settings > Photos > Memories range"),
+      ],
+    ),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -218,6 +246,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  510: _buildChangelog510,
   500: _buildChangelog500,
   480: _buildChangelog480,
   470: _buildChangelog470,
