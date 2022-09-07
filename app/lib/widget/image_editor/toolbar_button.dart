@@ -20,7 +20,7 @@ class ToolbarButton extends StatelessWidget {
   @override
   build(BuildContext context) {
     final color = !isSelected && isActivated
-        ? AppTheme.primarySwatchDark[900]!.withOpacity(0.4)
+        ? Colors.white12
         : AppTheme.primarySwatchDark[500]!.withOpacity(0.7);
     return InkWell(
       onTap: onPressed,
