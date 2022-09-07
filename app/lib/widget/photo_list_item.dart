@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/flutter_util.dart'as flutter_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -65,6 +66,7 @@ class PhotoListImageItem extends PhotoListFileItem {
         previewUrl: previewUrl,
         isGif: file.contentType == "image/gif",
         isFavorite: shouldShowFavoriteBadge && file.isFavorite == true,
+        heroKey: flutter_util.getImageHeroTag(file),
       );
 
   final Account account;
@@ -214,10 +216,45 @@ class PhotoListImage extends StatelessWidget {
     this.padding = const EdgeInsets.all(2),
     this.isGif = false,
     this.isFavorite = false,
+    this.heroKey,
   }) : super(key: key);
 
   @override
   build(BuildContext context) {
+    Widget buildPlaceholder() => Center(
+          child: Icon(
+            Icons.image_not_supported,
+            size: 64,
+            color: Colors.white.withOpacity(.8),
+          ),
+        );
+    Widget child;
+    if (previewUrl == null) {
+      child = buildPlaceholder();
+    } else {
+      child = CachedNetworkImage(
+        cacheManager: ThumbnailCacheManager.inst,
+        imageUrl: previewUrl!,
+        httpHeaders: {
+          "Authorization": Api.getAuthorizationHeaderValue(account),
+        },
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+        errorWidget: (context, url, error) {
+          // won't work on web because the image is downloaded by
+          // the cache manager instead
+          return buildPlaceholder();
+        },
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      );
+      if (heroKey != null) {
+        child = Hero(
+          tag: heroKey!,
+          child: child,
+        );
+      }
+    }
+
     return Padding(
       padding: padding,
       child: FittedBox(
@@ -229,37 +266,7 @@ class PhotoListImage extends StatelessWidget {
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
               color: AppTheme.getListItemBackgroundColor(context),
-              child: previewUrl == null
-                  ? Center(
-                      child: Icon(
-                        Icons.image_not_supported,
-                        size: 64,
-                        color: Colors.white.withOpacity(.8),
-                      ),
-                    )
-                  : CachedNetworkImage(
-                      cacheManager: ThumbnailCacheManager.inst,
-                      imageUrl: previewUrl!,
-                      httpHeaders: {
-                        "Authorization":
-                            Api.getAuthorizationHeaderValue(account),
-                      },
-                      fadeInDuration: const Duration(),
-                      filterQuality: FilterQuality.high,
-                      errorWidget: (context, url, error) {
-                        // won't work on web because the image is downloaded by
-                        // the cache manager instead
-                        // where's the preview???
-                        return Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            size: 64,
-                            color: Colors.white.withOpacity(.8),
-                          ),
-                        );
-                      },
-                      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-                    ),
+              child: child,
             ),
             if (isGif)
               Container(
@@ -296,6 +303,8 @@ class PhotoListImage extends StatelessWidget {
   final bool isGif;
   final EdgeInsetsGeometry padding;
   final bool isFavorite;
+  // if not null, the image will be contained by a Hero widget
+  final String? heroKey;
 }
 
 class PhotoListVideo extends StatelessWidget {

@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/object_extension.dart';
@@ -974,6 +975,7 @@ class _ImageListItem extends _FileListItem {
         account: account,
         previewUrl: previewUrl,
         isGif: file.contentType == "image/gif",
+        heroKey: flutter_util.getImageHeroTag(file),
       );
 
   final Account account;

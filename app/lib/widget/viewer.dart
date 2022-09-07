@@ -14,6 +14,7 @@ import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -52,8 +53,11 @@ class ViewerArguments {
 class Viewer extends StatefulWidget {
   static const routeName = "/viewer";
 
-  static Route buildRoute(ViewerArguments args) => MaterialPageRoute(
-        builder: (context) => Viewer.fromArgs(args),
+  static Route buildRoute(ViewerArguments args) =>
+      CustomizableMaterialPageRoute(
+        transitionDuration: k.heroDurationNormal,
+        reverseTransitionDuration: k.heroDurationNormal,
+        builder: (_) => Viewer.fromArgs(args),
       );
 
   const Viewer({

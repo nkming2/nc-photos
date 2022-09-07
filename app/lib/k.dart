@@ -18,7 +18,9 @@ const animationDurationNormal = Duration(milliseconds: 250);
 const animationDurationLong = Duration(milliseconds: 500);
 
 /// Duration for tab transition animation
-const animationDurationTabTransition = Duration(milliseconds: 400);
+const animationDurationTabTransition = Duration(milliseconds: 350);
+
+const heroDurationNormal = Duration(milliseconds: 450);
 
 /// Size of the photo/video thumbnails
 ///
