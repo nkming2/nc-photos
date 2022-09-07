@@ -1,33 +1,34 @@
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
 
 class SearchCriteria {
-  const SearchCriteria(this.keywords, this.filters);
+  const SearchCriteria(this.input, this.filters);
 
   SearchCriteria copyWith({
-    Set<CiString>? keywords,
+    String? input,
     List<SearchFilter>? filters,
   }) =>
       SearchCriteria(
-        keywords ?? Set.of(this.keywords),
+        input ?? this.input,
         filters ?? List.of(this.filters),
       );
 
   @override
   toString() => "$runtimeType {"
-      "keywords: ${keywords.toReadableString()}, "
+      "input: $input, "
       "filters: ${filters.toReadableString()}, "
       "}";
 
-  final Set<CiString> keywords;
+  final String input;
   final List<SearchFilter> filters;
 }
 
 abstract class SearchFilter {
   void apply(sql.FilesQueryBuilder query);
+  bool isSatisfy(File file);
 }
 
 enum SearchFileType {
@@ -56,6 +57,17 @@ class SearchFileTypeFilter implements SearchFilter {
   }
 
   @override
+  isSatisfy(File file) {
+    switch (type) {
+      case SearchFileType.image:
+        return file_util.isSupportedImageFormat(file);
+
+      case SearchFileType.video:
+        return file_util.isSupportedVideoFormat(file);
+    }
+  }
+
+  @override
   toString() => "$runtimeType {"
       "type: ${type.name}, "
       "}";
@@ -70,6 +82,9 @@ class SearchFavoriteFilter implements SearchFilter {
   apply(sql.FilesQueryBuilder query) {
     query.byFavorite(value);
   }
+
+  @override
+  isSatisfy(File file) => (file.isFavorite ?? false) == value;
 
   @override
   toString() => "$runtimeType {"

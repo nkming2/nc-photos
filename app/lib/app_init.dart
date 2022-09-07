@@ -212,7 +212,7 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.tagRepoRemote = const TagRepo(TagRemoteDataSource());
   c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
-  c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c.sqliteDb));
+  c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c));
 
   if (platform_k.isAndroid) {
     // local file currently only supported on Android

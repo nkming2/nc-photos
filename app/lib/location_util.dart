@@ -1,7 +1,25 @@
-/// Convert a ISO 3166-1 alpha-2 code into country name
-String? alpha2CodeToName(String cc) => _ccMap[cc];
+import 'package:nc_photos/ci_string.dart';
 
-const _ccMap = {
+/// Convert a ISO 3166-1 alpha-2 code into country name
+String? alpha2CodeToName(String cc) => _ccMap.byCc(cc);
+
+/// Convert a country name into ISO 3166-1 alpha-2 code
+String? nameToAlpha2Code(CiString name) => _ccMap.byCiName(name);
+
+class _CcMap {
+  _CcMap(this._ccMap)
+      : _nameMap = _ccMap.map(
+            (cc, name) => MapEntry(name.toCi().toCaseInsensitiveString(), cc));
+
+  String? byCc(String cc) => _ccMap[cc];
+  String? byCiName(CiString name) =>
+      _nameMap[name.toCaseInsensitiveString()];
+
+  final Map<String, String> _ccMap;
+  final Map<String, String> _nameMap;
+}
+
+final _ccMap = _CcMap({
   "AD": "Andorra",
   "AE": "United Arab Emirates",
   "AF": "Afghanistan",
@@ -251,4 +269,4 @@ const _ccMap = {
   "ZA": "South Africa",
   "ZM": "Zambia",
   "ZW": "Zimbabwe",
-};
+});

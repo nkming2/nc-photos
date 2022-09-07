@@ -8,13 +8,11 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/search.dart';
-import 'package:nc_photos/entity/search_util.dart' as search_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -536,14 +534,7 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   void _reqQuery(String input, List<SearchFilter> filters) {
-    final keywords = search_util
-        .cleanUpSymbols(input)
-        .split(" ")
-        .where((s) => s.isNotEmpty)
-        .map((s) => s.toCi())
-        .toSet();
-    _bloc.add(
-        SearchBlocQuery(widget.account, SearchCriteria(keywords, filters)));
+    _bloc.add(SearchBlocQuery(widget.account, SearchCriteria(input, filters)));
   }
 
   void _reqResetLanding() {

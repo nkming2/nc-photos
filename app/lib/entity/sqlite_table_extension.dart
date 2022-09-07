@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart' as app;
 import 'package:nc_photos/entity/sqlite_table.dart';
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
@@ -8,6 +9,7 @@ import 'package:nc_photos/entity/sqlite_table_isolate.dart';
 import 'package:nc_photos/future_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/object_extension.dart';
@@ -430,6 +432,30 @@ extension SqliteDbExtension on SqliteDb {
     }
   }
 
+  Future<Tag?> tagByDisplayName({
+    Account? sqlAccount,
+    app.Account? appAccount,
+    required String displayName,
+  }) {
+    assert((sqlAccount != null) != (appAccount != null));
+    if (sqlAccount != null) {
+      final query = select(tags)
+        ..where((t) => t.server.equals(sqlAccount.server))
+        ..where((t) => t.displayName.like(displayName))
+        ..limit(1);
+      return query.getSingleOrNull();
+    } else {
+      final query = select(tags).join([
+        innerJoin(servers, servers.rowId.equalsExp(tags.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(appAccount!.url))
+        ..where(tags.displayName.like(displayName))
+        ..limit(1);
+      return query.map((r) => r.readTable(tags)).getSingleOrNull();
+    }
+  }
+
   Future<List<Person>> allPersons({
     Account? sqlAccount,
     app.Account? appAccount,
@@ -449,6 +475,35 @@ extension SqliteDbExtension on SqliteDb {
         ..where(servers.address.equals(appAccount!.url))
         ..where(accounts.userId
             .equals(appAccount.userId.toCaseInsensitiveString()));
+      return query.map((r) => r.readTable(persons)).get();
+    }
+  }
+
+  Future<List<Person>> personsByName({
+    Account? sqlAccount,
+    app.Account? appAccount,
+    required String name,
+  }) {
+    assert((sqlAccount != null) != (appAccount != null));
+    if (sqlAccount != null) {
+      final query = select(persons)
+        ..where((t) => t.account.equals(sqlAccount.rowId))
+        ..where((t) =>
+            t.name.like(name) |
+            t.name.like("% $name") |
+            t.name.like("$name %"));
+      return query.get();
+    } else {
+      final query = select(persons).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(persons.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(appAccount!.url))
+        ..where(persons.name.like(name) |
+            persons.name.like("% $name") |
+            persons.name.like("$name %"));
       return query.map((r) => r.readTable(persons)).get();
     }
   }
@@ -555,6 +610,10 @@ class FilesQueryBuilder {
     _byServerRowId = serverRowId;
   }
 
+  void byLocation(String location) {
+    _byLocation = location;
+  }
+
   JoinedSelectStatement build() {
     if (_sqlAccount == null && _appAccount == null && !_isAccountless) {
       throw StateError("Invalid query: missing account");
@@ -638,6 +697,20 @@ class FilesQueryBuilder {
     if (_byServerRowId != null) {
       query.where(db.files.server.equals(_byServerRowId));
     }
+    if (_byLocation != null) {
+      var clause = db.imageLocations.name.like(_byLocation!) |
+          db.imageLocations.admin1.like(_byLocation!) |
+          db.imageLocations.admin2.like(_byLocation!);
+      final countryCode = location_util.nameToAlpha2Code(_byLocation!.toCi());
+      if (countryCode != null) {
+        clause = clause | db.imageLocations.countryCode.equals(countryCode);
+      } else if (_byLocation!.length == 2 &&
+          location_util.alpha2CodeToName(_byLocation!.toUpperCase()) != null) {
+        clause = clause |
+            db.imageLocations.countryCode.equals(_byLocation!.toUpperCase());
+      }
+      query.where(clause);
+    }
     return query;
   }
 
@@ -659,6 +732,7 @@ class FilesQueryBuilder {
   bool? _byFavorite;
   int? _byDirRowId;
   int? _byServerRowId;
+  String? _byLocation;
 }
 
 app.File _covertSqliteDbFile(Map map) {

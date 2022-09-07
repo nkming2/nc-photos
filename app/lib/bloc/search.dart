@@ -62,7 +62,7 @@ abstract class SearchBlocState {
 }
 
 class SearchBlocInit extends SearchBlocState {
-  SearchBlocInit() : super(null, const SearchCriteria({}, []), const []);
+  SearchBlocInit() : super(null, const SearchCriteria("", []), const []);
 }
 
 class SearchBlocLoading extends SearchBlocState {
