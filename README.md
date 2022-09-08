@@ -17,14 +17,20 @@ Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/web-a
 Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/development/build)
 
 ## Screenshots
-<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="180" />
+<img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="180" /> <img src="https://gitlab.com/nkming2/nc-photos/-/raw/master/fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="180" />
+
+Screenshots contain photos by:
+- Dillon Kydd on Unsplash
+- rawkkim on Unsplash
+- Video by Yaroslava Borz from Pexels
+- and others
 
 ## Features
 - EXIF support (JPEG and HEIC only)
 - Organize photos with actual albums that are NOT folders
 - Reverse geocoding
 - Enhance photos with machine learning models
-- Adjust image color
+- Edit photos with built-in editor
 - Sign-in to multiple servers
 - Create shared albums with users on the same server (experimental)
 
