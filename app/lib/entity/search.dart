@@ -5,7 +5,7 @@ import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
 
 class SearchCriteria {
-  const SearchCriteria(this.input, this.filters);
+  SearchCriteria(String input, this.filters) : input = input.trim();
 
   SearchCriteria copyWith({
     String? input,
