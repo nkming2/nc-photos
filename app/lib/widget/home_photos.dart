@@ -381,12 +381,7 @@ class _HomePhotosState extends State<HomePhotos>
       itemStreamListItems = [];
     } else if (state is ScanAccountDirBlocSuccess ||
         state is ScanAccountDirBlocLoading) {
-      _transformItems(state.files);
-      if (state is ScanAccountDirBlocSuccess) {
-        _isScrollbarVisible = true;
-        _startupSync();
-        _tryStartMetadataTask();
-      }
+      _transformItems(state.files, isPostSuccess: true);
     } else if (state is ScanAccountDirBlocFailure) {
       _isScrollbarVisible = true;
       _transformItems(state.files);
@@ -551,7 +546,11 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   /// Transform a File list to grid items
-  void _transformItems(List<File> files, {bool isSorted = false}) {
+  void _transformItems(
+    List<File> files, {
+    bool isSorted = false,
+    bool isPostSuccess = false,
+  }) {
     _log.info("[_transformItems] Queue ${files.length} items");
     final c = KiwiContainer().resolve<DiContainer>();
     final PhotoListItemSorter? sorter;
@@ -583,6 +582,12 @@ class _HomePhotosState extends State<HomePhotos>
             _backingFiles = result.backingFiles;
             itemStreamListItems = result.listItems;
             _smartAlbums = result.smartAlbums;
+
+            if (isPostSuccess) {
+              _isScrollbarVisible = true;
+              _startupSync();
+              _tryStartMetadataTask();
+            }
           });
         }
       },
