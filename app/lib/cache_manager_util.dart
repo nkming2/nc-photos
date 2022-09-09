@@ -51,6 +51,7 @@ class ThumbnailCacheManager {
 /// very large in size. Since large images are only viewed one by one (unlike
 /// thumbnails), they are less critical to the overall app responsiveness
 class LargeImageCacheManager {
+  // used in file_paths.xml, must not change
   static const key = "largeImageCache";
   static CacheManager inst = CacheManager(
     Config(

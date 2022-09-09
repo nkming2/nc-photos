@@ -1,6 +1,7 @@
 package com.nkming.nc_photos
 
 import android.app.Activity
+import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import io.flutter.plugin.common.MethodCall
@@ -54,14 +55,26 @@ class ShareChannelHandler(activity: Activity) :
 		val shareIntent = if (uris.size == 1) Intent().apply {
 			action = Intent.ACTION_SEND
 			putExtra(Intent.EXTRA_STREAM, uris[0])
+			// setting clipdata is needed for FLAG_GRANT_READ_URI_PERMISSION to
+			// work, see: https://developer.android.com/reference/android/content/Intent#ACTION_SEND
+			clipData =
+				ClipData.newUri(_context.contentResolver, "Share", uris[0])
 			type = mimeTypes[0] ?: "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		} else Intent().apply {
 			action = Intent.ACTION_SEND_MULTIPLE
 			putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
-			type =
-				if (mimeTypes.all { it?.startsWith("image/") == true }) "image/*" else "*/*"
+			clipData =
+				ClipData.newUri(_context.contentResolver, "Share", uris[0])
+					.apply {
+						for (uri in uris.subList(1, uris.size)) {
+							addItem(ClipData.Item(uri))
+						}
+					}
+			type = if (mimeTypes.all {
+					it?.startsWith("image/") == true
+				}) "image/*" else "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		}

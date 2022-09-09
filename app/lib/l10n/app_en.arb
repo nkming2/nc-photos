@@ -906,11 +906,16 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "File",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
+	"shareMethodPreviewTitle": "Preview",
+	"@shareMethodPreviewTitle": {
+		"description": "Share the preview of a file"
 	},
-	"shareMethodFileDescription": "Download the file and share it to other apps",
+	"shareMethodPreviewDescription": "Share a reduced quality preview to other apps (only support images)",
+	"shareMethodOriginalFileTitle": "Original file",
+	"@shareMethodOriginalFileTitle": {
+		"description": "Share the original file"
+	},
+	"shareMethodOriginalFileDescription": "Download the original file and share it to other apps",
 	"shareMethodPublicLinkTitle": "Public link",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"

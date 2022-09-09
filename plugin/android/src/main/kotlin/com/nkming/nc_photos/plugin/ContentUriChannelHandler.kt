@@ -2,8 +2,10 @@ package com.nkming.nc_photos.plugin
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.content.FileProvider
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 import java.io.FileNotFoundException
 
 class ContentUriChannelHandler(context: Context) :
@@ -19,6 +21,14 @@ class ContentUriChannelHandler(context: Context) :
 			"readUri" -> {
 				try {
 					readUri(call.argument("uri")!!, result)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
+			"getUriForFile" -> {
+				try {
+					getUriForFile(call.argument("filePath")!!, result)
 				} catch (e: Throwable) {
 					result.error("systemException", e.toString(), null)
 				}
@@ -43,6 +53,19 @@ class ContentUriChannelHandler(context: Context) :
 			result.success(bytes)
 		} catch (e: FileNotFoundException) {
 			result.error("fileNotFoundException", e.toString(), null)
+		}
+	}
+
+	private fun getUriForFile(filePath: String, result: MethodChannel.Result) {
+		try {
+			val file = File(filePath)
+			val contentUri = FileProvider.getUriForFile(
+				context, "${context.packageName}.fileprovider", file
+			)
+			result.success(contentUri.toString())
+		} catch (e: IllegalArgumentException) {
+			logE(TAG, "[getUriForFile] Unsupported file path: $filePath")
+			throw e
 		}
 	}
 

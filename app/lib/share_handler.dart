@@ -10,6 +10,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
@@ -24,6 +25,7 @@ import 'package:nc_photos/use_case/copy.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/download_file.dart';
+import 'package:nc_photos/use_case/download_preview.dart';
 import 'package:nc_photos/use_case/share_local.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
@@ -67,7 +69,7 @@ class ShareHandler {
 
   Future<void> shareFiles(Account account, List<File> files) async {
     try {
-      final method = await _askShareMethod();
+      final method = await _askShareMethod(files);
       if (method == null) {
         // user canceled
         return;
@@ -75,6 +77,8 @@ class ShareHandler {
         return await _shareAsLink(account, files, false);
       } else if (method == ShareMethod.passwordLink) {
         return await _shareAsLink(account, files, true);
+      } else if (method == ShareMethod.preview) {
+        return await _shareAsPreview(account, files);
       } else {
         return await _shareAsFile(account, files);
       }
@@ -91,9 +95,59 @@ class ShareHandler {
     }
   }
 
-  Future<ShareMethod?> _askShareMethod() {
+  Future<ShareMethod?> _askShareMethod(List<File> files) {
     return showDialog<ShareMethod>(
-        context: context, builder: (context) => const ShareMethodDialog());
+      context: context,
+      builder: (context) => ShareMethodDialog(
+        isSupportPerview: files.any((f) => file_util.isSupportedImageFormat(f)),
+      ),
+    );
+  }
+
+  Future<void> _shareAsPreview(Account account, List<File> files) async {
+    assert(platform_k.isAndroid);
+    final controller = StreamController<String>();
+    unawaited(
+      showDialog(
+        context: context,
+        builder: (context) => StreamBuilder(
+          stream: controller.stream,
+          builder: (context, snapshot) => ProcessingDialog(
+            text: L10n.global().shareDownloadingDialogContent +
+                (snapshot.hasData ? " ${snapshot.data}" : ""),
+          ),
+        ),
+      ),
+    );
+    final results = <Tuple2<File, dynamic>>[];
+    for (final pair in files.withIndex()) {
+      final i = pair.item1, f = pair.item2;
+      controller.add("($i/${files.length})");
+      try {
+        final dynamic uri;
+        if (file_util.isSupportedImageFormat(f) &&
+            f.contentType != "image/gif") {
+          uri = await DownloadPreview()(account, f);
+        } else {
+          uri = await DownloadFile()(account, f);
+        }
+        results.add(Tuple2(f, uri));
+      } catch (e, stacktrace) {
+        _log.shout(
+            "[_shareAsPreview] Failed while DownloadPreview", e, stacktrace);
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(exception_util.toUserString(e)),
+          duration: k.snackBarDurationNormal,
+        ));
+      }
+    }
+    // dismiss the dialog
+    Navigator.of(context).pop();
+
+    final share = AndroidFileShare(
+        results.map((e) => e.item2 as String).toList(),
+        results.map((e) => e.item1.contentType).toList());
+    return share.share();
   }
 
   Future<void> _shareAsFile(Account account, List<File> files) async {

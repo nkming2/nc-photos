@@ -20,6 +20,12 @@ class ContentUri {
     }
   }
 
+  static Future<String> getUriForFile(String filePath) async {
+    return await _methodChannel.invokeMethod("getUriForFile", <String, dynamic>{
+      "filePath": filePath,
+    });
+  }
+
   static const _methodChannel = MethodChannel("${k.libId}/content_uri_method");
 
   static const _exceptionFileNotFound = "fileNotFoundException";
