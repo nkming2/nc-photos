@@ -107,13 +107,19 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler,
 			logE(TAG, "Image result uri == null")
 			return null
 		}
-		val filename = UriUtil.resolveFilename(this, resultUri)?.let {
-			URLEncoder.encode(it, Charsets.UTF_8.toString())
+		return if (resultUri.scheme?.startsWith("http") == true) {
+			// remote uri
+			val encodedUrl = URLEncoder.encode(resultUri.toString(), "utf-8")
+			"/result-viewer?url=$encodedUrl"
+		} else {
+			val filename = UriUtil.resolveFilename(this, resultUri)?.let {
+				URLEncoder.encode(it, Charsets.UTF_8.toString())
+			}
+			StringBuilder().apply {
+				append("/enhanced-photo-browser?")
+				if (filename != null) append("filename=$filename")
+			}.toString()
 		}
-		return StringBuilder().apply {
-			append("/enhanced-photo-browser?")
-			if (filename != null) append("filename=$filename")
-		}.toString()
 	}
 
 	private var _initialRoute: String? = null

@@ -625,8 +625,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 				val filter = cmd.filters.first() as Orientation
 				try {
 					return loselessRotate(
-						filter.degree, file, cmd.filename,
-						"Edited Photos"
+						filter.degree, file, cmd.filename, cmd
 					)
 				} catch (e: Throwable) {
 					logE(
@@ -644,14 +643,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 				cmd.apply(context, fileUri)
 			})
 			handleCancel()
-			saveBitmap(
-				output, cmd.filename, file,
-				if (cmd.method in ImageProcessorService.EDIT_METHODS) {
-					"Edited Photos"
-				} else {
-					"Enhanced Photos"
-				}
-			)
+			saveBitmap(output, cmd.filename, file, cmd)
 		} finally {
 			file.delete()
 		}
@@ -680,7 +672,8 @@ private open class ImageProcessorCommandTask(context: Context) :
 	}
 
 	private fun loselessRotate(
-		degree: Int, srcFile: File, outFilename: String, subDir: String
+		degree: Int, srcFile: File, outFilename: String,
+		cmd: ImageProcessorImageCommand
 	): Uri {
 		logI(TAG, "[loselessRotate] $outFilename")
 		val outFile = File.createTempFile("out", null, getTempDir(context))
@@ -693,12 +686,8 @@ private open class ImageProcessorCommandTask(context: Context) :
 			oExif.saveAttributes()
 
 			handleCancel()
-			// move file to user accessible storage
-			val uri = MediaStoreUtil.copyFileToDownload(
-				context, Uri.fromFile(outFile), outFilename,
-				"Photos (for Nextcloud)/$subDir"
-			)
-			return uri
+			val persister = EnhancedFileServerPersisterWithFallback(context)
+			return persister.persist(cmd, outFile)
 		} finally {
 			outFile.delete()
 		}
@@ -738,31 +727,31 @@ private open class ImageProcessorCommandTask(context: Context) :
 	}
 
 	private fun saveBitmap(
-		bitmap: Bitmap, filename: String, srcFile: File, subDir: String
+		bitmap: Bitmap, filename: String, srcFile: File,
+		cmd: ImageProcessorImageCommand
 	): Uri {
 		logI(TAG, "[saveBitmap] $filename")
 		val outFile = File.createTempFile("out", null, getTempDir(context))
-		outFile.outputStream().use {
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it)
-		}
-
-		// then copy the EXIF tags
 		try {
-			val iExif = ExifInterface(srcFile)
-			val oExif = ExifInterface(outFile)
-			copyExif(iExif, oExif)
-			oExif.saveAttributes()
-		} catch (e: Throwable) {
-			logE(TAG, "[copyExif] Failed while saving EXIF", e)
-		}
+			outFile.outputStream().use {
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it)
+			}
 
-		// move file to user accessible storage
-		val uri = MediaStoreUtil.copyFileToDownload(
-			context, Uri.fromFile(outFile), filename,
-			"Photos (for Nextcloud)/$subDir"
-		)
-		outFile.delete()
-		return uri
+			// then copy the EXIF tags
+			try {
+				val iExif = ExifInterface(srcFile)
+				val oExif = ExifInterface(outFile)
+				copyExif(iExif, oExif)
+				oExif.saveAttributes()
+			} catch (e: Throwable) {
+				logE(TAG, "[copyExif] Failed while saving EXIF", e)
+			}
+
+			val persister = EnhancedFileServerPersisterWithFallback(context)
+			return persister.persist(cmd, outFile)
+		} finally {
+			outFile.delete()
+		}
 	}
 
 	private fun copyExif(from: ExifInterface, to: ExifInterface) {
@@ -800,4 +789,98 @@ private fun getTempDir(context: Context): File {
 		f.mkdirs()
 	}
 	return f
+}
+
+private interface EnhancedFilePersister {
+	fun persist(cmd: ImageProcessorImageCommand, file: File): Uri
+}
+
+private class EnhancedFileDevicePersister(context: Context) :
+	EnhancedFilePersister {
+	override fun persist(cmd: ImageProcessorImageCommand, file: File): Uri {
+		val uri = MediaStoreUtil.copyFileToDownload(
+			context, Uri.fromFile(file), cmd.filename,
+			"Photos (for Nextcloud)/${getSubDir(cmd)}"
+		)
+		return uri
+	}
+
+	private fun getSubDir(cmd: ImageProcessorImageCommand): String {
+		return if (cmd.method in ImageProcessorService.EDIT_METHODS) {
+			"Edited Photos"
+		} else {
+			"Enhanced Photos"
+		}
+	}
+
+	val context = context
+}
+
+private class EnhancedFileServerPersister :
+	EnhancedFilePersister {
+	companion object {
+		const val TAG = "EnhancedFileServerPersister"
+	}
+
+	override fun persist(cmd: ImageProcessorImageCommand, file: File): Uri {
+		val ext = cmd.fileUrl.substringAfterLast('.', "")
+		val url = if (ext.contains('/')) {
+			// no ext
+			"${cmd.fileUrl}_${getSuffix(cmd)}.jpg"
+		} else {
+			"${cmd.fileUrl.substringBeforeLast('.', "")}_${getSuffix(cmd)}.jpg"
+		}
+		logI(TAG, "[persist] Persist file to server: $url")
+		(URL(url).openConnection() as HttpURLConnection).apply {
+			requestMethod = "PUT"
+			instanceFollowRedirects = true
+			connectTimeout = 8000
+			for (entry in (cmd.headers ?: mapOf()).entries) {
+				setRequestProperty(entry.key, entry.value)
+			}
+		}.use {
+			file.inputStream()
+				.use { iStream -> iStream.copyTo(it.outputStream) }
+			val responseCode = it.responseCode
+			if (responseCode / 100 != 2) {
+				logE(TAG, "[persist] Failed uploading file: HTTP$responseCode")
+				throw HttpException(
+					responseCode, "Failed uploading file (HTTP$responseCode)"
+				)
+			}
+		}
+		return Uri.parse(url)
+	}
+
+	private fun getSuffix(cmd: ImageProcessorImageCommand): String {
+		val epoch = System.currentTimeMillis() / 1000
+		return if (cmd.method in ImageProcessorService.EDIT_METHODS) {
+			"edited_$epoch"
+		} else {
+			"enhanced_$epoch"
+		}
+	}
+}
+
+private class EnhancedFileServerPersisterWithFallback(context: Context) :
+	EnhancedFilePersister {
+	companion object {
+		const val TAG = "EnhancedFileServerPersisterWithFallback"
+	}
+
+	override fun persist(cmd: ImageProcessorImageCommand, file: File): Uri {
+		try {
+			return server.persist(cmd, file)
+		} catch (e: Throwable) {
+			logW(
+				TAG,
+				"[persist] Failed while persisting to server, switch to fallback",
+				e
+			)
+		}
+		return fallback.persist(cmd, file)
+	}
+
+	private val server = EnhancedFileServerPersister()
+	private val fallback = EnhancedFileDevicePersister(context)
 }
