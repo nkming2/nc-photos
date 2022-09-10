@@ -8,4 +8,5 @@ const enhanceZeroDceUrl = "https://bit.ly/3wKJcm9";
 const enhanceDeepLabPortraitBlurUrl = "https://bit.ly/3wIuXy6";
 const enhanceEsrganUrl = "https://bit.ly/3wO0NJP";
 const enhanceStyleTransferUrl = "https://bit.ly/3agpTcF";
+const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
 const editPhotosUrl = "https://bit.ly/3v82oKA";

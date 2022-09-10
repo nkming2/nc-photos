@@ -151,6 +151,25 @@ class ImageProcessor {
         "isSaveToServer": isSaveToServer,
       });
 
+  static Future<void> deepLab3ColorPop(
+    String fileUrl,
+    String filename,
+    int maxWidth,
+    int maxHeight,
+    double weight, {
+    Map<String, String>? headers,
+    required bool isSaveToServer,
+  }) =>
+      _methodChannel.invokeMethod("deepLab3ColorPop", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+        "maxWidth": maxWidth,
+        "maxHeight": maxHeight,
+        "weight": weight,
+        "isSaveToServer": isSaveToServer,
+      });
+
   static Future<void> filter(
     String fileUrl,
     String filename,

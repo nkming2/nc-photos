@@ -92,6 +92,24 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"deepLab3ColorPop" -> {
+				try {
+					deepLab3ColorPop(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
+						call.argument("weight")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			"filter" -> {
 				try {
 					filter(
@@ -177,6 +195,17 @@ class ImageProcessorChannelHandler(context: Context) :
 			it.putExtra(
 				ImageProcessorService.EXTRA_STYLE_URI, Uri.parse(styleUri)
 			)
+			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
+		}
+	)
+
+	private fun deepLab3ColorPop(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, weight: Float,
+		result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
+		ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
 		}
 	)

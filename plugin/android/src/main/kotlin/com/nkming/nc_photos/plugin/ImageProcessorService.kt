@@ -31,6 +31,7 @@ class ImageProcessorService : Service() {
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ESRGAN = "Esrgan"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
+		const val METHOD_DEEP_LAP_COLOR_POP = "DeepLab3ColorPop"
 		const val METHOD_FILTER = "Filter"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
@@ -49,6 +50,7 @@ class ImageProcessorService : Service() {
 			METHOD_DEEP_LAP_PORTRAIT,
 			METHOD_ESRGAN,
 			METHOD_ARBITRARY_STYLE_TRANSFER,
+			METHOD_DEEP_LAP_COLOR_POP,
 		)
 		val EDIT_METHODS = listOf(
 			METHOD_FILTER,
@@ -128,6 +130,9 @@ class ImageProcessorService : Service() {
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
 				startId, intent.extras!!
 			)
+			METHOD_DEEP_LAP_COLOR_POP -> onDeepLapColorPop(
+				startId, intent.extras!!
+			)
 			METHOD_FILTER -> onFilter(startId, intent.extras!!)
 			else -> {
 				logE(TAG, "Unknown method: $method")
@@ -168,6 +173,14 @@ class ImageProcessorService : Service() {
 			args = mapOf(
 				"styleUri" to extras.getParcelable<Uri>(EXTRA_STYLE_URI),
 				"weight" to extras.getFloat(EXTRA_WEIGHT),
+			)
+		)
+	}
+
+	private fun onDeepLapColorPop(startId: Int, extras: Bundle) {
+		return onMethod(
+			startId, extras, METHOD_DEEP_LAP_COLOR_POP, args = mapOf(
+				"weight" to extras.getFloat(EXTRA_WEIGHT)
 			)
 		)
 	}
@@ -463,6 +476,10 @@ private class ImageProcessorEnhanceCommand(
 				context, maxWidth, maxHeight,
 				args["styleUri"] as Uri,
 				args["weight"] as Float
+			).infer(fileUri)
+
+			ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP -> DeepLab3ColorPop(
+				context, maxWidth, maxHeight, args["weight"] as Float
 			).infer(fileUri)
 
 			else -> throw IllegalArgumentException("Unknown method: $method")

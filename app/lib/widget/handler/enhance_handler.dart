@@ -115,6 +115,20 @@ class EnhanceHandler {
           isSaveToServer: isSaveToServer,
         );
         break;
+
+      case _Algorithm.deepLab3ColorPop:
+        await ImageProcessor.deepLab3ColorPop(
+          "${account.url}/${file.path}",
+          file.filename,
+          Pref().getEnhanceMaxWidthOr(),
+          Pref().getEnhanceMaxHeightOr(),
+          args["weight"],
+          headers: {
+            "Authorization": Api.getAuthorizationHeaderValue(account),
+          },
+          isSaveToServer: isSaveToServer,
+        );
+        break;
     }
   }
 
@@ -182,6 +196,13 @@ class EnhanceHandler {
   List<_Option> _getOptions() => [
         if (platform_k.isAndroid)
           _Option(
+            title: L10n.global().enhanceColorPopTitle,
+            subtitle: "DeepLap v3",
+            link: enhanceDeepLabColorPopUrl,
+            algorithm: _Algorithm.deepLab3ColorPop,
+          ),
+        if (platform_k.isAndroid)
+          _Option(
             title: L10n.global().enhanceLowLightTitle,
             subtitle: "Zero-DCE",
             link: enhanceZeroDceUrl,
@@ -223,6 +244,9 @@ class EnhanceHandler {
 
       case _Algorithm.arbitraryStyleTransfer:
         return _getArbitraryStyleTransferArgs(context);
+
+      case _Algorithm.deepLab3ColorPop:
+        return _getDeepLab3ColorPopArgs(context);
     }
   }
 
@@ -347,6 +371,58 @@ class EnhanceHandler {
     }
   }
 
+  Future<Map<String, dynamic>?> _getDeepLab3ColorPopArgs(
+      BuildContext context) async {
+    var current = 1.0;
+    final weight = await showDialog<double>(
+      context: context,
+      builder: (context) => AppTheme(
+        child: AlertDialog(
+          title: Text(L10n.global().enhanceGenericParamWeightLabel),
+          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Icon(
+                    Icons.water_drop,
+                    size: 20,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                  Expanded(
+                    child: StatefulSlider(
+                      initialValue: current,
+                      onChangeEnd: (value) {
+                        current = value;
+                      },
+                    ),
+                  ),
+                  Icon(
+                    Icons.water_drop_outlined,
+                    color: AppTheme.getSecondaryTextColor(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(current);
+              },
+              child: Text(L10n.global().enhanceButtonLabel),
+            ),
+          ],
+        ),
+      ),
+    );
+    _log.info("[_getDeepLab3ColorPopArgs] weight: $weight");
+    return weight?.run((it) => {"weight": it});
+  }
+
   bool isAtLeast4GbRam() {
     // We can't compare with 4096 directly as some RAM are preserved
     return AndroidInfo().totalMemMb > 3584;
@@ -368,6 +444,7 @@ enum _Algorithm {
   deepLab3Portrait,
   esrgan,
   arbitraryStyleTransfer,
+  deepLab3ColorPop,
 }
 
 class _Option {

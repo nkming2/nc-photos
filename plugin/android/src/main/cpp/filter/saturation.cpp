@@ -11,22 +11,10 @@
 #include "../math_util.h"
 #include "../util.h"
 #include "./hslhsv.h"
+#include "./saturation.h"
 
 using namespace plugin;
 using namespace std;
-
-namespace {
-
-class Saturation {
-public:
-  std::vector<uint8_t> apply(const uint8_t *rgba8, const size_t width,
-                             const size_t height, const float weight);
-
-private:
-  static constexpr const char *TAG = "Saturation";
-};
-
-} // namespace
 
 extern "C" JNIEXPORT jbyteArray JNICALL
 Java_com_nkming_nc_1photos_plugin_image_1processor_Saturation_applyNative(
@@ -39,7 +27,7 @@ Java_com_nkming_nc_1photos_plugin_image_1processor_Saturation_applyNative(
         [&](jbyte *obj) {
           env->ReleaseByteArrayElements(rgba8, obj, JNI_ABORT);
         });
-    const auto result = Saturation().apply(
+    const auto result = filter::Saturation().apply(
         reinterpret_cast<uint8_t *>(cRgba8.get()), width, height, value);
     auto resultAry = env->NewByteArray(result.size());
     env->SetByteArrayRegion(resultAry, 0, result.size(),
@@ -51,7 +39,8 @@ Java_com_nkming_nc_1photos_plugin_image_1processor_Saturation_applyNative(
   }
 }
 
-namespace {
+namespace plugin {
+namespace filter {
 
 vector<uint8_t> Saturation::apply(const uint8_t *rgba8, const size_t width,
                                   const size_t height, const float weight) {
@@ -75,3 +64,4 @@ vector<uint8_t> Saturation::apply(const uint8_t *rgba8, const size_t width,
 }
 
 } // namespace
+}
