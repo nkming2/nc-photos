@@ -10,6 +10,20 @@ class NativeEventChannelHandler : MethodChannel.MethodCallHandler,
 		const val EVENT_CHANNEL = "${K.LIB_ID}/native_event"
 		const val METHOD_CHANNEL = "${K.LIB_ID}/native_event_method"
 
+		/**
+		 * Fire native events on the native side
+		 */
+		fun fire(eventObj: NativeEvent) {
+			synchronized(eventSinks) {
+				for (s in eventSinks.values) {
+					s.success(buildMap {
+						put("event", eventObj.getId())
+						eventObj.getData()?.also { put("data", it) }
+					})
+				}
+			}
+		}
+
 		private val eventSinks = mutableMapOf<Int, EventChannel.EventSink>()
 		private var nextId = 0
 	}
@@ -29,21 +43,27 @@ class NativeEventChannelHandler : MethodChannel.MethodCallHandler,
 	}
 
 	override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
-		eventSinks[id] = events
+		synchronized(eventSinks) {
+			eventSinks[id] = events
+		}
 	}
 
 	override fun onCancel(arguments: Any?) {
-		eventSinks.remove(id)
+		synchronized(eventSinks) {
+			eventSinks.remove(id)
+		}
 	}
 
 	private fun fire(
 		event: String, data: String?, result: MethodChannel.Result
 	) {
-		for (s in eventSinks.values) {
-			s.success(buildMap {
-				put("event", event)
-				if (data != null) put("data", data)
-			})
+		synchronized(eventSinks) {
+			for (s in eventSinks.values) {
+				s.success(buildMap {
+					put("event", event)
+					if (data != null) put("data", data)
+				})
+			}
 		}
 		result.success(null)
 	}

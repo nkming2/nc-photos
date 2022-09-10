@@ -177,7 +177,8 @@ class _SettingsState extends State<Settings> {
                     Icons.auto_fix_high_outlined,
                     color: AppTheme.getUnfocusedIconColor(context),
                   ),
-                  label: L10n.global().settingsPhotoEnhancementTitle,
+                  label: L10n.global().settingsImageEditTitle,
+                  description: L10n.global().settingsImageEditDescription,
                   builder: () => const EnhancementSettings(),
                 ),
               _buildSubSettings(
@@ -1293,6 +1294,7 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
     super.initState();
     _maxWidth = Pref().getEnhanceMaxWidthOr();
     _maxHeight = Pref().getEnhanceMaxHeightOr();
+    _isSaveEditResultToServer = Pref().isSaveEditResultToServerOr();
   }
 
   @override
@@ -1311,13 +1313,24 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsPhotoEnhancementPageTitle),
+          title: Text(L10n.global().settingsImageEditTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              SwitchListTile(
+                title: Text(
+                    L10n.global().settingsImageEditSaveResultsToServerTitle),
+                subtitle: Text(_isSaveEditResultToServer
+                    ? L10n.global()
+                        .settingsImageEditSaveResultsToServerTrueDescription
+                    : L10n.global()
+                        .settingsImageEditSaveResultsToServerFalseDescription),
+                value: _isSaveEditResultToServer,
+                onChanged: _onSaveEditResultToServerChanged,
+              ),
               ListTile(
-                title: Text(L10n.global().settingsEnhanceMaxResolutionTitle),
+                title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
                 subtitle: Text("${_maxWidth}x$_maxHeight"),
                 onTap: () => _onMaxResolutionTap(context),
               ),
@@ -1335,7 +1348,7 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
       context: context,
       builder: (_) => AppTheme(
         child: AlertDialog(
-          title: Text(L10n.global().settingsEnhanceMaxResolutionTitle),
+          title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -1394,8 +1407,26 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
     }
   }
 
+  Future<void> _onSaveEditResultToServerChanged(bool value) async {
+    final oldValue = _isSaveEditResultToServer;
+    setState(() {
+      _isSaveEditResultToServer = value;
+    });
+    if (!await Pref().setSaveEditResultToServer(value)) {
+      _log.severe("[_onSaveEditResultToServerChanged] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _isSaveEditResultToServer = oldValue;
+      });
+    }
+  }
+
   late int _maxWidth;
   late int _maxHeight;
+  late bool _isSaveEditResultToServer;
 
   static final _log = Logger("widget.settings._EnhancementSettingsState");
 }

@@ -602,11 +602,13 @@ class _ViewerState extends State<Viewer>
       _log.shout("[_onEnhancePressed] Video file not supported");
       return;
     }
+    final c = KiwiContainer().resolve<DiContainer>();
 
     _log.info("[_onEnhancePressed] Enhance file: ${file.path}");
     EnhanceHandler(
       account: widget.account,
       file: file,
+      isSaveToServer: c.pref.isSaveEditResultToServerOr(),
     )(context);
   }
 

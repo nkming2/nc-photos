@@ -28,6 +28,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("iteration")!!,
 						result
 					)
@@ -45,6 +46,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("radius")!!,
 						result
 					)
@@ -62,6 +64,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -78,6 +81,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("styleUri")!!,
 						call.argument("weight")!!,
 						result
@@ -96,6 +100,7 @@ class ImageProcessorChannelHandler(context: Context) :
 						call.argument("filename")!!,
 						call.argument("maxWidth")!!,
 						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("filters")!!,
 						result
 					)
@@ -132,10 +137,10 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun zeroDce(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, iteration: Int,
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, iteration: Int,
 		result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename, maxWidth, maxHeight,
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
 		ImageProcessorService.METHOD_ZERO_DCE, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_ITERATION, iteration)
 		}
@@ -143,9 +148,10 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun deepLab3Portrait(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, radius: Int, result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, radius: Int,
+		result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename, maxWidth, maxHeight,
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
 		ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
 		}
@@ -153,18 +159,19 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun esrgan(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
+		result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename, maxWidth, maxHeight,
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
 		ImageProcessorService.METHOD_ESRGAN, result
 	)
 
 	private fun arbitraryStyleTransfer(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, styleUri: String, weight: Float,
-		result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
+		styleUri: String, weight: Float, result: MethodChannel.Result
 	) = method(
-		fileUrl, headers, filename, maxWidth, maxHeight,
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
 		ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER, result,
 		onIntent = {
 			it.putExtra(
@@ -176,14 +183,14 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun filter(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, filters: List<Map<String, Any>>,
-		result: MethodChannel.Result
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
+		filters: List<Map<String, Any>>, result: MethodChannel.Result
 	) {
 		// convert to serializable
 		val l = arrayListOf<Serializable>()
 		filters.mapTo(l, { HashMap(it) })
 		method(
-			fileUrl, headers, filename, maxWidth, maxHeight,
+			fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
 			ImageProcessorService.METHOD_FILTER, result,
 			onIntent = {
 				it.putExtra(ImageProcessorService.EXTRA_FILTERS, l)
@@ -204,7 +211,7 @@ class ImageProcessorChannelHandler(context: Context) :
 
 	private fun method(
 		fileUrl: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, method: String,
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, method: String,
 		result: MethodChannel.Result, onIntent: ((Intent) -> Unit)? = null
 	) {
 		val intent = Intent(context, ImageProcessorService::class.java).apply {
@@ -216,6 +223,9 @@ class ImageProcessorChannelHandler(context: Context) :
 			putExtra(ImageProcessorService.EXTRA_FILENAME, filename)
 			putExtra(ImageProcessorService.EXTRA_MAX_WIDTH, maxWidth)
 			putExtra(ImageProcessorService.EXTRA_MAX_HEIGHT, maxHeight)
+			putExtra(
+				ImageProcessorService.EXTRA_IS_SAVE_TO_SERVER, isSaveToServer
+			)
 			onIntent?.invoke(this)
 		}
 		ContextCompat.startForegroundService(context, intent)

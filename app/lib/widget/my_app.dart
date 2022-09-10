@@ -25,6 +25,7 @@ import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
+import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -171,6 +172,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePlaceBrowserRoute(settings);
     route ??= _handlePlacesBrowserRoute(settings);
+    route ??= _handleResultViewerRoute(settings);
     return route;
   }
 
@@ -596,6 +598,25 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handlePlacesBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleResultViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == ResultViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as ResultViewerArguments;
+        return ResultViewer.buildRoute(args);
+      } else if (settings.name?.startsWith("${ResultViewer.routeName}?") ==
+          true) {
+        final queries = Uri.parse(settings.name!).queryParameters;
+        final args = ResultViewerArguments(queries["url"]!);
+        return ResultViewer.buildRoute(args);
+      }
+    } catch (e, stackTrace) {
+      _log.severe("[_handleResultViewerRoute] Failed while handling route", e,
+          stackTrace);
     }
     return null;
   }

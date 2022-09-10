@@ -82,6 +82,7 @@ class ImageProcessor {
     int maxHeight,
     int iteration, {
     Map<String, String>? headers,
+    required bool isSaveToServer,
   }) =>
       _methodChannel.invokeMethod("zeroDce", <String, dynamic>{
         "fileUrl": fileUrl,
@@ -90,6 +91,7 @@ class ImageProcessor {
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
         "iteration": iteration,
+        "isSaveToServer": isSaveToServer,
       });
 
   static Future<void> deepLab3Portrait(
@@ -99,6 +101,7 @@ class ImageProcessor {
     int maxHeight,
     int radius, {
     Map<String, String>? headers,
+    required bool isSaveToServer,
   }) =>
       _methodChannel.invokeMethod("deepLab3Portrait", <String, dynamic>{
         "fileUrl": fileUrl,
@@ -107,6 +110,7 @@ class ImageProcessor {
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
         "radius": radius,
+        "isSaveToServer": isSaveToServer,
       });
 
   static Future<void> esrgan(
@@ -115,6 +119,7 @@ class ImageProcessor {
     int maxWidth,
     int maxHeight, {
     Map<String, String>? headers,
+    required bool isSaveToServer,
   }) =>
       _methodChannel.invokeMethod("esrgan", <String, dynamic>{
         "fileUrl": fileUrl,
@@ -122,6 +127,7 @@ class ImageProcessor {
         "filename": filename,
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
+        "isSaveToServer": isSaveToServer,
       });
 
   static Future<void> arbitraryStyleTransfer(
@@ -132,6 +138,7 @@ class ImageProcessor {
     String styleUri,
     double weight, {
     Map<String, String>? headers,
+    required bool isSaveToServer,
   }) =>
       _methodChannel.invokeMethod("arbitraryStyleTransfer", <String, dynamic>{
         "fileUrl": fileUrl,
@@ -141,6 +148,7 @@ class ImageProcessor {
         "maxHeight": maxHeight,
         "styleUri": styleUri,
         "weight": weight,
+        "isSaveToServer": isSaveToServer,
       });
 
   static Future<void> filter(
@@ -150,6 +158,7 @@ class ImageProcessor {
     int maxHeight,
     List<ImageFilter> filters, {
     Map<String, String>? headers,
+    required bool isSaveToServer,
   }) =>
       _methodChannel.invokeMethod("filter", <String, dynamic>{
         "fileUrl": fileUrl,
@@ -158,6 +167,7 @@ class ImageProcessor {
         "maxWidth": maxWidth,
         "maxHeight": maxHeight,
         "filters": filters.map((f) => f.toJson()).toList(),
+        "isSaveToServer": isSaveToServer,
       });
 
   static Future<Rgba8Image> filterPreview(

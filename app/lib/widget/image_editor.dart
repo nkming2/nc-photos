@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
@@ -258,6 +260,7 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   Future<void> _onSavePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     await ImageProcessor.filter(
       "${widget.account.url}/${widget.file.path}",
       widget.file.filename,
@@ -267,6 +270,7 @@ class _ImageEditorState extends State<ImageEditor> {
       headers: {
         "Authorization": Api.getAuthorizationHeaderValue(widget.account),
       },
+      isSaveToServer: c.pref.isSaveEditResultToServerOr(),
     );
     Navigator.of(context).pop();
   }

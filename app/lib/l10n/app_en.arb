@@ -403,13 +403,19 @@
 	},
 	"settingsShowDateInAlbumTitle": "Group photos by date",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
-	"settingsPhotoEnhancementTitle": "Photo enhancement",
-	"settingsPhotoEnhancementPageTitle": "Photo enhancement settings",
-	"@settingsPhotoEnhancementPageTitle": {
-		"description": "Dedicated page for photo enhancement settings"
+	"settingsImageEditTitle": "Editor",
+	"@settingsImageEditTitle": {
+		"description": "Include settings for image enhancements and the image editor"
 	},
-	"settingsEnhanceMaxResolutionTitle": "Max output resolution",
+	"settingsImageEditDescription": "Customize image enhancements and the image editor",
+	"settingsEnhanceMaxResolutionTitle2": "Image resolution for enhancements",
 	"settingsEnhanceMaxResolutionDescription": "Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.",
+	"settingsImageEditSaveResultsToServerTitle": "Save results to server",
+	"@settingsImageEditSaveResultsToServerTitle": {
+		"description": "Whether to save the edit/enhance results to server instead of the current device"
+	},
+	"settingsImageEditSaveResultsToServerTrueDescription": "Results are saved to server, fallback to device storage if failed",
+	"settingsImageEditSaveResultsToServerFalseDescription": "Results are saved to this device",
 	"settingsThemeTitle": "Theme",
 	"settingsThemeDescription": "Customize the appearance of the app",
 	"settingsThemePageTitle": "Theme settings",
