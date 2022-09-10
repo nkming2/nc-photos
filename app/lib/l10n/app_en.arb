@@ -330,10 +330,6 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Account",
-	"settingsAccountPageTitle": "Account settings",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
 	"settingsAccountLabelTitle": "Label",
 	"@settingsAccountLabelTitle": {
 		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
@@ -367,10 +363,6 @@
 	"@settingsPhotosDescription": {
 		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
 	},
-	"settingsPhotosPageTitle": "Photos settings",
-	"@settingsPhotosPageTitle": {
-		"description": "Dedicated page for settings related to the Photos tab"
-	},
 	"settingsMemoriesRangeTitle": "Memories range",
 	"@settingsMemoriesRangeTitle": {
 		"description": "How many adjacent days to be inclded in memories for a particular year"
@@ -386,10 +378,6 @@
 	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
-	"settingsViewerPageTitle": "Viewer settings",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Screen brightness",
 	"settingsScreenBrightnessDescription": "Override system brightness level",
 	"settingsForceRotationTitle": "Ignore rotation lock",
@@ -397,10 +385,6 @@
 	"settingsMapProviderTitle": "Map provider",
 	"settingsAlbumTitle": "Album",
 	"settingsAlbumDescription": "Customize albums",
-	"settingsAlbumPageTitle": "Album settings",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "Group photos by date",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
 	"settingsImageEditTitle": "Editor",
@@ -418,10 +402,6 @@
 	"settingsImageEditSaveResultsToServerFalseDescription": "Results are saved to this device",
 	"settingsThemeTitle": "Theme",
 	"settingsThemeDescription": "Customize the appearance of the app",
-	"settingsThemePageTitle": "Theme settings",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "Follow system theme",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -439,7 +419,6 @@
 		"description": "When black in dark theme is set to false"
 	},
 	"settingsMiscellaneousTitle": "Miscellaneous",
-	"settingsMiscellaneousPageTitle": "Miscellaneous settings",
 	"settingsDoubleTapExitTitle": "Double tap to exit",
 	"@settingsDoubleTapExitTitle": {
 		"description": "If enabled, users need to tap the back button twice to exit app"
@@ -450,7 +429,6 @@
 	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Features that are not ready for everyday use",
-	"settingsExperimentalPageTitle": "Experimental settings",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"

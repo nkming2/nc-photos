@@ -530,7 +530,7 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
         slivers: [
           SliverAppBar(
             pinned: true,
-            title: Text(L10n.global().settingsAccountPageTitle),
+            title: Text(L10n.global().settingsAccountTitle),
             leading: _shouldReload
                 ? IconButton(
                     icon: const Icon(Icons.check),
@@ -837,7 +837,7 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsPhotosPageTitle),
+          title: Text(L10n.global().photosTabLabel),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -1018,7 +1018,7 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsViewerPageTitle),
+          title: Text(L10n.global().settingsViewerTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -1232,7 +1232,7 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsAlbumPageTitle),
+          title: Text(L10n.global().settingsAlbumTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -1552,7 +1552,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsThemePageTitle),
+          title: Text(L10n.global().settingsThemeTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -1659,7 +1659,7 @@ class _MiscSettingsState extends State<_MiscSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsMiscellaneousPageTitle),
+          title: Text(L10n.global().settingsMiscellaneousTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
@@ -1749,7 +1749,7 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsExperimentalPageTitle),
+          title: Text(L10n.global().settingsExperimentalTitle),
         ),
         SliverList(
           delegate: SliverChildListDelegate(

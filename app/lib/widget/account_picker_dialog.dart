@@ -98,7 +98,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
               Icons.settings_outlined,
               color: AppTheme.getUnfocusedIconColor(context),
             ),
-            tooltip: L10n.global().settingsAccountPageTitle,
+            tooltip: L10n.global().settingsMenuLabel,
             onPressed: _onEditPressed,
           ),
         ),
