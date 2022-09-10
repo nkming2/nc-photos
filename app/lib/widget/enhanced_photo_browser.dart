@@ -124,7 +124,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
       return Column(
         children: [
           AppBar(
-            title: Text(L10n.global().collectionEnhancedPhotosLabel),
+            title: Text(L10n.global().collectionEditedPhotosLabel),
             elevation: 0,
           ),
           Expanded(
@@ -141,7 +141,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
       return Column(
         children: [
           AppBar(
-            title: Text(L10n.global().collectionEnhancedPhotosLabel),
+            title: Text(L10n.global().collectionEditedPhotosLabel),
             elevation: 0,
           ),
           Expanded(
@@ -192,7 +192,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   Widget _buildNormalAppBar(BuildContext context) => SliverAppBar(
-        title: Text(L10n.global().collectionEnhancedPhotosLabel),
+        title: Text(L10n.global().collectionEditedPhotosLabel),
       );
 
   Widget _buildSelectionAppBar(BuildContext context) {

@@ -271,7 +271,7 @@ class _HomeAlbumsState extends State<HomeAlbums>
   SelectableItem _buildEnhancedPhotosItem(BuildContext context) {
     return _ButtonListItem(
       icon: Icons.auto_fix_high_outlined,
-      label: L10n.global().collectionEnhancedPhotosLabel,
+      label: L10n.global().collectionEditedPhotosLabel,
       onTap: () {
         if (!isSelectionMode) {
           Navigator.of(context).pushNamed(EnhancedPhotoBrowser.routeName,

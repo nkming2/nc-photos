@@ -1238,9 +1238,9 @@
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Enhanced",
-	"@collectionEnhancedPhotosLabel": {
-		"description": "List photos enhanced by the app"
+	"collectionEditedPhotosLabel": "Edited",
+	"@collectionEditedPhotosLabel": {
+		"description": "List photos modified by the app, via image enhancements or the image editor"
 	},
 	"deletePermanentlyLocalConfirmationDialogContent": "Selected items will be deleted permanently from this device.\n\nThis action is nonreversible",
 	"@deletePermanentlyLocalConfirmationDialogContent": {
