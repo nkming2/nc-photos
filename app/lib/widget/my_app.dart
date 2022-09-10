@@ -611,12 +611,12 @@ class _MyAppState extends State<MyApp>
       } else if (settings.name?.startsWith("${ResultViewer.routeName}?") ==
           true) {
         final queries = Uri.parse(settings.name!).queryParameters;
-        final fileUrl = Uri.decodeQueryComponent(queries["url"]!);
-        final args = ResultViewerArguments(fileUrl);
+        final args = ResultViewerArguments(queries["url"]!);
         return ResultViewer.buildRoute(args);
       }
-    } catch (e) {
-      _log.severe("[_handleResultViewerRoute] Failed while handling route", e);
+    } catch (e, stackTrace) {
+      _log.severe("[_handleResultViewerRoute] Failed while handling route", e,
+          stackTrace);
     }
     return null;
   }

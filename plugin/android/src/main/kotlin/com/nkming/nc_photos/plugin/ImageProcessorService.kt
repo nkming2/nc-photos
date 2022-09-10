@@ -372,6 +372,7 @@ class ImageProcessorService : Service() {
 
 	private fun notifyResult(event: MessageEvent) {
 		if (event is ImageProcessorCompletedEvent) {
+			NativeEventChannelHandler.fire(ImageProcessorUploadSuccessEvent())
 			notificationManager.notify(
 				RESULT_NOTIFICATION_ID, buildResultNotification(event.result)
 			)

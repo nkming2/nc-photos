@@ -121,6 +121,7 @@ class ScanAccountDirBloc
     _accountPrefUpdatedEventListener.begin();
 
     _nativeFileExifUpdatedListener?.begin();
+    _imageProcessorUploadSuccessListener?.begin();
 
     on<ScanAccountDirBlocEvent>(_onEvent, transformer: ((events, mapper) {
       return events.asyncExpand(mapper).distinct((a, b) {
@@ -164,6 +165,7 @@ class ScanAccountDirBloc
     _accountPrefUpdatedEventListener.end();
 
     _nativeFileExifUpdatedListener?.end();
+    _imageProcessorUploadSuccessListener?.end();
 
     _refreshThrottler.clear();
     return super.close();
@@ -327,6 +329,14 @@ class ScanAccountDirBloc
   }
 
   void _onNativeFileExifUpdated(FileExifUpdatedEvent ev) {
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
+  }
+
+  void _onImageProcessorUploadSuccessEvent(
+      ImageProcessorUploadSuccessEvent ev) {
     _refreshThrottler.trigger(
       maxResponceTime: const Duration(seconds: 3),
       maxPendingCount: 10,
@@ -540,6 +550,10 @@ class ScanAccountDirBloc
   late final _nativeFileExifUpdatedListener = platform_k.isWeb
       ? null
       : NativeEventListener<FileExifUpdatedEvent>(_onNativeFileExifUpdated);
+  late final _imageProcessorUploadSuccessListener = platform_k.isWeb
+      ? null
+      : NativeEventListener<ImageProcessorUploadSuccessEvent>(
+          _onImageProcessorUploadSuccessEvent);
 
   late final _refreshThrottler = Throttler(
     onTriggered: (_) {
