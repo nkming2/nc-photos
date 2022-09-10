@@ -29,10 +29,10 @@ Screenshots contain photos by:
 - EXIF support (JPEG and HEIC only)
 - Organize photos with actual albums that are NOT folders
 - Reverse geocoding
-- Enhance photos with machine learning models
-- Edit photos with built-in editor
+- [Enhance photos with machine learning models](https://gitlab.com/nkming2/nc-photos/-/wikis/help/enhance)
+- [Edit photos with built-in editor](https://gitlab.com/nkming2/nc-photos/-/wikis/help/edit-photos)
 - Sign-in to multiple servers
-- Create shared albums with users on the same server (experimental)
+- [Create shared albums with users on the same server (experimental)](https://gitlab.com/nkming2/nc-photos/-/wikis/help/shared-album)
 
 ## Supported formats
 - JPEG, PNG, WebP, HEIC, GIF
