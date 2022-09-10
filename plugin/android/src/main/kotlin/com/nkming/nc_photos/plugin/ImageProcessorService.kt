@@ -37,6 +37,7 @@ class ImageProcessorService : Service() {
 		const val EXTRA_FILENAME = "filename"
 		const val EXTRA_MAX_WIDTH = "maxWidth"
 		const val EXTRA_MAX_HEIGHT = "maxHeight"
+		const val EXTRA_IS_SAVE_TO_SERVER = "isSaveToServer"
 		const val EXTRA_RADIUS = "radius"
 		const val EXTRA_ITERATION = "iteration"
 		const val EXTRA_STYLE_URI = "styleUri"
@@ -134,7 +135,7 @@ class ImageProcessorService : Service() {
 				// there are commands running in the bg
 				addCommand(
 					ImageProcessorEnhanceCommand(
-						startId, "null", "", null, "", 0, 0
+						startId, "null", "", null, "", 0, 0, false
 					)
 				)
 			}
@@ -184,10 +185,11 @@ class ImageProcessorService : Service() {
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
 		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
+		val isSaveToServer = extras.getBoolean(EXTRA_IS_SAVE_TO_SERVER)
 		addCommand(
 			ImageProcessorFilterCommand(
 				startId, fileUrl, headers, filename, maxWidth,
-				maxHeight, filters
+				maxHeight, isSaveToServer, filters
 			)
 		)
 	}
@@ -211,10 +213,11 @@ class ImageProcessorService : Service() {
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
 		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
+		val isSaveToServer = extras.getBoolean(EXTRA_IS_SAVE_TO_SERVER)
 		addCommand(
 			ImageProcessorEnhanceCommand(
 				startId, method, fileUrl, headers, filename, maxWidth,
-				maxHeight, args = args
+				maxHeight, isSaveToServer, args = args
 			)
 		)
 	}
@@ -421,6 +424,7 @@ private abstract class ImageProcessorImageCommand(
 	val filename: String,
 	val maxWidth: Int,
 	val maxHeight: Int,
+	val isSaveToServer: Boolean,
 ) : ImageProcessorCommand {
 	abstract fun apply(context: Context, fileUri: Uri): Bitmap
 }
@@ -433,9 +437,11 @@ private class ImageProcessorEnhanceCommand(
 	filename: String,
 	maxWidth: Int,
 	maxHeight: Int,
+	isSaveToServer: Boolean,
 	val args: Map<String, Any?> = mapOf(),
 ) : ImageProcessorImageCommand(
-	startId, method, fileUrl, headers, filename, maxWidth, maxHeight
+	startId, method, fileUrl, headers, filename, maxWidth, maxHeight,
+	isSaveToServer
 ) {
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
 		return when (method) {
@@ -471,10 +477,11 @@ private class ImageProcessorFilterCommand(
 	filename: String,
 	maxWidth: Int,
 	maxHeight: Int,
+	isSaveToServer: Boolean,
 	val filters: List<ImageFilter>,
 ) : ImageProcessorImageCommand(
 	startId, ImageProcessorService.METHOD_FILTER, fileUrl, headers, filename,
-	maxWidth, maxHeight
+	maxWidth, maxHeight, isSaveToServer
 ) {
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
 		return ImageFilterProcessor(
@@ -687,7 +694,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 			oExif.saveAttributes()
 
 			handleCancel()
-			val persister = EnhancedFileServerPersisterWithFallback(context)
+			val persister = getPersister(cmd.isSaveToServer)
 			return persister.persist(cmd, outFile)
 		} finally {
 			outFile.delete()
@@ -748,7 +755,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 				logE(TAG, "[copyExif] Failed while saving EXIF", e)
 			}
 
-			val persister = EnhancedFileServerPersisterWithFallback(context)
+			val persister = getPersister(cmd.isSaveToServer)
 			return persister.persist(cmd, outFile)
 		} finally {
 			outFile.delete()
@@ -770,6 +777,14 @@ private open class ImageProcessorCommandTask(context: Context) :
 		if (isCancelled) {
 			logI(TAG, "[handleCancel] Canceled")
 			throw InterruptedException()
+		}
+	}
+
+	private fun getPersister(isSaveToServer: Boolean): EnhancedFilePersister {
+		return if (isSaveToServer) {
+			EnhancedFileServerPersisterWithFallback(context)
+		} else {
+			EnhancedFileDevicePersister(context)
 		}
 	}
 

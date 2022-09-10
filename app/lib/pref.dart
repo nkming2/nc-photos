@@ -249,6 +249,15 @@ class Pref {
   Future<bool> setMemoriesRange(int value) => _set<int>(PrefKey.memoriesRange,
       value, (key, value) => provider.setInt(key, value));
 
+  bool? isSaveEditResultToServer() =>
+      provider.getBool(PrefKey.saveEditResultToServer);
+  bool isSaveEditResultToServerOr([bool def = true]) =>
+      isSaveEditResultToServer() ?? def;
+  Future<bool> setSaveEditResultToServer(bool value) => _set<bool>(
+      PrefKey.saveEditResultToServer,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -561,6 +570,7 @@ enum PrefKey {
   shouldProcessExifWifiOnly,
   doubleTapExit,
   memoriesRange,
+  saveEditResultToServer,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -632,6 +642,8 @@ extension on PrefKey {
         return "doubleTapExit";
       case PrefKey.memoriesRange:
         return "memoriesRange";
+      case PrefKey.saveEditResultToServer:
+        return "saveEditResultToServer";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

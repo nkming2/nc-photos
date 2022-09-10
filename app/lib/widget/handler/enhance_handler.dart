@@ -31,6 +31,7 @@ class EnhanceHandler {
   const EnhanceHandler({
     required this.account,
     required this.file,
+    required this.isSaveToServer,
   });
 
   static bool isSupportedFormat(File file) =>
@@ -67,6 +68,7 @@ class EnhanceHandler {
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
+          isSaveToServer: isSaveToServer,
         );
         break;
 
@@ -80,6 +82,7 @@ class EnhanceHandler {
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
+          isSaveToServer: isSaveToServer,
         );
         break;
 
@@ -92,6 +95,7 @@ class EnhanceHandler {
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
+          isSaveToServer: isSaveToServer,
         );
         break;
 
@@ -108,6 +112,7 @@ class EnhanceHandler {
           headers: {
             "Authorization": Api.getAuthorizationHeaderValue(account),
           },
+          isSaveToServer: isSaveToServer,
         );
         break;
     }
@@ -353,6 +358,7 @@ class EnhanceHandler {
 
   final Account account;
   final File file;
+  final bool isSaveToServer;
 
   static final _log = Logger("widget.handler.enhance_handler.EnhanceHandler");
 }
