@@ -22,6 +22,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -78,11 +79,13 @@ class _HomePhotosState extends State<HomePhotos>
     _initBloc();
     _web?.onInitState();
     _prefUpdatedListener.begin();
+    _imageProcessorUploadSuccessListener?.begin();
   }
 
   @override
   dispose() {
     _prefUpdatedListener.end();
+    _imageProcessorUploadSuccessListener?.end();
     _web?.onDispose();
     super.dispose();
   }
@@ -512,6 +515,13 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  void _onImageProcessorUploadSuccessEvent(
+      ImageProcessorUploadSuccessEvent ev) {
+    _log.info(
+        "[_onImageProcessorUploadSuccessEvent] Scheduling metadata task after next refresh");
+    _hasFiredMetadataTask.value = false;
+  }
+
   void _tryStartMetadataTask({
     bool ignoreFired = false,
   }) {
@@ -714,6 +724,10 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
+  late final _imageProcessorUploadSuccessListener = platform_k.isWeb
+      ? null
+      : NativeEventListener<ImageProcessorUploadSuccessEvent>(
+          _onImageProcessorUploadSuccessEvent);
 
   late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
 
