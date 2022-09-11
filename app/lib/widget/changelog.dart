@@ -190,6 +190,29 @@ List<Widget> _buildChangelog510(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog520(BuildContext context) {
+  return [
+    _subSection("Changes"),
+    _bulletGroup(const Text(
+        "New option to share a reduced quality preview instead of the original file")),
+    _bulletGroup(const Text(
+        "Support saving enhanced/edited photos directly on the server")),
+    _bulletGroup(
+      const Text("Image enhancements"),
+      [
+        const Text("Added color pop"),
+        const Text("Improved portrait blur in scenes with multiple objects"),
+      ],
+    ),
+    _bulletGroup(
+      const Text("Image editor"),
+      [
+        const Text("Fixed changing image orientation may flip the image"),
+      ],
+    ),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -246,6 +269,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  520: _buildChangelog520,
   510: _buildChangelog510,
   500: _buildChangelog500,
   480: _buildChangelog480,
