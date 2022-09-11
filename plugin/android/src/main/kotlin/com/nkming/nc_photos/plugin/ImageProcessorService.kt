@@ -518,7 +518,9 @@ private open class ImageProcessorCommandTask(context: Context) :
 			ExifInterface.TAG_IMAGE_DESCRIPTION,
 			ExifInterface.TAG_MAKE,
 			ExifInterface.TAG_MODEL,
-			ExifInterface.TAG_ORIENTATION,
+			// while processing, we'll correct the orientation, if we copy the
+			// value to the resulting image, the orientation will be wrong
+//			ExifInterface.TAG_ORIENTATION,
 			ExifInterface.TAG_X_RESOLUTION,
 			ExifInterface.TAG_Y_RESOLUTION,
 			ExifInterface.TAG_DATETIME,

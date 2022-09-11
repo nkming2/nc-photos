@@ -17,6 +17,7 @@ class ImageLoader {
     ImageLoaderResizeMethod resizeMethod, {
     bool isAllowSwapSide = false,
     bool shouldUpscale = false,
+    bool shouldFixOrientation = false,
   }) async {
     final result =
         await _methodChannel.invokeMethod<Map>("loadUri", <String, dynamic>{
@@ -26,6 +27,7 @@ class ImageLoader {
       "resizeMethod": resizeMethod.index,
       "isAllowSwapSide": isAllowSwapSide,
       "shouldUpscale": shouldUpscale,
+      "shouldFixOrientation": shouldFixOrientation,
     });
     return Rgba8Image.fromJson(result!.cast<String, dynamic>());
   }

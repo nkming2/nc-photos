@@ -24,6 +24,7 @@ class ImageLoaderChannelHandler(context: Context) :
 						call.argument("resizeMethod")!!,
 						call.argument("isAllowSwapSide")!!,
 						call.argument("shouldUpscale")!!,
+						call.argument("shouldFixOrientation")!!,
 						result
 					)
 				} catch (e: Throwable) {
@@ -44,17 +45,18 @@ class ImageLoaderChannelHandler(context: Context) :
 	 * @param resizeMethod
 	 * @param isAllowSwapSide
 	 * @param shouldUpscale
+	 * @param shouldFixOrientation
 	 * @param result
 	 */
 	private fun loadUri(
 		fileUri: String, maxWidth: Int, maxHeight: Int, resizeMethod: Int,
 		isAllowSwapSide: Boolean, shouldUpscale: Boolean,
-		result: MethodChannel.Result
+		shouldFixOrientation: Boolean, result: MethodChannel.Result
 	) {
 		val image = BitmapUtil.loadImage(
 			context, Uri.parse(fileUri), maxWidth, maxHeight,
 			BitmapResizeMethod.values()[resizeMethod], isAllowSwapSide,
-			shouldUpscale
+			shouldUpscale, shouldFixOrientation
 		).use {
 			Rgba8Image(TfLiteHelper.bitmapToRgba8Array(it), it.width, it.height)
 		}

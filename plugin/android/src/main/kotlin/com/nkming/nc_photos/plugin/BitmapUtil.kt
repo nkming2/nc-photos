@@ -3,7 +3,9 @@ package com.nkming.nc_photos.plugin
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
+import androidx.exifinterface.media.ExifInterface
 import java.io.InputStream
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -91,6 +93,7 @@ interface BitmapUtil {
 			resizeMethod: BitmapResizeMethod,
 			isAllowSwapSide: Boolean = false,
 			shouldUpscale: Boolean = true,
+			shouldFixOrientation: Boolean = false,
 		): Bitmap {
 			val opt = loadImageBounds(context, uri)
 			val shouldSwapSide = isAllowSwapSide &&
@@ -116,9 +119,13 @@ interface BitmapUtil {
 				logD(TAG, "Bitmap subsampled: ${bitmap.width}x${bitmap.height}")
 			}
 			if (bitmap.width < dstW && bitmap.height < dstH && !shouldUpscale) {
-				return bitmap
+				return if (shouldFixOrientation) {
+					fixOrientation(context, uri, bitmap)
+				} else {
+					bitmap
+				}
 			}
-			return when (resizeMethod) {
+			val result = when (resizeMethod) {
 				BitmapResizeMethod.FIT -> Bitmap.createScaledBitmap(
 					bitmap,
 					minOf(dstW, (dstH * bitmap.aspectRatio()).toInt()),
@@ -132,6 +139,62 @@ interface BitmapUtil {
 					maxOf(dstH, (dstW / bitmap.aspectRatio()).toInt()),
 					true
 				)
+			}
+			return if (shouldFixOrientation) {
+				fixOrientation(context, uri, result)
+			} else {
+				result
+			}
+		}
+
+		/**
+		 * Rotate the image to its visible orientation
+		 */
+		private fun fixOrientation(
+			context: Context, uri: Uri, bitmap: Bitmap
+		): Bitmap {
+			return try {
+				openUriInputStream(context, uri)!!.use {
+					val iExif = ExifInterface(it)
+					val orientation =
+						iExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
+					logI(
+						TAG,
+						"[fixOrientation] Input file orientation: $orientation"
+					)
+					val rotate = when (orientation) {
+						ExifInterface.ORIENTATION_ROTATE_90,
+						ExifInterface.ORIENTATION_TRANSPOSE -> 90f
+
+						ExifInterface.ORIENTATION_ROTATE_180,
+						ExifInterface.ORIENTATION_FLIP_VERTICAL -> 180f
+
+						ExifInterface.ORIENTATION_ROTATE_270,
+						ExifInterface.ORIENTATION_TRANSVERSE -> 270f
+
+						ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> 0f
+						else -> return bitmap
+					}
+					val mat = Matrix()
+					mat.postRotate(rotate)
+					if (orientation == ExifInterface.ORIENTATION_FLIP_HORIZONTAL ||
+						orientation == ExifInterface.ORIENTATION_TRANSVERSE ||
+						orientation == ExifInterface.ORIENTATION_FLIP_VERTICAL ||
+						orientation == ExifInterface.ORIENTATION_TRANSPOSE
+					) {
+						mat.postScale(-1f, 1f)
+					}
+					Bitmap.createBitmap(
+						bitmap, 0, 0, bitmap.width, bitmap.height, mat, true
+					)
+				}
+			} catch (e: Throwable) {
+				logE(
+					TAG,
+					"[fixOrientation] Failed fixing, assume normal orientation",
+					e
+				)
+				bitmap
 			}
 		}
 

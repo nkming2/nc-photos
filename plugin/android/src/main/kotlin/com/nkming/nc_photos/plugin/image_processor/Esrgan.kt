@@ -15,7 +15,7 @@ class Esrgan(context: Context, maxWidth: Int, maxHeight: Int) {
 		val rgb8Image = BitmapUtil.loadImage(
 			context, imageUri, maxWidth / 4, maxHeight / 4,
 			BitmapResizeMethod.FIT, isAllowSwapSide = true,
-			shouldUpscale = false
+			shouldUpscale = false, shouldFixOrientation = true
 		).use {
 			width = it.width
 			height = it.height

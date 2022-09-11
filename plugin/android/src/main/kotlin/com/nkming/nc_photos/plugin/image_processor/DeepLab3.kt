@@ -23,7 +23,8 @@ class DeepLab3Portrait(
 		val height: Int
 		val rgb8Image = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
-			isAllowSwapSide = true, shouldUpscale = false
+			isAllowSwapSide = true, shouldUpscale = false,
+			shouldFixOrientation = true
 		).use {
 			width = it.width
 			height = it.height
@@ -54,7 +55,8 @@ class DeepLab3ColorPop(
 		val height: Int
 		val rgb8Image = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
-			isAllowSwapSide = true, shouldUpscale = false
+			isAllowSwapSide = true, shouldUpscale = false,
+			shouldFixOrientation = true
 		).use {
 			width = it.width
 			height = it.height

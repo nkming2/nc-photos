@@ -18,7 +18,8 @@ class ImageFilterProcessor(
 	fun apply(imageUri: Uri): Bitmap {
 		var img = BitmapUtil.loadImage(
 			context, imageUri, maxWidth, maxHeight, BitmapResizeMethod.FIT,
-			isAllowSwapSide = true, shouldUpscale = false
+			isAllowSwapSide = true, shouldUpscale = false,
+			shouldFixOrientation = true
 		).use {
 			Rgba8Image(TfLiteHelper.bitmapToRgba8Array(it), it.width, it.height)
 		}

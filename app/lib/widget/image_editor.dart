@@ -90,6 +90,8 @@ class _ImageEditorState extends State<ImageEditor> {
       height: k.photoLargeSize,
       a: true,
     ));
+    // no need to set shouldfixOrientation because the previews are always in
+    // the correct orientation
     _src = await ImageLoader.loadUri(
       "file://${fileInfo!.file.path}",
       _previewWidth,
