@@ -340,7 +340,7 @@ class ImageProcessorService : Service() {
 		)
 		cmdTask = object : ImageProcessorCommandTask(applicationContext) {
 			override fun onPostExecute(result: MessageEvent) {
-				notifyResult(result)
+				notifyResult(result, cmd.isSaveToServer)
 				cmds.removeFirst()
 				stopSelf(cmd.startId)
 				cmdTask = null
@@ -386,9 +386,13 @@ class ImageProcessorService : Service() {
 		}
 	}
 
-	private fun notifyResult(event: MessageEvent) {
+	private fun notifyResult(event: MessageEvent, shouldFireEvent: Boolean) {
 		if (event is ImageProcessorCompletedEvent) {
-			NativeEventChannelHandler.fire(ImageProcessorUploadSuccessEvent())
+			if (shouldFireEvent) {
+				NativeEventChannelHandler.fire(
+					ImageProcessorUploadSuccessEvent()
+				)
+			}
 			notificationManager.notify(
 				RESULT_NOTIFICATION_ID, buildResultNotification(event.result)
 			)
