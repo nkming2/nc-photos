@@ -22,6 +22,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
+import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -40,6 +41,9 @@ class EnhanceHandler {
   Future<void> call(BuildContext context) async {
     if (!Pref().hasShownEnhanceInfoOr()) {
       await _showInfo(context);
+    }
+    if (!Pref().hasShownSaveEditResultDialogOr()) {
+      await _showSaveEditResultDialog(context);
     }
 
     if (!await const PermissionHandler().ensureStorageWritePermission()) {
@@ -161,6 +165,15 @@ class EnhanceHandler {
       ),
     );
     unawaited(Pref().setHasShownEnhanceInfo(true));
+  }
+
+  Future<void> _showSaveEditResultDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          const ImageEditorPersistOptionDialog(isFromEditor: false),
+    );
   }
 
   Future<_Algorithm?> _pickAlgorithm(BuildContext context) =>

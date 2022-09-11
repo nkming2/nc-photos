@@ -161,6 +161,10 @@
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
     "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -338,6 +342,10 @@
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
     "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel",
     "errorAlbumDowngrade"
   ],
 
@@ -405,7 +413,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "es": [
@@ -437,7 +449,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "fi": [
@@ -466,7 +482,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "fr": [
@@ -553,7 +573,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "pl": [
@@ -657,7 +681,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "pt": [
@@ -740,7 +768,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "ru": [
@@ -823,7 +855,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "zh": [
@@ -906,7 +942,11 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ],
 
   "zh_Hant": [
@@ -989,6 +1029,10 @@
     "gpsPlaceText",
     "gpsPlaceAboutDialogTitle",
     "gpsPlaceAboutDialogContent",
-    "collectionPlacesLabel"
+    "collectionPlacesLabel",
+    "imageSaveOptionDialogTitle",
+    "imageSaveOptionDialogContent",
+    "imageSaveOptionDialogDeviceButtonLabel",
+    "imageSaveOptionDialogServerButtonLabel"
   ]
 }

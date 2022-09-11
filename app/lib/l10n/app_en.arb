@@ -1435,6 +1435,22 @@
 	"@collectionPlacesLabel": {
 		"description": "Browse photos grouped by place"
 	},
+	"imageSaveOptionDialogTitle": "Saving the result",
+	"@imageSaveOptionDialogTitle": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogContent": "Select where to save this and future processed images. If you picked server but the app failed to upload it, it will be saved on your device.",
+	"@imageSaveOptionDialogContent": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogDeviceButtonLabel": "DEVICE",
+	"@imageSaveOptionDialogDeviceButtonLabel": {
+		"description": "Save the image on the current device"
+	},
+	"imageSaveOptionDialogServerButtonLabel": "SERVER",
+	"@imageSaveOptionDialogServerButtonLabel": {
+		"description": "Save the image on your Nextcloud server"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

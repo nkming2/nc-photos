@@ -20,6 +20,7 @@ import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
 import 'package:nc_photos/widget/image_editor/crop_controller.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
+import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
 class ImageEditorArguments {
@@ -61,14 +62,24 @@ class _ImageEditorState extends State<ImageEditor> {
   initState() {
     super.initState();
     _initImage();
-    _ensurePermission();
+    _ensurePermission().then((value) {
+      if (value && mounted) {
+        final c = KiwiContainer().resolve<DiContainer>();
+        if (!c.pref.hasShownSaveEditResultDialogOr()) {
+          _showSaveEditResultDialog(context);
+        }
+      }
+    });
   }
 
-  Future<void> _ensurePermission() async {
+  Future<bool> _ensurePermission() async {
     if (!await const PermissionHandler().ensureStorageWritePermission()) {
       if (mounted) {
         Navigator.of(context).pop();
       }
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -275,6 +286,15 @@ class _ImageEditorState extends State<ImageEditor> {
       isSaveToServer: c.pref.isSaveEditResultToServerOr(),
     );
     Navigator.of(context).pop();
+  }
+
+  Future<void> _showSaveEditResultDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) =>
+          const ImageEditorPersistOptionDialog(isFromEditor: true),
+    );
   }
 
   void _setActiveTool(_ToolType tool) {
