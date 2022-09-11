@@ -101,7 +101,7 @@ vector<uint8_t> Orientation::apply90Cw(const uint8_t *rgba8, const size_t width,
     const auto yI = y * width * 4;
     for (size_t x = 0; x < width; ++x) {
       const auto p = x * 4 + yI;
-      const auto desY = width - x - 1;
+      const auto desY = x;
       const auto desX = height - y - 1;
       const auto desP = (desY * height + desX) * 4;
       output[desP + 0] = rgba8[p + 0];
