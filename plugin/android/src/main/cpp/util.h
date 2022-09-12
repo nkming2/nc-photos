@@ -57,6 +57,14 @@ private:
   AAsset *asset = nullptr;
 };
 
+struct Coord {
+  Coord() : Coord(0, 0) {}
+  Coord(const int x, const int y) : x(x), y(y) {}
+
+  const int x;
+  const int y;
+};
+
 void initOpenMp();
 int getNumberOfProcessors();
 
