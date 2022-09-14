@@ -45,17 +45,6 @@ class ImageProcessorService : Service() {
 		const val EXTRA_WEIGHT = "weight"
 		const val EXTRA_FILTERS = "filters"
 
-		val ENHANCE_METHODS = listOf(
-			METHOD_ZERO_DCE,
-			METHOD_DEEP_LAP_PORTRAIT,
-			METHOD_ESRGAN,
-			METHOD_ARBITRARY_STYLE_TRANSFER,
-			METHOD_DEEP_LAP_COLOR_POP,
-		)
-		val EDIT_METHODS = listOf(
-			METHOD_FILTER,
-		)
-
 		private const val ACTION_CANCEL = "cancel"
 
 		private const val NOTIFICATION_ID =
@@ -139,8 +128,10 @@ class ImageProcessorService : Service() {
 				// we can't call stopSelf here as it'll stop the service even if
 				// there are commands running in the bg
 				addCommand(
-					ImageProcessorEnhanceCommand(
-						startId, "null", "", null, "", 0, 0, false
+					ImageProcessorDummyCommand(
+						ImageProcessorImageCommand.Params(
+							startId, "null", null, "", 0, 0, false
+						)
 					)
 				)
 			}
@@ -149,39 +140,49 @@ class ImageProcessorService : Service() {
 
 	private fun onZeroDce(startId: Int, extras: Bundle) {
 		return onMethod(
-			startId, extras, METHOD_ZERO_DCE, args = mapOf(
-				"iteration" to extras.getIntOrNull(EXTRA_ITERATION)
-			)
+			startId, extras, { params ->
+				ImageProcessorZeroDceCommand(
+					params, extras.getIntOrNull(EXTRA_ITERATION)
+				)
+			}
 		)
 	}
 
 	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
 		return onMethod(
-			startId, extras, METHOD_DEEP_LAP_PORTRAIT, args = mapOf(
-				"radius" to extras.getIntOrNull(EXTRA_RADIUS)
-			)
+			startId, extras, { params ->
+				ImageProcessorDeepLapPortraitCommand(
+					params, extras.getIntOrNull(EXTRA_RADIUS)
+				)
+			}
 		)
 	}
 
 	private fun onEsrgan(startId: Int, extras: Bundle) {
-		return onMethod(startId, extras, METHOD_ESRGAN)
+		return onMethod(
+			startId, extras, { params -> ImageProcessorEsrganCommand(params) })
 	}
 
 	private fun onArbitraryStyleTransfer(startId: Int, extras: Bundle) {
 		return onMethod(
-			startId, extras, METHOD_ARBITRARY_STYLE_TRANSFER,
-			args = mapOf(
-				"styleUri" to extras.getParcelable<Uri>(EXTRA_STYLE_URI),
-				"weight" to extras.getFloat(EXTRA_WEIGHT),
-			)
+			startId, extras, { params ->
+				ImageProcessorArbitraryStyleTransferCommand(
+					params,
+					extras.getParcelable(EXTRA_STYLE_URI)!!,
+					extras.getFloat(EXTRA_WEIGHT)
+				)
+			}
 		)
 	}
 
 	private fun onDeepLapColorPop(startId: Int, extras: Bundle) {
 		return onMethod(
-			startId, extras, METHOD_DEEP_LAP_COLOR_POP, args = mapOf(
-				"weight" to extras.getFloat(EXTRA_WEIGHT)
-			)
+			startId, extras,
+			{ params ->
+				ImageProcessorDeepLapColorPopCommand(
+					params, extras.getFloat(EXTRA_WEIGHT)
+				)
+			},
 		)
 	}
 
@@ -201,8 +202,10 @@ class ImageProcessorService : Service() {
 		val isSaveToServer = extras.getBoolean(EXTRA_IS_SAVE_TO_SERVER)
 		addCommand(
 			ImageProcessorFilterCommand(
-				startId, fileUrl, headers, filename, maxWidth,
-				maxHeight, isSaveToServer, filters
+				ImageProcessorImageCommand.Params(
+					startId, fileUrl, headers, filename, maxWidth,
+					maxHeight, isSaveToServer
+				), filters
 			)
 		)
 	}
@@ -212,11 +215,11 @@ class ImageProcessorService : Service() {
 	 *
 	 * @param startId
 	 * @param extras
-	 * @param method
+	 * @param builder Build the command
 	 */
 	private fun onMethod(
-		startId: Int, extras: Bundle, method: String,
-		args: Map<String, Any?> = mapOf()
+		startId: Int, extras: Bundle,
+		builder: (ImageProcessorImageCommand.Params) -> ImageProcessorImageCommand
 	) {
 		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
 
@@ -228,9 +231,11 @@ class ImageProcessorService : Service() {
 		val maxHeight = extras.getInt(EXTRA_MAX_HEIGHT)
 		val isSaveToServer = extras.getBoolean(EXTRA_IS_SAVE_TO_SERVER)
 		addCommand(
-			ImageProcessorEnhanceCommand(
-				startId, method, fileUrl, headers, filename, maxWidth,
-				maxHeight, isSaveToServer, args = args
+			builder(
+				ImageProcessorImageCommand.Params(
+					startId, fileUrl, headers, filename, maxWidth,
+					maxHeight, isSaveToServer
+				)
 			)
 		)
 	}
@@ -434,81 +439,121 @@ class ImageProcessorService : Service() {
 private interface ImageProcessorCommand
 
 private abstract class ImageProcessorImageCommand(
-	val startId: Int,
-	val method: String,
-	val fileUrl: String,
-	val headers: Map<String, String>?,
-	val filename: String,
-	val maxWidth: Int,
-	val maxHeight: Int,
-	val isSaveToServer: Boolean,
+	val params: Params,
 ) : ImageProcessorCommand {
+	class Params(
+		val startId: Int,
+		val fileUrl: String,
+		val headers: Map<String, String>?,
+		val filename: String,
+		val maxWidth: Int,
+		val maxHeight: Int,
+		val isSaveToServer: Boolean,
+	)
+
 	abstract fun apply(context: Context, fileUri: Uri): Bitmap
+	abstract fun isEnhanceCommand(): Boolean
+
+	val startId: Int
+		get() = params.startId
+	val fileUrl: String
+		get() = params.fileUrl
+	val headers: Map<String, String>?
+		get() = params.headers
+	val filename: String
+		get() = params.filename
+	val maxWidth: Int
+		get() = params.maxWidth
+	val maxHeight: Int
+		get() = params.maxHeight
+	val isSaveToServer: Boolean
+		get() = params.isSaveToServer
 }
 
-private class ImageProcessorEnhanceCommand(
-	startId: Int,
-	method: String,
-	fileUrl: String,
-	headers: Map<String, String>?,
-	filename: String,
-	maxWidth: Int,
-	maxHeight: Int,
-	isSaveToServer: Boolean,
-	val args: Map<String, Any?> = mapOf(),
-) : ImageProcessorImageCommand(
-	startId, method, fileUrl, headers, filename, maxWidth, maxHeight,
-	isSaveToServer
-) {
+private class ImageProcessorDummyCommand(
+	params: Params,
+) : ImageProcessorImageCommand(params) {
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return when (method) {
-			ImageProcessorService.METHOD_ZERO_DCE -> ZeroDce(
-				context, maxWidth, maxHeight,
-				args["iteration"] as? Int ?: 8
-			).infer(fileUri)
-
-			ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT -> DeepLab3Portrait(
-				context, maxWidth, maxHeight,
-				args["radius"] as? Int ?: 16
-			).infer(fileUri)
-
-			ImageProcessorService.METHOD_ESRGAN -> Esrgan(
-				context, maxWidth, maxHeight
-			).infer(fileUri)
-
-			ImageProcessorService.METHOD_ARBITRARY_STYLE_TRANSFER -> ArbitraryStyleTransfer(
-				context, maxWidth, maxHeight,
-				args["styleUri"] as Uri,
-				args["weight"] as Float
-			).infer(fileUri)
-
-			ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP -> DeepLab3ColorPop(
-				context, maxWidth, maxHeight, args["weight"] as Float
-			).infer(fileUri)
-
-			else -> throw IllegalArgumentException("Unknown method: $method")
-		}
+		throw UnsupportedOperationException()
 	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorZeroDceCommand(
+	params: Params,
+	val iteration: Int?,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return ZeroDce(context, maxWidth, maxHeight, iteration ?: 8).infer(
+			fileUri
+		)
+	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorDeepLapPortraitCommand(
+	params: Params,
+	val radius: Int?,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return DeepLab3Portrait(
+			context, maxWidth, maxHeight, radius ?: 16
+		).infer(fileUri)
+	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorEsrganCommand(
+	params: Params,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return Esrgan(context, maxWidth, maxHeight).infer(fileUri)
+	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorArbitraryStyleTransferCommand(
+	params: Params,
+	val styleUri: Uri,
+	val weight: Float,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return ArbitraryStyleTransfer(
+			context, maxWidth, maxHeight, styleUri, weight
+		).infer(fileUri)
+	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorDeepLapColorPopCommand(
+	params: Params,
+	val weight: Float,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return DeepLab3ColorPop(context, maxWidth, maxHeight, weight).infer(
+			fileUri
+		)
+	}
+
+	override fun isEnhanceCommand() = true
 }
 
 private class ImageProcessorFilterCommand(
-	startId: Int,
-	fileUrl: String,
-	headers: Map<String, String>?,
-	filename: String,
-	maxWidth: Int,
-	maxHeight: Int,
-	isSaveToServer: Boolean,
+	params: Params,
 	val filters: List<ImageFilter>,
-) : ImageProcessorImageCommand(
-	startId, ImageProcessorService.METHOD_FILTER, fileUrl, headers, filename,
-	maxWidth, maxHeight, isSaveToServer
-) {
+) : ImageProcessorImageCommand(params) {
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
 		return ImageFilterProcessor(
 			context, maxWidth, maxHeight, filters
 		).apply(fileUri)
 	}
+
+	override fun isEnhanceCommand() = false
 }
 
 private class ImageProcessorGracePeriodCommand : ImageProcessorCommand
@@ -845,7 +890,7 @@ private class EnhancedFileDevicePersister(context: Context) :
 	}
 
 	private fun getSubDir(cmd: ImageProcessorImageCommand): String {
-		return if (cmd.method in ImageProcessorService.EDIT_METHODS) {
+		return if (!cmd.isEnhanceCommand()) {
 			"Edited Photos"
 		} else {
 			"Enhanced Photos"
@@ -893,7 +938,7 @@ private class EnhancedFileServerPersister :
 
 	private fun getSuffix(cmd: ImageProcessorImageCommand): String {
 		val epoch = System.currentTimeMillis() / 1000
-		return if (cmd.method in ImageProcessorService.EDIT_METHODS) {
+		return if (!cmd.isEnhanceCommand()) {
 			"edited_$epoch"
 		} else {
 			"enhanced_$epoch"
