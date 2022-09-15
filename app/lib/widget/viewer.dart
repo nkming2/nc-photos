@@ -24,10 +24,10 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
-import 'package:nc_photos/widget/handler/enhance_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_editor.dart';
+import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/slideshow_dialog.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
@@ -217,7 +217,7 @@ class _ViewerState extends State<Viewer>
                 onPressed: () => _onSharePressed(context),
               ),
               if (features.isSupportEnhancement &&
-                  EnhanceHandler.isSupportedFormat(file)) ...[
+                  ImageEnhancer.isSupportedFormat(file)) ...[
                 IconButton(
                   icon: Icon(
                     Icons.tune_outlined,
@@ -605,11 +605,9 @@ class _ViewerState extends State<Viewer>
     final c = KiwiContainer().resolve<DiContainer>();
 
     _log.info("[_onEnhancePressed] Enhance file: ${file.path}");
-    EnhanceHandler(
-      account: widget.account,
-      file: file,
-      isSaveToServer: c.pref.isSaveEditResultToServerOr(),
-    )(context);
+    Navigator.of(context).pushNamed(ImageEnhancer.routeName,
+        arguments: ImageEnhancerArguments(
+            widget.account, file, c.pref.isSaveEditResultToServerOr()));
   }
 
   void _onDownloadPressed() {

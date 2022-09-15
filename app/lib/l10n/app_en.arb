@@ -1234,6 +1234,7 @@
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
 	},
+	"enhanceLowLightDescription": "Brighten your photos taken in low-light environments",
 	"enhanceLowLightParamBrightnessLabel": "Brightness",
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
@@ -1250,6 +1251,7 @@
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
 	},
+	"enhancePortraitBlurDescription": "Blur the background of your photos, work best with portraits",
 	"enhancePortraitBlurParamBlurLabel": "Blurriness",
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
@@ -1258,6 +1260,7 @@
 	"@enhanceSuperResolution4xTitle": {
 		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
 	},
+	"enhanceSuperResolution4xDescription": "Enlarge your photos to 4x of its original resolution (see Help for details on how max resolution applies here)",
 	"enhanceStyleTransferTitle": "Style transfer",
 	"@enhanceStyleTransferTitle": {
 		"description": "Transfer the image style from a reference image to a photo"
@@ -1266,10 +1269,16 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
+	"enhanceStyleTransferStyleDialogDescription": "Transfer image style from a reference image to your photos",
+	"enhanceStyleTransferNoStyleSelectedNotification": "Please pick a style",
+	"@enhanceStyleTransferNoStyleSelectedNotification": {
+		"description": "Show this error if users did not pick a reference image"
+	},
 	"enhanceColorPopTitle": "Color pop",
 	"@enhanceColorPopTitle": {
 		"description": "Desaturate the background of a photo"
 	},
+	"enhanceColorPopDescription": "Desaturate the background of your photos, work best with portraits",
 	"enhanceGenericParamWeightLabel": "Weight",
 	"@enhanceGenericParamWeightLabel": {
 		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
@@ -1278,6 +1287,7 @@
 	"@enhanceRetouchTitle": {
 		"description": "Automatically improve your photo"
 	},
+	"enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
 	"doubleTapExitNotification": "Tap again to exit",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
