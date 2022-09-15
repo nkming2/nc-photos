@@ -1274,6 +1274,10 @@
 	"@enhanceGenericParamWeightLabel": {
 		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
 	},
+	"enhanceRetouchTitle": "Auto retouch",
+	"@enhanceRetouchTitle": {
+		"description": "Automatically improve your photo"
+	},
 	"doubleTapExitNotification": "Tap again to exit",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"

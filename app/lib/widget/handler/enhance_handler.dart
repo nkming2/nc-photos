@@ -133,6 +133,19 @@ class EnhanceHandler {
           isSaveToServer: isSaveToServer,
         );
         break;
+
+      case _Algorithm.neurOp:
+        await ImageProcessor.neurOp(
+          "${account.url}/${file.path}",
+          file.filename,
+          Pref().getEnhanceMaxWidthOr(),
+          Pref().getEnhanceMaxHeightOr(),
+          headers: {
+            "Authorization": Api.getAuthorizationHeaderValue(account),
+          },
+          isSaveToServer: isSaveToServer,
+        );
+        break;
     }
   }
 
@@ -209,6 +222,12 @@ class EnhanceHandler {
   List<_Option> _getOptions() => [
         if (platform_k.isAndroid)
           _Option(
+            title: L10n.global().enhanceRetouchTitle,
+            link: enhanceRetouchUrl,
+            algorithm: _Algorithm.neurOp,
+          ),
+        if (platform_k.isAndroid)
+          _Option(
             title: L10n.global().enhanceColorPopTitle,
             subtitle: "DeepLap v3",
             link: enhanceDeepLabColorPopUrl,
@@ -260,6 +279,9 @@ class EnhanceHandler {
 
       case _Algorithm.deepLab3ColorPop:
         return _getDeepLab3ColorPopArgs(context);
+
+      case _Algorithm.neurOp:
+        return {};
     }
   }
 
@@ -458,6 +480,7 @@ enum _Algorithm {
   esrgan,
   arbitraryStyleTransfer,
   deepLab3ColorPop,
+  neurOp,
 }
 
 class _Option {

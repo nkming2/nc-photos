@@ -50,6 +50,7 @@ add_library( # Sets the name of the library.
              esrgan.cpp
              exception.cpp
              image_splitter.cpp
+             neur_op.cpp
              stopwatch.cpp
              tflite_wrapper.cpp
              util.cpp

@@ -110,6 +110,23 @@ class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
+			"neurOp" -> {
+				try {
+					neurOp(
+						call.argument("fileUrl")!!,
+						call.argument("headers"),
+						call.argument("filename")!!,
+						call.argument("maxWidth")!!,
+						call.argument("maxHeight")!!,
+						call.argument<Boolean>("isSaveToServer")!!,
+						result
+					)
+				} catch (e: Throwable) {
+					logE(TAG, "Uncaught exception", e)
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			"filter" -> {
 				try {
 					filter(
@@ -208,6 +225,15 @@ class ImageProcessorChannelHandler(context: Context) :
 		ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
 		}
+	)
+
+	private fun neurOp(
+		fileUrl: String, headers: Map<String, String>?, filename: String,
+		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
+		result: MethodChannel.Result
+	) = method(
+		fileUrl, headers, filename, maxWidth, maxHeight, isSaveToServer,
+		ImageProcessorService.METHOD_NEUR_OP, result
 	)
 
 	private fun filter(

@@ -170,6 +170,23 @@ class ImageProcessor {
         "isSaveToServer": isSaveToServer,
       });
 
+  static Future<void> neurOp(
+    String fileUrl,
+    String filename,
+    int maxWidth,
+    int maxHeight, {
+    Map<String, String>? headers,
+    required bool isSaveToServer,
+  }) =>
+      _methodChannel.invokeMethod("neurOp", <String, dynamic>{
+        "fileUrl": fileUrl,
+        "headers": headers,
+        "filename": filename,
+        "maxWidth": maxWidth,
+        "maxHeight": maxHeight,
+        "isSaveToServer": isSaveToServer,
+      });
+
   static Future<void> filter(
     String fileUrl,
     String filename,

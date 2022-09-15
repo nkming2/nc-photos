@@ -32,6 +32,7 @@ class ImageProcessorService : Service() {
 		const val METHOD_ESRGAN = "Esrgan"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
 		const val METHOD_DEEP_LAP_COLOR_POP = "DeepLab3ColorPop"
+		const val METHOD_NEUR_OP = "NeurOp"
 		const val METHOD_FILTER = "Filter"
 		const val EXTRA_FILE_URL = "fileUrl"
 		const val EXTRA_HEADERS = "headers"
@@ -122,6 +123,7 @@ class ImageProcessorService : Service() {
 			METHOD_DEEP_LAP_COLOR_POP -> onDeepLapColorPop(
 				startId, intent.extras!!
 			)
+			METHOD_NEUR_OP -> onNeurOp(startId, intent.extras!!)
 			METHOD_FILTER -> onFilter(startId, intent.extras!!)
 			else -> {
 				logE(TAG, "Unknown method: $method")
@@ -183,6 +185,12 @@ class ImageProcessorService : Service() {
 					params, extras.getFloat(EXTRA_WEIGHT)
 				)
 			},
+		)
+	}
+
+	private fun onNeurOp(startId: Int, extras: Bundle) {
+		return onMethod(
+			startId, extras, { params -> ImageProcessorNeurOpCommand(params) },
 		)
 	}
 
@@ -538,6 +546,16 @@ private class ImageProcessorDeepLapColorPopCommand(
 		return DeepLab3ColorPop(context, maxWidth, maxHeight, weight).infer(
 			fileUri
 		)
+	}
+
+	override fun isEnhanceCommand() = true
+}
+
+private class ImageProcessorNeurOpCommand(
+	params: Params,
+) : ImageProcessorImageCommand(params) {
+	override fun apply(context: Context, fileUri: Uri): Bitmap {
+		return NeurOp(context, maxWidth, maxHeight).infer(fileUri)
 	}
 
 	override fun isEnhanceCommand() = true
