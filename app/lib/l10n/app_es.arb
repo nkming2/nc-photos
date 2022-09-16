@@ -4,7 +4,7 @@
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
-	"photosTabLabel": "Línea temporal",
+	"photosTabLabel": "Fotos",
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
@@ -33,7 +33,7 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "Selección añadida a {album} con éxito",
+	"addSelectedToAlbumSuccessNotification": "Selección añadida a {album}",
 	"@addSelectedToAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are added to an album successfully",
 		"placeholders": {
@@ -50,7 +50,7 @@
 	"@addToAlbumTooltip": {
 		"description": "Add selected items to an album"
 	},
-	"addToAlbumSuccessNotification": "Archivo añadido a {album} con éxito",
+	"addToAlbumSuccessNotification": "Añadido a {album}",
 	"@addToAlbumSuccessNotification": {
 		"description": "Inform user that the item is added to an album successfully",
 		"placeholders": {
@@ -72,7 +72,7 @@
 			}
 		}
 	},
-	"deleteSelectedSuccessNotification": "Elementos borrados con éxito",
+	"deleteSelectedSuccessNotification": "Elementos borrados",
 	"@deleteSelectedSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully"
 	},
@@ -89,7 +89,7 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivando 1 elemento} other{Archivando {count} archivos}}",
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivando 1 elemento} other{Archivando {count} elementos}}",
 	"@archiveSelectedProcessingNotification": {
 		"description": "Archiving the selected items",
 		"placeholders": {
@@ -98,7 +98,7 @@
 			}
 		}
 	},
-	"archiveSelectedSuccessNotification": "Archivado con éxito",
+	"archiveSelectedSuccessNotification": "Archivado",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
 	},
@@ -124,7 +124,7 @@
 			}
 		}
 	},
-	"unarchiveSelectedSuccessNotification": "Selección desarchivada con éxito",
+	"unarchiveSelectedSuccessNotification": "Selección desarchivada",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
 	},
@@ -145,7 +145,7 @@
 	"@deleteProcessingNotification": {
 		"description": "Inform user that the item is being deleted"
 	},
-	"deleteSuccessNotification": "Elemento borrado con éxito",
+	"deleteSuccessNotification": "Elemento borrado",
 	"@deleteSuccessNotification": {
 		"description": "Inform user that the item is deleted successfully"
 	},
@@ -174,7 +174,7 @@
 	"@addServerTooltip": {
 		"description": "Tooltip of the button that adds a new server"
 	},
-	"removeServerSuccessNotification": "Quitado {server} con éxito",
+	"removeServerSuccessNotification": "Quitado {server}",
 	"@removeServerSuccessNotification": {
 		"description": "Inform user that a server is removed successfully",
 		"placeholders": {
@@ -200,7 +200,7 @@
 			}
 		}
 	},
-	"albumArchiveLabel": "Archivados",
+	"albumArchiveLabel": "Archivo",
 	"@albumArchiveLabel": {
 		"description": "Archive"
 	},
@@ -301,6 +301,10 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
+	"settingsLanguageOptionSystemDefaultLabel": "Sistema",
+	"@settingsLanguageOptionSystemDefaultLabel": {
+		"description": "Follow the Android system language"
+	},
 	"settingsExifSupportTitle": "Soporte EXIF",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
@@ -326,11 +330,7 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Cuenta",
-	"settingsAccountPageTitle": "Configuraciones de la cuenta",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
-	"settingsAccountLabelTitle": "Nombre para la cuenta",
+	"settingsAccountLabelTitle": "Etiqueta",
 	"@settingsAccountLabelTitle": {
 		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
 	},
@@ -339,11 +339,11 @@
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
-	"settingsShareFolderTitle": "Carpeta compartida",
+	"settingsShareFolderTitle": "Carpeta Share",
 	"@settingsShareFolderTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsShareFolderDialogTitle": "Ubicación de la carpeta compartida",
+	"settingsShareFolderDialogTitle": "Ubicación de la carpeta Share",
 	"@settingsShareFolderDialogTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
@@ -355,43 +355,54 @@
 	"@settingsShareFolderPickerDescription": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsServerAppSectionTitle": "Soporte para aplicaciones del servidor",
+	"settingsServerAppSectionTitle": "Usar apps del servidor",
 	"@settingsServerAppSectionTitle": {
-		"description": "Habilita/Deshabilita varias aplicaciones del servidor"
+		"description": "Enable/disable various server apps"
+	},
+	"settingsPhotosDescription": "Personaliza el contenido de la pestaña Fotos",
+	"@settingsPhotosDescription": {
+		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+	},
+	"settingsMemoriesRangeTitle": "Rango de recuerdos",
+	"@settingsMemoriesRangeTitle": {
+		"description": "How many adjacent days to be inclded in memories for a particular year"
+	},
+	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} día} other{+-{range} días}}",
+	"@settingsMemoriesRangeValueText": {
+		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+		"placeholders": {
+			"range": {
+				"example": "1"
+			}
+		}
 	},
 	"settingsViewerTitle": "Visualización",
 	"settingsViewerDescription": "Personalizar la visualización de imágenes/vídeos",
-	"settingsViewerPageTitle": "Ajustes de visualización",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Brillo de pantalla",
-	"settingsScreenBrightnessDescription": "Invalidar nivel de brillo del sistema",
-	"settingsForceRotationTitle": "Ignorar autorotación desactivada",
-	"settingsForceRotationDescription": "Rotar la pantalla aunque la autorotación está desactivada",
+	"settingsScreenBrightnessDescription": "Ignorar nivel de brillo del sistema",
+	"settingsForceRotationTitle": "Forzar rotación automática",
+	"settingsForceRotationDescription": "Rotar la pantalla aunque la autorotación del sistema esté desactivada",
 	"settingsMapProviderTitle": "Proveedor de mapas",
 	"settingsAlbumTitle": "Álbumes",
 	"settingsAlbumDescription": "Personalizar álbumes",
-	"settingsAlbumPageTitle": "Ajustes de álbum",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "Agrupar fotos por fecha",
 	"settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado time",
-	"settingsPhotoEnhancementTitle": "Mejorar fotos",
-	"settingsPhotoEnhancementPageTitle": "Configurar mejoras de fotos",
-	"@settingsPhotoEnhancementPageTitle": {
-		"description": "Dedicated page for photo enhancement settings"
+	"settingsImageEditTitle": "Editor",
+	"@settingsImageEditTitle": {
+		"description": "Include settings for image enhancements and the image editor"
 	},
+	"settingsImageEditDescription": "Personaliza la mejora y edición de imágenes",
 	"settingsEnhanceMaxResolutionTitle": "Resolución máxima al guardar",
-	"settingsEnhanceMaxResolutionDescription": "Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga o cierra mientras mejora fotos.",
-	"settingsThemeTitle": "Temas",
-	"settingsThemeDescription": "Personaliza la apariencia de la app",
-	"settingsThemePageTitle": "Configuración de tema",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
+	"settingsEnhanceMaxResolutionDescription": "Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga photos.",
+	"settingsImageEditSaveResultsToServerTitle": "Guardar en el servidor",
+	"@settingsImageEditSaveResultsToServerTitle": {
+		"description": "Whether to save the edit/enhance results to server instead of the current device"
 	},
-	"settingsFollowSystemThemeTitle": "Usar el mismo tema que android",
+	"settingsImageEditSaveResultsToServerTrueDescription": "Las imágenes se guardan en el servidor, pero si falla se guardan en el almacenamiento del dispositivo",
+	"settingsImageEditSaveResultsToServerFalseDescription": "Los resultados se guardan en éste dispositivo",
+	"settingsThemeTitle": "Apariencia",
+	"settingsThemeDescription": "Personaliza la apariencia de la app",
+	"settingsFollowSystemThemeTitle": "Usar tema del sistema",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
 	},
@@ -399,16 +410,15 @@
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
 	},
-	"settingsUseBlackInDarkThemeTrueDescription": "Usar negro con el tema oscuro",
+	"settingsUseBlackInDarkThemeTrueDescription": "Usar negro en tema oscuro",
 	"@settingsUseBlackInDarkThemeTrueDescription": {
 		"description": "When black in dark theme is set to true"
 	},
-	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris oscuro con el tema oscuro",
+	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris oscuro en tema oscuro",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
 	"settingsMiscellaneousTitle": "Otros ajustes",
-	"settingsMiscellaneousPageTitle": "Otros ajustes",
 	"settingsDoubleTapExitTitle": "Tocar dos veces atrás para salir",
 	"@settingsDoubleTapExitTitle": {
 		"description": "If enabled, users need to tap the back button twice to exit app"
@@ -419,7 +429,6 @@
 	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Características que no están listas para uso diario",
-	"settingsExperimentalPageTitle": "Configuración Experimental",
 	"settingsAboutSectionTitle": "Acerca de",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -432,11 +441,11 @@
 	"@settingsSourceCodeTitle": {
 		"description": "Title of the source code item"
 	},
-	"settingsBugReportTitle": "Comunicar un problema",
+	"settingsBugReportTitle": "Reporte de fallos",
 	"@settingsBugReportTitle": {
 		"description": "Report issue"
 	},
-	"settingsCaptureLogsTitle": "Capturar logs",
+	"settingsCaptureLogsTitle": "Guardar registros",
 	"@settingsCaptureLogsTitle": {
 		"description": "Capture app logs for bug report"
 	},
@@ -445,7 +454,7 @@
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
 	},
-	"writePreferenceFailureNotification": "Error al establecer preferencias",
+	"writePreferenceFailureNotification": "Error al establecer preferencia",
 	"@writePreferenceFailureNotification": {
 		"description": "Inform user that the preference file cannot be modified"
 	},
@@ -453,7 +462,7 @@
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
 	},
-	"exifSupportDetails": "Habilitando el soporte EXIF podrás ver metadatos como la fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño original. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
+	"exifSupportDetails": "Habilitando el uso de EXIF podrás ver metadatos como la fecha de captura, modelo de cámara, etc. Para leer estos metadatos, se necesita un uso extra de la red para obtener la imagen en tamaño original. La aplicación sólo empezará a descargar cuando esté conectado a una red wifi.",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
@@ -461,11 +470,11 @@
 	"@exifSupportConfirmationDialogTitle": {
 		"description": "Title of the dialog to confirm enabling exif support"
 	},
-	"captureLogDetails": "Para obtener logs para reportar fallos:\n\n1. Habilita ésta opción\n2. Reproduce el fallo\n3. Desabilita ésta opción\n4. Busca nc-photos.log en la carpeta de descargas\n\n*Si el fallo provoca que la aplicación se cierre, no se puede capturar el log. En ese caso, por favor contacta con el desarrollador para más instrucciones",
+	"captureLogDetails": "Para guardar registros y reportar fallos:\n\n1. Habilita ésta opción\n2. Reproduce el fallo\n3. Desabilita ésta opción\n4. Busca nc-photos.log en la carpeta de descargas\n\n*Si el fallo provoca que la aplicación se cierre, no se puede guardar el registro. En ese caso, por favor contacta con el desarrollador para más instrucciones",
 	"@captureLogDetails": {
 		"description": "Detailed description on capturing logs"
 	},
-	"captureLogSuccessNotification": "Logs guargados con éxito",
+	"captureLogSuccessNotification": "Registros guargados",
 	"@captureLogSuccessNotification": {
 		"description": "Captured logs are successfully saved to the download directory"
 	},
@@ -481,7 +490,7 @@
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
 	},
-	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos tus archivos",
+	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos tus archivos. Esto puede incrementar el uso de memoria y degradar el rendimiento.",
 	"@rootPickerSkipConfirmationDialogContent": {
 		"description": "Inform user what happens after skipping root picker"
 	},
@@ -524,7 +533,7 @@
 	"@downloadProcessingNotification": {
 		"description": "Inform user that the file is being downloaded"
 	},
-	"downloadSuccessNotification": "Descargado con éxito",
+	"downloadSuccessNotification": "Archivo descargado",
 	"@downloadSuccessNotification": {
 		"description": "Inform user that the file is downloaded successfully"
 	},
@@ -588,7 +597,7 @@
 	"@albumImporterHeaderText": {
 		"description": "Import folders as albums"
 	},
-	"albumImporterSubHeaderText": "Las carpetas sugeridas se alistan a continuación. Dependiendo de la cantidad de archivos en tu servidor, esto podría tardar un rato en terminar.",
+	"albumImporterSubHeaderText": "Las carpetas disponibles se muestran a continuación. Dependiendo de la cantidad de archivos en tu servidor, esto podría tardar un rato en terminar.",
 	"@albumImporterSubHeaderText": {
 		"description": "Import folders as albums"
 	},
@@ -695,7 +704,7 @@
 			}
 		}
 	},
-	"restoreSelectedSuccessNotification": "Restaurado todo con éxito",
+	"restoreSelectedSuccessNotification": "Restaurados",
 	"@restoreSelectedSuccessNotification": {
 		"description": "Restored all selected items from trashbin successfully"
 	},
@@ -712,7 +721,7 @@
 	"@restoreProcessingNotification": {
 		"description": "Restoring the opened item from trashbin"
 	},
-	"restoreSuccessNotification": "Elemento restaurado con éxito",
+	"restoreSuccessNotification": "Elemento restaurado",
 	"@restoreSuccessNotification": {
 		"description": "Restored the opened item from trashbin successfully"
 	},
@@ -732,7 +741,7 @@
 	"@deletePermanentlyConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items"
 	},
-    "albumSharedLabel": "Compartidos",
+    "albumSharedLabel": "Compartido",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
 	},
@@ -796,7 +805,7 @@
 			}
 		}
 	},
-	"whitelistCertButtonLabel": "ASUMIR RIESGO Y PONER EN LISTA BLANCA",
+	"whitelistCertButtonLabel": "ASUMIR RIESGO Y AÑADIR A LISTA BLANCA",
 	"@whitelistCertButtonLabel": {
 		"description": "Label of the whitelist certificate button"
 	},
@@ -824,7 +833,7 @@
 	"@unsetAlbumCoverProcessingNotification": {
 		"description": "Unsetting the cover of the opened album"
 	},
-	"unsetAlbumCoverSuccessNotification": "Portada quitada con éxito",
+	"unsetAlbumCoverSuccessNotification": "Portada quitada",
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
@@ -881,11 +890,16 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "Archivo",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
+	"shareMethodPreviewTitle": "Vista previa",
+	"@shareMethodPreviewTitle": {
+		"description": "Share the preview of a file"
 	},
-	"shareMethodFileDescription": "Descarga el archivo y compártelo con otras apps",
+	"shareMethodPreviewDescription": "Compartir una versión de calidad reducida con otras apps (sólo para imágenes)",
+	"shareMethodOriginalFileTitle": "Archivo original",
+	"@shareMethodOriginalFileTitle": {
+		"description": "Share the original file"
+	},
+	"shareMethodOriginalFileDescription": "Descargar el archivo original y compartirlo con otras apps",
 	"shareMethodPublicLinkTitle": "Enlace público",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
@@ -1002,7 +1016,7 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "Añadido {album} a tu colección con éxito",
+	"addToCollectionSuccessNotification": "Añadido {album} a tu colección",
 	"@addToCollectionSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
@@ -1153,7 +1167,7 @@
 	"@convertAlbumConfirmationDialogContent": {
 		"description": "Make sure the user wants to perform the conversion"
 	},
-	"convertAlbumSuccessNotification": "Collección convertida a álbum con éxito",
+	"convertAlbumSuccessNotification": "Collección convertida a álbum",
 	"@convertAlbumSuccessNotification": {
 		"description": "Successfully converted the album"
 	},
@@ -1252,6 +1266,14 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
+	"enhanceColorPopTitle": "Color pop",
+	"@enhanceColorPopTitle": {
+		"description": "Desaturate the background of a photo"
+	},
+	"enhanceGenericParamWeightLabel": "Intensidad",
+	"@enhanceGenericParamWeightLabel": {
+		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+	},
 	"doubleTapExitNotification": "Toca otra vez para salir",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
@@ -1301,8 +1323,32 @@
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
 	},
+	"imageEditToolbarColorLabel": "Color",
+	"@imageEditToolbarColorLabel": {
+		"description": "Label of the color tools. These can be used to adjust the color of an image"
+	},
+	"imageEditToolbarTransformLabel": "Transformar",
+	"@imageEditToolbarTransformLabel": {
+		"description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+	},
+	"imageEditTransformOrientation": "Orientación",
+	"@imageEditTransformOrientation": {
+		"description": "Change the orientation of the image, 90 degree per step"
+	},
+	"imageEditTransformOrientationClockwise": "dcha",
+	"@imageEditTransformOrientationClockwise": {
+		"description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformOrientationCounterclockwise": "izq",
+	"@imageEditTransformOrientationCounterclockwise": {
+		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformCrop": "Recortar",
+	"@imageEditTransformCrop": {
+		"description": "Crop the image"
+	},
 	"categoriesLabel": "Categorías",
-	"searchLandingPeopleListEmptyText": "Toca ayuda para aprender cómo configurar",
+	"searchLandingPeopleListEmptyText": "Toca ayuda para aprender a configurar",
 	"@searchLandingPeopleListEmptyText": {
 		"description": "Shown in the search landing page under the People section when there are no people"
 	},
@@ -1366,7 +1412,45 @@
 	"@searchFilterBubbleFavoriteFalseText": {
 		"description": "List of active search filters shown in the result page (by favorites, false)"
 	},
-
+	"showAllButtonLabel": "MOSTRAR TODO",
+	"@showAllButtonLabel": {
+		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+	},
+	"gpsPlaceText": "Cerca de {place}",
+	"@gpsPlaceText": {
+		"description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+		"placeholders": {
+			"place": {}
+		}
+	},
+	"gpsPlaceAboutDialogTitle": "Acerca de lugares",
+	"@gpsPlaceAboutDialogTitle": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"gpsPlaceAboutDialogContent": "El lugar mostrado aquí sólo es una estimación y no garantiza ninguna precisión.",
+	"@gpsPlaceAboutDialogContent": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"collectionPlacesLabel": "Lugares",
+	"@collectionPlacesLabel": {
+		"description": "Browse photos grouped by place"
+	},
+	"imageSaveOptionDialogTitle": "Guardando resultados",
+	"@imageSaveOptionDialogTitle": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogContent": "Selecciona dónde guardar ésta y las futuras imágenes. Si eliges Servidor y la app falla al subirlo, se guardará en el dispositivo.",
+	"@imageSaveOptionDialogContent": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogDeviceButtonLabel": "DISPOSITIVO",
+	"@imageSaveOptionDialogDeviceButtonLabel": {
+		"description": "Save the image on the current device"
+	},
+	"imageSaveOptionDialogServerButtonLabel": "SERVIDOR",
+	"@imageSaveOptionDialogServerButtonLabel": {
+		"description": "Save the image on your Nextcloud server"
+	},
 	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
