@@ -213,6 +213,24 @@ List<Widget> _buildChangelog520(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog530(BuildContext context) {
+  return [
+    _subSection("Changes"),
+    _bulletGroup(
+      const Text("New enhancement: auto retouch"),
+      [
+        const Text(
+            "Automatically retouch your photos, improve color and vibrance"),
+      ],
+    ),
+    _bulletGroup(const Text(
+        "A redesigned enhancement page that is more informative and beautiful")),
+    _sectionPadding(),
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -269,6 +287,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  530: _buildChangelog530,
   520: _buildChangelog520,
   510: _buildChangelog510,
   500: _buildChangelog500,
