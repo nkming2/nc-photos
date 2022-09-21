@@ -10,8 +10,10 @@ import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/home.dart';
@@ -117,7 +119,12 @@ class _SignInState extends State<SignIn> {
                               .cancelButtonLabel),
                         )
                       else
-                        Container(),
+                        TextButton(
+                          onPressed: () {
+                            launch(help_util.nextcloudProviderUrl);
+                          },
+                          child: const Text("DON'T HAVE ONE?"),
+                        ),
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState?.validate() == true) {
