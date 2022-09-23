@@ -17,11 +17,8 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:path/path.dart' as path_lib;
-import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
 class FileWebdavDataSource implements FileDataSource {
@@ -583,10 +580,10 @@ class FileCachedDataSource implements FileDataSource {
       await FileSqliteCacheUpdater(_c)(account, dir, remote: remote);
       if (shouldCheckCache) {
         // update our local touch token to match the remote one
-        final tokenManager = TouchTokenManager(_c);
         try {
-          await tokenManager.setLocalToken(
-              account, dir, cacheLoader.remoteTouchToken);
+          _log.info("[list] Update outdated local etag: ${dir.path}");
+          await _c.touchManager
+              .setLocalEtag(account, dir, cacheLoader.remoteTouchEtag);
         } catch (e, stacktrace) {
           _log.shout("[list] Failed while setLocalToken", e, stacktrace);
           // ignore error
@@ -676,19 +673,8 @@ class FileCachedDataSource implements FileDataSource {
     );
 
     // generate a new random token
-    final token = const Uuid().v4().replaceAll("-", "");
     final dir = File(path: path_lib.dirname(f.path));
-    await TouchTokenManager(_c).setLocalToken(account, dir, token);
-    // don't update remote token that frequently
-    (_touchTokenThrottlers["${account.url}/${dir.path}"] ??= Throttler(
-      onTriggered: _updateRemoteTouchToken,
-      logTag: "FileCachedDataSource._touchTokenThrottlers",
-    ))
-        .trigger(
-      maxResponceTime: const Duration(seconds: 20),
-      maxPendingCount: 20,
-      data: _TouchTokenThrottlerData(account, dir, token),
-    );
+    await _c.touchManager.touch(account, dir);
   }
 
   @override
@@ -718,21 +704,8 @@ class FileCachedDataSource implements FileDataSource {
     await _remoteSrc.createDir(account, path);
   }
 
-  Future<void> updateRemoteTouchTokenNow() async {
-    for (final t in _touchTokenThrottlers.values) {
-      await t.triggerNow();
-    }
-  }
-
-  Future<void> _updateRemoteTouchToken(
-      List<_TouchTokenThrottlerData> data) async {
-    try {
-      final d = data.last;
-      await TouchTokenManager(_c).setRemoteToken(d.account, d.dir, d.token);
-    } catch (e, stackTrace) {
-      _log.shout("[_updateRemoteTouchToken] Failed while setRemoteToken", e,
-          stackTrace);
-    }
+  Future<void> flushRemoteTouch() async {
+    return _c.touchManager.flushRemote();
   }
 
   final DiContainer _c;
@@ -742,17 +715,7 @@ class FileCachedDataSource implements FileDataSource {
   final _remoteSrc = const FileWebdavDataSource();
   final FileSqliteDbDataSource _sqliteDbSrc;
 
-  final _touchTokenThrottlers = <String, Throttler<_TouchTokenThrottlerData>>{};
-
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
-}
-
-class _TouchTokenThrottlerData {
-  const _TouchTokenThrottlerData(this.account, this.dir, this.token);
-
-  final Account account;
-  final File dir;
-  final String token;
 }
 
 /// Forward cache for listing AppDb dirs

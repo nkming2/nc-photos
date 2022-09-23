@@ -13,8 +13,6 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/touch_token_manager.dart';
 
 class FileCacheLoader {
   FileCacheLoader(
@@ -51,7 +49,7 @@ class FileCacheLoader {
       }
       if (cacheEtag == remoteEtag) {
         if (shouldCheckCache) {
-          await _checkTouchToken(account, dir, cache);
+          await _checkTouchEtag(account, dir, cache);
         } else {
           _isGood = true;
         }
@@ -67,39 +65,15 @@ class FileCacheLoader {
   }
 
   bool get isGood => _isGood;
-  String? get remoteTouchToken => _remoteToken;
+  String? get remoteTouchEtag => _remoteEtag;
 
-  Future<void> _checkTouchToken(
+  Future<void> _checkTouchEtag(
       Account account, File f, List<File> cache) async {
-    final touchPath =
-        "${remote_storage_util.getRemoteTouchDir(account)}/${f.strippedPath}";
-    final tokenManager = TouchTokenManager(_c);
-    String? remoteToken;
-    try {
-      remoteToken = await tokenManager.getRemoteToken(account, f);
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_checkTouchToken] Failed getting remote token at '$touchPath'",
-          e,
-          stacktrace);
-    }
-    _remoteToken = remoteToken;
-
-    String? localToken;
-    try {
-      localToken = await tokenManager.getLocalToken(account, f);
-    } catch (e, stacktrace) {
-      _log.shout(
-          "[_checkTouchToken] Failed getting local token at '$touchPath'",
-          e,
-          stacktrace);
-    }
-
-    if (localToken != remoteToken) {
-      _log.info(
-          "[_checkTouchToken] Remote and local token differ, cache outdated");
-    } else {
+    final result = await _c.touchManager.checkTouchEtag(account, f);
+    if (result == null) {
       _isGood = true;
+    } else {
+      _remoteEtag = result;
     }
   }
 
@@ -110,7 +84,7 @@ class FileCacheLoader {
   final FileForwardCacheManager? forwardCacheManager;
 
   var _isGood = false;
-  String? _remoteToken;
+  String? _remoteEtag;
 
   static final _log = Logger("entity.file.file_cache_manager.FileCacheLoader");
 }

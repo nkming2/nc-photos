@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:collection/collection.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -17,7 +16,6 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/touch_token_manager.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
@@ -135,7 +133,9 @@ class ScanAccountDirBloc
     }));
   }
 
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
+  static bool require(DiContainer c) =>
+      DiContainer.has(c, DiType.fileRepo) &&
+      DiContainer.has(c, DiType.touchManager);
 
   static ScanAccountDirBloc of(Account account) {
     final name =
@@ -373,98 +373,35 @@ class ScanAccountDirBloc
     // 1st pass: scan for new files
     var files = <File>[];
     final cacheMap = FileForwardCacheManager.prepareFileMap(cache);
-    {
-      final stopwatch = Stopwatch()..start();
-      final fileRepo = FileRepo(FileCachedDataSource(
-        _c,
-        forwardCacheManager: FileForwardCacheManager(_c, cacheMap),
-      ));
-      await for (final event in _queryWithFileRepo(fileRepo, ev,
-          fileRepoForShareDir: _c.fileRepo)) {
-        if (event is ExceptionEvent) {
-          _log.shout("[_queryOnline] Exception while request (1st pass)",
-              event.error, event.stackTrace);
-          emit(ScanAccountDirBlocFailure(
-              cache.isEmpty
-                  ? files
-                  : cache.where((f) => file_util.isSupportedFormat(f)).toList(),
-              event.error));
-          return;
-        }
-        files.addAll(event);
-        if (cache.isEmpty) {
-          // only emit partial results if there's no cache
-          emit(ScanAccountDirBlocLoading(files.toList()));
-        }
-      }
-      _log.info(
-          "[_queryOnline] Elapsed time (pass1): ${stopwatch.elapsedMilliseconds}ms");
-    }
-
-    try {
-      if (_shouldCheckCache) {
-        // 2nd pass: check outdated cache
-        _shouldCheckCache = false;
-
-        // announce the result of the 1st pass
-        // if cache is empty, we have already emitted the results in the loop
-        if (cache.isNotEmpty || files.isEmpty) {
-          // emit results from remote
-          emit(ScanAccountDirBlocLoading(files));
-        }
-
-        // files = await _queryOnlinePass2(ev, cacheMap, files);
-        files = await _queryOnlinePass2(ev, {}, files);
-      }
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_queryOnline] Failed while _queryOnlinePass2", e, stackTrace);
-    }
-    emit(ScanAccountDirBlocSuccess(files));
-  }
-
-  Future<List<File>> _queryOnlinePass2(ScanAccountDirBlocQueryBase ev,
-      Map<int, File> cacheMap, List<File> pass1Files) async {
-    final touchTokenManager = TouchTokenManager(_c);
-    // combine the file maps because [pass1Files] doesn't contain non-supported
-    // files
-    final pass2CacheMap = CombinedMapView(
-        [FileForwardCacheManager.prepareFileMap(pass1Files), cacheMap]);
+    final stopwatch = Stopwatch()..start();
+    _c.touchManager.clearTouchCache();
     final fileRepo = FileRepo(FileCachedDataSource(
       _c,
+      forwardCacheManager: FileForwardCacheManager(_c, cacheMap),
       shouldCheckCache: true,
-      forwardCacheManager: FileForwardCacheManager(_c, pass2CacheMap),
     ));
-    final remoteTouchEtag = await touchTokenManager.getRemoteRootEtag(account);
-    if (remoteTouchEtag == null) {
-      _log.info("[_queryOnlinePass2] remoteTouchEtag == null");
-      await touchTokenManager.setLocalRootEtag(account, null);
-      return pass1Files;
-    }
-    final localTouchEtag = await touchTokenManager.getLocalRootEtag(account);
-    if (remoteTouchEtag == localTouchEtag) {
-      _log.info("[_queryOnlinePass2] remoteTouchEtag matched");
-      return pass1Files;
-    }
-
-    final stopwatch = Stopwatch()..start();
-    final fileRepoNoCache =
-        FileRepo(FileCachedDataSource(_c, shouldCheckCache: true));
-    final newFiles = <File>[];
-    await for (final event in _queryWithFileRepo(fileRepo, ev,
-        fileRepoForShareDir: fileRepoNoCache)) {
+    await for (final event
+        in _queryWithFileRepo(fileRepo, ev, fileRepoForShareDir: _c.fileRepo)) {
       if (event is ExceptionEvent) {
-        _log.shout("[_queryOnlinePass2] Exception while request (2nd pass)",
-            event.error, event.stackTrace);
-        return pass1Files;
+        _log.shout("[_queryOnline] Exception while request", event.error,
+            event.stackTrace);
+        emit(ScanAccountDirBlocFailure(
+            cache.isEmpty
+                ? files
+                : cache.where((f) => file_util.isSupportedFormat(f)).toList(),
+            event.error));
+        return;
       }
-      newFiles.addAll(event);
+      files.addAll(event);
+      if (cache.isEmpty) {
+        // only emit partial results if there's no cache
+        emit(ScanAccountDirBlocLoading(files.toList()));
+      }
     }
     _log.info(
-        "[_queryOnlinePass2] Elapsed time (pass2): ${stopwatch.elapsedMilliseconds}ms");
-    _log.info("[_queryOnlinePass2] Save new touch root etag: $remoteTouchEtag");
-    await touchTokenManager.setLocalRootEtag(account, remoteTouchEtag);
-    return newFiles;
+        "[_queryOnline] Elapsed time (_queryOnline): ${stopwatch.elapsedMilliseconds}ms, ${files.length} files");
+
+    emit(ScanAccountDirBlocSuccess(files));
   }
 
   /// Emit all files under this account
@@ -559,8 +496,6 @@ class ScanAccountDirBloc
     },
     logTag: "ScanAccountDirBloc.refresh",
   );
-
-  bool _shouldCheckCache = true;
 
   static final _log = Logger("bloc.scan_dir.ScanAccountDirBloc");
 }

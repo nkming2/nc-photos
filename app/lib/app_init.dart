@@ -40,6 +40,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
+import 'package:nc_photos/touch_manager.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
@@ -213,6 +214,7 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
   c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c));
+  c.touchManager = TouchManager(c);
 
   if (platform_k.isAndroid) {
     // local file currently only supported on Android

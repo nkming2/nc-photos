@@ -239,8 +239,7 @@ class _MetadataTask {
 
     final c = KiwiContainer().resolve<DiContainer>();
     if (c.fileRepo.dataSrc is FileCachedDataSource) {
-      await (c.fileRepo.dataSrc as FileCachedDataSource)
-          .updateRemoteTouchTokenNow();
+      await (c.fileRepo.dataSrc as FileCachedDataSource).flushRemoteTouch();
     }
   }
 

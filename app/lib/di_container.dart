@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/touch_manager.dart';
 
 enum DiType {
   albumRepo,
@@ -34,6 +35,7 @@ enum DiType {
   searchRepo,
   pref,
   sqliteDb,
+  touchManager,
 }
 
 class DiContainer {
@@ -58,6 +60,7 @@ class DiContainer {
     SearchRepo? searchRepo,
     Pref? pref,
     sql.SqliteDb? sqliteDb,
+    TouchManager? touchManager,
   })  : _albumRepo = albumRepo,
         _albumRepoLocal = albumRepoLocal,
         _faceRepo = faceRepo,
@@ -77,7 +80,8 @@ class DiContainer {
         _localFileRepo = localFileRepo,
         _searchRepo = searchRepo,
         _pref = pref,
-        _sqliteDb = sqliteDb;
+        _sqliteDb = sqliteDb,
+        _touchManager = touchManager;
 
   DiContainer.late();
 
@@ -123,6 +127,8 @@ class DiContainer {
         return contianer._pref != null;
       case DiType.sqliteDb:
         return contianer._sqliteDb != null;
+      case DiType.touchManager:
+        return contianer._touchManager != null;
     }
   }
 
@@ -140,6 +146,7 @@ class DiContainer {
     OrNull<SearchRepo>? searchRepo,
     OrNull<Pref>? pref,
     OrNull<sql.SqliteDb>? sqliteDb,
+    OrNull<TouchManager>? touchManager,
   }) {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
@@ -156,6 +163,7 @@ class DiContainer {
       searchRepo: searchRepo == null ? _searchRepo : searchRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
+      touchManager: touchManager == null ? _touchManager : touchManager.obj,
     );
   }
 
@@ -177,6 +185,7 @@ class DiContainer {
   TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
   LocalFileRepo get localFileRepo => _localFileRepo!;
   SearchRepo get searchRepo => _searchRepo!;
+  TouchManager get touchManager => _touchManager!;
 
   sql.SqliteDb get sqliteDb => _sqliteDb!;
   Pref get pref => _pref!;
@@ -271,6 +280,11 @@ class DiContainer {
     _searchRepo = v;
   }
 
+  set touchManager(TouchManager v) {
+    assert(_touchManager == null);
+    _touchManager = v;
+  }
+
   set sqliteDb(sql.SqliteDb v) {
     assert(_sqliteDb == null);
     _sqliteDb = v;
@@ -302,6 +316,7 @@ class DiContainer {
   TaggedFileRepo? _taggedFileRepo;
   LocalFileRepo? _localFileRepo;
   SearchRepo? _searchRepo;
+  TouchManager? _touchManager;
 
   sql.SqliteDb? _sqliteDb;
   Pref? _pref;
