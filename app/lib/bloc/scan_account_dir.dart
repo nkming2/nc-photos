@@ -124,16 +124,14 @@ class ScanAccountDirBloc
     _imageProcessorUploadSuccessListener?.begin();
 
     on<ScanAccountDirBlocEvent>(_onEvent, transformer: ((events, mapper) {
-      return events.asyncExpand(mapper).distinct((a, b) {
+      return events.distinct((a, b) {
         // only handle ScanAccountDirBlocQuery
-        final r = a is ScanAccountDirBlocQuery &&
-            b is ScanAccountDirBlocQuery &&
-            a == b;
+        final r = a is ScanAccountDirBlocQuery && b is ScanAccountDirBlocQuery;
         if (r) {
           _log.fine("[on] Skip identical ScanAccountDirBlocQuery event");
         }
         return r;
-      });
+      }).asyncExpand(mapper);
     }));
   }
 
