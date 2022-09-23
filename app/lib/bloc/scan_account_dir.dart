@@ -199,7 +199,7 @@ class ScanAccountDirBloc
     }
     final cacheFiles = await _queryOffline(ev);
     _log.info(
-        "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms");
+        "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms, ${cacheFiles.length} files");
     if (!hasContent) {
       // show something instantly on first load
       emit(ScanAccountDirBlocLoading(
@@ -220,6 +220,7 @@ class ScanAccountDirBloc
       return;
     }
     if (_isFileOfInterest(ev.file)) {
+      _log.info("[_onFileRemovedEvent] Request refresh");
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -245,6 +246,7 @@ class ScanAccountDirBloc
       return;
     }
 
+    _log.info("[_onFilePropertyUpdatedEvent] Request refresh");
     if (ev.hasAnyProperties([
       FilePropertyUpdatedEvent.propIsArchived,
       FilePropertyUpdatedEvent.propOverrideDateTime,
@@ -267,6 +269,7 @@ class ScanAccountDirBloc
       // no data in this bloc, ignore
       return;
     }
+    _log.info("[_onFileTrashbinRestoredEvent] Request refresh");
     _refreshThrottler.trigger(
       maxResponceTime: const Duration(seconds: 3),
       maxPendingCount: 10,
@@ -279,6 +282,7 @@ class ScanAccountDirBloc
       return;
     }
     if (_isFileOfInterest(ev.file)) {
+      _log.info("[_onFileMovedEvent] Request refresh");
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -292,6 +296,7 @@ class ScanAccountDirBloc
       return;
     }
     if (ev.account.compareServerIdentity(account)) {
+      _log.info("[_onFavoriteResyncedEvent] Request refresh");
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -305,6 +310,7 @@ class ScanAccountDirBloc
       return;
     }
     if (ev.key == PrefKey.accounts3) {
+      _log.info("[_onPrefUpdatedEvent] Request refresh");
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -319,6 +325,7 @@ class ScanAccountDirBloc
     }
     if (ev.key == PrefKey.shareFolder &&
         identical(ev.pref, AccountPref.of(account))) {
+      _log.info("[_onAccountPrefUpdatedEvent] Request refresh");
       _refreshThrottler.trigger(
         maxResponceTime: const Duration(seconds: 3),
         maxPendingCount: 10,
@@ -327,6 +334,7 @@ class ScanAccountDirBloc
   }
 
   void _onNativeFileExifUpdated(FileExifUpdatedEvent ev) {
+    _log.info("[_onNativeFileExifUpdated] Request refresh");
     _refreshThrottler.trigger(
       maxResponceTime: const Duration(seconds: 3),
       maxPendingCount: 10,
@@ -335,6 +343,7 @@ class ScanAccountDirBloc
 
   void _onImageProcessorUploadSuccessEvent(
       ImageProcessorUploadSuccessEvent ev) {
+    _log.info("[_onImageProcessorUploadSuccessEvent] Request refresh");
     _refreshThrottler.trigger(
       maxResponceTime: const Duration(seconds: 3),
       maxPendingCount: 10,
