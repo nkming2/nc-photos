@@ -382,9 +382,10 @@ class _HomePhotosState extends State<HomePhotos>
   void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
     if (state is ScanAccountDirBlocInit) {
       itemStreamListItems = [];
-    } else if (state is ScanAccountDirBlocSuccess ||
-        state is ScanAccountDirBlocLoading) {
+    } else if (state is ScanAccountDirBlocSuccess) {
       _transformItems(state.files, isPostSuccess: true);
+    } else if (state is ScanAccountDirBlocLoading) {
+      _transformItems(state.files);
     } else if (state is ScanAccountDirBlocFailure) {
       _isScrollbarVisible = true;
       _transformItems(state.files);
