@@ -82,7 +82,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   }
 
   @override
-  build(BuildContext context) => AppTheme(
+  build(BuildContext context) => AppTheme.dark(
         child: Scaffold(
           body: Builder(
             builder: _buildContent,
