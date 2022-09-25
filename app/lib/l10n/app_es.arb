@@ -377,14 +377,14 @@
 		}
 	},
 	"settingsViewerTitle": "Visualización",
-	"settingsViewerDescription": "Personalizar la visualización de imágenes/vídeos",
+	"settingsViewerDescription": "Personaliza la visualización de imágenes/vídeos",
 	"settingsScreenBrightnessTitle": "Brillo de pantalla",
 	"settingsScreenBrightnessDescription": "Ignorar nivel de brillo del sistema",
 	"settingsForceRotationTitle": "Forzar rotación automática",
 	"settingsForceRotationDescription": "Rotar la pantalla aunque la autorotación del sistema esté desactivada",
 	"settingsMapProviderTitle": "Proveedor de mapas",
 	"settingsAlbumTitle": "Álbumes",
-	"settingsAlbumDescription": "Personalizar álbumes",
+	"settingsAlbumDescription": "Personaliza los álbumes",
 	"settingsShowDateInAlbumTitle": "Agrupar fotos por fecha",
 	"settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado time",
 	"settingsImageEditTitle": "Editor",
@@ -410,11 +410,11 @@
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
 	},
-	"settingsUseBlackInDarkThemeTrueDescription": "Usar negro en tema oscuro",
+	"settingsUseBlackInDarkThemeTrueDescription": "Usando negro en tema oscuro",
 	"@settingsUseBlackInDarkThemeTrueDescription": {
 		"description": "When black in dark theme is set to true"
 	},
-	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris oscuro en tema oscuro",
+	"settingsUseBlackInDarkThemeFalseDescription": "Usando gris oscuro en tema oscuro",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
@@ -910,7 +910,7 @@
 		"description": "Create a password protected share link on server and share it"
 	},
 	"shareMethodPasswordLinkDescription": "Crea en el servidor un nuevo enlace protegido con contraseña",
-	"collectionSharingLabel": "Compartidos",
+	"collectionSharingLabel": "Compartido",
 	"@collectionSharingLabel": {
 		"description": "List items being shared by the current account"
 	},
@@ -1230,17 +1230,18 @@
 	"enhanceButtonLabel": "RETOCAR",
 	"enhanceIntroDialogTitle": "Retoca tus fotos",
 	"enhanceIntroDialogDescription": "Tus fotos son procesadas localmente en tu dispositivo. Por defecto, son reducidas a 2048x1536. Puedes ajustar la resolución de guardado en Ajustes",
-	"enhanceLowLightTitle": "Corregir poca luz",
+	"enhanceLowLightTitle": "Mejorar poca luz",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
 	},
-	"enhanceLowLightParamBrightnessLabel": "Nivel De brillo",
+	"enhanceLowLightDescription": "Ilumina tus fotos tomadas en entornos oscuros",
+	"enhanceLowLightParamBrightnessLabel": "Brillo",
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Fotos retocadas",
-	"@collectionEnhancedPhotosLabel": {
-		"description": "List photos enhanced by the app"
+	"collectionEditedPhotosLabel": "Editado (local)",
+	"@collectionEditedPhotosLabel": {
+		"description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
 	},
 	"deletePermanentlyLocalConfirmationDialogContent": "Las fotos seleccionadas se eliminarán permanentemente del dispositivo.\n\nÉsta acción es irreversible",
 	"@deletePermanentlyLocalConfirmationDialogContent": {
@@ -1250,6 +1251,7 @@
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
 	},
+	"enhancePortraitBlurDescription": "Desenfoca el fondo de tus fotos. Obtén el mejor resultado en retratos",
 	"enhancePortraitBlurParamBlurLabel": "Desenfoque",
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
@@ -1258,6 +1260,7 @@
 	"@enhanceSuperResolution4xTitle": {
 		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
 	},
+	"enhanceSuperResolution4xDescription": "Agranda tus fotos 4 veces su resolución original (mira la ayuda para detalles sobre cómo se aplica la máxima resolución)",
 	"enhanceStyleTransferTitle": "Fusionar estilo",
 	"@enhanceStyleTransferTitle": {
 		"description": "Transfer the image style from a reference image to a photo"
@@ -1266,14 +1269,25 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
-	"enhanceColorPopTitle": "Color pop",
+	"enhanceStyleTransferStyleDialogDescription": "Transfiere el estilo de imagen de una imagen de referencia a tus fotos",
+	"enhanceStyleTransferNoStyleSelectedNotification": "Por favor, elige un estilo",
+	"@enhanceStyleTransferNoStyleSelectedNotification": {
+		"description": "Show this error if users did not pick a reference image"
+	},
+	"enhanceColorPopTitle": "Explosión de color",
 	"@enhanceColorPopTitle": {
 		"description": "Desaturate the background of a photo"
 	},
+	"enhanceColorPopDescription": "Desatura el fondo de tus fotos, Obtén el mejor resultado en retratos.",	
 	"enhanceGenericParamWeightLabel": "Intensidad",
 	"@enhanceGenericParamWeightLabel": {
 		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
 	},
+	"enhanceRetouchTitle": "Auto retoque",
+	"@enhanceRetouchTitle": {
+		"description": "Automatically improve your photo"
+	},
+	"enhanceRetouchDescription": "Retoca tus fotos automáticamente, mejora el color y el estado general",
 	"doubleTapExitNotification": "Toca otra vez para salir",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"

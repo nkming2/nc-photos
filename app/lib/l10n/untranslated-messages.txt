@@ -446,16 +446,7 @@
 
   "es": [
     "settingsEnhanceMaxResolutionTitle2",
-    "rootPickerSkipConfirmationDialogContent2",
-    "enhanceLowLightDescription",
-    "collectionEditedPhotosLabel",
-    "enhancePortraitBlurDescription",
-    "enhanceSuperResolution4xDescription",
-    "enhanceStyleTransferStyleDialogDescription",
-    "enhanceStyleTransferNoStyleSelectedNotification",
-    "enhanceColorPopDescription",
-    "enhanceRetouchTitle",
-    "enhanceRetouchDescription"
+    "rootPickerSkipConfirmationDialogContent2"
   ],
 
   "fi": [
