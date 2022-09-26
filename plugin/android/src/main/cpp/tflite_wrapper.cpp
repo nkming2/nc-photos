@@ -2,6 +2,7 @@
 #include "util.h"
 #include <exception>
 #include <tensorflow/lite/c/c_api.h>
+#include <tensorflow/lite/delegates/gpu/delegate.h>
 
 using namespace plugin;
 using namespace std;
@@ -97,6 +98,12 @@ int32_t Interpreter::getOutputTensorCount() const {
 
 const TfLiteTensor *Interpreter::getOutputTensor(const int32_t outputIndex) {
   return TfLiteInterpreterGetOutputTensor(interpreter, outputIndex);
+}
+
+AutoTfLiteDelegate::~AutoTfLiteDelegate() {
+  if (inst) {
+    TfLiteGpuDelegateV2Delete(inst);
+  }
 }
 
 } // namespace tflite
