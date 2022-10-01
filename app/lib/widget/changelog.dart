@@ -231,6 +231,16 @@ List<Widget> _buildChangelog530(BuildContext context) {
   ];
 }
 
+List<Widget> _buildChangelog540(BuildContext context) {
+  return [
+    _subSection("Changes"),
+    _bulletGroup(const Text("Performance tweaks")),
+    _sectionPadding(),
+    _subSection("Localization"),
+    _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
+  ];
+}
+
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
   var change = _oldChangelogs[majorVersion - 1];
   if (change != null) {
@@ -287,6 +297,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  540: _buildChangelog540,
   530: _buildChangelog530,
   520: _buildChangelog520,
   510: _buildChangelog510,
