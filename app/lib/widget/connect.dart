@@ -23,9 +23,9 @@ import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 
 class ConnectArguments {
-  ConnectArguments(this.account);
+  ConnectArguments(this.uri);
 
-  final Account account;
+  final Uri uri;
 }
 
 class Connect extends StatefulWidget {
@@ -37,19 +37,19 @@ class Connect extends StatefulWidget {
 
   const Connect({
     Key? key,
-    required this.account,
+    required this.uri,
   }) : super(key: key);
 
   Connect.fromArgs(ConnectArguments args, {Key? key})
       : this(
           key: key,
-          account: args.account,
+          uri: args.uri,
         );
 
   @override
   createState() => _ConnectState();
 
-  final Account account;
+  final Uri uri;
 }
 
 class _ConnectState extends State<Connect> {
@@ -57,6 +57,12 @@ class _ConnectState extends State<Connect> {
   initState() {
     super.initState();
     _initBloc();
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
   }
 
   @override
@@ -75,7 +81,7 @@ class _ConnectState extends State<Connect> {
 
   void _initBloc() {
     _log.info("[_initBloc] Initialize bloc");
-    _connect();
+    _initiateLogin();
   }
 
   Widget _buildContent(BuildContext context) {
@@ -92,7 +98,7 @@ class _ConnectState extends State<Connect> {
               color: Theme.of(context).colorScheme.primary,
             ),
             Text(
-              L10n.global().connectingToServer(widget.account.url),
+              L10n.global().connectingToServer(widget.uri),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headline6,
             )
@@ -104,9 +110,19 @@ class _ConnectState extends State<Connect> {
 
   void _onStateChange(
       BuildContext context, AppPasswordExchangeBlocState state) {
-    if (state is AppPasswordExchangeBlocSuccess) {
-      final newAccount = widget.account.copyWith(password: state.password);
-      _log.info("[_onStateChange] Password exchanged: $newAccount");
+    if (state is AppPasswordExchangeBlocInitiateLoginSuccess) {
+      // launch the login url
+      launch(state.result.login);
+      // and start polling the API for login credentials
+      _bloc.add(AppPasswordExchangeBlocPoll(state.result.poll));
+    } else if (state is AppPasswordExchangeBlocAppPwSuccess) {
+      final newAccount = Account(
+          Account.newId(),
+          state.result.server.scheme,
+          state.result.server.authority,
+          state.result.loginName.toCi(),
+          state.result.loginName,
+          state.result.appPassword, []);
       _checkWebDavUrl(context, newAccount);
     } else if (state is AppPasswordExchangeBlocFailure) {
       if (features.isSupportSelfSignedCert &&
@@ -189,8 +205,8 @@ class _ConnectState extends State<Connect> {
     });
   }
 
-  void _connect() {
-    _bloc.add(AppPasswordExchangeBlocConnect(widget.account));
+  void _initiateLogin() {
+    _bloc.add(AppPasswordExchangeBlocInitiateLogin(widget.uri));
   }
 
   Future<void> _onCheckWebDavUrlFailed(

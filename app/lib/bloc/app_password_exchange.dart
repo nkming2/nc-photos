@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/account.dart';
+
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/exception.dart';
 
@@ -11,17 +11,58 @@ abstract class AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocEvent();
 }
 
-class AppPasswordExchangeBlocConnect extends AppPasswordExchangeBlocEvent {
-  const AppPasswordExchangeBlocConnect(this.account);
+class AppPasswordExchangeBlocInitiateLogin
+    extends AppPasswordExchangeBlocEvent {
+  const AppPasswordExchangeBlocInitiateLogin(this.uri);
 
   @override
   toString() {
     return "$runtimeType {"
-        "account: $account, "
+        "uri: $uri, "
         "}";
   }
 
-  final Account account;
+  final Uri uri;
+}
+
+class AppPasswordExchangeBlocPoll extends AppPasswordExchangeBlocEvent {
+  const AppPasswordExchangeBlocPoll(this.pollOptions);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "pollOptions: $pollOptions, "
+        "}";
+  }
+
+  final api_util.InitiateLoginPollOptions pollOptions;
+}
+
+class _AppPasswordExchangeBlocAppPwReceived
+    extends AppPasswordExchangeBlocEvent {
+  const _AppPasswordExchangeBlocAppPwReceived(this.appPasswordResponse);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "appPasswordResponse: $appPasswordResponse, "
+        "}";
+  }
+
+  final api_util.AppPasswordSuccess appPasswordResponse;
+}
+
+class _AppPasswordExchangeBlocAppPwFailed extends AppPasswordExchangeBlocEvent {
+  const _AppPasswordExchangeBlocAppPwFailed(this.exception);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "exception: $exception, "
+        "}";
+  }
+
+  final dynamic exception;
 }
 
 abstract class AppPasswordExchangeBlocState {
@@ -32,17 +73,31 @@ class AppPasswordExchangeBlocInit extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocInit();
 }
 
-class AppPasswordExchangeBlocSuccess extends AppPasswordExchangeBlocState {
-  const AppPasswordExchangeBlocSuccess(this.password);
+class AppPasswordExchangeBlocInitiateLoginSuccess
+    extends AppPasswordExchangeBlocState {
+  const AppPasswordExchangeBlocInitiateLoginSuccess(this.result);
 
   @override
   toString() {
     return "$runtimeType {"
-        "password: ${kDebugMode ? password : '***'}, "
+        "result: $result, "
         "}";
   }
 
-  final String password;
+  final api_util.InitiateLoginResponse result;
+}
+
+class AppPasswordExchangeBlocAppPwSuccess extends AppPasswordExchangeBlocState {
+  const AppPasswordExchangeBlocAppPwSuccess(this.result);
+
+  @override
+  toString() {
+    return "$runtimeType {"
+        "result: $result, "
+        "}";
+  }
+
+  final api_util.AppPasswordSuccess result;
 }
 
 class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
@@ -58,6 +113,20 @@ class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
   final dynamic exception;
 }
 
+/// Business Logic Component (BLoC) which handles the App password exchange.
+///
+/// The flow followed by this component is described in the Nextcloud documentation under
+/// https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
+///
+/// ```
+/// Event [AppPasswordExchangeBlocInitiateLogin]  -> State [AppPasswordExchangeBlocInitiateLoginSuccess]
+///                                               -> State [AppPasswordExchangeBlocFailure]
+/// Event [AppPasswordExchangeBlocPoll]           -> Event [AppPasswordExchangeBlocAppPwReceived]
+///                                               -> Event [AppPasswordExchangeBlocAppPwFailed]
+/// Event [AppPasswordExchangeBlocAppPwReceived]  -> State [AppPasswordExchangeBlocAppPwSuccess]
+///                                               -> State [AppPasswordExchangeBlocFailure]
+/// Event [AppPasswordExchangeBlocAppPwFailed]    -> State [AppPasswordExchangeBlocFailure]
+/// ```
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
   AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit()) {
@@ -67,36 +136,96 @@ class AppPasswordExchangeBloc
   Future<void> _onEvent(AppPasswordExchangeBlocEvent event,
       Emitter<AppPasswordExchangeBlocState> emit) async {
     _log.info("[_onEvent] $event");
-    if (event is AppPasswordExchangeBlocConnect) {
-      await _onEventConnect(event, emit);
+    if (event is AppPasswordExchangeBlocInitiateLogin) {
+      await _onEventInitiateLogin(event, emit);
+    } else if (event is AppPasswordExchangeBlocPoll) {
+      await _onEventPoll(event, emit);
+    } else if (event is _AppPasswordExchangeBlocAppPwReceived) {
+      await _onEventAppPasswordReceived(event, emit);
+    } else if (event is _AppPasswordExchangeBlocAppPwFailed) {
+      await _onEventAppPasswordFailure(event, emit);
     }
   }
 
-  Future<void> _onEventConnect(AppPasswordExchangeBlocConnect ev,
+  Future<void> _onEventInitiateLogin(AppPasswordExchangeBlocInitiateLogin ev,
       Emitter<AppPasswordExchangeBlocState> emit) async {
-    final account = ev.account;
+    final uri = ev.uri;
     try {
-      final appPwd = await api_util.exchangePassword(account);
-      emit(AppPasswordExchangeBlocSuccess(appPwd));
+      final initiateLoginResponse = await api_util.initiateLogin(uri);
+      emit(AppPasswordExchangeBlocInitiateLoginSuccess(initiateLoginResponse));
     } on InvalidBaseUrlException catch (e) {
-      _log.warning("[_exchangePassword] Invalid base url");
+      _log.warning("[_onEventInitiateLogin] Invalid base url");
       emit(AppPasswordExchangeBlocFailure(e));
     } on HandshakeException catch (e) {
-      _log.info("[_exchangePassword] Self-signed cert");
+      _log.info("[_onEventInitiateLogin] Self-signed cert");
       emit(AppPasswordExchangeBlocFailure(e));
     } catch (e, stacktrace) {
-      if (e is ApiException && e.response.statusCode == 401) {
-        // wrong password, normal
-        _log.warning(
-            "[_exchangePassword] Server response 401, wrong password?");
-      } else {
-        _log.shout("[_exchangePassword] Failed while exchanging password", e,
-            stacktrace);
-      }
+      _log.shout("[_onEventInitiateLogin] Failed while exchanging password", e,
+          stacktrace);
       emit(AppPasswordExchangeBlocFailure(e));
     }
+  }
+
+  Future<void> _onEventPoll(AppPasswordExchangeBlocPoll ev,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    final pollOptions = ev.pollOptions;
+    try {
+      await _pollPasswordSubscription?.cancel();
+      _pollPasswordSubscription = api_util
+          .pollAppPassword(pollOptions)
+          .listen(_pollAppPasswordStreamListener);
+    } catch (e, stacktrace) {
+      await _pollPasswordSubscription?.cancel();
+      _log.shout(
+          "[_onEventPoll] Failed while polling for password", e, stacktrace);
+      emit(AppPasswordExchangeBlocFailure(e));
+    }
+  }
+
+  Future<void> _pollAppPasswordStreamListener(event) async {
+    try {
+      final appPasswordResponse = await event;
+      if (appPasswordResponse is api_util.AppPasswordSuccess) {
+        await _pollPasswordSubscription?.cancel();
+        add(_AppPasswordExchangeBlocAppPwReceived(appPasswordResponse));
+      }
+    } catch (e, stacktrace) {
+      _log.shout(
+          "[_pollAppPasswordStreamListener] Failed while polling for password", e, stacktrace);
+      add(_AppPasswordExchangeBlocAppPwFailed(e));
+    }
+  }
+
+  Future<void> _onEventAppPasswordReceived(
+      _AppPasswordExchangeBlocAppPwReceived ev,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    try {
+      emit(AppPasswordExchangeBlocAppPwSuccess(ev.appPasswordResponse));
+    } catch (e, stacktrace) {
+      _log.shout(
+          "[_onEventAppPasswordReceived] Failed while exchanging password",
+          e,
+          stacktrace);
+      emit(AppPasswordExchangeBlocFailure(e));
+    }
+  }
+
+  Future<void> _onEventAppPasswordFailure(
+      _AppPasswordExchangeBlocAppPwFailed ev,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    await _pollPasswordSubscription?.cancel();
+    emit(AppPasswordExchangeBlocFailure(ev.exception));
+  }
+
+  @override
+  Future<void> close() {
+    _pollPasswordSubscription?.cancel();
+    return super.close();
   }
 
   static final _log =
       Logger("bloc.app_password_exchange.AppPasswordExchangeBloc");
+
+  StreamSubscription<Future<api_util.AppPasswordResponse>>?
+      _pollPasswordSubscription;
 }
