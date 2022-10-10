@@ -70,6 +70,16 @@ void main() {
       test("-start +stop", () {
         expect(list.slice(-5, 9), List.generate(5, (i) => i + 5));
       });
+
+      /// Expected: [2, 4, 6, 8]
+      test("step = 2", () {
+        expect(list.slice(1, 9, 2), [2, 4, 6, 8]);
+      });
+
+      /// Expected: [1]
+      test("step = 10", () {
+        expect(list.slice(1, 9, 9), [2]);
+      });
     });
   });
 }
