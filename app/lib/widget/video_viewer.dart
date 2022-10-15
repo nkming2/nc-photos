@@ -4,7 +4,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -33,7 +33,7 @@ class VideoViewer extends StatefulWidget {
   createState() => _VideoViewerState();
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final VoidCallback? onLoaded;
   final VoidCallback? onLoadFailure;
   final ValueChanged<double>? onHeightChanged;

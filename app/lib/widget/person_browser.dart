@@ -16,6 +16,7 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -351,11 +352,13 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -366,10 +369,11 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -384,17 +388,19 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -402,13 +408,14 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -416,16 +423,15 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
-    if (_backingFiles.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
-        true) {
+    if (_backingFiles.containsIf(ev.file, (a, b) => a.fdId == b.fdId) != true) {
       return;
     }
     _refreshThrottler.trigger(
@@ -474,7 +480,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   late final DiContainer _c;
 
   late final ListFaceFileBloc _bloc = ListFaceFileBloc(_c);
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
 
   final _buildItemQueue =
       ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();

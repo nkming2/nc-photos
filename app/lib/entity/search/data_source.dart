@@ -4,6 +4,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search_util.dart' as search_util;
 import 'package:nc_photos/entity/sqlite_table_converter.dart';

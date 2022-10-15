@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;

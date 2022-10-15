@@ -12,6 +12,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;

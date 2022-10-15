@@ -11,6 +11,7 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -295,11 +296,13 @@ class _PlaceBrowserState extends State<PlaceBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -310,10 +313,11 @@ class _PlaceBrowserState extends State<PlaceBrowser>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -328,17 +332,19 @@ class _PlaceBrowserState extends State<PlaceBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -346,13 +352,14 @@ class _PlaceBrowserState extends State<PlaceBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -360,9 +367,9 @@ class _PlaceBrowserState extends State<PlaceBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
@@ -408,7 +415,7 @@ class _PlaceBrowserState extends State<PlaceBrowser>
   late final DiContainer _c;
 
   late final ListLocationFileBloc _bloc = ListLocationFileBloc(_c);
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
 
   final _buildItemQueue =
       ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();

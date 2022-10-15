@@ -7,9 +7,9 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
-import 'package:nc_photos/flutter_util.dart'as flutter_util;
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -33,24 +33,24 @@ abstract class PhotoListFileItem extends SelectableItem {
       other is PhotoListFileItem && file.compareServerIdentity(other.file);
 
   @override
-  get hashCode => file.path.hashCode;
+  get hashCode => file.fdPath.hashCode;
 
   @override
   toString() => "$runtimeType {"
       "fileIndex: $fileIndex, "
-      "file: ${file.path}, "
+      "file: ${file.fdPath}, "
       "shouldShowFavoriteBadge: $shouldShowFavoriteBadge, "
       "}";
 
   final int fileIndex;
-  final File file;
+  final FileDescriptor file;
   final bool shouldShowFavoriteBadge;
 }
 
 class PhotoListImageItem extends PhotoListFileItem {
   const PhotoListImageItem({
     required int fileIndex,
-    required File file,
+    required FileDescriptor file,
     required this.account,
     required this.previewUrl,
     required bool shouldShowFavoriteBadge,
@@ -64,8 +64,8 @@ class PhotoListImageItem extends PhotoListFileItem {
   buildWidget(BuildContext context) => PhotoListImage(
         account: account,
         previewUrl: previewUrl,
-        isGif: file.contentType == "image/gif",
-        isFavorite: shouldShowFavoriteBadge && file.isFavorite == true,
+        isGif: file.fdMime == "image/gif",
+        isFavorite: shouldShowFavoriteBadge && file.fdIsFavorite == true,
         heroKey: flutter_util.getImageHeroTag(file),
       );
 
@@ -76,7 +76,7 @@ class PhotoListImageItem extends PhotoListFileItem {
 class PhotoListVideoItem extends PhotoListFileItem {
   const PhotoListVideoItem({
     required int fileIndex,
-    required File file,
+    required FileDescriptor file,
     required this.account,
     required this.previewUrl,
     required bool shouldShowFavoriteBadge,
@@ -90,7 +90,7 @@ class PhotoListVideoItem extends PhotoListFileItem {
   buildWidget(BuildContext context) => PhotoListVideo(
         account: account,
         previewUrl: previewUrl,
-        isFavorite: shouldShowFavoriteBadge && file.isFavorite == true,
+        isFavorite: shouldShowFavoriteBadge && file.fdIsFavorite == true,
       );
 
   final Account account;

@@ -12,7 +12,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -21,6 +21,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
@@ -45,7 +46,7 @@ class ViewerArguments {
   });
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final Album? album;
 }
@@ -81,7 +82,7 @@ class Viewer extends StatefulWidget {
   createState() => _ViewerState();
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
 
   /// The album these files belongs to, or null
@@ -166,7 +167,8 @@ class _ViewerState extends State<Viewer>
                 foregroundColor: Colors.white.withOpacity(.87),
                 actions: [
                   if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
-                    (_pageStates[index]?.favoriteOverride ?? file.isFavorite) ==
+                    (_pageStates[index]?.favoriteOverride ??
+                                file.fdIsFavorite) ==
                             true
                         ? IconButton(
                             icon: const Icon(Icons.star),
@@ -313,7 +315,7 @@ class _ViewerState extends State<Viewer>
                         visible: _isShowDetailPane,
                         child: ViewerDetailPane(
                           account: widget.account,
-                          file: widget.streamFiles[index],
+                          fd: widget.streamFiles[index],
                           album: widget.album,
                           onSlideshowPressed: _onSlideshowPressed,
                         ),
@@ -336,7 +338,7 @@ class _ViewerState extends State<Viewer>
     } else if (file_util.isSupportedVideoFormat(file)) {
       return _buildVideoView(context, index);
     } else {
-      _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
+      _log.shout("[_buildItemView] Unknown file format: ${file.fdMime}");
       _pageStates[index]!.itemHeight = 0;
       return Container();
     }
@@ -509,8 +511,9 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final fd = widget.streamFiles[_viewerController.currentPage];
     final c = KiwiContainer().resolve<DiContainer>();
+    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = true;
     });
@@ -542,8 +545,9 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final fd = widget.streamFiles[_viewerController.currentPage];
     final c = KiwiContainer().resolve<DiContainer>();
+    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = false;
     });
@@ -578,8 +582,10 @@ class _ViewerState extends State<Viewer>
   }
 
   void _onSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
     ShareHandler(
+      c,
       context: context,
     ).shareFiles(widget.account, [file]);
   }
@@ -591,7 +597,7 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    _log.info("[_onEditPressed] Edit file: ${file.path}");
+    _log.info("[_onEditPressed] Edit file: ${file.fdPath}");
     Navigator.of(context).pushNamed(ImageEditor.routeName,
         arguments: ImageEditorArguments(widget.account, file));
   }
@@ -604,24 +610,26 @@ class _ViewerState extends State<Viewer>
     }
     final c = KiwiContainer().resolve<DiContainer>();
 
-    _log.info("[_onEnhancePressed] Enhance file: ${file.path}");
+    _log.info("[_onEnhancePressed] Enhance file: ${file.fdPath}");
     Navigator.of(context).pushNamed(ImageEnhancer.routeName,
         arguments: ImageEnhancerArguments(
             widget.account, file, c.pref.isSaveEditResultToServerOr()));
   }
 
   void _onDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
-    _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
-    DownloadHandler().downloadFiles(widget.account, [file]);
+    _log.info("[_onDownloadPressed] Downloading file: ${file.fdPath}");
+    DownloadHandler(c).downloadFiles(widget.account, [file]);
   }
 
   Future<void> _onDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
-    _log.info("[_onDeletePressed] Removing file: ${file.path}");
-    final count = await RemoveSelectionHandler()(
+    _log.info("[_onDeletePressed] Removing file: ${file.fdPath}");
+    final count = await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: [file],
+      selection: [file],
       isRemoveOpened: true,
       isMoveToTrash: true,
     );

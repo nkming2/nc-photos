@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_local_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -244,11 +246,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   Future<void> _onSelectionSharePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListLocalFileItem>()
         .map((e) => e.file)
         .toList();
     await ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {

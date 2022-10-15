@@ -1,6 +1,7 @@
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:test/test.dart';
 

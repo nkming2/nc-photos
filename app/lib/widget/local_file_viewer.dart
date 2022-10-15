@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/share_handler.dart';
@@ -135,9 +137,10 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
   }
 
   Future<void> _onSharePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_onSharePressed] Sharing file: ${file.logTag}");
-    await ShareHandler(context: context).shareLocalFiles([file]);
+    await ShareHandler(c, context: context).shareLocalFiles([file]);
   }
 
   void _onMenuSelected(BuildContext context, _AppBarMenuOption option) {

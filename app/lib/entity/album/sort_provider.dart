@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
 import 'package:tuple/tuple.dart';

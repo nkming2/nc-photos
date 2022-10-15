@@ -3,6 +3,8 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart' as app;
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table.dart';
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_isolate.dart';
@@ -508,6 +510,48 @@ extension SqliteDbExtension on SqliteDb {
     }
   }
 
+  Future<int> countMissingMetadataByFileIds({
+    Account? sqlAccount,
+    app.Account? appAccount,
+    required List<int> fileIds,
+  }) async {
+    assert((sqlAccount != null) != (appAccount != null));
+    final counts = await fileIds.withPartition((sublist) async {
+      final count = countAll(
+          filter:
+              images.lastUpdated.isNull() | imageLocations.version.isNull());
+      final query = selectOnly(files).join([
+        innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+            useColumns: false),
+        if (appAccount != null) ...[
+          innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
+              useColumns: false),
+          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+              useColumns: false),
+        ],
+        leftOuterJoin(images, images.accountFile.equalsExp(accountFiles.rowId),
+            useColumns: false),
+        leftOuterJoin(imageLocations,
+            imageLocations.accountFile.equalsExp(accountFiles.rowId),
+            useColumns: false),
+      ]);
+      query.addColumns([count]);
+      if (sqlAccount != null) {
+        query.where(accountFiles.account.equals(sqlAccount.rowId));
+      } else if (appAccount != null) {
+        query
+          ..where(servers.address.equals(appAccount.url))
+          ..where(accounts.userId
+              .equals(appAccount.userId.toCaseInsensitiveString()));
+      }
+      query
+        ..where(files.fileId.isIn(sublist))
+        ..where(whereFileIsSupportedImageMime());
+      return [await query.map((r) => r.read(count)).getSingle()];
+    }, maxByFileIdsSize);
+    return counts.reduce((value, element) => value + element);
+  }
+
   Future<void> truncate() async {
     await delete(servers).go();
     // technically deleting Servers table is enough to clear the followings, but
@@ -526,6 +570,18 @@ extension SqliteDbExtension on SqliteDb {
 
     // reset the auto increment counter
     await customStatement("UPDATE sqlite_sequence SET seq=0;");
+  }
+
+  Expression<bool?> whereFileIsSupportedMime() {
+    return file_util.supportedFormatMimes
+        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .reduce((value, element) => value | element);
+  }
+
+  Expression<bool?> whereFileIsSupportedImageMime() {
+    return file_util.supportedImageFormatMimes
+        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .reduce((value, element) => value | element);
   }
 
   static final _log = Logger("entity.sqlite_table_extension.SqliteDbExtension");

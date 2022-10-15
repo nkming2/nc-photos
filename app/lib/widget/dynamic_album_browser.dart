@@ -15,6 +15,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -388,7 +389,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onDownloadPressed() {
-    DownloadHandler().downloadFiles(
+    final c = KiwiContainer().resolve<DiContainer>();
+    DownloadHandler(c).downloadFiles(
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
@@ -411,11 +413,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -477,11 +481,12 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });

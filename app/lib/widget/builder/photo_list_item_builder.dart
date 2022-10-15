@@ -6,7 +6,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -32,7 +32,7 @@ class PhotoListItemBuilderArguments {
   });
 
   final Account account;
-  final List<File> files;
+  final List<FileDescriptor> files;
   final bool isArchived;
   final PhotoListItemSorter? sorter;
   final PhotoListItemGrouper? grouper;
@@ -50,17 +50,17 @@ class PhotoListItemBuilderResult {
     this.smartAlbums = const [],
   });
 
-  final List<File> backingFiles;
+  final List<FileDescriptor> backingFiles;
   final List<SelectableItem> listItems;
   final List<Album> smartAlbums;
 }
 
-typedef PhotoListItemSorter = int Function(File, File);
+typedef PhotoListItemSorter = int Function(FileDescriptor, FileDescriptor);
 
 abstract class PhotoListItemGrouper {
   const PhotoListItemGrouper();
 
-  SelectableItem? onFile(File file);
+  SelectableItem? onFile(FileDescriptor file);
 }
 
 class PhotoListFileDateGrouper implements PhotoListItemGrouper {
@@ -69,7 +69,7 @@ class PhotoListFileDateGrouper implements PhotoListItemGrouper {
   }) : helper = DateGroupHelper(isMonthOnly: isMonthOnly);
 
   @override
-  onFile(File file) => helper
+  onFile(FileDescriptor file) => helper
       .onFile(file)
       ?.run((date) => PhotoListDateItem(date: date, isMonthOnly: isMonthOnly));
 
@@ -83,10 +83,10 @@ class PhotoListItemSmartAlbumConfig {
   final int memoriesDayRange;
 }
 
-int photoListFileDateTimeSorter(File a, File b) =>
-    compareFileDateTimeDescending(a, b);
+int photoListFileDateTimeSorter(FileDescriptor a, FileDescriptor b) =>
+    compareFileDescriptorDateTimeDescending(a, b);
 
-int photoListFilenameSorter(File a, File b) =>
+int photoListFilenameSorter(FileDescriptor a, FileDescriptor b) =>
     compareNatural(b.filename, a.filename);
 
 PhotoListItemBuilderResult buildPhotoListItem(
@@ -112,7 +112,7 @@ class _PhotoListItemBuilder {
     required this.locale,
   });
 
-  PhotoListItemBuilderResult call(Account account, List<File> files) {
+  PhotoListItemBuilderResult call(Account account, List<FileDescriptor> files) {
     final s = Stopwatch()..start();
     try {
       return _fromSortedItems(account, _sortItems(files));
@@ -121,8 +121,8 @@ class _PhotoListItemBuilder {
     }
   }
 
-  List<File> _sortItems(List<File> files) {
-    final filtered = files.where((f) => (f.isArchived ?? false) == isArchived);
+  List<FileDescriptor> _sortItems(List<FileDescriptor> files) {
+    final filtered = files.where((f) => f.fdIsArchived == isArchived);
     if (sorter == null) {
       return filtered.toList();
     } else {
@@ -131,7 +131,7 @@ class _PhotoListItemBuilder {
   }
 
   PhotoListItemBuilderResult _fromSortedItems(
-      Account account, List<File> files) {
+      Account account, List<FileDescriptor> files) {
     final today = DateTime.now();
     final memoryAlbumHelper = smartAlbumConfig != null
         ? MemoryAlbumHelper(
@@ -156,7 +156,7 @@ class _PhotoListItemBuilder {
     );
   }
 
-  SelectableItem? _buildListItem(int i, Account account, File file) {
+  SelectableItem? _buildListItem(int i, Account account, FileDescriptor file) {
     final previewUrl = api_util.getFilePreviewUrl(account, file,
         width: k.photoThumbSize, height: k.photoThumbSize);
     if (file_util.isSupportedImageFormat(file)) {
@@ -176,8 +176,7 @@ class _PhotoListItemBuilder {
         shouldShowFavoriteBadge: shouldShowFavoriteBadge,
       );
     } else {
-      _log.shout(
-          "[_buildListItem] Unsupported file format: ${file.contentType}");
+      _log.shout("[_buildListItem] Unsupported file format: ${file.fdMime}");
       return null;
     }
   }

@@ -3,6 +3,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/move.dart';
 

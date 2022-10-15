@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -16,15 +18,23 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/download_file.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:tuple/tuple.dart';
 
 class DownloadHandler {
+  DownloadHandler(this._c)
+      : assert(require(_c)),
+        assert(InflateFileDescriptor.require(_c));
+
+  static bool require(DiContainer c) => true;
+
   Future<void> downloadFiles(
     Account account,
-    List<File> files, {
+    List<FileDescriptor> fds, {
     String? parentDir,
-  }) {
+  }) async {
+    final files = await InflateFileDescriptor(_c)(account, fds);
     final _DownloadHandlerBase handler;
     if (platform_k.isAndroid) {
       handler = _DownlaodHandlerAndroid();
@@ -37,6 +47,8 @@ class DownloadHandler {
       parentDir: parentDir,
     );
   }
+
+  final DiContainer _c;
 }
 
 abstract class _DownloadHandlerBase {

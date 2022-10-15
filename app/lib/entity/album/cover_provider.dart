@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/type.dart';
 
@@ -19,6 +20,9 @@ abstract class AlbumCoverProvider with EquatableMixin {
         return AlbumAutoCoverProvider.fromJson(content.cast<String, dynamic>());
       case AlbumManualCoverProvider._type:
         return AlbumManualCoverProvider.fromJson(
+            content.cast<String, dynamic>());
+      case AlbumMemoryCoverProvider._type:
+        return AlbumMemoryCoverProvider.fromJson(
             content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
@@ -46,7 +50,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
   @override
   toString();
 
-  File? getCover(Album album);
+  FileDescriptor? getCover(Album album);
 
   JsonObj _toContentJson();
 
@@ -150,4 +154,40 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
   final File coverFile;
 
   static const _type = "manual";
+}
+
+/// Cover selected when building a Memory album
+class AlbumMemoryCoverProvider extends AlbumCoverProvider {
+  AlbumMemoryCoverProvider({
+    required this.coverFile,
+  });
+
+  factory AlbumMemoryCoverProvider.fromJson(JsonObj json) {
+    return AlbumMemoryCoverProvider(
+      coverFile:
+          FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
+    );
+  }
+
+  @override
+  toString() => "$runtimeType {"
+      "coverFile: '${coverFile.fdPath}', "
+      "}";
+
+  @override
+  getCover(Album album) => coverFile;
+
+  @override
+  get props => [
+        coverFile,
+      ];
+
+  @override
+  _toContentJson() => {
+        "coverFile": coverFile.toJson(),
+      };
+
+  final FileDescriptor coverFile;
+
+  static const _type = "memory";
 }

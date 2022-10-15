@@ -2,7 +2,7 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 
@@ -12,7 +12,7 @@ const reservedFilenameChars = "<>:\"/\\|?*";
 /// Return the preview image URL for [file]. See [getFilePreviewUrlRelative]
 String getFilePreviewUrl(
   Account account,
-  File file, {
+  FileDescriptor file, {
   required int width,
   required int height,
   String? mode,
@@ -27,7 +27,7 @@ String getFilePreviewUrl(
 /// cropped
 String getFilePreviewUrlRelative(
   Account account,
-  File file, {
+  FileDescriptor file, {
   required int width,
   required int height,
   String? mode,
@@ -36,14 +36,9 @@ String getFilePreviewUrlRelative(
   String url;
   if (file_util.isTrash(account, file)) {
     // trashbin does not support preview.png endpoint
-    url = "index.php/apps/files_trashbin/preview?fileId=${file.fileId}";
+    url = "index.php/apps/files_trashbin/preview?fileId=${file.fdId}";
   } else {
-    if (file.fileId != null) {
-      url = "index.php/core/preview?fileId=${file.fileId}";
-    } else {
-      final filePath = Uri.encodeQueryComponent(file.strippedPath);
-      url = "index.php/core/preview.png?file=$filePath";
-    }
+    url = "index.php/core/preview?fileId=${file.fdId}";
   }
 
   url = "$url&x=$width&y=$height";
@@ -76,12 +71,12 @@ String getFilePreviewUrlByFileId(
   return url;
 }
 
-String getFileUrl(Account account, File file) {
+String getFileUrl(Account account, FileDescriptor file) {
   return "${account.url}/${getFileUrlRelative(file)}";
 }
 
-String getFileUrlRelative(File file) {
-  return file.path;
+String getFileUrlRelative(FileDescriptor file) {
+  return file.fdPath;
 }
 
 String getWebdavRootUrlRelative(Account account) =>

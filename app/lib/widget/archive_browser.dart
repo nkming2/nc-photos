@@ -11,6 +11,7 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -18,6 +19,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -230,7 +232,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
           .unarchiveSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles = selectedListItems
+    final selection = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
@@ -238,6 +240,8 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
       clearSelectedItems();
     });
     final c = KiwiContainer().resolve<DiContainer>();
+    final selectedFiles =
+        await InflateFileDescriptor(c)(widget.account, selection);
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
@@ -265,7 +269,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     }
   }
 
-  void _transformItems(List<File> files) {
+  void _transformItems(List<FileDescriptor> files) {
     _buildItemQueue.addJob(
       PhotoListItemBuilderArguments(
         widget.account,
@@ -293,7 +297,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
 
   final _buildItemQueue =
       ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();

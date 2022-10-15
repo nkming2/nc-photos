@@ -6,7 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
-import 'package:nc_photos/entity/file.dart' as app;
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
@@ -91,7 +91,7 @@ class RemoteImageViewer extends StatefulWidget {
   @override
   createState() => _RemoteImageViewerState();
 
-  static void preloadImage(Account account, app.File file) {
+  static void preloadImage(Account account, FileDescriptor file) {
     LargeImageCacheManager.inst.getFileStream(
       _getImageUrl(account, file),
       headers: {
@@ -101,7 +101,7 @@ class RemoteImageViewer extends StatefulWidget {
   }
 
   final Account account;
-  final app.File file;
+  final FileDescriptor file;
   final bool canZoom;
   final VoidCallback? onLoaded;
   final ValueChanged<double>? onHeightChanged;
@@ -333,8 +333,8 @@ class _ImageViewerState extends State<_ImageViewer>
   static final _log = Logger("widget.image_viewer._ImageViewerState");
 }
 
-String _getImageUrl(Account account, app.File file) {
-  if (file.contentType == "image/gif") {
+String _getImageUrl(Account account, FileDescriptor file) {
+  if (file.fdMime == "image/gif") {
     return api_util.getFileUrl(account, file);
   } else {
     return api_util.getFilePreviewUrl(

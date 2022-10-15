@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/use_case/list_album.dart';
