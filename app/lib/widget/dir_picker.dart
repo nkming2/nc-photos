@@ -342,7 +342,7 @@ class DirPickerState extends State<DirPicker> {
     _log.fine(
         "[_pickedAllExclude] Unpicking '${item.file.path}' and picking children");
     final products = <LsDirBlocItem>[];
-    for (final i in item.children ?? []) {
+    for (final i in item.children ?? <LsDirBlocItem>[]) {
       if (file_util.isOrUnderDir(exclude.file, i.file)) {
         // [i] is a parent of exclude
         products.addAll(_pickedAllExclude(item: i, exclude: exclude));
@@ -358,7 +358,7 @@ class DirPickerState extends State<DirPicker> {
     if (path == parent.file.path) {
       return parent;
     }
-    for (final c in parent.children ?? []) {
+    for (final c in parent.children ?? <LsDirBlocItem>[]) {
       if (path == c.file.path || path.startsWith("${c.file.path}/")) {
         return _findChildItemByPath(c, path);
       }
