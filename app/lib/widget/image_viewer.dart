@@ -198,7 +198,7 @@ class _ImageViewerState extends State<_ImageViewer>
           },
           child: SizeChangedLayoutNotifier(
             key: _key,
-            child: widget.child,
+            child: IntrinsicHeight(child: widget.child),
           ),
         ),
       ),
