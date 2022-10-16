@@ -9,7 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
-import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -66,7 +65,6 @@ class PhotoListImageItem extends PhotoListFileItem {
         previewUrl: previewUrl,
         isGif: file.fdMime == "image/gif",
         isFavorite: shouldShowFavoriteBadge && file.fdIsFavorite == true,
-        heroKey: flutter_util.getImageHeroTag(file),
       );
 
   final Account account;
