@@ -483,13 +483,19 @@ class _ViewerState extends State<Viewer>
   /// Called when the page is being built for the first time
   void _onCreateNewPage(BuildContext context, int index) {
     _pageStates[index] = _PageState(ScrollController(
-        initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
-            ? _calcDetailPaneOpenedScrollPosition(index)
-            : 0));
+      initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
+          ? _calcDetailPaneOpenedScrollPosition(index)
+          : 0,
+    ));
   }
 
   /// Called when the page is being built after previously moved out of view
   void _onRecreatePageAfterMovedOut(BuildContext context, int index) {
+    _pageStates[index]!.setScrollController(ScrollController(
+      initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
+          ? _calcDetailPaneOpenedScrollPosition(index)
+          : 0,
+    ));
     if (_isShowDetailPane && !_isClosingDetailPane) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_pageStates[index]!.itemHeight != null) {
@@ -761,6 +767,10 @@ class _ViewerState extends State<Viewer>
 
 class _PageState {
   _PageState(this.scrollController);
+
+  void setScrollController(ScrollController c) {
+    scrollController = c;
+  }
 
   ScrollController scrollController;
   double? itemHeight;
