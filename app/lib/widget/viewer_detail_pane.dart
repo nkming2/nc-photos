@@ -27,14 +27,12 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_file_tag.dart';
-import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
-import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:path/path.dart' as path_lib;
@@ -46,6 +44,9 @@ class ViewerDetailPane extends StatefulWidget {
     required this.account,
     required this.fd,
     this.album,
+    required this.onRemoveFromAlbumPressed,
+    required this.onArchivePressed,
+    required this.onUnarchivePressed,
     this.onSlideshowPressed,
   }) : super(key: key);
 
@@ -58,6 +59,9 @@ class ViewerDetailPane extends StatefulWidget {
   /// The album this file belongs to, or null
   final Album? album;
 
+  final void Function(BuildContext context) onRemoveFromAlbumPressed;
+  final void Function(BuildContext context) onArchivePressed;
+  final void Function(BuildContext context) onUnarchivePressed;
   final VoidCallback? onSlideshowPressed;
 }
 
@@ -140,7 +144,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     _DetailPaneButton(
                       icon: Icons.remove_outlined,
                       label: L10n.global().removeFromAlbumTooltip,
-                      onPressed: () => _onRemoveFromAlbumPressed(context),
+                      onPressed: () => widget.onRemoveFromAlbumPressed(context),
                     ),
                   if (widget.album != null &&
                       widget.album!.albumFile?.isOwned(widget.account.userId) ==
@@ -159,13 +163,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     _DetailPaneButton(
                       icon: Icons.unarchive_outlined,
                       label: L10n.global().unarchiveTooltip,
-                      onPressed: () => _onUnarchivePressed(context),
+                      onPressed: () => widget.onUnarchivePressed(context),
                     )
                   else
                     _DetailPaneButton(
                       icon: Icons.archive_outlined,
                       label: L10n.global().archiveTooltip,
-                      onPressed: () => _onArchivePressed(context),
+                      onPressed: () => widget.onArchivePressed(context),
                     ),
                   _DetailPaneButton(
                     icon: Icons.slideshow_outlined,
@@ -417,31 +421,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     return cameraSubStr;
   }
 
-  Future<void> _onRemoveFromAlbumPressed(BuildContext context) async {
-    assert(widget.album!.provider is AlbumStaticProvider);
-    try {
-      await NotifiedAction(
-        () async {
-          final thisItem = AlbumStaticProvider.of(widget.album!)
-              .items
-              .whereType<AlbumFileItem>()
-              .firstWhere((element) => element.file.path == widget.fd.fdPath);
-          await RemoveFromAlbum(KiwiContainer().resolve<DiContainer>())(
-              widget.account, widget.album!, [thisItem]);
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        },
-        null,
-        L10n.global().removeSelectedFromAlbumSuccessNotification(1),
-        failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
-      )();
-    } catch (e, stackTrace) {
-      _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album", e,
-          stackTrace);
-    }
-  }
-
   Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
     assert(_file != null);
     assert(widget.album != null);
@@ -477,45 +456,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       selection: [_file!],
       clearSelection: () {},
     );
-  }
-
-  Future<void> _onArchivePressed(BuildContext context) async {
-    assert(_file != null);
-    _log.info("[_onArchivePressed] Archive file: ${widget.fd.fdPath}");
-    final c = KiwiContainer().resolve<DiContainer>();
-    final count = await ArchiveSelectionHandler(c)(
-      account: widget.account,
-      selection: [_file!],
-    );
-    if (count == 1) {
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    }
-  }
-
-  Future<void> _onUnarchivePressed(BuildContext context) async {
-    assert(_file != null);
-    _log.info("[_onUnarchivePressed] Unarchive file: ${widget.fd.fdPath}");
-    try {
-      await NotifiedAction(
-        () async {
-          await UpdateProperty(_c.fileRepo)
-              .updateIsArchived(widget.account, _file!, false);
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
-        },
-        L10n.global().unarchiveSelectedProcessingNotification(1),
-        L10n.global().unarchiveSelectedSuccessNotification,
-        failureText: L10n.global().unarchiveSelectedFailureNotification(1),
-      )();
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_onUnarchivePressed] Failed while archiving file: ${logFilename(widget.fd.fdPath)}",
-          e,
-          stackTrace);
-    }
   }
 
   void _onMapTap() {

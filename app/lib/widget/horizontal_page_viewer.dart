@@ -260,6 +260,15 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
 }
 
 class HorizontalPageViewerController {
+  Future<void> previousPage({
+    required Duration duration,
+    required Curve curve,
+  }) =>
+      _pageController.previousPage(
+        duration: duration,
+        curve: curve,
+      );
+
   Future<void> nextPage({
     required Duration duration,
     required Curve curve,
@@ -268,6 +277,10 @@ class HorizontalPageViewerController {
         duration: duration,
         curve: curve,
       );
+
+  void jumpToPage(int page) {
+    _pageController.jumpToPage(page);
+  }
 
   int get currentPage => _pageController.hasClients
       ? _pageController.page!.round()

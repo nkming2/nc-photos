@@ -9,35 +9,36 @@ import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 
-class ArchiveSelectionHandler {
-  ArchiveSelectionHandler(this._c)
+class UnarchiveSelectionHandler {
+  UnarchiveSelectionHandler(this._c)
       : assert(require(_c)),
         assert(InflateFileDescriptor.require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
-  /// Archive [selectedFiles] and return the archived count
+  /// Unarchive [selectedFiles] and return the unarchived count
   Future<int> call({
     required Account account,
     required List<FileDescriptor> selection,
     bool shouldShowProcessingText = true,
   }) async {
     final selectedFiles = await InflateFileDescriptor(_c)(account, selection);
-    return NotifiedListAction<File>(
+    return await NotifiedListAction<File>(
       list: selectedFiles,
       action: (file) async {
-        await UpdateProperty(_c.fileRepo).updateIsArchived(account, file, true);
+        await UpdateProperty(_c.fileRepo)
+            .updateIsArchived(account, file, false);
       },
       processingText: shouldShowProcessingText
           ? L10n.global()
-              .archiveSelectedProcessingNotification(selectedFiles.length)
+              .unarchiveSelectedProcessingNotification(selectedFiles.length)
           : null,
-      successText: L10n.global().archiveSelectedSuccessNotification,
+      successText: L10n.global().unarchiveSelectedSuccessNotification,
       getFailureText: (failures) =>
-          L10n.global().archiveSelectedFailureNotification(failures.length),
+          L10n.global().unarchiveSelectedFailureNotification(failures.length),
       onActionError: (file, e, stackTrace) {
         _log.shout(
-            "[call] Failed while archiving file: ${logFilename(file.path)}",
+            "[call] Failed while unarchiving file: ${logFilename(file.path)}",
             e,
             stackTrace);
       },
@@ -47,5 +48,5 @@ class ArchiveSelectionHandler {
   final DiContainer _c;
 
   static final _log = Logger(
-      "widget.handler.archive_selection_handler.ArchiveSelectionHandler");
+      "widget.handler.unarchive_selection_handler.UnarchiveSelectionHandler");
 }
