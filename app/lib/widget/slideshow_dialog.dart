@@ -11,6 +11,7 @@ class SlideshowConfig {
     required this.duration,
     required this.isShuffle,
     required this.isRepeat,
+    required this.isReverse,
   });
 
   @override
@@ -19,6 +20,7 @@ class SlideshowConfig {
         "duration: $duration, "
         "isShuffle: $isShuffle, "
         "isRepeat: $isRepeat, "
+        "isReverse: $isReverse, "
         "}";
   }
 
@@ -30,6 +32,9 @@ class SlideshowConfig {
 
   /// Whether to repeat the slideshow after finishing
   final bool isRepeat;
+
+  /// Whether to show the items in reverse order
+  final bool isReverse;
 }
 
 class SlideshowDialog extends StatefulWidget {
@@ -38,6 +43,7 @@ class SlideshowDialog extends StatefulWidget {
     required this.duration,
     required this.isShuffle,
     required this.isRepeat,
+    required this.isReverse,
   }) : super(key: key);
 
   @override
@@ -46,6 +52,7 @@ class SlideshowDialog extends StatefulWidget {
   final Duration duration;
   final bool isShuffle;
   final bool isRepeat;
+  final bool isReverse;
 }
 
 class _SlideshowDialogState extends State<SlideshowDialog> {
@@ -148,6 +155,13 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
               },
               initialValue: widget.isRepeat,
             ),
+            SwitchFormField(
+              title: Text(L10n.global().slideshowSetupDialogReverseTitle),
+              onSaved: (value) {
+                _formValue.isReverse = value!;
+              },
+              initialValue: widget.isReverse,
+            ),
           ],
         ),
       ),
@@ -179,6 +193,7 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
         ),
         isShuffle: _formValue.isShuffle,
         isRepeat: _formValue.isRepeat,
+        isReverse: _formValue.isReverse,
       );
       _log.info("[_onOkPressed] Config: $product");
       Navigator.of(context).pop(product);
@@ -199,4 +214,5 @@ class _FormValue {
   late int second;
   late bool isShuffle;
   late bool isRepeat;
+  late bool isReverse;
 }

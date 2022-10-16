@@ -267,6 +267,13 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
+  bool isSlideshowReverseOr(bool def) => isSlideshowReverse() ?? def;
+  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
+      PrefKey.isSlideshowReverse,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -581,6 +588,7 @@ enum PrefKey {
   memoriesRange,
   saveEditResultToServer,
   hasShownSaveEditResultDialog,
+  isSlideshowReverse,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -656,6 +664,8 @@ extension on PrefKey {
         return "saveEditResultToServer";
       case PrefKey.hasShownSaveEditResultDialog:
         return "hasShownSaveEditResultDialog";
+      case PrefKey.isSlideshowReverse:
+        return "isSlideshowReverse";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

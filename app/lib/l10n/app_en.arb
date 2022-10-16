@@ -882,6 +882,10 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"slideshowSetupDialogReverseTitle": "Reverse",
+	"@slideshowSetupDialogReverseTitle": {
+		"description": "Whether to play the slideshow in reverse order"
+	},
 	"linkCopiedNotification": "Link copied",
 	"@linkCopiedNotification": {
 		"description": "Copied the share link to clipboard"

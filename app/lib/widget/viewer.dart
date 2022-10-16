@@ -651,6 +651,7 @@ class _ViewerState extends State<Viewer>
         duration: Duration(seconds: Pref().getSlideshowDurationOr(5)),
         isShuffle: Pref().isSlideshowShuffleOr(false),
         isRepeat: Pref().isSlideshowRepeatOr(false),
+        isReverse: Pref().isSlideshowReverseOr(false),
       ),
     );
     if (result == null) {
@@ -659,6 +660,7 @@ class _ViewerState extends State<Viewer>
     unawaited(Pref().setSlideshowDuration(result.duration.inSeconds));
     unawaited(Pref().setSlideshowShuffle(result.isShuffle));
     unawaited(Pref().setSlideshowRepeat(result.isRepeat));
+    unawaited(Pref().setSlideshowReverse(result.isReverse));
     unawaited(
       Navigator.of(context).pushNamed(
         SlideshowViewer.routeName,

@@ -75,6 +75,8 @@ class _SlideshowViewerState extends State<SlideshowViewer>
       final index = [for (var i = 0; i < widget.streamFiles.length; ++i) i];
       if (widget.config.isShuffle) {
         return index..shuffle();
+      } else if (widget.config.isReverse) {
+        return index.reversed.toList();
       } else {
         return index;
       }
@@ -103,6 +105,15 @@ class _SlideshowViewerState extends State<SlideshowViewer>
   }
 
   Widget _buildContent(BuildContext context) {
+    final int initialPage;
+    if (widget.config.isShuffle) {
+      // the original order is meaningless after shuffled
+      initialPage = 0;
+    } else if (widget.config.isReverse) {
+      initialPage = widget.streamFiles.length - 1 - widget.startIndex;
+    } else {
+      initialPage = widget.startIndex;
+    }
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -116,8 +127,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
             pageCount:
                 widget.config.isRepeat ? null : widget.streamFiles.length,
             pageBuilder: _buildPage,
-            // the original order is meaningless after shuffled
-            initialPage: widget.config.isShuffle ? 0 : widget.startIndex,
+            initialPage: initialPage,
             controller: _viewerController,
             viewportFraction: _viewportFraction,
             canSwitchPage: false,
