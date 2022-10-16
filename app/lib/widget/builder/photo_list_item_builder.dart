@@ -1,4 +1,4 @@
-import 'package:collection/collection.dart' show compareNatural;
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -8,7 +8,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -126,7 +125,7 @@ class _PhotoListItemBuilder {
     if (sorter == null) {
       return filtered.toList();
     } else {
-      return filtered.stableSorted(sorter);
+      return filtered.sorted(sorter!);
     }
   }
 
