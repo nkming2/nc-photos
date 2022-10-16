@@ -27,6 +27,7 @@ class RemoveSelectionHandler {
     bool shouldCleanupAlbum = true,
     bool isRemoveOpened = false,
     bool isMoveToTrash = false,
+    bool shouldShowProcessingText = true,
   }) async {
     final selectedFiles = await InflateFileDescriptor(_c)(account, selection);
     final String processingText, successText;
@@ -42,13 +43,15 @@ class RemoveSelectionHandler {
       failureText =
           (count) => L10n.global().deleteSelectedFailureNotification(count);
     }
-    SnackBarManager().showSnackBar(
-      SnackBar(
-        content: Text(processingText),
-        duration: k.snackBarDurationShort,
-      ),
-      canBeReplaced: true,
-    );
+    if (shouldShowProcessingText) {
+      SnackBarManager().showSnackBar(
+        SnackBar(
+          content: Text(processingText),
+          duration: k.snackBarDurationShort,
+        ),
+        canBeReplaced: true,
+      );
+    }
 
     var failureCount = 0;
     await Remove(KiwiContainer().resolve<DiContainer>())(

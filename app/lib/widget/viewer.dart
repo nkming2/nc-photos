@@ -653,6 +653,7 @@ class _ViewerState extends State<Viewer>
       selection: [file],
       isRemoveOpened: true,
       isMoveToTrash: true,
+      shouldShowProcessingText: false,
     ));
     _removeCurrentItemFromStream(context, index);
   }
