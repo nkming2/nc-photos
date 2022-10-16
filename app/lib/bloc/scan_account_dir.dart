@@ -8,17 +8,17 @@ import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
-import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
+import 'package:nc_photos/use_case/sync_dir.dart';
 
 abstract class ScanAccountDirBlocEvent {
   const ScanAccountDirBlocEvent();
@@ -63,7 +63,7 @@ abstract class ScanAccountDirBlocState {
         "}";
   }
 
-  final List<File> files;
+  final List<FileDescriptor> files;
 }
 
 class ScanAccountDirBlocInit extends ScanAccountDirBlocState {
@@ -71,15 +71,15 @@ class ScanAccountDirBlocInit extends ScanAccountDirBlocState {
 }
 
 class ScanAccountDirBlocLoading extends ScanAccountDirBlocState {
-  const ScanAccountDirBlocLoading(List<File> files) : super(files);
+  const ScanAccountDirBlocLoading(List<FileDescriptor> files) : super(files);
 }
 
 class ScanAccountDirBlocSuccess extends ScanAccountDirBlocState {
-  const ScanAccountDirBlocSuccess(List<File> files) : super(files);
+  const ScanAccountDirBlocSuccess(List<FileDescriptor> files) : super(files);
 }
 
 class ScanAccountDirBlocFailure extends ScanAccountDirBlocState {
-  const ScanAccountDirBlocFailure(List<File> files, this.exception)
+  const ScanAccountDirBlocFailure(List<FileDescriptor> files, this.exception)
       : super(files);
 
   @override
@@ -96,7 +96,8 @@ class ScanAccountDirBlocFailure extends ScanAccountDirBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class ScanAccountDirBlocInconsistent extends ScanAccountDirBlocState {
-  const ScanAccountDirBlocInconsistent(List<File> files) : super(files);
+  const ScanAccountDirBlocInconsistent(List<FileDescriptor> files)
+      : super(files);
 }
 
 /// A bloc that return all files under a dir recursively
@@ -206,7 +207,45 @@ class ScanAccountDirBloc
           cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList()));
     }
 
-    await _queryOnline(ev, emit, cacheFiles);
+    stopwatch.reset();
+    final hasUpdate = await _syncOnline(ev);
+    _log.info(
+        "[_onEventQuery] Elapsed time (_syncOnline): ${stopwatch.elapsedMilliseconds}ms, hasUpdate: $hasUpdate");
+    if (hasUpdate) {
+      // content updated, reload from db
+      stopwatch.reset();
+      final newFiles = await _queryOffline(ev);
+      _log.info(
+          "[_onEventQuery] Elapsed time (_queryOffline) 2nd pass: ${stopwatch.elapsedMilliseconds}ms, ${newFiles.length} files");
+      emit(ScanAccountDirBlocSuccess(newFiles));
+    } else {
+      emit(ScanAccountDirBlocSuccess(cacheFiles));
+    }
+  }
+
+  Future<bool> _syncOnline(ScanAccountDirBlocQueryBase ev) async {
+    final settings = AccountPref.of(account);
+    final shareDir =
+        File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
+    bool isShareDirIncluded = false;
+
+    bool hasUpdate = false;
+    for (final r in account.roots) {
+      final dirPath = file_util.unstripPath(account, r);
+      hasUpdate |= await SyncDir(_c)(account, dirPath);
+      isShareDirIncluded |=
+          file_util.isOrUnderDir(shareDir, File(path: dirPath));
+    }
+
+    if (!isShareDirIncluded) {
+      _log.info("[_syncOnline] Explicitly scanning share folder");
+      hasUpdate |= await SyncDir(_c)(
+        account,
+        file_util.unstripPath(account, settings.getShareFolderOr()),
+        isRecursive: false,
+      );
+    }
+    return hasUpdate;
   }
 
   Future<void> _onExternalEvent(_ScanAccountDirBlocExternalEvent ev,
@@ -360,13 +399,20 @@ class ScanAccountDirBloc
     );
   }
 
-  Future<List<File>> _queryOffline(ScanAccountDirBlocQueryBase ev) async {
-    final files = <File>[];
+  Future<List<FileDescriptor>> _queryOffline(
+      ScanAccountDirBlocQueryBase ev) async {
+    final settings = AccountPref.of(account);
+    final shareDir =
+        File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
+    bool isShareDirIncluded = false;
+
+    final files = <FileDescriptor>[];
     for (final r in account.roots) {
       try {
         final dir = File(path: file_util.unstripPath(account, r));
         files.addAll(await ScanDirOffline(_c)(account, dir,
-            isOnlySupportedFormat: false));
+            isOnlySupportedFormat: true));
+        isShareDirIncluded |= file_util.isOrUnderDir(shareDir, dir);
       } catch (e, stackTrace) {
         _log.shout(
             "[_queryOffline] Failed while ScanDirOffline: ${logFilename(r)}",
@@ -374,81 +420,12 @@ class ScanAccountDirBloc
             stackTrace);
       }
     }
-    return files;
-  }
-
-  Future<void> _queryOnline(ScanAccountDirBlocQueryBase ev,
-      Emitter<ScanAccountDirBlocState> emit, List<File> cache) async {
-    // 1st pass: scan for new files
-    var files = <File>[];
-    final cacheMap = FileForwardCacheManager.prepareFileMap(cache);
-    final stopwatch = Stopwatch()..start();
-    _c.touchManager.clearTouchCache();
-    final fileRepo = FileRepo(FileCachedDataSource(
-      _c,
-      forwardCacheManager: FileForwardCacheManager(_c, cacheMap),
-      shouldCheckCache: true,
-    ));
-    await for (final event
-        in _queryWithFileRepo(fileRepo, ev, fileRepoForShareDir: _c.fileRepo)) {
-      if (event is ExceptionEvent) {
-        _log.shout("[_queryOnline] Exception while request", event.error,
-            event.stackTrace);
-        emit(ScanAccountDirBlocFailure(
-            cache.isEmpty
-                ? files
-                : cache.where((f) => file_util.isSupportedFormat(f)).toList(),
-            event.error));
-        return;
-      }
-      files.addAll(event);
-      if (cache.isEmpty) {
-        // only emit partial results if there's no cache
-        emit(ScanAccountDirBlocLoading(files.toList()));
-      }
-    }
-    _log.info(
-        "[_queryOnline] Elapsed time (_queryOnline): ${stopwatch.elapsedMilliseconds}ms, ${files.length} files");
-
-    emit(ScanAccountDirBlocSuccess(files));
-  }
-
-  /// Emit all files under this account
-  ///
-  /// Emit List<File> or ExceptionEvent
-  Stream<dynamic> _queryWithFileRepo(
-    FileRepo fileRepo,
-    ScanAccountDirBlocQueryBase ev, {
-    FileRepo? fileRepoForShareDir,
-  }) async* {
-    final settings = AccountPref.of(account);
-    final shareDir =
-        File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
-    bool isShareDirIncluded = false;
-
-    for (final r in account.roots) {
-      final dir = File(path: file_util.unstripPath(account, r));
-      yield* ScanDir(fileRepo)(account, dir);
-      isShareDirIncluded |= file_util.isOrUnderDir(shareDir, dir);
-    }
 
     if (!isShareDirIncluded) {
-      _log.info("[_queryWithFileRepo] Explicitly scanning share folder");
-      try {
-        final files = await Ls(fileRepoForShareDir ?? fileRepo)(
-          account,
-          File(
-            path: file_util.unstripPath(account, settings.getShareFolderOr()),
-          ),
-        );
-        yield files
-            .where((f) =>
-                file_util.isSupportedFormat(f) && !f.isOwned(account.userId))
-            .toList();
-      } catch (e, stackTrace) {
-        yield ExceptionEvent(e, stackTrace);
-      }
+      _log.info("[_queryOffline] Explicitly scanning share folder");
+      files.addAll(await Ls(_c.fileRepoLocal)(account, shareDir));
     }
+    return files;
   }
 
   bool _isFileOfInterest(File file) {

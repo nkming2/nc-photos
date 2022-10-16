@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
@@ -375,6 +376,15 @@ File buildJpegFile({
       fileId: fileId,
       ownerId: ownerId.toCi(),
       ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
+    );
+
+FileDescriptor fileToFileDescriptor(File f) => FileDescriptor(
+      fdPath: f.path,
+      fdId: f.fileId!,
+      fdMime: f.contentType,
+      fdIsArchived: f.isArchived ?? false,
+      fdIsFavorite: f.isFavorite ?? false,
+      fdDateTime: f.bestDateTime,
     );
 
 Share buildShare({

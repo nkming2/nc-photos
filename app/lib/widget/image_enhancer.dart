@@ -11,7 +11,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/help_utils.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -34,7 +34,7 @@ class ImageEnhancerArguments {
   const ImageEnhancerArguments(this.account, this.file, this.isSaveToServer);
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final bool isSaveToServer;
 }
 
@@ -45,8 +45,8 @@ class ImageEnhancer extends StatefulWidget {
         builder: (context) => ImageEnhancer.fromArgs(args),
       );
 
-  static bool isSupportedFormat(File file) =>
-      file_util.isSupportedImageFormat(file) && file.contentType != "image/gif";
+  static bool isSupportedFormat(FileDescriptor file) =>
+      file_util.isSupportedImageFormat(file) && file.fdMime != "image/gif";
 
   const ImageEnhancer({
     super.key,
@@ -67,7 +67,7 @@ class ImageEnhancer extends StatefulWidget {
   createState() => _ImageEnhancerState();
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final bool isSaveToServer;
 }
 
@@ -181,7 +181,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     switch (_selectedOption.algorithm) {
       case _Algorithm.zeroDce:
         await ImageProcessor.zeroDce(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
@@ -195,7 +195,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
       case _Algorithm.deepLab3Portrait:
         await ImageProcessor.deepLab3Portrait(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
@@ -209,7 +209,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
       case _Algorithm.esrgan:
         await ImageProcessor.esrgan(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
@@ -222,7 +222,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
       case _Algorithm.arbitraryStyleTransfer:
         await ImageProcessor.arbitraryStyleTransfer(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           math.min(
               _c.pref.getEnhanceMaxWidthOr(), _isAtLeast5GbRam() ? 1600 : 1280),
@@ -239,7 +239,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
       case _Algorithm.deepLab3ColorPop:
         await ImageProcessor.deepLab3ColorPop(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
@@ -253,7 +253,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
       case _Algorithm.neurOp:
         await ImageProcessor.neurOp(
-          "${widget.account.url}/${widget.file.path}",
+          "${widget.account.url}/${widget.file.fdPath}",
           widget.file.filename,
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),

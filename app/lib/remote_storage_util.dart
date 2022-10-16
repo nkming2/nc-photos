@@ -14,4 +14,6 @@ String getRemoteLinkSharesDir(Account account) =>
     "${getRemoteStorageDir(account)}/link_shares";
 
 String getRemoteStorageDir(Account account) =>
-    "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos";
+    "${api_util.getWebdavRootUrlRelative(account)}/$remoteStorageDirRelativePath";
+
+const remoteStorageDirRelativePath = ".com.nkming.nc_photos";

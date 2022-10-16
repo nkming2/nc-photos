@@ -389,7 +389,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onDownloadPressed() {
-    DownloadHandler().downloadFiles(
+    final c = KiwiContainer().resolve<DiContainer>();
+    DownloadHandler(c).downloadFiles(
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
@@ -419,6 +420,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
@@ -431,6 +433,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       return;
     }
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -441,10 +444,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Future<void> _onSelectionAddPressed(BuildContext context) async {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<_FileListItem>()
           .map((e) => e.file)
           .toList(),
@@ -493,11 +497,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });

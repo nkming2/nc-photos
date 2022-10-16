@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
@@ -26,7 +26,7 @@ class SlideshowViewerArguments {
   );
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -59,7 +59,7 @@ class SlideshowViewer extends StatefulWidget {
   createState() => _SlideshowViewerState();
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -185,7 +185,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
     } else if (file_util.isSupportedVideoFormat(file)) {
       return _buildVideoView(context, index);
     } else {
-      _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
+      _log.shout("[_buildItemView] Unknown file format: ${file.fdMime}");
       return Container();
     }
   }

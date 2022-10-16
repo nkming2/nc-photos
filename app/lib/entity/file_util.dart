@@ -2,32 +2,34 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
 
-bool isSupportedMime(String mime) => _supportedFormatMimes.contains(mime);
+bool isSupportedMime(String mime) => supportedFormatMimes.contains(mime);
 
-bool isSupportedFormat(File file) => isSupportedMime(file.contentType ?? "");
+bool isSupportedFormat(FileDescriptor file) =>
+    isSupportedMime(file.fdMime ?? "");
 
 bool isSupportedImageMime(String mime) =>
-    isSupportedMime(mime) && mime.startsWith("image/") == true;
+    supportedImageFormatMimes.contains(mime);
 
-bool isSupportedImageFormat(File file) =>
-    isSupportedImageMime(file.contentType ?? "");
+bool isSupportedImageFormat(FileDescriptor file) =>
+    isSupportedImageMime(file.fdMime ?? "");
 
-bool isSupportedVideoFormat(File file) =>
-    isSupportedFormat(file) && file.contentType?.startsWith("video/") == true;
+bool isSupportedVideoFormat(FileDescriptor file) =>
+    isSupportedFormat(file) && file.fdMime?.startsWith("video/") == true;
 
 bool isMetadataSupportedMime(String mime) =>
     _metadataSupportedFormatMimes.contains(mime);
 
-bool isMetadataSupportedFormat(File file) =>
-    isMetadataSupportedMime(file.contentType ?? "");
+bool isMetadataSupportedFormat(FileDescriptor file) =>
+    isMetadataSupportedMime(file.fdMime ?? "");
 
-bool isTrash(Account account, File file) =>
-    file.path.startsWith(api_util.getTrashbinPath(account));
+bool isTrash(Account account, FileDescriptor file) =>
+    file.fdPath.startsWith(api_util.getTrashbinPath(account));
 
 bool isAlbumFile(Account account, File file) =>
     file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
@@ -94,7 +96,7 @@ bool isMissingMetadata(File file) =>
     isSupportedImageFormat(file) &&
     (file.metadata == null || file.location == null);
 
-final _supportedFormatMimes = [
+final supportedFormatMimes = [
   "image/jpeg",
   "image/png",
   "image/webp",
@@ -104,6 +106,9 @@ final _supportedFormatMimes = [
   "video/quicktime",
   if (platform_k.isAndroid || platform_k.isWeb) "video/webm",
 ];
+
+final supportedImageFormatMimes =
+    supportedFormatMimes.where((f) => f.startsWith("image/")).toList();
 
 const _metadataSupportedFormatMimes = [
   "image/jpeg",

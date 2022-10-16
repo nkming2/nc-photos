@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
 
 class RequestPublicLink {
   /// Request a temporary unique public link to [file]
-  Future<String> call(Account account, File file) async {
+  Future<String> call(Account account, FileDescriptor file) async {
     final response =
-        await Api(account).ocs().dav().direct().post(fileId: file.fileId!);
+        await Api(account).ocs().dav().direct().post(fileId: file.fdId);
     if (!response.isGood) {
       _log.severe("[call] Failed requesting server: $response");
       throw ApiException(

@@ -311,11 +311,12 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   }
 
   Future<void> _delete(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_delete] Removing file: ${file.path}");
-    final count = await RemoveSelectionHandler()(
+    final count = await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: [file],
+      selection: [file],
       shouldCleanupAlbum: false,
       isRemoveOpened: true,
     );

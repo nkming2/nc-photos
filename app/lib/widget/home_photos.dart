@@ -19,8 +19,8 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -359,7 +359,7 @@ class _HomePhotosState extends State<HomePhotos>
         ?.item
         .as<PhotoListFileItem>()
         ?.file
-        .bestDateTime;
+        .fdDateTime;
     if (date != null) {
       final text = DateFormat(DateFormat.YEAR_ABBR_MONTH,
               Localizations.localeOf(context).languageCode)
@@ -424,11 +424,13 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -439,10 +441,11 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -457,17 +460,19 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -475,13 +480,14 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -489,9 +495,9 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
@@ -523,23 +529,34 @@ class _HomePhotosState extends State<HomePhotos>
     _hasFiredMetadataTask.value = false;
   }
 
-  void _tryStartMetadataTask({
+  Future<void> _tryStartMetadataTask({
     bool ignoreFired = false,
-  }) {
+  }) async {
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
-      final missingMetadataCount =
-          _backingFiles.where(file_util.isMissingMetadata).length;
-      if (missingMetadataCount > 0) {
-        if (_web != null) {
-          _web!.startMetadataTask(missingMetadataCount);
-        } else {
-          service.startService();
+      try {
+        final c = KiwiContainer().resolve<DiContainer>();
+        final missingMetadataCount =
+            await c.sqliteDb.countMissingMetadataByFileIds(
+          appAccount: widget.account,
+          fileIds: _backingFiles.map((e) => e.fdId).toList(),
+        );
+        _log.info(
+            "[_tryStartMetadataTask] Missing count: $missingMetadataCount");
+        if (missingMetadataCount > 0) {
+          if (_web != null) {
+            _web!.startMetadataTask(missingMetadataCount);
+          } else {
+            unawaited(service.startService());
+          }
         }
-      }
 
-      _hasFiredMetadataTask.value = true;
+        _hasFiredMetadataTask.value = true;
+      } catch (e, stackTrace) {
+        _log.shout("[_tryStartMetadataTask] Failed starting metadata task", e,
+            stackTrace);
+      }
     }
   }
 
@@ -558,7 +575,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   /// Transform a File list to grid items
   void _transformItems(
-    List<File> files, {
+    List<FileDescriptor> files, {
     bool isSorted = false,
     bool isPostSuccess = false,
   }) {
@@ -700,7 +717,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
   var _smartAlbums = <Album>[];
 
   final _buildItemQueue =

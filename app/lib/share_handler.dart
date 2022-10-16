@@ -10,6 +10,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -26,6 +27,7 @@ import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/download_preview.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/share_local.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
@@ -36,10 +38,14 @@ import 'package:tuple/tuple.dart';
 
 /// Handle sharing to other apps
 class ShareHandler {
-  ShareHandler({
+  ShareHandler(
+    this._c, {
     required this.context,
     this.clearSelection,
-  });
+  })  : assert(require(_c)),
+        assert(InflateFileDescriptor.require(_c));
+
+  static bool require(DiContainer c) => true;
 
   Future<void> shareLocalFiles(List<LocalFile> files) async {
     if (!isSelectionCleared) {
@@ -67,7 +73,8 @@ class ShareHandler {
     );
   }
 
-  Future<void> shareFiles(Account account, List<File> files) async {
+  Future<void> shareFiles(Account account, List<FileDescriptor> fds) async {
+    final files = await InflateFileDescriptor(_c)(account, fds);
     try {
       final method = await _askShareMethod(files);
       if (method == null) {
@@ -336,6 +343,7 @@ class ShareHandler {
     }
   }
 
+  final DiContainer _c;
   final BuildContext context;
   final VoidCallback? clearSelection;
   var isSelectionCleared = false;
