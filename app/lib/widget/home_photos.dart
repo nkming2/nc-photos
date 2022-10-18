@@ -537,11 +537,12 @@ class _HomePhotosState extends State<HomePhotos>
         (!_hasFiredMetadataTask.value || ignoreFired)) {
       try {
         final c = KiwiContainer().resolve<DiContainer>();
-        final missingMetadataCount =
-            await c.sqliteDb.countMissingMetadataByFileIds(
-          appAccount: widget.account,
-          fileIds: _backingFiles.map((e) => e.fdId).toList(),
-        );
+        final missingMetadataCount = await c.sqliteDb.use((db) async {
+          return await db.countMissingMetadataByFileIds(
+            appAccount: widget.account,
+            fileIds: _backingFiles.map((e) => e.fdId).toList(),
+          );
+        });
         _log.info(
             "[_tryStartMetadataTask] Missing count: $missingMetadataCount");
         if (missingMetadataCount > 0) {
