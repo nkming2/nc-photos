@@ -94,12 +94,14 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _albumUpdatedListener.begin();
+    _fileRemovedListener.begin();
   }
 
   @override
   dispose() {
     super.dispose();
     _albumUpdatedListener.end();
+    _fileRemovedListener.end();
   }
 
   @override
@@ -586,6 +588,21 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
   }
 
+  void _onFileRemovedEvent(FileRemovedEvent ev) {
+    if (_backingFiles.any((f) => f.compareServerIdentity(ev.file))) {
+      setState(() {
+        _sortedItems = _sortedItems.where((i) {
+          if (i is AlbumFileItem) {
+            return !i.file.compareServerIdentity(ev.file);
+          } else {
+            return true;
+          }
+        }).toList();
+        _onSortedItemsUpdated();
+      });
+    }
+  }
+
   void _transformItems(List<AlbumItem> items) {
     _sortedItems = (_editAlbum ?? _album)!.sortProvider.sort(items);
     _onSortedItemsUpdated();
@@ -658,6 +675,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   Album? _editAlbum;
 
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
+  late final _fileRemovedListener =
+      AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
 
   static final _log =
       Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
