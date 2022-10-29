@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
@@ -432,7 +433,16 @@ class ScanAccountDirBloc
 
     if (!isShareDirIncluded) {
       _log.info("[_queryOffline] Explicitly scanning share folder");
-      files.addAll(await Ls(_c.fileRepoLocal)(account, shareDir));
+      try {
+        files.addAll(await Ls(_c.fileRepoLocal)(account, shareDir));
+      } on CacheNotFoundException catch (_) {
+        // normal when there's no cache
+      } catch (e, stackTrace) {
+        _log.shout(
+            "[_queryOffline] Failed while ScanDirOffline: ${logFilename(shareDir.path)}",
+            e,
+            stackTrace);
+      }
     }
     return files;
   }
