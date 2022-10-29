@@ -469,6 +469,17 @@ class FileSqliteDbDataSource implements FileDataSource {
               : sql.Value(overrideDateTime.obj),
           isFavorite:
               favorite == null ? const sql.Value.absent() : sql.Value(favorite),
+          bestDateTime: overrideDateTime == null && metadata == null
+              ? const sql.Value.absent()
+              : sql.Value(file_util.getBestDateTime(
+                  overrideDateTime: overrideDateTime == null
+                      ? f.overrideDateTime
+                      : overrideDateTime.obj,
+                  dateTimeOriginal: metadata == null
+                      ? f.metadata?.exif?.dateTimeOriginal
+                      : metadata.obj?.exif?.dateTimeOriginal,
+                  lastModified: f.lastModified,
+                )),
         );
         await (db.update(db.accountFiles)
               ..where((t) => t.rowId.equals(rowIds.accountFileRowId)))

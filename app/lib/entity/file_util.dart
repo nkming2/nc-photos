@@ -96,6 +96,12 @@ bool isMissingMetadata(File file) =>
     isSupportedImageFormat(file) &&
     (file.metadata == null || file.location == null);
 
+DateTime getBestDateTime({
+  DateTime? overrideDateTime,
+  DateTime? dateTimeOriginal,
+  DateTime? lastModified,
+}) => overrideDateTime ?? dateTimeOriginal ?? lastModified ?? DateTime.now().toUtc();
+
 final supportedFormatMimes = [
   "image/jpeg",
   "image/png",

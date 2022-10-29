@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
@@ -568,11 +569,11 @@ class File with EquatableMixin implements FileDescriptor {
 }
 
 extension FileExtension on File {
-  DateTime get bestDateTime =>
-      overrideDateTime ??
-      metadata?.exif?.dateTimeOriginal ??
-      lastModified ??
-      DateTime.now().toUtc();
+  DateTime get bestDateTime => file_util.getBestDateTime(
+        overrideDateTime: overrideDateTime,
+        dateTimeOriginal: metadata?.exif?.dateTimeOriginal,
+        lastModified: lastModified,
+      );
 
   bool isOwned(CiString userId) => ownerId == null || ownerId == userId;
 }
