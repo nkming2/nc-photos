@@ -208,7 +208,15 @@ class ScanAccountDirBloc
     }
 
     stopwatch.reset();
-    final hasUpdate = await _syncOnline(ev);
+    final bool hasUpdate;
+    try {
+      hasUpdate = await _syncOnline(ev);
+    } catch (e, stackTrace) {
+      _log.shout("[_onEventQuery] Exception while request", e, stackTrace);
+      emit(ScanAccountDirBlocFailure(
+          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList(), e));
+      return;
+    }
     _log.info(
         "[_onEventQuery] Elapsed time (_syncOnline): ${stopwatch.elapsedMilliseconds}ms, hasUpdate: $hasUpdate");
     if (hasUpdate) {
