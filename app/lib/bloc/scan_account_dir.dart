@@ -238,6 +238,7 @@ class ScanAccountDirBloc
     bool isShareDirIncluded = false;
 
     bool hasUpdate = false;
+    _c.touchManager.clearTouchCache();
     for (final r in account.roots) {
       final dirPath = file_util.unstripPath(account, r);
       hasUpdate |= await SyncDir(_c)(account, dirPath);
