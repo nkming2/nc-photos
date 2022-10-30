@@ -204,8 +204,7 @@ class ScanAccountDirBloc
         "[_onEventQuery] Elapsed time (_queryOffline): ${stopwatch.elapsedMilliseconds}ms, ${cacheFiles.length} files");
     if (!hasContent) {
       // show something instantly on first load
-      emit(ScanAccountDirBlocLoading(
-          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList()));
+      emit(ScanAccountDirBlocLoading(cacheFiles));
     }
 
     stopwatch.reset();
@@ -214,8 +213,7 @@ class ScanAccountDirBloc
       hasUpdate = await _syncOnline(ev);
     } catch (e, stackTrace) {
       _log.shout("[_onEventQuery] Exception while request", e, stackTrace);
-      emit(ScanAccountDirBlocFailure(
-          cacheFiles.where((f) => file_util.isSupportedFormat(f)).toList(), e));
+      emit(ScanAccountDirBlocFailure(cacheFiles, e));
       return;
     }
     _log.info(
@@ -434,7 +432,8 @@ class ScanAccountDirBloc
     if (!isShareDirIncluded) {
       _log.info("[_queryOffline] Explicitly scanning share folder");
       try {
-        files.addAll(await Ls(_c.fileRepoLocal)(account, shareDir));
+        final raw = await Ls(_c.fileRepoLocal)(account, shareDir);
+        files.addAll(raw.where((f) => file_util.isSupportedFormat(f)));
       } on CacheNotFoundException catch (_) {
         // normal when there's no cache
       } catch (e, stackTrace) {
