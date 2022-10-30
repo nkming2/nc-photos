@@ -27,7 +27,7 @@ class SyncDir {
     String dirPath, {
     bool isRecursive = true,
   }) async {
-    final dirCache = await _queryAllSubDirEtags(account, dirPath);
+    final dirCache = await _queryAllDirEtags(account, dirPath);
     final remoteRoot =
         await LsSingleFile(_c.withRemoteFileRepo())(account, dirPath);
     return await _syncDir(account, remoteRoot, dirCache,
@@ -81,7 +81,7 @@ class SyncDir {
     return Tuple2(true, touchResult);
   }
 
-  Future<Map<int, String>> _queryAllSubDirEtags(
+  Future<Map<int, String>> _queryAllDirEtags(
       Account account, String dirPath) async {
     final dir = File(path: dirPath);
     return await _c.sqliteDb.use((db) async {
@@ -91,7 +91,9 @@ class SyncDir {
               expressions: [db.files.fileId, db.files.etag])
           ..setAppAccount(account);
         if (dir.strippedPathWithEmpty.isNotEmpty) {
-          q.byOrRelativePathPattern("${dir.strippedPathWithEmpty}/%");
+          q
+            ..byOrRelativePath(dir.strippedPathWithEmpty)
+            ..byOrRelativePathPattern("${dir.strippedPathWithEmpty}/%");
         }
         return q.build();
       });

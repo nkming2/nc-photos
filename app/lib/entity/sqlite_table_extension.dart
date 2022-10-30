@@ -593,6 +593,9 @@ enum FilesQueryMode {
   expression,
 }
 
+typedef FilesQueryRelativePathBuilder = Expression<bool?> Function(
+    GeneratedColumn<String?> relativePath);
+
 /// Build a Files table query
 ///
 /// If you call more than one by* methods, the condition will be added up
@@ -646,8 +649,12 @@ class FilesQueryBuilder {
     _byRelativePath = path;
   }
 
+  void byOrRelativePath(String path) {
+    _byOrRelativePathBuilder((relativePath) => relativePath.equals(path));
+  }
+
   void byOrRelativePathPattern(String pattern) {
-    (_byOrRelativePathPatterns ??= []).add(pattern);
+    _byOrRelativePathBuilder((relativePath) => relativePath.like(pattern));
   }
 
   void byMimePattern(String pattern) {
@@ -723,13 +730,13 @@ class FilesQueryBuilder {
     if (_byRelativePath != null) {
       query.where(db.accountFiles.relativePath.equals(_byRelativePath));
     }
-    if (_byOrRelativePathPatterns?.isNotEmpty == true) {
-      final expression = _byOrRelativePathPatterns!
+    if (_byOrRelativePathBuilders?.isNotEmpty == true) {
+      final expression = _byOrRelativePathBuilders!
           .sublist(1)
           .fold<Expression<bool?>>(
-              db.accountFiles.relativePath.like(_byOrRelativePathPatterns![0]),
-              (previousValue, element) =>
-                  previousValue | db.accountFiles.relativePath.like(element));
+              _byOrRelativePathBuilders![0](db.accountFiles.relativePath),
+              (previousValue, builder) =>
+                  previousValue | builder(db.accountFiles.relativePath));
       query.where(expression);
     }
     if (_byMimePatterns?.isNotEmpty == true) {
@@ -770,6 +777,10 @@ class FilesQueryBuilder {
     return query;
   }
 
+  void _byOrRelativePathBuilder(FilesQueryRelativePathBuilder builder) {
+    (_byOrRelativePathBuilders ??= []).add(builder);
+  }
+
   final SqliteDb db;
 
   FilesQueryMode _queryMode = FilesQueryMode.file;
@@ -783,7 +794,7 @@ class FilesQueryBuilder {
   int? _byFileId;
   Iterable<int>? _byFileIds;
   String? _byRelativePath;
-  List<String>? _byOrRelativePathPatterns;
+  List<FilesQueryRelativePathBuilder>? _byOrRelativePathBuilders;
   List<String>? _byMimePatterns;
   bool? _byFavorite;
   int? _byDirRowId;
