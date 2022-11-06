@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -12,6 +14,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
+import 'package:nc_photos/use_case/compat/v55.dart';
 import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -68,10 +71,11 @@ class _SplashState extends State<Splash> {
   Widget _buildContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Center(
-        child: Stack(
-          children: [
-            Column(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Center(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -88,25 +92,36 @@ class _SplashState extends State<Splash> {
                 ),
               ],
             ),
-            if (_isUpgrading)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 64,
-                child: Column(
-                  children: const [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(),
-                    ),
-                    SizedBox(height: 8),
-                    Text("Updating"),
-                  ],
-                ),
-              ),
-          ],
-        ),
+          ),
+          if (_isUpgrading)
+            BlocBuilder<_UpgradeCubit, _UpgradeState>(
+              bloc: _upgradeCubit,
+              builder: (context, state) {
+                return Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 64,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(state.text),
+                      const SizedBox(height: 8),
+                      if (state.count == null)
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(),
+                        )
+                      else
+                        LinearProgressIndicator(
+                          value: state.current / state.count!,
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
@@ -164,6 +179,9 @@ class _SplashState extends State<Splash> {
     if (lastVersion < 460) {
       await _upgrade46(lastVersion);
     }
+    if (lastVersion < 550) {
+      await _upgrade55(lastVersion);
+    }
   }
 
   Future<void> _upgrade29(int lastVersion) async {
@@ -204,6 +222,33 @@ class _SplashState extends State<Splash> {
     }
   }
 
+  Future<void> _upgrade55(int lastVersion) async {
+    final c = KiwiContainer().resolve<DiContainer>();
+    try {
+      _log.info("[_upgrade55] migrate DB");
+      await CompatV55.migrateDb(
+        c.sqliteDb,
+        onProgress: (current, count) {
+          _upgradeCubit.setState(
+            L10n.global().migrateDatabaseProcessingNotification,
+            current,
+            count,
+          );
+        },
+      );
+    } catch (e, stackTrace) {
+      _log.shout("[_upgrade55] Failed while migrateDb", e, stackTrace);
+      await c.sqliteDb.use((db) async {
+        await db.truncate();
+        final accounts = Pref().getAccounts3Or([]);
+        for (final a in accounts) {
+          await db.insertAccountOf(a);
+        }
+      });
+    }
+    _upgradeCubit.setIntermediate();
+  }
+
   Future<void> _showChangelogIfAvailable(int lastVersion) async {
     if (Changelog.hasContent(lastVersion)) {
       try {
@@ -222,6 +267,36 @@ class _SplashState extends State<Splash> {
 
   final _changelogCompleter = Completer();
   var _isUpgrading = false;
+  late final _upgradeCubit = _UpgradeCubit();
 
   static final _log = Logger("widget.splash._SplashState");
+}
+
+class _UpgradeState {
+  const _UpgradeState(String text, int current, int count)
+      : this._(text, current, count);
+
+  const _UpgradeState.intermediate([String? text])
+      : this._(text ?? "Updating", 0, null);
+
+  const _UpgradeState._(this.text, this.current, this.count);
+
+  @override
+  String toString() => "_UpgradeState {"
+      "current: $current, "
+      "count: $count, "
+      "}";
+
+  final String text;
+  final int current;
+  final int? count;
+}
+
+class _UpgradeCubit extends Cubit<_UpgradeState> {
+  _UpgradeCubit() : super(const _UpgradeState.intermediate());
+
+  void setIntermediate() => emit(const _UpgradeState.intermediate());
+
+  void setState(String text, int current, int count) =>
+      emit(_UpgradeState(text, current, count));
 }
