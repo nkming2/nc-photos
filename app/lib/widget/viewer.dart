@@ -296,42 +296,45 @@ class _ViewerState extends State<Viewer>
             child: Stack(
               children: [
                 _buildItemView(context, index),
-                Visibility(
-                  visible: !_isZoomed,
-                  child: AnimatedOpacity(
-                    opacity: _isShowDetailPane ? 1 : 0,
-                    duration: k.animationDurationNormal,
-                    onEnd: () {
-                      if (!_isShowDetailPane) {
-                        setState(() {
-                          _isDetailPaneActive = false;
-                        });
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(4)),
-                      ),
-                      margin:
-                          EdgeInsets.only(top: _calcDetailPaneOffset(index)),
-                      // this visibility widget avoids loading the detail pane
-                      // until it's actually opened, otherwise swiping between
-                      // photos will slow down severely
-                      child: Visibility(
-                        visible: _isShowDetailPane,
-                        child: ViewerDetailPane(
-                          account: widget.account,
-                          fd: _streamFilesView[index],
-                          album: widget.album,
-                          onRemoveFromAlbumPressed: _onRemoveFromAlbumPressed,
-                          onArchivePressed: _onArchivePressed,
-                          onUnarchivePressed: _onUnarchivePressed,
-                          onSlideshowPressed: _onSlideshowPressed,
+                IgnorePointer(
+                  ignoring: !_isShowDetailPane,
+                  child: Visibility(
+                    visible: !_isZoomed,
+                    child: AnimatedOpacity(
+                      opacity: _isShowDetailPane ? 1 : 0,
+                      duration: k.animationDurationNormal,
+                      onEnd: () {
+                        if (!_isShowDetailPane) {
+                          setState(() {
+                            _isDetailPaneActive = false;
+                          });
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(4)),
+                        ),
+                        margin:
+                            EdgeInsets.only(top: _calcDetailPaneOffset(index)),
+                        // this visibility widget avoids loading the detail pane
+                        // until it's actually opened, otherwise swiping between
+                        // photos will slow down severely
+                        child: Visibility(
+                          visible: _isShowDetailPane,
+                          child: ViewerDetailPane(
+                            account: widget.account,
+                            fd: _streamFilesView[index],
+                            album: widget.album,
+                            onRemoveFromAlbumPressed: _onRemoveFromAlbumPressed,
+                            onArchivePressed: _onArchivePressed,
+                            onUnarchivePressed: _onUnarchivePressed,
+                            onSlideshowPressed: _onSlideshowPressed,
+                          ),
                         ),
                       ),
                     ),
