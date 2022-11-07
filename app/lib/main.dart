@@ -16,6 +16,9 @@ void main() async {
   if (platform_k.isMobile) {
     // reset orientation override just in case, see #59
     unawaited(SystemChrome.setPreferredOrientations([]));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
   }
   BlocOverrides.runZoned(
     () => runApp(const MyApp()),
