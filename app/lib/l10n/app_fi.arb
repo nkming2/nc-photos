@@ -1,4 +1,4 @@
-{
+ {
 	"appTitle": "Photos",
 	"translator": "pHamala",
 	"@translator": {
@@ -330,11 +330,7 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Tili",
-	"settingsAccountPageTitle": "Account settings",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
-	"settingsAccountLabelTitle": "Tilin tunniste",
+	"settingsAccountLabelTitle": "Otsikko",
 	"@settingsAccountLabelTitle": {
 		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
 	},
@@ -359,16 +355,29 @@
 	"@settingsShareFolderPickerDescription": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsServerAppSectionTitle": "Sovelluksen palvelintuki",
+	"settingsServerAppSectionTitle": "Palvelimen sovellustuki",
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
 	},
+	"settingsPhotosDescription": "Muokkaa Kuvat-välilehdellä näytettävää sisältöä",
+	"@settingsPhotosDescription": {
+		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+	},
+	"settingsMemoriesRangeTitle": "Muistojen väli",
+	"@settingsMemoriesRangeTitle": {
+		"description": "How many adjacent days to be inclded in memories for a particular year"
+	},
+	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} päivä} other{+-{range} päivää}}",
+	"@settingsMemoriesRangeValueText": {
+		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+		"placeholders": {
+			"range": {
+				"example": "1"
+			}
+		}
+	},
 	"settingsViewerTitle": "Katselin",
 	"settingsViewerDescription": "Muokkaa kuva/video -katselinta",
-	"settingsViewerPageTitle": "Katselimen asetukset",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Näytön kirkkaus",
 	"settingsScreenBrightnessDescription": "Ohita järjestelmän määrittämä kirkkaus",
 	"settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
@@ -376,25 +385,23 @@
 	"settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
 	"settingsAlbumTitle": "Albumi",
 	"settingsAlbumDescription": "Muokkaa albumeita",
-	"settingsAlbumPageTitle": "Albumi-asetukset",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
 	"settingsShowDateInAlbumDescription": "Käytä vain kun albumi on lajiteltu ajan mukaan",
-	"settingsPhotoEnhancementTitle": "Kuvan parannus",
-	"settingsPhotoEnhancementPageTitle": "Kuvan parannuksen asetukset",
-	"@settingsPhotoEnhancementPageTitle": {
-		"description": "Dedicated page for photo enhancement settings"
+	"settingsImageEditTitle": "Editori",
+	"@settingsImageEditTitle": {
+		"description": "Include settings for image enhancements and the image editor"
 	},
-	"settingsEnhanceMaxResolutionTitle": "Kuvien maksimiresoluutio",
+	"settingsImageEditDescription": "Muokkaa kuvien parannusta ja kuvaeditoria",
+	"settingsEnhanceMaxResolutionTitle2": "Kuvaresoluutio muokkausta varten",
 	"settingsEnhanceMaxResolutionDescription": "Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.",
+	"settingsImageEditSaveResultsToServerTitle": "Tallenna muokkaus palvelimelle",
+	"@settingsImageEditSaveResultsToServerTitle": {
+		"description": "Whether to save the edit/enhance results to server instead of the current device"
+	},
+	"settingsImageEditSaveResultsToServerTrueDescription": "Muokkaukset tallennetaan palvelimelle. Virheen sattuessa muokkaukset tallennetaan paikallisesti laitteelle.",
+	"settingsImageEditSaveResultsToServerFalseDescription": "Muokkaukset tallennetaan paikallisesti tälle laitteelle.",
 	"settingsThemeTitle": "Teema",
 	"settingsThemeDescription": "Muokkaa sovelluksen ulkoasua",
-	"settingsThemePageTitle": "Teema-asetukset",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "Käytä järjestelmän teemaa",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -412,7 +419,6 @@
 		"description": "When black in dark theme is set to false"
 	},
 	"settingsMiscellaneousTitle": "Sekalaiset",
-	"settingsMiscellaneousPageTitle": "Sekalaiset asetukset",
 	"settingsDoubleTapExitTitle": "Napauta kahdesti poistuaksesi",
 	"@settingsDoubleTapExitTitle": {
 		"description": "If enabled, users need to tap the back button twice to exit app"
@@ -423,7 +429,6 @@
 	},
 	"settingsExperimentalTitle": "Kokeellinen",
 	"settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
-	"settingsExperimentalPageTitle": "Kokeelliset asetukset",
 	"settingsAboutSectionTitle": "Tietoa",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -877,6 +882,10 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"slideshowSetupDialogReverseTitle": "Käänteinen",
+	"@slideshowSetupDialogReverseTitle": {
+		"description": "Whether to play the slideshow in reverse order"
+	},
 	"linkCopiedNotification": "Linkki kopioitu",
 	"@linkCopiedNotification": {
 		"description": "Copied the share link to clipboard"
@@ -885,12 +894,17 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "Tiedosto",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
+	"shareMethodPreviewTitle": "Esikatselu",
+	"@shareMethodPreviewTitle": {
+		"description": "Share the preview of a file"
 	},
-	"shareMethodFileDescription": "Lataa tiedosta ja jaa se muissa sovelluksissa",
-	"shareMethodPublicLinkTitle": "Public link",
+	"shareMethodPreviewDescription": "Jaa heikkolaatuisempi esikatselu muihin sovelluksiin (vain kuvat tuettu)",
+	"shareMethodOriginalFileTitle": "Alkuperäinen tiedosto",
+	"@shareMethodOriginalFileTitle": {
+		"description": "Share the original file"
+	},
+	"shareMethodOriginalFileDescription": "Lataa alkuperäinen tiedosto ja jaa se muiden sovellusten kanssa",
+	"shareMethodPublicLinkTitle": "Julkinen linkki",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
 	},
@@ -1224,13 +1238,14 @@
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
 	},
+	"enhanceLowLightDescription": "Kirkasta hämärässä ympäristössä otettuja kuvia",
 	"enhanceLowLightParamBrightnessLabel": "Kirkkaus",
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Parannettu",
-	"@collectionEnhancedPhotosLabel": {
-		"description": "List photos enhanced by the app"
+	"collectionEditedPhotosLabel": "Muokatut (paikallinen)",
+	"@collectionEditedPhotosLabel": {
+		"description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
 	},
 	"deletePermanentlyLocalConfirmationDialogContent": "Valitut kuvat poistetaan lopullisesti laitteeltasi.\n\nTätä toimintoa ei voi perua.",
 	"@deletePermanentlyLocalConfirmationDialogContent": {
@@ -1240,7 +1255,8 @@
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
 	},
-	"enhancePortraitBlurParamBlurLabel": "Sumennus",
+	"enhancePortraitBlurDescription": "Sumenna kuviesi taustaa, toimii parhaiten muotokuvien kanssa",
+	"enhancePortraitBlurParamBlurLabel": "Blurriness",
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
 	},
@@ -1248,6 +1264,7 @@
 	"@enhanceSuperResolution4xTitle": {
 		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
 	},
+	"enhanceSuperResolution4xDescription": "Skaalaa kuviesi resoluutiota jopa 4x normaalista resoluutiosta. (Lue kohta Apua saadaksesi lisätietoa, kuinka toiminto toimii.)",
 	"enhanceStyleTransferTitle": "Tyylin siirto",
 	"@enhanceStyleTransferTitle": {
 		"description": "Transfer the image style from a reference image to a photo"
@@ -1256,6 +1273,25 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
+	"enhanceStyleTransferStyleDialogDescription": "Siirrä kuvan tyyli vertailukuvasta omiin kuviisi.",
+	"enhanceStyleTransferNoStyleSelectedNotification": "Valitse tyyli",
+	"@enhanceStyleTransferNoStyleSelectedNotification": {
+		"description": "Show this error if users did not pick a reference image"
+	},
+	"enhanceColorPopTitle": "Värihyppy",
+	"@enhanceColorPopTitle": {
+		"description": "Desaturate the background of a photo"
+	},
+	"enhanceColorPopDescription": "Vähennä kuvien taustan saturaatiota, toimii parhaiten muotokuvien kanssa.",
+	"enhanceGenericParamWeightLabel": "Paino",
+	"@enhanceGenericParamWeightLabel": {
+		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+	},
+	"enhanceRetouchTitle": "Automaattinen parannus",
+	"@enhanceRetouchTitle": {
+		"description": "Automatically improve your photo"
+	},
+	"enhanceRetouchDescription": "Paranna kuvia automaattisesti. Parantaa kuvien värisävyjä.",
 	"doubleTapExitNotification": "Napauta uudelleen poistuaksesi",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
@@ -1304,6 +1340,30 @@
 	"imageEditTitle": "Esikatsele muutoksia",
 	"@imageEditTitle": {
 		"description": "Title of the image editor"
+	},
+	"imageEditToolbarColorLabel": "Väri",
+	"@imageEditToolbarColorLabel": {
+		"description": "Label of the color tools. These can be used to adjust the color of an image"
+	},
+	"imageEditToolbarTransformLabel": "Muuta",
+	"@imageEditToolbarTransformLabel": {
+		"description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+	},
+	"imageEditTransformOrientation": "Kierto",
+	"@imageEditTransformOrientation": {
+		"description": "Change the orientation of the image, 90 degree per step"
+	},
+	"imageEditTransformOrientationClockwise": "myötäpäivään",
+	"@imageEditTransformOrientationClockwise": {
+		"description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformOrientationCounterclockwise": "vastapäivään",
+	"@imageEditTransformOrientationCounterclockwise": {
+		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformCrop": "Rajaa",
+	"@imageEditTransformCrop": {
+		"description": "Crop the image"
 	},
 	"categoriesLabel": "Luokat",
 	"searchLandingPeopleListEmptyText": "Paina kysymys-painiketta saadaksesi tietoa ominaisuuden asentamisesta",
@@ -1374,7 +1434,42 @@
 	"@showAllButtonLabel": {
 		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
 	},
-	
+	"gpsPlaceText": "Seuraava {place}",
+	"@gpsPlaceText": {
+		"description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+		"placeholders": {
+			"place": {}
+		}
+	},
+	"gpsPlaceAboutDialogTitle": "Paikasta",
+	"@gpsPlaceAboutDialogTitle": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"gpsPlaceAboutDialogContent": "Näytetty paikka on vain karkea arvio. Se ei välttämättä ole tarkka. Paikka ei kuvaa sovelluksen kehittäjien näkökantaa alueesta.",
+	"@gpsPlaceAboutDialogContent": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"collectionPlacesLabel": "Paikat",
+	"@collectionPlacesLabel": {
+		"description": "Browse photos grouped by place"
+	},
+	"imageSaveOptionDialogTitle": "Tallennetaan tulosta",
+	"@imageSaveOptionDialogTitle": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogContent": "Valitse mihin prosessoidut kuvat tallennetaan. Mikäli kuvansiirto palvelimelle epäonnistuu, tallennetaan kuva laitteelle.",
+	"@imageSaveOptionDialogContent": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogDeviceButtonLabel": "LAITE",
+	"@imageSaveOptionDialogDeviceButtonLabel": {
+		"description": "Save the image on the current device"
+	},
+	"imageSaveOptionDialogServerButtonLabel": "PALVELIN",
+	"@imageSaveOptionDialogServerButtonLabel": {
+		"description": "Save the image on your Nextcloud server"
+	},
+
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
