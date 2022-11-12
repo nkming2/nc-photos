@@ -22,6 +22,7 @@ import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
@@ -1473,6 +1474,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     super.initState();
     _isFollowSystemTheme = Pref().isFollowSystemThemeOr(false);
     _isUseBlackInDarkTheme = Pref().isUseBlackInDarkThemeOr(false);
+    _seedColor = getSeedColor();
   }
 
   @override
@@ -1494,6 +1496,15 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              ListTile(
+                title: Text(L10n.global().settingsSeedColorTitle),
+                trailing: Icon(
+                  Icons.circle,
+                  size: 32,
+                  color: _seedColor.toColor(),
+                ),
+                onTap: () => _onSeedColorPressed(context),
+              ),
               if (platform_k.isAndroid &&
                   AndroidInfo().sdkInt >= AndroidVersion.Q)
                 SwitchListTile(
@@ -1559,10 +1570,125 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     }
   }
 
+  Future<void> _onSeedColorPressed(BuildContext context) async {
+    final result = await showDialog<SeedColor>(
+      context: context,
+      builder: (context) => _SeedColorPicker(
+        initialColor: _seedColor,
+      ),
+    );
+    if (result == null) {
+      return;
+    }
+
+    final oldValue = _seedColor;
+    setState(() {
+      _seedColor = result;
+    });
+    if (await Pref().setSeedColor(result.index)) {
+      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
+    } else {
+      _log.severe("[_onSeedColorPressed] Failed writing pref");
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+      setState(() {
+        _seedColor = oldValue;
+      });
+    }
+  }
+
   late bool _isFollowSystemTheme;
   late bool _isUseBlackInDarkTheme;
+  late SeedColor _seedColor;
 
   static final _log = Logger("widget.settings._ThemeSettingsState");
+}
+
+class _SeedColorPicker extends StatefulWidget {
+  const _SeedColorPicker({
+    required this.initialColor,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _SeedColorPickerState();
+
+  final SeedColor initialColor;
+}
+
+class _SeedColorPickerState extends State<_SeedColorPicker> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(L10n.global().settingsSeedColorPickerTitle),
+      content: Wrap(
+        children: const [
+          SeedColor.red,
+          SeedColor.purple,
+          SeedColor.blue,
+          SeedColor.green,
+          SeedColor.amber,
+        ]
+            .map((c) => _SeedColorPickerItem(
+                  seedColor: c,
+                  isSelected: c == widget.initialColor,
+                  onSelected: () => _onItemSelected(context, c),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  void _onItemSelected(BuildContext context, SeedColor seedColor) {
+    Navigator.of(context).pop(seedColor);
+  }
+}
+
+class _SeedColorPickerItem extends StatelessWidget {
+  const _SeedColorPickerItem({
+    required this.seedColor,
+    required this.isSelected,
+    this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final content = SizedBox.square(
+      dimension: _size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (isSelected)
+            Icon(
+              Icons.circle,
+              size: _size,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          Icon(
+            Icons.circle,
+            size: _size - _size * .2,
+            color: seedColor.toColor(),
+          ),
+        ],
+      ),
+    );
+    if (onSelected != null) {
+      return InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onSelected,
+        child: content,
+      );
+    } else {
+      return content;
+    }
+  }
+
+  final SeedColor seedColor;
+  final bool isSelected;
+  final VoidCallback? onSelected;
+
+  static const _size = 56.0;
 }
 
 class _MiscSettings extends StatefulWidget {

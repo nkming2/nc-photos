@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/color_schemes.g.dart';
+import 'package:logging/logging.dart';
 import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/pref.dart';
+
+enum SeedColor {
+  // the order must NOT change
+  amber,
+  blue,
+  green,
+  purple,
+  red;
+
+  Color toColor() {
+    switch (this) {
+      case amber:
+        return const Color(0xFFFFC107);
+      case blue:
+        return const Color(0xFF2196F3);
+      case green:
+        return const Color(0xFF4CAF50);
+      case purple:
+        return const Color(0xFF9C27B0);
+      case red:
+        return const Color(0xFFF44336);
+    }
+  }
+}
 
 extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;
@@ -56,21 +80,32 @@ ThemeData buildTheme(Brightness brightness) {
 }
 
 ThemeData buildLightTheme() {
-  final theme = _applyColorScheme(lightColorScheme);
-  return theme;
+  final seedColor = getSeedColor();
+  final color = seedColor.toColor();
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: color,
+  );
+  return _applyColorScheme(colorScheme, color);
 }
 
 ThemeData buildDarkTheme() {
-  final ThemeData theme;
+  final seedColor = getSeedColor();
+  final color = seedColor.toColor();
+  final colorScheme = ColorScheme.fromSeed(
+    seedColor: color,
+    brightness: Brightness.dark,
+  );
   if (Pref().isUseBlackInDarkThemeOr(false)) {
-    theme = _applyColorScheme(darkColorScheme.copyWith(
-      background: Colors.black,
-      surface: Colors.grey[900],
-    ));
+    return _applyColorScheme(
+      colorScheme.copyWith(
+        background: Colors.black,
+        surface: Colors.grey[900],
+      ),
+      color,
+    );
   } else {
-    theme = _applyColorScheme(darkColorScheme);
+    return _applyColorScheme(colorScheme, color);
   }
-  return theme;
 }
 
 ThemeData buildDarkModeSwitchTheme(BuildContext context) {
@@ -83,7 +118,23 @@ ThemeData buildDarkModeSwitchTheme(BuildContext context) {
   );
 }
 
-ThemeData _applyColorScheme(ColorScheme colorScheme) {
+SeedColor getSeedColor() {
+  final index = Pref().getSeedColor();
+  if (index == null) {
+    return SeedColor.blue;
+  } else {
+    SeedColor seedColor;
+    try {
+      seedColor = SeedColor.values[index];
+    } catch (e, stackTrace) {
+      _log.severe("[getSeedColor] Uncaught exception", e, stackTrace);
+      seedColor = SeedColor.blue;
+    }
+    return seedColor;
+  }
+}
+
+ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
   return ThemeData(
     useMaterial3: true,
     brightness: colorScheme.brightness,
@@ -173,6 +224,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     ),
     extensions: [
       M3(
+        seed: seedColor,
         checkbox: M3Checkbox(
           disabled: M3CheckboxDisabled(
             container: colorScheme.onSurface.withOpacity(.38),
@@ -194,3 +246,5 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     ],
   );
 }
+
+final _log = Logger("theme");

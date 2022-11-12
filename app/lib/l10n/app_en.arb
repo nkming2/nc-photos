@@ -406,6 +406,14 @@
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
 	},
+	"settingsSeedColorTitle": "Theme color",
+	"@settingsSeedColorTitle": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorPickerTitle": "Pick a color",
+	"@settingsSeedColorPickerTitle": {
+		"description": "Dialog to customize the colors used in app"
+	},
 	"settingsUseBlackInDarkThemeTitle": "Darker theme",
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
