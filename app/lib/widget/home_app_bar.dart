@@ -9,6 +9,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
+import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/settings.dart';
 
@@ -20,6 +21,7 @@ class HomeSliverAppBar extends StatelessWidget {
     this.actions,
     this.menuActions,
     this.onSelectedMenuActions,
+    this.isShowProgressIcon = false,
   }) : super(key: key);
 
   @override
@@ -38,15 +40,17 @@ class HomeSliverAppBar extends StatelessWidget {
         child: AppBarTitleContainer(
           title: Text(accountLabel ?? account.address),
           subtitle: accountLabel == null ? Text(account.username2) : null,
-          icon: account.scheme == "http"
-              ? Icon(
-                  Icons.no_encryption_outlined,
-                  color: Theme.of(context).colorScheme.error,
-                )
-              : Icon(
-                  Icons.https,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+          icon: isShowProgressIcon
+              ? const AppBarCircularProgressIndicator()
+              : (account.scheme == "http"
+                  ? Icon(
+                      Icons.no_encryption_outlined,
+                      color: Theme.of(context).colorScheme.error,
+                    )
+                  : Icon(
+                      Icons.https,
+                      color: Theme.of(context).colorScheme.primary,
+                    )),
         ),
       ),
       floating: true,
@@ -103,6 +107,7 @@ class HomeSliverAppBar extends StatelessWidget {
   /// much >= 0
   final List<PopupMenuEntry<int>>? menuActions;
   final void Function(int)? onSelectedMenuActions;
+  final bool isShowProgressIcon;
 
   static const _menuValueAbout = -1;
   static const _menuValueHelp = -2;

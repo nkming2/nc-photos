@@ -205,25 +205,17 @@ class _HomePhotosState extends State<HomePhotos>
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (state is ScanAccountDirBlocLoading ||
-                    _buildItemQueue.isProcessing)
-                  const LinearProgressIndicator(),
-                SizedBox(
-                  width: double.infinity,
-                  height: _calcBottomAppBarExtent(context),
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                      child: const ColoredBox(
-                        color: Colors.transparent,
-                      ),
-                    ),
+            child: SizedBox(
+              width: double.infinity,
+              height: _calcBottomAppBarExtent(context),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                  child: const ColoredBox(
+                    color: Colors.transparent,
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -287,31 +279,42 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return HomeSliverAppBar(
-      account: widget.account,
-      actions: [
-        ZoomMenuButton(
-          initialZoom: _thumbZoomLevel,
-          minZoom: -1,
-          maxZoom: 2,
-          onZoomChanged: (value) {
-            _setThumbZoomLevel(value.round());
-            Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+    return BlocBuilder(
+      bloc: _bloc,
+      buildWhen: (previous, current) =>
+          previous is ScanAccountDirBlocLoading !=
+          current is ScanAccountDirBlocLoading,
+      builder: (context, state) {
+        return HomeSliverAppBar(
+          account: widget.account,
+          isShowProgressIcon: (state is ScanAccountDirBlocLoading ||
+                  _buildItemQueue.isProcessing) &&
+              !_isRefreshIndicatorActive,
+          actions: [
+            ZoomMenuButton(
+              initialZoom: _thumbZoomLevel,
+              minZoom: -1,
+              maxZoom: 2,
+              onZoomChanged: (value) {
+                _setThumbZoomLevel(value.round());
+                Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+              },
+            ),
+          ],
+          menuActions: [
+            PopupMenuItem(
+              value: _menuValueRefresh,
+              child: Text(L10n.global().refreshMenuLabel),
+            ),
+          ],
+          onSelectedMenuActions: (option) {
+            switch (option) {
+              case _menuValueRefresh:
+                _onRefreshSelected();
+                break;
+            }
           },
-        ),
-      ],
-      menuActions: [
-        PopupMenuItem(
-          value: _menuValueRefresh,
-          child: Text(L10n.global().refreshMenuLabel),
-        ),
-      ],
-      onSelectedMenuActions: (option) {
-        switch (option) {
-          case _menuValueRefresh:
-            _onRefreshSelected();
-            break;
-        }
+        );
       },
     );
   }
@@ -625,11 +628,25 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _waitRefresh() async {
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (_bloc.state is! ScanAccountDirBlocLoading) {
-        return;
+    setState(() {
+      _isRefreshIndicatorActive = true;
+    });
+    try {
+      while (true) {
+        await Future.delayed(const Duration(seconds: 1));
+        if (_bloc.state is! ScanAccountDirBlocLoading) {
+          return;
+        }
       }
+    } finally {
+      // To prevent the app bar icon appearing for a very short while
+      unawaited(Future.delayed(const Duration(seconds: 2)).then((_) {
+        if (mounted) {
+          setState(() {
+            _isRefreshIndicatorActive = false;
+          });
+        }
+      }));
     }
   }
 
@@ -745,6 +762,7 @@ class _HomePhotosState extends State<HomePhotos>
   late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
 
   var _isScrollbarVisible = false;
+  var _isRefreshIndicatorActive = false;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;

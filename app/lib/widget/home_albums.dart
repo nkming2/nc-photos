@@ -140,24 +140,17 @@ class _HomeAlbumsState extends State<HomeAlbums>
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (state is ListAlbumBlocLoading)
-                const LinearProgressIndicator(),
-              SizedBox(
-                width: double.infinity,
-                height: _calcBottomAppBarExtent(context),
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                    child: const ColoredBox(
-                      color: Colors.transparent,
-                    ),
-                  ),
+          child: SizedBox(
+            width: double.infinity,
+            height: _calcBottomAppBarExtent(context),
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                child: const ColoredBox(
+                  color: Colors.transparent,
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ],
@@ -193,28 +186,36 @@ class _HomeAlbumsState extends State<HomeAlbums>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return HomeSliverAppBar(
-      account: widget.account,
-      menuActions: [
-        PopupMenuItem(
-          value: _menuValueSort,
-          child: Text(L10n.global().sortTooltip),
-        ),
-        PopupMenuItem(
-          value: _menuValueImport,
-          child: Text(L10n.global().importFoldersTooltip),
-        ),
-      ],
-      onSelectedMenuActions: (option) {
-        switch (option) {
-          case _menuValueSort:
-            _onSortPressed(context);
-            break;
+    return BlocBuilder(
+      bloc: _bloc,
+      buildWhen: (previous, current) =>
+          previous is ListAlbumBlocLoading != current is ListAlbumBlocLoading,
+      builder: (context, state) {
+        return HomeSliverAppBar(
+          account: widget.account,
+          isShowProgressIcon: state is ListAlbumBlocLoading,
+          menuActions: [
+            PopupMenuItem(
+              value: _menuValueSort,
+              child: Text(L10n.global().sortTooltip),
+            ),
+            PopupMenuItem(
+              value: _menuValueImport,
+              child: Text(L10n.global().importFoldersTooltip),
+            ),
+          ],
+          onSelectedMenuActions: (option) {
+            switch (option) {
+              case _menuValueSort:
+                _onSortPressed(context);
+                break;
 
-          case _menuValueImport:
-            _onImportPressed(context);
-            break;
-        }
+              case _menuValueImport:
+                _onImportPressed(context);
+                break;
+            }
+          },
+        );
       },
     );
   }
