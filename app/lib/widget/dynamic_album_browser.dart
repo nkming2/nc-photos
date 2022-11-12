@@ -26,7 +26,6 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -106,20 +105,18 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) {
-            if (isEditMode) {
-              return Form(
-                key: _editFormKey,
-                child: _buildContent(context),
-              );
-            } else {
-              return _buildContent(context);
-            }
-          },
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) {
+          if (isEditMode) {
+            return Form(
+              key: _editFormKey,
+              child: _buildContent(context),
+            );
+          } else {
+            return _buildContent(context);
+          }
+        },
       ),
     );
   }
@@ -214,26 +211,19 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
-              ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context),
-            SliverIgnorePointer(
-              ignoring: isEditMode,
-              sliver: SliverOpacity(
-                opacity: isEditMode ? .25 : 1,
-                sliver: buildItemStreamList(
-                  maxCrossAxisExtent: thumbSize.toDouble(),
-                ),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context),
+          SliverIgnorePointer(
+            ignoring: isEditMode,
+            sliver: SliverOpacity(
+              opacity: isEditMode ? .25 : 1,
+              sliver: buildItemStreamList(
+                maxCrossAxisExtent: thumbSize.toDouble(),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -95,7 +95,8 @@ class _SlideshowViewerState extends State<SlideshowViewer>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,
@@ -162,8 +163,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
               ),
               AppBar(
                 backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                foregroundColor: Colors.white.withOpacity(.87),
+                elevation: 0,
                 leading: IconButton(
                   icon: const Icon(Icons.close),
                   tooltip: MaterialLocalizations.of(context).closeButtonTooltip,

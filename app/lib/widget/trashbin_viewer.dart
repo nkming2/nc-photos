@@ -60,7 +60,8 @@ class TrashbinViewer extends StatefulWidget {
 class _TrashbinViewerState extends State<TrashbinViewer> {
   @override
   build(BuildContext context) {
-    return AppTheme(
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,
@@ -120,8 +121,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
             ),
             AppBar(
               backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              foregroundColor: Colors.white.withOpacity(.87),
+              elevation: 0,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.restore_outlined),

@@ -11,7 +11,6 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
 
 class TagPickerDialog extends StatefulWidget {
@@ -35,13 +34,11 @@ class _TagPickerDialogState extends State<TagPickerDialog> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: DialogScaffold(
-        body: BlocListener<ListTagBloc, ListTagBlocState>(
-          bloc: _bloc,
-          listener: _onStateChange,
-          child: Builder(builder: _buildContent),
-        ),
+    return DialogScaffold(
+      body: BlocListener<ListTagBloc, ListTagBlocState>(
+        bloc: _bloc,
+        listener: _onStateChange,
+        child: Builder(builder: _buildContent),
       ),
     );
   }

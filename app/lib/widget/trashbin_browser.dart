@@ -19,7 +19,6 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
@@ -73,15 +72,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<LsTrashbinBloc, LsTrashbinBlocState>(
+    return Scaffold(
+      body: BlocListener<LsTrashbinBloc, LsTrashbinBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<LsTrashbinBloc, LsTrashbinBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<LsTrashbinBloc, LsTrashbinBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -138,20 +135,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
-                  ),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                buildItemStreamList(
+                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                ),
+              ],
             ),
           ),
           if (state is LsTrashbinBlocLoading || _buildItemQueue.isProcessing)

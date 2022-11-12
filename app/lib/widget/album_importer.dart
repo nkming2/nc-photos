@@ -20,7 +20,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
@@ -74,17 +73,14 @@ class _AlbumImporterState extends State<AlbumImporter> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body:
-            BlocListener<ListImportableAlbumBloc, ListImportableAlbumBlocState>(
+    return Scaffold(
+      body: BlocListener<ListImportableAlbumBloc, ListImportableAlbumBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child:
+            BlocBuilder<ListImportableAlbumBloc, ListImportableAlbumBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListImportableAlbumBloc,
-              ListImportableAlbumBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );

@@ -34,10 +34,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(builder: (context) => _buildContent(context)),
-      ),
+    return Scaffold(
+      body: Builder(builder: (context) => _buildContent(context)),
     );
   }
 
@@ -84,16 +82,20 @@ class _SignInState extends State<SignIn> {
                         Align(
                           alignment: Alignment.center,
                           child: Container(
-                            constraints: const BoxConstraints(
-                                maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                            constraints: BoxConstraints(
+                              maxWidth:
+                                  Theme.of(context).widthLimitedContentMaxWidth,
+                            ),
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: _buildForm(context),
                           ),
                         ),
                         Container(
                           alignment: AlignmentDirectional.centerStart,
-                          constraints: const BoxConstraints(
-                              maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                          constraints: BoxConstraints(
+                            maxWidth:
+                                Theme.of(context).widthLimitedContentMaxWidth,
+                          ),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: InkWell(
                             onTap: () {
@@ -119,8 +121,10 @@ class _SignInState extends State<SignIn> {
                         ),
                         if (!platform_k.isWeb) Expanded(child: Container()),
                         Container(
-                          constraints: const BoxConstraints(
-                              maxWidth: AppTheme.widthLimitedContentMaxWidth),
+                          constraints: BoxConstraints(
+                            maxWidth:
+                                Theme.of(context).widthLimitedContentMaxWidth,
+                          ),
                           padding: const EdgeInsets.all(16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

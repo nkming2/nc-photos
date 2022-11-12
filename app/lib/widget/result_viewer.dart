@@ -56,12 +56,11 @@ class _ResultViewerState extends State<ResultViewer> {
   @override
   build(BuildContext context) {
     if (_file == null) {
-      return AppTheme(
+      return Theme(
+        data: buildDarkTheme(),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
-            shadowColor: Colors.black,
-            foregroundColor: Colors.white.withOpacity(.87),
             elevation: 0,
           ),
           body: Container(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/theme.dart';
 
 class SelectionAppBar extends StatelessWidget {
   const SelectionAppBar({
@@ -12,20 +11,15 @@ class SelectionAppBar extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        appBarTheme: AppTheme.getContextualAppBarTheme(context),
+    return SliverAppBar(
+      pinned: true,
+      leading: IconButton(
+        icon: const Icon(Icons.close),
+        tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+        onPressed: onClosePressed,
       ),
-      child: SliverAppBar(
-        pinned: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-          onPressed: onClosePressed,
-        ),
-        title: Text(L10n.global().selectionAppBarTitle(count)),
-        actions: actions,
-      ),
+      title: Text(L10n.global().selectionAppBarTitle(count)),
+      actions: actions,
     );
   }
 

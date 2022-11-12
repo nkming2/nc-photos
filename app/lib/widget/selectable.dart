@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/theme.dart';
 
 // Overlay a check mark if an item is selected
 class Selectable extends StatelessWidget {
@@ -23,7 +22,7 @@ class Selectable extends StatelessWidget {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.getSelectionOverlayColor(context),
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: borderRadius,
               ),
             ),
@@ -44,12 +43,12 @@ class Selectable extends StatelessWidget {
                 Icon(
                   Icons.circle,
                   size: iconSize,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
                 Icon(
                   Icons.check_circle_outlined,
                   size: iconSize,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               ],
             ),

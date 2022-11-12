@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/material3.dart';
 
 /// Button in the image editor toolbar
 ///
@@ -19,9 +19,19 @@ class ToolbarButton extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    final color = !isSelected && isActivated
-        ? Colors.white12
-        : AppTheme.primarySwatchDark[500]!.withOpacity(0.7);
+    final Color backgroundColor, foregroundColor;
+    if (isSelected) {
+      backgroundColor = Theme.of(context).colorScheme.secondaryContainer;
+      foregroundColor = Theme.of(context).colorScheme.onSecondaryContainer;
+    } else {
+      if (isActivated) {
+        backgroundColor = M3.of(context).filterChip.disabled.containerSelected;
+        foregroundColor = Theme.of(context).colorScheme.onSurface;
+      } else {
+        backgroundColor = Theme.of(context).colorScheme.secondaryContainer;
+        foregroundColor = M3.of(context).filterChip.disabled.labelText;
+      }
+    }
     return InkWell(
       onTap: onPressed,
       child: Padding(
@@ -41,7 +51,7 @@ class ToolbarButton extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(32),
-                        color: color,
+                        color: backgroundColor,
                       ),
                     ),
                   ),
@@ -49,9 +59,7 @@ class ToolbarButton extends StatelessWidget {
                     child: Icon(
                       icon,
                       size: 32,
-                      color: isSelected
-                          ? Colors.white
-                          : AppTheme.unfocusedIconColorDark,
+                      color: foregroundColor,
                     ),
                   ),
                   if (isActivated && activationOrder! >= 0)
@@ -63,9 +71,7 @@ class ToolbarButton extends StatelessWidget {
                           (activationOrder! + 1).toString(),
                           style: TextStyle(
                             fontSize: 12,
-                            color: isSelected
-                                ? Colors.white
-                                : AppTheme.unfocusedIconColorDark,
+                            color: foregroundColor,
                           ),
                         ),
                       ),
@@ -79,8 +85,9 @@ class ToolbarButton extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
-                color:
-                    isSelected ? Colors.white : AppTheme.unfocusedIconColorDark,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],

@@ -18,7 +18,6 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
@@ -71,15 +70,13 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
+    return Scaffold(
+      body: BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -134,20 +131,13 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
-                  ),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                buildItemStreamList(
+                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                ),
+              ],
             ),
           ),
           if (state is ScanAccountDirBlocLoading ||

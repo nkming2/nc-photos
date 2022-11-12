@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 
@@ -263,7 +262,7 @@ class _OrientationButton extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: isSelected
-                    ? AppTheme.primarySwatchDark[500]!.withOpacity(0.7)
+                    ? Theme.of(context).colorScheme.secondaryContainer
                     : null,
                 // borderRadius: const BorderRadius.all(Radius.circular(24)),
               ),
@@ -274,8 +273,8 @@ class _OrientationButton extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: isSelected
-                      ? Colors.white
-                      : AppTheme.unfocusedIconColorDark,
+                      ? Theme.of(context).colorScheme.onSecondaryContainer
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),

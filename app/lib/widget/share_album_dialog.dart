@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:nc_photos/use_case/unshare_album_with_user.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
@@ -62,15 +61,13 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: DialogScaffold(
-        canPop: _processingSharee.isEmpty,
-        body: BlocListener<ListShareeBloc, ListShareeBlocState>(
-          bloc: _shareeBloc,
-          listener: _onShareeStateChange,
-          child: Builder(
-            builder: _buildContent,
-          ),
+    return DialogScaffold(
+      canPop: _processingSharee.isEmpty,
+      body: BlocListener<ListShareeBloc, ListShareeBlocState>(
+        bloc: _shareeBloc,
+        listener: _onShareeStateChange,
+        child: Builder(
+          builder: _buildContent,
         ),
       ),
     );
@@ -90,14 +87,12 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
     final isProcessing = _processingSharee.any((s) => s == share.shareWith);
     final Widget trailing;
     if (isProcessing) {
-      trailing = Padding(
-        padding: const EdgeInsetsDirectional.only(end: 12),
+      trailing = const Padding(
+        padding: EdgeInsetsDirectional.only(end: 12),
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(
-            color: AppTheme.getUnfocusedIconColor(context),
-          ),
+          child: CircularProgressIndicator(),
         ),
       );
     } else {
@@ -263,7 +258,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       action: hasFailure
           ? SnackBarAction(
               label: L10n.global().fixButtonLabel,
-              textColor: Theme.of(context).colorScheme.secondaryVariant,
               onPressed: _onFixPressed,
             )
           : null,
@@ -303,7 +297,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
       action: hasFailure
           ? SnackBarAction(
               label: L10n.global().fixButtonLabel,
-              textColor: Theme.of(context).colorScheme.secondaryVariant,
               onPressed: _onFixPressed,
             )
           : null,

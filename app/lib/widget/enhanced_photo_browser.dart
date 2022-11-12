@@ -19,7 +19,6 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
@@ -81,15 +80,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ScanLocalDirBloc, ScanLocalDirBlocState>(
+    return Scaffold(
+      body: BlocListener<ScanLocalDirBloc, ScanLocalDirBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ScanLocalDirBloc, ScanLocalDirBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ScanLocalDirBloc, ScanLocalDirBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -159,20 +156,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
-                  ),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                buildItemStreamList(
+                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                ),
+              ],
             ),
           ),
           if (state is ScanLocalDirBlocLoading || _buildItemQueue.isProcessing)

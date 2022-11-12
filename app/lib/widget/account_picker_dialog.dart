@@ -11,7 +11,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
@@ -49,10 +48,7 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
           title: Text(label ?? a.url),
           subtitle: label == null ? Text(a.username2) : null,
           trailing: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: AppTheme.getUnfocusedIconColor(context),
-            ),
+            icon: const Icon(Icons.close),
             tooltip: L10n.global().deleteTooltip,
             onPressed: () => _onRemoveItemPressed(a),
           ),
@@ -69,43 +65,35 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
         },
         child: Tooltip(
           message: L10n.global().addServerTooltip,
-          child: Center(
-            child: Icon(
-              Icons.add,
-              color: AppTheme.getSecondaryTextColor(context),
-            ),
+          child: const Center(
+            child: Icon(Icons.add),
           ),
         ),
       ),
     ];
     final accountLabel = AccountPref.of(widget.account).getAccountLabel();
-    return AppTheme(
-      child: SimpleDialog(
-        title: ListTile(
-          dense: true,
-          title: Text(
-            accountLabel ?? widget.account.url,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: accountLabel == null
-              ? Text(
-                  widget.account.username2,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                )
-              : null,
-          trailing: IconButton(
-            icon: Icon(
-              Icons.settings_outlined,
-              color: AppTheme.getUnfocusedIconColor(context),
-            ),
-            tooltip: L10n.global().settingsMenuLabel,
-            onPressed: _onEditPressed,
-          ),
+    return SimpleDialog(
+      title: ListTile(
+        dense: true,
+        title: Text(
+          accountLabel ?? widget.account.url,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
-        children: otherAccountOptions + addAccountOptions,
+        subtitle: accountLabel == null
+            ? Text(
+                widget.account.username2,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              )
+            : null,
+        trailing: IconButton(
+          icon: const Icon(Icons.settings_outlined),
+          tooltip: L10n.global().settingsMenuLabel,
+          onPressed: _onEditPressed,
+        ),
       ),
+      titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
+      contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
+      children: otherAccountOptions + addAccountOptions,
     );
   }
 

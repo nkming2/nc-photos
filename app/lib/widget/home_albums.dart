@@ -21,7 +21,6 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove_album.dart';
 import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
@@ -115,35 +114,27 @@ class _HomeAlbumsState extends State<HomeAlbums>
       children: [
         buildItemStreamListOuter(
           context,
-          child: Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                    secondary: AppTheme.getOverscrollIndicatorColor(context),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              _onRefreshPressed();
+              await _waitRefresh();
+            },
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  sliver: buildItemStreamList(
+                    maxCrossAxisExtent: 256,
+                    mainAxisSpacing: 6,
                   ),
-            ),
-            child: RefreshIndicator(
-              backgroundColor: Colors.grey[100],
-              onRefresh: () async {
-                _onRefreshPressed();
-                await _waitRefresh();
-              },
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    sliver: buildItemStreamList(
-                      maxCrossAxisExtent: 256,
-                      mainAxisSpacing: 6,
-                    ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: _calcBottomAppBarExtent(context),
                   ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: _calcBottomAppBarExtent(context),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -499,7 +490,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
     }
   }
 
-  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
+  double _calcBottomAppBarExtent(BuildContext context) =>
+      NavigationBarTheme.of(context).height!;
 
   late final _bloc = ListAlbumBloc.of(widget.account);
   late final _accountPrefUpdatedEventListener =
@@ -556,7 +548,7 @@ class _ButtonListItem extends _ListItem {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppTheme.getListItemBackgroundColor(context),
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -564,19 +556,18 @@ class _ButtonListItem extends _ListItem {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    color: AppTheme.getPrimaryTextColor(context),
-                    size: 24,
-                  ),
+                  Icon(icon),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(label),
+                    child: Text(
+                      label,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
                   ),
                   if (isShowIndicator)
-                    const Icon(
+                    Icon(
                       Icons.circle,
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.tertiary,
                       size: 8,
                     ),
                 ],

@@ -12,8 +12,8 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:path/path.dart' as path_lib;
 
 class DirPicker extends StatefulWidget {
@@ -106,6 +106,7 @@ class DirPickerState extends State<DirPicker> {
       // needed to prevent background color overflowing the parent bound, see:
       // https://github.com/flutter/flutter/issues/86584
       child: Material(
+        type: MaterialType.transparency,
         child: ListView.separated(
           key: Key(_currentPath),
           itemBuilder: (context, index) {
@@ -142,27 +143,38 @@ class DirPickerState extends State<DirPicker> {
     final pickState = _isItemPicked(item);
 
     IconData? iconData;
+    Color? iconColor;
     if (canPick) {
       switch (pickState) {
         case _PickState.picked:
           iconData = widget.isMultipleSelections
               ? Icons.check_box
               : Icons.radio_button_checked;
+          iconColor = CheckboxTheme.of(context)
+              .fillColor!
+              .resolve({MaterialState.selected});
           break;
+
         case _PickState.childPicked:
           iconData = widget.isMultipleSelections
               ? Icons.indeterminate_check_box
               : Icons.remove_circle_outline;
+          iconColor = CheckboxTheme.of(context)
+              .fillColor!
+              .resolve({MaterialState.selected});
           break;
+
         case _PickState.notPicked:
         default:
           iconData = widget.isMultipleSelections
               ? Icons.check_box_outline_blank
               : Icons.radio_button_unchecked;
+          iconColor = Theme.of(context).colorScheme.onSurface;
           break;
       }
     } else if (item.isE2ee) {
       iconData = Icons.lock_outlined;
+      iconColor = M3.of(context).checkbox.disabled.container;
     }
 
     return ListTile(
@@ -177,6 +189,7 @@ class DirPickerState extends State<DirPicker> {
                 child: Icon(
                   iconData,
                   key: ValueKey(pickState),
+                  color: iconColor,
                 ),
               ),
               onPressed: () {
@@ -188,15 +201,15 @@ class DirPickerState extends State<DirPicker> {
               },
             )
           : IconButton(
-              icon: Icon(iconData),
-              color: AppTheme.getUnfocusedIconColor(context),
+              icon: Icon(iconData, color: iconColor),
               onPressed: null,
             ),
       title: Text(item.file.filename),
       trailing: item.children?.isNotEmpty == true
           ? const Icon(Icons.arrow_forward_ios)
           : null,
-      textColor: item.isE2ee ? AppTheme.getUnfocusedIconColor(context) : null,
+      textColor:
+          item.isE2ee ? M3.of(context).checkbox.disabled.container : null,
       onTap: item.children?.isNotEmpty == true
           ? () {
               try {

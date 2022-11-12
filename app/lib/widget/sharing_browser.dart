@@ -24,7 +24,6 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -82,15 +81,13 @@ class _SharingBrowserState extends State<SharingBrowser> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListSharingBloc, ListSharingBlocState>(
+    return Scaffold(
+      body: BlocListener<ListSharingBloc, ListSharingBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListSharingBloc, ListSharingBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListSharingBloc, ListSharingBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -117,26 +114,19 @@ class _SharingBrowserState extends State<SharingBrowser> {
     } else {
       return Stack(
         children: [
-          Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                    secondary: AppTheme.getOverscrollIndicatorColor(context),
-                  ),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  title: Text(L10n.global().collectionSharingLabel),
-                  floating: true,
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: Text(L10n.global().collectionSharingLabel),
+                floating: true,
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildItem(context, _items[index]),
+                  childCount: _items.length,
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildItem(context, _items[index]),
-                    childCount: _items.length,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
           if (state is ListSharingBlocLoading)
             const Align(
@@ -172,14 +162,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final firstItem = shares.first as ListSharingFile;
     return _ListTile(
       leading: shares.first.share.itemType == ShareItemType.folder
-          ? SizedBox(
+          ? const SizedBox(
               height: _leadingSize,
               width: _leadingSize,
-              child: Icon(
-                Icons.folder,
-                size: 32,
-                color: AppTheme.getUnfocusedIconColor(context),
-              ),
+              child: Icon(Icons.folder, size: 32),
             )
           : CachedNetworkImage(
               width: _leadingSize,
@@ -195,11 +181,8 @@ class _SharingBrowserState extends State<SharingBrowser> {
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              errorWidget: (context, url, error) => Icon(
-                Icons.folder,
-                size: 32,
-                color: AppTheme.getUnfocusedIconColor(context),
-              ),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.folder, size: 32),
             ),
       label: shares.first.share.filename,
       description: shares.first.share.uidOwner == widget.account.userId
@@ -207,10 +190,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
           : L10n.global().fileLastSharedByOthersDescription(
               shares.first.share.displaynameOwner, dateStr),
       trailing: (shares.any((element) => element.share.url?.isNotEmpty == true))
-          ? Icon(
-              Icons.link,
-              color: AppTheme.getUnfocusedIconColor(context),
-            )
+          ? const Icon(Icons.link)
           : null,
       onTap: () {
         Navigator.of(context).pushNamed(SharedFileViewer.routeName,
@@ -231,14 +211,10 @@ class _SharingBrowserState extends State<SharingBrowser> {
     final cover = firstItem.album.coverProvider.getCover(firstItem.album);
     return _ListTile(
       leading: cover == null
-          ? SizedBox(
+          ? const SizedBox(
               height: _leadingSize,
               width: _leadingSize,
-              child: Icon(
-                Icons.photo_album,
-                size: 32,
-                color: AppTheme.getUnfocusedIconColor(context),
-              ),
+              child: Icon(Icons.photo_album, size: 32),
             )
           : CachedNetworkImage(
               width: _leadingSize,
@@ -253,21 +229,15 @@ class _SharingBrowserState extends State<SharingBrowser> {
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              errorWidget: (context, url, error) => Icon(
-                Icons.photo_album,
-                size: 32,
-                color: AppTheme.getUnfocusedIconColor(context),
-              ),
+              errorWidget: (context, url, error) =>
+                  const Icon(Icons.photo_album, size: 32),
             ),
       label: firstItem.album.name,
       description: shares.first.share.uidOwner == widget.account.userId
           ? L10n.global().fileLastSharedDescription(dateStr)
           : L10n.global().albumLastSharedByOthersDescription(
               shares.first.share.displaynameOwner, dateStr),
-      trailing: Icon(
-        Icons.photo_album_outlined,
-        color: AppTheme.getUnfocusedIconColor(context),
-      ),
+      trailing: const Icon(Icons.photo_album_outlined),
       onTap: () =>
           _onAlbumShareItemTap(context, shares.first as ListSharingAlbum),
     );

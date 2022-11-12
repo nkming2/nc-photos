@@ -155,56 +155,49 @@ class _HomePhotosState extends State<HomePhotos>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: DraggableScrollbar.semicircle(
-                controller: _scrollController,
-                overrideMaxScrollExtent: scrollExtent,
-                // status bar + app bar
-                topOffset: _calcAppBarExtent(context),
-                bottomOffset: _calcBottomAppBarExtent(context),
-                labelTextBuilder: (_) => _buildScrollLabel(context),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 40),
-                enabled: _isScrollbarVisible,
-                heightScrollThumb: 60,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context)
-                      .copyWith(scrollbars: false),
-                  child: RefreshIndicator(
-                    backgroundColor: Colors.grey[100],
-                    onRefresh: () async {
-                      _onRefreshSelected();
-                      await _waitRefresh();
-                    },
-                    child: CustomScrollView(
-                      controller: _scrollController,
-                      slivers: [
-                        _buildAppBar(context),
-                        _web?.buildContent(context),
-                        if (AccountPref.of(widget.account)
-                                .isEnableMemoryAlbumOr(true) &&
-                            _smartAlbums.isNotEmpty)
-                          _buildSmartAlbumList(context),
-                        buildItemStreamList(
-                          maxCrossAxisExtent: _thumbSize.toDouble(),
-                          onMaxExtentChanged: (value) {
-                            setState(() {
-                              _itemListMaxExtent = value;
-                            });
-                          },
-                          isEnableVisibilityCallback: true,
+            child: DraggableScrollbar.semicircle(
+              controller: _scrollController,
+              overrideMaxScrollExtent: scrollExtent,
+              // status bar + app bar
+              topOffset: _calcAppBarExtent(context),
+              bottomOffset: _calcBottomAppBarExtent(context),
+              labelTextBuilder: (_) => _buildScrollLabel(context),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 40),
+              backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+              enabled: _isScrollbarVisible,
+              heightScrollThumb: 60,
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    _onRefreshSelected();
+                    await _waitRefresh();
+                  },
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _buildAppBar(context),
+                      _web?.buildContent(context),
+                      if (AccountPref.of(widget.account)
+                              .isEnableMemoryAlbumOr(true) &&
+                          _smartAlbums.isNotEmpty)
+                        _buildSmartAlbumList(context),
+                      buildItemStreamList(
+                        maxCrossAxisExtent: _thumbSize.toDouble(),
+                        onMaxExtentChanged: (value) {
+                          setState(() {
+                            _itemListMaxExtent = value;
+                          });
+                        },
+                        isEnableVisibilityCallback: true,
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: _calcBottomAppBarExtent(context),
                         ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: _calcBottomAppBarExtent(context),
-                          ),
-                        ),
-                      ].whereType<Widget>().toList(),
-                    ),
+                      ),
+                    ].whereType<Widget>().toList(),
                   ),
                 ),
               ),
@@ -368,10 +361,10 @@ class _HomePhotosState extends State<HomePhotos>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
           text,
-          style: const TextStyle(
-            color: AppTheme.primaryTextColorLight,
-            fontSize: 16,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         ),
       );
     } else {
@@ -684,7 +677,8 @@ class _HomePhotosState extends State<HomePhotos>
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
 
-  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
+  double _calcBottomAppBarExtent(BuildContext context) =>
+      NavigationBarTheme.of(context).height!;
 
   Primitive<bool> get _hasFiredMetadataTask {
     final name = bloc_util.getInstNameForRootAwareAccount(
@@ -1025,7 +1019,9 @@ class _SmartAlbumItem extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     child: Text(
                       label,
-                      style: TextStyle(color: AppTheme.primaryTextColorDark),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).onDarkSurface,
+                          ),
                     ),
                   ),
                 ),

@@ -1,213 +1,196 @@
 import 'package:flutter/material.dart';
+import 'package:nc_photos/color_schemes.g.dart';
+import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/pref.dart';
 
-class AppTheme extends StatelessWidget {
-  const AppTheme({
-    Key? key,
-    required this.child,
-    this.brightnessOverride,
-  }) : super(key: key);
+extension ThemeExtension on ThemeData {
+  double get widthLimitedContentMaxWidth => 550.0;
 
-  factory AppTheme.light({
-    Key? key,
-    required Widget child,
-  }) =>
-      AppTheme(
-        key: key,
-        brightnessOverride: Brightness.light,
-        child: child,
-      );
+  Color get listPlaceholderBackgroundColor =>
+      colorScheme.secondaryContainer.withOpacity(.6);
 
-  factory AppTheme.dark({
-    Key? key,
-    required Widget child,
-  }) =>
-      AppTheme(
-        key: key,
-        brightnessOverride: Brightness.dark,
-        child: child,
-      );
+  Color get listPlaceholderForegroundColor =>
+      colorScheme.onSecondaryContainer.withOpacity(.7);
 
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: _buildThemeData(context),
-      child: DefaultTextStyle(
-        style: _buildTextStyle(context),
-        child: child,
-      ),
-    );
+  Color get homeNavigationBarBackgroundColor =>
+      elevate(colorScheme.surface, 2).withOpacity(.77);
+
+  Color get onDarkSurface {
+    return brightness == Brightness.light
+        ? colorScheme.onInverseSurface
+        : colorScheme.onSurface;
   }
 
-  static ThemeData buildThemeData(BuildContext context) {
-    final theme = Theme.of(context);
-    return theme.brightness == Brightness.light
-        ? buildLightThemeData()
-        : buildDarkThemeData();
-  }
-
-  static AppBarTheme getContextualAppBarTheme(BuildContext context) {
-    final theme = Theme.of(context);
-    if (theme.brightness == Brightness.light) {
-      return theme.appBarTheme.copyWith(
-        backgroundColor: Colors.grey[800],
-        foregroundColor: Colors.white.withOpacity(.87),
-      );
-    } else {
-      return theme.appBarTheme.copyWith(
-        backgroundColor: Colors.grey[200],
-        foregroundColor: Colors.black87,
-      );
+  /// Apply surface tint to [color] based on the [elevation] level
+  ///
+  /// This function is a temporary workaround for widgets not yet fully
+  /// supported Material 3
+  Color elevate(Color color, int elevation) {
+    final double tintOpacity;
+    switch (elevation) {
+      case 1:
+        tintOpacity = 0.05;
+        break;
+      case 2:
+        tintOpacity = 0.08;
+        break;
+      case 3:
+        tintOpacity = 0.11;
+        break;
+      case 4:
+        tintOpacity = 0.12;
+        break;
+      case 5:
+      default:
+        tintOpacity = 0.14;
+        break;
     }
+    return Color.lerp(color, colorScheme.surfaceTint, tintOpacity)!;
   }
-
-  static Color getSelectionOverlayColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? primarySwatchLight[100]!.withOpacity(0.7)
-        : primarySwatchDark[700]!.withOpacity(0.7);
-  }
-
-  static Color getOverscrollIndicatorColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? Colors.grey[800]!
-        : Colors.grey[200]!;
-  }
-
-  static Color getRootPickerContentBoxColor(BuildContext context) {
-    return Colors.blue[200]!;
-  }
-
-  static Color getPrimaryTextColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? primaryTextColorLight
-        : primaryTextColorDark;
-  }
-
-  static Color getSecondaryTextColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? Colors.black.withOpacity(.6)
-        : Colors.white60;
-  }
-
-  static Color getPrimaryTextColorInverse(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.light
-          ? primaryTextColorDark
-          : primaryTextColorLight;
-
-  static Color getAppBarDarkModeSwitchColor(BuildContext context) {
-    return Colors.black87;
-  }
-
-  static Color getAppBarDarkModeSwitchTrackColor(BuildContext context) {
-    return Colors.white.withOpacity(.5);
-  }
-
-  static Color getListItemBackgroundColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? Colors.black26
-        : Colors.white12;
-  }
-
-  static Color getUnfocusedIconColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light
-        ? unfocusedIconColorLight
-        : unfocusedIconColorDark;
-  }
-
-  static ThemeData buildLightThemeData() {
-    final theme = ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: AppTheme.primarySwatchLight,
-    );
-    final appBarTheme = theme.appBarTheme.copyWith(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      foregroundColor: theme.colorScheme.onSurface,
-    );
-    return theme.copyWith(appBarTheme: appBarTheme);
-  }
-
-  static ThemeData buildDarkThemeData() {
-    final Color background;
-    final Color popup;
-    if (Pref().isUseBlackInDarkThemeOr(false)) {
-      background = Colors.black;
-      popup = Colors.grey[900]!;
-    } else {
-      // in the material spec, black is suggested to be 0x121212, but the one
-      // used in flutter by default is 0x303030, why?
-      background = Colors.grey[850]!;
-      popup = Colors.grey[800]!;
-    }
-
-    final theme = ThemeData(
-      brightness: Brightness.dark,
-      primarySwatch: AppTheme.primarySwatchDark,
-      scaffoldBackgroundColor: background,
-      dialogBackgroundColor: popup,
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: background,
-      ),
-      popupMenuTheme: PopupMenuThemeData(
-        color: popup,
-      ),
-      checkboxTheme: CheckboxThemeData(
-        fillColor: _CheckboxDarkColorProperty(),
-      ),
-    );
-    final appBarTheme = theme.appBarTheme.copyWith(
-      backgroundColor: background,
-      foregroundColor: theme.colorScheme.onSurface,
-    );
-    return theme.copyWith(appBarTheme: appBarTheme);
-  }
-
-  ThemeData _buildThemeData(BuildContext context) {
-    return (brightnessOverride ?? Theme.of(context).brightness) ==
-            Brightness.light
-        ? buildLightThemeData()
-        : buildDarkThemeData();
-  }
-
-  TextStyle _buildTextStyle(BuildContext context) {
-    return (brightnessOverride ?? Theme.of(context).brightness) ==
-            Brightness.light
-        ? const TextStyle(color: AppTheme.primaryTextColorLight)
-        : TextStyle(color: AppTheme.primaryTextColorDark);
-  }
-
-  static const primarySwatchLight = Colors.blue;
-  static const primarySwatchDark = Colors.cyan;
-
-  static const primaryTextColorLight = Colors.black87;
-  static final primaryTextColorDark = Colors.white.withOpacity(.87);
-
-  static const unfocusedIconColorLight = Colors.black54;
-  static const unfocusedIconColorDark = Colors.white70;
-
-  static const widthLimitedContentMaxWidth = 550.0;
-
-  /// Make a TextButton look like a default FlatButton. See
-  /// https://flutter.dev/go/material-button-migration-guide
-  static final flatButtonStyle = TextButton.styleFrom(
-    primary: Colors.black87,
-    minimumSize: const Size(88, 36),
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(2.0)),
-    ),
-  );
-
-  final Widget child;
-  final Brightness? brightnessOverride;
 }
 
-class _CheckboxDarkColorProperty implements MaterialStateProperty<Color?> {
-  @override
-  resolve(Set<MaterialState> states) {
-    if (states.contains(MaterialState.selected)) {
-      return Colors.cyanAccent[400];
-    } else {
-      return null;
-    }
+ThemeData buildTheme(Brightness brightness) {
+  return (brightness == Brightness.light)
+      ? buildLightTheme()
+      : buildDarkTheme();
+}
+
+ThemeData buildLightTheme() {
+  final theme = _applyColorScheme(lightColorScheme);
+  return theme;
+}
+
+ThemeData buildDarkTheme() {
+  final ThemeData theme;
+  if (Pref().isUseBlackInDarkThemeOr(false)) {
+    theme = _applyColorScheme(darkColorScheme.copyWith(
+      background: Colors.black,
+      surface: Colors.grey[900],
+    ));
+  } else {
+    theme = _applyColorScheme(darkColorScheme);
   }
+  return theme;
+}
+
+ThemeData buildDarkModeSwitchTheme(BuildContext context) {
+  final theme = Theme.of(context);
+  return theme.copyWith(
+    switchTheme: SwitchThemeData(
+      trackColor: MaterialStateProperty.all(theme.colorScheme.surfaceVariant),
+      thumbColor: MaterialStateProperty.all(Colors.black87),
+    ),
+  );
+}
+
+ThemeData _applyColorScheme(ColorScheme colorScheme) {
+  return ThemeData(
+    useMaterial3: true,
+    brightness: colorScheme.brightness,
+    colorScheme: colorScheme,
+    scaffoldBackgroundColor: colorScheme.background,
+    appBarTheme: AppBarTheme(
+      backgroundColor: colorScheme.background,
+      foregroundColor: colorScheme.onSurface,
+    ),
+    listTileTheme: ListTileThemeData(
+      iconColor: colorScheme.onSurfaceVariant,
+    ),
+    iconTheme: IconThemeData(
+      color: colorScheme.onSurfaceVariant,
+    ),
+    // remove after dialog supports m3
+    dialogBackgroundColor:
+        Color.lerp(colorScheme.surface, colorScheme.surfaceTint, 0.11),
+    popupMenuTheme: PopupMenuThemeData(
+      // remove after menu supports m3
+      color: Color.lerp(colorScheme.surface, colorScheme.surfaceTint, 0.08),
+    ),
+    navigationBarTheme: const NavigationBarThemeData(
+      // default for Material 3
+      height: 80,
+    ),
+    // remove after checkbox supports m3
+    // see: https://m3.material.io/components/checkbox/specs
+    checkboxTheme: CheckboxThemeData(
+      fillColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          return colorScheme.onSurface;
+        } else {
+          if (states.contains(MaterialState.selected)) {
+            return colorScheme.primary;
+          } else {
+            return Colors.transparent;
+          }
+        }
+      }),
+      checkColor: MaterialStateProperty.all(colorScheme.onPrimary),
+    ),
+    // remove after checkbox supports m3
+    // see: https://m3.material.io/components/switch/specs
+    // the color here is slightly modified to work better with the M2 switch
+    switchTheme: SwitchThemeData(
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          if (states.contains(MaterialState.selected)) {
+            return colorScheme.onSurface.withOpacity(.12);
+          } else {
+            return colorScheme.surfaceVariant.withOpacity(.12);
+          }
+        } else {
+          if (states.contains(MaterialState.selected)) {
+            // return colorScheme.primary;
+            return colorScheme.primaryContainer;
+          } else {
+            return colorScheme.surfaceVariant;
+          }
+        }
+      }),
+      thumbColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          if (states.contains(MaterialState.selected)) {
+            // return colorScheme.surface;
+            return colorScheme.onSurface.withOpacity(.38);
+          } else {
+            return colorScheme.onSurface.withOpacity(.38);
+          }
+        } else {
+          if (states.contains(MaterialState.selected)) {
+            // return colorScheme.onPrimary;
+            return colorScheme.primary;
+          } else {
+            return colorScheme.outline;
+          }
+        }
+      }),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: colorScheme.inverseSurface,
+      contentTextStyle: TextStyle(
+        color: colorScheme.onInverseSurface,
+      ),
+      actionTextColor: colorScheme.inversePrimary,
+    ),
+    extensions: [
+      M3(
+        checkbox: M3Checkbox(
+          disabled: M3CheckboxDisabled(
+            container: colorScheme.onSurface.withOpacity(.38),
+          ),
+        ),
+        filterChip: M3FilterChip(
+          disabled: M3FilterChipDisabled(
+            containerSelected: colorScheme.onSurface.withOpacity(.12),
+            labelText: colorScheme.onSurface.withOpacity(.38),
+          ),
+        ),
+        listTile: M3ListTile(
+          enabled: M3ListTileEnabled(
+            headline: colorScheme.onSurface,
+            supportingText: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ),
+    ],
+  );
 }

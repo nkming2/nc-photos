@@ -58,15 +58,13 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListPersonBloc, ListPersonBlocState>(
+    return Scaffold(
+      body: BlocListener<ListPersonBloc, ListPersonBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListPersonBloc, ListPersonBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListPersonBloc, ListPersonBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -89,32 +87,25 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   Widget _buildContent(BuildContext context, ListPersonBlocState state) {
     return Stack(
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
+        CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            if (state is ListPersonBlocLoading)
+              const SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: LinearProgressIndicator(),
                 ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              if (state is ListPersonBlocLoading)
-                const SliverToBoxAdapter(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: LinearProgressIndicator(),
-                  ),
-                ),
-              SliverStaggeredGrid.extentBuilder(
-                maxCrossAxisExtent: 160,
-                mainAxisSpacing: 2,
-                crossAxisSpacing: 2,
-                itemCount: _items.length,
-                itemBuilder: _buildItem,
-                staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
               ),
-            ],
-          ),
+            SliverStaggeredGrid.extentBuilder(
+              maxCrossAxisExtent: 160,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              itemCount: _items.length,
+              itemBuilder: _buildItem,
+              staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
+            ),
+          ],
         ),
       ],
     );
@@ -213,9 +204,9 @@ class _PersonListItem extends _ListItem {
         account: account,
         label: name,
         coverUrl: faceUrl,
-        fallbackBuilder: (_) => Icon(
+        fallbackBuilder: (context) => Icon(
           Icons.person,
-          color: Colors.white.withOpacity(.8),
+          color: Theme.of(context).listPlaceholderForegroundColor,
         ),
         onTap: onTap,
       );

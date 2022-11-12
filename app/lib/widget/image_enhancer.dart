@@ -82,7 +82,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   }
 
   @override
-  build(BuildContext context) => AppTheme.dark(
+  build(BuildContext context) => Theme(
+        data: buildDarkTheme(),
         child: Scaffold(
           body: Builder(
             builder: _buildContent,
@@ -131,8 +132,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
   Widget _buildAppBar(BuildContext context) => AppBar(
         backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.white.withOpacity(.87),
+        elevation: 0,
         title: Text(L10n.global().enhanceTooltip),
         actions: [
           TextButton(
@@ -361,47 +361,39 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     var current = .8;
     final iteration = await showDialog<int>(
       context: context,
-      builder: (context) => AppTheme(
-        child: AlertDialog(
-          title: Text(L10n.global().enhanceLowLightParamBrightnessLabel),
-          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Icon(
-                    Icons.brightness_low,
-                    color: AppTheme.getSecondaryTextColor(context),
+      builder: (context) => AlertDialog(
+        title: Text(L10n.global().enhanceLowLightParamBrightnessLabel),
+        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Icon(Icons.brightness_low),
+                Expanded(
+                  child: StatefulSlider(
+                    initialValue: current,
+                    onChangeEnd: (value) {
+                      current = value;
+                    },
                   ),
-                  Expanded(
-                    child: StatefulSlider(
-                      initialValue: current,
-                      onChangeEnd: (value) {
-                        current = value;
-                      },
-                    ),
-                  ),
-                  Icon(
-                    Icons.brightness_high,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                final iteration = (current * 10).round().clamp(1, 10);
-                Navigator.of(context).pop(iteration);
-              },
-              child: Text(L10n.global().enhanceButtonLabel),
+                ),
+                const Icon(Icons.brightness_high),
+              ],
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final iteration = (current * 10).round().clamp(1, 10);
+              Navigator.of(context).pop(iteration);
+            },
+            child: Text(L10n.global().enhanceButtonLabel),
+          ),
+        ],
       ),
     );
     _log.info("[_getZeroDceArgs] iteration: $iteration");
@@ -413,48 +405,39 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     var current = .5;
     final radius = await showDialog<int>(
       context: context,
-      builder: (context) => AppTheme(
-        child: AlertDialog(
-          title: Text(L10n.global().enhancePortraitBlurParamBlurLabel),
-          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Icon(
-                    Icons.circle,
-                    size: 20,
-                    color: AppTheme.getSecondaryTextColor(context),
+      builder: (context) => AlertDialog(
+        title: Text(L10n.global().enhancePortraitBlurParamBlurLabel),
+        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Icon(Icons.circle, size: 20),
+                Expanded(
+                  child: StatefulSlider(
+                    initialValue: current,
+                    onChangeEnd: (value) {
+                      current = value;
+                    },
                   ),
-                  Expanded(
-                    child: StatefulSlider(
-                      initialValue: current,
-                      onChangeEnd: (value) {
-                        current = value;
-                      },
-                    ),
-                  ),
-                  Icon(
-                    Icons.blur_on,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                final radius = (current * 25).round().clamp(1, 25);
-                Navigator.of(context).pop(radius);
-              },
-              child: Text(L10n.global().enhanceButtonLabel),
+                ),
+                const Icon(Icons.blur_on),
+              ],
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final radius = (current * 25).round().clamp(1, 25);
+              Navigator.of(context).pop(radius);
+            },
+            child: Text(L10n.global().enhanceButtonLabel),
+          ),
+        ],
       ),
     );
     _log.info("[_getDeepLab3PortraitArgs] radius: $radius");
@@ -483,47 +466,38 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     var current = 1.0;
     final weight = await showDialog<double>(
       context: context,
-      builder: (context) => AppTheme(
-        child: AlertDialog(
-          title: Text(L10n.global().enhanceGenericParamWeightLabel),
-          contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Icon(
-                    Icons.water_drop,
-                    size: 20,
-                    color: AppTheme.getSecondaryTextColor(context),
+      builder: (context) => AlertDialog(
+        title: Text(L10n.global().enhanceGenericParamWeightLabel),
+        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Icon(Icons.water_drop, size: 20),
+                Expanded(
+                  child: StatefulSlider(
+                    initialValue: current,
+                    onChangeEnd: (value) {
+                      current = value;
+                    },
                   ),
-                  Expanded(
-                    child: StatefulSlider(
-                      initialValue: current,
-                      onChangeEnd: (value) {
-                        current = value;
-                      },
-                    ),
-                  ),
-                  Icon(
-                    Icons.water_drop_outlined,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(current);
-              },
-              child: Text(L10n.global().enhanceButtonLabel),
+                ),
+                const Icon(Icons.water_drop_outlined),
+              ],
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(current);
+            },
+            child: Text(L10n.global().enhanceButtonLabel),
+          ),
+        ],
       ),
     );
     _log.info("[_getDeepLab3ColorPopArgs] weight: $weight");
@@ -635,14 +609,17 @@ class _ListChild extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Container(
-            color: isSelected ? Colors.white24 : null,
+            color: isSelected
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : null,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               title,
               style: TextStyle(
-                color:
-                    isSelected ? Colors.white : AppTheme.unfocusedIconColorDark,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onSecondaryContainer
+                    : Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -889,106 +866,95 @@ class _StylePicker extends StatefulWidget {
 class _StylePickerState extends State<_StylePicker> {
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: AlertDialog(
-        title: Text(L10n.global().enhanceStyleTransferStyleDialogTitle),
-        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_selected != null) ...[
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: 128,
-                  height: 128,
-                  child: Image(
+    return AlertDialog(
+      title: Text(L10n.global().enhanceStyleTransferStyleDialogTitle),
+      contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_selected != null) ...[
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: 128,
+                height: 128,
+                child: Image(
+                  image: ResizeImage.resizeIfNeeded(
+                      128, null, ContentUriImage(_getSelectedUri())),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+          Wrap(
+            runSpacing: 8,
+            spacing: 8,
+            children: [
+              ..._bundledStyles.mapIndexed((i, e) => _buildItem(
+                    i,
+                    Image(
+                      image: ResizeImage.resizeIfNeeded(
+                          _thumbSize, null, ContentUriImage(e)),
+                      fit: BoxFit.cover,
+                    ),
+                  )),
+              if (_customUri != null)
+                _buildItem(
+                  _bundledStyles.length,
+                  Image(
                     image: ResizeImage.resizeIfNeeded(
-                        128, null, ContentUriImage(_getSelectedUri())),
+                        _thumbSize, null, ContentUriImage(_customUri!)),
                     fit: BoxFit.cover,
                   ),
                 ),
+              InkWell(
+                onTap: _onCustomTap,
+                child: SizedBox(
+                  width: _thumbSize.toDouble(),
+                  height: _thumbSize.toDouble(),
+                  child: const Icon(Icons.file_open_outlined),
+                ),
               ),
-              const SizedBox(height: 16),
             ],
-            Wrap(
-              runSpacing: 8,
-              spacing: 8,
-              children: [
-                ..._bundledStyles.mapIndexed((i, e) => _buildItem(
-                      i,
-                      Image(
-                        image: ResizeImage.resizeIfNeeded(
-                            _thumbSize, null, ContentUriImage(e)),
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-                if (_customUri != null)
-                  _buildItem(
-                    _bundledStyles.length,
-                    Image(
-                      image: ResizeImage.resizeIfNeeded(
-                          _thumbSize, null, ContentUriImage(_customUri!)),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                InkWell(
-                  onTap: _onCustomTap,
-                  child: SizedBox(
-                    width: _thumbSize.toDouble(),
-                    height: _thumbSize.toDouble(),
-                    child: const Icon(
-                      Icons.file_open_outlined,
-                      size: 24,
-                    ),
-                  ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const Icon(Icons.auto_fix_normal),
+              Expanded(
+                child: StatefulSlider(
+                  initialValue: _weight,
+                  min: .01,
+                  onChangeEnd: (value) {
+                    _weight = value;
+                  },
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Icon(
-                  Icons.auto_fix_normal,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
-                Expanded(
-                  child: StatefulSlider(
-                    initialValue: _weight,
-                    min: .01,
-                    onChangeEnd: (value) {
-                      _weight = value;
-                    },
-                  ),
-                ),
-                Icon(
-                  Icons.auto_fix_high,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (_selected == null) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(L10n.global()
-                      .enhanceStyleTransferNoStyleSelectedNotification),
-                  duration: k.snackBarDurationNormal,
-                ));
-              } else {
-                final result = _StylePickerResult(_getSelectedUri(), _weight);
-                Navigator.of(context).pop(result);
-              }
-            },
-            child: Text(L10n.global().enhanceButtonLabel),
+              ),
+              const Icon(Icons.auto_fix_high),
+            ],
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (_selected == null) {
+              SnackBarManager().showSnackBar(SnackBar(
+                content: Text(L10n.global()
+                    .enhanceStyleTransferNoStyleSelectedNotification),
+                duration: k.snackBarDurationNormal,
+              ));
+            } else {
+              final result = _StylePickerResult(_getSelectedUri(), _weight);
+              Navigator.of(context).pop(result);
+            }
+          },
+          child: Text(L10n.global().enhanceButtonLabel),
+        ),
+      ],
     );
   }
 

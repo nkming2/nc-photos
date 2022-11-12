@@ -29,6 +29,7 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -103,15 +104,13 @@ class _PersonBrowserState extends State<PersonBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListFaceFileBloc, ListFaceFileBlocState>(
+    return Scaffold(
+      body: BlocListener<ListFaceFileBloc, ListFaceFileBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListFaceFileBloc, ListFaceFileBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListFaceFileBloc, ListFaceFileBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -137,28 +136,20 @@ class _PersonBrowserState extends State<PersonBrowser>
   Widget _buildContent(BuildContext context, ListFaceFileBlocState state) {
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context, state),
+          if (state is ListFaceFileBlocLoading || _buildItemQueue.isProcessing)
+            const SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.center,
+                child: LinearProgressIndicator(),
               ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context, state),
-            if (state is ListFaceFileBlocLoading ||
-                _buildItemQueue.isProcessing)
-              const SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            buildItemStreamList(
-              maxCrossAxisExtent: _thumbSize.toDouble(),
             ),
-          ],
-        ),
+          buildItemStreamList(
+            maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
       ),
     );
   }
@@ -175,43 +166,12 @@ class _PersonBrowserState extends State<PersonBrowser>
     return SliverAppBar(
       floating: true,
       titleSpacing: 0,
-      title: Row(
-        children: [
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: _buildFaceImage(context),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.person.name,
-                  style: TextStyle(
-                    color: AppTheme.getPrimaryTextColor(context),
-                  ),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.clip,
-                ),
-                if (state is! ListFaceFileBlocLoading &&
-                    !_buildItemQueue.isProcessing)
-                  Text(
-                    L10n.global().personPhotoCountText(_backingFiles.length),
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                      fontSize: 12,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
+      title: AppBarTitleContainer(
+        icon: _buildFaceImage(context),
+        title: Text(widget.person.name),
+        subtitle:
+            Text(L10n.global().personPhotoCountText(_backingFiles.length)),
       ),
-      // ),
       actions: [
         ZoomMenuButton(
           initialZoom: _thumbZoomLevel,
@@ -254,7 +214,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     } catch (_) {
       cover = Icon(
         Icons.person,
-        color: Colors.white.withOpacity(.8),
+        color: Theme.of(context).listPlaceholderForegroundColor,
         size: 24,
       );
     }
@@ -262,7 +222,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     return ClipRRect(
       borderRadius: BorderRadius.circular(64),
       child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
+        color: Theme.of(context).listPlaceholderBackgroundColor,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),

@@ -9,6 +9,7 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
+import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/settings.dart';
 
 /// AppBar for home screens
@@ -34,46 +35,18 @@ class HomeSliverAppBar extends StatelessWidget {
             ),
           );
         },
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Stack(
-                children: [
-                  if (account.scheme == "http")
-                    const Icon(
-                      Icons.no_encryption_outlined,
-                      color: Colors.orange,
-                    )
-                  else
-                    Icon(
-                      Icons.https,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                ],
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      accountLabel ?? account.address,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    if (accountLabel == null)
-                      Text(
-                        account.username2,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppTheme.getSecondaryTextColor(context),
-                        ),
-                      ),
-                  ],
+        child: AppBarTitleContainer(
+          title: Text(accountLabel ?? account.address),
+          subtitle: accountLabel == null ? Text(account.username2) : null,
+          icon: account.scheme == "http"
+              ? Icon(
+                  Icons.no_encryption_outlined,
+                  color: Theme.of(context).colorScheme.error,
+                )
+              : Icon(
+                  Icons.https,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-              ),
-            ],
-          ),
         ),
       ),
       floating: true,
@@ -81,18 +54,8 @@ class HomeSliverAppBar extends StatelessWidget {
       actions: (actions ?? []) +
           [
             if (!Pref().isFollowSystemThemeOr(false))
-              Switch(
-                value: Theme.of(context).brightness == Brightness.dark,
+              _DarkModeSwitch(
                 onChanged: _onDarkModeChanged,
-                activeColor: AppTheme.getAppBarDarkModeSwitchColor(context),
-                inactiveThumbColor:
-                    AppTheme.getAppBarDarkModeSwitchColor(context),
-                activeTrackColor:
-                    AppTheme.getAppBarDarkModeSwitchTrackColor(context),
-                activeThumbImage:
-                    const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
-                inactiveThumbImage:
-                    const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
               ),
             PopupMenuButton<int>(
               tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
@@ -143,4 +106,27 @@ class HomeSliverAppBar extends StatelessWidget {
 
   static const _menuValueAbout = -1;
   static const _menuValueHelp = -2;
+}
+
+class _DarkModeSwitch extends StatelessWidget {
+  const _DarkModeSwitch({
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: buildDarkModeSwitchTheme(context),
+      child: Switch(
+        value: Theme.of(context).brightness == Brightness.dark,
+        onChanged: onChanged,
+        activeThumbImage:
+            const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+        inactiveThumbImage:
+            const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
+      ),
+    );
+  }
+
+  final ValueChanged<bool>? onChanged;
 }

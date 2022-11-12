@@ -3,7 +3,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
@@ -186,41 +185,39 @@ class _ColorToolbarState extends State<ColorToolbar> {
     required double initialValue,
     ValueChanged<double>? onChangeEnd,
   }) {
-    return AppTheme.dark(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(min.toStringAsFixedTruncated(1)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(min.toStringAsFixedTruncated(1)),
+                ),
+                if (min < 0 && max > 0)
+                  const Align(
+                    alignment: AlignmentDirectional.center,
+                    child: Text("0"),
                   ),
-                  if (min < 0 && max > 0)
-                    const Align(
-                      alignment: AlignmentDirectional.center,
-                      child: Text("0"),
-                    ),
-                  Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(max.toStringAsFixedTruncated(1)),
-                  ),
-                ],
-              ),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Text(max.toStringAsFixedTruncated(1)),
+                ),
+              ],
             ),
-            StatefulSlider(
-              key: key,
-              initialValue: initialValue.toDouble(),
-              min: min.toDouble(),
-              max: max.toDouble(),
-              onChangeEnd: onChangeEnd,
-            ),
-          ],
-        ),
+          ),
+          StatefulSlider(
+            key: key,
+            initialValue: initialValue.toDouble(),
+            min: min.toDouble(),
+            max: max.toDouble(),
+            onChangeEnd: onChangeEnd,
+          ),
+        ],
       ),
     );
   }

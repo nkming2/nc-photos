@@ -48,7 +48,8 @@ class LocalFileViewer extends StatefulWidget {
 class _LocalFileViewerState extends State<LocalFileViewer> {
   @override
   build(BuildContext context) {
-    return AppTheme(
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,
@@ -108,8 +109,7 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
             ),
             AppBar(
               backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              foregroundColor: Colors.white.withOpacity(.87),
+              elevation: 0,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.share),

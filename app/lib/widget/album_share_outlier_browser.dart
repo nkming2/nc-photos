@@ -22,7 +22,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/string_extension.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -73,17 +72,15 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListAlbumShareOutlierBloc,
+    return Scaffold(
+      body: BlocListener<ListAlbumShareOutlierBloc,
+          ListAlbumShareOutlierBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListAlbumShareOutlierBloc,
             ListAlbumShareOutlierBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListAlbumShareOutlierBloc,
-              ListAlbumShareOutlierBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -112,23 +109,16 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     } else {
       return Stack(
         children: [
-          Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                    secondary: AppTheme.getOverscrollIndicatorColor(context),
-                  ),
-            ),
-            child: CustomScrollView(
-              slivers: [
-                _buildAppBar(context),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildItem(context, _items[index]),
-                    childCount: _items.length,
-                  ),
+          CustomScrollView(
+            slivers: [
+              _buildAppBar(context),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => _buildItem(context, _items[index]),
+                  childCount: _items.length,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           if (state is ListAlbumShareOutlierBlocLoading)
             const Align(
@@ -264,20 +254,11 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   }
 
   Widget _buildFileThumbnail(File file) {
+    final Widget child;
     if (file_util.isAlbumFile(widget.account, file)) {
-      return SizedBox(
-        width: 56,
-        height: 56,
-        child: Icon(
-          Icons.photo_album,
-          size: 32,
-          color: AppTheme.getUnfocusedIconColor(context),
-        ),
-      );
+      child = const Icon(Icons.photo_album, size: 32);
     } else {
-      return CachedNetworkImage(
-        width: 56,
-        height: 56,
+      child = CachedNetworkImage(
         cacheManager: ThumbnailCacheManager.inst,
         imageUrl: api_util.getFilePreviewUrl(widget.account, file,
             width: k.photoThumbSize, height: k.photoThumbSize),
@@ -287,13 +268,15 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
         fadeInDuration: const Duration(),
         filterQuality: FilterQuality.high,
         imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        errorWidget: (context, url, error) => Icon(
-          Icons.image_not_supported,
-          size: 32,
-          color: AppTheme.getUnfocusedIconColor(context),
-        ),
+        errorWidget: (context, url, error) =>
+            const Icon(Icons.image_not_supported, size: 32),
       );
     }
+    return SizedBox(
+      width: 56,
+      height: 56,
+      child: child,
+    );
   }
 
   String _buildFilename(File file) {
@@ -309,34 +292,26 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   }) {
     return IconButton(
       onPressed: onPressed,
-      icon: Icon(
-        Icons.handyman_outlined,
-        color: AppTheme.getUnfocusedIconColor(context),
-      ),
+      icon: const Icon(Icons.handyman_outlined),
       tooltip: L10n.global().fixTooltip,
     );
   }
 
   Widget _buildProcessingIcon(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
+    return const Padding(
+      padding: EdgeInsets.all(12),
       child: SizedBox(
         width: 24,
         height: 24,
-        child: CircularProgressIndicator(
-          color: AppTheme.getUnfocusedIconColor(context),
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }
 
   Widget _buildFixedIcon(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Icon(
-        Icons.check,
-        color: AppTheme.getUnfocusedIconColor(context),
-      ),
+    return const Padding(
+      padding: EdgeInsets.all(12),
+      child: Icon(Icons.check),
     );
   }
 

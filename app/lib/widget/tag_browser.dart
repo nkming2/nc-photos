@@ -22,8 +22,8 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -96,15 +96,13 @@ class _TagBrowserState extends State<TagBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListTagFileBloc, ListTagFileBlocState>(
+    return Scaffold(
+      body: BlocListener<ListTagFileBloc, ListTagFileBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListTagFileBloc, ListTagFileBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListTagFileBloc, ListTagFileBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -130,27 +128,20 @@ class _TagBrowserState extends State<TagBrowser>
   Widget _buildContent(BuildContext context, ListTagFileBlocState state) {
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context, state),
+          if (state is ListTagFileBlocLoading || _buildItemQueue.isProcessing)
+            const SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.center,
+                child: LinearProgressIndicator(),
               ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context, state),
-            if (state is ListTagFileBlocLoading || _buildItemQueue.isProcessing)
-              const SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            buildItemStreamList(
-              maxCrossAxisExtent: _thumbSize.toDouble(),
             ),
-          ],
-        ),
+          buildItemStreamList(
+            maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
       ),
     );
   }
@@ -167,45 +158,14 @@ class _TagBrowserState extends State<TagBrowser>
     return SliverAppBar(
       floating: true,
       titleSpacing: 0,
-      title: Row(
-        children: [
-          const SizedBox(
-            height: 40,
-            width: 40,
-            child: Center(
-              child: Icon(Icons.local_offer_outlined, size: 24),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.tag.displayName,
-                  style: TextStyle(
-                    color: AppTheme.getPrimaryTextColor(context),
-                  ),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.clip,
-                ),
-                if (state is! ListTagFileBlocLoading &&
-                    !_buildItemQueue.isProcessing)
-                  Text(
-                    L10n.global().personPhotoCountText(_backingFiles.length),
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                      fontSize: 12,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
+      title: AppBarTitleContainer(
+        icon: const Icon(Icons.local_offer_outlined),
+        title: Text(widget.tag.displayName),
+        subtitle:
+            (state is! ListTagFileBlocLoading && !_buildItemQueue.isProcessing)
+                ? Text(L10n.global().personPhotoCountText(_backingFiles.length))
+                : null,
       ),
-      // ),
       actions: [
         ZoomMenuButton(
           initialZoom: _thumbZoomLevel,

@@ -74,14 +74,7 @@ class _HomeSearchState extends State<HomeSearch>
       listener: (context, state) => _onStateChange(context, state),
       child: BlocBuilder<SearchBloc, SearchBlocState>(
         bloc: _bloc,
-        builder: (context, state) => Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: _buildContent(context, state),
-        ),
+        builder: (context, state) => _buildContent(context, state),
       ),
     );
   }
@@ -330,7 +323,7 @@ class _HomeSearchState extends State<HomeSearch>
     return Align(
       alignment: Alignment.topCenter,
       child: ColoredBox(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).colorScheme.background,
         child: SingleChildScrollView(
           child: HomeSearchSuggestion(
             account: widget.account,
@@ -559,7 +552,8 @@ class _HomeSearchState extends State<HomeSearch>
     }
   }
 
-  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
+  double _calcBottomAppBarExtent(BuildContext context) =>
+      NavigationBarTheme.of(context).height!;
 
   bool _isShowLanding(SearchBlocState state) => state is SearchBlocInit;
 
@@ -648,21 +642,18 @@ class _FilterBubbleList extends StatelessWidget {
   }
 
   Widget _buildBubble(BuildContext context, String label) {
-    return Container(
-      height: 28,
-      decoration: BoxDecoration(
-        color: AppTheme.getUnfocusedIconColor(context),
-        borderRadius: const BorderRadius.all(Radius.circular(14)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          color: AppTheme.getPrimaryTextColorInverse(context),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: FilterChip(
+        elevation: 1,
+        pressElevation: 1,
+        showCheckmark: false,
+        visualDensity: VisualDensity.compact,
+        selected: true,
+        selectedColor:
+            Theme.of(context).elevate(Theme.of(context).colorScheme.surface, 5),
+        label: Text(label),
+        onSelected: (_) {},
       ),
     );
   }
@@ -807,7 +798,7 @@ class _FilterDropdownState<T> extends State<_FilterDropdown<T>> {
           child: Text(
             widget.label,
             style: TextStyle(
-              color: AppTheme.getSecondaryTextColor(context),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),

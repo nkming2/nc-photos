@@ -82,8 +82,8 @@ class _MyAppState extends State<MyApp>
     }
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      theme: AppTheme.buildLightThemeData(),
-      darkTheme: AppTheme.buildDarkThemeData(),
+      theme: buildLightTheme(),
+      darkTheme: buildDarkTheme(),
       themeMode: themeMode,
       initialRoute: Splash.routeName,
       onGenerateRoute: _onGenerateRoute,

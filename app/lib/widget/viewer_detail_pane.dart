@@ -185,11 +185,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
             ),
           ],
           ListTile(
-            leading: ListTileCenterLeading(
-              child: Icon(
-                Icons.image_outlined,
-                color: AppTheme.getSecondaryTextColor(context),
-              ),
+            leading: const ListTileCenterLeading(
+              child: Icon(Icons.image_outlined),
             ),
             title: Text(path_lib.basenameWithoutExtension(widget.fd.fdPath)),
             subtitle: Text(widget.fd.strippedPath),
@@ -197,10 +194,9 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           if (_file != null) ...[
             if (!_file!.isOwned(widget.account.userId))
               ListTile(
-                leading: ListTileCenterLeading(
+                leading: const ListTileCenterLeading(
                   child: Icon(
                     Icons.share_outlined,
-                    color: AppTheme.getSecondaryTextColor(context),
                   ),
                 ),
                 title:
@@ -209,38 +205,22 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               ),
             if (_tags.isNotEmpty)
               ListTile(
-                leading: Icon(
-                  Icons.local_offer_outlined,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
+                leading: const Icon(Icons.local_offer_outlined),
                 title: SizedBox(
                   height: 40,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _tags.length,
-                    itemBuilder: (context, index) => Center(
-                      child: Wrap(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppTheme.getUnfocusedIconColor(context),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8)),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            alignment: Alignment.center,
-                            child: Text(
-                              _tags[index],
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppTheme.getPrimaryTextColorInverse(
-                                    context),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    itemBuilder: (context, index) => FilterChip(
+                      elevation: 1,
+                      pressElevation: 1,
+                      showCheckmark: false,
+                      visualDensity: VisualDensity.compact,
+                      selected: true,
+                      selectedColor: Theme.of(context)
+                          .elevate(Theme.of(context).colorScheme.surface, 5),
+                      label: Text(_tags[index]),
+                      onSelected: (_) {},
                     ),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 8),
@@ -249,28 +229,17 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               ),
           ],
           ListTile(
-            leading: Icon(
-              Icons.calendar_today_outlined,
-              color: AppTheme.getSecondaryTextColor(context),
-            ),
+            leading: const Icon(Icons.calendar_today_outlined),
             title: Text("$dateStr $timeStr"),
-            trailing: _file == null
-                ? null
-                : Icon(
-                    Icons.edit_outlined,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
+            trailing: _file == null ? null : const Icon(Icons.edit_outlined),
             onTap: _file == null ? null : () => _onDateTimeTap(context),
           ),
           if (_file != null) ...[
             if (_file!.metadata?.imageWidth != null &&
                 _file!.metadata?.imageHeight != null)
               ListTile(
-                leading: ListTileCenterLeading(
-                  child: Icon(
-                    Icons.aspect_ratio,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
+                leading: const ListTileCenterLeading(
+                  child: Icon(Icons.aspect_ratio),
                 ),
                 title: Text(
                     "${_file!.metadata!.imageWidth} x ${_file!.metadata!.imageHeight}"),
@@ -278,19 +247,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               )
             else
               ListTile(
-                leading: Icon(
-                  Icons.aspect_ratio,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
+                leading: const Icon(Icons.aspect_ratio),
                 title: Text(_byteSizeToString(_file!.contentLength ?? 0)),
               ),
             if (_model != null)
               ListTile(
-                leading: ListTileCenterLeading(
-                  child: Icon(
-                    Icons.camera_outlined,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
+                leading: const ListTileCenterLeading(
+                  child: Icon(Icons.camera_outlined),
                 ),
                 title: Text(_model!),
                 subtitle: _buildCameraSubtitle()
@@ -298,18 +261,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
               ),
             if (_location?.name != null)
               ListTile(
-                leading: ListTileCenterLeading(
-                  child: Icon(
-                    Icons.location_on_outlined,
-                    color: AppTheme.getSecondaryTextColor(context),
-                  ),
+                leading: const ListTileCenterLeading(
+                  child: Icon(Icons.location_on_outlined),
                 ),
                 title: Text(L10n.global().gpsPlaceText(_location!.name!)),
                 subtitle: _location!.toSubtitle()?.run((obj) => Text(obj)),
-                trailing: Icon(
-                  Icons.info_outline,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
+                trailing: const Icon(Icons.info_outline),
                 onTap: () {
                   showDialog(
                     context: context,
@@ -556,6 +513,10 @@ class _DetailPaneButton extends StatelessWidget {
   build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
+      style: ButtonStyle(
+        foregroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.onSurface),
+      ),
       child: SizedBox(
         width: 96,
         height: 96,
@@ -563,18 +524,12 @@ class _DetailPaneButton extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
           child: Column(
             children: [
-              Icon(
-                icon,
-                color: AppTheme.getSecondaryTextColor(context),
-              ),
+              Icon(icon),
               const SizedBox(height: 4),
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.getSecondaryTextColor(context),
-                ),
+                style: Theme.of(context).textTheme.labelMedium,
               ),
             ],
           ),

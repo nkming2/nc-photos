@@ -22,7 +22,6 @@ import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
@@ -83,11 +82,9 @@ class _SettingsState extends State<Settings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -104,11 +101,8 @@ class _SettingsState extends State<Settings> {
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                leading: ListTileCenterLeading(
-                  child: Icon(
-                    Icons.translate_outlined,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
+                leading: const ListTileCenterLeading(
+                  child: Icon(Icons.translate_outlined),
                 ),
                 title: Text(L10n.global().settingsLanguageTitle),
                 subtitle: Text(language_util.getSelectedLanguage().nativeName),
@@ -133,39 +127,27 @@ class _SettingsState extends State<Settings> {
                 ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.manage_accounts_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.manage_accounts_outlined),
                 label: L10n.global().settingsAccountTitle,
                 builder: () => AccountSettingsWidget(account: widget.account),
               ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.image_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.image_outlined),
                 label: L10n.global().photosTabLabel,
                 description: L10n.global().settingsPhotosDescription,
                 builder: () => _PhotosSettings(account: widget.account),
               ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.photo_album_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.photo_album_outlined),
                 label: L10n.global().settingsAlbumTitle,
                 description: L10n.global().settingsAlbumDescription,
                 builder: () => _AlbumSettings(),
               ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.view_carousel_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.view_carousel_outlined),
                 label: L10n.global().settingsViewerTitle,
                 description: L10n.global().settingsViewerDescription,
                 builder: () => _ViewerSettings(),
@@ -173,40 +155,28 @@ class _SettingsState extends State<Settings> {
               if (features.isSupportEnhancement)
                 _buildSubSettings(
                   context,
-                  leading: Icon(
-                    Icons.auto_fix_high_outlined,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
+                  leading: const Icon(Icons.auto_fix_high_outlined),
                   label: L10n.global().settingsImageEditTitle,
                   description: L10n.global().settingsImageEditDescription,
                   builder: () => const EnhancementSettings(),
                 ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.palette_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.palette_outlined),
                 label: L10n.global().settingsThemeTitle,
                 description: L10n.global().settingsThemeDescription,
                 builder: () => _ThemeSettings(),
               ),
               _buildSubSettings(
                 context,
-                leading: Icon(
-                  Icons.emoji_symbols_outlined,
-                  color: AppTheme.getUnfocusedIconColor(context),
-                ),
+                leading: const Icon(Icons.emoji_symbols_outlined),
                 label: L10n.global().settingsMiscellaneousTitle,
                 builder: () => const _MiscSettings(),
               ),
               if (_enabledExperiments.isNotEmpty)
                 _buildSubSettings(
                   context,
-                  leading: Icon(
-                    Icons.science_outlined,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
+                  leading: const Icon(Icons.science_outlined),
                   label: L10n.global().settingsExperimentalTitle,
                   description: L10n.global().settingsExperimentalDescription,
                   builder: () => _ExperimentalSettings(),
@@ -214,10 +184,7 @@ class _SettingsState extends State<Settings> {
               if (_isShowDevSettings)
                 _buildSubSettings(
                   context,
-                  leading: Icon(
-                    Icons.code_outlined,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
+                  leading: const Icon(Icons.code_outlined),
                   label: "Developer options",
                   builder: () => _DevSettings(),
                 ),
@@ -332,26 +299,23 @@ class _SettingsState extends State<Settings> {
     if (value) {
       showDialog(
         context: context,
-        builder: (context) => AppTheme(
-          child: AlertDialog(
-            title: Text(L10n.global().exifSupportConfirmationDialogTitle),
-            content: Text(L10n.global().exifSupportDetails),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child:
-                    Text(MaterialLocalizations.of(context).cancelButtonLabel),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text(L10n.global().enableButtonLabel),
-              ),
-            ],
-          ),
+        builder: (context) => AlertDialog(
+          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
+          content: Text(L10n.global().exifSupportDetails),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(L10n.global().enableButtonLabel),
+            ),
+          ],
         ),
       ).then((value) {
         if (value == true) {
@@ -389,18 +353,16 @@ class _SettingsState extends State<Settings> {
     if (value) {
       final result = await showDialog<bool>(
         context: context,
-        builder: (context) => AppTheme(
-          child: AlertDialog(
-            content: Text(L10n.global().captureLogDetails),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: Text(L10n.global().enableButtonLabel),
-              ),
-            ],
-          ),
+        builder: (context) => AlertDialog(
+          content: Text(L10n.global().captureLogDetails),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(L10n.global().enableButtonLabel),
+            ),
+          ],
         ),
       );
       if (result == true) {
@@ -514,11 +476,9 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -823,11 +783,9 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -869,24 +827,22 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
     var memoriesRange = _memoriesRange;
     final result = await showDialog<bool>(
       context: context,
-      builder: (_) => AppTheme(
-        child: AlertDialog(
-          content: _MemoriesRangeSlider(
-            initialRange: _memoriesRange,
-            onChanged: (value) {
-              memoriesRange = value;
-            },
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(L10n.global().applyButtonLabel),
-            ),
-          ],
+      builder: (_) => AlertDialog(
+        content: _MemoriesRangeSlider(
+          initialRange: _memoriesRange,
+          onChanged: (value) {
+            memoriesRange = value;
+          },
         ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text(L10n.global().applyButtonLabel),
+          ),
+        ],
       ),
     );
     if (result != true || memoriesRange == _memoriesRange) {
@@ -1004,11 +960,9 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1060,55 +1014,46 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
         await ScreenBrightness().setScreenBrightness(brightness);
         final value = await showDialog<int>(
           context: context,
-          builder: (_) => AppTheme(
-            child: AlertDialog(
-              title: Text(L10n.global().settingsScreenBrightnessTitle),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(L10n.global().settingsScreenBrightnessDescription),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        Icons.brightness_low,
-                        color: AppTheme.getSecondaryTextColor(context),
+          builder: (_) => AlertDialog(
+            title: Text(L10n.global().settingsScreenBrightnessTitle),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(L10n.global().settingsScreenBrightnessDescription),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const Icon(Icons.brightness_low),
+                    Expanded(
+                      child: StatefulSlider(
+                        initialValue: brightness,
+                        min: 0.01,
+                        onChangeEnd: (value) async {
+                          brightness = value;
+                          try {
+                            await ScreenBrightness().setScreenBrightness(value);
+                          } catch (e, stackTrace) {
+                            _log.severe("Failed while setScreenBrightness", e,
+                                stackTrace);
+                          }
+                        },
                       ),
-                      Expanded(
-                        child: StatefulSlider(
-                          initialValue: brightness,
-                          min: 0.01,
-                          onChangeEnd: (value) async {
-                            brightness = value;
-                            try {
-                              await ScreenBrightness()
-                                  .setScreenBrightness(value);
-                            } catch (e, stackTrace) {
-                              _log.severe("Failed while setScreenBrightness", e,
-                                  stackTrace);
-                            }
-                          },
-                        ),
-                      ),
-                      Icon(
-                        Icons.brightness_high,
-                        color: AppTheme.getSecondaryTextColor(context),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop((brightness * 100).round());
-                  },
-                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    ),
+                    const Icon(Icons.brightness_high),
+                  ],
                 ),
               ],
             ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop((brightness * 100).round());
+                },
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
+              ),
+            ],
           ),
         );
 
@@ -1218,11 +1163,9 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1299,11 +1242,9 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1346,34 +1287,32 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
     var height = _maxHeight;
     final result = await showDialog<bool>(
       context: context,
-      builder: (_) => AppTheme(
-        child: AlertDialog(
-          title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(L10n.global().settingsEnhanceMaxResolutionDescription),
-              const SizedBox(height: 16),
-              _EnhanceResolutionSlider(
-                initialWidth: _maxWidth,
-                initialHeight: _maxHeight,
-                onChanged: (value) {
-                  width = value.item1;
-                  height = value.item2;
-                },
-              )
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
+      builder: (_) => AlertDialog(
+        title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(L10n.global().settingsEnhanceMaxResolutionDescription),
+            const SizedBox(height: 16),
+            _EnhanceResolutionSlider(
+              initialWidth: _maxWidth,
+              initialHeight: _maxHeight,
+              onChanged: (value) {
+                width = value.item1;
+                height = value.item2;
               },
-              child: Text(MaterialLocalizations.of(context).okButtonLabel),
-            ),
+            )
           ],
         ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          ),
+        ],
       ),
     );
     if (result != true || (width == _maxWidth && height == _maxHeight)) {
@@ -1538,11 +1477,9 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1645,11 +1582,9 @@ class _MiscSettingsState extends State<_MiscSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1735,11 +1670,9 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1799,11 +1732,9 @@ class _DevSettings extends StatefulWidget {
 class _DevSettingsState extends State<_DevSettings> {
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -1883,9 +1814,9 @@ Widget _buildCaption(BuildContext context, String label) {
     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
     child: Text(
       label,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
-      ),
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+          ),
     ),
   );
 }

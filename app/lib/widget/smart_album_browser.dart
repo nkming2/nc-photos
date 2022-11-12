@@ -16,7 +16,6 @@ import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -76,11 +75,9 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -120,20 +117,13 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
     } else {
       return buildItemStreamListOuter(
         context,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              buildItemStreamList(
-                maxCrossAxisExtent: thumbSize.toDouble(),
-              ),
-            ],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            buildItemStreamList(
+              maxCrossAxisExtent: thumbSize.toDouble(),
+            ),
+          ],
         ),
       );
     }

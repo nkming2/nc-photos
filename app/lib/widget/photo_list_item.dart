@@ -171,7 +171,7 @@ class PhotoListLocalImageItem extends PhotoListLocalFileItem {
             Container(
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
-              color: AppTheme.getListItemBackgroundColor(context),
+              color: Theme.of(context).listPlaceholderBackgroundColor,
               child: Image(
                 image: ResizeImage.resizeIfNeeded(
                     k.photoThumbSize, null, provider),
@@ -182,7 +182,7 @@ class PhotoListLocalImageItem extends PhotoListLocalFileItem {
                     child: Icon(
                       Icons.image_not_supported,
                       size: 64,
-                      color: Colors.white.withOpacity(.8),
+                      color: Theme.of(context).listPlaceholderForegroundColor,
                     ),
                   );
                 },
@@ -223,7 +223,7 @@ class PhotoListImage extends StatelessWidget {
           child: Icon(
             Icons.image_not_supported,
             size: 64,
-            color: Colors.white.withOpacity(.8),
+            color: Theme.of(context).listPlaceholderForegroundColor,
           ),
         );
     Widget child;
@@ -263,7 +263,7 @@ class PhotoListImage extends StatelessWidget {
             Container(
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
-              color: AppTheme.getListItemBackgroundColor(context),
+              color: Theme.of(context).listPlaceholderBackgroundColor,
               child: child,
             ),
             if (isGif)
@@ -325,7 +325,7 @@ class PhotoListVideo extends StatelessWidget {
             Container(
               // arbitrary size here
               constraints: BoxConstraints.tight(const Size(128, 128)),
-              color: AppTheme.getListItemBackgroundColor(context),
+              color: Theme.of(context).listPlaceholderBackgroundColor,
               child: CachedNetworkImage(
                 cacheManager: ThumbnailCacheManager.inst,
                 imageUrl: previewUrl,
@@ -341,7 +341,7 @@ class PhotoListVideo extends StatelessWidget {
                     child: Icon(
                       Icons.image_not_supported,
                       size: 64,
-                      color: Colors.white.withOpacity(.8),
+                      color: Theme.of(context).listPlaceholderForegroundColor,
                     ),
                   );
                 },
@@ -458,10 +458,7 @@ class PhotoListDate extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Text(
           subtitle,
-          style: Theme.of(context).textTheme.caption!.copyWith(
-                color: AppTheme.getPrimaryTextColor(context),
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(context).textTheme.labelMedium,
         ),
       ),
     );

@@ -180,10 +180,9 @@ class _VideoViewerState extends State<VideoViewer>
                       valueListenable: _controller,
                       builder: (context, VideoPlayerValue value, child) => Text(
                         _durationToString(value.position),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(.87),
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -192,10 +191,12 @@ class _VideoViewerState extends State<VideoViewer>
                         _controller,
                         allowScrubbing: true,
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        colors: const VideoProgressColors(
-                          backgroundColor: Colors.white24,
-                          bufferedColor: Colors.white38,
-                          playedColor: Colors.white,
+                        colors: VideoProgressColors(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          bufferedColor:
+                              Theme.of(context).colorScheme.surfaceVariant,
+                          playedColor: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -203,10 +204,9 @@ class _VideoViewerState extends State<VideoViewer>
                     if (_controller.value.duration != Duration.zero)
                       Text(
                         _durationToString(_controller.value.duration),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(.87),
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                     const SizedBox(width: 4),
                     Tooltip(
@@ -222,8 +222,7 @@ class _VideoViewerState extends State<VideoViewer>
                           child: Icon(
                             _controller.value.volume == 0
                                 ? Icons.volume_mute_outlined
-                                : Icons.volume_up_outlined,
-                            color: Colors.white.withOpacity(.87),
+                                : Icons.volume_up,
                           ),
                         ),
                       ),

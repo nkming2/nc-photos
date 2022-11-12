@@ -10,7 +10,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
@@ -75,10 +74,8 @@ class _RootPickerState extends State<RootPicker> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: _buildContent(context),
-      ),
+    return Scaffold(
+      body: _buildContent(context),
     );
   }
 

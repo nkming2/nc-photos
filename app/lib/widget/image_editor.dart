@@ -12,6 +12,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -84,7 +85,8 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   @override
-  build(BuildContext context) => AppTheme(
+  build(BuildContext context) => Theme(
+        data: buildDarkTheme(),
         child: Scaffold(
           body: Builder(
             builder: _buildContent,
@@ -184,8 +186,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   Widget _buildAppBar(BuildContext context) => AppBar(
         backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        foregroundColor: Colors.white.withOpacity(.87),
+        elevation: 0,
         leading: BackButton(onPressed: () => _onBackButton(context)),
         title: Text(L10n.global().imageEditTitle),
         actions: [
@@ -359,7 +360,9 @@ class _ToolButton extends StatelessWidget {
             onTap: onPressed,
             child: Container(
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white24 : null,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.secondaryContainer
+                    : null,
                 // borderRadius: const BorderRadius.all(Radius.circular(24)),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -370,8 +373,8 @@ class _ToolButton extends StatelessWidget {
                   Icon(
                     icon,
                     color: isSelected
-                        ? Colors.white
-                        : AppTheme.unfocusedIconColorDark,
+                        ? Theme.of(context).colorScheme.onSecondaryContainer
+                        : M3.of(context).filterChip.disabled.labelText,
                     size: 18,
                   ),
                   const SizedBox(width: 4),
@@ -379,8 +382,8 @@ class _ToolButton extends StatelessWidget {
                     label,
                     style: TextStyle(
                       color: isSelected
-                          ? Colors.white
-                          : AppTheme.unfocusedIconColorDark,
+                          ? Theme.of(context).colorScheme.onSecondaryContainer
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],

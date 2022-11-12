@@ -20,8 +20,8 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
+import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -91,15 +91,13 @@ class _PlaceBrowserState extends State<PlaceBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListLocationFileBloc, ListLocationFileBlocState>(
+    return Scaffold(
+      body: BlocListener<ListLocationFileBloc, ListLocationFileBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListLocationFileBloc, ListLocationFileBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListLocationFileBloc, ListLocationFileBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -125,28 +123,21 @@ class _PlaceBrowserState extends State<PlaceBrowser>
   Widget _buildContent(BuildContext context, ListLocationFileBlocState state) {
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context, state),
+          if (state is ListLocationFileBlocLoading ||
+              _buildItemQueue.isProcessing)
+            const SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.center,
+                child: LinearProgressIndicator(),
               ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context, state),
-            if (state is ListLocationFileBlocLoading ||
-                _buildItemQueue.isProcessing)
-              const SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            buildItemStreamList(
-              maxCrossAxisExtent: _thumbSize.toDouble(),
             ),
-          ],
-        ),
+          buildItemStreamList(
+            maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
       ),
     );
   }
@@ -164,29 +155,14 @@ class _PlaceBrowserState extends State<PlaceBrowser>
     return SliverAppBar(
       floating: true,
       titleSpacing: 0,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            widget.place ?? location_util.alpha2CodeToName(widget.countryCode)!,
-            style: TextStyle(
-              color: AppTheme.getPrimaryTextColor(context),
-            ),
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.clip,
-          ),
-          if (state is! ListLocationFileBlocLoading &&
-              !_buildItemQueue.isProcessing)
-            Text(
-              L10n.global().personPhotoCountText(_backingFiles.length),
-              style: TextStyle(
-                color: AppTheme.getSecondaryTextColor(context),
-                fontSize: 12,
-              ),
-            ),
-        ],
+      title: AppBarTitleContainer(
+        title: Text(
+          widget.place ?? location_util.alpha2CodeToName(widget.countryCode)!,
+        ),
+        subtitle: (state is! ListLocationFileBlocLoading &&
+                !_buildItemQueue.isProcessing)
+            ? Text(L10n.global().personPhotoCountText(_backingFiles.length))
+            : null,
       ),
       actions: [
         ZoomMenuButton(

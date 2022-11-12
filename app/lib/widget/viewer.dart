@@ -104,16 +104,18 @@ class _ViewerState extends State<Viewer>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
+    final originalBrightness = Theme.of(context).brightness;
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
-          builder: _buildContent,
+          builder: (context) => _buildContent(context, originalBrightness),
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, Brightness originalBrightness) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -131,7 +133,8 @@ class _ViewerState extends State<Viewer>
             ),
           HorizontalPageViewer(
             pageCount: _streamFilesView.length,
-            pageBuilder: _buildPage,
+            pageBuilder: (context, i) =>
+                _buildPage(context, i, originalBrightness),
             initialPage: widget.startIndex,
             controller: _viewerController,
             viewportFraction: _viewportFraction,
@@ -174,8 +177,7 @@ class _ViewerState extends State<Viewer>
               ),
               AppBar(
                 backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                foregroundColor: Colors.white.withOpacity(.87),
+                elevation: 0,
                 actions: [
                   if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
                     (_pageStates[index]?.favoriteOverride ??
@@ -222,45 +224,30 @@ class _ViewerState extends State<Viewer>
           child: ViewerBottomAppBar(
             children: [
               IconButton(
-                icon: Icon(
-                  Icons.share_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.share_outlined),
                 tooltip: L10n.global().shareTooltip,
                 onPressed: () => _onSharePressed(context),
               ),
               if (features.isSupportEnhancement &&
                   ImageEnhancer.isSupportedFormat(file)) ...[
                 IconButton(
-                  icon: Icon(
-                    Icons.tune_outlined,
-                    color: Colors.white.withOpacity(.87),
-                  ),
+                  icon: const Icon(Icons.tune_outlined),
                   tooltip: L10n.global().editTooltip,
                   onPressed: () => _onEditPressed(context),
                 ),
                 IconButton(
-                  icon: Icon(
-                    Icons.auto_fix_high_outlined,
-                    color: Colors.white.withOpacity(.87),
-                  ),
+                  icon: const Icon(Icons.auto_fix_high_outlined),
                   tooltip: L10n.global().enhanceTooltip,
                   onPressed: () => _onEnhancePressed(context),
                 ),
               ],
               IconButton(
-                icon: Icon(
-                  Icons.download_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.download_outlined),
                 tooltip: L10n.global().downloadTooltip,
                 onPressed: _onDownloadPressed,
               ),
               IconButton(
-                icon: Icon(
-                  Icons.delete_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.delete_outlined),
                 tooltip: L10n.global().deleteTooltip,
                 onPressed: () => _onDeletePressed(context),
               ),
@@ -271,7 +258,8 @@ class _ViewerState extends State<Viewer>
     );
   }
 
-  Widget _buildPage(BuildContext context, int index) {
+  Widget _buildPage(
+      BuildContext context, int index, Brightness originalBrightness) {
     if (_pageStates[index] == null) {
       _onCreateNewPage(context, index);
     } else if (!_pageStates[index]!.scrollController.hasClients) {
@@ -310,31 +298,42 @@ class _ViewerState extends State<Viewer>
                           });
                         }
                       },
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        constraints: BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(4)),
-                        ),
-                        margin:
-                            EdgeInsets.only(top: _calcDetailPaneOffset(index)),
-                        // this visibility widget avoids loading the detail pane
-                        // until it's actually opened, otherwise swiping between
-                        // photos will slow down severely
-                        child: Visibility(
-                          visible: _isShowDetailPane,
-                          child: ViewerDetailPane(
-                            account: widget.account,
-                            fd: _streamFilesView[index],
-                            album: widget.album,
-                            onRemoveFromAlbumPressed: _onRemoveFromAlbumPressed,
-                            onArchivePressed: _onArchivePressed,
-                            onUnarchivePressed: _onUnarchivePressed,
-                            onSlideshowPressed: _onSlideshowPressed,
-                          ),
+                      child: Theme(
+                        data: buildTheme(originalBrightness),
+                        child: Builder(
+                          builder: (context) {
+                            return Container(
+                              alignment: Alignment.topLeft,
+                              constraints: BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(4),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(
+                                top: _calcDetailPaneOffset(index),
+                              ),
+                              // this visibility widget avoids loading the detail pane
+                              // until it's actually opened, otherwise swiping between
+                              // photos will slow down severely
+                              child: Visibility(
+                                visible: _isShowDetailPane,
+                                child: ViewerDetailPane(
+                                  account: widget.account,
+                                  fd: _streamFilesView[index],
+                                  album: widget.album,
+                                  onRemoveFromAlbumPressed:
+                                      _onRemoveFromAlbumPressed,
+                                  onArchivePressed: _onArchivePressed,
+                                  onUnarchivePressed: _onUnarchivePressed,
+                                  onSlideshowPressed: _onSlideshowPressed,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

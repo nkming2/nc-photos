@@ -79,7 +79,7 @@ class AlbumGridItemBuilder {
     } catch (_) {
       cover = Icon(
         Icons.panorama,
-        color: Colors.white.withOpacity(.8),
+        color: Theme.of(context).listPlaceholderForegroundColor,
         size: 88,
       );
     }
@@ -87,7 +87,7 @@ class AlbumGridItemBuilder {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
+        color: Theme.of(context).listPlaceholderBackgroundColor,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),

@@ -59,15 +59,13 @@ class _AlbumPickerState extends State<AlbumPicker>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListAlbumBloc, ListAlbumBlocState>(
+    return Scaffold(
+      body: BlocListener<ListAlbumBloc, ListAlbumBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListAlbumBloc, ListAlbumBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListAlbumBloc, ListAlbumBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -125,11 +123,11 @@ class _AlbumPickerState extends State<AlbumPicker>
           cover: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(
-              color: AppTheme.getListItemBackgroundColor(context),
+              color: Theme.of(context).listPlaceholderBackgroundColor,
               constraints: const BoxConstraints.expand(),
               child: Icon(
                 Icons.add,
-                color: Colors.white.withOpacity(.8),
+                color: Theme.of(context).listPlaceholderForegroundColor,
                 size: 88,
               ),
             ),
