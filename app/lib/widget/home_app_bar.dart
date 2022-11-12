@@ -12,6 +12,7 @@ import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
 
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {
@@ -27,7 +28,7 @@ class HomeSliverAppBar extends StatelessWidget {
   @override
   build(BuildContext context) {
     final accountLabel = AccountPref.of(account).getAccountLabel();
-    return SliverAppBar(
+    return TranslucentSliverAppBar(
       title: InkWell(
         onTap: () {
           showDialog(
@@ -53,6 +54,8 @@ class HomeSliverAppBar extends StatelessWidget {
                     )),
         ),
       ),
+      scrolledUnderBackgroundColor:
+          Theme.of(context).homeNavigationBarBackgroundColor,
       floating: true,
       automaticallyImplyLeading: false,
       actions: (actions ?? []) +
