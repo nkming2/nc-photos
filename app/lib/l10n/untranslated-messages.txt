@@ -453,10 +453,6 @@
     "slideshowSetupDialogReverseTitle"
   ],
 
-  "fi": [
-  
-  ],
-
   "fr": [
     "collectionsTooltip",
     "settingsLanguageOptionSystemDefaultLabel",
