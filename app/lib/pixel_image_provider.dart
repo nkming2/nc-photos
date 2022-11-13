@@ -17,7 +17,8 @@ class PixelImage extends ImageProvider<PixelImage> {
       SynchronousFuture<PixelImage>(this);
 
   @override
-  load(PixelImage key, DecoderCallback decode) =>
+  ImageStreamCompleter loadBuffer(
+          PixelImage key, DecoderBufferCallback decode) =>
       OneFrameImageStreamCompleter(_createImageInfo());
 
   Future<ImageInfo> _createImageInfo() async {
