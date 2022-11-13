@@ -1,4 +1,4 @@
-import 'dart:ui' as ui show Codec;
+import 'dart:ui' as ui show Codec, ImmutableBuffer;
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -19,7 +19,8 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
   }
 
   @override
-  load(ContentUriImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadBuffer(
+      ContentUriImage key, DecoderBufferCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
@@ -31,18 +32,17 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
   }
 
   Future<ui.Codec> _loadAsync(
-      ContentUriImage key, DecoderCallback decode) async {
+      ContentUriImage key, DecoderBufferCallback decode) async {
     assert(key == this);
-
     final bytes = await ContentUri.readUri(uri);
-
     if (bytes.lengthInBytes == 0) {
       // The file may become available later.
       PaintingBinding.instance.imageCache.evict(key);
       throw StateError("$uri is empty and cannot be loaded as an image.");
     }
-
-    return decode(bytes);
+    final ui.ImmutableBuffer buffer =
+        await ui.ImmutableBuffer.fromUint8List(bytes);
+    return decode(buffer);
   }
 
   @override
