@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/widget/animated_smooth_clip_r_rect.dart';
 
 // Overlay a check mark if an item is selected
 class Selectable extends StatelessWidget {
@@ -9,6 +10,8 @@ class Selectable extends StatelessWidget {
     this.isSelected = false,
     required this.iconSize,
     this.borderRadius,
+    this.childBorderRadius = BorderRadius.zero,
+    this.indicatorAlignment = Alignment.topLeft,
     this.onTap,
     this.onLongPress,
   }) : super(key: key);
@@ -31,24 +34,43 @@ class Selectable extends StatelessWidget {
           scale: isSelected ? .85 : 1,
           curve: Curves.easeInOut,
           duration: k.animationDurationNormal,
-          child: child,
+          child: childBorderRadius != BorderRadius.zero
+              ? AnimatedSmoothClipRRect(
+                  smoothness: 1,
+                  borderRadius:
+                      isSelected ? childBorderRadius : BorderRadius.zero,
+                  side: BorderSide(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primaryContainer
+                        : Theme.of(context)
+                            .colorScheme
+                            .primaryContainer
+                            .withOpacity(0),
+                    width: isSelected ? 4 : 0,
+                  ),
+                  curve: Curves.easeInOut,
+                  duration: k.animationDurationNormal,
+                  child: child,
+                )
+              : child,
         ),
-        Positioned.fill(
+        Align(
+          alignment: indicatorAlignment,
           child: AnimatedOpacity(
             opacity: isSelected ? 1 : 0,
             duration: k.animationDurationNormal,
             child: Stack(
-              alignment: AlignmentDirectional.center,
+              alignment: Alignment.center,
               children: [
                 Icon(
                   Icons.circle,
-                  size: iconSize,
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  size: iconSize - 2,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 Icon(
                   Icons.check_circle_outlined,
                   size: iconSize,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                 ),
               ],
             ),
@@ -73,6 +95,10 @@ class Selectable extends StatelessWidget {
   final bool isSelected;
   final double iconSize;
   final BorderRadius? borderRadius;
+
+  /// Border radius used to clip the child widget when selected
+  final BorderRadius childBorderRadius;
+  final Alignment indicatorAlignment;
 
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;

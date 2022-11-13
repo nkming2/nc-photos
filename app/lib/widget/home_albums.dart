@@ -127,6 +127,8 @@ class _HomeAlbumsState extends State<HomeAlbums>
                   sliver: buildItemStreamList(
                     maxCrossAxisExtent: 256,
                     mainAxisSpacing: 6,
+                    childBorderRadius: BorderRadius.zero,
+                    indicatorAlignment: const Alignment(-.92, -.92),
                   ),
                 ),
                 SliverToBoxAdapter(

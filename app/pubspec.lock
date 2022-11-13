@@ -1134,6 +1134,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_corner:
+    dependency: "direct main"
+    description:
+      name: smooth_corner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   source_gen:
     dependency: transitive
     description:

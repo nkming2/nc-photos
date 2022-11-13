@@ -64,15 +64,24 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     double mainAxisSpacing = 0,
     ValueChanged<double?>? onMaxExtentChanged,
     bool isEnableVisibilityCallback = false,
+    BorderRadius? childBorderRadius,
+    Alignment indicatorAlignment = Alignment.topLeft,
   }) {
+    childBorderRadius ??= BorderRadius.circular(24);
+
     final Widget content;
     if (onMaxExtentChanged != null) {
       content = MeasurableItemList(
         key: _listKey,
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
-        itemBuilder: (context, i) =>
-            _buildItem(context, i, isEnableVisibilityCallback),
+        itemBuilder: (context, i) => _buildItem(
+          context,
+          i,
+          isEnableVisibilityCallback: isEnableVisibilityCallback,
+          childBorderRadius: childBorderRadius!,
+          indicatorAlignment: indicatorAlignment,
+        ),
         staggeredTileBuilder: (index) => _items[index].staggeredTile,
         mainAxisSpacing: mainAxisSpacing,
         onMaxExtentChanged: onMaxExtentChanged,
@@ -82,8 +91,13 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         key: ObjectKey(maxCrossAxisExtent),
         maxCrossAxisExtent: maxCrossAxisExtent,
         itemCount: _items.length,
-        itemBuilder: (context, i) =>
-            _buildItem(context, i, isEnableVisibilityCallback),
+        itemBuilder: (context, i) => _buildItem(
+          context,
+          i,
+          isEnableVisibilityCallback: isEnableVisibilityCallback,
+          childBorderRadius: childBorderRadius!,
+          indicatorAlignment: indicatorAlignment,
+        ),
         staggeredTileBuilder: (index) => _items[index].staggeredTile,
         mainAxisSpacing: mainAxisSpacing,
       );
@@ -149,13 +163,20 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   }
 
   Widget _buildItem(
-      BuildContext context, int index, bool isEnableVisibilityCallback) {
+    BuildContext context,
+    int index, {
+    required bool isEnableVisibilityCallback,
+    required BorderRadius childBorderRadius,
+    required Alignment indicatorAlignment,
+  }) {
     final item = _items[index];
     Widget content = item.buildWidget(context);
     if (item.isSelectable) {
       content = Selectable(
         isSelected: _selectedItems.contains(item),
         iconSize: 32,
+        childBorderRadius: childBorderRadius,
+        indicatorAlignment: indicatorAlignment,
         onTap: () => _onItemTap(item, index),
         onLongPress: isSelectionMode && platform_k.isWeb
             ? null

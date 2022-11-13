@@ -965,6 +965,7 @@ class _StylePickerState extends State<_StylePicker> {
       child: Selectable(
         isSelected: _selected == index,
         iconSize: 24,
+        indicatorAlignment: Alignment.center,
         child: child,
         onTap: () {
           setState(() {
