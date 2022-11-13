@@ -231,6 +231,7 @@ class PhotoListImage extends StatelessWidget {
       child = buildPlaceholder();
     } else {
       child = CachedNetworkImage(
+        fit: BoxFit.cover,
         cacheManager: ThumbnailCacheManager.inst,
         imageUrl: previewUrl!,
         httpHeaders: {
