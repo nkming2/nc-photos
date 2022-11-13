@@ -3,30 +3,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/pref.dart';
 
-enum SeedColor {
-  // the order must NOT change
-  amber,
-  blue,
-  green,
-  purple,
-  red;
-
-  Color toColor() {
-    switch (this) {
-      case amber:
-        return const Color(0xFFFFC107);
-      case blue:
-        return const Color(0xFF2196F3);
-      case green:
-        return const Color(0xFF4CAF50);
-      case purple:
-        return const Color(0xFF9C27B0);
-      case red:
-        return const Color(0xFFF44336);
-    }
-  }
-}
-
 extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;
 
@@ -81,18 +57,16 @@ ThemeData buildTheme(Brightness brightness) {
 
 ThemeData buildLightTheme() {
   final seedColor = getSeedColor();
-  final color = seedColor.toColor();
   final colorScheme = ColorScheme.fromSeed(
-    seedColor: color,
+    seedColor: seedColor,
   );
-  return _applyColorScheme(colorScheme, color);
+  return _applyColorScheme(colorScheme, seedColor);
 }
 
 ThemeData buildDarkTheme() {
   final seedColor = getSeedColor();
-  final color = seedColor.toColor();
   final colorScheme = ColorScheme.fromSeed(
-    seedColor: color,
+    seedColor: seedColor,
     brightness: Brightness.dark,
   );
   if (Pref().isUseBlackInDarkThemeOr(false)) {
@@ -101,10 +75,10 @@ ThemeData buildDarkTheme() {
         background: Colors.black,
         surface: Colors.grey[900],
       ),
-      color,
+      seedColor,
     );
   } else {
-    return _applyColorScheme(colorScheme, color);
+    return _applyColorScheme(colorScheme, seedColor);
   }
 }
 
@@ -118,20 +92,8 @@ ThemeData buildDarkModeSwitchTheme(BuildContext context) {
   );
 }
 
-SeedColor getSeedColor() {
-  final index = Pref().getSeedColor();
-  if (index == null) {
-    return SeedColor.blue;
-  } else {
-    SeedColor seedColor;
-    try {
-      seedColor = SeedColor.values[index];
-    } catch (e, stackTrace) {
-      _log.severe("[getSeedColor] Uncaught exception", e, stackTrace);
-      seedColor = SeedColor.blue;
-    }
-    return seedColor;
-  }
+Color getSeedColor() {
+  return Color(Pref().getSeedColor() ?? 0xFF2196F3).withAlpha(0xFF);
 }
 
 ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {

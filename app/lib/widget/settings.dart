@@ -1501,7 +1501,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
                 trailing: Icon(
                   Icons.circle,
                   size: 32,
-                  color: _seedColor.toColor(),
+                  color: _seedColor,
                 ),
                 onTap: () => _onSeedColorPressed(context),
               ),
@@ -1571,11 +1571,9 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
   }
 
   Future<void> _onSeedColorPressed(BuildContext context) async {
-    final result = await showDialog<SeedColor>(
+    final result = await showDialog<Color>(
       context: context,
-      builder: (context) => _SeedColorPicker(
-        initialColor: _seedColor,
-      ),
+      builder: (context) => const _SeedColorPicker(),
     );
     if (result == null) {
       return;
@@ -1585,7 +1583,7 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
     setState(() {
       _seedColor = result;
     });
-    if (await Pref().setSeedColor(result.index)) {
+    if (await Pref().setSeedColor(result.withAlpha(0xFF).value)) {
       KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
     } else {
       _log.severe("[_onSeedColorPressed] Failed writing pref");
@@ -1601,20 +1599,16 @@ class _ThemeSettingsState extends State<_ThemeSettings> {
 
   late bool _isFollowSystemTheme;
   late bool _isUseBlackInDarkTheme;
-  late SeedColor _seedColor;
+  late Color _seedColor;
 
   static final _log = Logger("widget.settings._ThemeSettingsState");
 }
 
 class _SeedColorPicker extends StatefulWidget {
-  const _SeedColorPicker({
-    required this.initialColor,
-  });
+  const _SeedColorPicker();
 
   @override
   State<StatefulWidget> createState() => _SeedColorPickerState();
-
-  final SeedColor initialColor;
 }
 
 class _SeedColorPickerState extends State<_SeedColorPicker> {
@@ -1624,15 +1618,14 @@ class _SeedColorPickerState extends State<_SeedColorPicker> {
       title: Text(L10n.global().settingsSeedColorPickerTitle),
       content: Wrap(
         children: const [
-          SeedColor.red,
-          SeedColor.purple,
-          SeedColor.blue,
-          SeedColor.green,
-          SeedColor.amber,
+          Color(0xFFF44336),
+          Color(0xFF9C27B0),
+          Color(0xFF2196F3),
+          Color(0xFF4CAF50),
+          Color(0xFFFFC107),
         ]
             .map((c) => _SeedColorPickerItem(
                   seedColor: c,
-                  isSelected: c == widget.initialColor,
                   onSelected: () => _onItemSelected(context, c),
                 ))
             .toList(),
@@ -1640,7 +1633,7 @@ class _SeedColorPickerState extends State<_SeedColorPicker> {
     );
   }
 
-  void _onItemSelected(BuildContext context, SeedColor seedColor) {
+  void _onItemSelected(BuildContext context, Color seedColor) {
     Navigator.of(context).pop(seedColor);
   }
 }
@@ -1648,7 +1641,6 @@ class _SeedColorPickerState extends State<_SeedColorPicker> {
 class _SeedColorPickerItem extends StatelessWidget {
   const _SeedColorPickerItem({
     required this.seedColor,
-    required this.isSelected,
     this.onSelected,
   });
 
@@ -1656,21 +1648,12 @@ class _SeedColorPickerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final content = SizedBox.square(
       dimension: _size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (isSelected)
-            Icon(
-              Icons.circle,
-              size: _size,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          Icon(
-            Icons.circle,
-            size: _size - _size * .2,
-            color: seedColor.toColor(),
-          ),
-        ],
+      child: Center(
+        child: Icon(
+          Icons.circle,
+          size: _size - _size * .1,
+          color: seedColor,
+        ),
       ),
     );
     if (onSelected != null) {
@@ -1684,8 +1667,7 @@ class _SeedColorPickerItem extends StatelessWidget {
     }
   }
 
-  final SeedColor seedColor;
-  final bool isSelected;
+  final Color seedColor;
   final VoidCallback? onSelected;
 
   static const _size = 56.0;
