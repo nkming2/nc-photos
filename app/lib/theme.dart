@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/material3.dart';
@@ -13,13 +15,19 @@ extension ThemeExtension on ThemeData {
       colorScheme.onSecondaryContainer.withOpacity(.7);
 
   Color get homeNavigationBarBackgroundColor =>
-      elevate(colorScheme.surface, 2).withOpacity(.77);
+      elevate(colorScheme.surface, 2).withOpacity(.55);
 
   Color get onDarkSurface {
     return brightness == Brightness.light
         ? colorScheme.onInverseSurface
         : colorScheme.onSurface;
   }
+
+  ImageFilter get appBarBlurFilter => ImageFilter.blur(
+        sigmaX: 12,
+        sigmaY: 12,
+        tileMode: TileMode.mirror,
+      );
 
   /// Apply surface tint to [color] based on the [elevation] level
   ///

@@ -210,7 +210,7 @@ class _HomePhotosState extends State<HomePhotos>
               height: _calcBottomAppBarExtent(context),
               child: ClipRect(
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                  filter: Theme.of(context).appBarBlurFilter,
                   child: const ColoredBox(
                     color: Colors.transparent,
                   ),

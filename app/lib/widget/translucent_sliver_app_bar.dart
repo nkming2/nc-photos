@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use, unnecessary_null_comparison, curly_braces_in_flow_control_structures, deprecated_member_use_from_same_package
 
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:nc_photos/theme.dart';
 
 /// A translucent sliver app bar used in home pages
 ///
@@ -607,7 +607,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             height: math.max(minExtent, maxExtent - shrinkOffset),
             child: ClipRect(
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                filter: Theme.of(context).appBarBlurFilter,
                 child: const ColoredBox(
                   color: Colors.transparent,
                 ),
