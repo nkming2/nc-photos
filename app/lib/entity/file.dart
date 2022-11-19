@@ -124,6 +124,7 @@ class Metadata with EquatableMixin {
     JsonObj json, {
     required MetadataUpgraderV1? upgraderV1,
     required MetadataUpgraderV2? upgraderV2,
+    required MetadataUpgraderV3? upgraderV3,
   }) {
     final jsonVersion = json["version"];
     JsonObj? result = json;
@@ -136,6 +137,13 @@ class Metadata with EquatableMixin {
     }
     if (jsonVersion < 3) {
       result = upgraderV2?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 4) {
+      result = upgraderV3?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -219,7 +227,7 @@ class Metadata with EquatableMixin {
   final Exif? exif;
 
   /// versioning of this class, use to upgrade old persisted metadata
-  static const version = 3;
+  static const version = 4;
 
   static final _log = Logger("entity.file.Metadata");
 }
@@ -285,6 +293,35 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
   final String? logFilePath;
 
   static final _log = Logger("entity.file.MetadataUpgraderV2");
+}
+
+/// Upgrade v3 Metadata to v4
+class MetadataUpgraderV3 implements MetadataUpgrader {
+  const MetadataUpgraderV3({
+    required this.fileContentType,
+    this.logFilePath,
+  });
+
+  @override
+  JsonObj? call(JsonObj json) {
+    if (fileContentType == "image/heic") {
+      // Version 3 metadata for heic may incorrectly have exif as null due to a
+      // bug in exifdart
+      if (json["exif"] == null) {
+        _log.fine("[call] Remove v3 metadata for file: $logFilePath");
+        // return null to let the app parse the file again
+        return null;
+      }
+    }
+    return json;
+  }
+
+  final String? fileContentType;
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  static final _log = Logger("entity.file.MetadataUpgraderV3");
 }
 
 class File with EquatableMixin implements FileDescriptor {
@@ -354,6 +391,10 @@ class File with EquatableMixin implements FileDescriptor {
                 logFilePath: json["path"],
               ),
               upgraderV2: MetadataUpgraderV2(
+                fileContentType: json["contentType"],
+                logFilePath: json["path"],
+              ),
+              upgraderV3: MetadataUpgraderV3(
                 fileContentType: json["contentType"],
                 logFilePath: json["path"],
               ),

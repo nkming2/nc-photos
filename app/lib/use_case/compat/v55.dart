@@ -18,7 +18,8 @@ class CompatV55 {
       final count = await countQ.map((r) => r.read<int>(countExp)).getSingle();
       onProgress?.call(0, count);
 
-      final needUpdates = <Tuple2<int, DateTime>>[];
+      final dateTimeUpdates = <Tuple2<int, DateTime>>[];
+      final imageRemoves = <int>[];
       for (var i = 0; i < count; i += 1000) {
         final q = db.select(db.files).join([
           sql.innerJoin(
@@ -51,19 +52,28 @@ class CompatV55 {
           );
           if (f.accountFile.bestDateTime != bestDateTime) {
             // need update
-            needUpdates.add(Tuple2(f.accountFile.rowId, bestDateTime));
+            dateTimeUpdates.add(Tuple2(f.accountFile.rowId, bestDateTime));
+          }
+
+          if (f.file.contentType == "image/heic" &&
+              f.image != null &&
+              f.image!.exifRaw == null) {
+            imageRemoves.add(f.accountFile.rowId);
           }
         }
         onProgress?.call(i, count);
       }
 
-      _log.info("[migrateDb] ${needUpdates.length} rows require updating");
+      _log.info(
+          "[migrateDb] ${dateTimeUpdates.length} rows require updating, ${imageRemoves.length} rows require removing");
       if (kDebugMode) {
         _log.fine(
-            "[migrateDb] ${needUpdates.map((e) => e.item1).toReadableString()}");
+            "[migrateDb] dateTimeUpdates: ${dateTimeUpdates.map((e) => e.item1).toReadableString()}");
+        _log.fine(
+            "[migrateDb] imageRemoves: ${imageRemoves.map((e) => e).toReadableString()}");
       }
       await db.batch((batch) {
-        for (final pair in needUpdates) {
+        for (final pair in dateTimeUpdates) {
           batch.update(
             db.accountFiles,
             sql.AccountFilesCompanion(
@@ -71,6 +81,12 @@ class CompatV55 {
             ),
             where: (sql.$AccountFilesTable table) =>
                 table.rowId.equals(pair.item1),
+          );
+        }
+        for (final r in imageRemoves) {
+          batch.deleteWhere(
+            db.images,
+            (sql.$ImagesTable table) => table.accountFile.equals(r),
           );
         }
       });
