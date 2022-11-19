@@ -459,7 +459,10 @@ class FileSqliteDbDataSource implements FileDataSource {
     _log.info("[updateProperty] ${f.path}");
     await _c.sqliteDb.use((db) async {
       final rowIds = await db.accountFileRowIdsOf(f, appAccount: account);
-      if (isArchived != null || overrideDateTime != null || favorite != null) {
+      if (isArchived != null ||
+          overrideDateTime != null ||
+          favorite != null ||
+          metadata != null) {
         final update = sql.AccountFilesCompanion(
           isArchived: isArchived == null
               ? const sql.Value.absent()
