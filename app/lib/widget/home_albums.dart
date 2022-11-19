@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +16,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
@@ -127,7 +127,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   sliver: buildItemStreamList(
                     maxCrossAxisExtent: 256,
-                    mainAxisSpacing: 6,
                     childBorderRadius: BorderRadius.zero,
                     indicatorAlignment: const Alignment(-.92, -.92),
                   ),
@@ -540,44 +539,54 @@ class _ButtonListItem extends _ListItem {
   get staggeredTile => const StaggeredTile.fit(1);
 
   @override
-  buildWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            onTap: _onTap,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.outline,
-                  width: 1,
+  Widget buildWidget(BuildContext context) => _ButtonListItemView(
+        icon: icon,
+        label: label,
+        onTap: _onTap,
+        isShowIndicator: isShowIndicator,
+      );
+
+  final IconData icon;
+  final String label;
+  final bool isShowIndicator;
+
+  final VoidCallback? _onTap;
+}
+
+class _ButtonListItemView extends StatelessWidget {
+  const _ButtonListItemView({
+    required this.icon,
+    required this.label,
+    this.onTap,
+    this.isShowIndicator = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        canvasColor: M3.of(context).assistChip.enabled.container,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: ActionChip(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          labelPadding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+          // specify icon size explicitly to workaround size flickering during
+          // theme transition
+          avatar: Icon(icon, size: 18),
+          label: Row(
+            children: [
+              Expanded(child: Text(label)),
+              if (isShowIndicator)
+                Icon(
+                  Icons.circle,
+                  color: Theme.of(context).colorScheme.tertiary,
+                  size: 8,
                 ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Row(
-                children: [
-                  Icon(icon),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      label,
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                  if (isShowIndicator)
-                    Icon(
-                      Icons.circle,
-                      color: Theme.of(context).colorScheme.tertiary,
-                      size: 8,
-                    ),
-                ],
-              ),
-            ),
+            ],
           ),
+          onPressed: onTap,
         ),
       ),
     );
@@ -585,9 +594,8 @@ class _ButtonListItem extends _ListItem {
 
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
   final bool isShowIndicator;
-
-  final VoidCallback? _onTap;
 }
 
 class _SeparatorListItem extends _ListItem {

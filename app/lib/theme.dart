@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/pref.dart';
 
@@ -200,6 +199,12 @@ ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
             container: colorScheme.onSurface.withOpacity(.38),
           ),
         ),
+        assistChip: M3AssistChip(
+          enabled: M3AssistChipEnabled(
+            container: Colors.transparent,
+            containerElevated: colorScheme.surface,
+          ),
+        ),
         filterChip: M3FilterChip(
           disabled: M3FilterChipDisabled(
             containerSelected: colorScheme.onSurface.withOpacity(.12),
@@ -216,5 +221,3 @@ ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
     ],
   );
 }
-
-final _log = Logger("theme");
