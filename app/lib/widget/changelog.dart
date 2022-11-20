@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/theme.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -30,11 +29,9 @@ class Changelog extends StatelessWidget {
         );
 
   @override
-  build(BuildContext context) => AppTheme(
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          body: Builder(builder: (context) => _buildContent(context)),
-        ),
+  build(BuildContext context) => Scaffold(
+        appBar: _buildAppBar(),
+        body: Builder(builder: (context) => _buildContent(context)),
       );
 
   AppBar _buildAppBar() => AppBar(

@@ -57,14 +57,7 @@ class _SearchLandingState extends State<SearchLanding> {
       listener: (context, state) => _onStateChange(context, state),
       child: BlocBuilder<SearchLandingBloc, SearchLandingBlocState>(
         bloc: _bloc,
-        builder: (context, state) => Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: _buildContent(context, state),
-        ),
+        builder: (context, state) => _buildContent(context, state),
       ),
     );
   }
@@ -319,7 +312,7 @@ class _LandingPersonItem {
         onTap: onTap,
         fallbackBuilder: (_) => Icon(
           Icons.person,
-          color: Colors.white.withOpacity(.8),
+          color: Theme.of(context).listPlaceholderForegroundColor,
         ),
       );
 
@@ -344,7 +337,7 @@ class _LandingLocationItem {
         onTap: onTap,
         fallbackBuilder: (_) => Icon(
           Icons.location_on,
-          color: Colors.white.withOpacity(.8),
+          color: Theme.of(context).listPlaceholderForegroundColor,
         ),
       );
 
@@ -384,9 +377,7 @@ class _LandingItemWidget extends StatelessWidget {
             width: 88,
             child: Text(
               label + "\n",
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    color: AppTheme.getPrimaryTextColor(context),
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -408,7 +399,7 @@ class _LandingItemWidget extends StatelessWidget {
   Widget _buildCoverImage(BuildContext context) {
     Widget cover;
     Widget buildPlaceholder() => Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(8),
           child: fallbackBuilder(context),
         );
     try {
@@ -436,7 +427,7 @@ class _LandingItemWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(128),
       child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
+        color: Theme.of(context).listPlaceholderBackgroundColor,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),

@@ -8,7 +8,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_grid_item.dart';
@@ -79,7 +79,7 @@ class AlbumGridItemBuilder {
     } catch (_) {
       cover = Icon(
         Icons.panorama,
-        color: Colors.white.withOpacity(.8),
+        color: Theme.of(context).listPlaceholderForegroundColor,
         size: 88,
       );
     }
@@ -87,7 +87,7 @@ class AlbumGridItemBuilder {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
+        color: Theme.of(context).listPlaceholderBackgroundColor,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),

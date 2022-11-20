@@ -379,6 +379,10 @@ class _FilePropParser {
             fileContentType: _contentType,
             logFilePath: logFilePath,
           ),
+          upgraderV3: MetadataUpgraderV3(
+            fileContentType: _contentType,
+            logFilePath: logFilePath,
+          ),
         );
       }
     }

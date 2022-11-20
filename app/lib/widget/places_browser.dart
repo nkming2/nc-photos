@@ -63,15 +63,13 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListLocationBloc, ListLocationBlocState>(
+    return Scaffold(
+      body: BlocListener<ListLocationBloc, ListLocationBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListLocationBloc, ListLocationBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListLocationBloc, ListLocationBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -94,49 +92,41 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
   Widget _buildContent(BuildContext context, ListLocationBlocState state) {
     return Stack(
       children: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              if (state is ListLocationBlocLoading)
-                const SliverToBoxAdapter(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: LinearProgressIndicator(),
-                  ),
-                ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 48,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    itemCount: _countryItems.length,
-                    itemBuilder: (context, i) =>
-                        _countryItems[i].buildWidget(context),
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  ),
-                ),
-              ),
+        CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            if (state is ListLocationBlocLoading)
               const SliverToBoxAdapter(
-                child: SizedBox(height: 8),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: LinearProgressIndicator(),
+                ),
               ),
-              SliverStaggeredGrid.extentBuilder(
-                maxCrossAxisExtent: 160,
-                mainAxisSpacing: 2,
-                crossAxisSpacing: 2,
-                itemCount: _placeItems.length,
-                itemBuilder: (context, i) =>
-                    _placeItems[i].buildWidget(context),
-                staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 48,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: _countryItems.length,
+                  itemBuilder: (context, i) =>
+                      _countryItems[i].buildWidget(context),
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                ),
               ),
-            ],
-          ),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 8),
+            ),
+            SliverStaggeredGrid.extentBuilder(
+              maxCrossAxisExtent: 160,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              itemCount: _placeItems.length,
+              itemBuilder: (context, i) => _placeItems[i].buildWidget(context),
+              staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
+            ),
+          ],
         ),
       ],
     );
@@ -265,9 +255,9 @@ class _PlaceItem {
         account: account,
         label: place,
         coverUrl: thumbUrl,
-        fallbackBuilder: (_) => Icon(
+        fallbackBuilder: (context) => Icon(
           Icons.location_on,
-          color: Colors.white.withOpacity(.8),
+          color: Theme.of(context).listPlaceholderForegroundColor,
         ),
         onTap: onTap,
       );
@@ -303,12 +293,9 @@ class _CountryItem {
                 },
                 fadeInDuration: const Duration(),
                 filterQuality: FilterQuality.high,
-                errorWidget: (_, __, ___) => Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
-                  child: Icon(
-                    Icons.location_on,
-                    color: AppTheme.getUnfocusedIconColor(context),
-                  ),
+                errorWidget: (_, __, ___) => const Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                  child: Icon(Icons.location_on),
                 ),
                 imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               ),
@@ -321,7 +308,7 @@ class _CountryItem {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppTheme.getListItemBackgroundColor(context),
+                  color: Theme.of(context).colorScheme.outline,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(16),

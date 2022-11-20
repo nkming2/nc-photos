@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
@@ -26,7 +26,7 @@ class SlideshowViewerArguments {
   );
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -59,7 +59,7 @@ class SlideshowViewer extends StatefulWidget {
   createState() => _SlideshowViewerState();
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -75,6 +75,8 @@ class _SlideshowViewerState extends State<SlideshowViewer>
       final index = [for (var i = 0; i < widget.streamFiles.length; ++i) i];
       if (widget.config.isShuffle) {
         return index..shuffle();
+      } else if (widget.config.isReverse) {
+        return index.reversed.toList();
       } else {
         return index;
       }
@@ -93,7 +95,8 @@ class _SlideshowViewerState extends State<SlideshowViewer>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,
@@ -103,6 +106,15 @@ class _SlideshowViewerState extends State<SlideshowViewer>
   }
 
   Widget _buildContent(BuildContext context) {
+    final int initialPage;
+    if (widget.config.isShuffle) {
+      // the original order is meaningless after shuffled
+      initialPage = 0;
+    } else if (widget.config.isReverse) {
+      initialPage = widget.streamFiles.length - 1 - widget.startIndex;
+    } else {
+      initialPage = widget.startIndex;
+    }
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -116,8 +128,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
             pageCount:
                 widget.config.isRepeat ? null : widget.streamFiles.length,
             pageBuilder: _buildPage,
-            // the original order is meaningless after shuffled
-            initialPage: widget.config.isShuffle ? 0 : widget.startIndex,
+            initialPage: initialPage,
             controller: _viewerController,
             viewportFraction: _viewportFraction,
             canSwitchPage: false,
@@ -152,8 +163,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
               ),
               AppBar(
                 backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                foregroundColor: Colors.white.withOpacity(.87),
+                elevation: 0,
                 leading: IconButton(
                   icon: const Icon(Icons.close),
                   tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
@@ -185,7 +195,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
     } else if (file_util.isSupportedVideoFormat(file)) {
       return _buildVideoView(context, index);
     } else {
-      _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
+      _log.shout("[_buildItemView] Unknown file format: ${file.fdMime}");
       return Container();
     }
   }

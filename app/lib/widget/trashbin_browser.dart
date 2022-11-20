@@ -12,13 +12,14 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -71,15 +72,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<LsTrashbinBloc, LsTrashbinBlocState>(
+    return Scaffold(
+      body: BlocListener<LsTrashbinBloc, LsTrashbinBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<LsTrashbinBloc, LsTrashbinBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<LsTrashbinBloc, LsTrashbinBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -136,20 +135,13 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
-                  ),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                buildItemStreamList(
+                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                ),
+              ],
             ),
           ),
           if (state is LsTrashbinBlocLoading || _buildItemQueue.isProcessing)
@@ -294,18 +286,20 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
           .restoreSelectedProcessingNotification(selectedListItems.length)),
       duration: k.snackBarDurationShort,
     ));
-    final selectedFiles = selectedListItems
+    final selection = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     setState(() {
       clearSelectedItems();
     });
+    final c = KiwiContainer().resolve<DiContainer>();
+    final selectedFiles =
+        await InflateFileDescriptor(c)(widget.account, selection);
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
-        await RestoreTrashbin(KiwiContainer().resolve<DiContainer>())(
-            widget.account, f);
+        await RestoreTrashbin(c)(widget.account, f);
       } catch (e, stacktrace) {
         _log.shout(
             "[_onSelectionAppBarRestorePressed] Failed while restoring file: ${logFilename(f.path)}",
@@ -363,7 +357,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       (result) {
         if (mounted) {
           setState(() {
-            _backingFiles = result.backingFiles;
+            _backingFiles = result.backingFiles.cast();
             itemStreamListItems = result.listItems;
           });
         }
@@ -382,10 +376,11 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
     return _deleteFiles(selectedFiles);
   }
 
-  Future<void> _deleteFiles(List<File> files) async {
-    await RemoveSelectionHandler()(
+  Future<void> _deleteFiles(List<FileDescriptor> files) async {
+    final c = KiwiContainer().resolve<DiContainer>();
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: files,
+      selection: files,
       shouldCleanupAlbum: false,
     );
   }
@@ -415,7 +410,9 @@ enum _SelectionAppBarMenuOption {
   delete,
 }
 
-int _fileSorter(File a, File b) {
+int _fileSorter(FileDescriptor fdA, FileDescriptor fdB) {
+  final a = fdA as File;
+  final b = fdB as File;
   if (a.trashbinDeletionTime == null && b.trashbinDeletionTime == null) {
     // ?
     return 0;

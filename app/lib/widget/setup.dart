@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:page_view_indicators/circle_page_indicator.dart';
@@ -23,11 +22,9 @@ class Setup extends StatefulWidget {
 class _SetupState extends State<Setup> {
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: Builder(builder: (context) => _buildContent(context)),
-      ),
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: Builder(builder: (context) => _buildContent(context)),
     );
   }
 

@@ -38,21 +38,20 @@ class CollectionListSmall extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.black.withOpacity(0),
-                      Colors.black.withOpacity(.55),
+                      Colors.black.withOpacity(.5),
                     ],
                   ),
                 ),
               ),
               Container(
-                color: Colors.black.withOpacity(.55),
+                color: Colors.black.withOpacity(.5),
                 constraints: const BoxConstraints(minWidth: double.infinity),
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
                 child: Text(
                   label,
-                  style: TextStyle(
-                    color: AppTheme.primaryTextColorDark,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                        color: Theme.of(context).onDarkSurface,
+                      ),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -80,7 +79,7 @@ class CollectionListSmall extends StatelessWidget {
       );
     }
     return Container(
-      color: AppTheme.getListItemBackgroundColor(context),
+      color: Theme.of(context).listPlaceholderBackgroundColor,
       constraints: const BoxConstraints.expand(),
       child: content,
     );

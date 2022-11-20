@@ -9,6 +9,7 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
@@ -458,7 +459,10 @@ class FileSqliteDbDataSource implements FileDataSource {
     _log.info("[updateProperty] ${f.path}");
     await _c.sqliteDb.use((db) async {
       final rowIds = await db.accountFileRowIdsOf(f, appAccount: account);
-      if (isArchived != null || overrideDateTime != null || favorite != null) {
+      if (isArchived != null ||
+          overrideDateTime != null ||
+          favorite != null ||
+          metadata != null) {
         final update = sql.AccountFilesCompanion(
           isArchived: isArchived == null
               ? const sql.Value.absent()
@@ -468,6 +472,17 @@ class FileSqliteDbDataSource implements FileDataSource {
               : sql.Value(overrideDateTime.obj),
           isFavorite:
               favorite == null ? const sql.Value.absent() : sql.Value(favorite),
+          bestDateTime: overrideDateTime == null && metadata == null
+              ? const sql.Value.absent()
+              : sql.Value(file_util.getBestDateTime(
+                  overrideDateTime: overrideDateTime == null
+                      ? f.overrideDateTime
+                      : overrideDateTime.obj,
+                  dateTimeOriginal: metadata == null
+                      ? f.metadata?.exif?.dateTimeOriginal
+                      : metadata.obj?.exif?.dateTimeOriginal,
+                  lastModified: f.lastModified,
+                )),
         );
         await (db.update(db.accountFiles)
               ..where((t) => t.rowId.equals(rowIds.accountFileRowId)))
@@ -575,6 +590,17 @@ class FileCachedDataSource implements FileDataSource {
     }
 
     // no cache or outdated
+    return await sync(account, dir,
+        remoteTouchEtag: cacheLoader.remoteTouchEtag);
+  }
+
+  /// Sync [dir] with remote content, and set the local touch etag as
+  /// [remoteTouchEtag]
+  Future<List<File>> sync(
+    Account account,
+    File dir, {
+    required String? remoteTouchEtag,
+  }) async {
     try {
       final remote = await _remoteSrc.list(account, dir);
       await FileSqliteCacheUpdater(_c)(account, dir, remote: remote);
@@ -582,8 +608,7 @@ class FileCachedDataSource implements FileDataSource {
         // update our local touch token to match the remote one
         try {
           _log.info("[list] Update outdated local etag: ${dir.path}");
-          await _c.touchManager
-              .setLocalEtag(account, dir, cacheLoader.remoteTouchEtag);
+          await _c.touchManager.setLocalEtag(account, dir, remoteTouchEtag);
         } catch (e, stacktrace) {
           _log.shout("[list] Failed while setLocalToken", e, stacktrace);
           // ignore error
@@ -593,16 +618,22 @@ class FileCachedDataSource implements FileDataSource {
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
         _log.info("[list] File removed: $dir");
-        if (cache != null) {
+        try {
           await _sqliteDbSrc.remove(account, dir);
+        } catch (e) {
+          _log.warning(
+              "[list] Failed while remove from db, file not cached?", e);
         }
         return [];
       } else if (e.response.statusCode == 403) {
         _log.info("[list] E2E encrypted dir: $dir");
-        if (cache != null) {
+        try {
           // we need to keep the dir itself as it'll be inserted again on next
           // listing of its parent
           await _sqliteDbSrc.emptyDir(account, dir);
+        } catch (e) {
+          _log.warning(
+              "[list] Failed while emptying from db, file not cached?", e);
         }
         return [];
       } else {

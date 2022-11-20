@@ -6,7 +6,6 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/theme.dart';
 
 class AlbumBrowserAppBar extends StatelessWidget {
   const AlbumBrowserAppBar({
@@ -26,9 +25,8 @@ class AlbumBrowserAppBar extends StatelessWidget {
         background: _getAppBarCover(context, account, coverPreviewUrl),
         title: Text(
           album.name,
-          style: TextStyle(
-            color: AppTheme.getPrimaryTextColor(context),
-          ),
+          style:
+              TextStyle(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
       ),
       actions: actions,
@@ -95,9 +93,9 @@ class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
           onSaved: (_) {
             widget.onAlbumNameSaved?.call(_controller.text);
           },
-          style: TextStyle(
-            color: AppTheme.getPrimaryTextColor(context),
-          ),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
         ),
       ),
       leading: IconButton(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/theme.dart';
 
 class ZoomMenuButton extends StatelessWidget {
   const ZoomMenuButton({
@@ -67,19 +66,17 @@ class _PopupMenuZoomState extends State<_PopupMenuZoom> {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Slider(
-        value: _value.toDouble(),
-        min: widget.minValue.toDouble(),
-        max: widget.maxValue.toDouble(),
-        divisions: (widget.maxValue - widget.minValue).round(),
-        onChanged: (value) {
-          setState(() {
-            _value = value.round();
-          });
-          widget.onChanged?.call(_value);
-        },
-      ),
+    return Slider(
+      value: _value.toDouble(),
+      min: widget.minValue.toDouble(),
+      max: widget.maxValue.toDouble(),
+      divisions: (widget.maxValue - widget.minValue).round(),
+      onChanged: (value) {
+        setState(() {
+          _value = value.round();
+        });
+        widget.onChanged?.call(_value);
+      },
     );
   }
 

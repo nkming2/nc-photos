@@ -26,7 +26,6 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
@@ -111,20 +110,18 @@ class _AlbumBrowserState extends State<AlbumBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) {
-            if (isEditMode) {
-              return Form(
-                key: _editFormKey,
-                child: _buildContent(context),
-              );
-            } else {
-              return _buildContent(context);
-            }
-          },
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) {
+          if (isEditMode) {
+            return Form(
+              key: _editFormKey,
+              child: _buildContent(context),
+            );
+          } else {
+            return _buildContent(context);
+          }
+        },
       ),
     );
   }
@@ -253,17 +250,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
         child: content,
       );
     }
-    return buildItemStreamListOuter(
-      context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
-              ),
-        ),
-        child: content,
-      ),
-    );
+    return buildItemStreamListOuter(context, child: content);
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -389,7 +376,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onDownloadPressed() {
-    DownloadHandler().downloadFiles(
+    final c = KiwiContainer().resolve<DiContainer>();
+    DownloadHandler(c).downloadFiles(
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
@@ -419,6 +407,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
@@ -431,6 +420,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       return;
     }
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -441,10 +431,11 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Future<void> _onSelectionAddPressed(BuildContext context) async {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<_FileListItem>()
           .map((e) => e.file)
           .toList(),
@@ -493,11 +484,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });

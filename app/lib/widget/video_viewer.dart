@@ -4,7 +4,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/k.dart' as platform_k;
@@ -33,7 +33,7 @@ class VideoViewer extends StatefulWidget {
   createState() => _VideoViewerState();
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final VoidCallback? onLoaded;
   final VoidCallback? onLoadFailure;
   final ValueChanged<double>? onHeightChanged;
@@ -180,10 +180,9 @@ class _VideoViewerState extends State<VideoViewer>
                       valueListenable: _controller,
                       builder: (context, VideoPlayerValue value, child) => Text(
                         _durationToString(value.position),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(.87),
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -192,10 +191,12 @@ class _VideoViewerState extends State<VideoViewer>
                         _controller,
                         allowScrubbing: true,
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        colors: const VideoProgressColors(
-                          backgroundColor: Colors.white24,
-                          bufferedColor: Colors.white38,
-                          playedColor: Colors.white,
+                        colors: VideoProgressColors(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          bufferedColor:
+                              Theme.of(context).colorScheme.surfaceVariant,
+                          playedColor: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -203,10 +204,9 @@ class _VideoViewerState extends State<VideoViewer>
                     if (_controller.value.duration != Duration.zero)
                       Text(
                         _durationToString(_controller.value.duration),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withOpacity(.87),
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                     const SizedBox(width: 4),
                     Tooltip(
@@ -222,8 +222,7 @@ class _VideoViewerState extends State<VideoViewer>
                           child: Icon(
                             _controller.value.volume == 0
                                 ? Icons.volume_mute_outlined
-                                : Icons.volume_up_outlined,
-                            color: Colors.white.withOpacity(.87),
+                                : Icons.volume_up,
                           ),
                         ),
                       ),

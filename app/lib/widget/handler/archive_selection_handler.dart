@@ -4,26 +4,34 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/notified_action.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 
 class ArchiveSelectionHandler {
-  ArchiveSelectionHandler(this._c) : assert(require(_c));
+  ArchiveSelectionHandler(this._c)
+      : assert(require(_c)),
+        assert(InflateFileDescriptor.require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   /// Archive [selectedFiles] and return the archived count
   Future<int> call({
     required Account account,
-    required List<File> selectedFiles,
-  }) {
+    required List<FileDescriptor> selection,
+    bool shouldShowProcessingText = true,
+  }) async {
+    final selectedFiles = await InflateFileDescriptor(_c)(account, selection);
     return NotifiedListAction<File>(
       list: selectedFiles,
       action: (file) async {
         await UpdateProperty(_c.fileRepo).updateIsArchived(account, file, true);
       },
-      processingText: L10n.global()
-          .archiveSelectedProcessingNotification(selectedFiles.length),
+      processingText: shouldShowProcessingText
+          ? L10n.global()
+              .archiveSelectedProcessingNotification(selectedFiles.length)
+          : null,
       successText: L10n.global().archiveSelectedSuccessNotification,
       getFailureText: (failures) =>
           L10n.global().archiveSelectedFailureNotification(failures.length),

@@ -12,13 +12,13 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
@@ -66,10 +66,8 @@ class SharedFileViewer extends StatefulWidget {
 class _SharedFileViewerState extends State<SharedFileViewer> {
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: _buildContent(context),
-      ),
+    return Scaffold(
+      body: _buildContent(context),
     );
   }
 

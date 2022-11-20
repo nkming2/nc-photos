@@ -6,7 +6,8 @@ import 'package:nc_photos/int_extension.dart';
 extension ListExtension<T> on List<T> {
   Iterable<T> takeIndex(List<int> indexes) => indexes.map((e) => this[e]);
 
-  List<T> slice(int start, [int? stop]) {
+  List<T> slice(int start, [int? stop, int step = 1]) {
+    assert(step > 0);
     if (start < 0) {
       start = math.max(length + start, 0);
     }
@@ -16,11 +17,21 @@ extension ListExtension<T> on List<T> {
     if (start >= length) {
       return [];
     } else if (stop == null) {
-      return sublist(start);
+      final sub = sublist(start);
+      if (step <= 1) {
+        return sub;
+      } else {
+        return sub.whereIndexed((index, _) => index % step == 0).toList();
+      }
     } else if (start >= stop) {
       return [];
     } else {
-      return sublist(start, math.min(stop, length));
+      final sub = sublist(start, math.min(stop, length));
+      if (step <= 1) {
+        return sub;
+      } else {
+        return sub.whereIndexed((index, _) => index % step == 0).toList();
+      }
     }
   }
 

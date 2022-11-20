@@ -59,16 +59,11 @@ class _AlbumPickerState extends State<AlbumPicker>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListAlbumBloc, ListAlbumBlocState>(
-          bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListAlbumBloc, ListAlbumBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
-        ),
+    return Scaffold(
+      body: BlocConsumer<ListAlbumBloc, ListAlbumBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        builder: (context, state) => _buildContent(context, state),
       ),
     );
   }
@@ -119,53 +114,17 @@ class _AlbumPickerState extends State<AlbumPicker>
   }
 
   Widget _buildNewAlbumItem(BuildContext context) {
-    return Stack(
-      children: [
-        AlbumGridItem(
-          cover: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              color: AppTheme.getListItemBackgroundColor(context),
-              constraints: const BoxConstraints.expand(),
-              child: Icon(
-                Icons.add,
-                color: Colors.white.withOpacity(.8),
-                size: 88,
-              ),
-            ),
-          ),
-          title: L10n.global().createAlbumTooltip,
-        ),
-        Positioned.fill(
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: () => _onNewAlbumPressed(context),
-            ),
-          ),
-        ),
-      ],
+    return _NewAlbumView(
+      onTap: () => _onNewAlbumPressed(context),
     );
   }
 
   Widget _buildItem(BuildContext context, int index) {
     final item = _sortedAlbums[index];
-    return Stack(
-      children: [
-        AlbumGridItemBuilder(
-          account: widget.account,
-          album: item,
-          isShared: item.shares?.isNotEmpty == true,
-        ).build(context),
-        Positioned.fill(
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: () => _onItemPressed(context, item),
-            ),
-          ),
-        ),
-      ],
+    return _AlbumView(
+      account: widget.account,
+      album: item,
+      onTap: () => _onItemPressed(context, item),
     );
   }
 
@@ -231,6 +190,78 @@ class _AlbumPickerState extends State<AlbumPicker>
   var _sortedAlbums = <Album>[];
 
   static final _log = Logger("widget.album_picker._AlbumPickerState");
+}
+
+class _NewAlbumView extends StatelessWidget {
+  const _NewAlbumView({
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AlbumGridItem(
+          cover: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              color: Theme.of(context).listPlaceholderBackgroundColor,
+              constraints: const BoxConstraints.expand(),
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).listPlaceholderForegroundColor,
+                size: 88,
+              ),
+            ),
+          ),
+          title: L10n.global().createAlbumTooltip,
+        ),
+        Positioned.fill(
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: onTap,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  final VoidCallback? onTap;
+}
+
+class _AlbumView extends StatelessWidget {
+  const _AlbumView({
+    required this.account,
+    required this.album,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AlbumGridItemBuilder(
+          account: account,
+          album: album,
+          isShared: album.shares?.isNotEmpty == true,
+        ).build(context),
+        Positioned.fill(
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: onTap,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  final Account account;
+  final Album album;
+  final VoidCallback? onTap;
 }
 
 album_util.AlbumSort _getSortFromPref() {

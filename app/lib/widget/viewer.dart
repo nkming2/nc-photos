@@ -12,7 +12,9 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/album/item.dart';
+import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -21,10 +23,14 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
+import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
+import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
+import 'package:nc_photos/widget/handler/unarchive_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart';
@@ -45,7 +51,7 @@ class ViewerArguments {
   });
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
   final Album? album;
 }
@@ -81,7 +87,7 @@ class Viewer extends StatefulWidget {
   createState() => _ViewerState();
 
   final Account account;
-  final List<File> streamFiles;
+  final List<FileDescriptor> streamFiles;
   final int startIndex;
 
   /// The album these files belongs to, or null
@@ -91,17 +97,25 @@ class Viewer extends StatefulWidget {
 class _ViewerState extends State<Viewer>
     with DisposableManagerMixin<Viewer>, ViewerControllersMixin<Viewer> {
   @override
+  initState() {
+    super.initState();
+    _streamFilesView = widget.streamFiles;
+  }
+
+  @override
   build(BuildContext context) {
-    return AppTheme(
+    final originalBrightness = Theme.of(context).brightness;
+    return Theme(
+      data: buildDarkTheme(),
       child: Scaffold(
         body: Builder(
-          builder: _buildContent,
+          builder: (context) => _buildContent(context, originalBrightness),
         ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, Brightness originalBrightness) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -118,8 +132,9 @@ class _ViewerState extends State<Viewer>
               child: CircularProgressIndicator(),
             ),
           HorizontalPageViewer(
-            pageCount: widget.streamFiles.length,
-            pageBuilder: _buildPage,
+            pageCount: _streamFilesView.length,
+            pageBuilder: (context, i) =>
+                _buildPage(context, i, originalBrightness),
             initialPage: widget.startIndex,
             controller: _viewerController,
             viewportFraction: _viewportFraction,
@@ -138,7 +153,7 @@ class _ViewerState extends State<Viewer>
   Widget _buildAppBar(BuildContext context) {
     final index =
         _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
-    final file = widget.streamFiles[index];
+    final file = _streamFilesView[index];
     return Wrap(
       children: [
         AnimatedVisibility(
@@ -162,11 +177,11 @@ class _ViewerState extends State<Viewer>
               ),
               AppBar(
                 backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                foregroundColor: Colors.white.withOpacity(.87),
+                elevation: 0,
                 actions: [
                   if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
-                    (_pageStates[index]?.favoriteOverride ?? file.isFavorite) ==
+                    (_pageStates[index]?.favoriteOverride ??
+                                file.fdIsFavorite) ==
                             true
                         ? IconButton(
                             icon: const Icon(Icons.star),
@@ -196,7 +211,7 @@ class _ViewerState extends State<Viewer>
   Widget _buildBottomAppBar(BuildContext context) {
     final index =
         _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
-    final file = widget.streamFiles[index];
+    final file = _streamFilesView[index];
     return Align(
       alignment: Alignment.bottomCenter,
       child: Material(
@@ -209,45 +224,30 @@ class _ViewerState extends State<Viewer>
           child: ViewerBottomAppBar(
             children: [
               IconButton(
-                icon: Icon(
-                  Icons.share_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.share_outlined),
                 tooltip: L10n.global().shareTooltip,
                 onPressed: () => _onSharePressed(context),
               ),
               if (features.isSupportEnhancement &&
                   ImageEnhancer.isSupportedFormat(file)) ...[
                 IconButton(
-                  icon: Icon(
-                    Icons.tune_outlined,
-                    color: Colors.white.withOpacity(.87),
-                  ),
+                  icon: const Icon(Icons.tune_outlined),
                   tooltip: L10n.global().editTooltip,
                   onPressed: () => _onEditPressed(context),
                 ),
                 IconButton(
-                  icon: Icon(
-                    Icons.auto_fix_high_outlined,
-                    color: Colors.white.withOpacity(.87),
-                  ),
+                  icon: const Icon(Icons.auto_fix_high_outlined),
                   tooltip: L10n.global().enhanceTooltip,
                   onPressed: () => _onEnhancePressed(context),
                 ),
               ],
               IconButton(
-                icon: Icon(
-                  Icons.download_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.download_outlined),
                 tooltip: L10n.global().downloadTooltip,
                 onPressed: _onDownloadPressed,
               ),
               IconButton(
-                icon: Icon(
-                  Icons.delete_outlined,
-                  color: Colors.white.withOpacity(.87),
-                ),
+                icon: const Icon(Icons.delete_outlined),
                 tooltip: L10n.global().deleteTooltip,
                 onPressed: () => _onDeletePressed(context),
               ),
@@ -258,7 +258,8 @@ class _ViewerState extends State<Viewer>
     );
   }
 
-  Widget _buildPage(BuildContext context, int index) {
+  Widget _buildPage(
+      BuildContext context, int index, Brightness originalBrightness) {
     if (_pageStates[index] == null) {
       _onCreateNewPage(context, index);
     } else if (!_pageStates[index]!.scrollController.hasClients) {
@@ -283,39 +284,56 @@ class _ViewerState extends State<Viewer>
             child: Stack(
               children: [
                 _buildItemView(context, index),
-                Visibility(
-                  visible: !_isZoomed,
-                  child: AnimatedOpacity(
-                    opacity: _isShowDetailPane ? 1 : 0,
-                    duration: k.animationDurationNormal,
-                    onEnd: () {
-                      if (!_isShowDetailPane) {
-                        setState(() {
-                          _isDetailPaneActive = false;
-                        });
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(4)),
-                      ),
-                      margin:
-                          EdgeInsets.only(top: _calcDetailPaneOffset(index)),
-                      // this visibility widget avoids loading the detail pane
-                      // until it's actually opened, otherwise swiping between
-                      // photos will slow down severely
-                      child: Visibility(
-                        visible: _isShowDetailPane,
-                        child: ViewerDetailPane(
-                          account: widget.account,
-                          file: widget.streamFiles[index],
-                          album: widget.album,
-                          onSlideshowPressed: _onSlideshowPressed,
+                IgnorePointer(
+                  ignoring: !_isShowDetailPane,
+                  child: Visibility(
+                    visible: !_isZoomed,
+                    child: AnimatedOpacity(
+                      opacity: _isShowDetailPane ? 1 : 0,
+                      duration: k.animationDurationNormal,
+                      onEnd: () {
+                        if (!_isShowDetailPane) {
+                          setState(() {
+                            _isDetailPaneActive = false;
+                          });
+                        }
+                      },
+                      child: Theme(
+                        data: buildTheme(originalBrightness),
+                        child: Builder(
+                          builder: (context) {
+                            return Container(
+                              alignment: Alignment.topLeft,
+                              constraints: BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(4),
+                                ),
+                              ),
+                              margin: EdgeInsets.only(
+                                top: _calcDetailPaneOffset(index),
+                              ),
+                              // this visibility widget avoids loading the detail pane
+                              // until it's actually opened, otherwise swiping between
+                              // photos will slow down severely
+                              child: Visibility(
+                                visible: _isShowDetailPane,
+                                child: ViewerDetailPane(
+                                  account: widget.account,
+                                  fd: _streamFilesView[index],
+                                  album: widget.album,
+                                  onRemoveFromAlbumPressed:
+                                      _onRemoveFromAlbumPressed,
+                                  onArchivePressed: _onArchivePressed,
+                                  onUnarchivePressed: _onUnarchivePressed,
+                                  onSlideshowPressed: _onSlideshowPressed,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -330,13 +348,13 @@ class _ViewerState extends State<Viewer>
   }
 
   Widget _buildItemView(BuildContext context, int index) {
-    final file = widget.streamFiles[index];
+    final file = _streamFilesView[index];
     if (file_util.isSupportedImageFormat(file)) {
       return _buildImageView(context, index);
     } else if (file_util.isSupportedVideoFormat(file)) {
       return _buildVideoView(context, index);
     } else {
-      _log.shout("[_buildItemView] Unknown file format: ${file.contentType}");
+      _log.shout("[_buildItemView] Unknown file format: ${file.fdMime}");
       _pageStates[index]!.itemHeight = 0;
       return Container();
     }
@@ -345,7 +363,7 @@ class _ViewerState extends State<Viewer>
   Widget _buildImageView(BuildContext context, int index) {
     return RemoteImageViewer(
       account: widget.account,
-      file: widget.streamFiles[index],
+      file: _streamFilesView[index],
       canZoom: _canZoom(),
       onLoaded: () => _onImageLoaded(index),
       onHeightChanged: (height) => _updateItemHeight(index, height),
@@ -365,7 +383,7 @@ class _ViewerState extends State<Viewer>
   Widget _buildVideoView(BuildContext context, int index) {
     return VideoViewer(
       account: widget.account,
-      file: widget.streamFiles[index],
+      file: _streamFilesView[index],
       onLoaded: () => _onVideoLoaded(index),
       onHeightChanged: (height) => _updateItemHeight(index, height),
       onPlay: _onVideoPlay,
@@ -441,13 +459,13 @@ class _ViewerState extends State<Viewer>
         !_pageStates[index]!.hasLoaded) {
       _log.info("[_onImageLoaded] Pre-loading nearby images");
       if (index > 0) {
-        final prevFile = widget.streamFiles[index - 1];
+        final prevFile = _streamFilesView[index - 1];
         if (file_util.isSupportedImageFormat(prevFile)) {
           RemoteImageViewer.preloadImage(widget.account, prevFile);
         }
       }
-      if (index + 1 < widget.streamFiles.length) {
-        final nextFile = widget.streamFiles[index + 1];
+      if (index + 1 < _streamFilesView.length) {
+        final nextFile = _streamFilesView[index + 1];
         if (file_util.isSupportedImageFormat(nextFile)) {
           RemoteImageViewer.preloadImage(widget.account, nextFile);
         }
@@ -481,13 +499,19 @@ class _ViewerState extends State<Viewer>
   /// Called when the page is being built for the first time
   void _onCreateNewPage(BuildContext context, int index) {
     _pageStates[index] = _PageState(ScrollController(
-        initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
-            ? _calcDetailPaneOpenedScrollPosition(index)
-            : 0));
+      initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
+          ? _calcDetailPaneOpenedScrollPosition(index)
+          : 0,
+    ));
   }
 
   /// Called when the page is being built after previously moved out of view
   void _onRecreatePageAfterMovedOut(BuildContext context, int index) {
+    _pageStates[index]!.setScrollController(ScrollController(
+      initialScrollOffset: _isShowDetailPane && !_isClosingDetailPane
+          ? _calcDetailPaneOpenedScrollPosition(index)
+          : 0,
+    ));
     if (_isShowDetailPane && !_isClosingDetailPane) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_pageStates[index]!.itemHeight != null) {
@@ -509,8 +533,9 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final fd = _streamFilesView[_viewerController.currentPage];
     final c = KiwiContainer().resolve<DiContainer>();
+    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = true;
     });
@@ -542,8 +567,9 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final fd = _streamFilesView[_viewerController.currentPage];
     final c = KiwiContainer().resolve<DiContainer>();
+    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = false;
     });
@@ -578,55 +604,149 @@ class _ViewerState extends State<Viewer>
   }
 
   void _onSharePressed(BuildContext context) {
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[_viewerController.currentPage];
     ShareHandler(
+      c,
       context: context,
     ).shareFiles(widget.account, [file]);
   }
 
   void _onEditPressed(BuildContext context) {
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final file = _streamFilesView[_viewerController.currentPage];
     if (!file_util.isSupportedImageFormat(file)) {
       _log.shout("[_onEditPressed] Video file not supported");
       return;
     }
 
-    _log.info("[_onEditPressed] Edit file: ${file.path}");
+    _log.info("[_onEditPressed] Edit file: ${file.fdPath}");
     Navigator.of(context).pushNamed(ImageEditor.routeName,
         arguments: ImageEditorArguments(widget.account, file));
   }
 
   void _onEnhancePressed(BuildContext context) {
-    final file = widget.streamFiles[_viewerController.currentPage];
+    final file = _streamFilesView[_viewerController.currentPage];
     if (!file_util.isSupportedImageFormat(file)) {
       _log.shout("[_onEnhancePressed] Video file not supported");
       return;
     }
     final c = KiwiContainer().resolve<DiContainer>();
 
-    _log.info("[_onEnhancePressed] Enhance file: ${file.path}");
+    _log.info("[_onEnhancePressed] Enhance file: ${file.fdPath}");
     Navigator.of(context).pushNamed(ImageEnhancer.routeName,
         arguments: ImageEnhancerArguments(
             widget.account, file, c.pref.isSaveEditResultToServerOr()));
   }
 
   void _onDownloadPressed() {
-    final file = widget.streamFiles[_viewerController.currentPage];
-    _log.info("[_onDownloadPressed] Downloading file: ${file.path}");
-    DownloadHandler().downloadFiles(widget.account, [file]);
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[_viewerController.currentPage];
+    _log.info("[_onDownloadPressed] Downloading file: ${file.fdPath}");
+    DownloadHandler(c).downloadFiles(widget.account, [file]);
   }
 
-  Future<void> _onDeletePressed(BuildContext context) async {
-    final file = widget.streamFiles[_viewerController.currentPage];
-    _log.info("[_onDeletePressed] Removing file: ${file.path}");
-    final count = await RemoveSelectionHandler()(
+  void _onDeletePressed(BuildContext context) {
+    final index = _viewerController.currentPage;
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[index];
+    _log.info("[_onDeletePressed] Removing file: ${file.fdPath}");
+    unawaited(RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: [file],
+      selection: [file],
       isRemoveOpened: true,
       isMoveToTrash: true,
-    );
-    if (count > 0 && mounted) {
+      shouldShowProcessingText: false,
+    ));
+    _removeCurrentItemFromStream(context, index);
+  }
+
+  void _onArchivePressed(BuildContext context) {
+    final index = _viewerController.currentPage;
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[index];
+    _log.info("[_onArchivePressed] Archive file: ${file.fdPath}");
+    unawaited(ArchiveSelectionHandler(c)(
+      account: widget.account,
+      selection: [file],
+      shouldShowProcessingText: false,
+    ));
+    _removeCurrentItemFromStream(context, index);
+  }
+
+  void _onUnarchivePressed(BuildContext context) {
+    final index = _viewerController.currentPage;
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[index];
+    _log.info("[_onUnarchivePressed] Unarchive file: ${file.fdPath}");
+    unawaited(UnarchiveSelectionHandler(c)(
+      account: widget.account,
+      selection: [file],
+      shouldShowProcessingText: false,
+    ));
+    _removeCurrentItemFromStream(context, index);
+  }
+
+  void _onRemoveFromAlbumPressed(BuildContext context) {
+    assert(widget.album!.provider is AlbumStaticProvider);
+    final index = _viewerController.currentPage;
+    final c = KiwiContainer().resolve<DiContainer>();
+    final file = _streamFilesView[index];
+    _log.info("[_onRemoveFromAlbumPressed] Remove file: ${file.fdPath}");
+    NotifiedAction(
+      () async {
+        final selectedFile =
+            (await InflateFileDescriptor(c)(widget.account, [file])).first;
+        final thisItem = AlbumStaticProvider.of(widget.album!)
+            .items
+            .whereType<AlbumFileItem>()
+            .firstWhere((e) => e.file.compareServerIdentity(selectedFile));
+        await RemoveFromAlbum(KiwiContainer().resolve<DiContainer>())(
+            widget.account, widget.album!, [thisItem]);
+      },
+      null,
+      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
+      failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
+    ).call().catchError((e, stackTrace) {
+      _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album", e,
+          stackTrace);
+    });
+    _removeCurrentItemFromStream(context, index);
+  }
+
+  void _removeCurrentItemFromStream(BuildContext context, int index) {
+    if (_streamFilesView.length == 1) {
       Navigator.of(context).pop();
+    } else {
+      if (index >= _streamFilesView.length - 1) {
+        // last item, go back
+        _viewerController
+            .previousPage(
+          duration: k.animationDurationNormal,
+          curve: Curves.easeInOut,
+        )
+            .then((_) {
+          if (mounted) {
+            setState(() {
+              _streamFilesEditable.removeAt(index);
+            });
+          }
+        });
+      } else {
+        _viewerController
+            .nextPage(
+          duration: k.animationDurationNormal,
+          curve: Curves.easeInOut,
+        )
+            .then((_) {
+          if (mounted) {
+            setState(() {
+              _streamFilesEditable.removeAt(index);
+            });
+            // a page is removed, length - 1
+            _viewerController.jumpToPage(index);
+          }
+        });
+      }
     }
   }
 
@@ -637,6 +757,7 @@ class _ViewerState extends State<Viewer>
         duration: Duration(seconds: Pref().getSlideshowDurationOr(5)),
         isShuffle: Pref().isSlideshowShuffleOr(false),
         isRepeat: Pref().isSlideshowRepeatOr(false),
+        isReverse: Pref().isSlideshowReverseOr(false),
       ),
     );
     if (result == null) {
@@ -645,6 +766,7 @@ class _ViewerState extends State<Viewer>
     unawaited(Pref().setSlideshowDuration(result.duration.inSeconds));
     unawaited(Pref().setSlideshowShuffle(result.isShuffle));
     unawaited(Pref().setSlideshowRepeat(result.isRepeat));
+    unawaited(Pref().setSlideshowReverse(result.isReverse));
     unawaited(
       Navigator.of(context).pushNamed(
         SlideshowViewer.routeName,
@@ -731,6 +853,14 @@ class _ViewerState extends State<Viewer>
   bool _canOpenDetailPane() => !_isZoomed;
   bool _canZoom() => !_isDetailPaneActive;
 
+  List<FileDescriptor> get _streamFilesEditable {
+    if (!_isStreamFilesCopy) {
+      _streamFilesView = List.of(_streamFilesView);
+      _isStreamFilesCopy = true;
+    }
+    return _streamFilesView;
+  }
+
   var _isShowAppBar = true;
 
   var _isShowDetailPane = false;
@@ -746,6 +876,9 @@ class _ViewerState extends State<Viewer>
   double? _scrollStartPosition;
   var _overscrollSum = 0.0;
 
+  late List<FileDescriptor> _streamFilesView;
+  bool _isStreamFilesCopy = false;
+
   static final _log = Logger("widget.viewer._ViewerState");
 
   static const _viewportFraction = 1.05;
@@ -753,6 +886,10 @@ class _ViewerState extends State<Viewer>
 
 class _PageState {
   _PageState(this.scrollController);
+
+  void setScrollController(ScrollController c) {
+    scrollController = c;
+  }
 
   ScrollController scrollController;
   double? itemHeight;

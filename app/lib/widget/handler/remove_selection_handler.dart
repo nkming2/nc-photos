@@ -5,22 +5,31 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 
 class RemoveSelectionHandler {
+  RemoveSelectionHandler(this._c)
+      : assert(require(_c)),
+        assert(InflateFileDescriptor.require(_c));
+
+  static bool require(DiContainer c) => true;
+
   /// Remove [selectedFiles] and return the removed count
   Future<int> call({
     required Account account,
-    required List<File> selectedFiles,
+    required List<FileDescriptor> selection,
     bool shouldCleanupAlbum = true,
     bool isRemoveOpened = false,
     bool isMoveToTrash = false,
+    bool shouldShowProcessingText = true,
   }) async {
+    final selectedFiles = await InflateFileDescriptor(_c)(account, selection);
     final String processingText, successText;
     final String Function(int) failureText;
     if (isRemoveOpened) {
@@ -34,13 +43,15 @@ class RemoveSelectionHandler {
       failureText =
           (count) => L10n.global().deleteSelectedFailureNotification(count);
     }
-    SnackBarManager().showSnackBar(
-      SnackBar(
-        content: Text(processingText),
-        duration: k.snackBarDurationShort,
-      ),
-      canBeReplaced: true,
-    );
+    if (shouldShowProcessingText) {
+      SnackBarManager().showSnackBar(
+        SnackBar(
+          content: Text(processingText),
+          duration: k.snackBarDurationShort,
+        ),
+        canBeReplaced: true,
+      );
+    }
 
     var failureCount = 0;
     await Remove(KiwiContainer().resolve<DiContainer>())(
@@ -80,6 +91,8 @@ class RemoveSelectionHandler {
     }
     return selectedFiles.length - failureCount;
   }
+
+  final DiContainer _c;
 
   static final _log =
       Logger("widget.handler.remove_selection_handler.RemoveSelectionHandler");

@@ -16,7 +16,6 @@ import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
@@ -76,11 +75,9 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) => _buildContent(context),
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) => _buildContent(context),
       ),
     );
   }
@@ -120,20 +117,13 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
     } else {
       return buildItemStreamListOuter(
         context,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: CustomScrollView(
-            slivers: [
-              _buildAppBar(context),
-              buildItemStreamList(
-                maxCrossAxisExtent: thumbSize.toDouble(),
-              ),
-            ],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            buildItemStreamList(
+              maxCrossAxisExtent: thumbSize.toDouble(),
+            ),
+          ],
         ),
       );
     }
@@ -216,7 +206,8 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   }
 
   void _onDownloadPressed() {
-    DownloadHandler().downloadFiles(
+    final c = KiwiContainer().resolve<DiContainer>();
+    DownloadHandler(c).downloadFiles(
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
@@ -236,11 +227,13 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -251,10 +244,11 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   }
 
   Future<void> _onSelectionAddPressed(BuildContext context) async {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<_FileListItem>()
           .map((e) => e.file)
           .toList(),
@@ -269,11 +263,12 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });

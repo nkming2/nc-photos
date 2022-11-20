@@ -9,8 +9,8 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -58,11 +58,14 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
           BlocBuilder<HomeSearchSuggestionBloc, HomeSearchSuggestionBlocState>(
         bloc: _bloc,
         builder: (context, state) => Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
+          data: Theme.of(context).run((t) {
+            return t.copyWith(
+              listTileTheme: ListTileThemeData(
+                iconColor: t.colorScheme.onBackground,
+                textColor: t.colorScheme.onBackground,
+              ),
+            );
+          }),
           child: _buildContent(context, state),
         ),
       ),

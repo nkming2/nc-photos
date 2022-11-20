@@ -45,7 +45,7 @@ Future<void> _root() async {
     (await ScanDirOffline(c)(
             account, File(path: file_util.unstripPath(account, "."))))
         .toSet(),
-    files.toSet(),
+    files.map(util.fileToFileDescriptor).toSet(),
   );
 }
 
@@ -73,7 +73,7 @@ Future<void> _subDir() async {
     (await ScanDirOffline(c)(
             account, File(path: file_util.unstripPath(account, "test"))))
         .toSet(),
-    {files[1]},
+    [files[1]].map(util.fileToFileDescriptor).toSet(),
   );
 }
 
@@ -102,7 +102,7 @@ Future<void> _unsupportedFile() async {
     (await ScanDirOffline(c)(
             account, File(path: file_util.unstripPath(account, "."))))
         .toSet(),
-    {files[0]},
+    [files[0]].map(util.fileToFileDescriptor).toSet(),
   );
 }
 
@@ -140,12 +140,12 @@ Future<void> _multiAccountRoot() async {
     (await ScanDirOffline(c)(
             account, File(path: file_util.unstripPath(account, "."))))
         .toSet(),
-    files.toSet(),
+    files.map(util.fileToFileDescriptor).toSet(),
   );
   expect(
     (await ScanDirOffline(c)(
             user1Account, File(path: file_util.unstripPath(user1Account, "."))))
         .toSet(),
-    user1Files.toSet(),
+    user1Files.map(util.fileToFileDescriptor).toSet(),
   );
 }

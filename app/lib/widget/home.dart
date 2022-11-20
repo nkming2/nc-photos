@@ -69,35 +69,35 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        bottomNavigationBar: _buildBottomNavigationBar(context),
-        body: Builder(builder: (context) => _buildContent(context)),
-        extendBody: true,
-        resizeToAvoidBottomInset: false,
-      ),
+    return Scaffold(
+      bottomNavigationBar: _buildBottomNavigationBar(context),
+      body: Builder(builder: (context) => _buildContent(context)),
+      extendBody: true,
+      resizeToAvoidBottomInset: false,
     );
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
+    return NavigationBar(
+      destinations: [
+        NavigationDestination(
           icon: const Icon(Icons.photo_outlined),
+          selectedIcon: const Icon(Icons.photo),
           label: L10n.global().photosTabLabel,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(Icons.search),
           label: L10n.global().searchTooltip,
         ),
-        BottomNavigationBarItem(
+        NavigationDestination(
           icon: const Icon(Icons.grid_view_outlined),
+          selectedIcon: const Icon(Icons.grid_view_sharp),
           label: L10n.global().collectionsTooltip,
         ),
       ],
-      currentIndex: _nextPage,
-      onTap: _onTapNavItem,
-      backgroundColor: Theme.of(context).bottomAppBarColor.withOpacity(.8),
+      selectedIndex: _nextPage,
+      onDestinationSelected: _onTapNavItem,
+      backgroundColor: Theme.of(context).homeNavigationBarBackgroundColor,
     );
   }
 

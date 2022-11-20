@@ -98,7 +98,7 @@ void _prevYear() {
         name: "2020",
         provider:
             AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -141,7 +141,7 @@ void _prevYear2DaysBefore() {
         name: "2020",
         provider:
             AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -184,7 +184,7 @@ void _prevYear2DaysAfter() {
         name: "2020",
         provider:
             AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -227,7 +227,7 @@ void _onFeb29AddFeb27() {
         name: "2019",
         provider:
             AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -270,7 +270,7 @@ void _onFeb29AddMar3() {
         name: "2019",
         provider:
             AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -313,7 +313,7 @@ void _onFeb29AddMar2LeapYear() {
         name: "2016",
         provider:
             AlbumMemoryProvider(year: 2016, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -356,7 +356,7 @@ void _onJan1AddDec31PrevYear() {
         name: "2019",
         provider:
             AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -385,7 +385,7 @@ void _onDec31AddJan1() {
         name: "2019",
         provider:
             AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),
@@ -414,7 +414,7 @@ void _onMay15AddMay15Range0() {
         name: "2021",
         provider:
             AlbumMemoryProvider(year: 2021, month: today.month, day: today.day),
-        coverProvider: AlbumManualCoverProvider(coverFile: file),
+        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
         sortProvider: const AlbumTimeSortProvider(isAscending: false),
         lastUpdated: DateTime(2021),
       ),

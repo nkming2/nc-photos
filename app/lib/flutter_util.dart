@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 
 class CustomizableMaterialPageRoute extends MaterialPageRoute {
   CustomizableMaterialPageRoute({
@@ -18,4 +18,4 @@ class CustomizableMaterialPageRoute extends MaterialPageRoute {
   final Duration reverseTransitionDuration;
 }
 
-String getImageHeroTag(File file) => "imageHero(${file.path})";
+String getImageHeroTag(FileDescriptor file) => "imageHero(${file.fdPath})";

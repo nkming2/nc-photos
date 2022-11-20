@@ -15,6 +15,7 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -25,7 +26,6 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/update_album.dart';
@@ -93,30 +93,30 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     _albumUpdatedListener =
         AppEventListener<AlbumUpdatedEvent>(_onAlbumUpdatedEvent);
     _albumUpdatedListener.begin();
+    _fileRemovedListener.begin();
   }
 
   @override
   dispose() {
     super.dispose();
     _albumUpdatedListener.end();
+    _fileRemovedListener.end();
   }
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: Builder(
-          builder: (context) {
-            if (isEditMode) {
-              return Form(
-                key: _editFormKey,
-                child: _buildContent(context),
-              );
-            } else {
-              return _buildContent(context);
-            }
-          },
-        ),
+    return Scaffold(
+      body: Builder(
+        builder: (context) {
+          if (isEditMode) {
+            return Form(
+              key: _editFormKey,
+              child: _buildContent(context),
+            );
+          } else {
+            return _buildContent(context);
+          }
+        },
       ),
     );
   }
@@ -211,26 +211,19 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
-              ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context),
-            SliverIgnorePointer(
-              ignoring: isEditMode,
-              sliver: SliverOpacity(
-                opacity: isEditMode ? .25 : 1,
-                sliver: buildItemStreamList(
-                  maxCrossAxisExtent: thumbSize.toDouble(),
-                ),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context),
+          SliverIgnorePointer(
+            ignoring: isEditMode,
+            sliver: SliverOpacity(
+              opacity: isEditMode ? .25 : 1,
+              sliver: buildItemStreamList(
+                maxCrossAxisExtent: thumbSize.toDouble(),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -388,7 +381,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onDownloadPressed() {
-    DownloadHandler().downloadFiles(
+    final c = KiwiContainer().resolve<DiContainer>();
+    DownloadHandler(c).downloadFiles(
       widget.account,
       _sortedItems.whereType<AlbumFileItem>().map((e) => e.file).toList(),
       parentDir: _album!.name,
@@ -411,11 +405,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -477,11 +473,12 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<_FileListItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
@@ -581,6 +578,21 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     }
   }
 
+  void _onFileRemovedEvent(FileRemovedEvent ev) {
+    if (_backingFiles.any((f) => f.compareServerIdentity(ev.file))) {
+      setState(() {
+        _sortedItems = _sortedItems.where((i) {
+          if (i is AlbumFileItem) {
+            return !i.file.compareServerIdentity(ev.file);
+          } else {
+            return true;
+          }
+        }).toList();
+        _onSortedItemsUpdated();
+      });
+    }
+  }
+
   void _transformItems(List<AlbumItem> items) {
     _sortedItems = (_editAlbum ?? _album)!.sortProvider.sort(items);
     _onSortedItemsUpdated();
@@ -653,6 +665,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   Album? _editAlbum;
 
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
+  late final _fileRemovedListener =
+      AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
 
   static final _log =
       Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");

@@ -267,6 +267,18 @@ class Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
+  bool isSlideshowReverseOr(bool def) => isSlideshowReverse() ?? def;
+  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
+      PrefKey.isSlideshowReverse,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  int? getSeedColor() => provider.getInt(PrefKey.seedColor);
+  int getSeedColorOr(int def) => getSeedColor() ?? def;
+  Future<bool> setSeedColor(int value) => _set<int>(
+      PrefKey.seedColor, value, (key, value) => provider.setInt(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -581,6 +593,8 @@ enum PrefKey {
   memoriesRange,
   saveEditResultToServer,
   hasShownSaveEditResultDialog,
+  isSlideshowReverse,
+  seedColor,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -656,6 +670,10 @@ extension on PrefKey {
         return "saveEditResultToServer";
       case PrefKey.hasShownSaveEditResultDialog:
         return "hasShownSaveEditResultDialog";
+      case PrefKey.isSlideshowReverse:
+        return "isSlideshowReverse";
+      case PrefKey.seedColor:
+        return "seedColor";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

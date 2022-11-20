@@ -3,6 +3,8 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart' as app;
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table.dart';
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_isolate.dart';
@@ -508,6 +510,48 @@ extension SqliteDbExtension on SqliteDb {
     }
   }
 
+  Future<int> countMissingMetadataByFileIds({
+    Account? sqlAccount,
+    app.Account? appAccount,
+    required List<int> fileIds,
+  }) async {
+    assert((sqlAccount != null) != (appAccount != null));
+    final counts = await fileIds.withPartition((sublist) async {
+      final count = countAll(
+          filter:
+              images.lastUpdated.isNull() | imageLocations.version.isNull());
+      final query = selectOnly(files).join([
+        innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+            useColumns: false),
+        if (appAccount != null) ...[
+          innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
+              useColumns: false),
+          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+              useColumns: false),
+        ],
+        leftOuterJoin(images, images.accountFile.equalsExp(accountFiles.rowId),
+            useColumns: false),
+        leftOuterJoin(imageLocations,
+            imageLocations.accountFile.equalsExp(accountFiles.rowId),
+            useColumns: false),
+      ]);
+      query.addColumns([count]);
+      if (sqlAccount != null) {
+        query.where(accountFiles.account.equals(sqlAccount.rowId));
+      } else if (appAccount != null) {
+        query
+          ..where(servers.address.equals(appAccount.url))
+          ..where(accounts.userId
+              .equals(appAccount.userId.toCaseInsensitiveString()));
+      }
+      query
+        ..where(files.fileId.isIn(sublist))
+        ..where(whereFileIsSupportedImageMime());
+      return [await query.map((r) => r.read(count)).getSingle()];
+    }, maxByFileIdsSize);
+    return counts.reduce((value, element) => value + element);
+  }
+
   Future<void> truncate() async {
     await delete(servers).go();
     // technically deleting Servers table is enough to clear the followings, but
@@ -528,6 +572,18 @@ extension SqliteDbExtension on SqliteDb {
     await customStatement("UPDATE sqlite_sequence SET seq=0;");
   }
 
+  Expression<bool?> whereFileIsSupportedMime() {
+    return file_util.supportedFormatMimes
+        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .reduce((value, element) => value | element);
+  }
+
+  Expression<bool?> whereFileIsSupportedImageMime() {
+    return file_util.supportedImageFormatMimes
+        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .reduce((value, element) => value | element);
+  }
+
   static final _log = Logger("entity.sqlite_table_extension.SqliteDbExtension");
 }
 
@@ -536,6 +592,9 @@ enum FilesQueryMode {
   completeFile,
   expression,
 }
+
+typedef FilesQueryRelativePathBuilder = Expression<bool?> Function(
+    GeneratedColumn<String?> relativePath);
 
 /// Build a Files table query
 ///
@@ -590,8 +649,12 @@ class FilesQueryBuilder {
     _byRelativePath = path;
   }
 
+  void byOrRelativePath(String path) {
+    _byOrRelativePathBuilder((relativePath) => relativePath.equals(path));
+  }
+
   void byOrRelativePathPattern(String pattern) {
-    (_byOrRelativePathPatterns ??= []).add(pattern);
+    _byOrRelativePathBuilder((relativePath) => relativePath.like(pattern));
   }
 
   void byMimePattern(String pattern) {
@@ -667,13 +730,13 @@ class FilesQueryBuilder {
     if (_byRelativePath != null) {
       query.where(db.accountFiles.relativePath.equals(_byRelativePath));
     }
-    if (_byOrRelativePathPatterns?.isNotEmpty == true) {
-      final expression = _byOrRelativePathPatterns!
+    if (_byOrRelativePathBuilders?.isNotEmpty == true) {
+      final expression = _byOrRelativePathBuilders!
           .sublist(1)
           .fold<Expression<bool?>>(
-              db.accountFiles.relativePath.like(_byOrRelativePathPatterns![0]),
-              (previousValue, element) =>
-                  previousValue | db.accountFiles.relativePath.like(element));
+              _byOrRelativePathBuilders![0](db.accountFiles.relativePath),
+              (previousValue, builder) =>
+                  previousValue | builder(db.accountFiles.relativePath));
       query.where(expression);
     }
     if (_byMimePatterns?.isNotEmpty == true) {
@@ -714,6 +777,10 @@ class FilesQueryBuilder {
     return query;
   }
 
+  void _byOrRelativePathBuilder(FilesQueryRelativePathBuilder builder) {
+    (_byOrRelativePathBuilders ??= []).add(builder);
+  }
+
   final SqliteDb db;
 
   FilesQueryMode _queryMode = FilesQueryMode.file;
@@ -727,7 +794,7 @@ class FilesQueryBuilder {
   int? _byFileId;
   Iterable<int>? _byFileIds;
   String? _byRelativePath;
-  List<String>? _byOrRelativePathPatterns;
+  List<FilesQueryRelativePathBuilder>? _byOrRelativePathBuilders;
   List<String>? _byMimePatterns;
   bool? _byFavorite;
   int? _byDirRowId;

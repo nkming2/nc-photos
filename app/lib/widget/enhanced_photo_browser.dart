@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_local_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -17,7 +19,6 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
@@ -79,15 +80,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ScanLocalDirBloc, ScanLocalDirBlocState>(
+    return Scaffold(
+      body: BlocListener<ScanLocalDirBloc, ScanLocalDirBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ScanLocalDirBloc, ScanLocalDirBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ScanLocalDirBloc, ScanLocalDirBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -157,20 +156,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  _buildAppBar(context),
-                  buildItemStreamList(
-                    maxCrossAxisExtent: _thumbSize.toDouble(),
-                  ),
-                ],
-              ),
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                buildItemStreamList(
+                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                ),
+              ],
             ),
           ),
           if (state is ScanLocalDirBlocLoading || _buildItemQueue.isProcessing)
@@ -244,11 +236,13 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   Future<void> _onSelectionSharePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListLocalFileItem>()
         .map((e) => e.file)
         .toList();
     await ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {

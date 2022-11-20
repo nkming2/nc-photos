@@ -5,21 +5,15 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
-import 'package:path/path.dart' as path_lib;
 
-int compareFileDateTimeDescending(File x, File y) {
-  final tmp = y.bestDateTime.compareTo(x.bestDateTime);
-  if (tmp != 0) {
-    return tmp;
-  } else {
-    // compare file name if files are modified at the same time
-    return x.path.compareTo(y.path);
-  }
-}
+int compareFileDateTimeDescending(File x, File y) =>
+    compareFileDescriptorDateTimeDescending(x, y);
 
 class ImageLocation with EquatableMixin {
   const ImageLocation({
@@ -130,6 +124,7 @@ class Metadata with EquatableMixin {
     JsonObj json, {
     required MetadataUpgraderV1? upgraderV1,
     required MetadataUpgraderV2? upgraderV2,
+    required MetadataUpgraderV3? upgraderV3,
   }) {
     final jsonVersion = json["version"];
     JsonObj? result = json;
@@ -142,6 +137,13 @@ class Metadata with EquatableMixin {
     }
     if (jsonVersion < 3) {
       result = upgraderV2?.call(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 4) {
+      result = upgraderV3?.call(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -225,7 +227,7 @@ class Metadata with EquatableMixin {
   final Exif? exif;
 
   /// versioning of this class, use to upgrade old persisted metadata
-  static const version = 3;
+  static const version = 4;
 
   static final _log = Logger("entity.file.Metadata");
 }
@@ -293,7 +295,36 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
   static final _log = Logger("entity.file.MetadataUpgraderV2");
 }
 
-class File with EquatableMixin {
+/// Upgrade v3 Metadata to v4
+class MetadataUpgraderV3 implements MetadataUpgrader {
+  const MetadataUpgraderV3({
+    required this.fileContentType,
+    this.logFilePath,
+  });
+
+  @override
+  JsonObj? call(JsonObj json) {
+    if (fileContentType == "image/heic") {
+      // Version 3 metadata for heic may incorrectly have exif as null due to a
+      // bug in exifdart
+      if (json["exif"] == null) {
+        _log.fine("[call] Remove v3 metadata for file: $logFilePath");
+        // return null to let the app parse the file again
+        return null;
+      }
+    }
+    return json;
+  }
+
+  final String? fileContentType;
+
+  /// File path for logging only
+  final String? logFilePath;
+
+  static final _log = Logger("entity.file.MetadataUpgraderV3");
+}
+
+class File with EquatableMixin implements FileDescriptor {
   File({
     required String path,
     this.contentLength,
@@ -360,6 +391,10 @@ class File with EquatableMixin {
                 logFilePath: json["path"],
               ),
               upgraderV2: MetadataUpgraderV2(
+                fileContentType: json["contentType"],
+                logFilePath: json["path"],
+              ),
+              upgraderV3: MetadataUpgraderV3(
                 fileContentType: json["contentType"],
                 logFilePath: json["path"],
               ),
@@ -435,6 +470,7 @@ class File with EquatableMixin {
     return product + "}";
   }
 
+  @override
   JsonObj toJson() {
     return {
       "path": path,
@@ -533,6 +569,24 @@ class File with EquatableMixin {
         location,
       ];
 
+  @override
+  get fdPath => path;
+
+  @override
+  get fdId => fileId!;
+
+  @override
+  get fdMime => contentType;
+
+  @override
+  get fdIsArchived => isArchived ?? false;
+
+  @override
+  get fdIsFavorite => isFavorite ?? false;
+
+  @override
+  get fdDateTime => bestDateTime;
+
   final String path;
   final int? contentLength;
   final String? contentType;
@@ -556,61 +610,13 @@ class File with EquatableMixin {
 }
 
 extension FileExtension on File {
-  DateTime get bestDateTime =>
-      overrideDateTime ??
-      metadata?.exif?.dateTimeOriginal ??
-      lastModified ??
-      DateTime.now().toUtc();
+  DateTime get bestDateTime => file_util.getBestDateTime(
+        overrideDateTime: overrideDateTime,
+        dateTimeOriginal: metadata?.exif?.dateTimeOriginal,
+        lastModified: lastModified,
+      );
 
   bool isOwned(CiString userId) => ownerId == null || ownerId == userId;
-
-  /// Return the path of this file with the DAV part stripped
-  ///
-  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}. If this
-  /// file points to the user's root dir, return "."
-  ///
-  /// See: [strippedPathWithEmpty]
-  String get strippedPath {
-    if (path.contains("remote.php/dav/files")) {
-      final position = path.indexOf("/", "remote.php/dav/files/".length) + 1;
-      if (position == 0) {
-        // root dir path
-        return ".";
-      } else {
-        return path.substring(position);
-      }
-    } else {
-      return path;
-    }
-  }
-
-  /// Return the path of this file with the DAV part stripped
-  ///
-  /// WebDAV file path: remote.php/dav/files/{username}/{strippedPath}. If this
-  /// file points to the user's root dir, return an empty string
-  ///
-  /// See: [strippedPath]
-  String get strippedPathWithEmpty {
-    final path = strippedPath;
-    return path == "." ? "" : path;
-  }
-
-  String get filename => path_lib.basename(path);
-
-  /// Compare the server identity of two Files
-  ///
-  /// Return true if two Files point to the same file on server. Be careful that
-  /// this does NOT mean that the two Files are identical
-  bool compareServerIdentity(File other) {
-    if (fileId != null && other.fileId != null) {
-      return fileId == other.fileId;
-    } else {
-      return path == other.path;
-    }
-  }
-
-  /// hashCode to be used with [compareServerIdentity]
-  int get identityHashCode => (fileId ?? path).hashCode;
 }
 
 class FileServerIdentityComparator {

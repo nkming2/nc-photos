@@ -19,8 +19,8 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -155,56 +155,49 @@ class _HomePhotosState extends State<HomePhotos>
         children: [
           buildItemStreamListOuter(
             context,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: Theme.of(context).colorScheme.copyWith(
-                      secondary: AppTheme.getOverscrollIndicatorColor(context),
-                    ),
-              ),
-              child: DraggableScrollbar.semicircle(
-                controller: _scrollController,
-                overrideMaxScrollExtent: scrollExtent,
-                // status bar + app bar
-                topOffset: _calcAppBarExtent(context),
-                bottomOffset: _calcBottomAppBarExtent(context),
-                labelTextBuilder: (_) => _buildScrollLabel(context),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 40),
-                enabled: _isScrollbarVisible,
-                heightScrollThumb: 60,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context)
-                      .copyWith(scrollbars: false),
-                  child: RefreshIndicator(
-                    backgroundColor: Colors.grey[100],
-                    onRefresh: () async {
-                      _onRefreshSelected();
-                      await _waitRefresh();
-                    },
-                    child: CustomScrollView(
-                      controller: _scrollController,
-                      slivers: [
-                        _buildAppBar(context),
-                        _web?.buildContent(context),
-                        if (AccountPref.of(widget.account)
-                                .isEnableMemoryAlbumOr(true) &&
-                            _smartAlbums.isNotEmpty)
-                          _buildSmartAlbumList(context),
-                        buildItemStreamList(
-                          maxCrossAxisExtent: _thumbSize.toDouble(),
-                          onMaxExtentChanged: (value) {
-                            setState(() {
-                              _itemListMaxExtent = value;
-                            });
-                          },
-                          isEnableVisibilityCallback: true,
+            child: DraggableScrollbar.semicircle(
+              controller: _scrollController,
+              overrideMaxScrollExtent: scrollExtent,
+              // status bar + app bar
+              topOffset: _calcAppBarExtent(context),
+              bottomOffset: _calcBottomAppBarExtent(context),
+              labelTextBuilder: (_) => _buildScrollLabel(context),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 40),
+              backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+              enabled: _isScrollbarVisible,
+              heightScrollThumb: 60,
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    _onRefreshSelected();
+                    await _waitRefresh();
+                  },
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _buildAppBar(context),
+                      _web?.buildContent(context),
+                      if (AccountPref.of(widget.account)
+                              .isEnableMemoryAlbumOr(true) &&
+                          _smartAlbums.isNotEmpty)
+                        _buildSmartAlbumList(context),
+                      buildItemStreamList(
+                        maxCrossAxisExtent: _thumbSize.toDouble(),
+                        onMaxExtentChanged: (value) {
+                          setState(() {
+                            _itemListMaxExtent = value;
+                          });
+                        },
+                        isEnableVisibilityCallback: true,
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: _calcBottomAppBarExtent(context),
                         ),
-                        SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: _calcBottomAppBarExtent(context),
-                          ),
-                        ),
-                      ].whereType<Widget>().toList(),
-                    ),
+                      ),
+                    ].whereType<Widget>().toList(),
                   ),
                 ),
               ),
@@ -212,25 +205,17 @@ class _HomePhotosState extends State<HomePhotos>
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (state is ScanAccountDirBlocLoading ||
-                    _buildItemQueue.isProcessing)
-                  const LinearProgressIndicator(),
-                SizedBox(
-                  width: double.infinity,
-                  height: _calcBottomAppBarExtent(context),
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                      child: const ColoredBox(
-                        color: Colors.transparent,
-                      ),
-                    ),
+            child: SizedBox(
+              width: double.infinity,
+              height: _calcBottomAppBarExtent(context),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: Theme.of(context).appBarBlurFilter,
+                  child: const ColoredBox(
+                    color: Colors.transparent,
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -294,31 +279,42 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return HomeSliverAppBar(
-      account: widget.account,
-      actions: [
-        ZoomMenuButton(
-          initialZoom: _thumbZoomLevel,
-          minZoom: -1,
-          maxZoom: 2,
-          onZoomChanged: (value) {
-            _setThumbZoomLevel(value.round());
-            Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+    return BlocBuilder(
+      bloc: _bloc,
+      buildWhen: (previous, current) =>
+          previous is ScanAccountDirBlocLoading !=
+          current is ScanAccountDirBlocLoading,
+      builder: (context, state) {
+        return HomeSliverAppBar(
+          account: widget.account,
+          isShowProgressIcon: (state is ScanAccountDirBlocLoading ||
+                  _buildItemQueue.isProcessing) &&
+              !_isRefreshIndicatorActive,
+          actions: [
+            ZoomMenuButton(
+              initialZoom: _thumbZoomLevel,
+              minZoom: -1,
+              maxZoom: 2,
+              onZoomChanged: (value) {
+                _setThumbZoomLevel(value.round());
+                Pref().setHomePhotosZoomLevel(_thumbZoomLevel);
+              },
+            ),
+          ],
+          menuActions: [
+            PopupMenuItem(
+              value: _menuValueRefresh,
+              child: Text(L10n.global().refreshMenuLabel),
+            ),
+          ],
+          onSelectedMenuActions: (option) {
+            switch (option) {
+              case _menuValueRefresh:
+                _onRefreshSelected();
+                break;
+            }
           },
-        ),
-      ],
-      menuActions: [
-        PopupMenuItem(
-          value: _menuValueRefresh,
-          child: Text(L10n.global().refreshMenuLabel),
-        ),
-      ],
-      onSelectedMenuActions: (option) {
-        switch (option) {
-          case _menuValueRefresh:
-            _onRefreshSelected();
-            break;
-        }
+        );
       },
     );
   }
@@ -359,7 +355,7 @@ class _HomePhotosState extends State<HomePhotos>
         ?.item
         .as<PhotoListFileItem>()
         ?.file
-        .bestDateTime;
+        .fdDateTime;
     if (date != null) {
       final text = DateFormat(DateFormat.YEAR_ABBR_MONTH,
               Localizations.localeOf(context).languageCode)
@@ -368,10 +364,10 @@ class _HomePhotosState extends State<HomePhotos>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
           text,
-          style: const TextStyle(
-            color: AppTheme.primaryTextColorLight,
-            fontSize: 16,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
         ),
       );
     } else {
@@ -424,11 +420,13 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -439,10 +437,11 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -457,17 +456,19 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -475,13 +476,14 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -489,9 +491,9 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
@@ -523,23 +525,35 @@ class _HomePhotosState extends State<HomePhotos>
     _hasFiredMetadataTask.value = false;
   }
 
-  void _tryStartMetadataTask({
+  Future<void> _tryStartMetadataTask({
     bool ignoreFired = false,
-  }) {
+  }) async {
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
         (!_hasFiredMetadataTask.value || ignoreFired)) {
-      final missingMetadataCount =
-          _backingFiles.where(file_util.isMissingMetadata).length;
-      if (missingMetadataCount > 0) {
-        if (_web != null) {
-          _web!.startMetadataTask(missingMetadataCount);
-        } else {
-          service.startService();
+      try {
+        final c = KiwiContainer().resolve<DiContainer>();
+        final missingMetadataCount = await c.sqliteDb.use((db) async {
+          return await db.countMissingMetadataByFileIds(
+            appAccount: widget.account,
+            fileIds: _backingFiles.map((e) => e.fdId).toList(),
+          );
+        });
+        _log.info(
+            "[_tryStartMetadataTask] Missing count: $missingMetadataCount");
+        if (missingMetadataCount > 0) {
+          if (_web != null) {
+            _web!.startMetadataTask(missingMetadataCount);
+          } else {
+            unawaited(service.startService());
+          }
         }
-      }
 
-      _hasFiredMetadataTask.value = true;
+        _hasFiredMetadataTask.value = true;
+      } catch (e, stackTrace) {
+        _log.shout("[_tryStartMetadataTask] Failed starting metadata task", e,
+            stackTrace);
+      }
     }
   }
 
@@ -558,7 +572,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   /// Transform a File list to grid items
   void _transformItems(
-    List<File> files, {
+    List<FileDescriptor> files, {
     bool isSorted = false,
     bool isPostSuccess = false,
   }) {
@@ -614,11 +628,25 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _waitRefresh() async {
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      if (_bloc.state is! ScanAccountDirBlocLoading) {
-        return;
+    setState(() {
+      _isRefreshIndicatorActive = true;
+    });
+    try {
+      while (true) {
+        await Future.delayed(const Duration(seconds: 1));
+        if (_bloc.state is! ScanAccountDirBlocLoading) {
+          return;
+        }
       }
+    } finally {
+      // To prevent the app bar icon appearing for a very short while
+      unawaited(Future.delayed(const Duration(seconds: 2)).then((_) {
+        if (mounted) {
+          setState(() {
+            _isRefreshIndicatorActive = false;
+          });
+        }
+      }));
     }
   }
 
@@ -666,7 +694,8 @@ class _HomePhotosState extends State<HomePhotos>
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
 
-  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
+  double _calcBottomAppBarExtent(BuildContext context) =>
+      NavigationBarTheme.of(context).height!;
 
   Primitive<bool> get _hasFiredMetadataTask {
     final name = bloc_util.getInstNameForRootAwareAccount(
@@ -700,7 +729,7 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
 
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
   var _smartAlbums = <Album>[];
 
   final _buildItemQueue =
@@ -733,6 +762,7 @@ class _HomePhotosState extends State<HomePhotos>
   late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
 
   var _isScrollbarVisible = false;
+  var _isRefreshIndicatorActive = false;
 
   static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
@@ -1007,7 +1037,9 @@ class _SmartAlbumItem extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     child: Text(
                       label,
-                      style: TextStyle(color: AppTheme.primaryTextColorDark),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).onDarkSurface,
+                          ),
                     ),
                   ),
                 ),

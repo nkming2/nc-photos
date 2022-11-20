@@ -16,6 +16,7 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -28,6 +29,7 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
+import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -102,15 +104,13 @@ class _PersonBrowserState extends State<PersonBrowser>
 
   @override
   build(BuildContext context) {
-    return AppTheme(
-      child: Scaffold(
-        body: BlocListener<ListFaceFileBloc, ListFaceFileBlocState>(
+    return Scaffold(
+      body: BlocListener<ListFaceFileBloc, ListFaceFileBlocState>(
+        bloc: _bloc,
+        listener: (context, state) => _onStateChange(context, state),
+        child: BlocBuilder<ListFaceFileBloc, ListFaceFileBlocState>(
           bloc: _bloc,
-          listener: (context, state) => _onStateChange(context, state),
-          child: BlocBuilder<ListFaceFileBloc, ListFaceFileBlocState>(
-            bloc: _bloc,
-            builder: (context, state) => _buildContent(context, state),
-          ),
+          builder: (context, state) => _buildContent(context, state),
         ),
       ),
     );
@@ -136,28 +136,20 @@ class _PersonBrowserState extends State<PersonBrowser>
   Widget _buildContent(BuildContext context, ListFaceFileBlocState state) {
     return buildItemStreamListOuter(
       context,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                secondary: AppTheme.getOverscrollIndicatorColor(context),
+      child: CustomScrollView(
+        slivers: [
+          _buildAppBar(context, state),
+          if (state is ListFaceFileBlocLoading || _buildItemQueue.isProcessing)
+            const SliverToBoxAdapter(
+              child: Align(
+                alignment: Alignment.center,
+                child: LinearProgressIndicator(),
               ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            _buildAppBar(context, state),
-            if (state is ListFaceFileBlocLoading ||
-                _buildItemQueue.isProcessing)
-              const SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            buildItemStreamList(
-              maxCrossAxisExtent: _thumbSize.toDouble(),
             ),
-          ],
-        ),
+          buildItemStreamList(
+            maxCrossAxisExtent: _thumbSize.toDouble(),
+          ),
+        ],
       ),
     );
   }
@@ -174,43 +166,12 @@ class _PersonBrowserState extends State<PersonBrowser>
     return SliverAppBar(
       floating: true,
       titleSpacing: 0,
-      title: Row(
-        children: [
-          SizedBox(
-            height: 40,
-            width: 40,
-            child: _buildFaceImage(context),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.person.name,
-                  style: TextStyle(
-                    color: AppTheme.getPrimaryTextColor(context),
-                  ),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.clip,
-                ),
-                if (state is! ListFaceFileBlocLoading &&
-                    !_buildItemQueue.isProcessing)
-                  Text(
-                    L10n.global().personPhotoCountText(_backingFiles.length),
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                      fontSize: 12,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
+      title: AppBarTitleContainer(
+        icon: _buildFaceImage(context),
+        title: Text(widget.person.name),
+        subtitle:
+            Text(L10n.global().personPhotoCountText(_backingFiles.length)),
       ),
-      // ),
       actions: [
         ZoomMenuButton(
           initialZoom: _thumbZoomLevel,
@@ -253,7 +214,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     } catch (_) {
       cover = Icon(
         Icons.person,
-        color: Colors.white.withOpacity(.8),
+        color: Theme.of(context).listPlaceholderForegroundColor,
         size: 24,
       );
     }
@@ -261,7 +222,7 @@ class _PersonBrowserState extends State<PersonBrowser>
     return ClipRRect(
       borderRadius: BorderRadius.circular(64),
       child: Container(
-        color: AppTheme.getListItemBackgroundColor(context),
+        color: Theme.of(context).listPlaceholderBackgroundColor,
         constraints: const BoxConstraints.expand(),
         child: cover,
       ),
@@ -351,11 +312,13 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -366,10 +329,11 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -384,17 +348,19 @@ class _PersonBrowserState extends State<PersonBrowser>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -402,13 +368,14 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -416,16 +383,15 @@ class _PersonBrowserState extends State<PersonBrowser>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
 
   void _onFilePropertyUpdated(FilePropertyUpdatedEvent ev) {
-    if (_backingFiles.containsIf(ev.file, (a, b) => a.fileId == b.fileId) !=
-        true) {
+    if (_backingFiles.containsIf(ev.file, (a, b) => a.fdId == b.fdId) != true) {
       return;
     }
     _refreshThrottler.trigger(
@@ -474,7 +440,7 @@ class _PersonBrowserState extends State<PersonBrowser>
   late final DiContainer _c;
 
   late final ListFaceFileBloc _bloc = ListFaceFileBloc(_c);
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
 
   final _buildItemQueue =
       ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();

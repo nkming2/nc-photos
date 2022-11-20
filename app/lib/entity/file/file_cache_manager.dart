@@ -6,6 +6,8 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
@@ -178,6 +180,8 @@ class FileSqliteCacheUpdater {
     // for updates, we use batch to speed up the process
     await db.batch((batch) {
       for (final f in sqlFiles) {
+        final isSupportedImageFormat =
+            file_util.isSupportedImageMime(f.file.contentType.value ?? "");
         final thisRowIds = rowIdsMap[f.file.fileId.value];
         if (thisRowIds != null) {
           // updates
@@ -199,6 +203,14 @@ class FileSqliteCacheUpdater {
               where: (sql.$ImagesTable t) =>
                   t.accountFile.equals(thisRowIds.accountFileRowId),
             );
+          } else {
+            if (isSupportedImageFormat) {
+              batch.deleteWhere(
+                db.images,
+                (sql.$ImagesTable t) =>
+                    t.accountFile.equals(thisRowIds.accountFileRowId),
+              );
+            }
           }
           if (f.imageLocation != null) {
             batch.update(
@@ -207,6 +219,14 @@ class FileSqliteCacheUpdater {
               where: (sql.$ImageLocationsTable t) =>
                   t.accountFile.equals(thisRowIds.accountFileRowId),
             );
+          } else {
+            if (isSupportedImageFormat) {
+              batch.deleteWhere(
+                db.imageLocations,
+                (sql.$ImageLocationsTable t) =>
+                    t.accountFile.equals(thisRowIds.accountFileRowId),
+              );
+            }
           }
           if (f.trash != null) {
             batch.update(
@@ -214,6 +234,11 @@ class FileSqliteCacheUpdater {
               f.trash!,
               where: (sql.$TrashesTable t) =>
                   t.file.equals(thisRowIds.fileRowId),
+            );
+          } else {
+            batch.deleteWhere(
+              db.trashes,
+              (sql.$TrashesTable t) => t.file.equals(thisRowIds.fileRowId),
             );
           }
           _onRowCached(thisRowIds.fileRowId, f, dir);

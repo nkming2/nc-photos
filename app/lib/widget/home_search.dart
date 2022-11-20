@@ -12,6 +12,7 @@ import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -73,14 +74,7 @@ class _HomeSearchState extends State<HomeSearch>
       listener: (context, state) => _onStateChange(context, state),
       child: BlocBuilder<SearchBloc, SearchBlocState>(
         bloc: _bloc,
-        builder: (context, state) => Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  secondary: AppTheme.getOverscrollIndicatorColor(context),
-                ),
-          ),
-          child: _buildContent(context, state),
-        ),
+        builder: (context, state) => _buildContent(context, state),
       ),
     );
   }
@@ -200,7 +194,7 @@ class _HomeSearchState extends State<HomeSearch>
                       height: _calcBottomAppBarExtent(context),
                       child: ClipRect(
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                          filter: Theme.of(context).appBarBlurFilter,
                           child: const ColoredBox(
                             color: Colors.transparent,
                           ),
@@ -329,7 +323,7 @@ class _HomeSearchState extends State<HomeSearch>
     return Align(
       alignment: Alignment.topCenter,
       child: ColoredBox(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).colorScheme.background,
         child: SingleChildScrollView(
           child: HomeSearchSuggestion(
             account: widget.account,
@@ -438,11 +432,13 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   void _onSelectionSharePressed(BuildContext context) {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
     ShareHandler(
+      c,
       context: context,
       clearSelection: () {
         setState(() {
@@ -453,10 +449,11 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    return AddSelectionToAlbumHandler()(
+    final c = KiwiContainer().resolve<DiContainer>();
+    return AddSelectionToAlbumHandler(c)(
       context: context,
       account: widget.account,
-      selectedFiles: selectedListItems
+      selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
           .toList(),
@@ -471,17 +468,19 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   void _onSelectionDownloadPressed() {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selected = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
         .toList();
-    DownloadHandler().downloadFiles(widget.account, selected);
+    DownloadHandler(c).downloadFiles(widget.account, selected);
     setState(() {
       clearSelectedItems();
     });
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -489,13 +488,14 @@ class _HomeSearchState extends State<HomeSearch>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(KiwiContainer().resolve<DiContainer>())(
+    await ArchiveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
     );
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
+    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -503,9 +503,9 @@ class _HomeSearchState extends State<HomeSearch>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler()(
+    await RemoveSelectionHandler(c)(
       account: widget.account,
-      selectedFiles: selectedFiles,
+      selection: selectedFiles,
       isMoveToTrash: true,
     );
   }
@@ -552,7 +552,8 @@ class _HomeSearchState extends State<HomeSearch>
     }
   }
 
-  double _calcBottomAppBarExtent(BuildContext context) => kToolbarHeight;
+  double _calcBottomAppBarExtent(BuildContext context) =>
+      NavigationBarTheme.of(context).height!;
 
   bool _isShowLanding(SearchBlocState state) => state is SearchBlocInit;
 
@@ -583,7 +584,7 @@ class _HomeSearchState extends State<HomeSearch>
   late final _thumbSize =
       photo_list_util.getThumbSize(_thumbZoomLevel).toDouble();
 
-  var _backingFiles = <File>[];
+  var _backingFiles = <FileDescriptor>[];
 
   static final _log = Logger("widget.home_search._HomeSearchState");
 }
@@ -641,21 +642,18 @@ class _FilterBubbleList extends StatelessWidget {
   }
 
   Widget _buildBubble(BuildContext context, String label) {
-    return Container(
-      height: 28,
-      decoration: BoxDecoration(
-        color: AppTheme.getUnfocusedIconColor(context),
-        borderRadius: const BorderRadius.all(Radius.circular(14)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 12,
-          color: AppTheme.getPrimaryTextColorInverse(context),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: FilterChip(
+        elevation: 1,
+        pressElevation: 1,
+        showCheckmark: false,
+        visualDensity: VisualDensity.compact,
+        selected: true,
+        selectedColor:
+            Theme.of(context).elevate(Theme.of(context).colorScheme.surface, 5),
+        label: Text(label),
+        onSelected: (_) {},
       ),
     );
   }
@@ -800,7 +798,7 @@ class _FilterDropdownState<T> extends State<_FilterDropdown<T>> {
           child: Text(
             widget.label,
             style: TextStyle(
-              color: AppTheme.getSecondaryTextColor(context),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),

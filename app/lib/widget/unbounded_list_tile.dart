@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/material3.dart';
 
 /// A [ListTile]-like widget with unbounded height
 class UnboundedListTile extends StatelessWidget {
@@ -28,14 +28,16 @@ class UnboundedListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultTextStyle(
-                  style: Theme.of(context).textTheme.subtitle1!,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: M3.of(context).listTile.enabled.headline,
+                      ),
                   child: title,
                 ),
                 if (subtitle != null)
                   DefaultTextStyle(
-                    style: TextStyle(
-                      color: AppTheme.getSecondaryTextColor(context),
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: M3.of(context).listTile.enabled.supportingText,
+                        ),
                     child: subtitle!,
                   ),
               ],
