@@ -28,18 +28,42 @@ class Response {
   final dynamic body;
 }
 
+class BasicAuth {
+  BasicAuth(this.username, this.password);
+
+  BasicAuth.fromAccount(Account account)
+      : this(
+          account.username2,
+          account.password,
+        );
+
+  @override
+  toString() {
+    final authString = base64.encode(utf8.encode("$username:$password"));
+    return "Basic $authString";
+  }
+
+  final String username;
+  final String password;
+}
+
 class Api {
-  Api(this._account);
+  Api(Account account)
+      : _baseUrl = Uri.parse(account.url),
+        _auth = BasicAuth.fromAccount(account);
+
+  Api.fromBaseUrl(Uri baseUrl) : _baseUrl = baseUrl;
 
   ApiFiles files() => ApiFiles(this);
+
   ApiOcs ocs() => ApiOcs(this);
+
   ApiSystemtags systemtags() => ApiSystemtags(this);
+
   ApiSystemtagsRelations systemtagsRelations() => ApiSystemtagsRelations(this);
 
   static String getAuthorizationHeaderValue(Account account) {
-    final auth =
-        base64.encode(utf8.encode("${account.username2}:${account.password}"));
-    return "Basic $auth";
+    return BasicAuth.fromAccount(account).toString();
   }
 
   Future<Response> request(
@@ -52,10 +76,12 @@ class Api {
     bool isResponseString = true,
   }) async {
     final url = _makeUri(endpoint, queryParameters: queryParameters);
-    final req = http.Request(method, url)
-      ..headers.addAll({
-        "authorization": getAuthorizationHeaderValue(_account),
+    final req = http.Request(method, url);
+    if (_auth != null) {
+      req.headers.addAll({
+        "authorization": _auth.toString(),
       });
+    }
     if (header != null) {
       // turn all to lower case, since HTTP headers are case-insensitive, this
       // smooths our processing (if any)
@@ -89,19 +115,16 @@ class Api {
     String endpoint, {
     Map<String, String>? queryParameters,
   }) {
-    final splits = _account.address.split("/");
-    final authority = splits[0];
-    final path = splits.length > 1
-        ? splits.sublist(1).join("/") + "/$endpoint"
-        : endpoint;
-    if (_account.scheme == "http") {
-      return Uri.http(authority, path, queryParameters);
+    final path = _baseUrl.path + "/$endpoint";
+    if (_baseUrl.scheme == "http") {
+      return Uri.http(_baseUrl.authority, path, queryParameters);
     } else {
-      return Uri.https(authority, path, queryParameters);
+      return Uri.https(_baseUrl.authority, path, queryParameters);
     }
   }
 
-  final Account _account;
+  final Uri _baseUrl;
+  BasicAuth? _auth;
 
   static final _log = Logger("api.api.Api");
 }
@@ -451,7 +474,9 @@ class ApiOcs {
   ApiOcs(this._api);
 
   ApiOcsDav dav() => ApiOcsDav(this);
+
   ApiOcsFacerecognition facerecognition() => ApiOcsFacerecognition(this);
+
   ApiOcsFilesSharing filesSharing() => ApiOcsFilesSharing(this);
 
   final Api _api;
@@ -499,6 +524,7 @@ class ApiOcsFacerecognition {
   ApiOcsFacerecognition(this._ocs);
 
   ApiOcsFacerecognitionPersons persons() => ApiOcsFacerecognitionPersons(this);
+
   ApiOcsFacerecognitionPerson person(String name) =>
       ApiOcsFacerecognitionPerson(this, name);
 
@@ -571,8 +597,10 @@ class ApiOcsFilesSharing {
   ApiOcsFilesSharing(this._ocs);
 
   ApiOcsFilesSharingShares shares() => ApiOcsFilesSharingShares(this);
+
   ApiOcsFilesSharingShare share(String shareId) =>
       ApiOcsFilesSharingShare(this, shareId);
+
   ApiOcsFilesSharingSharees sharees() => ApiOcsFilesSharingSharees(this);
 
   final ApiOcs _ocs;
