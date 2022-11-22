@@ -4,6 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/legacy/connect.dart' as legacy;
+import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -137,6 +139,7 @@ class _MyAppState extends State<MyApp>
         Setup.routeName: (context) => const Setup(),
         SignIn.routeName: (context) => const SignIn(),
         Splash.routeName: (context) => const Splash(),
+        legacy.SignIn.routeName: (_) => const legacy.SignIn(),
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -145,6 +148,7 @@ class _MyAppState extends State<MyApp>
     route ??= _handleBasicRoute(settings);
     route ??= _handleViewerRoute(settings);
     route ??= _handleConnectRoute(settings);
+    route ??= _handleConnectLegacyRoute(settings);
     route ??= _handleHomeRoute(settings);
     route ??= _handleRootPickerRoute(settings);
     route ??= _handleAlbumBrowserRoute(settings);
@@ -217,6 +221,19 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleConnectRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleConnectLegacyRoute(RouteSettings settings) {
+    try {
+      if (settings.name == legacy.Connect.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as legacy.ConnectArguments;
+        return legacy.Connect.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe("[_handleConnectLegacyRoute] Failed while handling route", e);
     }
     return null;
   }
