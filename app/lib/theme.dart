@@ -28,6 +28,8 @@ extension ThemeExtension on ThemeData {
         tileMode: TileMode.mirror,
       );
 
+  Color get nextcloudBlue => const Color(0xFF0082C9);
+
   /// Apply surface tint to [color] based on the [elevation] level
   ///
   /// This function is a temporary workaround for widgets not yet fully

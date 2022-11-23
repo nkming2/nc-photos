@@ -1,5 +1,6 @@
 {
   "cs": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -180,6 +181,7 @@
   ],
 
   "de": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -372,6 +374,7 @@
   ],
 
   "el": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -454,6 +457,7 @@
   ],
 
   "es": [
+    "signInHeaderText2",
     "settingsEnhanceMaxResolutionTitle2",
     "settingsSeedColorTitle",
     "settingsSeedColorPickerTitle",
@@ -462,12 +466,14 @@
   ],
 
   "fi": [
+    "signInHeaderText2",
     "settingsSeedColorTitle",
     "settingsSeedColorPickerTitle"
   ],
 
   "fr": [
     "collectionsTooltip",
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -569,6 +575,7 @@
   ],
 
   "pl": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -688,6 +695,7 @@
   ],
 
   "pt": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -786,6 +794,7 @@
   ],
 
   "ru": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -884,6 +893,7 @@
   ],
 
   "zh": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -982,6 +992,7 @@
   ],
 
   "zh_Hant": [
+    "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",

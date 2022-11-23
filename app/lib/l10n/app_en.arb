@@ -231,11 +231,15 @@
 	},
 	"signInHeaderText": "Sign in to Nextcloud server",
 	"@signInHeaderText": {
-		"description": "Inform user what to do in sign in widget"
+		"description": "(deprecated, may be removed in the future)"
 	},
 	"signIn2faHintText": "Use an app password if you have two-factor authentication enabled in the server",
 	"@signIn2faHintText": {
-		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+		"description": "(deprecated, may be removed in the future)"
+	},
+	"signInHeaderText2": "Nextcloud\nSign in",
+	"@signInHeaderText2": {
+		"description": "Sign in to Nextcloud server"
 	},
 	"serverAddressInputHint": "Server address",
 	"@serverAddressInputHint": {
@@ -1477,7 +1481,6 @@
 	"@imageSaveOptionDialogServerButtonLabel": {
 		"description": "Save the image on your Nextcloud server"
 	},
-
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

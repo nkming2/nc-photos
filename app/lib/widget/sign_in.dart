@@ -10,7 +10,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:nc_photos/string_extension.dart';
@@ -33,8 +32,24 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   @override
   build(BuildContext context) {
-    return Scaffold(
-      body: Builder(builder: (context) => _buildContent(context)),
+    return Theme(
+      data: buildDarkTheme().copyWith(
+        scaffoldBackgroundColor: Colors.transparent,
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+          ),
+        ),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const _SingInBackground(),
+          Scaffold(
+            body: Builder(builder: (context) => _buildContent(context)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -57,156 +72,62 @@ class _SignInState extends State<SignIn> {
         ],
       );
     } else {
-      return SafeArea(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: viewportConstraints.maxHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Text(
-                            L10n.global().signInHeaderText,
-                            style: Theme.of(context).textTheme.headline5,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth:
-                                  Theme.of(context).widthLimitedContentMaxWidth,
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
-                            child: _buildForm(context),
-                          ),
-                        ),
-                        if (!platform_k.isWeb) Expanded(child: Container()),
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth:
-                                Theme.of(context).widthLimitedContentMaxWidth,
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (!ModalRoute.of(context)!.isFirst)
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(MaterialLocalizations.of(context)
-                                      .cancelButtonLabel),
-                                )
-                              else
-                                Container(),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ==
-                                      true) {
-                                    _connect();
-                                  }
-                                },
-                                child: Text(L10n.global().connectButtonLabel),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+      return Form(
+        key: _formKey,
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: Theme.of(context).widthLimitedContentMaxWidth,
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: _SignInBody(
+                        onSchemeSaved: (scheme) {
+                          _formValue.scheme = scheme;
+                        },
+                        onServerUrlSaved: (url) {
+                          _formValue.address = url;
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (!ModalRoute.of(context)!.isFirst)
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(MaterialLocalizations.of(context)
+                              .cancelButtonLabel),
+                        )
+                      else
+                        Container(),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() == true) {
+                            _connect();
+                          }
+                        },
+                        child: Text(L10n.global().connectButtonLabel),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }
-  }
-
-  Widget _buildForm(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Icon(
-            Icons.cloud,
-            color: Theme.of(context).colorScheme.primary,
-            size: 72,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            SizedBox(
-              width: 64,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButtonFormField<_Scheme>(
-                  value: _scheme,
-                  items: [_Scheme.http, _Scheme.https]
-                      .map((e) => DropdownMenuItem<_Scheme>(
-                            value: e,
-                            child: Text(e.toValueString()),
-                          ))
-                      .toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      _scheme = newValue!;
-                    });
-                  },
-                  onSaved: (value) {
-                    _formValue.scheme = value!.toValueString();
-                  },
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4),
-              child: Text("://"),
-            ),
-            Expanded(
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: L10n.global().serverAddressInputHint,
-                ),
-                keyboardType: TextInputType.url,
-                validator: (value) {
-                  if (value!.trim().trimRightAny("/").isEmpty) {
-                    return L10n.global().serverAddressInputInvalidEmpty;
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _formValue.address = value!.trim().trimRightAny("/");
-                },
-              ),
-            ),
-          ],
-        ),
-        if (kDebugMode) ...[
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, legacy.SignIn.routeName);
-            },
-            child: const Text(
-              "Legacy sign in",
-              style: TextStyle(decoration: TextDecoration.underline),
-            ),
-          ),
-        ],
-      ],
-    );
   }
 
   Future<void> _connect() async {
@@ -264,7 +185,6 @@ class _SignInState extends State<SignIn> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  var _scheme = _Scheme.https;
   var _isConnecting = false;
 
   final _formValue = _FormValue();
@@ -272,24 +192,199 @@ class _SignInState extends State<SignIn> {
   static final _log = Logger("widget.sign_in._SignInState");
 }
 
-enum _Scheme {
-  http,
-  https,
+/// A nice background that matches Nextcloud without breaking any copyright law
+class _SingInBackground extends StatelessWidget {
+  const _SingInBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ColoredBox(color: Theme.of(context).nextcloudBlue),
+        const Positioned(
+          bottom: 60,
+          left: -200,
+          child: Opacity(
+            opacity: .22,
+            child: Icon(
+              Icons.circle_outlined,
+              color: Colors.white,
+              size: 340,
+            ),
+          ),
+        ),
+        const Positioned(
+          top: -120,
+          left: -180,
+          right: 0,
+          child: Opacity(
+            opacity: .1,
+            child: Icon(
+              Icons.circle_outlined,
+              color: Colors.white,
+              size: 620,
+            ),
+          ),
+        ),
+        const Positioned(
+          bottom: -50,
+          right: -80,
+          child: Opacity(
+            opacity: .27,
+            child: Icon(
+              Icons.circle_outlined,
+              color: Colors.white,
+              size: 400,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-extension on _Scheme {
+class _SignInBody extends StatelessWidget {
+  const _SignInBody({
+    this.onSchemeSaved,
+    this.onServerUrlSaved,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            L10n.global().signInHeaderText2,
+            style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w100,
+                ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SizedBox(
+                width: 64,
+                child: _SchemeDropdown(
+                  onSaved: onSchemeSaved,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: Text("://"),
+              ),
+              Expanded(
+                child: _ServerUrlInput(
+                  onSaved: onServerUrlSaved,
+                ),
+              ),
+            ],
+          ),
+          if (kDebugMode) ...[
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () {
+                Navigator.pushReplacementNamed(
+                    context, legacy.SignIn.routeName);
+              },
+              child: const Text(
+                "Legacy sign in",
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  final void Function(String scheme)? onSchemeSaved;
+  final void Function(String url)? onServerUrlSaved;
+}
+
+enum _Scheme {
+  http,
+  https;
+
   String toValueString() {
     switch (this) {
-      case _Scheme.http:
+      case http:
         return "http";
 
-      case _Scheme.https:
+      case https:
         return "https";
-
-      default:
-        throw StateError("Unknown value: $this");
     }
   }
+}
+
+class _SchemeDropdown extends StatefulWidget {
+  const _SchemeDropdown({
+    this.onSaved,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _SchemeDropdownState();
+
+  final void Function(String scheme)? onSaved;
+}
+
+class _SchemeDropdownState extends State<_SchemeDropdown> {
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonHideUnderline(
+      child: DropdownButtonFormField<_Scheme>(
+        value: _scheme,
+        items: _Scheme.values
+            .map((e) => DropdownMenuItem<_Scheme>(
+                  value: e,
+                  child: Text(e.toValueString()),
+                ))
+            .toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _scheme = newValue!;
+          });
+        },
+        onSaved: (value) {
+          widget.onSaved?.call(value!.toValueString());
+        },
+      ),
+    );
+  }
+
+  var _scheme = _Scheme.https;
+}
+
+class _ServerUrlInput extends StatelessWidget {
+  const _ServerUrlInput({
+    this.onSaved,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        hintText: L10n.global().serverAddressInputHint,
+      ),
+      keyboardType: TextInputType.url,
+      validator: (value) {
+        if (value!.trim().trimRightAny("/").isEmpty) {
+          return L10n.global().serverAddressInputInvalidEmpty;
+        }
+        return null;
+      },
+      onSaved: (value) {
+        onSaved?.call(value!.trim().trimRightAny("/"));
+      },
+    );
+  }
+
+  final void Function(String url)? onSaved;
 }
 
 class _FormValue {
