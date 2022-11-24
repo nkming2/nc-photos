@@ -18,6 +18,7 @@ import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/string_extension.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/cloud_progress_indicator.dart';
@@ -67,11 +68,20 @@ class _ConnectState extends State<Connect> {
 
   @override
   build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<AppPasswordExchangeBloc, AppPasswordExchangeBlocState>(
-        bloc: _bloc,
-        listener: (context, state) => _onStateChange(context, state),
-        child: Builder(builder: (context) => _buildContent(context)),
+    return Theme(
+      data: buildDarkTheme().copyWith(
+        scaffoldBackgroundColor: Theme.of(context).nextcloudBlue,
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Colors.white,
+        ),
+      ),
+      child: Scaffold(
+        body:
+            BlocListener<AppPasswordExchangeBloc, AppPasswordExchangeBlocState>(
+          bloc: _bloc,
+          listener: (context, state) => _onStateChange(context, state),
+          child: Builder(builder: (context) => _buildContent(context)),
+        ),
       ),
     );
   }
