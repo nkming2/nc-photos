@@ -20,6 +20,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
+import 'package:nc_photos/widget/cloud_progress_indicator.dart';
 
 class ConnectArguments {
   ConnectArguments(this.uri);
@@ -88,15 +89,12 @@ class _ConnectState extends State<Connect> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.cloud,
-              size: 128,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            const CloudProgressIndicator(size: 192),
+            const SizedBox(height: 16),
             Text(
               L10n.global().connectingToServer(widget.uri),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             )
           ],
         ),

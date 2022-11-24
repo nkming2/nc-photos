@@ -9,8 +9,8 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
-import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/app_bar_title_container.dart';
+import 'package:nc_photos/widget/cloud_progress_indicator.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
 
@@ -42,7 +42,7 @@ class HomeSliverAppBar extends StatelessWidget {
           title: Text(accountLabel ?? account.address),
           subtitle: accountLabel == null ? Text(account.username2) : null,
           icon: isShowProgressIcon
-              ? const AppBarCircularProgressIndicator()
+              ? const CloudProgressIndicator(size: 36)
               : (account.scheme == "http"
                   ? Icon(
                       Icons.no_encryption_outlined,
