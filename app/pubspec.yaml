@@ -58,6 +58,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter_background_service.git
       ref: v0.2.6-nc-photos-2
   flutter_bloc: ^8.0.0
+  flutter_colorpicker: ^1.0.3
   flutter_isolate:
     git:
       url: https://gitlab.com/nc-photos/flutter_isolate.git
