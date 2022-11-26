@@ -414,6 +414,10 @@
 	"@settingsSeedColorTitle": {
 		"description": "Customize the colors used in app"
 	},
+	"settingsSeedColorDescription": "Used to derive all colors used in the app",
+	"@settingsSeedColorDescription": {
+		"description": "Customize the colors used in app"
+	},
 	"settingsSeedColorPickerTitle": "Pick a color",
 	"@settingsSeedColorPickerTitle": {
 		"description": "Dialog to customize the colors used in app"

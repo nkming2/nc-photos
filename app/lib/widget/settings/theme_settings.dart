@@ -49,6 +49,7 @@ class _ThemeSettingsState extends State<ThemeSettings> {
             [
               ListTile(
                 title: Text(L10n.global().settingsSeedColorTitle),
+                subtitle: Text(L10n.global().settingsSeedColorDescription),
                 trailing: Icon(
                   Icons.circle,
                   size: 32,
