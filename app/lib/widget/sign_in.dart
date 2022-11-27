@@ -35,6 +35,9 @@ class _SignInState extends State<SignIn> {
     return Theme(
       data: buildDarkTheme().copyWith(
         scaffoldBackgroundColor: Colors.transparent,
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Colors.white,
+        ),
         textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(Colors.white),
@@ -229,7 +232,7 @@ class _SingInBackground extends StatelessWidget {
         ),
         const Positioned(
           bottom: -50,
-          right: -80,
+          right: -120,
           child: Opacity(
             opacity: .27,
             child: Icon(
