@@ -102,7 +102,7 @@ class _ConnectState extends State<Connect> {
             const CloudProgressIndicator(size: 192),
             const SizedBox(height: 16),
             Text(
-              L10n.global().connectingToServer(widget.uri),
+              L10n.global().connectingToServer2,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             )

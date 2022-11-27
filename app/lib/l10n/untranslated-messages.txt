@@ -1,5 +1,6 @@
 {
   "cs": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -182,6 +183,7 @@
   ],
 
   "de": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -376,6 +378,7 @@
   ],
 
   "el": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -460,6 +463,7 @@
   ],
 
   "es": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsEnhanceMaxResolutionTitle2",
     "settingsSeedColorTitle",
@@ -470,6 +474,7 @@
   ],
 
   "fi": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsSeedColorTitle",
     "settingsSeedColorDescription",
@@ -478,6 +483,7 @@
 
   "fr": [
     "collectionsTooltip",
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -581,6 +587,7 @@
   ],
 
   "pl": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -702,6 +709,7 @@
   ],
 
   "pt": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -802,6 +810,7 @@
   ],
 
   "ru": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -902,6 +911,7 @@
   ],
 
   "zh": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -1002,6 +1012,7 @@
   ],
 
   "zh_Hant": [
+    "connectingToServer2",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",

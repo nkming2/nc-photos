@@ -206,12 +206,16 @@
 	},
 	"connectingToServer": "Connecting to\n{server}",
 	"@connectingToServer": {
-		"description": "Inform user that the app is connecting to a server",
+		"description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
 		"placeholders": {
 			"server": {
 				"example": "http://www.example.com"
 			}
 		}
+	},
+	"connectingToServer2": "Waiting for the server to authorize us",
+	"@connectingToServer2": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
 	},
 	"nameInputHint": "Name",
 	"@nameInputHint": {
