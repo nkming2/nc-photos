@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/exception.dart';
 
 abstract class AppPasswordExchangeBlocEvent {
@@ -231,7 +231,8 @@ class AppPasswordExchangeBloc
       final account = Account(
         Account.newId(),
         response.server.scheme,
-        response.server.authority,
+        response.server.authority +
+            (response.server.path.isEmpty ? "" : response.server.path),
         response.loginName.toCi(),
         response.loginName,
         response.appPassword,
