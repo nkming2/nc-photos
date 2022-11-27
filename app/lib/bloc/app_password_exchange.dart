@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:logging/logging.dart';
-
+import 'package:nc_photos/account.dart';
+import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/exception.dart';
 
@@ -36,6 +37,13 @@ class AppPasswordExchangeBlocPoll extends AppPasswordExchangeBlocEvent {
   }
 
   final api_util.InitiateLoginPollOptions pollOptions;
+}
+
+class AppPasswordExchangeBlocCancel extends AppPasswordExchangeBlocEvent {
+  const AppPasswordExchangeBlocCancel();
+
+  @override
+  String toString() => "AppPasswordExchangeBlocCancel {}";
 }
 
 class _AppPasswordExchangeBlocAppPwReceived
@@ -113,6 +121,17 @@ class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
   final dynamic exception;
 }
 
+class AppPasswordExchangeBlocResult extends AppPasswordExchangeBlocState {
+  const AppPasswordExchangeBlocResult(this.result);
+
+  @override
+  String toString() => "AppPasswordExchangeBlocResult {"
+      "result: $result, "
+      "}";
+
+  final Account? result;
+}
+
 /// Business Logic Component (BLoC) which handles the App password exchange.
 ///
 /// The flow followed by this component is described in the Nextcloud documentation under
@@ -136,6 +155,10 @@ class AppPasswordExchangeBloc
   Future<void> _onEvent(AppPasswordExchangeBlocEvent event,
       Emitter<AppPasswordExchangeBlocState> emit) async {
     _log.info("[_onEvent] $event");
+    if (_isCanceled) {
+      _log.fine("[_onEvent] canceled = true, ignore event");
+      return;
+    }
     if (event is AppPasswordExchangeBlocInitiateLogin) {
       await _onEventInitiateLogin(event, emit);
     } else if (event is AppPasswordExchangeBlocPoll) {
@@ -144,6 +167,8 @@ class AppPasswordExchangeBloc
       await _onEventAppPasswordReceived(event, emit);
     } else if (event is _AppPasswordExchangeBlocAppPwFailed) {
       await _onEventAppPasswordFailure(event, emit);
+    } else if (event is AppPasswordExchangeBlocCancel) {
+      await _onEventCancel(event, emit);
     }
   }
 
@@ -191,7 +216,9 @@ class AppPasswordExchangeBloc
       }
     } catch (e, stacktrace) {
       _log.shout(
-          "[_pollAppPasswordStreamListener] Failed while polling for password", e, stacktrace);
+          "[_pollAppPasswordStreamListener] Failed while polling for password",
+          e,
+          stacktrace);
       add(_AppPasswordExchangeBlocAppPwFailed(e));
     }
   }
@@ -200,7 +227,17 @@ class AppPasswordExchangeBloc
       _AppPasswordExchangeBlocAppPwReceived ev,
       Emitter<AppPasswordExchangeBlocState> emit) async {
     try {
-      emit(AppPasswordExchangeBlocAppPwSuccess(ev.appPasswordResponse));
+      final response = ev.appPasswordResponse;
+      final account = Account(
+        Account.newId(),
+        response.server.scheme,
+        response.server.authority,
+        response.loginName.toCi(),
+        response.loginName,
+        response.appPassword,
+        [""],
+      );
+      emit(AppPasswordExchangeBlocResult(account));
     } catch (e, stacktrace) {
       _log.shout(
           "[_onEventAppPasswordReceived] Failed while exchanging password",
@@ -217,6 +254,13 @@ class AppPasswordExchangeBloc
     emit(AppPasswordExchangeBlocFailure(ev.exception));
   }
 
+  Future<void> _onEventCancel(AppPasswordExchangeBlocCancel ev,
+      Emitter<AppPasswordExchangeBlocState> emit) async {
+    await _pollPasswordSubscription?.cancel();
+    _isCanceled = true;
+    emit(const AppPasswordExchangeBlocResult(null));
+  }
+
   @override
   Future<void> close() {
     _pollPasswordSubscription?.cancel();
@@ -228,4 +272,5 @@ class AppPasswordExchangeBloc
 
   StreamSubscription<Future<api_util.AppPasswordResponse>>?
       _pollPasswordSubscription;
+  bool _isCanceled = false;
 }

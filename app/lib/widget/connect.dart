@@ -92,20 +92,48 @@ class _ConnectState extends State<Connect> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Center(
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: Theme.of(context).widthLimitedContentMaxWidth,
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CloudProgressIndicator(size: 192),
-            const SizedBox(height: 16),
-            Text(
-              L10n.global().connectingToServer2,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge,
-            )
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CloudProgressIndicator(size: 192),
+                    const SizedBox(height: 16),
+                    Text(
+                      L10n.global().connectingToServer2,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _bloc.add(const AppPasswordExchangeBlocCancel());
+                    },
+                    child: Text(
+                      MaterialLocalizations.of(context).cancelButtonLabel,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -119,15 +147,6 @@ class _ConnectState extends State<Connect> {
       launch(state.result.login);
       // and start polling the API for login credentials
       _bloc.add(AppPasswordExchangeBlocPoll(state.result.poll));
-    } else if (state is AppPasswordExchangeBlocAppPwSuccess) {
-      final newAccount = Account(
-          Account.newId(),
-          state.result.server.scheme,
-          state.result.server.authority,
-          state.result.loginName.toCi(),
-          state.result.loginName,
-          state.result.appPassword, []);
-      _checkWebDavUrl(context, newAccount);
     } else if (state is AppPasswordExchangeBlocFailure) {
       if (features.isSupportSelfSignedCert &&
           state.exception is HandshakeException) {
@@ -145,6 +164,13 @@ class _ConnectState extends State<Connect> {
           duration: k.snackBarDurationNormal,
         ));
         Navigator.of(context).pop(null);
+      }
+    } else if (state is AppPasswordExchangeBlocResult) {
+      if (state.result == null) {
+        // user canceled
+        Navigator.of(context).pop(null);
+      } else {
+        _checkWebDavUrl(context, state.result!);
       }
     }
   }
