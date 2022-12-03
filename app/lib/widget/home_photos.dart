@@ -14,6 +14,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
+import 'package:nc_photos/bloc/progress.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
@@ -95,10 +96,7 @@ class _HomePhotosState extends State<HomePhotos>
     return BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
       bloc: _bloc,
       listener: (context, state) => _onStateChange(context, state),
-      child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
-        bloc: _bloc,
-        builder: (context, state) => _buildContent(context, state),
-      ),
+      child: _buildContent(context),
     );
   }
 
@@ -148,7 +146,7 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
+  Widget _buildContent(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final scrollExtent = _getScrollViewExtent(context, constraints);
       return Stack(
@@ -183,21 +181,32 @@ class _HomePhotosState extends State<HomePhotos>
                               .isEnableMemoryAlbumOr(true) &&
                           _smartAlbums.isNotEmpty)
                         _buildSmartAlbumList(context),
-                      buildItemStreamList(
-                        maxCrossAxisExtent: _thumbSize.toDouble(),
-                        onMaxExtentChanged: (value) {
-                          setState(() {
-                            _itemListMaxExtent = value;
-                          });
+                      BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
+                        bloc: _bloc,
+                        builder: (context, state) {
+                          if (_isInitialSync(state)) {
+                            return _InitialLoadingProgress(
+                              progressBloc: _queryProgressBloc,
+                            );
+                          } else {
+                            return buildItemStreamList(
+                              maxCrossAxisExtent: _thumbSize.toDouble(),
+                              onMaxExtentChanged: (value) {
+                                setState(() {
+                                  _itemListMaxExtent = value;
+                                });
+                              },
+                              isEnableVisibilityCallback: true,
+                            );
+                          }
                         },
-                        isEnableVisibilityCallback: true,
                       ),
                       SliverToBoxAdapter(
                         child: SizedBox(
                           height: _calcBottomAppBarExtent(context),
                         ),
                       ),
-                    ].whereType<Widget>().toList(),
+                    ].whereNotNull().toList(),
                   ),
                 ),
               ),
@@ -279,15 +288,24 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Widget _buildNormalAppBar(BuildContext context) {
-    return BlocBuilder(
+    return BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
       bloc: _bloc,
-      buildWhen: (previous, current) =>
-          previous is ScanAccountDirBlocLoading !=
-          current is ScanAccountDirBlocLoading,
+      buildWhen: (previous, current) {
+        if (previous is ScanAccountDirBlocLoading &&
+            current is ScanAccountDirBlocLoading) {
+          // both loading, check if initial flag changed
+          return previous.isInitialLoad != current.isInitialLoad;
+        } else {
+          // check if any one is loading == state changed from/to loading
+          return previous is ScanAccountDirBlocLoading ||
+              current is ScanAccountDirBlocLoading;
+        }
+      },
       builder: (context, state) {
         return HomeSliverAppBar(
           account: widget.account,
-          isShowProgressIcon: (state is ScanAccountDirBlocLoading ||
+          isShowProgressIcon: !_isInitialSync(state) &&
+              (state is ScanAccountDirBlocLoading ||
                   _buildItemQueue.isProcessing) &&
               !_isRefreshIndicatorActive,
           actions: [
@@ -620,7 +638,9 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   void _reqQuery() {
-    _bloc.add(const ScanAccountDirBlocQuery());
+    _bloc.add(ScanAccountDirBlocQuery(
+      progressBloc: _queryProgressBloc,
+    ));
   }
 
   void _reqRefresh() {
@@ -691,6 +711,11 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
+  bool _isInitialSync(ScanAccountDirBlocState state) =>
+      state is ScanAccountDirBlocLoading &&
+      state.files.isEmpty &&
+      state.isInitialLoad;
+
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
 
@@ -728,6 +753,7 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
+  late final _queryProgressBloc = ProgressBloc();
 
   var _backingFiles = <FileDescriptor>[];
   var _smartAlbums = <Album>[];
@@ -1086,4 +1112,53 @@ class _VisibleItem implements Comparable<_VisibleItem> {
 
   final int index;
   final SelectableItem item;
+}
+
+class _InitialLoadingProgress extends StatelessWidget {
+  const _InitialLoadingProgress({
+    required this.progressBloc,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProgressBloc, ProgressBlocState>(
+      bloc: progressBloc,
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, state) {
+        return SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 56, 16, 0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: Theme.of(context).widthLimitedContentMaxWidth,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      L10n.global().initialSyncMessage,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: state.progress == 0 ? null : state.progress,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      state.text ?? "",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  final ProgressBloc progressBloc;
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -7,6 +8,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:tuple/tuple.dart';
@@ -26,12 +28,18 @@ class SyncDir {
     Account account,
     String dirPath, {
     bool isRecursive = true,
+    ValueChanged<Progress>? onProgressUpdate,
   }) async {
     final dirCache = await _queryAllDirEtags(account, dirPath);
     final remoteRoot =
         await LsSingleFile(_c.withRemoteFileRepo())(account, dirPath);
-    return await _syncDir(account, remoteRoot, dirCache,
-        isRecursive: isRecursive);
+    return await _syncDir(
+      account,
+      remoteRoot,
+      dirCache,
+      isRecursive: isRecursive,
+      onProgressUpdate: onProgressUpdate,
+    );
   }
 
   Future<bool> _syncDir(
@@ -39,6 +47,7 @@ class SyncDir {
     File remoteDir,
     Map<int, String> dirCache, {
     required bool isRecursive,
+    ValueChanged<Progress>? onProgressUpdate,
   }) async {
     final status = await _checkContentUpdated(account, remoteDir, dirCache);
     if (!status.item1) {
@@ -52,16 +61,32 @@ class SyncDir {
     if (!isRecursive) {
       return true;
     }
-    for (final d in children.where((c) =>
-        c.isCollection == true &&
-        !remoteDir.compareServerIdentity(c) &&
-        !c.path.endsWith(remote_storage_util.getRemoteStorageDir(account)))) {
+    final subDirs = children
+        .where((f) =>
+            f.isCollection == true &&
+            !remoteDir.compareServerIdentity(f) &&
+            !f.path.endsWith(remote_storage_util.getRemoteStorageDir(account)))
+        .toList();
+    final progress = IntProgress(subDirs.length);
+    for (final d in subDirs) {
+      onProgressUpdate
+          ?.call(Progress(progress.progress, d.strippedPathWithEmpty));
       try {
-        await _syncDir(account, d, dirCache, isRecursive: isRecursive);
+        await _syncDir(
+          account,
+          d,
+          dirCache,
+          isRecursive: isRecursive,
+          onProgressUpdate: (value) {
+            final merged = progress.progress + progress.step * value.progress;
+            onProgressUpdate?.call(Progress(merged, value.text));
+          },
+        );
       } catch (e, stackTrace) {
         _log.severe("[_syncDir] Failed while _syncDir: ${logFilename(d.path)}",
             e, stackTrace);
       }
+      progress.next();
     }
     return true;
   }

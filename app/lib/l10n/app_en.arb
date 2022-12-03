@@ -1489,6 +1489,11 @@
 	"@imageSaveOptionDialogServerButtonLabel": {
 		"description": "Save the image on your Nextcloud server"
 	},
+	"initialSyncMessage": "Syncing with your server for the first time",
+	"@initialSyncMessage": {
+		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+	},
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

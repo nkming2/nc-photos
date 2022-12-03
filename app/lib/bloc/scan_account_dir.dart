@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
+import 'package:nc_photos/bloc/progress.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -15,6 +17,7 @@ import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
@@ -25,22 +28,31 @@ abstract class ScanAccountDirBlocEvent {
   const ScanAccountDirBlocEvent();
 }
 
-class ScanAccountDirBlocQueryBase extends ScanAccountDirBlocEvent {
-  const ScanAccountDirBlocQueryBase();
+abstract class ScanAccountDirBlocQueryBase extends ScanAccountDirBlocEvent {
+  const ScanAccountDirBlocQueryBase({
+    this.progressBloc,
+  });
 
   @override
   toString() {
     return "$runtimeType {"
         "}";
   }
+
+  /// Get notified about the query progress
+  final ProgressBloc? progressBloc;
 }
 
 class ScanAccountDirBlocQuery extends ScanAccountDirBlocQueryBase {
-  const ScanAccountDirBlocQuery();
+  const ScanAccountDirBlocQuery({
+    super.progressBloc,
+  });
 }
 
 class ScanAccountDirBlocRefresh extends ScanAccountDirBlocQueryBase {
-  const ScanAccountDirBlocRefresh();
+  const ScanAccountDirBlocRefresh({
+    super.progressBloc,
+  });
 }
 
 /// An external event has happened and may affect the state of this bloc
@@ -72,7 +84,12 @@ class ScanAccountDirBlocInit extends ScanAccountDirBlocState {
 }
 
 class ScanAccountDirBlocLoading extends ScanAccountDirBlocState {
-  const ScanAccountDirBlocLoading(List<FileDescriptor> files) : super(files);
+  const ScanAccountDirBlocLoading(
+    List<FileDescriptor> files, {
+    this.isInitialLoad = false,
+  }) : super(files);
+
+  final bool isInitialLoad;
 }
 
 class ScanAccountDirBlocSuccess extends ScanAccountDirBlocState {
@@ -207,10 +224,22 @@ class ScanAccountDirBloc
       emit(ScanAccountDirBlocLoading(cacheFiles));
     }
 
+    if (!hasContent && cacheFiles.isEmpty) {
+      emit(const ScanAccountDirBlocLoading([], isInitialLoad: true));
+    }
+
     stopwatch.reset();
     final bool hasUpdate;
     try {
-      hasUpdate = await _syncOnline(ev);
+      hasUpdate = await _syncOnline(
+        ev,
+        onProgressUpdate: (value) {
+          if (ev.progressBloc?.isClosed == false) {
+            ev.progressBloc!
+                .add(ProgressBlocUpdate(value.progress, value.text));
+          }
+        },
+      );
     } catch (e, stackTrace) {
       _log.shout("[_onEventQuery] Exception while request", e, stackTrace);
       emit(ScanAccountDirBlocFailure(cacheFiles, e));
@@ -230,7 +259,10 @@ class ScanAccountDirBloc
     }
   }
 
-  Future<bool> _syncOnline(ScanAccountDirBlocQueryBase ev) async {
+  Future<bool> _syncOnline(
+    ScanAccountDirBlocQueryBase ev, {
+    ValueChanged<Progress>? onProgressUpdate,
+  }) async {
     final settings = AccountPref.of(account);
     final shareDir =
         File(path: file_util.unstripPath(account, settings.getShareFolderOr()));
@@ -238,11 +270,20 @@ class ScanAccountDirBloc
 
     bool hasUpdate = false;
     _c.touchManager.clearTouchCache();
+    final progress = IntProgress(account.roots.length);
     for (final r in account.roots) {
       final dirPath = file_util.unstripPath(account, r);
-      hasUpdate |= await SyncDir(_c)(account, dirPath);
+      hasUpdate |= await SyncDir(_c)(
+        account,
+        dirPath,
+        onProgressUpdate: (value) {
+          final merged = progress.progress + progress.step * value.progress;
+          onProgressUpdate?.call(Progress(merged, value.text));
+        },
+      );
       isShareDirIncluded |=
           file_util.isOrUnderDir(shareDir, File(path: dirPath));
+      progress.next();
     }
 
     if (!isShareDirIncluded) {

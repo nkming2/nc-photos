@@ -126,6 +126,10 @@ dev_dependencies:
     sdk: flutter
   # integration_test:
   #   sdk: flutter
+  to_string:
+    git:
+      url: https://gitlab.com/nkming2/dart-to-string
+      ref: 2432bd99c5c8c90b11d7e691992514e312cee0fe
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

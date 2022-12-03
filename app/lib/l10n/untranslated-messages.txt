@@ -179,6 +179,7 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage",
     "errorAlbumDowngrade"
   ],
 
@@ -374,6 +375,7 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage",
     "errorAlbumDowngrade"
   ],
 
@@ -459,7 +461,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "es": [
@@ -470,7 +473,8 @@
     "settingsSeedColorDescription",
     "settingsSeedColorPickerTitle",
     "rootPickerSkipConfirmationDialogContent2",
-    "slideshowSetupDialogReverseTitle"
+    "slideshowSetupDialogReverseTitle",
+    "initialSyncMessage"
   ],
 
   "fi": [
@@ -478,7 +482,8 @@
     "signInHeaderText2",
     "settingsSeedColorTitle",
     "settingsSeedColorDescription",
-    "settingsSeedColorPickerTitle"
+    "settingsSeedColorPickerTitle",
+    "initialSyncMessage"
   ],
 
   "fr": [
@@ -583,7 +588,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "pl": [
@@ -705,7 +711,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "pt": [
@@ -806,7 +813,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "ru": [
@@ -907,7 +915,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "zh": [
@@ -1008,7 +1017,8 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ],
 
   "zh_Hant": [
@@ -1109,6 +1119,7 @@
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
-    "imageSaveOptionDialogServerButtonLabel"
+    "imageSaveOptionDialogServerButtonLabel",
+    "initialSyncMessage"
   ]
 }

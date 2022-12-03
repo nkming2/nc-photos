@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "41.0.0"
+    version: "47.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.7.0"
   analyzer_plugin:
     dependency: transitive
     description:
@@ -121,7 +121,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   build_config:
     dependency: transitive
     description:
@@ -1154,7 +1154,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.6"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -1280,6 +1280,15 @@ packages:
       name: timing
       url: "https://pub.dartlang.org"
     source: hosted
+    version: "1.0.0"
+  to_string:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: "2432bd99c5c8c90b11d7e691992514e312cee0fe"
+      resolved-ref: "2432bd99c5c8c90b11d7e691992514e312cee0fe"
+      url: "https://gitlab.com/nkming2/dart-to-string"
+    source: git
     version: "1.0.0"
   tuple:
     dependency: "direct main"
