@@ -52,12 +52,14 @@ class _MeasurableItemListState extends State<MeasurableItemList>
   @override
   didChangeMetrics() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orientation = MediaQuery.of(context).orientation;
-      if (orientation != _prevOrientation) {
-        _log.info(
-            "[didChangeMetrics] updateListHeight: orientation changed: $orientation");
-        _prevOrientation = orientation;
-        updateListHeight();
+      if (mounted) {
+        final orientation = MediaQuery.of(context).orientation;
+        if (orientation != _prevOrientation) {
+          _log.info(
+              "[didChangeMetrics] updateListHeight: orientation changed: $orientation");
+          _prevOrientation = orientation;
+          updateListHeight();
+        }
       }
     });
   }
