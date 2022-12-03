@@ -516,6 +516,9 @@ extension SqliteDbExtension on SqliteDb {
     required List<int> fileIds,
   }) async {
     assert((sqlAccount != null) != (appAccount != null));
+    if (fileIds.isEmpty) {
+      return 0;
+    }
     final counts = await fileIds.withPartition((sublist) async {
       final count = countAll(
           filter:
