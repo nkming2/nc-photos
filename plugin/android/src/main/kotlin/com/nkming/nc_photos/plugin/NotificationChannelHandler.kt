@@ -128,7 +128,8 @@ class NotificationChannelHandler(context: Context) :
 				addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 			}
 			val openPendingIntent = PendingIntent.getActivity(
-				_context, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT
+				_context, 0, openIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT or getPendingIntentFlagImmutable()
 			)
 			builder.setContentIntent(openPendingIntent)
 
@@ -175,7 +176,8 @@ class NotificationChannelHandler(context: Context) :
 			)
 		)
 		val sharePendingIntent = PendingIntent.getActivity(
-			_context, 1, shareChooser, PendingIntent.FLAG_UPDATE_CURRENT
+			_context, 1, shareChooser,
+			PendingIntent.FLAG_UPDATE_CURRENT or getPendingIntentFlagImmutable()
 		)
 		builder.addAction(
 			0, _context.getString(
@@ -228,7 +230,8 @@ class NotificationChannelHandler(context: Context) :
 			putExtra(K.EXTRA_NOTIFICATION_ID, id)
 		}
 		val cancelPendingIntent = PendingIntent.getBroadcast(
-			_context, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT
+			_context, 0, cancelIntent,
+			PendingIntent.FLAG_UPDATE_CURRENT or getPendingIntentFlagImmutable()
 		)
 		builder.addAction(
 			0, _context.getString(android.R.string.cancel), cancelPendingIntent
@@ -273,7 +276,8 @@ class NotificationChannelHandler(context: Context) :
 			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		}
 		val openPendingIntent = PendingIntent.getActivity(
-			_context, 0, openIntent, PendingIntent.FLAG_UPDATE_CURRENT
+			_context, 0, openIntent,
+			PendingIntent.FLAG_UPDATE_CURRENT or getPendingIntentFlagImmutable()
 		)
 		builder.setContentIntent(openPendingIntent)
 
