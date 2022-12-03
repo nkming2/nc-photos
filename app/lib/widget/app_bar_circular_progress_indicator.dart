@@ -9,7 +9,7 @@ class AppBarCircularProgressIndicator extends StatelessWidget {
       child: SizedBox.square(
         dimension: 24,
         child: CircularProgressIndicator(
-          strokeWidth: 2,
+          strokeWidth: 3,
         ),
       ),
     );
