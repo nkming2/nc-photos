@@ -22,7 +22,6 @@ class FileCacheLoader {
     required this.cacheSrc,
     required this.remoteSrc,
     this.shouldCheckCache = false,
-    this.forwardCacheManager,
   }) : assert(require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
@@ -33,11 +32,7 @@ class FileCacheLoader {
   Future<List<File>?> call(Account account, File dir) async {
     List<File>? cache;
     try {
-      if (forwardCacheManager != null) {
-        cache = await forwardCacheManager!.list(account, dir);
-      } else {
-        cache = await cacheSrc.list(account, dir);
-      }
+      cache = await cacheSrc.list(account, dir);
       // compare the cached root
       final cacheEtag =
           cache.firstWhere((f) => f.compareServerIdentity(dir)).etag!;
@@ -83,7 +78,6 @@ class FileCacheLoader {
   final FileWebdavDataSource remoteSrc;
   final FileDataSource cacheSrc;
   final bool shouldCheckCache;
-  final FileForwardCacheManager? forwardCacheManager;
 
   var _isGood = false;
   String? _remoteEtag;

@@ -572,7 +572,6 @@ class FileCachedDataSource implements FileDataSource {
   FileCachedDataSource(
     this._c, {
     this.shouldCheckCache = false,
-    this.forwardCacheManager,
   }) : _sqliteDbSrc = FileSqliteDbDataSource(_c);
 
   @override
@@ -582,7 +581,6 @@ class FileCachedDataSource implements FileDataSource {
       cacheSrc: _sqliteDbSrc,
       remoteSrc: _remoteSrc,
       shouldCheckCache: shouldCheckCache,
-      forwardCacheManager: forwardCacheManager,
     );
     final cache = await cacheLoader(account, dir);
     if (cacheLoader.isGood) {
@@ -741,182 +739,11 @@ class FileCachedDataSource implements FileDataSource {
 
   final DiContainer _c;
   final bool shouldCheckCache;
-  final FileForwardCacheManager? forwardCacheManager;
 
   final _remoteSrc = const FileWebdavDataSource();
   final FileSqliteDbDataSource _sqliteDbSrc;
 
   static final _log = Logger("entity.file.data_source.FileCachedDataSource");
-}
-
-/// Forward cache for listing AppDb dirs
-///
-/// It's very expensive to list a dir and its sub-dirs one by one in multiple
-/// queries. This class will instead query every sub-dirs when a new dir is
-/// passed to us in one transaction. For this reason, this should only be used
-/// when it's necessary to query everything
-class FileForwardCacheManager {
-  FileForwardCacheManager(this._c, Map<int, File> knownFiles) {
-    _fileCache.addAll(knownFiles);
-  }
-
-  static bool require(DiContainer c) => true;
-
-  /// Transform a list of files to a map suitable to be passed as the
-  /// [knownFiles] argument
-  static Map<int, File> prepareFileMap(List<File> knownFiles) => knownFiles
-      .where((f) => f.fileId != null)
-      .map((e) => MapEntry(e.fileId!, e))
-      .run((obj) => Map.fromEntries(obj));
-
-  Future<List<File>> list(Account account, File dir) async {
-    // check cache
-    var childFileIds = _dirCache[dir.strippedPathWithEmpty];
-    if (childFileIds == null) {
-      _log.info(
-          "[list] No cache and querying everything under ${logFilename(dir.path)}");
-      await _cacheDir(account, dir);
-      childFileIds = _dirCache[dir.strippedPathWithEmpty];
-      if (childFileIds == null) {
-        throw CacheNotFoundException("No entry: ${dir.path}");
-      }
-    } else {
-      _log.fine("[list] Returning data from cache: ${logFilename(dir.path)}");
-    }
-    return _listByFileIds(dir, childFileIds);
-  }
-
-  Future<void> _cacheDir(Account account, File dir) async {
-    await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final dirCache = <String, List<int>>{};
-      await _fillDirCacheForDir(
-          db, dirCache, dbAccount, null, dir.fileId, dir.strippedPathWithEmpty);
-      _log.info(
-          "[_cacheDir] Cached ${dirCache.length} dirs under ${logFilename(dir.path)}");
-      await _fillFileCache(
-          db, account, dbAccount, dirCache.values.flatten().toSet());
-      _dirCache.addAll(dirCache);
-    });
-  }
-
-  Future<void> _fillDirCacheForDir(
-      sql.SqliteDb db,
-      Map<String, List<int>> dirCache,
-      sql.Account dbAccount,
-      int? dirRowId,
-      int? dirFileId,
-      String dirRelativePath) async {
-    // get rowId
-    final myDirRowId = dirRowId ??
-        await _queryFileIdOfDir(db, dbAccount, dirFileId, dirRelativePath);
-    if (myDirRowId == null) {
-      // no cache
-      return;
-    }
-    final children = await _queryChildOfDir(db, dbAccount, myDirRowId);
-    if (children.isEmpty) {
-      // no cache
-      return;
-    }
-    final childFileIds = children.map((c) => c.fileId).toList();
-    dirCache[dirRelativePath] = childFileIds;
-
-    // recursively fill child dirs
-    for (final c in children
-        .where((c) => c.rowId != myDirRowId && c.isCollection == true)) {
-      await _fillDirCacheForDir(
-          db, dirCache, dbAccount, c.rowId, c.fileId, c.relativePath);
-    }
-  }
-
-  Future<void> _fillFileCache(sql.SqliteDb db, Account account,
-      sql.Account dbAccount, Iterable<int> fileIds) async {
-    final needQuery = fileIds.where((id) => !_fileCache.containsKey(id));
-    if (needQuery.isNotEmpty) {
-      _log.info("[_fillFileCache] ${needQuery.length} files need querying");
-      final dbFiles =
-          await db.completeFilesByFileIds(needQuery, sqlAccount: dbAccount);
-      for (final f in await dbFiles.convertToAppFile(account)) {
-        _fileCache[f.fileId!] = f;
-      }
-      _log.info("[_fillFileCache] Cached ${dbFiles.length} files");
-    } else {
-      _log.info("[_fillFileCache] 0 files need querying");
-    }
-  }
-
-  List<File> _listByFileIds(File dir, List<int> childFileIds) {
-    return childFileIds.map((id) {
-      try {
-        return _fileCache[id]!;
-      } catch (_) {
-        _log.warning(
-            "[_listByFileIds] Missing file ($id) in db for dir: ${logFilename(dir.path)}");
-        throw CacheNotFoundException("No entry for dir child: $id");
-      }
-    }).toList();
-  }
-
-  Future<int?> _queryFileIdOfDir(sql.SqliteDb db, sql.Account dbAccount,
-      int? dirFileId, String dirRelativePath) async {
-    final dirQuery = db.queryFiles().run((q) {
-      q
-        ..setQueryMode(sql.FilesQueryMode.expression,
-            expressions: [db.files.rowId])
-        ..setSqlAccount(dbAccount);
-      if (dirFileId != null) {
-        q.byFileId(dirFileId);
-      } else {
-        q.byRelativePath(dirRelativePath);
-      }
-      return q.build()..limit(1);
-    });
-    return await dirQuery.map((r) => r.read(db.files.rowId)).getSingleOrNull();
-  }
-
-  Future<List<_ForwardCacheQueryChildResult>> _queryChildOfDir(
-      sql.SqliteDb db, sql.Account dbAccount, int dirRowId) async {
-    final childQuery = db.selectOnly(db.files).join([
-      sql.innerJoin(db.dirFiles, db.dirFiles.child.equalsExp(db.files.rowId),
-          useColumns: false),
-      sql.innerJoin(
-          db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId),
-          useColumns: false),
-    ])
-      ..addColumns([
-        db.files.rowId,
-        db.files.fileId,
-        db.files.isCollection,
-        db.accountFiles.relativePath,
-      ])
-      ..where(db.dirFiles.dir.equals(dirRowId))
-      ..where(db.accountFiles.account.equals(dbAccount.rowId));
-    return await childQuery
-        .map((r) => _ForwardCacheQueryChildResult(
-              r.read(db.files.rowId)!,
-              r.read(db.files.fileId)!,
-              r.read(db.accountFiles.relativePath)!,
-              r.read(db.files.isCollection),
-            ))
-        .get();
-  }
-
-  final DiContainer _c;
-  final _dirCache = <String, List<int>>{};
-  final _fileCache = <int, File>{};
-
-  static final _log = Logger("entity.file.data_source.FileForwardCacheManager");
-}
-
-class _ForwardCacheQueryChildResult {
-  const _ForwardCacheQueryChildResult(
-      this.rowId, this.fileId, this.relativePath, this.isCollection);
-
-  final int rowId;
-  final int fileId;
-  final String relativePath;
-  final bool? isCollection;
 }
 
 bool _validateFile(File f) {
