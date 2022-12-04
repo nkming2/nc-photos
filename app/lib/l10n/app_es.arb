@@ -206,12 +206,16 @@
 	},
 	"connectingToServer": "Conectando a\n{server}",
 	"@connectingToServer": {
-		"description": "Inform user that the app is connecting to a server",
+		"description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
 		"placeholders": {
 			"server": {
-				"example": "http://www.ejemplo.com"
+				"example": "http://www.example.com"
 			}
 		}
+	},
+	"connectingToServer2": "Esperando autorización del servidor",
+	"@connectingToServer2": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
 	},
 	"nameInputHint": "Nombre",
 	"@nameInputHint": {
@@ -229,13 +233,17 @@
 	"@confirmButtonLabel": {
 		"description": "Label of the confirm button"
 	},
-	"signInHeaderText": "Iniciar sesión en Nextcloud",
+	"signInHeaderText": "Iniciar sesión en servidor Nextcloud",
 	"@signInHeaderText": {
-		"description": "Inform user what to do in sign in widget"
+		"description": "(deprecated, may be removed in the future)"
 	},
 	"signIn2faHintText": "Usa una contraseña de aplicación si tienes activada en el servidor la autentificación en dos pasos.",
 	"@signIn2faHintText": {
-		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+		"description": "(deprecated, may be removed in the future)"
+	},
+	"signInHeaderText2": "Nextcloud\nIdentifícate",
+	"@signInHeaderText2": {
+		"description": "Sign in to Nextcloud server"
 	},
 	"serverAddressInputHint": "Dirección del servidor",
 	"@serverAddressInputHint": {
@@ -402,19 +410,31 @@
 	"settingsImageEditSaveResultsToServerFalseDescription": "Los resultados se guardan en éste dispositivo",
 	"settingsThemeTitle": "Apariencia",
 	"settingsThemeDescription": "Personaliza la apariencia de la app",
-	"settingsFollowSystemThemeTitle": "Usar tema del sistema",
+	"settingsFollowSystemThemeTitle": "Tema del sistema",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
 	},
-	"settingsUseBlackInDarkThemeTitle": "Tema más oscuro",
+	"settingsSeedColorTitle": "Color del tema",
+	"@settingsSeedColorTitle": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorDescription": "Usado para extrapolar todos los colores usados en la app",
+	"@settingsSeedColorDescription": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorPickerTitle": "Elige un color",
+	"@settingsSeedColorPickerTitle": {
+		"description": "Dialog to customize the colors used in app"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Tema negro",
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
 	},
-	"settingsUseBlackInDarkThemeTrueDescription": "Usando negro en tema oscuro",
+	"settingsUseBlackInDarkThemeTrueDescription": "Usar negro puro cuando se activa el tema oscuro",
 	"@settingsUseBlackInDarkThemeTrueDescription": {
 		"description": "When black in dark theme is set to true"
 	},
-	"settingsUseBlackInDarkThemeFalseDescription": "Usando gris oscuro en tema oscuro",
+	"settingsUseBlackInDarkThemeFalseDescription": "Usar gris cuando se activa el tema oscuro",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
@@ -490,8 +510,8 @@
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
 	},
-	"rootPickerSkipConfirmationDialogContent": "Se incluirán todos tus archivos. Esto puede incrementar el uso de memoria y degradar el rendimiento.",
-	"@rootPickerSkipConfirmationDialogContent": {
+	"rootPickerSkipConfirmationDialogContent2": "Se incluirán todos tus archivos. Esto puede incrementar el uso de memoria y degradar el rendimiento.",
+	"@rootPickerSkipConfirmationDialogContent2": {
 		"description": "Inform user what happens after skipping root picker"
 	},
 	"megapixelCount": "{count}MP",
@@ -882,6 +902,10 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"slideshowSetupDialogReverseTitle": "Orden inverso",
+	"@slideshowSetupDialogReverseTitle": {
+		"description": "Whether to play the slideshow in reverse order"
+	},	
 	"linkCopiedNotification": "Enlace copiado",
 	"@linkCopiedNotification": {
 		"description": "Copied the share link to clipboard"
