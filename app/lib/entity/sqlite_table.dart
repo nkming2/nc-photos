@@ -251,6 +251,7 @@ class SqliteDb extends _$SqliteDb {
               "CREATE INDEX album_shares_album_index ON album_shares(album);"));
 
           await _createIndexV2(m);
+          await _createIndexV3(m);
         },
         onUpgrade: (m, from, to) async {
           _log.info("[onUpgrade] $from -> $to");
