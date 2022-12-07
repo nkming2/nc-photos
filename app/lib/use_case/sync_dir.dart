@@ -56,9 +56,12 @@ class SyncDir {
     }
     _log.info("[_syncDir] Dir changed: ${remoteDir.path}");
 
-    final children = await FileCachedDataSource(_c, shouldCheckCache: true)
-        .sync(account, remoteDir, remoteTouchEtag: status.item2);
+    final dataSrc = FileCachedDataSource(_c, shouldCheckCache: true);
+    final syncState = await dataSrc.beginSync(account, remoteDir,
+        remoteTouchEtag: status.item2);
+    final children = syncState.files;
     if (!isRecursive) {
+      await dataSrc.concludeSync(syncState);
       return true;
     }
     final subDirs = children
@@ -88,6 +91,7 @@ class SyncDir {
       }
       progress.next();
     }
+    await dataSrc.concludeSync(syncState);
     return true;
   }
 

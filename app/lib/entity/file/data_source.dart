@@ -568,6 +568,22 @@ class FileSqliteDbDataSource implements FileDataSource {
   static final _log = Logger("entity.file.data_source.FileSqliteDbDataSource");
 }
 
+class IntermediateSyncState {
+  const IntermediateSyncState({
+    required this.account,
+    required this.dir,
+    required this.remoteTouchEtag,
+    required this.files,
+    required this.shouldCache,
+  });
+
+  final Account account;
+  final File dir;
+  final String? remoteTouchEtag;
+  final List<File> files;
+  final bool shouldCache;
+}
+
 class FileCachedDataSource implements FileDataSource {
   FileCachedDataSource(
     this._c, {
@@ -599,20 +615,28 @@ class FileCachedDataSource implements FileDataSource {
     File dir, {
     required String? remoteTouchEtag,
   }) async {
+    final state = await beginSync(
+      account,
+      dir,
+      remoteTouchEtag: remoteTouchEtag,
+    );
+    return concludeSync(state);
+  }
+
+  Future<IntermediateSyncState> beginSync(
+    Account account,
+    File dir, {
+    required String? remoteTouchEtag,
+  }) async {
     try {
       final remote = await _remoteSrc.list(account, dir);
-      await FileSqliteCacheUpdater(_c)(account, dir, remote: remote);
-      if (shouldCheckCache) {
-        // update our local touch token to match the remote one
-        try {
-          _log.info("[list] Update outdated local etag: ${dir.path}");
-          await _c.touchManager.setLocalEtag(account, dir, remoteTouchEtag);
-        } catch (e, stacktrace) {
-          _log.shout("[list] Failed while setLocalToken", e, stacktrace);
-          // ignore error
-        }
-      }
-      return remote;
+      return IntermediateSyncState(
+        account: account,
+        dir: dir,
+        remoteTouchEtag: remoteTouchEtag,
+        files: remote,
+        shouldCache: true,
+      );
     } on ApiException catch (e) {
       if (e.response.statusCode == 404) {
         _log.info("[list] File removed: $dir");
@@ -622,7 +646,13 @@ class FileCachedDataSource implements FileDataSource {
           _log.warning(
               "[list] Failed while remove from db, file not cached?", e);
         }
-        return [];
+        return IntermediateSyncState(
+          account: account,
+          dir: dir,
+          remoteTouchEtag: remoteTouchEtag,
+          files: [],
+          shouldCache: false,
+        );
       } else if (e.response.statusCode == 403) {
         _log.info("[list] E2E encrypted dir: $dir");
         try {
@@ -633,11 +663,38 @@ class FileCachedDataSource implements FileDataSource {
           _log.warning(
               "[list] Failed while emptying from db, file not cached?", e);
         }
-        return [];
+        return IntermediateSyncState(
+          account: account,
+          dir: dir,
+          remoteTouchEtag: remoteTouchEtag,
+          files: [],
+          shouldCache: false,
+        );
       } else {
         rethrow;
       }
     }
+  }
+
+  Future<List<File>> concludeSync(IntermediateSyncState state) async {
+    if (!state.shouldCache) {
+      return state.files;
+    }
+
+    await FileSqliteCacheUpdater(_c)(state.account, state.dir,
+        remote: state.files);
+    if (shouldCheckCache) {
+      // update our local touch token to match the remote one
+      try {
+        _log.info("[list] Update outdated local etag: ${state.dir.path}");
+        await _c.touchManager
+            .setLocalEtag(state.account, state.dir, state.remoteTouchEtag);
+      } catch (e, stacktrace) {
+        _log.shout("[list] Failed while setLocalToken", e, stacktrace);
+        // ignore error
+      }
+    }
+    return state.files;
   }
 
   @override
