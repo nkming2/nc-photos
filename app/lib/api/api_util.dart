@@ -166,11 +166,18 @@ Stream<Future<AppPasswordResponse>> pollAppPassword(
 }
 
 class InitiateLoginResponse {
-  InitiateLoginResponse.fromJsonString(String jsonString) {
+  const InitiateLoginResponse({
+    required this.poll,
+    required this.login,
+  });
+
+  factory InitiateLoginResponse.fromJsonString(String jsonString) {
     final json = jsonDecode(jsonString);
-    poll = InitiateLoginPollOptions(
-        json['poll']['token'], json['poll']['endpoint']);
-    login = json['login'];
+    return InitiateLoginResponse(
+      poll: InitiateLoginPollOptions(
+          json['poll']['token'], json['poll']['endpoint']),
+      login: json['login'],
+    );
   }
 
   @override
@@ -181,8 +188,8 @@ class InitiateLoginResponse {
         "}";
   }
 
-  late InitiateLoginPollOptions poll;
-  late String login;
+  final InitiateLoginPollOptions poll;
+  final String login;
 }
 
 class InitiateLoginPollOptions {
@@ -210,11 +217,19 @@ class InitiateLoginPollOptions {
 abstract class AppPasswordResponse {}
 
 class AppPasswordSuccess implements AppPasswordResponse {
-  AppPasswordSuccess.fromJsonString(String jsonString) {
+  const AppPasswordSuccess({
+    required this.server,
+    required this.loginName,
+    required this.appPassword,
+  });
+
+  factory AppPasswordSuccess.fromJsonString(String jsonString) {
     final json = jsonDecode(jsonString);
-    server = Uri.parse(json['server']);
-    loginName = json['loginName'];
-    appPassword = json['appPassword'];
+    return AppPasswordSuccess(
+      server: Uri.parse(json['server']),
+      loginName: json['loginName'],
+      appPassword: json['appPassword'],
+    );
   }
 
   @override
@@ -226,9 +241,9 @@ class AppPasswordSuccess implements AppPasswordResponse {
         "}";
   }
 
-  late Uri server;
-  late String loginName;
-  late String appPassword;
+  final Uri server;
+  final String loginName;
+  final String appPassword;
 }
 
 class AppPasswordPending implements AppPasswordResponse {}
