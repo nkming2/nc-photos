@@ -217,6 +217,10 @@
 	"@connectingToServer2": {
 		"description": "Shown when the app is waiting for the user to sign in via an external browser"
 	},
+	"connectingToServerInstruction": "Please sign in via the opened browser",
+	"@connectingToServerInstruction": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
 	"nameInputHint": "Name",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"

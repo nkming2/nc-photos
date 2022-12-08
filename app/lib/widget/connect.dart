@@ -113,6 +113,12 @@ class _ConnectState extends State<Connect> {
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
+                    const SizedBox(height: 16),
+                    Text(
+                      L10n.global().connectingToServerInstruction,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ],
                 ),
               ),
