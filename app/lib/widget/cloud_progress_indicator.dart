@@ -92,8 +92,8 @@ class _Indicator extends AnimatedWidget {
   Widget build(BuildContext context) {
     final thisValue = value ?? _progress.value;
     final stroke = size * .07;
-    final offsetX = size * .06;
-    final offsetY = size * .15;
+    final offsetX = size * .03;
+    final offsetY = size * .06;
     const curve = Curves.easeInOutQuad;
     return Transform.scale(
       scaleX: isInvert ? -1 : 1,
