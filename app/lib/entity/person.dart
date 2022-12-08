@@ -1,6 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
+import 'package:to_string/to_string.dart';
 
+part 'person.g.dart';
+
+@toString
 class Person with EquatableMixin {
   const Person({
     required this.name,
@@ -9,11 +13,7 @@ class Person with EquatableMixin {
   });
 
   @override
-  toString() => "$runtimeType {"
-      "name: '$name', "
-      "thumbFaceId: '$thumbFaceId', "
-      "count: '$count', "
-      "}";
+  String toString() => _$toString();
 
   @override
   get props => [

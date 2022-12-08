@@ -3,7 +3,11 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:to_string/to_string.dart';
 
+part 'search.g.dart';
+
+@toString
 class SearchCriteria {
   SearchCriteria(String input, this.filters) : input = input.trim();
 
@@ -17,12 +21,10 @@ class SearchCriteria {
       );
 
   @override
-  toString() => "$runtimeType {"
-      "input: $input, "
-      "filters: ${filters.toReadableString()}, "
-      "}";
+  String toString() => _$toString();
 
   final String input;
+  @Format(r"${$?.toReadableString()}")
   final List<SearchFilter> filters;
 }
 
@@ -48,6 +50,7 @@ extension on SearchFileType {
   }
 }
 
+@toString
 class SearchFileTypeFilter implements SearchFilter {
   const SearchFileTypeFilter(this.type);
 
@@ -68,13 +71,12 @@ class SearchFileTypeFilter implements SearchFilter {
   }
 
   @override
-  toString() => "$runtimeType {"
-      "type: ${type.name}, "
-      "}";
+  String toString() => _$toString();
 
   final SearchFileType type;
 }
 
+@toString
 class SearchFavoriteFilter implements SearchFilter {
   const SearchFavoriteFilter(this.value);
 
@@ -87,9 +89,7 @@ class SearchFavoriteFilter implements SearchFilter {
   isSatisfy(File file) => (file.isFavorite ?? false) == value;
 
   @override
-  toString() => "$runtimeType {"
-      "value: $value, "
-      "}";
+  String toString() => _$toString();
 
   final bool value;
 }

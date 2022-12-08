@@ -8,6 +8,9 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
+import 'package:to_string/to_string.dart';
+
+part 'api_util.g.dart';
 
 /// Characters that are not allowed in filename
 const reservedFilenameChars = "<>:\"/\\|?*";
@@ -165,6 +168,7 @@ Stream<Future<AppPasswordResponse>> pollAppPassword(
       .takeWhile((_) => options.isTokenValid());
 }
 
+@toString
 class InitiateLoginResponse {
   const InitiateLoginResponse({
     required this.poll,
@@ -181,34 +185,26 @@ class InitiateLoginResponse {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "poll: $poll, "
-        "login: $login, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final InitiateLoginPollOptions poll;
   final String login;
 }
 
+@toString
 class InitiateLoginPollOptions {
   InitiateLoginPollOptions(this.token, String endpoint)
       : endpoint = Uri.parse(endpoint),
         _validUntil = DateTime.now().add(const Duration(minutes: 20));
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "token: ${kDebugMode ? token : '***'}, "
-        "endpoint: $endpoint, "
-        "}";
-  }
+  String toString() => _$toString();
 
   bool isTokenValid() {
     return DateTime.now().isBefore(_validUntil);
   }
 
+  @Format(r"${kDebugMode ? $? : '***'}")
   final String token;
   final Uri endpoint;
   final DateTime _validUntil;
@@ -216,6 +212,7 @@ class InitiateLoginPollOptions {
 
 abstract class AppPasswordResponse {}
 
+@toString
 class AppPasswordSuccess implements AppPasswordResponse {
   const AppPasswordSuccess({
     required this.server,
@@ -233,16 +230,11 @@ class AppPasswordSuccess implements AppPasswordResponse {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "server: $server, "
-        "loginName: $loginName, "
-        "appPassword: ${kDebugMode ? appPassword : '***'}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Uri server;
   final String loginName;
+  @Format(r"${kDebugMode ? appPassword : '***'}")
   final String appPassword;
 }
 

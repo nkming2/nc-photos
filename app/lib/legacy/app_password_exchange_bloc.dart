@@ -6,20 +6,20 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:to_string/to_string.dart';
+
+part 'app_password_exchange_bloc.g.dart';
 
 abstract class AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocEvent();
 }
 
+@toString
 class AppPasswordExchangeBlocConnect extends AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocConnect(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
 }
@@ -32,28 +32,23 @@ class AppPasswordExchangeBlocInit extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocInit();
 }
 
+@toString
 class AppPasswordExchangeBlocSuccess extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocSuccess(this.password);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "password: ${kDebugMode ? password : '***'}, "
-        "}";
-  }
+  String toString() => _$toString();
 
+  @Format(r"${kDebugMode ? password : '***'}")
   final String password;
 }
 
+@toString
 class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocFailure(this.exception);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

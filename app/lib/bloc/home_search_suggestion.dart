@@ -14,51 +14,50 @@ import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
+import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
 
+part 'home_search_suggestion.g.dart';
+
 abstract class HomeSearchResult {}
 
+@toString
 class HomeSearchAlbumResult implements HomeSearchResult {
   const HomeSearchAlbumResult(this.album);
 
   @override
-  toString() => "$runtimeType {"
-      "album: $album, "
-      "}";
+  String toString() => _$toString();
 
   final Album album;
 }
 
+@toString
 class HomeSearchTagResult implements HomeSearchResult {
   const HomeSearchTagResult(this.tag);
 
   @override
-  toString() => "$runtimeType {"
-      "tag: $tag, "
-      "}";
+  String toString() => _$toString();
 
   final Tag tag;
 }
 
+@toString
 class HomeSearchPersonResult implements HomeSearchResult {
   const HomeSearchPersonResult(this.person);
 
   @override
-  toString() => "$runtimeType {"
-      "person: $person, "
-      "}";
+  String toString() => _$toString();
 
   final Person person;
 }
 
+@toString
 class HomeSearchLocationResult implements HomeSearchResult {
   const HomeSearchLocationResult(this.location);
 
   @override
-  toString() => "$runtimeType {"
-      "location: $location, "
-      "}";
+  String toString() => _$toString();
 
   final LocationGroup location;
 }
@@ -67,33 +66,31 @@ abstract class HomeSearchSuggestionBlocEvent {
   const HomeSearchSuggestionBlocEvent();
 }
 
+@toString
 class HomeSearchSuggestionBlocPreloadData
     extends HomeSearchSuggestionBlocEvent {
   const HomeSearchSuggestionBlocPreloadData();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 class HomeSearchSuggestionBlocSearch extends HomeSearchSuggestionBlocEvent {
   const HomeSearchSuggestionBlocSearch(this.phrase);
 
   @override
-  toString() => "$runtimeType {"
-      "phrase: '$phrase', "
-      "}";
+  String toString() => _$toString();
 
   final CiString phrase;
 }
 
+@toString
 abstract class HomeSearchSuggestionBlocState {
   const HomeSearchSuggestionBlocState(this.results);
 
   @override
-  toString() => "$runtimeType {"
-      "results: List {legth: ${results.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final List<HomeSearchResult> results;
 }
@@ -112,16 +109,14 @@ class HomeSearchSuggestionBlocSuccess extends HomeSearchSuggestionBlocState {
       : super(results);
 }
 
+@toString
 class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
   const HomeSearchSuggestionBlocFailure(
       List<HomeSearchTagResult> results, this.exception)
       : super(results);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

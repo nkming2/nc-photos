@@ -1,10 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
 
+part 'item.g.dart';
+
+@toString
 abstract class AlbumItem with EquatableMixin {
   AlbumItem({
     required this.addedBy,
@@ -51,12 +56,7 @@ abstract class AlbumItem with EquatableMixin {
   JsonObj toContentJson();
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "addedBy: '$addedBy', "
-        "addedAt: $addedAt, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -70,6 +70,7 @@ abstract class AlbumItem with EquatableMixin {
   static final _log = Logger("entity.album.AlbumItem");
 }
 
+@toString
 class AlbumFileItem extends AlbumItem {
   AlbumFileItem({
     required CiString addedBy,
@@ -99,12 +100,7 @@ class AlbumFileItem extends AlbumItem {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "file: $file, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   toContentJson() {
@@ -142,6 +138,7 @@ class AlbumFileItem extends AlbumItem {
   static const _type = "file";
 }
 
+@toString
 class AlbumLabelItem extends AlbumItem {
   AlbumLabelItem({
     required CiString addedBy,
@@ -159,12 +156,7 @@ class AlbumLabelItem extends AlbumItem {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "text: '$text', "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   toContentJson() {

@@ -8,12 +8,14 @@ part of 'progress_util.dart';
 
 extension _$IntProgressToString on IntProgress {
   String _$toString() {
-    return "IntProgress {max: $max, step: $step, _current: $_current}";
+    // ignore: unnecessary_string_interpolations
+    return "IntProgress {max: $max, step: ${step.toStringAsFixed(3)}, _current: $_current}";
   }
 }
 
 extension _$ProgressToString on Progress {
   String _$toString() {
-    return "Progress {progress: $progress, ${text == null ? "" : "text: $text, "}}";
+    // ignore: unnecessary_string_interpolations
+    return "Progress {progress: ${progress.toStringAsFixed(3)}, ${text == null ? "" : "text: $text"}}";
   }
 }

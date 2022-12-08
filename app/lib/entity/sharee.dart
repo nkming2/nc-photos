@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:to_string/to_string.dart';
+
+part 'sharee.g.dart';
 
 enum ShareeType {
   user,
@@ -14,6 +17,7 @@ enum ShareeType {
   lookup,
 }
 
+@ToString(ignoreNull: true)
 class Sharee with EquatableMixin {
   Sharee({
     required this.type,
@@ -24,17 +28,7 @@ class Sharee with EquatableMixin {
   });
 
   @override
-  toString() {
-    var product = "$runtimeType {"
-        "type: $type, "
-        "label: $label, "
-        "shareType: $shareType, "
-        "shareWith: $shareWith, ";
-    if (shareWithDisplayNameUnique != null) {
-      product += "shareWithDisplayNameUnique: $shareWithDisplayNameUnique, ";
-    }
-    return product + "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

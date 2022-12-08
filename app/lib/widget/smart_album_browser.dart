@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
@@ -22,6 +23,9 @@ import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:to_string/to_string.dart';
+
+part 'smart_album_browser.g.dart';
 
 class SmartAlbumBrowserArguments {
   const SmartAlbumBrowserArguments(this.account, this.album);
@@ -332,6 +336,7 @@ enum _SelectionMenuOption {
   download,
 }
 
+@toString
 abstract class _ListItem implements SelectableItem {
   const _ListItem({
     required this.index,
@@ -348,12 +353,11 @@ abstract class _ListItem implements SelectableItem {
   get staggeredTile => const StaggeredTile.count(1, 1);
 
   @override
-  toString() => "$runtimeType {"
-      "index: $index, "
-      "}";
+  String toString() => _$toString();
 
   final int index;
 
+  @ignore
   final VoidCallback? onTap;
 }
 

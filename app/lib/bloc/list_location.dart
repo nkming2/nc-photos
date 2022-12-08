@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -8,39 +9,39 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_location_file.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_location.g.dart';
 
 abstract class ListLocationBlocEvent {
   const ListLocationBlocEvent();
 }
 
+@toString
 class ListLocationBlocQuery extends ListLocationBlocEvent {
   const ListLocationBlocQuery(this.account);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ListLocationBlocExternalEvent extends ListLocationBlocEvent {
   const _ListLocationBlocExternalEvent();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ListLocationBlocState {
   const ListLocationBlocState(this.account, this.result);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "result: $result, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final LocationGroupResult result;
@@ -61,16 +62,14 @@ class ListLocationBlocSuccess extends ListLocationBlocState {
       : super(account, result);
 }
 
+@toString
 class ListLocationBlocFailure extends ListLocationBlocState {
   const ListLocationBlocFailure(
       Account? account, LocationGroupResult result, this.exception)
       : super(account, result);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

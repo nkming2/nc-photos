@@ -23,21 +23,22 @@ import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
+import 'package:to_string/to_string.dart';
+
+part 'scan_account_dir.g.dart';
 
 abstract class ScanAccountDirBlocEvent {
   const ScanAccountDirBlocEvent();
 }
 
+@toString
 abstract class ScanAccountDirBlocQueryBase extends ScanAccountDirBlocEvent {
   const ScanAccountDirBlocQueryBase({
     this.progressBloc,
   });
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "}";
-  }
+  String toString() => _$toString();
 
   /// Get notified about the query progress
   final ProgressBloc? progressBloc;
@@ -56,25 +57,20 @@ class ScanAccountDirBlocRefresh extends ScanAccountDirBlocQueryBase {
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ScanAccountDirBlocExternalEvent extends ScanAccountDirBlocEvent {
   const _ScanAccountDirBlocExternalEvent();
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "}";
-  }
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ScanAccountDirBlocState {
   const ScanAccountDirBlocState(this.files);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "files: List {length: ${files.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final List<FileDescriptor> files;
 }
@@ -96,17 +92,13 @@ class ScanAccountDirBlocSuccess extends ScanAccountDirBlocState {
   const ScanAccountDirBlocSuccess(List<FileDescriptor> files) : super(files);
 }
 
+@toString
 class ScanAccountDirBlocFailure extends ScanAccountDirBlocState {
   const ScanAccountDirBlocFailure(List<FileDescriptor> files, this.exception)
       : super(files);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -9,45 +10,39 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls_trashbin.dart';
+import 'package:to_string/to_string.dart';
+
+part 'ls_trashbin.g.dart';
 
 abstract class LsTrashbinBlocEvent {
   const LsTrashbinBlocEvent();
 }
 
+@toString
 class LsTrashbinBlocQuery extends LsTrashbinBlocEvent {
   const LsTrashbinBlocQuery(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _LsTrashbinBlocExternalEvent extends LsTrashbinBlocEvent {
   const _LsTrashbinBlocExternalEvent();
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "}";
-  }
+  String toString() => _$toString();
 }
 
+@toString
 abstract class LsTrashbinBlocState {
   const LsTrashbinBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account? account;
   final List<File> items;
@@ -67,18 +62,14 @@ class LsTrashbinBlocSuccess extends LsTrashbinBlocState {
       : super(account, items);
 }
 
+@toString
 class LsTrashbinBlocFailure extends LsTrashbinBlocState {
   const LsTrashbinBlocFailure(
       Account? account, List<File> items, this.exception)
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

@@ -1,33 +1,34 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/list_person.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_person.g.dart';
 
 abstract class ListPersonBlocEvent {
   const ListPersonBlocEvent();
 }
 
+@toString
 class ListPersonBlocQuery extends ListPersonBlocEvent {
   const ListPersonBlocQuery(this.account);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 abstract class ListPersonBlocState {
   const ListPersonBlocState(this.account, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<Person> items;
@@ -47,16 +48,14 @@ class ListPersonBlocSuccess extends ListPersonBlocState {
       : super(account, items);
 }
 
+@toString
 class ListPersonBlocFailure extends ListPersonBlocState {
   const ListPersonBlocFailure(
       Account? account, List<Person> items, this.exception)
       : super(account, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

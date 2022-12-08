@@ -1,16 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:to_string/to_string.dart';
 
+part 'favorite.g.dart';
+
+@toString
 class Favorite with EquatableMixin {
   const Favorite({
     required this.fileId,
   });
 
   @override
-  toString() => "$runtimeType {"
-      "fileId: '$fileId', "
-      "}";
+  String toString() => _$toString();
 
   Favorite copyWith({
     int? fileId,

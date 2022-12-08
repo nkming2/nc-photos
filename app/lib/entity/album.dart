@@ -11,6 +11,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
+
+part 'album.g.dart';
 
 /// Immutable object that represents an album
 class Album with EquatableMixin {
@@ -216,6 +219,7 @@ class Album with EquatableMixin {
   static final _log = Logger("entity.album.Album");
 }
 
+@toString
 class AlbumShare with EquatableMixin {
   AlbumShare({
     required this.userId,
@@ -257,13 +261,7 @@ class AlbumShare with EquatableMixin {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "userId: $userId, "
-        "displayName: $displayName, "
-        "sharedAt: $sharedAt, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

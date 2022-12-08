@@ -1,4 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:to_string/to_string.dart';
+
+part 'local_file.g.dart';
 
 abstract class LocalFile with EquatableMixin {
   const LocalFile();
@@ -25,6 +28,7 @@ extension LocalFileExtension on LocalFile {
 }
 
 /// A local file represented by its content uri on Android
+@ToString(ignoreNull: true)
 class LocalUriFile with EquatableMixin implements LocalFile {
   const LocalUriFile({
     required this.uri,
@@ -48,20 +52,7 @@ class LocalUriFile with EquatableMixin implements LocalFile {
   get identityHashCode => uri.hashCode;
 
   @override
-  toString() {
-    var product = "$runtimeType {"
-        "uri: $uri, "
-        "displayName: $displayName, "
-        "path: '$path', "
-        "lastModified: $lastModified, ";
-    if (mime != null) {
-      product += "mime: $mime, ";
-    }
-    if (dateTaken != null) {
-      product += "dateTaken: $dateTaken, ";
-    }
-    return product + "}";
-  }
+  String toString() => _$toString();
 
   @override
   get logTag => path;

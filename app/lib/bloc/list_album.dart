@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -14,6 +15,9 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_album.g.dart';
 
 class ListAlbumBlocItem {
   ListAlbumBlocItem(this.album);
@@ -25,40 +29,31 @@ abstract class ListAlbumBlocEvent {
   const ListAlbumBlocEvent();
 }
 
+@toString
 class ListAlbumBlocQuery extends ListAlbumBlocEvent {
   const ListAlbumBlocQuery(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ListAlbumBlocExternalEvent extends ListAlbumBlocEvent {
   const _ListAlbumBlocExternalEvent();
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "}";
-  }
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ListAlbumBlocState {
   const ListAlbumBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account? account;
   final List<ListAlbumBlocItem> items;
@@ -78,18 +73,14 @@ class ListAlbumBlocSuccess extends ListAlbumBlocState {
       : super(account, items);
 }
 
+@toString
 class ListAlbumBlocFailure extends ListAlbumBlocState {
   const ListAlbumBlocFailure(
       Account? account, List<ListAlbumBlocItem> items, this.exception)
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

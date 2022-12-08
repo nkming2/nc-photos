@@ -8,20 +8,17 @@ import 'package:nc_photos/math_util.dart' as math_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:sqlite3/common.dart';
+import 'package:to_string/to_string.dart';
 
+part 'reverse_geocoder.g.dart';
+
+@toString
 class ReverseGeocoderLocation {
   const ReverseGeocoderLocation(this.name, this.latitude, this.longitude,
       this.countryCode, this.admin1, this.admin2);
 
   @override
-  toString() => "$runtimeType {"
-      "name: $name, "
-      "latitude: $latitude, "
-      "longitude: $longitude, "
-      "countryCode: $countryCode, "
-      "admin1: $admin1, "
-      "admin2: $admin2, "
-      "}";
+  String toString() => _$toString();
 
   final String name;
   final double latitude;

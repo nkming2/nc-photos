@@ -1,26 +1,26 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:to_string/to_string.dart';
 
+part 'ls_dir.g.dart';
+
+@toString
 class LsDirBlocItem with EquatableMixin {
   LsDirBlocItem(this.file, this.isE2ee, this.children);
 
   @override
-  toString({bool isDeep = false}) {
+  String toString({bool isDeep = false}) {
     if (isDeep) {
       return "$runtimeType:${_toDeepString(0)}";
     } else {
-      final childrenStr =
-          children == null ? "null" : "List {length: ${children!.length}}";
-      return "$runtimeType {"
-          "file: '${file.path}', "
-          "children: $childrenStr, "
-          "}";
+      return _$toString();
     }
   }
 
@@ -53,6 +53,7 @@ abstract class LsDirBlocEvent {
   const LsDirBlocEvent();
 }
 
+@toString
 class LsDirBlocQuery extends LsDirBlocEvent {
   const LsDirBlocQuery(
     this.account,
@@ -61,13 +62,7 @@ class LsDirBlocQuery extends LsDirBlocEvent {
   });
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "root: '${root.path}', "
-        "depth: $depth, "
-        "}";
-  }
+  String toString() => _$toString();
 
   LsDirBlocQuery copyWith({
     Account? account,
@@ -86,17 +81,12 @@ class LsDirBlocQuery extends LsDirBlocEvent {
   final int depth;
 }
 
+@toString
 abstract class LsDirBlocState with EquatableMixin {
   const LsDirBlocState(this.account, this.root, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "root: ${root.path}, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -124,18 +114,14 @@ class LsDirBlocSuccess extends LsDirBlocState {
       : super(account, root, items);
 }
 
+@toString
 class LsDirBlocFailure extends LsDirBlocState {
   const LsDirBlocFailure(
       Account? account, File root, List<LsDirBlocItem> items, this.exception)
       : super(account, root, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

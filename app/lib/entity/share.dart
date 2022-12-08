@@ -4,6 +4,9 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
+import 'package:to_string/to_string.dart';
+
+part 'share.g.dart';
 
 enum ShareType {
   user,
@@ -84,6 +87,7 @@ extension ShareItemTypeExtension on ShareItemType {
   }
 }
 
+@toString
 class Share with EquatableMixin {
   Share({
     required this.id,
@@ -102,23 +106,7 @@ class Share with EquatableMixin {
   }) : path = path.trimAny("/");
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "id: $id, "
-        "shareType: $shareType, "
-        "stime: $stime, "
-        "uidOwner: $uidOwner, "
-        "displaynameOwner: $displaynameOwner, "
-        "uidFileOwner: $uidFileOwner, "
-        "path: $path, "
-        "itemType: $itemType, "
-        "mimeType: $mimeType, "
-        "itemSource: $itemSource, "
-        "shareWith: $shareWith, "
-        "shareWithDisplayName: $shareWithDisplayName, "
-        "url: $url, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/ci_string.dart';
@@ -14,17 +15,16 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/list_sharee.dart';
+import 'package:to_string/to_string.dart';
 
+part 'list_album_share_outlier.g.dart';
+
+@toString
 class ListAlbumShareOutlierItem with EquatableMixin {
   const ListAlbumShareOutlierItem(this.file, this.shareItems);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "file: '${file.path}', "
-        "shareItems: ${shareItems.toReadableString()}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -33,6 +33,7 @@ class ListAlbumShareOutlierItem with EquatableMixin {
       ];
 
   final File file;
+  @Format(r"${$?.toReadableString()}")
   final List<ListAlbumShareOutlierShareItem> shareItems;
 }
 
@@ -40,16 +41,13 @@ abstract class ListAlbumShareOutlierShareItem with EquatableMixin {
   const ListAlbumShareOutlierShareItem();
 }
 
+@toString
 class ListAlbumShareOutlierExtraShareItem
     extends ListAlbumShareOutlierShareItem {
   const ListAlbumShareOutlierExtraShareItem(this.share);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "share: $share, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -59,18 +57,14 @@ class ListAlbumShareOutlierExtraShareItem
   final Share share;
 }
 
+@toString
 class ListAlbumShareOutlierMissingShareItem
     extends ListAlbumShareOutlierShareItem {
   const ListAlbumShareOutlierMissingShareItem(
       this.shareWith, this.shareWithDisplayName);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "shareWith: $shareWith, "
-        "shareWithDisplayName: $shareWithDisplayName, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -86,31 +80,23 @@ abstract class ListAlbumShareOutlierBlocEvent {
   const ListAlbumShareOutlierBlocEvent();
 }
 
+@toString
 class ListAlbumShareOutlierBlocQuery extends ListAlbumShareOutlierBlocEvent {
   const ListAlbumShareOutlierBlocQuery(this.account, this.album);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "album: $album, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
   final Album album;
 }
 
+@toString
 abstract class ListAlbumShareOutlierBlocState with EquatableMixin {
   const ListAlbumShareOutlierBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: ${items.toReadableString()}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -119,6 +105,7 @@ abstract class ListAlbumShareOutlierBlocState with EquatableMixin {
       ];
 
   final Account? account;
+  @Format(r"${$?.toReadableString()}")
   final List<ListAlbumShareOutlierItem> items;
 }
 
@@ -138,18 +125,14 @@ class ListAlbumShareOutlierBlocSuccess extends ListAlbumShareOutlierBlocState {
       : super(account, items);
 }
 
+@toString
 class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
   const ListAlbumShareOutlierBlocFailure(
       Account? account, List<ListAlbumShareOutlierItem> items, this.exception)
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

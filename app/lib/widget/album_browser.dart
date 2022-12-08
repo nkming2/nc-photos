@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
@@ -43,6 +44,9 @@ import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:to_string/to_string.dart';
+
+part 'album_browser.g.dart';
 
 class AlbumBrowserArguments {
   AlbumBrowserArguments(this.account, this.album);
@@ -892,6 +896,7 @@ enum _SelectionMenuOption {
   removeFromAlbum,
 }
 
+@toString
 abstract class _ListItem implements SelectableItem, DraggableItem {
   const _ListItem({
     required this.index,
@@ -918,20 +923,23 @@ abstract class _ListItem implements SelectableItem, DraggableItem {
   buildDragFeedbackWidget(BuildContext context) => null;
 
   @override
-  toString() => "$runtimeType {"
-      "index: $index, "
-      "}";
+  String toString() => _$toString();
 
   final int index;
 
+  @ignore
   final VoidCallback? onTap;
   @override
+  @ignore
   final DragTargetAccept<DraggableItem>? onDropBefore;
   @override
+  @ignore
   final DragTargetAccept<DraggableItem>? onDropAfter;
   @override
+  @ignore
   final VoidCallback? onDragStarted;
   @override
+  @ignore
   final VoidCallback? onDragEndedAny;
 }
 

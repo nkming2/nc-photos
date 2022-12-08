@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
@@ -6,40 +7,42 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/scan_local_dir.dart';
+import 'package:to_string/to_string.dart';
+
+part 'scan_local_dir.g.dart';
 
 abstract class ScanLocalDirBlocEvent {
   const ScanLocalDirBlocEvent();
 }
 
+@toString
 class ScanLocalDirBlocQuery extends ScanLocalDirBlocEvent {
   const ScanLocalDirBlocQuery(this.relativePaths);
 
   @override
-  toString() => "$runtimeType {"
-      "relativePaths: ${relativePaths.toReadableString()}, "
-      "}";
+  String toString() => _$toString();
 
+  @Format(r"${$?.toReadableString()}")
   final List<String> relativePaths;
 }
 
+@toString
 class _ScanLocalDirBlocFileDeleted extends ScanLocalDirBlocEvent {
   const _ScanLocalDirBlocFileDeleted(this.files);
 
   @override
-  toString() => "$runtimeType {"
-      "files: ${files.map((f) => f.logTag).toReadableString()}, "
-      "}";
+  String toString() => _$toString();
 
+  @Format(r"${$?.map((f) => f.logTag).toReadableString()}")
   final List<LocalFile> files;
 }
 
+@toString
 abstract class ScanLocalDirBlocState {
   const ScanLocalDirBlocState(this.files);
 
   @override
-  toString() => "$runtimeType {"
-      "files: List {length: ${files.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final List<LocalFile> files;
 }
@@ -56,15 +59,13 @@ class ScanLocalDirBlocSuccess extends ScanLocalDirBlocState {
   const ScanLocalDirBlocSuccess(List<LocalFile> files) : super(files);
 }
 
+@toString
 class ScanLocalDirBlocFailure extends ScanLocalDirBlocState {
   const ScanLocalDirBlocFailure(List<LocalFile> files, this.exception)
       : super(files);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final dynamic exception;
 }

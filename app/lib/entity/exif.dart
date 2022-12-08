@@ -87,7 +87,7 @@ class Exif with EquatableMixin {
     final dataStr = data.entries.map((e) {
       return "${e.key}: '${e.value}'";
     }).join(", ");
-    return "$runtimeType {$dataStr}";
+    return "Exif {$dataStr}";
   }
 
   /// 0x010f Make

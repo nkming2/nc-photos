@@ -7,68 +7,60 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:to_string/to_string.dart';
+
+part 'app_password_exchange.g.dart';
 
 abstract class AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocEvent();
 }
 
+@toString
 class AppPasswordExchangeBlocInitiateLogin
     extends AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocInitiateLogin(this.uri);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "uri: $uri, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Uri uri;
 }
 
+@toString
 class AppPasswordExchangeBlocPoll extends AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocPoll(this.pollOptions);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "pollOptions: $pollOptions, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final api_util.InitiateLoginPollOptions pollOptions;
 }
 
+@toString
 class AppPasswordExchangeBlocCancel extends AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocCancel();
 
   @override
-  String toString() => "AppPasswordExchangeBlocCancel {}";
+  String toString() => _$toString();
 }
 
+@toString
 class _AppPasswordExchangeBlocAppPwReceived
     extends AppPasswordExchangeBlocEvent {
   const _AppPasswordExchangeBlocAppPwReceived(this.appPasswordResponse);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "appPasswordResponse: $appPasswordResponse, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final api_util.AppPasswordSuccess appPasswordResponse;
 }
 
+@toString
 class _AppPasswordExchangeBlocAppPwFailed extends AppPasswordExchangeBlocEvent {
   const _AppPasswordExchangeBlocAppPwFailed(this.exception);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }
@@ -81,53 +73,43 @@ class AppPasswordExchangeBlocInit extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocInit();
 }
 
+@toString
 class AppPasswordExchangeBlocInitiateLoginSuccess
     extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocInitiateLoginSuccess(this.result);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "result: $result, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final api_util.InitiateLoginResponse result;
 }
 
+@toString
 class AppPasswordExchangeBlocAppPwSuccess extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocAppPwSuccess(this.result);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "result: $result, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final api_util.AppPasswordSuccess result;
 }
 
+@toString
 class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocFailure(this.exception);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }
 
+@toString
 class AppPasswordExchangeBlocResult extends AppPasswordExchangeBlocState {
   const AppPasswordExchangeBlocResult(this.result);
 
   @override
-  String toString() => "AppPasswordExchangeBlocResult {"
-      "result: $result, "
-      "}";
+  String toString() => _$toString();
 
   final Account? result;
 }

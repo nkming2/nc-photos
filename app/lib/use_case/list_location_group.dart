@@ -5,18 +5,17 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/location_util.dart' as location_util;
+import 'package:to_string/to_string.dart';
 
+part 'list_location_group.g.dart';
+
+@toString
 class LocationGroup {
   const LocationGroup(
       this.place, this.countryCode, this.count, this.latestFileId);
 
   @override
-  toString() => "$runtimeType {"
-      "place: $place, "
-      "countryCode: $countryCode, "
-      "count: $count, "
-      "latestFileId: $latestFileId, "
-      "}";
+  String toString() => _$toString();
 
   final String place;
   final String countryCode;
@@ -24,17 +23,13 @@ class LocationGroup {
   final int latestFileId;
 }
 
+@toString
 class LocationGroupResult {
   const LocationGroupResult(
       this.name, this.admin1, this.admin2, this.countryCode);
 
   @override
-  toString() => "$runtimeType {"
-      "name: List {length: ${name.length}}, "
-      "admin1: List {length: ${admin1.length}}, "
-      "admin2: List {length: ${admin2.length}}, "
-      "countryCode: List {length: ${countryCode.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final List<LocationGroup> name;
   final List<LocationGroup> admin1;

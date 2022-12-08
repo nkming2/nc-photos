@@ -1,38 +1,35 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_sharee.g.dart';
 
 abstract class ListShareeBlocEvent {
   const ListShareeBlocEvent();
 }
 
+@toString
 class ListShareeBlocQuery extends ListShareeBlocEvent {
   const ListShareeBlocQuery(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 abstract class ListShareeBlocState {
   const ListShareeBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account? account;
   final List<Sharee> items;
@@ -52,18 +49,14 @@ class ListShareeBlocSuccess extends ListShareeBlocState {
       : super(account, items);
 }
 
+@toString
 class ListShareeBlocFailure extends ListShareeBlocState {
   const ListShareeBlocFailure(
       Account? account, List<Sharee> items, this.exception)
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

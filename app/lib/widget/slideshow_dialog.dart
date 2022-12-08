@@ -5,7 +5,11 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/switch_form_field.dart';
+import 'package:to_string/to_string.dart';
 
+part 'slideshow_dialog.g.dart';
+
+@toString
 class SlideshowConfig {
   SlideshowConfig({
     required this.duration,
@@ -15,14 +19,7 @@ class SlideshowConfig {
   });
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "duration: $duration, "
-        "isShuffle: $isShuffle, "
-        "isRepeat: $isRepeat, "
-        "isReverse: $isReverse, "
-        "}";
-  }
+  String toString() => _$toString();
 
   /// Time where each item is shown
   final Duration duration;

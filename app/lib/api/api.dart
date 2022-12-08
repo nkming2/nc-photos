@@ -1,30 +1,32 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:to_string/to_string.dart';
 import 'package:xml/xml.dart';
 
+part 'api.g.dart';
+
+@toString
 class Response {
   Response(this.statusCode, this.headers, this.body);
 
   bool get isGood => _isHttpStatusGood(statusCode);
 
   @override
-  String toString() {
-    return "{"
-        "status: $statusCode, "
-        "headers: ..., "
-        "body: ..., "
-        "}";
-  }
+  String toString() => _$toString();
 
   final int statusCode;
+  @Format(r"...")
   final Map<String, String> headers;
 
   /// Content of the response body, String if isResponseString == true during
   /// request, Uint8List otherwise
+  @Format(
+      r"${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').substring(0, 200) : '...'}")
   final dynamic body;
 }
 

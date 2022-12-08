@@ -1,40 +1,35 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_share.g.dart';
 
 abstract class ListShareBlocEvent {
   const ListShareBlocEvent();
 }
 
+@toString
 class ListShareBlocQuery extends ListShareBlocEvent {
   const ListShareBlocQuery(this.account, this.file);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "file: '${file.path}', "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
   final File file;
 }
 
+@toString
 abstract class ListShareBlocState {
   const ListShareBlocState(this.account, this.file, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "file: '${file.path}', "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account? account;
   final File file;
@@ -55,18 +50,14 @@ class ListShareBlocSuccess extends ListShareBlocState {
       : super(account, file, items);
 }
 
+@toString
 class ListShareBlocFailure extends ListShareBlocState {
   const ListShareBlocFailure(
       Account? account, File file, List<Share> items, this.exception)
       : super(account, file, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

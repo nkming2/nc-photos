@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -18,6 +19,9 @@ import 'package:nc_photos/use_case/list_share_with_me.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:path/path.dart' as path_lib;
+import 'package:to_string/to_string.dart';
+
+part 'list_sharing.g.dart';
 
 abstract class ListSharingItem {
   const ListSharingItem(this.share);
@@ -41,60 +45,46 @@ abstract class ListSharingBlocEvent {
   const ListSharingBlocEvent();
 }
 
+@toString
 class ListSharingBlocQuery extends ListSharingBlocEvent {
   const ListSharingBlocQuery(this.account);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 class _ListSharingBlocShareRemoved extends ListSharingBlocEvent {
   const _ListSharingBlocShareRemoved(this.shares);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "shares: ${shares.toReadableString()}, "
-        "}";
-  }
+  String toString() => _$toString();
 
+  @Format(r"${$?.toReadableString()}")
   final List<Share> shares;
 }
 
+@toString
 class _ListSharingBlocPendingSharedAlbumMoved extends ListSharingBlocEvent {
   const _ListSharingBlocPendingSharedAlbumMoved(
       this.account, this.file, this.destination);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "file: $file, "
-        "destination: $destination, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
   final File file;
   final String destination;
 }
 
+@toString
 abstract class ListSharingBlocState {
   const ListSharingBlocState(this.account, this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account? account;
   final List<ListSharingItem> items;
@@ -123,18 +113,14 @@ class ListSharingBlocSuccess extends ListSharingBlocState {
       );
 }
 
+@toString
 class ListSharingBlocFailure extends ListSharingBlocState {
   const ListSharingBlocFailure(
       Account? account, List<ListSharingItem> items, this.exception)
       : super(account, items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   ListSharingBlocFailure copyWith({
     Account? account,

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -8,53 +9,50 @@ import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/search.dart';
+import 'package:to_string/to_string.dart';
+
+part 'search.g.dart';
 
 abstract class SearchBlocEvent {
   const SearchBlocEvent();
 }
 
+@toString
 class SearchBlocQuery extends SearchBlocEvent {
   const SearchBlocQuery(this.account, this.criteria);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "criteria: $criteria, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
   final SearchCriteria criteria;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _SearchBlocExternalEvent extends SearchBlocEvent {
   const _SearchBlocExternalEvent();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 class SearchBlocResetLanding extends SearchBlocEvent {
   const SearchBlocResetLanding(this.account);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 abstract class SearchBlocState {
   const SearchBlocState(this.account, this.criteria, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "criteria: $criteria, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final SearchCriteria criteria;
@@ -77,16 +75,14 @@ class SearchBlocSuccess extends SearchBlocState {
       : super(account, criteria, items);
 }
 
+@toString
 class SearchBlocFailure extends SearchBlocState {
   const SearchBlocFailure(Account? account, SearchCriteria criteria,
       List<File> items, this.exception)
       : super(account, criteria, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

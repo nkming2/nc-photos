@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -7,20 +8,20 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_location_file.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_location_file.g.dart';
 
 abstract class ListLocationFileBlocEvent {
   const ListLocationFileBlocEvent();
 }
 
+@toString
 class ListLocationFileBlocQuery extends ListLocationFileBlocEvent {
   const ListLocationFileBlocQuery(this.account, this.place, this.countryCode);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "place: $place, "
-      "countryCode: $countryCode, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
   final String? place;
@@ -28,22 +29,20 @@ class ListLocationFileBlocQuery extends ListLocationFileBlocEvent {
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ListLocationFileBlocExternalEvent extends ListLocationFileBlocEvent {
   const _ListLocationFileBlocExternalEvent();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ListLocationFileBlocState {
   const ListLocationFileBlocState(this.account, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<File> items;
@@ -63,16 +62,14 @@ class ListLocationFileBlocSuccess extends ListLocationFileBlocState {
       : super(account, items);
 }
 
+@toString
 class ListLocationFileBlocFailure extends ListLocationFileBlocState {
   const ListLocationFileBlocFailure(
       Account? account, List<File> items, this.exception)
       : super(account, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

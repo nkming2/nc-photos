@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -11,6 +12,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_importable_album.g.dart';
 
 class ListImportableAlbumBlocItem {
   ListImportableAlbumBlocItem(this.file, this.photoCount);
@@ -23,6 +27,7 @@ abstract class ListImportableAlbumBlocEvent {
   const ListImportableAlbumBlocEvent();
 }
 
+@toString
 class ListImportableAlbumBlocQuery extends ListImportableAlbumBlocEvent {
   const ListImportableAlbumBlocQuery(
     this.account,
@@ -30,26 +35,19 @@ class ListImportableAlbumBlocQuery extends ListImportableAlbumBlocEvent {
   );
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "roots: ${roots.toReadableString()}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final Account account;
+  @Format(r"${$?.toReadableString()}")
   final List<File> roots;
 }
 
+@toString
 abstract class ListImportableAlbumBlocState {
   const ListImportableAlbumBlocState(this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "items: List {length: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final List<ListImportableAlbumBlocItem> items;
 }
@@ -68,18 +66,14 @@ class ListImportableAlbumBlocSuccess extends ListImportableAlbumBlocState {
       : super(items);
 }
 
+@toString
 class ListImportableAlbumBlocFailure extends ListImportableAlbumBlocState {
   const ListImportableAlbumBlocFailure(
       List<ListImportableAlbumBlocItem> items, this.exception)
       : super(items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "exception: $exception, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final dynamic exception;
 }

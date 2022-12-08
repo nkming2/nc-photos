@@ -1,7 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:to_string/to_string.dart';
 
+part 'face.g.dart';
+
+@toString
 class Face with EquatableMixin {
   const Face({
     required this.id,
@@ -9,12 +13,7 @@ class Face with EquatableMixin {
   });
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "id: '$id', "
-        "fileId: '$fileId', "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [

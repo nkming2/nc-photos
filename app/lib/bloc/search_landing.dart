@@ -1,35 +1,35 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
+import 'package:to_string/to_string.dart';
+
+part 'search_landing.g.dart';
 
 abstract class SearchLandingBlocEvent {
   const SearchLandingBlocEvent();
 }
 
+@toString
 class SearchLandingBlocQuery extends SearchLandingBlocEvent {
   const SearchLandingBlocQuery(this.account);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 abstract class SearchLandingBlocState {
   const SearchLandingBlocState(this.account, this.persons, this.locations);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "persons: List {length: ${persons.length}}, "
-      "locations: $locations, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<Person> persons;
@@ -53,16 +53,14 @@ class SearchLandingBlocSuccess extends SearchLandingBlocState {
       : super(account, persons, locations);
 }
 
+@toString
 class SearchLandingBlocFailure extends SearchLandingBlocState {
   const SearchLandingBlocFailure(Account? account, List<Person> persons,
       LocationGroupResult locations, this.exception)
       : super(account, persons, locations);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

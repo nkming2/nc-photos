@@ -8,3 +8,11 @@ targets:
           new_sql_code_generation: true
           scoped_dart_components: true
           generate_connect_constructor: true
+      to_string:
+        options:
+          formatStringNameMapping:
+            double: "${$?.toStringAsFixed(3)}"
+            List: "[length: ${$?.length}]"
+            File: "${$?.path}"
+            FileDescriptor: "${$?.fdPath}"
+          useEnumName: true

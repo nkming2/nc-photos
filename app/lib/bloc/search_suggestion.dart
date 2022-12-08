@@ -4,49 +4,43 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
+
+part 'search_suggestion.g.dart';
 
 abstract class SearchSuggestionBlocEvent<T> {
   const SearchSuggestionBlocEvent();
 }
 
+@toString
 class SearchSuggestionBlocUpdateItemsEvent<T>
     extends SearchSuggestionBlocEvent<T> {
   const SearchSuggestionBlocUpdateItemsEvent(this.items);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "items: List {legth: ${items.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final List<T> items;
 }
 
+@toString
 class SearchSuggestionBlocSearchEvent<T> extends SearchSuggestionBlocEvent<T> {
   const SearchSuggestionBlocSearchEvent(this.phrase);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "phrase: '$phrase', "
-        "}";
-  }
+  String toString() => _$toString();
 
   final CiString phrase;
 }
 
+@toString
 abstract class SearchSuggestionBlocState<T> {
   const SearchSuggestionBlocState(this.results);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "results: List {legth: ${results.length}}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   final List<T> results;
 }

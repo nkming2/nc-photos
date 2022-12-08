@@ -8,6 +8,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
+
+part 'cover_provider.g.dart';
 
 abstract class AlbumCoverProvider with EquatableMixin {
   const AlbumCoverProvider();
@@ -48,7 +51,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
   }
 
   @override
-  toString();
+  String toString();
 
   FileDescriptor? getCover(Album album);
 
@@ -58,6 +61,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 }
 
 /// Cover selected automatically by us
+@toString
 class AlbumAutoCoverProvider extends AlbumCoverProvider {
   AlbumAutoCoverProvider({
     this.coverFile,
@@ -72,11 +76,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "coverFile: '${coverFile?.path}', "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   getCover(Album album) {
@@ -118,6 +118,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
 }
 
 /// Cover picked by user
+@toString
 class AlbumManualCoverProvider extends AlbumCoverProvider {
   AlbumManualCoverProvider({
     required this.coverFile,
@@ -130,11 +131,7 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "coverFile: '${coverFile.path}', "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   getCover(Album album) => coverFile;
@@ -157,6 +154,7 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
 }
 
 /// Cover selected when building a Memory album
+@toString
 class AlbumMemoryCoverProvider extends AlbumCoverProvider {
   AlbumMemoryCoverProvider({
     required this.coverFile,
@@ -170,9 +168,7 @@ class AlbumMemoryCoverProvider extends AlbumCoverProvider {
   }
 
   @override
-  toString() => "$runtimeType {"
-      "coverFile: '${coverFile.fdPath}', "
-      "}";
+  String toString() => _$toString();
 
   @override
   getCover(Album album) => coverFile;

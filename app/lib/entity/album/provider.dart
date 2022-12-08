@@ -10,6 +10,9 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
+
+part 'provider.g.dart';
 
 abstract class AlbumProvider with EquatableMixin {
   const AlbumProvider();
@@ -53,7 +56,7 @@ abstract class AlbumProvider with EquatableMixin {
   JsonObj toContentJson();
 
   @override
-  toString({bool isDeep = false});
+  String toString({bool isDeep = false});
 
   /// Return the date time associated with the latest item, or null
   DateTime? get latestItemTime;
@@ -67,13 +70,6 @@ abstract class AlbumProviderBase extends AlbumProvider {
   AlbumProviderBase({
     DateTime? latestItemTime,
   }) : latestItemTime = latestItemTime?.toUtc();
-
-  @override
-  toString({bool isDeep = false}) {
-    return "$runtimeType {"
-        "latestItemTime: $latestItemTime, "
-        "}";
-  }
 
   @override
   toContentJson() {
@@ -97,6 +93,7 @@ abstract class AlbumProviderBase extends AlbumProvider {
   final DateTime? latestItemTime;
 }
 
+@ToString(extraParams: r"{bool isDeep = false}")
 class AlbumStaticProvider extends AlbumProviderBase {
   AlbumStaticProvider({
     DateTime? latestItemTime,
@@ -121,14 +118,7 @@ class AlbumStaticProvider extends AlbumProviderBase {
       (parent.provider as AlbumStaticProvider);
 
   @override
-  toString({bool isDeep = false}) {
-    final itemsStr =
-        isDeep ? items.toReadableString() : "List {length: ${items.length}}";
-    return "$runtimeType {"
-        "super: ${super.toString(isDeep: isDeep)}, "
-        "items: $itemsStr, "
-        "}";
-  }
+  String toString({bool isDeep = false}) => _$toString(isDeep: isDeep);
 
   @override
   toContentJson() {
@@ -157,6 +147,7 @@ class AlbumStaticProvider extends AlbumProviderBase {
       ];
 
   /// Immutable list of items. Modifying the list will result in an error
+  @Format(r"${isDeep ? $?.toReadableString() : '[length: ${$?.length}]'}")
   final List<AlbumItem> items;
 
   static const _type = "static";
@@ -168,6 +159,7 @@ abstract class AlbumDynamicProvider extends AlbumProviderBase {
   }) : super(latestItemTime: latestItemTime);
 }
 
+@ToString(extraParams: r"{bool isDeep = false}")
 class AlbumDirProvider extends AlbumDynamicProvider {
   AlbumDirProvider({
     required this.dirs,
@@ -188,12 +180,7 @@ class AlbumDirProvider extends AlbumDynamicProvider {
   }
 
   @override
-  toString({bool isDeep = false}) {
-    return "$runtimeType {"
-        "super: ${super.toString(isDeep: isDeep)}, "
-        "dirs: ${dirs.map((e) => e.path).toReadableString()}, "
-        "}";
-  }
+  String toString({bool isDeep = false}) => _$toString(isDeep: isDeep);
 
   @override
   toContentJson() {
@@ -221,11 +208,13 @@ class AlbumDirProvider extends AlbumDynamicProvider {
         dirs,
       ];
 
+  @Format(r"${$?.map((e) => e.path).toReadableString()}")
   final List<File> dirs;
 
   static const _type = "dir";
 }
 
+@ToString(extraParams: r"{bool isDeep = false}")
 class AlbumTagProvider extends AlbumDynamicProvider {
   AlbumTagProvider({
     required this.tags,
@@ -242,10 +231,7 @@ class AlbumTagProvider extends AlbumDynamicProvider {
       );
 
   @override
-  toString({bool isDeep = false}) => "$runtimeType {"
-      "super: ${super.toString(isDeep: isDeep)}, "
-      "tags: ${tags.map((t) => t.displayName).toReadableString()}, "
-      "}";
+  String toString({bool isDeep = false}) => _$toString(isDeep: isDeep);
 
   @override
   toContentJson() => {
@@ -270,6 +256,7 @@ class AlbumTagProvider extends AlbumDynamicProvider {
         tags,
       ];
 
+  @Format(r"${$?.map((t) => t.displayName).toReadableString()}")
   final List<Tag> tags;
 
   static const _type = "tag";
@@ -297,6 +284,7 @@ abstract class AlbumSmartProvider extends AlbumProviderBase {
 }
 
 /// Memory album is created based on dates
+@ToString(extraParams: r"{bool isDeep = false}")
 class AlbumMemoryProvider extends AlbumSmartProvider {
   AlbumMemoryProvider({
     required this.year,
@@ -305,14 +293,7 @@ class AlbumMemoryProvider extends AlbumSmartProvider {
   }) : super(latestItemTime: DateTime(year, month, day));
 
   @override
-  toString({bool isDeep = false}) {
-    return "$runtimeType {"
-        "super: ${super.toString(isDeep: isDeep)}, "
-        "year: $year, "
-        "month: $month, "
-        "day: $day, "
-        "}";
-  }
+  String toString({bool isDeep = false}) => _$toString(isDeep: isDeep);
 
   @override
   get props => [

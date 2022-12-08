@@ -4,10 +4,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
+
+part 'account.g.dart';
 
 /// Details of a remote Nextcloud server account
+@toString
 class Account with EquatableMixin {
   Account(
     this.id,
@@ -51,17 +56,7 @@ class Account with EquatableMixin {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "id: '$id', "
-        "scheme: '$scheme', "
-        "address: '${kDebugMode ? address : "***"}', "
-        "userId: '${kDebugMode ? userId : "***"}', "
-        "username2: '${kDebugMode ? username2 : "***"}', "
-        "password: '${password.isNotEmpty == true ? (kDebugMode ? password : '***') : null}', "
-        "roots: List {'${roots.join('\', \'')}'}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   static Account? fromJson(
     JsonObj json, {
@@ -105,13 +100,18 @@ class Account with EquatableMixin {
 
   final String id;
   final String scheme;
+  @Format(r"${kDebugMode ? $? : '***'}")
   final String address;
   // For non LDAP users, this is the username used to sign in
+  @Format(r"${kDebugMode ? $? : '***'}")
   final CiString userId;
   // Username used to sign in. For non-LDAP users, this is identical to userId
+  @Format(r"${kDebugMode ? $? : '***'}")
   final String username2;
+  @Format(r"${$?.isNotEmpty ? (kDebugMode ? $? : '***') : null}")
   final String password;
 
+  @Format(r"${$?.toReadableString()}")
   final List<String> _roots;
 
   /// versioning of this class, use to upgrade old persisted accounts

@@ -2,14 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
+import 'package:to_string/to_string.dart';
 
+part 'tagged_file.g.dart';
+
+@toString
 class TaggedFile with EquatableMixin {
   const TaggedFile({required this.fileId});
 
   @override
-  toString() => "$runtimeType {"
-      "fileId: '$fileId', "
-      "}";
+  String toString() => _$toString();
 
   @override
   get props => [

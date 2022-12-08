@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -6,30 +7,30 @@ import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_tag.g.dart';
 
 abstract class ListTagBlocEvent {
   const ListTagBlocEvent();
 }
 
+@toString
 class ListTagBlocQuery extends ListTagBlocEvent {
   const ListTagBlocQuery(this.account);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
 }
 
+@toString
 abstract class ListTagBlocState {
   const ListTagBlocState(this.account, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<Tag> items;
@@ -49,15 +50,13 @@ class ListTagBlocSuccess extends ListTagBlocState {
       : super(account, items);
 }
 
+@toString
 class ListTagBlocFailure extends ListTagBlocState {
   const ListTagBlocFailure(Account? account, List<Tag> items, this.exception)
       : super(account, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final dynamic exception;
 }

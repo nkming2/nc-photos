@@ -4,7 +4,11 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
 
+part 'tag.g.dart';
+
+@ToString(ignoreNull: true)
 class Tag with EquatableMixin {
   const Tag({
     required this.id,
@@ -28,20 +32,7 @@ class Tag with EquatableMixin {
       };
 
   @override
-  toString() {
-    final buffer = StringBuffer();
-    buffer.write("$runtimeType {"
-        "id: $id, "
-        "displayName: '$displayName', ");
-    if (userVisible != null) {
-      buffer.write("userVisible: $userVisible, ");
-    }
-    if (userAssignable != null) {
-      buffer.write("userAssignable: $userAssignable, ");
-    }
-    buffer.write("}");
-    return buffer.toString();
-  }
+  String toString() => _$toString();
 
   Tag copyWith({
     int? id,

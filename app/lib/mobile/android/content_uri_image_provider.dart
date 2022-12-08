@@ -4,7 +4,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:to_string/to_string.dart';
 
+part 'content_uri_image_provider.g.dart';
+
+@toString
 class ContentUriImage extends ImageProvider<ContentUriImage>
     with EquatableMixin {
   /// Creates an object that decodes a content Uri as an image.
@@ -52,10 +56,7 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
       ];
 
   @override
-  toString() => "${objectRuntimeType(this, "ContentUriImage")} {"
-      "uri: $uri, "
-      "scale: $scale, "
-      "}";
+  String toString() => _$toString();
 
   final String uri;
 

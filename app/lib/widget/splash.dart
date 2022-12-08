@@ -18,6 +18,9 @@ import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
+import 'package:to_string/to_string.dart';
+
+part 'splash.g.dart';
 
 class Splash extends StatefulWidget {
   static const routeName = "/splash";
@@ -269,6 +272,7 @@ class _SplashState extends State<Splash> {
   static final _log = Logger("widget.splash._SplashState");
 }
 
+@toString
 class _UpgradeState {
   const _UpgradeState(String text, int current, int count)
       : this._(text, current, count);
@@ -279,10 +283,7 @@ class _UpgradeState {
   const _UpgradeState._(this.text, this.current, this.count);
 
   @override
-  String toString() => "_UpgradeState {"
-      "current: $current, "
-      "count: $count, "
-      "}";
+  String toString() => _$toString();
 
   final String text;
   final int current;

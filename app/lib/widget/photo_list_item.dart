@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +14,11 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:to_string/to_string.dart';
 
+part 'photo_list_item.g.dart';
+
+@toString
 abstract class PhotoListFileItem extends SelectableItem {
   const PhotoListFileItem({
     required this.fileIndex,
@@ -35,11 +40,7 @@ abstract class PhotoListFileItem extends SelectableItem {
   get hashCode => file.fdPath.hashCode;
 
   @override
-  toString() => "$runtimeType {"
-      "fileIndex: $fileIndex, "
-      "file: ${file.fdPath}, "
-      "shouldShowFavoriteBadge: $shouldShowFavoriteBadge, "
-      "}";
+  String toString() => _$toString();
 
   final int fileIndex;
   final FileDescriptor file;

@@ -11,19 +11,19 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
+import 'package:to_string/to_string.dart';
+
+part 'metadata_task_manager.g.dart';
 
 /// Task to update metadata for missing files
+@ToString(ignorePrivate: true)
 class MetadataTask {
   MetadataTask(this._c, this.account, this.pref) : assert(require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.fileRepo);
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "account: $account, "
-        "}";
-  }
+  String toString() => _$toString();
 
   Future<void> call() async {
     try {
@@ -71,6 +71,7 @@ class MetadataTask {
   final DiContainer _c;
 
   final Account account;
+  @ignore
   final AccountPref pref;
 
   static final _log = Logger("metadata_task_manager.MetadataTask");

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -8,41 +9,40 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_tag_file.g.dart';
 
 abstract class ListTagFileBlocEvent {
   const ListTagFileBlocEvent();
 }
 
+@toString
 class ListTagFileBlocQuery extends ListTagFileBlocEvent {
   const ListTagFileBlocQuery(this.account, this.tag);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "tag: $tag, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
   final Tag tag;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ListTagFileBlocExternalEvent extends ListTagFileBlocEvent {
   const _ListTagFileBlocExternalEvent();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ListTagFileBlocState {
   const ListTagFileBlocState(this.account, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<File> items;
@@ -62,16 +62,14 @@ class ListTagFileBlocSuccess extends ListTagFileBlocState {
       : super(account, items);
 }
 
+@toString
 class ListTagFileBlocFailure extends ListTagFileBlocState {
   const ListTagFileBlocFailure(
       Account? account, List<File> items, this.exception)
       : super(account, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

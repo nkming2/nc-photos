@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
@@ -8,41 +9,40 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:to_string/to_string.dart';
+
+part 'list_face_file.g.dart';
 
 abstract class ListFaceFileBlocEvent {
   const ListFaceFileBlocEvent();
 }
 
+@toString
 class ListFaceFileBlocQuery extends ListFaceFileBlocEvent {
   const ListFaceFileBlocQuery(this.account, this.person);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "person: $person, "
-      "}";
+  String toString() => _$toString();
 
   final Account account;
   final Person person;
 }
 
 /// An external event has happened and may affect the state of this bloc
+@toString
 class _ListFaceFileBlocExternalEvent extends ListFaceFileBlocEvent {
   const _ListFaceFileBlocExternalEvent();
 
   @override
-  toString() => "$runtimeType {"
-      "}";
+  String toString() => _$toString();
 }
 
+@toString
 abstract class ListFaceFileBlocState {
   const ListFaceFileBlocState(this.account, this.items);
 
   @override
-  toString() => "$runtimeType {"
-      "account: $account, "
-      "items: List {length: ${items.length}}, "
-      "}";
+  String toString() => _$toString();
 
   final Account? account;
   final List<File> items;
@@ -62,16 +62,14 @@ class ListFaceFileBlocSuccess extends ListFaceFileBlocState {
       : super(account, items);
 }
 
+@toString
 class ListFaceFileBlocFailure extends ListFaceFileBlocState {
   const ListFaceFileBlocFailure(
       Account? account, List<File> items, this.exception)
       : super(account, items);
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "exception: $exception, "
-      "}";
+  String toString() => _$toString();
 
   final Object exception;
 }

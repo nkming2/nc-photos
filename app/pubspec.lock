@@ -1285,8 +1285,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "2432bd99c5c8c90b11d7e691992514e312cee0fe"
-      resolved-ref: "2432bd99c5c8c90b11d7e691992514e312cee0fe"
+      ref: "1c8c2df0eace366a87eb5a5642b4528f3d7af3f4"
+      resolved-ref: "1c8c2df0eace366a87eb5a5642b4528f3d7af3f4"
       url: "https://gitlab.com/nkming2/dart-to-string"
     source: git
     version: "1.0.0"

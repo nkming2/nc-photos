@@ -1,12 +1,15 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:logging/logging.dart';
 import 'package:memory_info/memory_info.dart';
-import 'package:nc_photos/double_extension.dart';
+import 'package:to_string/to_string.dart';
+
+part 'android_info.g.dart';
 
 /// System info for Android
 ///
 /// Only meaningful when running on Android. Must call [init] before accessing
 /// the data fields
+@toString
 class AndroidInfo {
   factory AndroidInfo() => _inst;
 
@@ -30,10 +33,7 @@ class AndroidInfo {
   }
 
   @override
-  toString() => "$runtimeType {"
-      "sdkInt: $sdkInt, "
-      "totalMemMb: ${totalMemMb.toStringAsFixedTruncated(2)}, "
-      "}";
+  String toString() => _$toString();
 
   static late final AndroidInfo _inst;
 

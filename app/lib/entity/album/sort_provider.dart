@@ -6,7 +6,10 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
+
+part 'sort_provider.g.dart';
 
 abstract class AlbumSortProvider with EquatableMixin {
   const AlbumSortProvider();
@@ -56,6 +59,7 @@ abstract class AlbumSortProvider with EquatableMixin {
 }
 
 /// Sort provider that does nothing
+@toString
 class AlbumNullSortProvider extends AlbumSortProvider {
   const AlbumNullSortProvider();
 
@@ -64,10 +68,7 @@ class AlbumNullSortProvider extends AlbumSortProvider {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   sort(List<AlbumItem> items) {
@@ -91,13 +92,6 @@ abstract class AlbumReversibleSortProvider extends AlbumSortProvider {
   });
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "isAscending: $isAscending, "
-        "}";
-  }
-
-  @override
   get props => [
         isAscending,
       ];
@@ -113,6 +107,7 @@ abstract class AlbumReversibleSortProvider extends AlbumSortProvider {
 }
 
 /// Sort based on the time of the files
+@toString
 class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   const AlbumTimeSortProvider({
     required bool isAscending,
@@ -125,11 +120,7 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   }
 
   @override
-  toString() {
-    return "$runtimeType {"
-        "super: ${super.toString()}, "
-        "}";
-  }
+  String toString() => _$toString();
 
   @override
   sort(List<AlbumItem> items) {
@@ -166,6 +157,7 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
 }
 
 /// Sort based on the name of the files
+@toString
 class AlbumFilenameSortProvider extends AlbumReversibleSortProvider {
   const AlbumFilenameSortProvider({
     required bool isAscending,
@@ -178,9 +170,7 @@ class AlbumFilenameSortProvider extends AlbumReversibleSortProvider {
   }
 
   @override
-  toString() => "$runtimeType {"
-      "super: ${super.toString()}, "
-      "}";
+  String toString() => _$toString();
 
   @override
   sort(List<AlbumItem> items) {

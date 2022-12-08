@@ -11,10 +11,14 @@ import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:to_string/to_string.dart';
+
+part 'file.g.dart';
 
 int compareFileDateTimeDescending(File x, File y) =>
     compareFileDescriptorDateTimeDescending(x, y);
 
+@ToString(ignoreNull: true)
 class ImageLocation with EquatableMixin {
   const ImageLocation({
     this.version = appVersion,
@@ -54,19 +58,7 @@ class ImageLocation with EquatableMixin {
   bool isEmpty() => name == null;
 
   @override
-  toString() {
-    var product = "$runtimeType {"
-        "version: $version, ";
-    if (name != null) {
-      product += "name: $name, "
-          "latitude: $latitude, "
-          "longitude: $longitude, "
-          "countryCode: $countryCode, "
-          "admin1: $admin1, "
-          "admin2: $admin2, ";
-    }
-    return product + "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -91,6 +83,7 @@ class ImageLocation with EquatableMixin {
 }
 
 /// Immutable object that hold metadata of a [File]
+@ToString(ignoreNull: true)
 class Metadata with EquatableMixin {
   Metadata({
     DateTime? lastUpdated,
@@ -191,23 +184,7 @@ class Metadata with EquatableMixin {
   }
 
   @override
-  toString() {
-    var product = "$runtimeType {"
-        "lastUpdated: $lastUpdated, ";
-    if (fileEtag != null) {
-      product += "fileEtag: $fileEtag, ";
-    }
-    if (imageWidth != null) {
-      product += "imageWidth: $imageWidth, ";
-    }
-    if (imageHeight != null) {
-      product += "imageHeight: $imageHeight, ";
-    }
-    if (exif != null) {
-      product += "exif: $exif, ";
-    }
-    return product + "}";
-  }
+  String toString() => _$toString();
 
   @override
   get props => [
@@ -324,6 +301,7 @@ class MetadataUpgraderV3 implements MetadataUpgrader {
   static final _log = Logger("entity.file.MetadataUpgraderV3");
 }
 
+@ToString(ignoreNull: true)
 class File with EquatableMixin implements FileDescriptor {
   File({
     required String path,
@@ -410,65 +388,7 @@ class File with EquatableMixin implements FileDescriptor {
   }
 
   @override
-  toString() {
-    var product = "$runtimeType {"
-        "path: '$path', ";
-    if (contentLength != null) {
-      product += "contentLength: $contentLength, ";
-    }
-    if (contentType != null) {
-      product += "contentType: '$contentType', ";
-    }
-    if (etag != null) {
-      product += "etag: '$etag', ";
-    }
-    if (lastModified != null) {
-      product += "lastModified: $lastModified, ";
-    }
-    if (isCollection != null) {
-      product += "isCollection: $isCollection, ";
-    }
-    if (usedBytes != null) {
-      product += "usedBytes: $usedBytes, ";
-    }
-    if (hasPreview != null) {
-      product += "hasPreview: $hasPreview, ";
-    }
-    if (fileId != null) {
-      product += "fileId: $fileId, ";
-    }
-    if (isFavorite != null) {
-      product += "isFavorite: $isFavorite, ";
-    }
-    if (ownerId != null) {
-      product += "ownerId: '$ownerId', ";
-    }
-    if (ownerDisplayName != null) {
-      product += "ownerDisplayName: '$ownerDisplayName', ";
-    }
-    if (trashbinFilename != null) {
-      product += "trashbinFilename: '$trashbinFilename', ";
-    }
-    if (trashbinOriginalLocation != null) {
-      product += "trashbinOriginalLocation: '$trashbinOriginalLocation', ";
-    }
-    if (trashbinDeletionTime != null) {
-      product += "trashbinDeletionTime: $trashbinDeletionTime, ";
-    }
-    if (metadata != null) {
-      product += "metadata: $metadata, ";
-    }
-    if (isArchived != null) {
-      product += "isArchived: $isArchived, ";
-    }
-    if (overrideDateTime != null) {
-      product += "overrideDateTime: $overrideDateTime, ";
-    }
-    if (location != null) {
-      product += "location: $location, ";
-    }
-    return product + "}";
-  }
+  String toString() => _$toString();
 
   @override
   JsonObj toJson() {
