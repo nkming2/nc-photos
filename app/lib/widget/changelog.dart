@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/theme.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -36,6 +37,7 @@ class Changelog extends StatelessWidget {
 
   AppBar _buildAppBar() => AppBar(
         title: const Text("Changelog"),
+        elevation: 0,
       );
 
   Widget _buildContent(BuildContext context) {
@@ -236,6 +238,48 @@ List<Widget> _buildChangelog540(BuildContext context) {
     _subSection("Localization"),
     _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
   ];
+}
+
+// ignore: unused_element
+class _ChangelogBanner extends StatelessWidget {
+  const _ChangelogBanner({
+    required this.title,
+    // ignore: unused_element
+    this.action,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      color:
+          Theme.of(context).elevate(Theme.of(context).colorScheme.surface, 2),
+      child: DefaultTextStyle(
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        child: TextButtonTheme(
+          data: TextButtonThemeData(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: title,
+              ),
+              if (action != null) action!,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  final Widget title;
+  final Widget? action;
 }
 
 List<Widget> _buildChangelogCompat(BuildContext context, int majorVersion) {
