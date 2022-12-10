@@ -109,6 +109,7 @@ class _IsolateMessage {
   final Account account;
 }
 
+@pragma("vm:entry-point")
 Future<JsonObj> _isolateMain(JsonObj messageJson) async {
   final message = _IsolateMessage.fromJson(messageJson);
   await app_init.init(app_init.InitIsolateType.flutterIsolate);

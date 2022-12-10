@@ -56,6 +56,7 @@ void stopService() {
 }
 
 @visibleForTesting
+@pragma("vm:entry-point")
 Future<void> serviceMain() async {
   _Service._shouldRun.value = true;
   WidgetsFlutterBinding.ensureInitialized();
