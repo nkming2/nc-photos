@@ -16,6 +16,10 @@ void main() {
   });
 }
 
+/// List and group locations for files in DB
+///
+/// DB: []
+/// Expect: []
 Future<void> _empty() async {
   final account = util.buildAccount();
   final c = DiContainer(
@@ -33,6 +37,10 @@ Future<void> _empty() async {
   expect(result.countryCode.toSet(), <LocationGroup>{});
 }
 
+/// List and group locations for files in DB
+///
+/// DB: [File(test1, location: null)]
+/// Expect: []
 Future<void> _noLocation() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
@@ -55,6 +63,13 @@ Future<void> _noLocation() async {
   expect(result.countryCode.toSet(), <LocationGroup>{});
 }
 
+/// List and group locations for files in DB
+///
+/// DB: [
+///   File(test1, location: "Some place"),
+///   File(test2, location: "Some place"),
+/// ]
+/// Expect: ["Some place"]
 Future<void> _nFile1Location() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
@@ -95,6 +110,15 @@ Future<void> _nFile1Location() async {
   });
 }
 
+/// List and group locations for files in DB
+///
+/// DB: [
+///   File(test1, location: "Some place"),
+///   File(test2, location: "Some place"),
+///   File(test3, location: "Another place"),
+///   File(test4, location: "Another place"),
+/// ]
+/// Expect: ["Some place", "Another place"]
 Future<void> _nFileNLocation() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()
@@ -153,6 +177,15 @@ Future<void> _nFileNLocation() async {
   });
 }
 
+/// List and group locations for files in DB
+///
+/// DB: [
+///   File(test1/test1, location: "Some place"),
+///   File(test1/test2, location: "Some place"),
+///   File(test2/test3, location: "Some place"),
+///   File(test2/test4, location: "Some place"),
+/// ]
+/// Expect: ["Some place"]
 Future<void> _multipleRoots() async {
   final account = util.buildAccount(
     roots: ["test1", "test2"],
