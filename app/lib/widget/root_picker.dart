@@ -186,12 +186,14 @@ class _RootPickerState extends State<RootPicker> {
     }
     _isInitDialogShown = true;
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) => ProcessingDialog(
-            text: L10n.global().genericProcessingDialogContent),
-      );
+      if (mounted) {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => ProcessingDialog(
+              text: L10n.global().genericProcessingDialogContent),
+        );
+      }
     });
   }
 

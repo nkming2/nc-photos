@@ -76,9 +76,11 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
     } else {
       // process the current state
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _onStateChange(context, _bloc.state);
-        });
+        if (mounted) {
+          setState(() {
+            _onStateChange(context, _bloc.state);
+          });
+        }
       });
     }
     _reqQuery();

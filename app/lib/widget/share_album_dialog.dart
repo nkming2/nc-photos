@@ -308,9 +308,11 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   Future<void> _initBloc() async {
     if (_shareeBloc.state is ListShareeBlocSuccess) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _onShareeStateChange(context, _shareeBloc.state);
-        });
+        if (mounted) {
+          setState(() {
+            _onShareeStateChange(context, _shareeBloc.state);
+          });
+        }
       });
     } else {
       _log.info("[_initBloc] Initialize bloc");

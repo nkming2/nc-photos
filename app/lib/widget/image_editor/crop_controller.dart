@@ -208,7 +208,9 @@ class _CropControllerState extends State<CropController> {
     _reset();
     _prevOrientation = orientation;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 

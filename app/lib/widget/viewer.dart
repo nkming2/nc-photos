@@ -514,7 +514,7 @@ class _ViewerState extends State<Viewer>
     ));
     if (_isShowDetailPane && !_isClosingDetailPane) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_pageStates[index]!.itemHeight != null) {
+        if (mounted && _pageStates[index]!.itemHeight != null) {
           setState(() {
             _openDetailPane(index);
           });

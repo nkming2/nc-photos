@@ -95,9 +95,11 @@ class _HomeSearchState extends State<HomeSearch>
     if (_bloc.state is! SearchBlocInit) {
       // process the current state
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          _onStateChange(context, _bloc.state);
-        });
+        if (mounted) {
+          setState(() {
+            _onStateChange(context, _bloc.state);
+          });
+        }
       });
     }
   }
