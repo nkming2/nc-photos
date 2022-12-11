@@ -43,6 +43,7 @@ class FilesBuilder {
     String ownerId = "admin",
     String? ownerDisplayName,
     Metadata? metadata,
+    ImageLocation? location,
   }) {
     files.add(File(
       path: "remote.php/dav/files/$relativePath",
@@ -58,6 +59,7 @@ class FilesBuilder {
       ownerId: ownerId.toCi(),
       ownerDisplayName: ownerDisplayName ?? ownerId.toString(),
       metadata: metadata,
+      location: location,
     ));
   }
 
@@ -94,6 +96,7 @@ class FilesBuilder {
     String ownerId = "admin",
     String? ownerDisplayName,
     OrNull<Metadata>? metadata,
+    ImageLocation? location,
   }) =>
       add(
         relativePath,
@@ -105,12 +108,14 @@ class FilesBuilder {
         isFavorite: isFavorite,
         ownerId: ownerId,
         ownerDisplayName: ownerDisplayName,
-        metadata: metadata?.obj ??
-            Metadata(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
-              imageWidth: 640,
-              imageHeight: 480,
-            ),
+        metadata: metadata == null
+            ? Metadata(
+                lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+                imageWidth: 640,
+                imageHeight: 480,
+              )
+            : metadata.obj,
+        location: location,
       );
 
   void addDir(

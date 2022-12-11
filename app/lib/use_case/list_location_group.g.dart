@@ -9,7 +9,7 @@ part of 'list_location_group.dart';
 extension _$LocationGroupToString on LocationGroup {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "LocationGroup {place: $place, countryCode: $countryCode, count: $count, latestFileId: $latestFileId}";
+    return "LocationGroup {place: $place, countryCode: $countryCode, count: $count, latestFileId: $latestFileId, latestDateTime: $latestDateTime}";
   }
 }
 
