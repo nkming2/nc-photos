@@ -278,7 +278,25 @@ class _CountryItem {
     this.onTap,
   });
 
-  Widget buildWidget(BuildContext context) {
+  Widget buildWidget(BuildContext context) =>
+      _CountryItemView(thumbUrl, country, account: account, onTap: onTap);
+
+  final Account account;
+  final String country;
+  final String thumbUrl;
+  final VoidCallback? onTap;
+}
+
+class _CountryItemView extends StatelessWidget {
+  const _CountryItemView(
+    this.imageUrl,
+    this.text, {
+    required this.account,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Stack(
@@ -289,7 +307,7 @@ class _CountryItem {
             children: [
               CachedNetworkImage(
                 cacheManager: ThumbnailCacheManager.inst,
-                imageUrl: thumbUrl,
+                imageUrl: imageUrl,
                 httpHeaders: {
                   "Authorization": Api.getAuthorizationHeaderValue(account),
                 },
@@ -302,7 +320,7 @@ class _CountryItem {
                 imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               ),
               const SizedBox(width: 8),
-              Text(country),
+              Text(text),
               const SizedBox(width: 8),
             ],
           ),
@@ -332,7 +350,7 @@ class _CountryItem {
   }
 
   final Account account;
-  final String country;
-  final String thumbUrl;
+  final String imageUrl;
+  final String text;
   final VoidCallback? onTap;
 }
