@@ -15,9 +15,15 @@ abstract class AppPasswordExchangeBlocEvent {
   const AppPasswordExchangeBlocEvent();
 }
 
+/// Group of events that are handled sequentially
+abstract class AppPasswordExchangeBlocEventGroup1
+    extends AppPasswordExchangeBlocEvent {
+  const AppPasswordExchangeBlocEventGroup1();
+}
+
 @toString
 class AppPasswordExchangeBlocInitiateLogin
-    extends AppPasswordExchangeBlocEvent {
+    extends AppPasswordExchangeBlocEventGroup1 {
   const AppPasswordExchangeBlocInitiateLogin(this.uri);
 
   @override
@@ -27,7 +33,7 @@ class AppPasswordExchangeBlocInitiateLogin
 }
 
 @toString
-class AppPasswordExchangeBlocPoll extends AppPasswordExchangeBlocEvent {
+class AppPasswordExchangeBlocPoll extends AppPasswordExchangeBlocEventGroup1 {
   const AppPasswordExchangeBlocPoll(this.pollOptions);
 
   @override
@@ -46,7 +52,7 @@ class AppPasswordExchangeBlocCancel extends AppPasswordExchangeBlocEvent {
 
 @toString
 class _AppPasswordExchangeBlocAppPwReceived
-    extends AppPasswordExchangeBlocEvent {
+    extends AppPasswordExchangeBlocEventGroup1 {
   const _AppPasswordExchangeBlocAppPwReceived(this.appPasswordResponse);
 
   @override
@@ -56,7 +62,8 @@ class _AppPasswordExchangeBlocAppPwReceived
 }
 
 @toString
-class _AppPasswordExchangeBlocAppPwFailed extends AppPasswordExchangeBlocEvent {
+class _AppPasswordExchangeBlocAppPwFailed
+    extends AppPasswordExchangeBlocEventGroup1 {
   const _AppPasswordExchangeBlocAppPwFailed(this.exception);
 
   @override
@@ -131,14 +138,21 @@ class AppPasswordExchangeBlocResult extends AppPasswordExchangeBlocState {
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
   AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit()) {
-    on<AppPasswordExchangeBlocEvent>(_onEvent);
+    on<AppPasswordExchangeBlocEventGroup1>(_onEventGroup1);
+    on<AppPasswordExchangeBlocCancel>(_onEventCancel);
   }
 
-  Future<void> _onEvent(AppPasswordExchangeBlocEvent event,
+  @override
+  Future<void> close() {
+    _pollPasswordSubscription?.cancel();
+    return super.close();
+  }
+
+  Future<void> _onEventGroup1(AppPasswordExchangeBlocEvent event,
       Emitter<AppPasswordExchangeBlocState> emit) async {
-    _log.info("[_onEvent] $event");
+    _log.info("[_onEventGroup1] $event");
     if (_isCanceled) {
-      _log.fine("[_onEvent] canceled = true, ignore event");
+      _log.fine("[_onEventGroup1] canceled = true, ignore event");
       return;
     }
     if (event is AppPasswordExchangeBlocInitiateLogin) {
@@ -149,8 +163,6 @@ class AppPasswordExchangeBloc
       await _onEventAppPasswordReceived(event, emit);
     } else if (event is _AppPasswordExchangeBlocAppPwFailed) {
       await _onEventAppPasswordFailure(event, emit);
-    } else if (event is AppPasswordExchangeBlocCancel) {
-      await _onEventCancel(event, emit);
     }
   }
 
@@ -242,12 +254,6 @@ class AppPasswordExchangeBloc
     await _pollPasswordSubscription?.cancel();
     _isCanceled = true;
     emit(const AppPasswordExchangeBlocResult(null));
-  }
-
-  @override
-  Future<void> close() {
-    _pollPasswordSubscription?.cancel();
-    return super.close();
   }
 
   static final _log =
