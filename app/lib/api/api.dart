@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/string_extension.dart';
 import 'package:to_string/to_string.dart';
 import 'package:xml/xml.dart';
 
@@ -25,7 +26,7 @@ class Response {
   /// Content of the response body, String if isResponseString == true during
   /// request, Uint8List otherwise
   @Format(
-      r"${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').substring(0, 200) : '...'}")
+      r"${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}")
   final dynamic body;
 }
 
