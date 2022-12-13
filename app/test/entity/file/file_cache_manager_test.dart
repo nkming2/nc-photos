@@ -33,6 +33,9 @@ void main() {
     test("too many files", _updaterTooManyFiles,
         timeout: const Timeout(Duration(minutes: 2)),
         skip: "too slow on gitlab");
+    test("moved file (to dir in front of the from dir)",
+        _updaterMovedFileToFront);
+    test("moved file (to dir behind the from dir)", _updaterMovedFileToBehind);
   });
   test("FileSqliteCacheEmptier", _emptier);
 }
@@ -539,6 +542,100 @@ Future<void> _updaterTooManyFiles() async {
   await updater(account, files[2], remote: [...files.slice(2), ...newFiles]);
   // we are testing to make sure the above function won't throw, so nothing to
   // expect here
+}
+
+/// Moved a file from test2 to test1, where test2 is sorted behind test1
+///
+/// Expect: file moved
+Future<void> _updaterMovedFileToFront() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addDir("admin/test1")
+        ..addDir("admin/test2")
+        ..addJpeg("admin/test2/test1.jpg"))
+      .build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(
+        c.sqliteDb, account, files[0], files.slice(1, 3));
+    await util.insertDirRelation(c.sqliteDb, account, files[1], []);
+    await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
+  });
+
+  final movedFile = files[3].copyWith(
+    path: "remote.php/dav/files/admin/test1/test1.jpg",
+  );
+  await FileSqliteCacheUpdater(c)(
+    account,
+    files[1],
+    remote: [files[1], movedFile],
+  );
+  await FileSqliteCacheUpdater(c)(
+    account,
+    files[2],
+    remote: [files[2]],
+  );
+  expect(
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {...files.slice(0, 3), movedFile},
+  );
+  final dirResult = await util.listSqliteDbDirs(c.sqliteDb);
+  expect(dirResult[files[0]], {...files.slice(0, 3)});
+  expect(dirResult[files[1]], {files[1], movedFile});
+  expect(dirResult[files[2]], {files[2]});
+}
+
+/// Moved a file from test1 to test2, where test1 is sorted in front of test2
+///
+/// Expect: file moved
+Future<void> _updaterMovedFileToBehind() async {
+  final account = util.buildAccount();
+  final files = (util.FilesBuilder()
+        ..addDir("admin")
+        ..addDir("admin/test1")
+        ..addDir("admin/test2")
+        ..addJpeg("admin/test1/test1.jpg"))
+      .build();
+  final c = DiContainer(
+    sqliteDb: util.buildTestDb(),
+  );
+  addTearDown(() => c.sqliteDb.close());
+  await c.sqliteDb.transaction(() async {
+    await c.sqliteDb.insertAccountOf(account);
+    await util.insertFiles(c.sqliteDb, account, files);
+    await util.insertDirRelation(
+        c.sqliteDb, account, files[0], files.slice(1, 3));
+    await util.insertDirRelation(c.sqliteDb, account, files[1], [files[3]]);
+    await util.insertDirRelation(c.sqliteDb, account, files[2], []);
+  });
+
+  final movedFile = files[3].copyWith(
+    path: "remote.php/dav/files/admin/test2/test1.jpg",
+  );
+  await FileSqliteCacheUpdater(c)(
+    account,
+    files[1],
+    remote: [files[1]],
+  );
+  await FileSqliteCacheUpdater(c)(
+    account,
+    files[2],
+    remote: [files[2], movedFile],
+  );
+  expect(
+    await util.listSqliteDbFiles(c.sqliteDb),
+    {...files.slice(0, 3), movedFile},
+  );
+  final dirResult = await util.listSqliteDbDirs(c.sqliteDb);
+  expect(dirResult[files[0]], {...files.slice(0, 3)});
+  expect(dirResult[files[1]], {files[1]});
+  expect(dirResult[files[2]], {files[2], movedFile});
 }
 
 /// Empty dir in cache

@@ -129,14 +129,12 @@ class FileSqliteCacheUpdater {
         throw StateError("Row ID for dir is null");
       }
 
-      final dirChildRowIdQuery = db.selectOnly(db.dirFiles)
-        ..addColumns([db.dirFiles.child])
-        ..where(db.dirFiles.dir.equals(_dirRowId))
-        ..orderBy([sql.OrderingTerm.asc(db.dirFiles.rowId)]);
-      final dirChildRowIds =
-          await dirChildRowIdQuery.map((r) => r.read(db.dirFiles.child)!).get();
-      final diff = list_util.diff(
-          dirChildRowIds, _childRowIds.sorted(Comparable.compare));
+      final dirFileQuery = db.select(db.dirFiles)
+        ..where((t) => t.dir.equals(_dirRowId))
+        ..orderBy([(t) => sql.OrderingTerm.asc(t.rowId)]);
+      final dirFiles = await dirFileQuery.get();
+      final diff = list_util.diff(dirFiles.map((e) => e.child),
+          _childRowIds.sorted(Comparable.compare));
       if (diff.item1.isNotEmpty) {
         await db.batch((batch) {
           // insert new children
@@ -145,9 +143,34 @@ class FileSqliteCacheUpdater {
         });
       }
       if (diff.item2.isNotEmpty) {
-        // delete obsolete children
-        await _removeSqliteFiles(db, dbAccount, diff.item2);
-        await db.cleanUpDanglingFiles();
+        // remove entries from the DirFiles table first
+        await diff.item2.withPartitionNoReturn((sublist) async {
+          final deleteQuery = db.delete(db.dirFiles)
+            ..where((t) => t.child.isIn(sublist))
+            ..where((t) =>
+                t.dir.equals(_dirRowId) | t.dir.equalsExp(db.dirFiles.child));
+          await deleteQuery.go();
+        }, sql.maxByFileIdsSize);
+
+        // select files having another dir parent under this account (i.e.,
+        // moved files)
+        final moved = await diff.item2.withPartition((sublist) async {
+          final query = db.selectOnly(db.dirFiles).join([
+            sql.innerJoin(db.accountFiles,
+                db.accountFiles.file.equalsExp(db.dirFiles.dir)),
+          ]);
+          query
+            ..addColumns([db.dirFiles.child])
+            ..where(db.accountFiles.account.equals(dbAccount.rowId))
+            ..where(db.dirFiles.child.isIn(sublist));
+          return query.map((r) => r.read(db.dirFiles.child)!).get();
+        }, sql.maxByFileIdsSize);
+        final removed = diff.item2.where((e) => !moved.contains(e)).toList();
+        if (removed.isNotEmpty) {
+          // delete obsolete children
+          await _removeSqliteFiles(db, dbAccount, removed);
+          await db.cleanUpDanglingFiles();
+        }
       }
     });
   }
