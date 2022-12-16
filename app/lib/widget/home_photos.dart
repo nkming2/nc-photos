@@ -167,7 +167,8 @@ class _HomePhotosState extends State<HomePhotos>
               bottomOffset: _calcBottomAppBarExtent(context),
               labelTextBuilder: (_) => _buildScrollLabel(context),
               labelPadding: const EdgeInsets.symmetric(horizontal: 40),
-              backgroundColor: Theme.of(context).colorScheme.inverseSurface,
+              backgroundColor: Theme.of(context)
+                  .elevate(Theme.of(context).colorScheme.inverseSurface, 3),
               enabled: _isScrollbarVisible,
               heightScrollThumb: 60,
               child: ScrollConfiguration(
