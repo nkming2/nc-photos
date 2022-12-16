@@ -4,7 +4,11 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/notification.dart' as itf;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'notification.g.dart';
+
+@npLog
 class NotificationManager implements itf.NotificationManager {
   @override
   notify(itf.Notification n) async {
@@ -23,6 +27,4 @@ class NotificationManager implements itf.NotificationManager {
   dismiss(dynamic id) async {
     return;
   }
-
-  static final _log = Logger("web.notification.NotificationManager");
 }

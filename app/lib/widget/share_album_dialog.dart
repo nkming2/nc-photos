@@ -20,6 +20,9 @@ import 'package:nc_photos/use_case/share_album_with_user.dart';
 import 'package:nc_photos/use_case/unshare_album_with_user.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'share_album_dialog.g.dart';
 
 class ShareAlbumDialog extends StatefulWidget {
   ShareAlbumDialog({
@@ -36,6 +39,7 @@ class ShareAlbumDialog extends StatefulWidget {
   final Album album;
 }
 
+@npLog
 class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   _ShareAlbumDialogState() {
     final c = KiwiContainer().resolve<DiContainer>();
@@ -332,9 +336,6 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
   late final List<_ShareItem> _items;
   final _processingSharee = <CiString>[];
   final _searchController = TextEditingController();
-
-  static final _log =
-      Logger("widget.share_album_dialog._ShareAlbumDialogState");
 }
 
 class _ShareItem {

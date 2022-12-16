@@ -5,7 +5,11 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'update_property.g.dart';
+
+@npLog
 class UpdateProperty {
   UpdateProperty(this.fileRepo);
 
@@ -65,8 +69,6 @@ class UpdateProperty {
   }
 
   final FileRepo fileRepo;
-
-  static final _log = Logger("use_case.update_property.UpdateProperty");
 }
 
 extension UpdatePropertyExtension on UpdateProperty {

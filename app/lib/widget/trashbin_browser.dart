@@ -30,6 +30,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'trashbin_browser.g.dart';
 
 class TrashbinBrowserArguments {
   TrashbinBrowserArguments(this.account);
@@ -61,6 +64,7 @@ class TrashbinBrowser extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _TrashbinBrowserState extends State<TrashbinBrowser>
     with SelectableItemStreamListMixin<TrashbinBrowser> {
   @override
@@ -400,8 +404,6 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
 
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
-
-  static final _log = Logger("widget.trashbin_browser._TrashbinBrowserState");
 }
 
 enum _AppBarMenuOption {

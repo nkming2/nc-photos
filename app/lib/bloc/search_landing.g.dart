@@ -3,6 +3,18 @@
 part of 'search_landing.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logSearchLandingBloc = Logger("bloc.search_landing.SearchLandingBloc");
+
+extension _$SearchLandingBlocNpLog on SearchLandingBloc {
+  // ignore: unused_element
+  Logger get _log => _$logSearchLandingBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

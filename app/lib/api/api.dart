@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/string_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 import 'package:xml/xml.dart';
 
@@ -49,6 +50,7 @@ class BasicAuth {
   final String password;
 }
 
+@npLog
 class Api {
   Api(Account account)
       : _baseUrl = Uri.parse(account.url),
@@ -127,12 +129,11 @@ class Api {
 
   final Uri _baseUrl;
   BasicAuth? _auth;
-
-  static final _log = Logger("api.api.Api");
 }
 
 bool _isHttpStatusGood(int status) => status ~/ 100 == 2;
 
+@npLog
 class ApiFiles {
   ApiFiles(this._api);
 
@@ -468,8 +469,6 @@ class ApiFiles {
       rethrow;
     }
   }
-
-  static final _log = Logger("api.api._Files");
 }
 
 class ApiOcs {
@@ -492,6 +491,7 @@ class ApiOcsDav {
   final ApiOcs _ocs;
 }
 
+@npLog
 class ApiOcsDavDirect {
   ApiOcsDavDirect(this._dav);
 
@@ -518,8 +518,6 @@ class ApiOcsDavDirect {
   }
 
   final ApiOcsDav _dav;
-
-  static final _log = Logger("api.api._OcsDavDirect");
 }
 
 class ApiOcsFacerecognition {
@@ -533,6 +531,7 @@ class ApiOcsFacerecognition {
   final ApiOcs _ocs;
 }
 
+@npLog
 class ApiOcsFacerecognitionPersons {
   ApiOcsFacerecognitionPersons(this._facerecognition);
 
@@ -555,8 +554,6 @@ class ApiOcsFacerecognitionPersons {
   }
 
   final ApiOcsFacerecognition _facerecognition;
-
-  static final _log = Logger("api.api._OcsFacerecognitionPersons");
 }
 
 class ApiOcsFacerecognitionPerson {
@@ -569,6 +566,7 @@ class ApiOcsFacerecognitionPerson {
   final String _name;
 }
 
+@npLog
 class ApiOcsFacerecognitionPersonFaces {
   ApiOcsFacerecognitionPersonFaces(this._person);
 
@@ -591,8 +589,6 @@ class ApiOcsFacerecognitionPersonFaces {
   }
 
   final ApiOcsFacerecognitionPerson _person;
-
-  static final _log = Logger("api.api._OcsFacerecognitionPersonFaces");
 }
 
 class ApiOcsFilesSharing {
@@ -608,6 +604,7 @@ class ApiOcsFilesSharing {
   final ApiOcs _ocs;
 }
 
+@npLog
 class ApiOcsFilesSharingShares {
   ApiOcsFilesSharingShares(this._filesSharing);
 
@@ -683,10 +680,9 @@ class ApiOcsFilesSharingShares {
   }
 
   final ApiOcsFilesSharing _filesSharing;
-
-  static final _log = Logger("api.api._OcsFilesSharingShares");
 }
 
+@npLog
 class ApiOcsFilesSharingShare {
   ApiOcsFilesSharingShare(this._filesSharing, this._shareId);
 
@@ -713,10 +709,9 @@ class ApiOcsFilesSharingShare {
 
   final ApiOcsFilesSharing _filesSharing;
   final String _shareId;
-
-  static final _log = Logger("api.api._OcsFilesSharingShare");
 }
 
+@npLog
 class ApiOcsFilesSharingSharees {
   ApiOcsFilesSharingSharees(this._filesSharing);
 
@@ -751,10 +746,9 @@ class ApiOcsFilesSharingSharees {
   }
 
   final ApiOcsFilesSharing _filesSharing;
-
-  static final _log = Logger("api.api._OcsFilesSharingSharees");
 }
 
+@npLog
 class ApiSystemtags {
   const ApiSystemtags(this.api);
 
@@ -815,8 +809,6 @@ class ApiSystemtags {
   }
 
   final Api api;
-
-  static final _log = Logger("api.api._Systemtags");
 }
 
 class ApiSystemtagsRelations {
@@ -828,6 +820,7 @@ class ApiSystemtagsRelations {
   final Api api;
 }
 
+@npLog
 class ApiSystemtagsRelationsFiles {
   const ApiSystemtagsRelationsFiles(this.systemtagsRelations, this.fileId);
 
@@ -894,6 +887,4 @@ class ApiSystemtagsRelationsFiles {
 
   final ApiSystemtagsRelations systemtagsRelations;
   final int fileId;
-
-  static final _log = Logger("api.api._SystemtagsRelationsFiles");
 }

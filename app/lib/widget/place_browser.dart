@@ -32,6 +32,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'place_browser.g.dart';
 
 class PlaceBrowserArguments {
   const PlaceBrowserArguments(this.account, this.place, this.countryCode);
@@ -71,6 +74,7 @@ class PlaceBrowser extends StatefulWidget {
   final String countryCode;
 }
 
+@npLog
 class _PlaceBrowserState extends State<PlaceBrowser>
     with SelectableItemStreamListMixin<PlaceBrowser> {
   _PlaceBrowserState() {
@@ -398,8 +402,6 @@ class _PlaceBrowserState extends State<PlaceBrowser>
 
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
-
-  static final _log = Logger("widget.place_browser._PlaceBrowserState");
 }
 
 enum _SelectionMenuOption {

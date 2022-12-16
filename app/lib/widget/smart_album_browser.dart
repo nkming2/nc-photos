@@ -23,6 +23,7 @@ import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'smart_album_browser.g.dart';
@@ -61,6 +62,7 @@ class SmartAlbumBrowser extends StatefulWidget {
   final Album album;
 }
 
+@npLog
 class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
     with
         SelectableItemStreamListMixin<SmartAlbumBrowser>,
@@ -327,8 +329,6 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   var _sortedItems = <AlbumItem>[];
   var _backingFiles = <File>[];
 
-  static final _log =
-      Logger("widget.smart_album_browser._SmartAlbumBrowserState");
   static const _menuValueDownload = 1;
 }
 

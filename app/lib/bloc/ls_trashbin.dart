@@ -10,6 +10,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls_trashbin.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'ls_trashbin.g.dart';
@@ -81,6 +82,7 @@ class LsTrashbinBlocInconsistent extends LsTrashbinBlocState {
       : super(account, items);
 }
 
+@npLog
 class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
   LsTrashbinBloc() : super(LsTrashbinBlocInit()) {
     _fileRemovedEventListener =
@@ -178,5 +180,5 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = Logger("bloc.ls_trashbin.LsTrashbinBloc");
+  static final _log = _$logLsTrashbinBloc;
 }

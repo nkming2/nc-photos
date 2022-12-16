@@ -17,6 +17,9 @@ import 'package:nc_photos/widget/album_grid_item.dart';
 import 'package:nc_photos/widget/builder/album_grid_item_builder.dart';
 import 'package:nc_photos/widget/new_album_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'album_picker.g.dart';
 
 class AlbumPickerArguments {
   AlbumPickerArguments(this.account);
@@ -49,6 +52,7 @@ class AlbumPicker extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _AlbumPickerState extends State<AlbumPicker>
     with RouteAware, PageVisibilityMixin {
   @override
@@ -190,8 +194,6 @@ class _AlbumPickerState extends State<AlbumPicker>
 
   late final _bloc = ListAlbumBloc.of(widget.account);
   var _sortedAlbums = <Album>[];
-
-  static final _log = Logger("widget.album_picker._AlbumPickerState");
 }
 
 class _NewAlbumView extends StatelessWidget {

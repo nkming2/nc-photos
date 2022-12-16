@@ -13,6 +13,9 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'photo_list_item_builder.g.dart';
 
 /// Arguments to the photo list item builder
 ///
@@ -101,6 +104,7 @@ PhotoListItemBuilderResult buildPhotoListItem(
   )(arg.account, arg.files);
 }
 
+@npLog
 class _PhotoListItemBuilder {
   const _PhotoListItemBuilder({
     required this.isArchived,
@@ -186,7 +190,4 @@ class _PhotoListItemBuilder {
   final PhotoListItemSmartAlbumConfig? smartAlbumConfig;
   final bool shouldShowFavoriteBadge;
   final Locale locale;
-
-  static final _log =
-      Logger("widget.builder.photo_list_item_builder._PhotoListItemBuilder");
 }

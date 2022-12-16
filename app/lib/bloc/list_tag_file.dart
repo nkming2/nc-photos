@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_tag_file.g.dart';
@@ -82,6 +83,7 @@ class ListTagFileBlocInconsistent extends ListTagFileBlocState {
 }
 
 /// List all files associated with a specific tag
+@npLog
 class ListTagFileBloc extends Bloc<ListTagFileBlocEvent, ListTagFileBlocState> {
   ListTagFileBloc(this._c)
       : assert(require(_c)),
@@ -221,6 +223,4 @@ class ListTagFileBloc extends Bloc<ListTagFileBlocEvent, ListTagFileBlocState> {
     },
     logTag: "ListTagFileBloc.refresh",
   );
-
-  static final _log = Logger("bloc.list_tag_file.ListTagFileBloc");
 }

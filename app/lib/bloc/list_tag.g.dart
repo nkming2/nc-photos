@@ -3,6 +3,18 @@
 part of 'list_tag.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logListTagBloc = Logger("bloc.list_tag.ListTagBloc");
+
+extension _$ListTagBlocNpLog on ListTagBloc {
+  // ignore: unused_element
+  Logger get _log => _$logListTagBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

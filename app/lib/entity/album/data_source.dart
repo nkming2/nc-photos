@@ -23,7 +23,11 @@ import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class AlbumRemoteDataSource implements AlbumDataSource {
   @override
   get(Account account, File albumFile) async {
@@ -95,10 +99,9 @@ class AlbumRemoteDataSource implements AlbumDataSource {
     final random = Random().nextInt(0xFFFFFF);
     return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.nc_album.json";
   }
-
-  static final _log = Logger("entity.album.AlbumRemoteDataSource");
 }
 
+@npLog
 class AlbumSqliteDbDataSource implements AlbumDataSource {
   AlbumSqliteDbDataSource(this._c);
 
@@ -233,10 +236,9 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("entity.album.AlbumSqliteDbDataSource");
 }
 
+@npLog
 class AlbumCachedDataSource implements AlbumDataSource {
   AlbumCachedDataSource(DiContainer c)
       : _sqliteDbSrc = AlbumSqliteDbDataSource(c);
@@ -303,6 +305,4 @@ class AlbumCachedDataSource implements AlbumDataSource {
 
   final _remoteSrc = AlbumRemoteDataSource();
   final AlbumSqliteDbDataSource _sqliteDbSrc;
-
-  static final _log = Logger("entity.album.AlbumCachedDataSource");
 }

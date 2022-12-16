@@ -7,6 +7,7 @@ import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_tag.g.dart';
@@ -62,6 +63,7 @@ class ListTagBlocFailure extends ListTagBlocState {
 }
 
 /// List all tags for this account
+@npLog
 class ListTagBloc extends Bloc<ListTagBlocEvent, ListTagBlocState> {
   ListTagBloc(this._c)
       : assert(require(_c)),
@@ -109,5 +111,5 @@ class ListTagBloc extends Bloc<ListTagBlocEvent, ListTagBlocState> {
 
   final DiContainer _c;
 
-  static final _log = Logger("bloc.list_tag.ListTagBloc");
+  static final _log = _$logListTagBloc;
 }

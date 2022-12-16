@@ -4,7 +4,11 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'find_file.g.dart';
+
+@npLog
 class FindFile {
   FindFile(this._c) : assert(require(_c));
 
@@ -47,6 +51,4 @@ class FindFile {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.find_file.FindFile");
 }

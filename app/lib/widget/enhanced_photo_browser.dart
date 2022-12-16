@@ -27,6 +27,9 @@ import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'enhanced_photo_browser.g.dart';
 
 class EnhancedPhotoBrowserArguments {
   const EnhancedPhotoBrowserArguments(this.filename);
@@ -59,6 +62,7 @@ class EnhancedPhotoBrowser extends StatefulWidget {
   final String? filename;
 }
 
+@npLog
 class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     with SelectableItemStreamListMixin<EnhancedPhotoBrowser> {
   @override
@@ -372,9 +376,6 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
   var _isNoPermission = false;
-
-  static final _log =
-      Logger("widget.enhanced_photo_browser._EnhancedPhotoBrowserState");
 }
 
 enum _SelectionMenuOption {
@@ -394,6 +395,7 @@ class _BuilderArguments {
   final List<LocalFile> files;
 }
 
+@npLog
 class _Builder {
   _BuilderResult call(List<LocalFile> files) {
     final s = Stopwatch()..start();
@@ -435,8 +437,6 @@ class _Builder {
       return null;
     }
   }
-
-  static final _log = Logger("widget.enhanced_photo_browser._Builder");
 }
 
 _BuilderResult _buildPhotoListItem(_BuilderArguments arg) {

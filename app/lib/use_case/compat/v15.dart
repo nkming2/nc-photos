@@ -7,6 +7,9 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'v15.g.dart';
 
 /// Compatibility helper for v15
 class CompatV15 {
@@ -20,6 +23,7 @@ class CompatV15 {
   }
 }
 
+@npLog
 class _MigrateAlbumFiles {
   _MigrateAlbumFiles(this.fileRepo);
 
@@ -76,6 +80,4 @@ class _MigrateAlbumFiles {
       "${api_util.getWebdavRootUrlRelative(account)}/.com.nkming.nc_photos";
 
   final FileRepo fileRepo;
-
-  static final _log = Logger("use_case.compat.v15._MigrateAlbumFiles");
 }

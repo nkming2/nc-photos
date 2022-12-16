@@ -12,7 +12,11 @@ import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'remove_from_album.g.dart';
+
+@npLog
 class RemoveFromAlbum {
   RemoveFromAlbum(this._c)
       : assert(require(_c)),
@@ -113,6 +117,4 @@ class RemoveFromAlbum {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.remove_from_album.RemoveFromAlbum");
 }

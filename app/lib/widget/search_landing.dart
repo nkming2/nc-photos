@@ -26,6 +26,9 @@ import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'search_landing.g.dart';
 
 class SearchLanding extends StatefulWidget {
   const SearchLanding({
@@ -43,6 +46,7 @@ class SearchLanding extends StatefulWidget {
   final VoidCallback? onVideoPressed;
 }
 
+@npLog
 class _SearchLandingState extends State<SearchLanding> {
   @override
   initState() {
@@ -295,8 +299,6 @@ class _SearchLandingState extends State<SearchLanding> {
 
   var _personItems = <_LandingPersonItem>[];
   var _locationItems = <_LandingLocationItem>[];
-
-  static final _log = Logger("widget.search_landing._SearchLandingState");
 }
 
 class _LandingPersonItem {

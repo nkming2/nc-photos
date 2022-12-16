@@ -9,7 +9,11 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class ShareRemoteDataSource implements ShareDataSource {
   @override
   list(
@@ -134,10 +138,9 @@ class ShareRemoteDataSource implements ShareDataSource {
     final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
     return _ShareParser().parseList(dataJson);
   }
-
-  static final _log = Logger("entity.share.data_source.ShareRemoteDataSource");
 }
 
+@npLog
 class _ShareParser {
   List<Share> parseList(List<JsonObj> jsons) {
     final product = <Share>[];
@@ -174,6 +177,4 @@ class _ShareParser {
       url: json["url"],
     );
   }
-
-  static final _log = Logger("entity.share.data_source._ShareParser");
 }

@@ -5,8 +5,12 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 
+part 'put_file_binary.g.dart';
+
+@npLog
 class PutFileBinary {
   PutFileBinary(this.fileRepo);
 
@@ -34,6 +38,4 @@ class PutFileBinary {
   }
 
   final FileRepo fileRepo;
-
-  static final _log = Logger("use_case.put_file_binary.PutFileBinary");
 }

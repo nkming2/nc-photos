@@ -9,6 +9,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_location_file.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_location.g.dart';
@@ -83,6 +84,7 @@ class ListLocationBlocInconsistent extends ListLocationBlocState {
 }
 
 /// List all files associated with a specific tag
+@npLog
 class ListLocationBloc
     extends Bloc<ListLocationBlocEvent, ListLocationBlocState> {
   ListLocationBloc(this._c)
@@ -170,6 +172,4 @@ class ListLocationBloc
     },
     logTag: "ListLocationBloc.refresh",
   );
-
-  static final _log = Logger("bloc.list_location.ListLocationBloc");
 }

@@ -12,7 +12,11 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'remove_selection_handler.g.dart';
+
+@npLog
 class RemoveSelectionHandler {
   RemoveSelectionHandler(this._c)
       : assert(require(_c)),
@@ -93,7 +97,4 @@ class RemoveSelectionHandler {
   }
 
   final DiContainer _c;
-
-  static final _log =
-      Logger("widget.handler.remove_selection_handler.RemoveSelectionHandler");
 }

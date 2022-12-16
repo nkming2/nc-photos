@@ -7,6 +7,7 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'ls_dir.g.dart';
@@ -133,6 +134,7 @@ class LsDirBlocFailure extends LsDirBlocState {
 }
 
 /// A bloc that return all directories under a dir recursively
+@npLog
 class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
   LsDirBloc(
     this.fileRepo, {
@@ -203,6 +205,4 @@ class LsDirBloc extends Bloc<LsDirBlocEvent, LsDirBlocState> {
   final bool isListMinimal;
 
   final _cache = <String, List<File>>{};
-
-  static final _log = Logger("bloc.ls_dir.LsDirBloc");
 }

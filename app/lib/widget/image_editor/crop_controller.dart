@@ -5,6 +5,9 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'crop_controller.g.dart';
 
 /// Crop editor
 ///
@@ -25,6 +28,7 @@ class CropController extends StatefulWidget {
   final ValueChanged<TransformArguments>? onCropChanged;
 }
 
+@npLog
 class _CropControllerState extends State<CropController> {
   @override
   initState() {
@@ -397,8 +401,6 @@ class _CropControllerState extends State<CropController> {
   Orientation? _prevOrientation;
 
   static const _threshold = 24;
-  static final _log =
-      Logger("widget.image_editor.crop_controller._CropControllerState");
 }
 
 class _TouchDot extends StatelessWidget {

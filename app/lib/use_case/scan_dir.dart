@@ -7,7 +7,11 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'scan_dir.g.dart';
+
+@npLog
 class ScanDir {
   ScanDir(this.fileRepo);
 
@@ -38,6 +42,4 @@ class ScanDir {
   }
 
   final FileRepo fileRepo;
-
-  static final _log = Logger("use_case.scan_dir.ScanDir");
 }

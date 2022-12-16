@@ -5,10 +5,12 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'item.g.dart';
 
+@npLog
 @toString
 abstract class AlbumItem with EquatableMixin {
   AlbumItem({
@@ -67,7 +69,7 @@ abstract class AlbumItem with EquatableMixin {
   final CiString addedBy;
   final DateTime addedAt;
 
-  static final _log = Logger("entity.album.AlbumItem");
+  static final _log = _$logAlbumItem;
 }
 
 @toString

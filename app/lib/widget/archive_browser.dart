@@ -28,6 +28,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'archive_browser.g.dart';
 
 class ArchiveBrowserArguments {
   ArchiveBrowserArguments(this.account);
@@ -59,6 +62,7 @@ class ArchiveBrowser extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _ArchiveBrowserState extends State<ArchiveBrowser>
     with SelectableItemStreamListMixin<ArchiveBrowser> {
   @override
@@ -296,6 +300,4 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
 
   var _thumbZoomLevel = 0;
   int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
-
-  static final _log = Logger("widget.archive_browser._ArchiveBrowserState");
 }

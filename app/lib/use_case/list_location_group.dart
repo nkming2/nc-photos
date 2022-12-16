@@ -6,6 +6,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/location_util.dart' as location_util;
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_location_group.g.dart';
@@ -56,6 +57,7 @@ class LocationGroupResult with EquatableMixin {
   final List<LocationGroup> countryCode;
 }
 
+@npLog
 class ListLocationGroup {
   ListLocationGroup(this._c) : assert(require(_c));
 
@@ -225,6 +227,4 @@ class ListLocationGroup {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.list_location_group.ListLocationGroup");
 }

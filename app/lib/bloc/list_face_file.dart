@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_face_file.g.dart';
@@ -82,6 +83,7 @@ class ListFaceFileBlocInconsistent extends ListFaceFileBlocState {
 }
 
 /// List all people recognized in an account
+@npLog
 class ListFaceFileBloc
     extends Bloc<ListFaceFileBlocEvent, ListFaceFileBlocState> {
   ListFaceFileBloc(this._c)
@@ -217,6 +219,4 @@ class ListFaceFileBloc
     },
     logTag: "ListFaceFileBloc.refresh",
   );
-
-  static final _log = Logger("bloc.list_face_file.ListFaceFileBloc");
 }

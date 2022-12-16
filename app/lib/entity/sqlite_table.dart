@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:np_codegen/np_codegen.dart';
 
 part 'sqlite_table.g.dart';
 
@@ -196,6 +197,7 @@ class Persons extends Table {
 }
 
 // remember to also update the truncate method after adding a new table
+@npLog
 @DriftDatabase(
   tables: [
     Servers,
@@ -302,8 +304,6 @@ class SqliteDb extends _$SqliteDb {
     await m.createIndex(Index("image_locations_admin2_index",
         "CREATE INDEX image_locations_admin2_index ON image_locations(admin2);"));
   }
-
-  static final _log = Logger("entity.sqlite_table.SqliteDb");
 }
 
 class _DateTimeConverter extends TypeConverter<DateTime, DateTime> {

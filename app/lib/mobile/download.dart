@@ -7,8 +7,11 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+
+part 'download.g.dart';
 
 class DownloadBuilder extends itf.DownloadBuilder {
   @override
@@ -35,6 +38,7 @@ class DownloadBuilder extends itf.DownloadBuilder {
   }
 }
 
+@npLog
 class _AndroidDownload extends itf.Download {
   _AndroidDownload({
     required this.url,
@@ -152,6 +156,4 @@ class _AndroidDownload extends itf.Download {
   bool shouldInterrupt = false;
 
   static bool _isInitialDownload = true;
-
-  static final _log = Logger("mobile.download._AndroidDownload");
 }

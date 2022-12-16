@@ -16,6 +16,9 @@ import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_albums.dart';
 import 'package:nc_photos/widget/home_photos.dart';
 import 'package:nc_photos/widget/home_search.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'home.g.dart';
 
 class HomeArguments {
   HomeArguments(this.account);
@@ -47,6 +50,7 @@ class Home extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
@@ -192,6 +196,4 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     parent: _animationController,
     curve: Curves.easeIn,
   );
-
-  static final _log = Logger("widget.home._HomeState");
 }

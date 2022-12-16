@@ -14,6 +14,7 @@ import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
@@ -121,6 +122,7 @@ class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
   final Object exception;
 }
 
+@npLog
 class HomeSearchSuggestionBloc
     extends Bloc<HomeSearchSuggestionBlocEvent, HomeSearchSuggestionBlocState> {
   HomeSearchSuggestionBloc(this.account)
@@ -240,9 +242,6 @@ class HomeSearchSuggestionBloc
   late final DiContainer _c;
 
   final _search = Woozy<_Searcheable>(limit: 10);
-
-  static final _log =
-      Logger("bloc.album_search_suggestion.HomeSearchSuggestionBloc");
 }
 
 abstract class _Searcheable {

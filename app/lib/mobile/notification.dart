@@ -1,7 +1,11 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/platform/notification.dart' as itf;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart' as plugin;
+import 'package:np_codegen/np_codegen.dart';
 
+part 'notification.g.dart';
+
+@npLog
 class NotificationManager implements itf.NotificationManager {
   @override
   notify(itf.Notification n) {
@@ -27,8 +31,6 @@ class NotificationManager implements itf.NotificationManager {
       return;
     }
   }
-
-  static final _log = Logger("mobile.notification.NotificationManager");
 }
 
 class AndroidDownloadSuccessfulNotification implements itf.Notification {

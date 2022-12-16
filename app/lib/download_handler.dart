@@ -20,7 +20,10 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:tuple/tuple.dart';
+
+part 'download_handler.g.dart';
 
 class DownloadHandler {
   DownloadHandler(this._c)
@@ -59,6 +62,7 @@ abstract class _DownloadHandlerBase {
   });
 }
 
+@npLog
 class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
   @override
   downloadFiles(
@@ -157,10 +161,9 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
       notificationId: notificationId,
     ));
   }
-
-  static final _log = Logger("download_handler._DownloadHandlerAndroid");
 }
 
+@npLog
 class _DownloadHandlerWeb extends _DownloadHandlerBase {
   @override
   downloadFiles(
@@ -211,6 +214,4 @@ class _DownloadHandlerWeb extends _DownloadHandlerBase {
       ));
     }
   }
-
-  static final _log = Logger("download_handler._DownloadHandlerWeb");
 }

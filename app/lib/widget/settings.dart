@@ -31,8 +31,11 @@ import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tuple/tuple.dart';
+
+part 'settings.g.dart';
 
 class SettingsArguments {
   SettingsArguments(this.account);
@@ -64,6 +67,7 @@ class Settings extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _SettingsState extends State<Settings> {
   @override
   initState() {
@@ -423,8 +427,6 @@ class _SettingsState extends State<Settings> {
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 
-  static final _log = Logger("widget.settings._SettingsState");
-
   static const String _sourceRepo = "https://bit.ly/3LQerBv";
   static const String _bugReportUrl = "https://bit.ly/3NANrr7";
   static const String _translationUrl = "https://bit.ly/3NwmdSw";
@@ -462,6 +464,7 @@ class AccountSettingsWidget extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _AccountSettingsState extends State<AccountSettingsWidget> {
   @override
   initState() {
@@ -690,8 +693,6 @@ class _AccountSettingsState extends State<AccountSettingsWidget> {
   late bool _isEnableFaceRecognitionApp;
   late String _shareFolder;
   late String? _label;
-
-  static final _log = Logger("widget.settings._AccountSettingsState");
 }
 
 class _ShareFolderDialog extends StatefulWidget {
@@ -771,6 +772,7 @@ class _PhotosSettings extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _PhotosSettingsState extends State<_PhotosSettings> {
   @override
   initState() {
@@ -890,8 +892,6 @@ class _PhotosSettingsState extends State<_PhotosSettings> {
 
   late bool _isEnableMemoryAlbum;
   late int _memoriesRange;
-
-  static final _log = Logger("widget.settings._PhotosSettingsState");
 }
 
 class _MemoriesRangeSlider extends StatefulWidget {
@@ -949,6 +949,7 @@ class _ViewerSettings extends StatefulWidget {
   createState() => _ViewerSettingsState();
 }
 
+@npLog
 class _ViewerSettingsState extends State<_ViewerSettings> {
   @override
   initState() {
@@ -1145,8 +1146,6 @@ class _ViewerSettingsState extends State<_ViewerSettings> {
   late int _screenBrightness;
   late bool _isForceRotation;
   late GpsMapProvider _gpsMapProvider;
-
-  static final _log = Logger("widget.settings._ViewerSettingsState");
 }
 
 class _AlbumSettings extends StatefulWidget {
@@ -1154,6 +1153,7 @@ class _AlbumSettings extends StatefulWidget {
   createState() => _AlbumSettingsState();
 }
 
+@npLog
 class _AlbumSettingsState extends State<_AlbumSettings> {
   @override
   initState() {
@@ -1212,8 +1212,6 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
   }
 
   late bool _isBrowserShowDate;
-
-  static final _log = Logger("widget.settings._AlbumSettingsState");
 }
 
 class EnhancementSettings extends StatefulWidget {
@@ -1231,6 +1229,7 @@ class EnhancementSettings extends StatefulWidget {
   createState() => _EnhancementSettingsState();
 }
 
+@npLog
 class _EnhancementSettingsState extends State<EnhancementSettings> {
   @override
   initState() {
@@ -1366,8 +1365,6 @@ class _EnhancementSettingsState extends State<EnhancementSettings> {
   late int _maxWidth;
   late int _maxHeight;
   late bool _isSaveEditResultToServer;
-
-  static final _log = Logger("widget.settings._EnhancementSettingsState");
 }
 
 class _EnhanceResolutionSlider extends StatefulWidget {
@@ -1469,6 +1466,7 @@ class _MiscSettings extends StatefulWidget {
   createState() => _MiscSettingsState();
 }
 
+@npLog
 class _MiscSettingsState extends State<_MiscSettings> {
   @override
   initState() {
@@ -1549,8 +1547,6 @@ class _MiscSettingsState extends State<_MiscSettings> {
 
   late bool _isPhotosTabSortByName;
   late bool _isDoubleTapExit;
-
-  static final _log = Logger("widget.settings._MiscSettingsState");
 }
 
 class _ExperimentalSettings extends StatefulWidget {
@@ -1558,6 +1554,7 @@ class _ExperimentalSettings extends StatefulWidget {
   createState() => _ExperimentalSettingsState();
 }
 
+@npLog
 class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
   @override
   initState() {
@@ -1617,8 +1614,6 @@ class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
   }
 
   late bool _isEnableSharedAlbum;
-
-  static final _log = Logger("widget.settings._ExperimentalSettingsState");
 }
 
 class _DevSettings extends StatefulWidget {
@@ -1626,6 +1621,7 @@ class _DevSettings extends StatefulWidget {
   createState() => _DevSettingsState();
 }
 
+@npLog
 class _DevSettingsState extends State<_DevSettings> {
   @override
   build(BuildContext context) {
@@ -1702,8 +1698,6 @@ class _DevSettingsState extends State<_DevSettings> {
       _log.shout("[_runSqlVacuum] Uncaught exception", e, stackTrace);
     }
   }
-
-  static final _log = Logger("widget.settings._DevSettingsState");
 }
 
 Widget _buildCaption(BuildContext context, String label) {

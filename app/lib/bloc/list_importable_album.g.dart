@@ -3,6 +3,19 @@
 part of 'list_importable_album.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logListImportableAlbumBloc =
+    Logger("bloc.list_importable_album.ListImportableAlbumBloc");
+
+extension _$ListImportableAlbumBlocNpLog on ListImportableAlbumBloc {
+  // ignore: unused_element
+  Logger get _log => _$logListImportableAlbumBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

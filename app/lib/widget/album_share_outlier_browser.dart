@@ -26,6 +26,9 @@ import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/unbounded_list_tile.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'album_share_outlier_browser.g.dart';
 
 class AlbumShareOutlierBrowserArguments {
   const AlbumShareOutlierBrowserArguments(this.account, this.album);
@@ -63,6 +66,7 @@ class AlbumShareOutlierBrowser extends StatefulWidget {
   final Album album;
 }
 
+@npLog
 class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   @override
   initState() {
@@ -468,9 +472,6 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
 
   var _items = <_ListItem>[];
   final _itemStatuses = <String, Map<CiString, _ItemStatus>>{};
-
-  static final _log = Logger(
-      "widget.album_share_outlier_browser._AlbumShareOutlierBrowserState");
 }
 
 abstract class _ListItem {

@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_share.g.dart';
@@ -63,6 +64,7 @@ class ListShareBlocFailure extends ListShareBlocState {
 }
 
 /// List all shares from a given file
+@npLog
 class ListShareBloc extends Bloc<ListShareBlocEvent, ListShareBlocState> {
   ListShareBloc() : super(ListShareBlocInit()) {
     on<ListShareBlocEvent>(_onEvent);
@@ -91,6 +93,4 @@ class ListShareBloc extends Bloc<ListShareBlocEvent, ListShareBlocState> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     return shareRepo.list(ev.account, ev.file);
   }
-
-  static final _log = Logger("bloc.list_share.ListShareBloc");
 }

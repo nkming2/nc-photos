@@ -15,6 +15,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/list_album.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_album.g.dart';
@@ -93,6 +94,7 @@ class ListAlbumBlocInconsistent extends ListAlbumBlocState {
       : super(account, items);
 }
 
+@npLog
 class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
   /// Constructor
   ///
@@ -332,5 +334,5 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = Logger("bloc.list_album.ListAlbumBloc");
+  static final _log = _$logListAlbumBloc;
 }

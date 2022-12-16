@@ -40,6 +40,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'person_browser.g.dart';
 
 class PersonBrowserArguments {
   PersonBrowserArguments(this.account, this.person);
@@ -76,6 +79,7 @@ class PersonBrowser extends StatefulWidget {
   final Person person;
 }
 
+@npLog
 class _PersonBrowserState extends State<PersonBrowser>
     with SelectableItemStreamListMixin<PersonBrowser> {
   _PersonBrowserState() {
@@ -459,8 +463,6 @@ class _PersonBrowserState extends State<PersonBrowser>
 
   late final _filePropertyUpdatedListener =
       AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
-
-  static final _log = Logger("widget.person_browser._PersonBrowserState");
 }
 
 enum _SelectionMenuOption {

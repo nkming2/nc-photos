@@ -19,6 +19,9 @@ import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/tag_picker_dialog.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'new_album_dialog.g.dart';
 
 /// Dialog to create a new album
 ///
@@ -38,6 +41,7 @@ class NewAlbumDialog extends StatefulWidget {
   final bool isAllowDynamic;
 }
 
+@npLog
 class _NewAlbumDialogState extends State<NewAlbumDialog> {
   _NewAlbumDialogState() {
     final c = KiwiContainer().resolve<DiContainer>();
@@ -245,8 +249,6 @@ class _NewAlbumDialogState extends State<NewAlbumDialog> {
   final _formValue = _FormValue();
 
   var _isVisible = true;
-
-  static final _log = Logger("widget.new_album_dialog._NewAlbumDialogState");
 }
 
 class _FormValue {

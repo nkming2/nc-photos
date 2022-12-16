@@ -10,10 +10,12 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'provider.g.dart';
 
+@npLog
 abstract class AlbumProvider with EquatableMixin {
   const AlbumProvider();
 
@@ -63,7 +65,7 @@ abstract class AlbumProvider with EquatableMixin {
 
   AlbumProvider copyWith();
 
-  static final _log = Logger("entity.album.provider.AlbumProvider");
+  static final _log = _$logAlbumProvider;
 }
 
 abstract class AlbumProviderBase extends AlbumProvider {

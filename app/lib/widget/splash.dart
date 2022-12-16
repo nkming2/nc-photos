@@ -18,6 +18,7 @@ import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'splash.g.dart';
@@ -33,6 +34,7 @@ class Splash extends StatefulWidget {
   createState() => _SplashState();
 }
 
+@npLog
 class _SplashState extends State<Splash> {
   @override
   initState() {
@@ -268,8 +270,6 @@ class _SplashState extends State<Splash> {
   final _changelogCompleter = Completer();
   var _isUpgrading = false;
   late final _upgradeCubit = _UpgradeCubit();
-
-  static final _log = Logger("widget.splash._SplashState");
 }
 
 @toString

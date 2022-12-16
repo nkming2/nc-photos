@@ -15,6 +15,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/list_sharee.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_album_share_outlier.g.dart';
@@ -158,6 +159,7 @@ class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
 /// 1. shares between you and the owner for all files added by you
 /// 2. files added by you: for each participants, any files that are
 /// added on or after the album share for him/her was created
+@npLog
 class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     ListAlbumShareOutlierBlocState> {
   ListAlbumShareOutlierBloc(this._c)
@@ -374,7 +376,4 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
   }
 
   final DiContainer _c;
-
-  static final _log =
-      Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");
 }

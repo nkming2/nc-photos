@@ -10,6 +10,9 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'local_file_viewer.g.dart';
 
 class LocalFileViewerArguments {
   LocalFileViewerArguments(this.streamFiles, this.startIndex);
@@ -45,6 +48,7 @@ class LocalFileViewer extends StatefulWidget {
   final int startIndex;
 }
 
+@npLog
 class _LocalFileViewerState extends State<LocalFileViewer> {
   @override
   build(BuildContext context) {
@@ -220,8 +224,6 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
   final _viewerController = HorizontalPageViewerController();
   bool _isViewerLoaded = false;
   final _pageStates = <int, _PageState>{};
-
-  static final _log = Logger("widget.local_file_viewer._LocalFileViewerState");
 
   static const _viewportFraction = 1.05;
 }

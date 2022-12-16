@@ -8,8 +8,12 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/disposable.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
+part 'viewer_mixin.g.dart';
+
+@npLog
 mixin ViewerControllersMixin<T extends StatefulWidget>
     on DisposableManagerMixin<T> {
   @override
@@ -50,8 +54,6 @@ mixin ViewerControllersMixin<T extends StatefulWidget>
     }
     SystemChrome.setPreferredOrientations(prefer);
   }
-
-  static final _log = Logger("widget.viewer_mixin.ViewerControllersMixin");
 }
 
 /// Control the screen brightness according to the settings

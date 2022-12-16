@@ -4,8 +4,12 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 
+part 'copy.g.dart';
+
+@npLog
 class Copy {
   Copy(this.fileRepo);
 
@@ -79,6 +83,4 @@ class Copy {
   }
 
   final FileRepo fileRepo;
-
-  static final _log = Logger("use_case.copy.Copy");
 }

@@ -11,7 +11,11 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'cache_favorite.g.dart';
+
+@npLog
 class CacheFavorite {
   CacheFavorite(this._c) : assert(require(_c));
 
@@ -101,8 +105,6 @@ class CacheFavorite {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.cache_favorite.CacheFavorite");
 }
 
 class _FileRowIdWithFileId {

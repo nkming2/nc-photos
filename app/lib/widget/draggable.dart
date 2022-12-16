@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'draggable.g.dart';
+
+@npLog
 class Draggable<T extends Object> extends StatelessWidget {
   const Draggable({
     Key? key,
@@ -124,6 +128,4 @@ class Draggable<T extends Object> extends StatelessWidget {
   ///
   /// Right now a translucent version of [child] is being shown
   final Size? feedbackSize;
-
-  static final _log = Logger("widget.draggable.Draggable");
 }

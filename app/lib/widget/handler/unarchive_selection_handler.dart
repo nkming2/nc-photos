@@ -8,7 +8,11 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'unarchive_selection_handler.g.dart';
+
+@npLog
 class UnarchiveSelectionHandler {
   UnarchiveSelectionHandler(this._c)
       : assert(require(_c)),
@@ -46,7 +50,4 @@ class UnarchiveSelectionHandler {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger(
-      "widget.handler.unarchive_selection_handler.UnarchiveSelectionHandler");
 }

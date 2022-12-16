@@ -5,13 +5,17 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:tuple/tuple.dart';
+
+part 'upgrader.g.dart';
 
 abstract class AlbumUpgrader {
   JsonObj? call(JsonObj json);
 }
 
 /// Upgrade v1 Album to v2
+@npLog
 class AlbumUpgraderV1 implements AlbumUpgrader {
   AlbumUpgraderV1({
     this.logFilePath,
@@ -28,11 +32,10 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV1");
 }
 
 /// Upgrade v2 Album to v3
+@npLog
 class AlbumUpgraderV2 implements AlbumUpgrader {
   AlbumUpgraderV2({
     this.logFilePath,
@@ -61,11 +64,10 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV2");
 }
 
 /// Upgrade v3 Album to v4
+@npLog
 class AlbumUpgraderV3 implements AlbumUpgrader {
   AlbumUpgraderV3({
     this.logFilePath,
@@ -88,11 +90,10 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV3");
 }
 
 /// Upgrade v4 Album to v5
+@npLog
 class AlbumUpgraderV4 implements AlbumUpgrader {
   AlbumUpgraderV4({
     this.logFilePath,
@@ -157,11 +158,10 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV4");
 }
 
 /// Upgrade v5 Album to v6
+@npLog
 class AlbumUpgraderV5 implements AlbumUpgrader {
   const AlbumUpgraderV5(
     this.account, {
@@ -202,11 +202,10 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV5");
 }
 
 /// Upgrade v6 Album to v7
+@npLog
 class AlbumUpgraderV6 implements AlbumUpgrader {
   const AlbumUpgraderV6({
     this.logFilePath,
@@ -218,13 +217,12 @@ class AlbumUpgraderV6 implements AlbumUpgrader {
     return json;
   }
 
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV6");
-
   /// File path for logging only
   final String? logFilePath;
 }
 
 /// Upgrade v7 Album to v8
+@npLog
 class AlbumUpgraderV7 implements AlbumUpgrader {
   const AlbumUpgraderV7({
     this.logFilePath,
@@ -235,8 +233,6 @@ class AlbumUpgraderV7 implements AlbumUpgrader {
     _log.fine("[call] Upgrade v7 Album for file: $logFilePath");
     return json;
   }
-
-  static final _log = Logger("entity.album.upgrader.AlbumUpgraderV7");
 
   /// File path for logging only
   final String? logFilePath;

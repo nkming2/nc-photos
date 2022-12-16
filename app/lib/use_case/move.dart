@@ -8,8 +8,12 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 
+part 'move.g.dart';
+
+@npLog
 class Move {
   Move(this._c) : assert(require(_c));
 
@@ -89,6 +93,4 @@ class Move {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.move.Move");
 }

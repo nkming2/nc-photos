@@ -5,10 +5,14 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'list_potential_shared_album.g.dart';
 
 /// List all shared files that are potentially albums
 ///
 /// Beware that it's NOT guaranteed that they are actually albums
+@npLog
 class ListPotentialSharedAlbum {
   ListPotentialSharedAlbum(this.fileRepo);
 
@@ -59,7 +63,4 @@ class ListPotentialSharedAlbum {
 
   final FileRepo fileRepo;
   final _regex = RegExp(r"^([0-9a-fA-F]+)-([0-9a-fA-F]+)\.nc_album\.json$");
-
-  static final _log =
-      Logger("user_case.list_potential_shared_album.ListPotentialSharedAlbum");
 }

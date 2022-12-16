@@ -23,7 +23,11 @@ import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'album_browser_mixin.g.dart';
+
+@npLog
 mixin AlbumBrowserMixin<T extends StatefulWidget>
     on SelectableItemStreamListMixin<T> {
   @override
@@ -251,7 +255,6 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
   var _isEditMode = false;
   var _editFormValue = _EditFormValue();
 
-  static final _log = Logger("widget.album_browser_mixin.AlbumBrowserMixin");
   static const _menuValueEdit = -1;
   static const _menuValueUnsetCover = -2;
 }

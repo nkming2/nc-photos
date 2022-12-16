@@ -12,8 +12,11 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
+part 'selectable_item_stream_list_mixin.g.dart';
 
 abstract class SelectableItem {
   const SelectableItem();
@@ -25,6 +28,7 @@ abstract class SelectableItem {
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
 
+@npLog
 mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @override
   initState() {
@@ -301,7 +305,4 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   /// used to gain focus on web for keyboard support
   final _keyboardFocus = FocusNode();
-
-  static final _log = Logger(
-      "widget.selectable_item_stream_list_mixin.SelectableItemStreamListMixin");
 }

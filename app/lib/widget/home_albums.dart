@@ -39,6 +39,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'home_albums.g.dart';
 
 class HomeAlbums extends StatefulWidget {
   const HomeAlbums({
@@ -52,6 +55,7 @@ class HomeAlbums extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _HomeAlbumsState extends State<HomeAlbums>
     with
         SelectableItemStreamListMixin,
@@ -502,7 +506,6 @@ class _HomeAlbumsState extends State<HomeAlbums>
   late final _accountPrefUpdatedEventListener =
       AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
 
-  static final _log = Logger("widget.home_albums._HomeAlbumsState");
   static const _menuValueImport = 0;
   static const _menuValueSort = 1;
 }

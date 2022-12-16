@@ -5,6 +5,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/switch_form_field.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'slideshow_dialog.g.dart';
@@ -52,6 +53,7 @@ class SlideshowDialog extends StatefulWidget {
   final bool isReverse;
 }
 
+@npLog
 class _SlideshowDialogState extends State<SlideshowDialog> {
   @override
   initState() {
@@ -202,8 +204,6 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
 
   late int _durationSecond;
   late int _durationMinute;
-
-  static final _log = Logger("widget.slideshow_dialog._SlideshowDialog");
 }
 
 class _FormValue {

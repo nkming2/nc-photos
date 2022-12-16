@@ -36,6 +36,9 @@ import 'package:nc_photos/widget/search_landing.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'home_search.g.dart';
 
 class HomeSearch extends StatefulWidget {
   const HomeSearch({
@@ -49,6 +52,7 @@ class HomeSearch extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _HomeSearchState extends State<HomeSearch>
     with
         SelectableItemStreamListMixin<HomeSearch>,
@@ -587,8 +591,6 @@ class _HomeSearchState extends State<HomeSearch>
       photo_list_util.getThumbSize(_thumbZoomLevel).toDouble();
 
   var _backingFiles = <FileDescriptor>[];
-
-  static final _log = Logger("widget.home_search._HomeSearchState");
 }
 
 class _FormValue {

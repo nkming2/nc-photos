@@ -3,12 +3,16 @@ import 'dart:math' as math;
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/int_util.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'throttler.g.dart';
 
 /// Throttle how many times an event could be triggered
 ///
 /// Events can be filtered by 2 ways:
 /// 1. Time passed after the last event
 /// 2. Number of events
+@npLog
 class Throttler<T> {
   Throttler({
     required this.onTriggered,
@@ -88,8 +92,6 @@ class Throttler<T> {
   int _count = 0;
   int? _maxCount;
   var _data = <T>[];
-
-  static final _log = Logger("throttler.Throttler");
 }
 
 Duration _minDuration(Duration a, Duration b) {

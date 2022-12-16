@@ -11,6 +11,7 @@ import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'file.g.dart';
@@ -83,6 +84,7 @@ class ImageLocation with EquatableMixin {
 }
 
 /// Immutable object that hold metadata of a [File]
+@npLog
 @ToString(ignoreNull: true)
 class Metadata with EquatableMixin {
   Metadata({
@@ -206,7 +208,7 @@ class Metadata with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted metadata
   static const version = 4;
 
-  static final _log = Logger("entity.file.Metadata");
+  static final _log = _$logMetadata;
 }
 
 abstract class MetadataUpgrader {
@@ -214,6 +216,7 @@ abstract class MetadataUpgrader {
 }
 
 /// Upgrade v1 Metadata to v2
+@npLog
 class MetadataUpgraderV1 implements MetadataUpgrader {
   MetadataUpgraderV1({
     required this.fileContentType,
@@ -235,11 +238,10 @@ class MetadataUpgraderV1 implements MetadataUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.file.MetadataUpgraderV1");
 }
 
 /// Upgrade v2 Metadata to v3
+@npLog
 class MetadataUpgraderV2 implements MetadataUpgrader {
   MetadataUpgraderV2({
     required this.fileContentType,
@@ -268,11 +270,10 @@ class MetadataUpgraderV2 implements MetadataUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.file.MetadataUpgraderV2");
 }
 
 /// Upgrade v3 Metadata to v4
+@npLog
 class MetadataUpgraderV3 implements MetadataUpgrader {
   const MetadataUpgraderV3({
     required this.fileContentType,
@@ -297,8 +298,6 @@ class MetadataUpgraderV3 implements MetadataUpgrader {
 
   /// File path for logging only
   final String? logFilePath;
-
-  static final _log = Logger("entity.file.MetadataUpgraderV3");
 }
 
 @ToString(ignoreNull: true)

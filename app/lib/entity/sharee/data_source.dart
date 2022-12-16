@@ -7,7 +7,11 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class ShareeRemoteDataSource implements ShareeDataSource {
   @override
   list(Account account) async {
@@ -28,11 +32,9 @@ class ShareeRemoteDataSource implements ShareeDataSource {
     final sharees = _ShareeParser()(json);
     return sharees;
   }
-
-  static final _log =
-      Logger("entity.sharee.data_source.ShareeRemoteDataSource");
 }
 
+@npLog
 class _ShareeParser {
   List<Sharee> call(JsonObj json) {
     final JsonObj dataJson = json["ocs"]["data"];
@@ -54,8 +56,6 @@ class _ShareeParser {
     }
     return product;
   }
-
-  static final _log = Logger("entity.sharee.data_source._ShareeParser");
 
   static const _keyTypes = {
     "users": ShareeType.user,

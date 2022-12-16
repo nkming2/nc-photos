@@ -13,7 +13,11 @@ import 'package:nc_photos/entity/file.dart' as app;
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/file_extension.dart';
 import 'package:nc_photos/image_size_getter_util.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'load_metadata.g.dart';
+
+@npLog
 class LoadMetadata {
   /// Load metadata of [binary], which is the content of [file]
   Future<app.Metadata> loadRemote(
@@ -119,6 +123,4 @@ class LoadMetadata {
       exif: exif,
     );
   }
-
-  static final _log = Logger("use_case.load_metadata.LoadMetadata");
 }

@@ -9,7 +9,11 @@ import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'image_editor_persist_option_dialog.g.dart';
+
+@npLog
 class ImageEditorPersistOptionDialog extends StatelessWidget {
   const ImageEditorPersistOptionDialog({
     super.key,
@@ -75,7 +79,4 @@ class ImageEditorPersistOptionDialog extends StatelessWidget {
 
   /// Whether this dialog is displayed in editor or enhancer
   final bool isFromEditor;
-
-  static final _log = Logger(
-      "widget.image_editor_persist_option_dialog.ImageEditorPersistOptionDialog");
 }

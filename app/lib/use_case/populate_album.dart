@@ -12,7 +12,11 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'populate_album.g.dart';
+
+@npLog
 class PopulateAlbum {
   PopulateAlbum(this._c) : assert(require(_c));
 
@@ -96,6 +100,4 @@ class PopulateAlbum {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.populate_album.PopulateAlbum");
 }

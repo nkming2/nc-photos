@@ -2,7 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/widget/measureable_sliver_staggered_grid.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:uuid/uuid.dart';
+
+part 'measurable_item_list.g.dart';
 
 abstract class MeasurableItemListState {
   void updateListHeight();
@@ -30,6 +33,7 @@ class MeasurableItemList extends StatefulWidget {
   final ValueChanged<double?>? onMaxExtentChanged;
 }
 
+@npLog
 class _MeasurableItemListState extends State<MeasurableItemList>
     with WidgetsBindingObserver
     implements MeasurableItemListState {
@@ -130,9 +134,6 @@ class _MeasurableItemListState extends State<MeasurableItemList>
   // this unique token is there to keep the global key unique
   final _uniqueToken = const Uuid().v4();
   late _GridKey _gridKey;
-
-  static final _log =
-      Logger("widget.measurable_item_list._MeasurableItemListState");
 }
 
 class _GridKey extends GlobalObjectKey {

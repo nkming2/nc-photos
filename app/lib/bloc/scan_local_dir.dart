@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/scan_local_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'scan_local_dir.g.dart';
@@ -70,6 +71,7 @@ class ScanLocalDirBlocFailure extends ScanLocalDirBlocState {
   final dynamic exception;
 }
 
+@npLog
 class ScanLocalDirBloc
     extends Bloc<ScanLocalDirBlocEvent, ScanLocalDirBlocState> {
   ScanLocalDirBloc() : super(const ScanLocalDirBlocInit()) {
@@ -127,6 +129,4 @@ class ScanLocalDirBloc
 
   late final _fileDeletedEventListener =
       AppEventListener<LocalFileDeletedEvent>(_onFileDeletedEvent);
-
-  static final _log = Logger("bloc.scan_local_dir.ScanLocalDirBloc");
 }

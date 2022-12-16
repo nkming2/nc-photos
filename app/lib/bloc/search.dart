@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/search.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'search.g.dart';
@@ -95,6 +96,7 @@ class SearchBlocInconsistent extends SearchBlocState {
       : super(account, criteria, items);
 }
 
+@npLog
 class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
   SearchBloc(this._c)
       : assert(require(_c)),
@@ -223,6 +225,4 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
     },
     logTag: "SearchBloc.refresh",
   );
-
-  static final _log = Logger("bloc.search.SearchBloc");
 }

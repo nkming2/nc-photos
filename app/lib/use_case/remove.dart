@@ -17,7 +17,11 @@ import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'remove.g.dart';
+
+@npLog
 class Remove {
   Remove(this._c)
       : assert(require(_c)),
@@ -110,6 +114,4 @@ class Remove {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.remove.Remove");
 }

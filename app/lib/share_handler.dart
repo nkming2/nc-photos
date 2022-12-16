@@ -34,9 +34,13 @@ import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
 import 'package:nc_photos/widget/share_method_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:tuple/tuple.dart';
 
+part 'share_handler.g.dart';
+
 /// Handle sharing to other apps
+@npLog
 class ShareHandler {
   ShareHandler(
     this._c, {
@@ -347,6 +351,4 @@ class ShareHandler {
   final BuildContext context;
   final VoidCallback? clearSelection;
   var isSelectionCleared = false;
-
-  static final _log = Logger("share_handler.ShareHandler");
 }

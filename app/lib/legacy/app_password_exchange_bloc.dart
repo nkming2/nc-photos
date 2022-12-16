@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'app_password_exchange_bloc.g.dart';
@@ -54,6 +55,7 @@ class AppPasswordExchangeBlocFailure extends AppPasswordExchangeBlocState {
 }
 
 /// Legacy sign in support, may be removed any time in the future
+@npLog
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
   AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit()) {
@@ -126,6 +128,5 @@ class AppPasswordExchangeBloc
     }
   }
 
-  static final _log =
-      Logger("legacy.app_password_exchange_bloc.AppPasswordExchangeBloc");
+  static final _log = _$logAppPasswordExchangeBloc;
 }

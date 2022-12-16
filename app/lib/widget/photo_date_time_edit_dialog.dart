@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/num_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'photo_date_time_edit_dialog.g.dart';
 
 class PhotoDateTimeEditDialog extends StatefulWidget {
   const PhotoDateTimeEditDialog({
@@ -15,6 +18,7 @@ class PhotoDateTimeEditDialog extends StatefulWidget {
   final DateTime initialDateTime;
 }
 
+@npLog
 class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
   @override
   build(BuildContext context) {
@@ -177,9 +181,6 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
 
   final _formKey = GlobalKey<FormState>();
   final _formValue = _FormValue();
-
-  static final _log = Logger(
-      "widget.photo_date_time_edit_dialog._PhotoDateTimeEditDialogState");
 }
 
 class _FormValue {

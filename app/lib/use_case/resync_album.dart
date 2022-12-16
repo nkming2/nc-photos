@@ -7,8 +7,12 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'resync_album.g.dart';
 
 /// Resync files inside an album with the file db
+@npLog
 class ResyncAlbum {
   ResyncAlbum(this._c)
       : assert(require(_c)),
@@ -62,6 +66,4 @@ class ResyncAlbum {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.resync_album.ResyncAlbum");
 }

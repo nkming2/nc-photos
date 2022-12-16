@@ -3,6 +3,18 @@
 part of 'splash.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$log_SplashState = Logger("widget.splash._SplashState");
+
+extension _$_SplashStateNpLog on _SplashState {
+  // ignore: unused_element
+  Logger get _log => _$log_SplashState;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

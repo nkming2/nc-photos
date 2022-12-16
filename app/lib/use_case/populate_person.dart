@@ -5,7 +5,11 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:np_codegen/np_codegen.dart';
 
+part 'populate_person.g.dart';
+
+@npLog
 class PopulatePerson {
   PopulatePerson(this._c) : assert(require(_c));
 
@@ -33,6 +37,4 @@ class PopulatePerson {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.populate_person.PopulatePerson");
 }

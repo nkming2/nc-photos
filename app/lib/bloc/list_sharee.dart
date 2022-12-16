@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_sharee.g.dart';
@@ -62,6 +63,7 @@ class ListShareeBlocFailure extends ListShareeBlocState {
 }
 
 /// List all sharees of this account
+@npLog
 class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
   ListShareeBloc() : super(ListShareeBlocInit()) {
     on<ListShareeBlocEvent>(_onEvent);
@@ -105,5 +107,5 @@ class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
     return shareeRepo.list(ev.account);
   }
 
-  static final _log = Logger("bloc.list_sharee.ListShareeBloc");
+  static final _log = _$logListShareeBloc;
 }

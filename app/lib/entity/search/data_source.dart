@@ -13,7 +13,11 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class SearchSqliteDbDataSource implements SearchDataSource {
   SearchSqliteDbDataSource(this._c);
 
@@ -182,7 +186,4 @@ class SearchSqliteDbDataSource implements SearchDataSource {
   }
 
   final DiContainer _c;
-
-  static final _log =
-      Logger("entity.search.data_source.SearchSqliteDbDataSource");
 }

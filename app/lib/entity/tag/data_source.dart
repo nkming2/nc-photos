@@ -8,8 +8,12 @@ import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:xml/xml.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class TagRemoteDataSource implements TagDataSource {
   const TagRemoteDataSource();
 
@@ -55,10 +59,9 @@ class TagRemoteDataSource implements TagDataSource {
     final xml = XmlDocument.parse(response.body);
     return WebdavResponseParser().parseTags(xml);
   }
-
-  static final _log = Logger("entity.tag.data_source.TagRemoteDataSource");
 }
 
+@npLog
 class TagSqliteDbDataSource implements TagDataSource {
   const TagSqliteDbDataSource(this.sqliteDb);
 
@@ -78,6 +81,4 @@ class TagSqliteDbDataSource implements TagDataSource {
   }
 
   final sql.SqliteDb sqliteDb;
-
-  static final _log = Logger("entity.tag.data_source.TagSqliteDbDataSource");
 }

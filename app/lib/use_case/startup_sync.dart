@@ -13,8 +13,12 @@ import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/use_case/sync_person.dart';
 import 'package:nc_photos/use_case/sync_tag.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'startup_sync.g.dart';
 
 /// Sync various properties with server during startup
+@npLog
 class StartupSync {
   StartupSync(this._c)
       : assert(require(_c)),
@@ -74,8 +78,6 @@ class StartupSync {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.startup_sync.StartupSync");
 }
 
 class SyncResult {

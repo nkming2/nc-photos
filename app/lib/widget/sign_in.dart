@@ -17,6 +17,9 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'sign_in.g.dart';
 
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in";
@@ -29,6 +32,7 @@ class SignIn extends StatefulWidget {
   createState() => _SignInState();
 }
 
+@npLog
 class _SignInState extends State<SignIn> {
   @override
   build(BuildContext context) {
@@ -191,8 +195,6 @@ class _SignInState extends State<SignIn> {
   var _isConnecting = false;
 
   final _formValue = _FormValue();
-
-  static final _log = Logger("widget.sign_in._SignInState");
 }
 
 /// A nice background that matches Nextcloud without breaking any copyright law

@@ -5,8 +5,12 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:tuple/tuple.dart';
 
+part 'v55.g.dart';
+
+@npLog
 class CompatV55 {
   static Future<void> migrateDb(
     sql.SqliteDb db, {
@@ -93,5 +97,5 @@ class CompatV55 {
     });
   }
 
-  static final _log = Logger("use_case.compat.v55.CompatV55");
+  static final _log = _$logCompatV55;
 }

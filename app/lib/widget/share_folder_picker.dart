@@ -9,6 +9,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/dir_picker.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'share_folder_picker.g.dart';
 
 class ShareFolderPickerArguments {
   const ShareFolderPickerArguments(this.account, this.initialValue);
@@ -45,6 +48,7 @@ class ShareFolderPicker extends StatefulWidget {
   final String initialValue;
 }
 
+@npLog
 class _ShareFolderPickerState extends State<ShareFolderPicker> {
   @override
   build(BuildContext context) {
@@ -134,7 +138,4 @@ class _ShareFolderPickerState extends State<ShareFolderPicker> {
   }
 
   final _pickerKey = GlobalKey<DirPickerState>();
-
-  static final _log =
-      Logger("widget.share_folder_picker._ShareFolderPickerState");
 }

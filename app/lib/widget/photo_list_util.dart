@@ -8,6 +8,9 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'photo_list_util.g.dart';
 
 class DateGroupHelper {
   DateGroupHelper({
@@ -33,6 +36,7 @@ class DateGroupHelper {
 /// Build memory album from files
 ///
 /// Feb 29 is treated as Mar 1 on non leap years
+@npLog
 class MemoryAlbumHelper {
   MemoryAlbumHelper({
     DateTime? today,
@@ -91,8 +95,6 @@ class MemoryAlbumHelper {
   final DateTime today;
   final int dayRange;
   final _data = <int, _MemoryAlbumHelperItem>{};
-
-  static final _log = Logger("widget.photo_list_util.MemoryAlbumHelper");
 }
 
 int getThumbSize(int zoomLevel) {

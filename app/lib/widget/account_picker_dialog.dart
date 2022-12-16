@@ -14,6 +14,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'account_picker_dialog.g.dart';
 
 /// A dialog that allows the user to switch between accounts
 class AccountPickerDialog extends StatefulWidget {
@@ -28,6 +31,7 @@ class AccountPickerDialog extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _AccountPickerDialogState extends State<AccountPickerDialog> {
   @override
   initState() {
@@ -169,7 +173,4 @@ class _AccountPickerDialogState extends State<AccountPickerDialog> {
   }
 
   late List<Account> _accounts;
-
-  static final _log =
-      Logger("widget.account_picker_dialog._AccountPickerDialogState");
 }

@@ -17,6 +17,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/person_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'people_browser.g.dart';
 
 class PeopleBrowserArguments {
   const PeopleBrowserArguments(this.account);
@@ -49,6 +52,7 @@ class PeopleBrowser extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _PeopleBrowserState extends State<PeopleBrowser> {
   @override
   initState() {
@@ -179,8 +183,6 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   late final _bloc = ListPersonBloc(KiwiContainer().resolve<DiContainer>());
 
   var _items = <_ListItem>[];
-
-  static final _log = Logger("widget.people_browser._PeopleBrowserState");
 }
 
 abstract class _ListItem {

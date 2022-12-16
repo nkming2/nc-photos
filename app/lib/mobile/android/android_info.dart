@@ -1,6 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:logging/logging.dart';
 import 'package:memory_info/memory_info.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'android_info.g.dart';
@@ -9,6 +10,7 @@ part 'android_info.g.dart';
 ///
 /// Only meaningful when running on Android. Must call [init] before accessing
 /// the data fields
+@npLog
 @toString
 class AndroidInfo {
   factory AndroidInfo() => _inst;
@@ -41,7 +43,7 @@ class AndroidInfo {
   final int sdkInt;
   final double totalMemMb;
 
-  static final _log = Logger("mobile.android.android_info.AndroidInfo");
+  static final _log = _$logAndroidInfo;
 }
 
 abstract class AndroidVersion {

@@ -5,7 +5,11 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/cache_favorite.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'sync_favorite.g.dart';
+
+@npLog
 class SyncFavorite {
   SyncFavorite(this._c)
       : assert(require(_c)),
@@ -45,6 +49,4 @@ class SyncFavorite {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.sync_favorite.SyncFavorite");
 }

@@ -6,7 +6,11 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_time.dart';
 import 'package:nc_photos/use_case/update_auto_album_cover.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'update_album_with_actual_items.g.dart';
+
+@npLog
 class UpdateAlbumWithActualItems {
   UpdateAlbumWithActualItems(this.albumRepo);
 
@@ -44,7 +48,4 @@ class UpdateAlbumWithActualItems {
   }
 
   final AlbumRepo? albumRepo;
-
-  static final _log = Logger(
-      "use_case.update_album_with_actual_items.UpdateAlbumWithActualItems");
 }

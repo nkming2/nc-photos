@@ -14,7 +14,10 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
+
+part 'dir_picker.g.dart';
 
 class DirPicker extends StatefulWidget {
   const DirPicker({
@@ -40,6 +43,7 @@ class DirPicker extends StatefulWidget {
   final ValueChanged<List<File>>? onConfirmed;
 }
 
+@npLog
 class DirPickerState extends State<DirPicker> {
   @override
   initState() {
@@ -420,8 +424,6 @@ class DirPickerState extends State<DirPicker> {
 
   var _currentPath = "";
   var _picks = <File>[];
-
-  static final _log = Logger("widget.dir_picker.DirPickerState");
 }
 
 enum _PickState {

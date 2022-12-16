@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'app_password_exchange.g.dart';
@@ -135,6 +136,7 @@ class AppPasswordExchangeBlocResult extends AppPasswordExchangeBlocState {
 ///                                               -> State [AppPasswordExchangeBlocFailure]
 /// Event [AppPasswordExchangeBlocAppPwFailed]    -> State [AppPasswordExchangeBlocFailure]
 /// ```
+@npLog
 class AppPasswordExchangeBloc
     extends Bloc<AppPasswordExchangeBlocEvent, AppPasswordExchangeBlocState> {
   AppPasswordExchangeBloc() : super(const AppPasswordExchangeBlocInit()) {
@@ -255,9 +257,6 @@ class AppPasswordExchangeBloc
     _isCanceled = true;
     emit(const AppPasswordExchangeBlocResult(null));
   }
-
-  static final _log =
-      Logger("bloc.app_password_exchange.AppPasswordExchangeBloc");
 
   StreamSubscription<Future<api_util.AppPasswordResponse>>?
       _pollPasswordSubscription;

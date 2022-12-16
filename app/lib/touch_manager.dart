@@ -13,14 +13,18 @@ import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:uuid/uuid.dart';
+
+part 'touch_manager.g.dart';
 
 /// Manage touch events for files
 ///
 /// Touch events are used to broadcast file changes that don't trigger an ETag
 /// update to other devices. Such changes include custom properties like
 /// metadata
+@npLog
 class TouchManager {
   TouchManager(this._c) : assert(require(_c));
 
@@ -186,8 +190,6 @@ class TouchManager {
   final DiContainer _c;
   final _throttlers = <String, Throttler<_ThrottlerData>>{};
   final _resultCache = <String, OrNull<String>>{};
-
-  static final _log = Logger("touch_token_manager.TouchManager");
 }
 
 class _ThrottlerData {

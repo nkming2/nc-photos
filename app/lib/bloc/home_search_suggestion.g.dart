@@ -3,6 +3,19 @@
 part of 'home_search_suggestion.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logHomeSearchSuggestionBloc =
+    Logger("bloc.home_search_suggestion.HomeSearchSuggestionBloc");
+
+extension _$HomeSearchSuggestionBlocNpLog on HomeSearchSuggestionBloc {
+  // ignore: unused_element
+  Logger get _log => _$logHomeSearchSuggestionBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

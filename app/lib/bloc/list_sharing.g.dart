@@ -3,6 +3,18 @@
 part of 'list_sharing.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logListSharingBloc = Logger("bloc.list_sharing.ListSharingBloc");
+
+extension _$ListSharingBlocNpLog on ListSharingBloc {
+  // ignore: unused_element
+  Logger get _log => _$logListSharingBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

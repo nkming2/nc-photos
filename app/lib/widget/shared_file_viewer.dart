@@ -22,7 +22,10 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
+
+part 'shared_file_viewer.g.dart';
 
 class SharedFileViewerArguments {
   SharedFileViewerArguments(this.account, this.file, this.shares);
@@ -63,6 +66,7 @@ class SharedFileViewer extends StatefulWidget {
   final List<Share> shares;
 }
 
+@npLog
 class _SharedFileViewerState extends State<SharedFileViewer> {
   @override
   build(BuildContext context) {
@@ -315,9 +319,6 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
   }
 
   late final List<Share> _shares = List.of(widget.shares);
-
-  static final _log =
-      Logger("widget.shared_file_viewer._SharedFileViewerState");
 }
 
 enum _ItemMenuOption {

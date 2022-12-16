@@ -37,6 +37,7 @@ import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'dynamic_album_browser.g.dart';
@@ -76,6 +77,7 @@ class DynamicAlbumBrowser extends StatefulWidget {
   final Album album;
 }
 
+@npLog
 class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     with
         SelectableItemStreamListMixin<DynamicAlbumBrowser>,
@@ -672,8 +674,6 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
   late final _fileRemovedListener =
       AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
 
-  static final _log =
-      Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
   static const _menuValueConvertBasic = 0;
   static const _menuValueDownload = 1;
 }

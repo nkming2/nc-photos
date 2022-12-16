@@ -35,8 +35,11 @@ import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:tuple/tuple.dart';
+
+part 'viewer_detail_pane.g.dart';
 
 class ViewerDetailPane extends StatefulWidget {
   const ViewerDetailPane({
@@ -65,6 +68,7 @@ class ViewerDetailPane extends StatefulWidget {
   final VoidCallback? onSlideshowPressed;
 }
 
+@npLog
 class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   _ViewerDetailPaneState() {
     final c = KiwiContainer().resolve<DiContainer>();
@@ -496,9 +500,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   late final bool _canRemoveFromAlbum = _checkCanRemoveFromAlbum();
 
   var _shouldBlockGpsMap = true;
-
-  static final _log =
-      Logger("widget.viewer_detail_pane._ViewerDetailPaneState");
 }
 
 class _DetailPaneButton extends StatelessWidget {

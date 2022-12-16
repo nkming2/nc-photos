@@ -24,6 +24,9 @@ import 'package:nc_photos/use_case/create_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'album_importer.g.dart';
 
 class AlbumImporterArguments {
   AlbumImporterArguments(this.account);
@@ -55,6 +58,7 @@ class AlbumImporter extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _AlbumImporterState extends State<AlbumImporter> {
   _AlbumImporterState() {
     final c = KiwiContainer().resolve<DiContainer>();
@@ -274,6 +278,4 @@ class _AlbumImporterState extends State<AlbumImporter> {
 
   var _backingFiles = <File>[];
   final _picks = <File>[];
-
-  static final _log = Logger("widget.album_importer._AlbumImporterState");
 }

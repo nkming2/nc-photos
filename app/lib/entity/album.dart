@@ -11,11 +11,13 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'album.g.dart';
 
 /// Immutable object that represents an album
+@npLog
 class Album with EquatableMixin {
   /// Create a new album
   ///
@@ -216,7 +218,7 @@ class Album with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted album
   static const version = 8;
 
-  static final _log = Logger("entity.album.Album");
+  static final _log = _$logAlbum;
 }
 
 @toString

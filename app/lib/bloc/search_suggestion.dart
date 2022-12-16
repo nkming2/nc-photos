@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
@@ -57,6 +58,7 @@ class SearchSuggestionBlocSuccess<T> extends SearchSuggestionBlocState<T> {
   const SearchSuggestionBlocSuccess(List<T> results) : super(results);
 }
 
+@npLog
 class SearchSuggestionBloc<T>
     extends Bloc<SearchSuggestionBlocEvent, SearchSuggestionBlocState<T>> {
   SearchSuggestionBloc({
@@ -125,7 +127,4 @@ class SearchSuggestionBloc<T>
 
   final _search = Woozy(limit: 5);
   SearchSuggestionBlocSearchEvent? _lastSearch;
-
-  static final _log =
-      Logger("bloc.album_search_suggestion.SearchSuggestionBloc");
 }

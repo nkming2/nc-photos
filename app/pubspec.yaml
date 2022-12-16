@@ -123,6 +123,8 @@ dev_dependencies:
     sdk: flutter
   # integration_test:
   #   sdk: flutter
+  np_codegen:
+    path: ../codegen
   to_string:
     git:
       url: https://gitlab.com/nkming2/dart-to-string

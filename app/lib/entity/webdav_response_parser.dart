@@ -10,8 +10,12 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/string_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:xml/xml.dart';
 
+part 'webdav_response_parser.g.dart';
+
+@npLog
 class WebdavResponseParser {
   Future<List<File>> parseFiles(XmlDocument xml) =>
       compute(_parseFilesIsolate, xml);
@@ -295,9 +299,6 @@ class WebdavResponseParser {
   }
 
   var _namespaces = <String, String>{};
-
-  static final _log =
-      Logger("entity.webdav_response_parser.WebdavResponseParser");
 }
 
 class _FilePropParser {

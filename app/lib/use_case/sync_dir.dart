@@ -11,8 +11,12 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls_single_file.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:tuple/tuple.dart';
 
+part 'sync_dir.g.dart';
+
+@npLog
 class SyncDir {
   SyncDir(this._c) : assert(require(_c));
 
@@ -135,6 +139,4 @@ class SyncDir {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.sync_dir.SyncDir");
 }

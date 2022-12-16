@@ -8,10 +8,12 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'cover_provider.g.dart';
 
+@npLog
 abstract class AlbumCoverProvider with EquatableMixin {
   const AlbumCoverProvider();
 
@@ -57,7 +59,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 
   JsonObj _toContentJson();
 
-  static final _log = Logger("entity.album.cover_provider.AlbumCoverProvider");
+  static final _log = _$logAlbumCoverProvider;
 }
 
 /// Cover selected automatically by us

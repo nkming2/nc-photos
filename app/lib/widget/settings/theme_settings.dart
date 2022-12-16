@@ -11,6 +11,9 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'theme_settings.g.dart';
 
 class ThemeSettings extends StatefulWidget {
   const ThemeSettings({super.key});
@@ -19,6 +22,7 @@ class ThemeSettings extends StatefulWidget {
   createState() => _ThemeSettingsState();
 }
 
+@npLog
 class _ThemeSettingsState extends State<ThemeSettings> {
   @override
   initState() {
@@ -152,9 +156,6 @@ class _ThemeSettingsState extends State<ThemeSettings> {
   late bool _isFollowSystemTheme;
   late bool _isUseBlackInDarkTheme;
   late Color _seedColor;
-
-  static final _log =
-      Logger("widget.settings.theme_settings._ThemeSettingsState");
 }
 
 class _SeedColorPicker extends StatefulWidget {

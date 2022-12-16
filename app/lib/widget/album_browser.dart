@@ -44,6 +44,7 @@ import 'package:nc_photos/widget/share_album_dialog.dart';
 import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'album_browser.g.dart';
@@ -82,6 +83,7 @@ class AlbumBrowser extends StatefulWidget {
   final Album album;
 }
 
+@npLog
 class _AlbumBrowserState extends State<AlbumBrowser>
     with
         SelectableItemStreamListMixin<AlbumBrowser>,
@@ -884,8 +886,6 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   Album? _editAlbum;
 
   late AppEventListener<AlbumUpdatedEvent> _albumUpdatedListener;
-
-  static final _log = Logger("widget.album_browser._AlbumBrowserState");
 
   static const _menuValueDownload = 0;
   static const _menuValueFixShares = 1;

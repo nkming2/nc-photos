@@ -43,6 +43,9 @@ import 'package:nc_photos/widget/tag_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'my_app.g.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -60,6 +63,7 @@ class MyApp extends StatefulWidget {
   static late BuildContext _globalContext;
 }
 
+@npLog
 class _MyAppState extends State<MyApp>
     implements SnackBarHandler, NavigationHandler {
   @override
@@ -658,8 +662,6 @@ class _MyAppState extends State<MyApp>
 
   late AppEventListener<ThemeChangedEvent> _themeChangedListener;
   late AppEventListener<LanguageChangedEvent> _langChangedListener;
-
-  static final _log = Logger("widget.my_app.MyAppState");
 }
 
 class _MyScrollBehavior extends MaterialScrollBehavior {

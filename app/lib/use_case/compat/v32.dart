@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'v32.g.dart';
+
 /// Compatibility helper for v32
+@npLog
 class CompatV32 {
   static Future<bool> isPrefNeedMigration() async {
     final pref = await SharedPreferences.getInstance();
@@ -49,5 +53,5 @@ class CompatV32 {
     return Exif(newData);
   }
 
-  static final _log = Logger("use_case.compat.v32.CompatV32");
+  static final _log = _$logCompatV32;
 }

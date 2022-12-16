@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/math_util.dart' as math_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:np_codegen/np_codegen.dart';
 import 'package:sqlite3/common.dart';
 import 'package:to_string/to_string.dart';
 
@@ -28,6 +29,7 @@ class ReverseGeocoderLocation {
   final String? admin2;
 }
 
+@npLog
 class ReverseGeocoder {
   Future<void> init() async {
     final s = Stopwatch()..start();
@@ -105,8 +107,6 @@ class ReverseGeocoder {
 
   late final CommonDatabase _db;
   late final KDTree _searchTree;
-
-  static final _log = Logger("reverse_geocoder.ReverseGeocoder");
 }
 
 extension ReverseGeocoderExtension on ReverseGeocoderLocation {

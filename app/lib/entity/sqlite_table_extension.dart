@@ -16,6 +16,9 @@ import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:np_codegen/np_codegen.dart';
+
+part 'sqlite_table_extension.g.dart';
 
 const maxByFileIdsSize = 30000;
 
@@ -92,6 +95,7 @@ class AccountFileRowIdsWithFileId {
   final int fileId;
 }
 
+@npLog
 extension SqliteDbExtension on SqliteDb {
   /// Start a transaction and run [block]
   ///
@@ -586,8 +590,6 @@ extension SqliteDbExtension on SqliteDb {
         .map<Expression<bool?>>((m) => files.contentType.equals(m))
         .reduce((value, element) => value | element);
   }
-
-  static final _log = Logger("entity.sqlite_table_extension.SqliteDbExtension");
 }
 
 enum FilesQueryMode {

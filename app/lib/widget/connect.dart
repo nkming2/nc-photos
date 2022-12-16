@@ -22,6 +22,9 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/cloud_progress_indicator.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'connect.g.dart';
 
 class ConnectArguments {
   ConnectArguments(this.uri);
@@ -53,6 +56,7 @@ class Connect extends StatefulWidget {
   final Uri uri;
 }
 
+@npLog
 class _ConnectState extends State<Connect> {
   @override
   initState() {
@@ -296,8 +300,6 @@ class _ConnectState extends State<Connect> {
   }
 
   final _bloc = AppPasswordExchangeBloc();
-
-  static final _log = Logger("widget.connect._ConnectState");
 }
 
 class _WebDavUrlDialog extends StatefulWidget {

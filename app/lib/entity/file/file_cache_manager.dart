@@ -15,7 +15,11 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'file_cache_manager.g.dart';
+
+@npLog
 class FileCacheLoader {
   FileCacheLoader(
     this._c, {
@@ -81,10 +85,9 @@ class FileCacheLoader {
 
   var _isGood = false;
   String? _remoteEtag;
-
-  static final _log = Logger("entity.file.file_cache_manager.FileCacheLoader");
 }
 
+@npLog
 class FileSqliteCacheUpdater {
   FileSqliteCacheUpdater(this._c) : assert(require(_c));
 
@@ -348,9 +351,6 @@ class FileSqliteCacheUpdater {
 
   int? _dirRowId;
   final _childRowIds = <int>[];
-
-  static final _log =
-      Logger("entity.file.file_cache_manager.FileSqliteCacheUpdater");
 }
 
 class FileSqliteCacheRemover {

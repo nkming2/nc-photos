@@ -9,7 +9,11 @@ import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class LocalFileMediaStoreDataSource implements LocalFileDataSource {
   const LocalFileMediaStoreDataSource();
 
@@ -118,7 +122,4 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
         mime: r.mimeType,
         dateTaken: r.dateTaken?.run(DateTime.fromMillisecondsSinceEpoch),
       );
-
-  static final _log =
-      Logger("entity.local_file.data_source.LocalFileMediaStoreDataSource");
 }

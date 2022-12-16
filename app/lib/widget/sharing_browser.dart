@@ -29,6 +29,9 @@ import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:nc_photos/widget/unbounded_list_tile.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'sharing_browser.g.dart';
 
 class SharingBrowserArguments {
   SharingBrowserArguments(this.account);
@@ -61,6 +64,7 @@ class SharingBrowser extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _SharingBrowserState extends State<SharingBrowser> {
   @override
   initState() {
@@ -321,8 +325,6 @@ class _SharingBrowserState extends State<SharingBrowser> {
   late final _bloc = ListSharingBloc.of(widget.account);
 
   var _items = <List<ListSharingItem>>[];
-
-  static final _log = Logger("widget.sharing_browser._SharingBrowserState");
 }
 
 class _ListTile extends StatelessWidget {

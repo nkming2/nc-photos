@@ -12,6 +12,7 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_importable_album.g.dart';
@@ -79,6 +80,7 @@ class ListImportableAlbumBlocFailure extends ListImportableAlbumBlocState {
 }
 
 /// Return all directories that potentially could be a new album
+@npLog
 class ListImportableAlbumBloc
     extends Bloc<ListImportableAlbumBlocEvent, ListImportableAlbumBlocState> {
   ListImportableAlbumBloc(this._c)
@@ -168,7 +170,4 @@ class ListImportableAlbumBloc
   }
 
   final DiContainer _c;
-
-  static final _log =
-      Logger("bloc.list_importable_album.ListImportableAlbumBloc");
 }

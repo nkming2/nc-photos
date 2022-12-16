@@ -3,7 +3,10 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/move.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
+
+part 'v25.g.dart';
 
 /// Compatibility helper for v25
 class CompatV25 {
@@ -17,6 +20,7 @@ class CompatV25 {
       _MigrateAlbumFile(c)(account, albumFile);
 }
 
+@npLog
 class _MigrateAlbumFile {
   _MigrateAlbumFile(this._c)
       : assert(require(_c)),
@@ -37,6 +41,4 @@ class _MigrateAlbumFile {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.compat.v25._MigrateAlbumFile");
 }

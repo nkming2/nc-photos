@@ -4,7 +4,11 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'delete_local.g.dart';
+
+@npLog
 class DeleteLocal {
   DeleteLocal(this._c) : assert(require(_c));
 
@@ -27,6 +31,4 @@ class DeleteLocal {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.delete_local.DeleteLocal");
 }

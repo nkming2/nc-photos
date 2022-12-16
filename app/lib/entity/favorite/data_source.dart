@@ -5,8 +5,12 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:xml/xml.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class FavoriteRemoteDataSource implements FavoriteDataSource {
   const FavoriteRemoteDataSource();
 
@@ -28,7 +32,4 @@ class FavoriteRemoteDataSource implements FavoriteDataSource {
     final xml = XmlDocument.parse(response.body);
     return WebdavResponseParser().parseFavorites(xml);
   }
-
-  static final _log =
-      Logger("entity.favorite.data_source.FavoriteRemoteDataSource");
 }

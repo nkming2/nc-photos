@@ -6,6 +6,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'search_landing.g.dart';
@@ -65,6 +66,7 @@ class SearchLandingBlocFailure extends SearchLandingBlocState {
   final Object exception;
 }
 
+@npLog
 class SearchLandingBloc
     extends Bloc<SearchLandingBlocEvent, SearchLandingBlocState> {
   SearchLandingBloc(this._c)
@@ -121,6 +123,4 @@ class SearchLandingBloc
       ListLocationGroup(_c.withLocalRepo())(ev.account);
 
   final DiContainer _c;
-
-  static final _log = Logger("bloc.search_landing.SearchLandingBloc");
 }

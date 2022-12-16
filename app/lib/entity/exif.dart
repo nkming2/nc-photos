@@ -3,7 +3,11 @@ import 'package:exifdart/exifdart.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'exif.g.dart';
+
+@npLog
 class Exif with EquatableMixin {
   Exif(this.data);
 
@@ -138,6 +142,4 @@ class Exif with EquatableMixin {
   final Map<String, dynamic> data;
 
   static final dateTimeFormat = DateFormat("yyyy:MM:dd HH:mm:ss");
-
-  static final _log = Logger("entity.exif.Exif");
 }

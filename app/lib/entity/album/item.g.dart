@@ -3,6 +3,18 @@
 part of 'item.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logAlbumItem = Logger("entity.album.item.AlbumItem");
+
+extension _$AlbumItemNpLog on AlbumItem {
+  // ignore: unused_element
+  Logger get _log => _$logAlbumItem;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

@@ -41,6 +41,9 @@ import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'viewer.g.dart';
 
 class ViewerArguments {
   ViewerArguments(
@@ -94,6 +97,7 @@ class Viewer extends StatefulWidget {
   final Album? album;
 }
 
+@npLog
 class _ViewerState extends State<Viewer>
     with DisposableManagerMixin<Viewer>, ViewerControllersMixin<Viewer> {
   @override
@@ -878,8 +882,6 @@ class _ViewerState extends State<Viewer>
 
   late List<FileDescriptor> _streamFilesView;
   bool _isStreamFilesCopy = false;
-
-  static final _log = Logger("widget.viewer._ViewerState");
 
   static const _viewportFraction = 1.05;
 }

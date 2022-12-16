@@ -23,10 +23,13 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'service.g.dart';
 
 /// Start the background service
 Future<void> startService() async {
-  _log.info("[startService] Starting service");
+  _C.log.info("[startService] Starting service");
   final service = FlutterBackgroundService();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
@@ -49,7 +52,7 @@ Future<void> startService() async {
 
 /// Ask the background service to stop ASAP
 void stopService() {
-  _log.info("[stopService] Stopping service");
+  _C.log.info("[stopService] Stopping service");
   FlutterBackgroundService().sendData({
     _dataKeyEvent: _eventStop,
   });
@@ -70,6 +73,7 @@ class ServiceConfig {
   }
 }
 
+@npLog
 class _Service {
   Future<void> call() async {
     final service = FlutterBackgroundService();
@@ -178,10 +182,10 @@ class _Service {
   bool? _isPaused;
 
   static final _shouldRun = ValueNotifier<bool>(true);
-  static final _log = Logger("service._Service");
 }
 
 /// Access localized string out of the main isolate
+@npLog
 class _L10n {
   factory _L10n() => _inst;
 
@@ -219,10 +223,9 @@ class _L10n {
 
   static final _inst = _L10n._();
   late AppLocalizations _l10n;
-
-  static final _log = Logger("service._L10n");
 }
 
+@npLog
 class _MetadataTask {
   _MetadataTask(this.service, this.account, this.accountPref);
 
@@ -328,8 +331,6 @@ class _MetadataTask {
   var _shouldRun = true;
   var _count = 0;
   var _processedIds = <int>[];
-
-  static final _log = Logger("service._MetadataTask");
 }
 
 class _UpdateMissingMetadataConfigProvider
@@ -342,10 +343,13 @@ class _UpdateMissingMetadataConfigProvider
           .notNull();
 }
 
+class _C {
+  // needed to work with generator logger
+  static final log = Logger("service");
+}
+
 const _dataKeyEvent = "event";
 const _eventStop = "stop";
 
 const _servicePref = "service";
 const _servicePrefProcessWifiOnly = "shouldProcessWifiOnly";
-
-final _log = Logger("service");

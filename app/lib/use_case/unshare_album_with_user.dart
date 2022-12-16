@@ -12,7 +12,11 @@ import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'unshare_album_with_user.g.dart';
+
+@npLog
 class UnshareAlbumWithUser {
   UnshareAlbumWithUser(this._c)
       : assert(require(_c)),
@@ -82,7 +86,4 @@ class UnshareAlbumWithUser {
   }
 
   final DiContainer _c;
-
-  static final _log =
-      Logger("use_case.unshare_album_with_user.UnshareAlbumWithUser");
 }

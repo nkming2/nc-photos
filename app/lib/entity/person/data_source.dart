@@ -4,12 +4,16 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/sqlite_table.dart' as sql;
 import 'package:nc_photos/entity/sqlite_table_converter.dart';
+import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
-import 'package:nc_photos/entity/sqlite_table.dart' as sql;
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class PersonRemoteDataSource implements PersonDataSource {
   const PersonRemoteDataSource();
 
@@ -29,11 +33,9 @@ class PersonRemoteDataSource implements PersonDataSource {
     final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
     return _PersonParser().parseList(dataJson);
   }
-
-  static final _log =
-      Logger("entity.person.data_source.PersonRemoteDataSource");
 }
 
+@npLog
 class PersonSqliteDbDataSource implements PersonDataSource {
   const PersonSqliteDbDataSource(this.sqliteDb);
 
@@ -47,11 +49,9 @@ class PersonSqliteDbDataSource implements PersonDataSource {
   }
 
   final sql.SqliteDb sqliteDb;
-
-  static final _log =
-      Logger("entity.person.data_source.PersonSqliteDbDataSource");
 }
 
+@npLog
 class _PersonParser {
   List<Person> parseList(List<JsonObj> jsons) {
     final product = <Person>[];
@@ -72,6 +72,4 @@ class _PersonParser {
       count: json["count"],
     );
   }
-
-  static final _log = Logger("entity.person.data_source._PersonParser");
 }

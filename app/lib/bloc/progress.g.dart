@@ -3,6 +3,18 @@
 part of 'progress.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logProgressBloc = Logger("bloc.progress.ProgressBloc");
+
+extension _$ProgressBlocNpLog on ProgressBloc {
+  // ignore: unused_element
+  Logger get _log => _$logProgressBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

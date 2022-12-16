@@ -6,7 +6,11 @@ import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'request_public_link.g.dart';
+
+@npLog
 class RequestPublicLink {
   /// Request a temporary unique public link to [file]
   Future<String> call(Account account, FileDescriptor file) async {
@@ -30,6 +34,4 @@ class RequestPublicLink {
     }
     return json["data"]["url"];
   }
-
-  static final _log = Logger("use_case.request_public_link.RequestPublicLink");
 }

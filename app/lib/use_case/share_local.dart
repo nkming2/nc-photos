@@ -1,7 +1,11 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'share_local.g.dart';
+
+@npLog
 class ShareLocal {
   ShareLocal(this._c) : assert(require(_c));
 
@@ -21,6 +25,4 @@ class ShareLocal {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.share_local.ShareLocal");
 }

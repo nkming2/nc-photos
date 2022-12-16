@@ -3,6 +3,18 @@
 part of 'list_album.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logListAlbumBloc = Logger("bloc.list_album.ListAlbumBloc");
+
+extension _$ListAlbumBlocNpLog on ListAlbumBloc {
+  // ignore: unused_element
+  Logger get _log => _$logListAlbumBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

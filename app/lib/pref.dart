@@ -10,8 +10,12 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/use_case/compat/v34.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'pref.g.dart';
+
+@npLog
 class Pref {
   factory Pref() {
     _inst ??= Pref.scoped(PrefMemoryProvider());
@@ -294,8 +298,6 @@ class Pref {
   final PrefProvider provider;
 
   static Pref? _inst;
-
-  static final _log = Logger("pref.Pref");
 }
 
 class AccountPref {

@@ -13,6 +13,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'root_picker.g.dart';
 
 class RootPickerArguments {
   RootPickerArguments(this.account);
@@ -45,6 +48,7 @@ class RootPicker extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _RootPickerState extends State<RootPicker> {
   @override
   initState() {
@@ -208,6 +212,4 @@ class _RootPickerState extends State<RootPicker> {
   List<File>? _initialPicks;
 
   bool _isInitDialogShown = false;
-
-  static final _log = Logger("widget.root_picker._RootPickerState");
 }

@@ -2,12 +2,16 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'snack_bar_manager.g.dart';
 
 /// Showing snack bars
 ///
 /// This manager helps showing a snack bar even after the context was
 /// invalidated by having another widget (presumably top-level) to handle such
 /// request in a decoupled way
+@npLog
 class SnackBarManager {
   factory SnackBarManager() => _inst;
 
@@ -85,8 +89,6 @@ class SnackBarManager {
   _Item? _currentItem;
 
   static final _inst = SnackBarManager.scoped();
-
-  static final _log = Logger("snack_bar_manager.SnackBarManager");
 }
 
 abstract class SnackBarHandler {

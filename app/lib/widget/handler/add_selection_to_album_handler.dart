@@ -12,7 +12,11 @@ import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/use_case/add_to_album.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/widget/album_picker.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'add_selection_to_album_handler.g.dart';
+
+@npLog
 class AddSelectionToAlbumHandler {
   AddSelectionToAlbumHandler(this._c)
       : assert(require(_c)),
@@ -62,7 +66,4 @@ class AddSelectionToAlbumHandler {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger(
-      "widget.handler.add_selection_to_album_handler.AddSelectionToAlbumHandler");
 }

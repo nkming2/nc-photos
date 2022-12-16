@@ -13,7 +13,10 @@ import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:video_player/video_player.dart';
+
+part 'video_viewer.g.dart';
 
 class VideoViewer extends StatefulWidget {
   const VideoViewer({
@@ -43,6 +46,7 @@ class VideoViewer extends StatefulWidget {
   final bool canPlay;
 }
 
+@npLog
 class _VideoViewerState extends State<VideoViewer>
     with DisposableManagerMixin<VideoViewer> {
   @override
@@ -305,8 +309,6 @@ class _VideoViewerState extends State<VideoViewer>
   bool _isControllerInitialized = false;
   late VideoPlayerController _controller;
   var _isFinished = false;
-
-  static final _log = Logger("widget.video_viewer._VideoViewerState");
 }
 
 String _durationToString(Duration duration) {

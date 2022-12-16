@@ -15,11 +15,15 @@ import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'update_missing_metadata.g.dart';
 
 abstract class UpdateMissingMetadataConfigProvider {
   Future<bool> isWifiOnly();
 }
 
+@npLog
 class UpdateMissingMetadata {
   UpdateMissingMetadata(this.fileRepo, this.configProvider, this.geocoder);
 
@@ -164,7 +168,4 @@ class UpdateMissingMetadata {
   final ReverseGeocoder geocoder;
 
   bool _shouldRun = true;
-
-  static final _log =
-      Logger("use_case.update_missing_metadata.UpdateMissingMetadata");
 }

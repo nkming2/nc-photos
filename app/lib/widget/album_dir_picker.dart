@@ -9,6 +9,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/dir_picker.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'album_dir_picker.g.dart';
 
 class AlbumDirPickerArguments {
   AlbumDirPickerArguments(this.account);
@@ -41,6 +44,7 @@ class AlbumDirPicker extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _AlbumDirPickerState extends State<AlbumDirPicker> {
   @override
   build(BuildContext context) {
@@ -140,6 +144,4 @@ class _AlbumDirPickerState extends State<AlbumDirPicker> {
 
   final _pickerKey = GlobalKey<DirPickerState>();
   late final _strippedRootDir = _getPickerRoot();
-
-  static final _log = Logger("widget.album_dir_picker._AlbumDirPickerState");
 }

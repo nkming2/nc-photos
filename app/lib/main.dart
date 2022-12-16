@@ -8,6 +8,9 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/widget/my_app.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'main.g.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,12 +30,11 @@ void main() async {
   );
 }
 
+@npLog
 class _BlocObserver extends BlocObserver {
   @override
   onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
     _log.finer("${bloc.runtimeType} $change");
   }
-
-  static final _log = Logger("main._BlocObserver");
 }

@@ -16,6 +16,9 @@ import 'package:nc_photos/widget/slideshow_dialog.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'slideshow_viewer.g.dart';
 
 class SlideshowViewerArguments {
   SlideshowViewerArguments(
@@ -64,6 +67,7 @@ class SlideshowViewer extends StatefulWidget {
   final SlideshowConfig config;
 }
 
+@npLog
 class _SlideshowViewerState extends State<SlideshowViewer>
     with
         DisposableManagerMixin<SlideshowViewer>,
@@ -297,8 +301,6 @@ class _SlideshowViewerState extends State<SlideshowViewer>
   final _viewerController = HorizontalPageViewerController();
   // late final _SlideshowController _slideshowController;
   late final List<int> _shuffledIndex;
-
-  static final _log = Logger("widget.slideshow_viewer._SlideshowViewerState");
 
   static const _viewportFraction = 1.05;
 }

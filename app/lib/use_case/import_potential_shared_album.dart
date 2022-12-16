@@ -7,8 +7,12 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_potential_shared_album.dart';
 import 'package:nc_photos/use_case/move.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'import_potential_shared_album.g.dart';
 
 /// Import new shared albums to the pending dir
+@npLog
 class ImportPotentialSharedAlbum {
   ImportPotentialSharedAlbum(this._c)
       : assert(require(_c)),
@@ -44,7 +48,4 @@ class ImportPotentialSharedAlbum {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger(
-      "user_case.import_potential_shared_album.ImportPotentialSharedAlbum");
 }

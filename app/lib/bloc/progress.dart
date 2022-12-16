@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'progress.g.dart';
@@ -35,6 +36,7 @@ class ProgressBlocState with EquatableMixin {
 }
 
 /// A generic bloc to bubble progress update for some events
+@npLog
 class ProgressBloc extends Bloc<ProgressBlocEvent, ProgressBlocState> {
   ProgressBloc() : super(const ProgressBlocState(0, null)) {
     on<ProgressBlocEvent>(_onEvent);
@@ -52,6 +54,4 @@ class ProgressBloc extends Bloc<ProgressBlocEvent, ProgressBlocState> {
       ProgressBlocUpdate ev, Emitter<ProgressBlocState> emit) async {
     emit(ProgressBlocState(ev.progress, ev.text));
   }
-
-  static final _log = Logger("bloc.progress.ProgressBloc");
 }

@@ -11,6 +11,9 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
+import 'package:np_codegen/np_codegen.dart';
+
+part 'image_viewer.g.dart';
 
 class LocalImageViewer extends StatefulWidget {
   const LocalImageViewer({
@@ -34,6 +37,7 @@ class LocalImageViewer extends StatefulWidget {
   final VoidCallback? onZoomEnded;
 }
 
+@npLog
 class _LocalImageViewerState extends State<LocalImageViewer> {
   @override
   build(BuildContext context) {
@@ -71,8 +75,6 @@ class _LocalImageViewerState extends State<LocalImageViewer> {
   }
 
   var _isLoaded = false;
-
-  static final _log = Logger("widget.image_viewer._LocalImageViewerState");
 }
 
 class RemoteImageViewer extends StatefulWidget {
@@ -108,6 +110,7 @@ class RemoteImageViewer extends StatefulWidget {
   final VoidCallback? onZoomEnded;
 }
 
+@npLog
 class _RemoteImageViewerState extends State<RemoteImageViewer> {
   @override
   build(BuildContext context) => _ImageViewer(
@@ -144,8 +147,6 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
   }
 
   var _isLoaded = false;
-
-  static final _log = Logger("widget.image_viewer._RemoteImageViewerState");
 }
 
 class _ImageViewer extends StatefulWidget {
@@ -168,6 +169,7 @@ class _ImageViewer extends StatefulWidget {
   final VoidCallback? onZoomEnded;
 }
 
+@npLog
 class _ImageViewerState extends State<_ImageViewer>
     with TickerProviderStateMixin {
   @override
@@ -325,8 +327,6 @@ class _ImageViewerState extends State<_ImageViewer>
 
   int _finger = 0;
   var _prevFingerPosition = const Offset(0, 0);
-
-  static final _log = Logger("widget.image_viewer._ImageViewerState");
 }
 
 String _getImageUrl(Account account, FileDescriptor file) {

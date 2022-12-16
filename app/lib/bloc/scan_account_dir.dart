@@ -23,6 +23,7 @@ import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'scan_account_dir.g.dart';
@@ -113,6 +114,7 @@ class ScanAccountDirBlocInconsistent extends ScanAccountDirBlocState {
 /// A bloc that return all files under a dir recursively
 ///
 /// See [ScanDir]
+@npLog
 class ScanAccountDirBloc
     extends Bloc<ScanAccountDirBlocEvent, ScanAccountDirBlocState> {
   ScanAccountDirBloc._(this.account) : super(const ScanAccountDirBlocInit()) {
@@ -534,5 +536,5 @@ class ScanAccountDirBloc
     logTag: "ScanAccountDirBloc.refresh",
   );
 
-  static final _log = Logger("bloc.scan_dir.ScanAccountDirBloc");
+  static final _log = _$logScanAccountDirBloc;
 }

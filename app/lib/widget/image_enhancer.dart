@@ -29,6 +29,9 @@ import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'image_enhancer.g.dart';
 
 class ImageEnhancerArguments {
   const ImageEnhancerArguments(this.account, this.file, this.isSaveToServer);
@@ -71,6 +74,7 @@ class ImageEnhancer extends StatefulWidget {
   final bool isSaveToServer;
 }
 
+@npLog
 class _ImageEnhancerState extends State<ImageEnhancer> {
   @override
   initState() {
@@ -564,8 +568,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   late final DiContainer _c;
   late var _selectedOption = _options[0];
   late final _pageController = PageController(keepPage: false);
-
-  static final _log = Logger("widget.image_enhancer._ImageEnhancerState");
 }
 
 enum _Algorithm {
@@ -863,6 +865,7 @@ class _StylePicker extends StatefulWidget {
   createState() => _StylePickerState();
 }
 
+@npLog
 class _StylePickerState extends State<_StylePicker> {
   @override
   build(BuildContext context) {
@@ -1016,6 +1019,4 @@ class _StylePickerState extends State<_StylePicker> {
     "file:///android_asset/tf/arbitrary-style-transfer/5.jpg",
     "file:///android_asset/tf/arbitrary-style-transfer/6.jpg",
   ];
-
-  static final _log = Logger("widget.image_enhancer._StylePickerState");
 }

@@ -12,6 +12,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'result_viewer.g.dart';
 
 class ResultViewerArguments {
   const ResultViewerArguments(this.resultUrl);
@@ -45,6 +48,7 @@ class ResultViewer extends StatefulWidget {
   final String resultUrl;
 }
 
+@npLog
 class _ResultViewerState extends State<ResultViewer> {
   @override
   initState() {
@@ -123,6 +127,4 @@ class _ResultViewerState extends State<ResultViewer> {
   late final DiContainer _c;
   Account? _account;
   File? _file;
-
-  static final _log = Logger("widget.result_viewer._ResultViewerState");
 }

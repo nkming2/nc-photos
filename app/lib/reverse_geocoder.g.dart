@@ -3,6 +3,18 @@
 part of 'reverse_geocoder.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logReverseGeocoder = Logger("reverse_geocoder.ReverseGeocoder");
+
+extension _$ReverseGeocoderNpLog on ReverseGeocoder {
+  // ignore: unused_element
+  Logger get _log => _$logReverseGeocoder;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

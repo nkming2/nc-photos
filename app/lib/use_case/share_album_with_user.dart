@@ -12,7 +12,11 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/update_album.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'share_album_with_user.g.dart';
+
+@npLog
 class ShareAlbumWithUser {
   ShareAlbumWithUser(this.shareRepo, this.albumRepo);
 
@@ -84,7 +88,4 @@ class ShareAlbumWithUser {
 
   final ShareRepo shareRepo;
   final AlbumRepo albumRepo;
-
-  static final _log =
-      Logger("use_case.share_album_with_user.ShareAlbumWithUser");
 }

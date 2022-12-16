@@ -53,7 +53,10 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
+part 'home_photos.g.dart';
 
 class HomePhotos extends StatefulWidget {
   const HomePhotos({
@@ -67,6 +70,7 @@ class HomePhotos extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _HomePhotosState extends State<HomePhotos>
     with
         SelectableItemStreamListMixin<HomePhotos>,
@@ -792,7 +796,6 @@ class _HomePhotosState extends State<HomePhotos>
   var _isScrollbarVisible = false;
   var _isRefreshIndicatorActive = false;
 
-  static final _log = Logger("widget.home_photos._HomePhotosState");
   static const _menuValueRefresh = 0;
 }
 

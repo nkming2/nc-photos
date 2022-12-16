@@ -14,7 +14,11 @@ import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'add_to_album.g.dart';
+
+@npLog
 class AddToAlbum {
   AddToAlbum(this._c)
       : assert(require(_c)),
@@ -110,8 +114,6 @@ class AddToAlbum {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.add_to_album.AddToAlbum");
 }
 
 bool _isItemFileEqual(AlbumItem a, AlbumItem b) {

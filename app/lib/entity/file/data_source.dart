@@ -19,9 +19,13 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:xml/xml.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class FileWebdavDataSource implements FileDataSource {
   const FileWebdavDataSource();
 
@@ -352,10 +356,9 @@ class FileWebdavDataSource implements FileDataSource {
       }
     }
   }
-
-  static final _log = Logger("entity.file.data_source.FileWebdavDataSource");
 }
 
+@npLog
 class FileSqliteDbDataSource implements FileDataSource {
   FileSqliteDbDataSource(this._c);
 
@@ -564,8 +567,6 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("entity.file.data_source.FileSqliteDbDataSource");
 }
 
 class IntermediateSyncState {
@@ -584,6 +585,7 @@ class IntermediateSyncState {
   final bool shouldCache;
 }
 
+@npLog
 class FileCachedDataSource implements FileDataSource {
   FileCachedDataSource(
     this._c, {
@@ -799,8 +801,6 @@ class FileCachedDataSource implements FileDataSource {
 
   final _remoteSrc = const FileWebdavDataSource();
   final FileSqliteDbDataSource _sqliteDbSrc;
-
-  static final _log = Logger("entity.file.data_source.FileCachedDataSource");
 }
 
 bool _validateFile(File f) {

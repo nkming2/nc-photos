@@ -4,9 +4,13 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/platform/universal_storage.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'v34.g.dart';
+
 /// Compatibility helper for v34
+@npLog
 class CompatV34 {
   static Future<bool> isPrefNeedMigration() async {
     final pref = await SharedPreferences.getInstance();
@@ -71,5 +75,5 @@ class CompatV34 {
     }
   }
 
-  static final _log = Logger("use_case.compat.v34.CompatV34");
+  static final _log = _$logCompatV34;
 }

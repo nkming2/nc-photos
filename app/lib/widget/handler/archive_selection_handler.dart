@@ -8,7 +8,11 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/update_property.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'archive_selection_handler.g.dart';
+
+@npLog
 class ArchiveSelectionHandler {
   ArchiveSelectionHandler(this._c)
       : assert(require(_c)),
@@ -45,7 +49,4 @@ class ArchiveSelectionHandler {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger(
-      "widget.handler.archive_selection_handler.ArchiveSelectionHandler");
 }

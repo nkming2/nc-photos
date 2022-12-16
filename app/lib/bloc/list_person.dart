@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/list_person.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_person.g.dart';
@@ -61,6 +62,7 @@ class ListPersonBlocFailure extends ListPersonBlocState {
 }
 
 /// List all people recognized in an account
+@npLog
 class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
   ListPersonBloc(this._c)
       : assert(require(_c)),
@@ -94,6 +96,4 @@ class ListPersonBloc extends Bloc<ListPersonBlocEvent, ListPersonBlocState> {
       ListPerson(_c.withLocalRepo())(ev.account);
 
   final DiContainer _c;
-
-  static final _log = Logger("bloc.list_person.ListPersonBloc");
 }

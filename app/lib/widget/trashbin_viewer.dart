@@ -18,6 +18,9 @@ import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'trashbin_viewer.g.dart';
 
 class TrashbinViewerArguments {
   TrashbinViewerArguments(this.account, this.streamFiles, this.startIndex);
@@ -57,6 +60,7 @@ class TrashbinViewer extends StatefulWidget {
   final int startIndex;
 }
 
+@npLog
 class _TrashbinViewerState extends State<TrashbinViewer> {
   @override
   build(BuildContext context) {
@@ -333,8 +337,6 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   final _viewerController = HorizontalPageViewerController();
   bool _isViewerLoaded = false;
   final _pageStates = <int, _PageState>{};
-
-  static final _log = Logger("widget.trashbin_viewer._TrashbinViewerState");
 
   static const _viewportFraction = 1.05;
 }

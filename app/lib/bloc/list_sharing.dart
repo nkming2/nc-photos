@@ -18,6 +18,7 @@ import 'package:nc_photos/use_case/find_file.dart';
 import 'package:nc_photos/use_case/list_share_with_me.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 
@@ -137,6 +138,7 @@ class ListSharingBlocFailure extends ListSharingBlocState {
 }
 
 /// List shares to be shown in [SharingBrowser]
+@npLog
 class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
   ListSharingBloc(this._c)
       : assert(require(_c)),
@@ -417,5 +419,5 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = Logger("bloc.list_sharing.ListSharingBloc");
+  static final _log = _$logListSharingBloc;
 }

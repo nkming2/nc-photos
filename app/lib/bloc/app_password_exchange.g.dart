@@ -3,6 +3,19 @@
 part of 'app_password_exchange.dart';
 
 // **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+// ignore: non_constant_identifier_names
+final _$logAppPasswordExchangeBloc =
+    Logger("bloc.app_password_exchange.AppPasswordExchangeBloc");
+
+extension _$AppPasswordExchangeBlocNpLog on AppPasswordExchangeBloc {
+  // ignore: unused_element
+  Logger get _log => _$logAppPasswordExchangeBloc;
+}
+
+// **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 

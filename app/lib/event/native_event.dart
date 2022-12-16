@@ -42,7 +42,7 @@ class NativeEventListener<T> {
   final void Function(T) listener;
   StreamSubscription<T>? _subscription;
 
-  final _log = Logger("native_event.NativeEventListener<${T.runtimeType}>");
+  final _log = Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
 }
 
 class FileExifUpdatedEvent {

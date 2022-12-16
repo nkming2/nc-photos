@@ -7,8 +7,12 @@ import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:xml/xml.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class TaggedFileRemoteDataSource implements TaggedFileDataSource {
   const TaggedFileRemoteDataSource();
 
@@ -31,7 +35,4 @@ class TaggedFileRemoteDataSource implements TaggedFileDataSource {
     final xml = XmlDocument.parse(response.body);
     return WebdavResponseParser().parseTaggedFiles(xml);
   }
-
-  static final _log =
-      Logger("entity.tagged_file.data_source.TaggedFileRemoteDataSource");
 }

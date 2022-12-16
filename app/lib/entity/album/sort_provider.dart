@@ -6,11 +6,13 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 
 part 'sort_provider.g.dart';
 
+@npLog
 abstract class AlbumSortProvider with EquatableMixin {
   const AlbumSortProvider();
 
@@ -55,7 +57,7 @@ abstract class AlbumSortProvider with EquatableMixin {
 
   JsonObj _toContentJson();
 
-  static final _log = Logger("entity.album.sort_provider.AlbumSortProvider");
+  static final _log = _$logAlbumSortProvider;
 }
 
 /// Sort provider that does nothing

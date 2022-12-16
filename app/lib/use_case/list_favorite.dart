@@ -5,7 +5,11 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/use_case/find_file.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'list_favorite.g.dart';
+
+@npLog
 class ListFavorite {
   ListFavorite(this._c)
       : assert(require(_c)),
@@ -36,6 +40,4 @@ class ListFavorite {
   }
 
   final DiContainer _c;
-
-  static final _log = Logger("use_case.list_favorite.ListFavorite");
 }

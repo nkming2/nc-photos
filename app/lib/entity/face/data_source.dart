@@ -7,7 +7,11 @@ import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'data_source.g.dart';
+
+@npLog
 class FaceRemoteDataSource implements FaceDataSource {
   const FaceRemoteDataSource();
 
@@ -32,10 +36,9 @@ class FaceRemoteDataSource implements FaceDataSource {
     final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
     return _FaceParser().parseList(dataJson);
   }
-
-  static final _log = Logger("entity.face.data_source.FaceRemoteDataSource");
 }
 
+@npLog
 class _FaceParser {
   List<Face> parseList(List<JsonObj> jsons) {
     final product = <Face>[];
@@ -55,6 +58,4 @@ class _FaceParser {
       fileId: json["fileId"],
     );
   }
-
-  static final _log = Logger("entity.face.data_source._FaceParser");
 }

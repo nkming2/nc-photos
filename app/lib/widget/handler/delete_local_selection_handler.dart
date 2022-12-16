@@ -8,7 +8,11 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/delete_local.dart';
+import 'package:np_codegen/np_codegen.dart';
 
+part 'delete_local_selection_handler.g.dart';
+
+@npLog
 class DeleteLocalSelectionHandler {
   const DeleteLocalSelectionHandler();
 
@@ -45,7 +49,4 @@ class DeleteLocalSelectionHandler {
     }
     return selectedFiles.length - failureCount;
   }
-
-  static final _log = Logger(
-      "widget.handler.delete_local_selection_handler.DeleteLocalSelectionHandler");
 }

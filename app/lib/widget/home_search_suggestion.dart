@@ -17,6 +17,9 @@ import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/tag_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'home_search_suggestion.g.dart';
 
 class HomeSearchSuggestionController {
   void search(String phrase) {
@@ -40,6 +43,7 @@ class HomeSearchSuggestion extends StatefulWidget {
   final HomeSearchSuggestionController controller;
 }
 
+@npLog
 class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
     with RouteAware, PageVisibilityMixin {
   @override
@@ -171,9 +175,6 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
   late final HomeSearchSuggestionBloc _bloc;
 
   var _items = <_ListItem>[];
-
-  static final _log =
-      Logger("widget.home_search_suggestion._HomeSearchSuggestionState");
 }
 
 abstract class _ListItem {

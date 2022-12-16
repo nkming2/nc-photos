@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'changelog.g.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -8,6 +11,7 @@ class ChangelogArguments {
   final int fromVersion;
 }
 
+@npLog
 class Changelog extends StatelessWidget {
   static const routeName = "/changelog";
 
@@ -73,8 +77,6 @@ class Changelog extends StatelessWidget {
   }
 
   final int? fromVersion;
-
-  static final _log = Logger("widget.changelog.Changelog");
 }
 
 List<Widget> _buildChangelog460(BuildContext context) {

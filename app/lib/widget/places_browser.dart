@@ -22,6 +22,9 @@ import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/place_browser.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'places_browser.g.dart';
 
 class PlacesBrowserArguments {
   const PlacesBrowserArguments(this.account);
@@ -54,6 +57,7 @@ class PlacesBrowser extends StatefulWidget {
   final Account account;
 }
 
+@npLog
 class _PlacesBrowserState extends State<PlacesBrowser> {
   @override
   initState() {
@@ -241,8 +245,6 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
 
   var _placeItems = <_PlaceItem>[];
   var _countryItems = <_CountryItem>[];
-
-  static final _log = Logger("widget.places_browser._PlacesBrowserState");
 }
 
 class _PlaceItem {

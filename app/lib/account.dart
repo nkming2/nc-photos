@@ -7,11 +7,13 @@ import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/type.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'account.g.dart';
 
 /// Details of a remote Nextcloud server account
+@npLog
 @toString
 class Account with EquatableMixin {
   Account(
@@ -117,7 +119,7 @@ class Account with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted accounts
   static const version = 2;
 
-  static final _log = Logger("account.Account");
+  static final _log = _$logAccount;
 }
 
 extension AccountExtension on Account {
@@ -139,6 +141,7 @@ abstract class AccountUpgrader {
   JsonObj? call(JsonObj json);
 }
 
+@npLog
 class AccountUpgraderV1 implements AccountUpgrader {
   const AccountUpgraderV1({
     this.logAccountId,
@@ -159,6 +162,4 @@ class AccountUpgraderV1 implements AccountUpgrader {
 
   /// Account ID for logging only
   final String? logAccountId;
-
-  static final _log = Logger("account.AccountUpgraderV1");
 }

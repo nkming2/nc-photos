@@ -34,6 +34,9 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'tag_browser.g.dart';
 
 class TagBrowserArguments {
   TagBrowserArguments(this.account, this.tag);
@@ -69,6 +72,7 @@ class TagBrowser extends StatefulWidget {
   final Tag tag;
 }
 
+@npLog
 class _TagBrowserState extends State<TagBrowser>
     with SelectableItemStreamListMixin<TagBrowser> {
   _TagBrowserState() {
@@ -412,8 +416,6 @@ class _TagBrowserState extends State<TagBrowser>
 
   late final _filePropertyUpdatedListener =
       AppEventListener<FilePropertyUpdatedEvent>(_onFilePropertyUpdated);
-
-  static final _log = Logger("widget.tag_browser._TagBrowserState");
 }
 
 enum _SelectionMenuOption {

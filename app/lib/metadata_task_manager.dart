@@ -11,11 +11,13 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'metadata_task_manager.g.dart';
 
 /// Task to update metadata for missing files
+@npLog
 @ToString(ignorePrivate: true)
 class MetadataTask {
   MetadataTask(this._c, this.account, this.pref) : assert(require(_c));
@@ -73,11 +75,10 @@ class MetadataTask {
   final Account account;
   @ignore
   final AccountPref pref;
-
-  static final _log = Logger("metadata_task_manager.MetadataTask");
 }
 
 /// Manage metadata tasks to run concurrently
+@npLog
 class MetadataTaskManager {
   factory MetadataTaskManager() {
     _inst ??= MetadataTaskManager._();
@@ -120,8 +121,6 @@ class MetadataTaskManager {
   late final _stateChangedListener =
       AppEventListener<MetadataTaskStateChangedEvent>(
           _onMetadataTaskStateChanged);
-
-  static final _log = Logger("metadata_task_manager.MetadataTaskManager");
 
   static MetadataTaskManager? _inst;
 }
