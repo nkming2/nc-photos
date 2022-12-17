@@ -437,7 +437,7 @@ class ScanAccountDirBloc
     return await ScanDirOfflineMini(_c)(
       account,
       account.roots.map((r) => File(path: file_util.unstripPath(account, r))),
-      100,
+      scanMiniCount,
       isOnlySupportedFormat: true,
     );
   }
@@ -505,6 +505,8 @@ class ScanAccountDirBloc
   late final DiContainer _c;
 
   final Account account;
+
+  static const scanMiniCount = 100;
 
   late final _fileRemovedEventListener =
       AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);

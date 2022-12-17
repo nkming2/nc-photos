@@ -377,6 +377,9 @@ class _HomePhotosState extends State<HomePhotos>
     } else if (state is ScanAccountDirBlocSuccess) {
       _transformItems(state.files, isPostSuccess: true);
     } else if (state is ScanAccountDirBlocLoading) {
+      if (state.files.length > ScanAccountDirBloc.scanMiniCount) {
+        _isScrollbarVisible = true;
+      }
       _transformItems(state.files);
     } else if (state is ScanAccountDirBlocFailure) {
       _isScrollbarVisible = true;
