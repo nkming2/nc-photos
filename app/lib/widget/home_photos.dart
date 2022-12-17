@@ -346,54 +346,25 @@ class _HomePhotosState extends State<HomePhotos>
 
   Widget _buildSmartAlbumList(BuildContext context) {
     return SliverToBoxAdapter(
-      child: SizedBox(
-        height: _SmartAlbumItem.height,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: _smartAlbums.length,
-          itemBuilder: (context, index) {
-            final a = _smartAlbums[index];
-            final coverFile = a.coverProvider.getCover(a);
-            return _SmartAlbumItem(
-              account: widget.account,
-              previewUrl: coverFile == null
-                  ? null
-                  : api_util.getFilePreviewUrl(widget.account, coverFile,
-                      width: k.photoThumbSize, height: k.photoThumbSize),
-              label: a.name,
-              onTap: () {
-                album_browser_util.push(context, widget.account, a);
-              },
-            );
-          },
-          separatorBuilder: (context, index) => const SizedBox(width: 8),
-        ),
+      child: _SmartAlbumList(
+        account: widget.account,
+        albums: _smartAlbums,
       ),
     );
   }
 
   Widget _buildScrollLabel(BuildContext context) {
-    final date = _visibleItems
+    final firstVisibleItem = _visibleItems
         .sorted()
-        .firstWhereOrNull((e) => e.item is PhotoListFileItem)
-        ?.item
-        .as<PhotoListFileItem>()
-        ?.file
-        .fdDateTime;
+        .firstWhereOrNull((e) => e.item is PhotoListFileItem);
+    final date =
+        firstVisibleItem?.item.as<PhotoListFileItem>()?.file.fdDateTime;
     if (date != null) {
       final text = DateFormat(DateFormat.YEAR_ABBR_MONTH,
               Localizations.localeOf(context).languageCode)
           .format(date.toLocal());
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Theme.of(context).colorScheme.onInverseSurface),
-        ),
+      return _ScrollLabel(
+        child: Text(text),
       );
     } else {
       return const SizedBox();
@@ -1022,6 +993,44 @@ class _MetadataTaskLoadingIcon extends AnimatedWidget {
   Animation<double> get _progress => listenable as Animation<double>;
 }
 
+class _SmartAlbumList extends StatelessWidget {
+  const _SmartAlbumList({
+    required this.account,
+    required this.albums,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _SmartAlbumItem.height,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: albums.length,
+        itemBuilder: (context, index) {
+          final a = albums[index];
+          final coverFile = a.coverProvider.getCover(a);
+          return _SmartAlbumItem(
+            account: account,
+            previewUrl: coverFile == null
+                ? null
+                : api_util.getFilePreviewUrl(account, coverFile,
+                    width: k.photoThumbSize, height: k.photoThumbSize),
+            label: a.name,
+            onTap: () {
+              album_browser_util.push(context, account, a);
+            },
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+      ),
+    );
+  }
+
+  final Account account;
+  final List<Album> albums;
+}
+
 class _SmartAlbumItem extends StatelessWidget {
   static const width = 96.0;
   static const height = width * 1.15;
@@ -1167,4 +1176,25 @@ class _InitialLoadingProgress extends StatelessWidget {
   }
 
   final ProgressBloc progressBloc;
+}
+
+class _ScrollLabel extends StatelessWidget {
+  const _ScrollLabel({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: DefaultTextStyle(
+        style: theme.textTheme.titleMedium!
+            .copyWith(color: theme.colorScheme.onInverseSurface),
+        child: child,
+      ),
+    );
+  }
+
+  final Widget child;
 }
