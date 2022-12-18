@@ -98,7 +98,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
                 fit: BoxFit.cover,
                 clipBehavior: Clip.hardEdge,
                 child: CachedNetworkImage(
-                  cacheManager: CoverCacheManager.inst,
+                  cacheManager: LargeImageCacheManager.inst,
                   imageUrl: previewUrl,
                   httpHeaders: {
                     "Authorization":
