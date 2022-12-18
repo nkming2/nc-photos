@@ -338,7 +338,7 @@ String _getImageUrl(Account account, FileDescriptor file) {
       file,
       width: k.photoLargeSize,
       height: k.photoLargeSize,
-      a: true,
+      isKeepAspectRatio: true,
     );
   }
 }

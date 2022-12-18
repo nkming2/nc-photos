@@ -22,22 +22,23 @@ String getFilePreviewUrl(
   required int width,
   required int height,
   String? mode,
-  bool? a,
+  required bool isKeepAspectRatio,
 }) {
   return "${account.url}/"
-      "${getFilePreviewUrlRelative(account, file, width: width, height: height, mode: mode, a: a)}";
+      "${getFilePreviewUrlRelative(account, file, width: width, height: height, mode: mode, isKeepAspectRatio: isKeepAspectRatio)}";
 }
 
-/// Return the relative preview image URL for [file]. If [a] == true, the
-/// preview will maintain the original aspect ratio, otherwise it will be
-/// cropped
+/// Return the relative preview image URL for [file]
+///
+/// If [isKeepAspectRatio] == true, the preview will maintain the original
+/// aspect ratio, otherwise it will be cropped
 String getFilePreviewUrlRelative(
   Account account,
   FileDescriptor file, {
   required int width,
   required int height,
   String? mode,
-  bool? a,
+  required bool isKeepAspectRatio,
 }) {
   String url;
   if (file_util.isTrash(account, file)) {
@@ -51,9 +52,8 @@ String getFilePreviewUrlRelative(
   if (mode != null) {
     url = "$url&mode=$mode";
   }
-  if (a != null) {
-    url = "$url&a=${a ? 1 : 0}";
-  }
+  // keep this here to use cache from older version
+  url = "$url&a=${isKeepAspectRatio ? 1 : 0}";
   return url;
 }
 
@@ -64,16 +64,14 @@ String getFilePreviewUrlByFileId(
   required int width,
   required int height,
   String? mode,
-  bool? a,
+  required bool isKeepAspectRatio,
 }) {
   String url = "${account.url}/index.php/core/preview?fileId=$fileId";
   url = "$url&x=$width&y=$height";
   if (mode != null) {
     url = "$url&mode=$mode";
   }
-  if (a != null) {
-    url = "$url&a=${a ? 1 : 0}";
-  }
+  url = "$url&a=${isKeepAspectRatio ? 1 : 0}";
   return url;
 }
 

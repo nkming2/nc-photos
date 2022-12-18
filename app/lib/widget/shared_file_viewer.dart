@@ -81,7 +81,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
       widget.file,
       width: k.photoLargeSize,
       height: k.photoLargeSize,
-      a: true,
+      isKeepAspectRatio: true,
     );
     return CustomScrollView(
       slivers: [

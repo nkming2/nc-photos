@@ -24,6 +24,7 @@ class NetworkRectThumbnail extends StatelessWidget {
         file,
         width: k.photoThumbSize,
         height: k.photoThumbSize,
+        isKeepAspectRatio: true,
       );
 
   static String imageUrlForFileId(Account account, int fileId) =>
@@ -32,6 +33,7 @@ class NetworkRectThumbnail extends StatelessWidget {
         fileId,
         width: k.photoThumbSize,
         height: k.photoThumbSize,
+        isKeepAspectRatio: true,
       );
 
   @override

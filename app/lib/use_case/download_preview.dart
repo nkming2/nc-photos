@@ -15,7 +15,7 @@ class DownloadPreview {
       file,
       width: k.photoLargeSize,
       height: k.photoLargeSize,
-      a: true,
+      isKeepAspectRatio: true,
     );
     final fileInfo =
         await LargeImageCacheManager.inst.getSingleFile(previewUrl, headers: {

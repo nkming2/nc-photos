@@ -57,7 +57,7 @@ class AlbumGridItemBuilder {
     try {
       final coverFile = album.coverProvider.getCover(album);
       final previewUrl = api_util.getFilePreviewUrl(account, coverFile!,
-          width: k.coverSize, height: k.coverSize);
+          width: k.coverSize, height: k.coverSize, isKeepAspectRatio: false);
       cover = FittedBox(
         clipBehavior: Clip.hardEdge,
         fit: BoxFit.cover,

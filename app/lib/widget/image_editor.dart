@@ -101,7 +101,7 @@ class _ImageEditorState extends State<ImageEditor> {
       widget.file,
       width: k.photoLargeSize,
       height: k.photoLargeSize,
-      a: true,
+      isKeepAspectRatio: true,
     ));
     // no need to set shouldfixOrientation because the previews are always in
     // the correct orientation

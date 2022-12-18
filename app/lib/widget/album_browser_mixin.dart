@@ -41,7 +41,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
     try {
       final coverFile = album.coverProvider.getCover(album);
       _coverPreviewUrl = api_util.getFilePreviewUrl(account, coverFile!,
-          width: k.coverSize, height: k.coverSize);
+          width: k.coverSize, height: k.coverSize, isKeepAspectRatio: false);
     } catch (_) {}
   }
 
