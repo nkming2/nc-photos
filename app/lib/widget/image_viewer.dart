@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -8,9 +9,11 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'image_viewer.g.dart';
@@ -113,30 +116,78 @@ class RemoteImageViewer extends StatefulWidget {
 @npLog
 class _RemoteImageViewerState extends State<RemoteImageViewer> {
   @override
-  build(BuildContext context) => _ImageViewer(
-        canZoom: widget.canZoom,
-        onHeightChanged: widget.onHeightChanged,
-        onZoomStarted: widget.onZoomStarted,
-        onZoomEnded: widget.onZoomEnded,
-        child: mod.CachedNetworkImage(
-          cacheManager: LargeImageCacheManager.inst,
-          imageUrl: _getImageUrl(widget.account, widget.file),
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-          },
-          fit: BoxFit.contain,
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-          imageBuilder: (context, child, imageProvider) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _onItemLoaded();
-            });
-            const SizeChangedLayoutNotification().dispatch(context);
-            return child;
-          },
-        ),
-      );
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        // needed to get rid of the large image blinking during Hero animation
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _ImageViewer(
+      canZoom: widget.canZoom,
+      onHeightChanged: widget.onHeightChanged,
+      onZoomStarted: widget.onZoomStarted,
+      onZoomEnded: widget.onZoomEnded,
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          Hero(
+            tag: flutter_util.getImageHeroTag(widget.file),
+            flightShuttleBuilder: (flightContext, animation, flightDirection,
+                fromHeroContext, toHeroContext) {
+              _isHeroDone = false;
+              animation.addStatusListener(_animationListener);
+              return flutter_util.defaultHeroFlightShuttleBuilder(
+                flightContext,
+                animation,
+                flightDirection,
+                fromHeroContext,
+                toHeroContext,
+              );
+            },
+            child: CachedNetworkImage(
+              fit: BoxFit.contain,
+              cacheManager: ThumbnailCacheManager.inst,
+              imageUrl: NetworkRectThumbnail.imageUrlForFile(
+                  widget.account, widget.file),
+              httpHeaders: {
+                "Authorization":
+                    Api.getAuthorizationHeaderValue(widget.account),
+              },
+              fadeInDuration: const Duration(),
+              filterQuality: FilterQuality.high,
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+            ),
+          ),
+          if (_isHeroDone)
+            mod.CachedNetworkImage(
+              cacheManager: LargeImageCacheManager.inst,
+              imageUrl: _getImageUrl(widget.account, widget.file),
+              httpHeaders: {
+                "Authorization":
+                    Api.getAuthorizationHeaderValue(widget.account),
+              },
+              fit: BoxFit.contain,
+              fadeInDuration: const Duration(),
+              filterQuality: FilterQuality.high,
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              imageBuilder: (context, child, imageProvider) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _onItemLoaded();
+                });
+                const SizeChangedLayoutNotification().dispatch(context);
+                return child;
+              },
+            ),
+        ],
+      ),
+    );
+  }
 
   void _onItemLoaded() {
     if (!_isLoaded) {
@@ -146,7 +197,19 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
     }
   }
 
+  void _animationListener(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      _isHeroDone = true;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
   var _isLoaded = false;
+  // initially set to true such that the large image will show when hero didn't
+  // run (i.e., when swiping in viewer)
+  var _isHeroDone = true;
 }
 
 class _ImageViewer extends StatefulWidget {

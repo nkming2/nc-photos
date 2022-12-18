@@ -19,3 +19,44 @@ class CustomizableMaterialPageRoute extends MaterialPageRoute {
 }
 
 String getImageHeroTag(FileDescriptor file) => "imageHero(${file.fdPath})";
+
+// copied from flutter
+Widget defaultHeroFlightShuttleBuilder(
+  BuildContext flightContext,
+  Animation<double> animation,
+  HeroFlightDirection flightDirection,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+) {
+  final Hero toHero = toHeroContext.widget as Hero;
+
+  final MediaQueryData? toMediaQueryData = MediaQuery.maybeOf(toHeroContext);
+  final MediaQueryData? fromMediaQueryData =
+      MediaQuery.maybeOf(fromHeroContext);
+
+  if (toMediaQueryData == null || fromMediaQueryData == null) {
+    return toHero.child;
+  }
+
+  final EdgeInsets fromHeroPadding = fromMediaQueryData.padding;
+  final EdgeInsets toHeroPadding = toMediaQueryData.padding;
+
+  return AnimatedBuilder(
+    animation: animation,
+    builder: (BuildContext context, Widget? child) {
+      return MediaQuery(
+          data: toMediaQueryData.copyWith(
+            padding: (flightDirection == HeroFlightDirection.push)
+                ? EdgeInsetsTween(
+                    begin: fromHeroPadding,
+                    end: toHeroPadding,
+                  ).evaluate(animation)
+                : EdgeInsetsTween(
+                    begin: toHeroPadding,
+                    end: fromHeroPadding,
+                  ).evaluate(animation),
+          ),
+          child: toHero.child);
+    },
+  );
+}
