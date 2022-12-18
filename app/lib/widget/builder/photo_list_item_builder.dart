@@ -2,14 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -160,8 +159,7 @@ class _PhotoListItemBuilder {
   }
 
   SelectableItem? _buildListItem(int i, Account account, FileDescriptor file) {
-    final previewUrl = api_util.getFilePreviewUrl(account, file,
-        width: k.photoThumbSize, height: k.photoThumbSize);
+    final previewUrl = NetworkRectThumbnail.imageUrlForFile(account, file);
     if (file_util.isSupportedImageFormat(file)) {
       return PhotoListImageItem(
         fileIndex: i,

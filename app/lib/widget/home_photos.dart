@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/bloc/progress.dart';
@@ -45,6 +44,7 @@ import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -1017,8 +1017,7 @@ class _SmartAlbumList extends StatelessWidget {
             account: account,
             previewUrl: coverFile == null
                 ? null
-                : api_util.getFilePreviewUrl(account, coverFile,
-                    width: k.photoThumbSize, height: k.photoThumbSize),
+                : NetworkRectThumbnail.imageUrlForFile(account, coverFile),
             label: a.name,
             onTap: () {
               album_browser_util.push(context, account, a);

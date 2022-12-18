@@ -5,7 +5,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
@@ -33,6 +32,7 @@ import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -618,12 +618,8 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
       for (int i = 0; i < _sortedItems.length; ++i) {
         final item = _sortedItems[i];
         if (item is AlbumFileItem) {
-          final previewUrl = api_util.getFilePreviewUrl(
-            widget.account,
-            item.file,
-            width: k.photoThumbSize,
-            height: k.photoThumbSize,
-          );
+          final previewUrl =
+              NetworkRectThumbnail.imageUrlForFile(widget.account, item.file);
           if ((_editAlbum ?? _album)?.sortProvider is AlbumTimeSortProvider &&
               Pref().isAlbumBrowserShowDateOr()) {
             final date = dateHelper.onFile(item.file);

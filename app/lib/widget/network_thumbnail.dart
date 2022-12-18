@@ -18,14 +18,21 @@ class NetworkRectThumbnail extends StatelessWidget {
     required this.errorBuilder,
   });
 
-  static String imageUrlForFile(Account account, FileDescriptor file) {
-    return api_util.getFilePreviewUrl(
-      account,
-      file,
-      width: k.photoThumbSize,
-      height: k.photoThumbSize,
-    );
-  }
+  static String imageUrlForFile(Account account, FileDescriptor file) =>
+      api_util.getFilePreviewUrl(
+        account,
+        file,
+        width: k.photoThumbSize,
+        height: k.photoThumbSize,
+      );
+
+  static String imageUrlForFileId(Account account, int fileId) =>
+      api_util.getFilePreviewUrlByFileId(
+        account,
+        fileId,
+        width: k.photoThumbSize,
+        height: k.photoThumbSize,
+      );
 
   @override
   Widget build(BuildContext context) {

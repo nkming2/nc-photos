@@ -4,7 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -14,12 +13,12 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -293,13 +292,8 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
       for (int i = 0; i < _sortedItems.length; ++i) {
         final item = _sortedItems[i];
         if (item is AlbumFileItem) {
-          final previewUrl = api_util.getFilePreviewUrl(
-            widget.account,
-            item.file,
-            width: k.photoThumbSize,
-            height: k.photoThumbSize,
-          );
-
+          final previewUrl =
+              NetworkRectThumbnail.imageUrlForFile(widget.account, item.file);
           if (file_util.isSupportedImageFormat(item.file)) {
             yield _ImageListItem(
               index: i,

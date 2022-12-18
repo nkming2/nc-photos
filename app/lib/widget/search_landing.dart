@@ -277,12 +277,8 @@ class _SearchLandingState extends State<SearchLanding> {
         .map((e) => _LandingLocationItem(
               account: widget.account,
               name: e.place,
-              thumbUrl: api_util.getFilePreviewUrlByFileId(
-                widget.account,
-                e.latestFileId,
-                width: k.photoThumbSize,
-                height: k.photoThumbSize,
-              ),
+              thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
+                  widget.account, e.latestFileId),
               onTap: () => _onLocationItemTap(e),
             ))
         .toList();

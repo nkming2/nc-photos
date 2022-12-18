@@ -5,7 +5,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_location.dart';
 import 'package:nc_photos/di_container.dart';
@@ -209,12 +208,8 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
         .map((e) => _PlaceItem(
               account: widget.account,
               place: e.place,
-              thumbUrl: api_util.getFilePreviewUrlByFileId(
-                widget.account,
-                e.latestFileId,
-                width: k.photoThumbSize,
-                height: k.photoThumbSize,
-              ),
+              thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
+                  widget.account, e.latestFileId),
               onTap: () => _onPlaceTap(e),
             ))
         .toList();
@@ -223,12 +218,8 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
         .map((e) => _CountryItem(
               account: widget.account,
               country: e.place,
-              thumbUrl: api_util.getFilePreviewUrlByFileId(
-                widget.account,
-                e.latestFileId,
-                width: k.photoThumbSize,
-                height: k.photoThumbSize,
-              ),
+              thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
+                  widget.account, e.latestFileId),
               onTap: () => _onCountryTap(e),
             ))
         .toList();
