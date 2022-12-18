@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,11 +5,9 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_location.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -21,6 +17,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -307,19 +304,13 @@ class _CountryItemView extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CachedNetworkImage(
-                cacheManager: ThumbnailCacheManager.inst,
+              NetworkRectThumbnail(
+                account: account,
                 imageUrl: imageUrl,
-                httpHeaders: {
-                  "Authorization": Api.getAuthorizationHeaderValue(account),
-                },
-                fadeInDuration: const Duration(),
-                filterQuality: FilterQuality.high,
-                errorWidget: (_, __, ___) => const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 0, 8),
+                errorBuilder: (_) => const Padding(
+                  padding: EdgeInsets.all(8),
                   child: Icon(Icons.location_on),
                 ),
-                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               ),
               const SizedBox(width: 8),
               Text(text),

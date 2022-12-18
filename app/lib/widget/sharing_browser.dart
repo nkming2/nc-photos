@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,11 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_sharing.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -27,6 +22,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/empty_list_indicator.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:nc_photos/widget/unbounded_list_tile.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -173,22 +169,12 @@ class _SharingBrowserState extends State<SharingBrowser> {
               width: _leadingSize,
               child: Icon(Icons.folder, size: 32),
             )
-          : CachedNetworkImage(
-              width: _leadingSize,
-              height: _leadingSize,
-              cacheManager: ThumbnailCacheManager.inst,
-              imageUrl: api_util.getFilePreviewUrl(
-                  widget.account, firstItem.file,
-                  width: k.photoThumbSize, height: k.photoThumbSize),
-              httpHeaders: {
-                "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
-              },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              errorWidget: (context, url, error) =>
-                  const Icon(Icons.folder, size: 32),
+          : NetworkRectThumbnail(
+              account: widget.account,
+              imageUrl: NetworkRectThumbnail.imageUrlForFile(
+                  widget.account, firstItem.file),
+              dimension: _leadingSize,
+              errorBuilder: (_) => const Icon(Icons.folder, size: 32),
             ),
       label: shares.first.share.filename,
       description: shares.first.share.uidOwner == widget.account.userId
@@ -222,21 +208,12 @@ class _SharingBrowserState extends State<SharingBrowser> {
               width: _leadingSize,
               child: Icon(Icons.photo_album, size: 32),
             )
-          : CachedNetworkImage(
-              width: _leadingSize,
-              height: _leadingSize,
-              cacheManager: ThumbnailCacheManager.inst,
-              imageUrl: api_util.getFilePreviewUrl(widget.account, cover,
-                  width: k.photoThumbSize, height: k.photoThumbSize),
-              httpHeaders: {
-                "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
-              },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              errorWidget: (context, url, error) =>
-                  const Icon(Icons.photo_album, size: 32),
+          : NetworkRectThumbnail(
+              account: widget.account,
+              imageUrl:
+                  NetworkRectThumbnail.imageUrlForFile(widget.account, cover),
+              dimension: _leadingSize,
+              errorBuilder: (_) => const Icon(Icons.photo_album, size: 32),
             ),
       label: firstItem.album.name,
       description: shares.first.share.uidOwner == widget.account.userId

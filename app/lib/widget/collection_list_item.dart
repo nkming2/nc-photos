@@ -1,10 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 
 class CollectionListSmall extends StatelessWidget {
   const CollectionListSmall({
@@ -87,24 +84,14 @@ class CollectionListSmall extends StatelessWidget {
 
   Widget _buildCoverImage(BuildContext context) {
     Widget buildPlaceholder() => Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(8),
           child: fallbackBuilder(context),
         );
     try {
-      return FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: CachedNetworkImage(
-          cacheManager: ThumbnailCacheManager.inst,
-          imageUrl: coverUrl,
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(account),
-          },
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          errorWidget: (context, url, error) => buildPlaceholder(),
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        ),
+      return NetworkRectThumbnail(
+        account: account,
+        imageUrl: coverUrl,
+        errorBuilder: (_) => buildPlaceholder(),
       );
     } catch (_) {
       return FittedBox(

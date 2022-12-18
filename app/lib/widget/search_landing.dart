@@ -1,16 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search_landing.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
@@ -22,6 +18,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/place_browser.dart';
@@ -327,7 +324,7 @@ class _LandingPersonItem {
 }
 
 class _LandingLocationItem {
-  _LandingLocationItem({
+  const _LandingLocationItem({
     required this.account,
     required this.name,
     required this.thumbUrl,
@@ -407,20 +404,10 @@ class _LandingItemWidget extends StatelessWidget {
           child: fallbackBuilder(context),
         );
     try {
-      cover = FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: CachedNetworkImage(
-          cacheManager: ThumbnailCacheManager.inst,
-          imageUrl: coverUrl,
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(account),
-          },
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          errorWidget: (context, url, error) => buildPlaceholder(),
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        ),
+      cover = NetworkRectThumbnail(
+        account: account,
+        imageUrl: coverUrl,
+        errorBuilder: (_) => buildPlaceholder(),
       );
     } catch (_) {
       cover = FittedBox(

@@ -1,17 +1,13 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_face_file.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
@@ -34,6 +30,7 @@ import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -194,32 +191,26 @@ class _PersonBrowserState extends State<PersonBrowser>
 
   Widget _buildFaceImage(BuildContext context) {
     Widget cover;
+    Widget buildPlaceholder() => Padding(
+          padding: const EdgeInsets.all(8),
+          child: Icon(
+            Icons.person,
+            color: Theme.of(context).listPlaceholderForegroundColor,
+          ),
+        );
     try {
-      cover = FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
-        child: CachedNetworkImage(
-          cacheManager: ThumbnailCacheManager.inst,
-          imageUrl: api_util.getFacePreviewUrl(
-              widget.account, widget.person.thumbFaceId,
-              size: k.faceThumbSize),
-          httpHeaders: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-          },
-          fadeInDuration: const Duration(),
-          filterQuality: FilterQuality.high,
-          errorWidget: (context, url, error) {
-            // just leave it empty
-            return Container();
-          },
-          imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      cover = NetworkRectThumbnail(
+        account: widget.account,
+        imageUrl: api_util.getFacePreviewUrl(
+          widget.account,
+          widget.person.thumbFaceId,
+          size: k.faceThumbSize,
         ),
+        errorBuilder: (_) => buildPlaceholder(),
       );
     } catch (_) {
-      cover = Icon(
-        Icons.person,
-        color: Theme.of(context).listPlaceholderForegroundColor,
-        size: 24,
+      cover = FittedBox(
+        child: buildPlaceholder(),
       );
     }
 

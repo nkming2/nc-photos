@@ -1,15 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -25,6 +20,7 @@ import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/unbounded_list_tile.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -260,29 +256,19 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   }
 
   Widget _buildFileThumbnail(File file) {
-    final Widget child;
     if (file_util.isAlbumFile(widget.account, file)) {
-      child = const Icon(Icons.photo_album, size: 32);
+      return const SizedBox.square(
+        dimension: 56,
+        child: Icon(Icons.photo_album, size: 32),
+      );
     } else {
-      child = CachedNetworkImage(
-        cacheManager: ThumbnailCacheManager.inst,
-        imageUrl: api_util.getFilePreviewUrl(widget.account, file,
-            width: k.photoThumbSize, height: k.photoThumbSize),
-        httpHeaders: {
-          "Authorization": Api.getAuthorizationHeaderValue(widget.account),
-        },
-        fadeInDuration: const Duration(),
-        filterQuality: FilterQuality.high,
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-        errorWidget: (context, url, error) =>
-            const Icon(Icons.image_not_supported, size: 32),
+      return NetworkRectThumbnail(
+        account: widget.account,
+        imageUrl: NetworkRectThumbnail.imageUrlForFile(widget.account, file),
+        dimension: 56,
+        errorBuilder: (_) => const Icon(Icons.image_not_supported, size: 32),
       );
     }
-    return SizedBox(
-      width: 56,
-      height: 56,
-      child: child,
-    );
   }
 
   String _buildFilename(File file) {

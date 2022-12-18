@@ -1,18 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:to_string/to_string.dart';
 
@@ -61,7 +58,7 @@ class PhotoListImageItem extends PhotoListFileItem {
         );
 
   @override
-  buildWidget(BuildContext context) => PhotoListImage(
+  Widget buildWidget(BuildContext context) => PhotoListImage(
         account: account,
         previewUrl: previewUrl,
         isGif: file.fdMime == "image/gif",
@@ -219,33 +216,24 @@ class PhotoListImage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  build(BuildContext context) {
-    Widget buildPlaceholder() => Center(
+  Widget build(BuildContext context) {
+    Widget buildPlaceholder() => Padding(
+          padding: const EdgeInsets.all(12),
           child: Icon(
             Icons.image_not_supported,
-            size: 64,
             color: Theme.of(context).listPlaceholderForegroundColor,
           ),
         );
     Widget child;
     if (previewUrl == null) {
-      child = buildPlaceholder();
+      child = FittedBox(
+        child: buildPlaceholder(),
+      );
     } else {
-      child = CachedNetworkImage(
-        fit: BoxFit.cover,
-        cacheManager: ThumbnailCacheManager.inst,
+      child = NetworkRectThumbnail(
+        account: account,
         imageUrl: previewUrl!,
-        httpHeaders: {
-          "Authorization": Api.getAuthorizationHeaderValue(account),
-        },
-        fadeInDuration: const Duration(),
-        filterQuality: FilterQuality.high,
-        errorWidget: (context, url, error) {
-          // won't work on web because the image is downloaded by
-          // the cache manager instead
-          return buildPlaceholder();
-        },
-        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+        errorBuilder: (_) => buildPlaceholder(),
       );
       if (heroKey != null) {
         child = Hero(
@@ -255,42 +243,27 @@ class PhotoListImage extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: padding,
-      child: FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
+    return IconTheme(
+      data: const IconThemeData(color: Colors.white),
+      child: Padding(
+        padding: padding,
         child: Stack(
           children: [
             Container(
-              // arbitrary size here
-              constraints: BoxConstraints.tight(const Size(128, 128)),
               color: Theme.of(context).listPlaceholderBackgroundColor,
               child: child,
             ),
             if (isGif)
               Container(
-                // arbitrary size here
-                constraints: BoxConstraints.tight(const Size(128, 128)),
                 alignment: AlignmentDirectional.topEnd,
                 padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: const Icon(
-                  Icons.gif,
-                  size: 36,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.gif, size: 26),
               ),
             if (isFavorite)
               Container(
-                // arbitrary size here
-                constraints: BoxConstraints.tight(const Size(128, 128)),
                 alignment: AlignmentDirectional.bottomStart,
-                padding: const EdgeInsets.all(8),
-                child: const Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.white,
-                ),
+                padding: const EdgeInsets.all(6),
+                child: const Icon(Icons.star, size: 15),
               ),
           ],
         ),
@@ -316,62 +289,37 @@ class PhotoListVideo extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: FittedBox(
-        clipBehavior: Clip.hardEdge,
-        fit: BoxFit.cover,
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: const IconThemeData(color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
         child: Stack(
           children: [
             Container(
-              // arbitrary size here
-              constraints: BoxConstraints.tight(const Size(128, 128)),
               color: Theme.of(context).listPlaceholderBackgroundColor,
-              child: CachedNetworkImage(
-                cacheManager: ThumbnailCacheManager.inst,
+              child: NetworkRectThumbnail(
+                account: account,
                 imageUrl: previewUrl,
-                httpHeaders: {
-                  "Authorization": Api.getAuthorizationHeaderValue(account),
-                },
-                fadeInDuration: const Duration(),
-                filterQuality: FilterQuality.high,
-                errorWidget: (context, url, error) {
-                  // no preview for this video. Normal since video preview is disabled
-                  // by default
-                  return Center(
-                    child: Icon(
-                      Icons.image_not_supported,
-                      size: 64,
-                      color: Theme.of(context).listPlaceholderForegroundColor,
-                    ),
-                  );
-                },
-                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+                errorBuilder: (_) => Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Icon(
+                    Icons.image_not_supported,
+                    color: Theme.of(context).listPlaceholderForegroundColor,
+                  ),
+                ),
               ),
             ),
             Container(
-              // arbitrary size here
-              constraints: BoxConstraints.tight(const Size(128, 128)),
               alignment: AlignmentDirectional.topEnd,
-              padding: const EdgeInsets.all(8),
-              child: const Icon(
-                Icons.play_circle_outlined,
-                size: 24,
-                color: Colors.white,
-              ),
+              padding: const EdgeInsets.all(6),
+              child: const Icon(Icons.play_circle_outlined, size: 17),
             ),
             if (isFavorite)
               Container(
-                // arbitrary size here
-                constraints: BoxConstraints.tight(const Size(128, 128)),
                 alignment: AlignmentDirectional.bottomStart,
-                padding: const EdgeInsets.all(8),
-                child: const Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.white,
-                ),
+                padding: const EdgeInsets.all(6),
+                child: const Icon(Icons.star, size: 15),
               ),
           ],
         ),
