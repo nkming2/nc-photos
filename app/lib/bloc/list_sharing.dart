@@ -419,5 +419,5 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = _$logListSharingBloc;
+  static final _log = _$ListSharingBlocNpLog.log;
 }

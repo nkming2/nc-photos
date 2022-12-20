@@ -6,90 +6,75 @@ part of 'api.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logApi = Logger("api.api.Api");
-
 extension _$ApiNpLog on Api {
   // ignore: unused_element
-  Logger get _log => _$logApi;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiFiles = Logger("api.api.ApiFiles");
+  static final log = Logger("api.api.Api");
+}
 
 extension _$ApiFilesNpLog on ApiFiles {
   // ignore: unused_element
-  Logger get _log => _$logApiFiles;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsDavDirect = Logger("api.api.ApiOcsDavDirect");
+  static final log = Logger("api.api.ApiFiles");
+}
 
 extension _$ApiOcsDavDirectNpLog on ApiOcsDavDirect {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsDavDirect;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsFacerecognitionPersons =
-    Logger("api.api.ApiOcsFacerecognitionPersons");
+  static final log = Logger("api.api.ApiOcsDavDirect");
+}
 
 extension _$ApiOcsFacerecognitionPersonsNpLog on ApiOcsFacerecognitionPersons {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsFacerecognitionPersons;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsFacerecognitionPersonFaces =
-    Logger("api.api.ApiOcsFacerecognitionPersonFaces");
+  static final log = Logger("api.api.ApiOcsFacerecognitionPersons");
+}
 
 extension _$ApiOcsFacerecognitionPersonFacesNpLog
     on ApiOcsFacerecognitionPersonFaces {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsFacerecognitionPersonFaces;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsFilesSharingShares =
-    Logger("api.api.ApiOcsFilesSharingShares");
+  static final log = Logger("api.api.ApiOcsFacerecognitionPersonFaces");
+}
 
 extension _$ApiOcsFilesSharingSharesNpLog on ApiOcsFilesSharingShares {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsFilesSharingShares;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsFilesSharingShare = Logger("api.api.ApiOcsFilesSharingShare");
+  static final log = Logger("api.api.ApiOcsFilesSharingShares");
+}
 
 extension _$ApiOcsFilesSharingShareNpLog on ApiOcsFilesSharingShare {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsFilesSharingShare;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiOcsFilesSharingSharees =
-    Logger("api.api.ApiOcsFilesSharingSharees");
+  static final log = Logger("api.api.ApiOcsFilesSharingShare");
+}
 
 extension _$ApiOcsFilesSharingShareesNpLog on ApiOcsFilesSharingSharees {
   // ignore: unused_element
-  Logger get _log => _$logApiOcsFilesSharingSharees;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiSystemtags = Logger("api.api.ApiSystemtags");
+  static final log = Logger("api.api.ApiOcsFilesSharingSharees");
+}
 
 extension _$ApiSystemtagsNpLog on ApiSystemtags {
   // ignore: unused_element
-  Logger get _log => _$logApiSystemtags;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logApiSystemtagsRelationsFiles =
-    Logger("api.api.ApiSystemtagsRelationsFiles");
+  static final log = Logger("api.api.ApiSystemtags");
+}
 
 extension _$ApiSystemtagsRelationsFilesNpLog on ApiSystemtagsRelationsFiles {
   // ignore: unused_element
-  Logger get _log => _$logApiSystemtagsRelationsFiles;
+  Logger get _log => log;
+
+  static final log = Logger("api.api.ApiSystemtagsRelationsFiles");
 }
 
 // **************************************************************************

@@ -97,5 +97,5 @@ class CompatV55 {
     });
   }
 
-  static final _log = _$logCompatV55;
+  static final _log = _$CompatV55NpLog.log;
 }

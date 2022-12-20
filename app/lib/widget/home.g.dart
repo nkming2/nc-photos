@@ -6,10 +6,9 @@ part of 'home.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$log_HomeState = Logger("widget.home._HomeState");
-
 extension _$_HomeStateNpLog on _HomeState {
   // ignore: unused_element
-  Logger get _log => _$log_HomeState;
+  Logger get _log => log;
+
+  static final log = Logger("widget.home._HomeState");
 }

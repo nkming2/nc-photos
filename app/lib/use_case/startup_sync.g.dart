@@ -6,10 +6,9 @@ part of 'startup_sync.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logStartupSync = Logger("use_case.startup_sync.StartupSync");
-
 extension _$StartupSyncNpLog on StartupSync {
   // ignore: unused_element
-  Logger get _log => _$logStartupSync;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.startup_sync.StartupSync");
 }

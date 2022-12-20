@@ -6,13 +6,11 @@ part of 'scan_account_dir.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logScanAccountDirBloc =
-    Logger("bloc.scan_account_dir.ScanAccountDirBloc");
-
 extension _$ScanAccountDirBlocNpLog on ScanAccountDirBloc {
   // ignore: unused_element
-  Logger get _log => _$logScanAccountDirBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.scan_account_dir.ScanAccountDirBloc");
 }
 
 // **************************************************************************

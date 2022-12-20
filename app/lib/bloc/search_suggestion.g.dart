@@ -6,13 +6,11 @@ part of 'search_suggestion.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logSearchSuggestionBloc =
-    Logger("bloc.search_suggestion.SearchSuggestionBloc");
-
 extension _$SearchSuggestionBlocNpLog on SearchSuggestionBloc {
   // ignore: unused_element
-  Logger get _log => _$logSearchSuggestionBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.search_suggestion.SearchSuggestionBloc");
 }
 
 // **************************************************************************

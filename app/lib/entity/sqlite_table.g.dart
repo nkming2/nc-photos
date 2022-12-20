@@ -4195,10 +4195,9 @@ abstract class _$SqliteDb extends GeneratedDatabase {
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logSqliteDb = Logger("entity.sqlite_table.SqliteDb");
-
 extension _$SqliteDbNpLog on SqliteDb {
   // ignore: unused_element
-  Logger get _log => _$logSqliteDb;
+  Logger get _log => log;
+
+  static final log = Logger("entity.sqlite_table.SqliteDb");
 }

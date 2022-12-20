@@ -6,13 +6,11 @@ part of 'cover_provider.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logAlbumCoverProvider =
-    Logger("entity.album.cover_provider.AlbumCoverProvider");
-
 extension _$AlbumCoverProviderNpLog on AlbumCoverProvider {
   // ignore: unused_element
-  Logger get _log => _$logAlbumCoverProvider;
+  Logger get _log => log;
+
+  static final log = Logger("entity.album.cover_provider.AlbumCoverProvider");
 }
 
 // **************************************************************************

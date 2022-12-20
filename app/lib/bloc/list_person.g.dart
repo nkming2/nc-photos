@@ -6,12 +6,11 @@ part of 'list_person.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListPersonBloc = Logger("bloc.list_person.ListPersonBloc");
-
 extension _$ListPersonBlocNpLog on ListPersonBloc {
   // ignore: unused_element
-  Logger get _log => _$logListPersonBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.list_person.ListPersonBloc");
 }
 
 // **************************************************************************

@@ -334,5 +334,5 @@ class ListAlbumBloc extends Bloc<ListAlbumBlocEvent, ListAlbumBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = _$logListAlbumBloc;
+  static final _log = _$ListAlbumBlocNpLog.log;
 }

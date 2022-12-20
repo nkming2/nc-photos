@@ -111,5 +111,5 @@ class ListTagBloc extends Bloc<ListTagBlocEvent, ListTagBlocState> {
 
   final DiContainer _c;
 
-  static final _log = _$logListTagBloc;
+  static final _log = _$ListTagBlocNpLog.log;
 }

@@ -6,29 +6,23 @@ part of 'data_source.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logAlbumRemoteDataSource =
-    Logger("entity.album.data_source.AlbumRemoteDataSource");
-
 extension _$AlbumRemoteDataSourceNpLog on AlbumRemoteDataSource {
   // ignore: unused_element
-  Logger get _log => _$logAlbumRemoteDataSource;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logAlbumSqliteDbDataSource =
-    Logger("entity.album.data_source.AlbumSqliteDbDataSource");
+  static final log = Logger("entity.album.data_source.AlbumRemoteDataSource");
+}
 
 extension _$AlbumSqliteDbDataSourceNpLog on AlbumSqliteDbDataSource {
   // ignore: unused_element
-  Logger get _log => _$logAlbumSqliteDbDataSource;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logAlbumCachedDataSource =
-    Logger("entity.album.data_source.AlbumCachedDataSource");
+  static final log = Logger("entity.album.data_source.AlbumSqliteDbDataSource");
+}
 
 extension _$AlbumCachedDataSourceNpLog on AlbumCachedDataSource {
   // ignore: unused_element
-  Logger get _log => _$logAlbumCachedDataSource;
+  Logger get _log => log;
+
+  static final log = Logger("entity.album.data_source.AlbumCachedDataSource");
 }

@@ -6,10 +6,9 @@ part of 'load_metadata.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logLoadMetadata = Logger("use_case.load_metadata.LoadMetadata");
-
 extension _$LoadMetadataNpLog on LoadMetadata {
   // ignore: unused_element
-  Logger get _log => _$logLoadMetadata;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.load_metadata.LoadMetadata");
 }

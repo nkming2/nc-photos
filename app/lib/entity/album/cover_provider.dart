@@ -59,7 +59,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 
   JsonObj _toContentJson();
 
-  static final _log = _$logAlbumCoverProvider;
+  static final _log = _$AlbumCoverProviderNpLog.log;
 }
 
 /// Cover selected automatically by us

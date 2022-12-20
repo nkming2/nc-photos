@@ -6,12 +6,11 @@ part of 'list_sharee.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListShareeBloc = Logger("bloc.list_sharee.ListShareeBloc");
-
 extension _$ListShareeBlocNpLog on ListShareeBloc {
   // ignore: unused_element
-  Logger get _log => _$logListShareeBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.list_sharee.ListShareeBloc");
 }
 
 // **************************************************************************

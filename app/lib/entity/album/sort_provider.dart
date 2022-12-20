@@ -57,7 +57,7 @@ abstract class AlbumSortProvider with EquatableMixin {
 
   JsonObj _toContentJson();
 
-  static final _log = _$logAlbumSortProvider;
+  static final _log = _$AlbumSortProviderNpLog.log;
 }
 
 /// Sort provider that does nothing

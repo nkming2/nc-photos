@@ -6,13 +6,12 @@ part of 'list_album_share_outlier.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListAlbumShareOutlierBloc =
-    Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");
-
 extension _$ListAlbumShareOutlierBlocNpLog on ListAlbumShareOutlierBloc {
   // ignore: unused_element
-  Logger get _log => _$logListAlbumShareOutlierBloc;
+  Logger get _log => log;
+
+  static final log =
+      Logger("bloc.list_album_share_outlier.ListAlbumShareOutlierBloc");
 }
 
 // **************************************************************************

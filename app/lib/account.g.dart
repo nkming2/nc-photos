@@ -6,20 +6,18 @@ part of 'account.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logAccount = Logger("account.Account");
-
 extension _$AccountNpLog on Account {
   // ignore: unused_element
-  Logger get _log => _$logAccount;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logAccountUpgraderV1 = Logger("account.AccountUpgraderV1");
+  static final log = Logger("account.Account");
+}
 
 extension _$AccountUpgraderV1NpLog on AccountUpgraderV1 {
   // ignore: unused_element
-  Logger get _log => _$logAccountUpgraderV1;
+  Logger get _log => log;
+
+  static final log = Logger("account.AccountUpgraderV1");
 }
 
 // **************************************************************************

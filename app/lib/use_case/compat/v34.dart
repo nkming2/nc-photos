@@ -75,5 +75,5 @@ class CompatV34 {
     }
   }
 
-  static final _log = _$logCompatV34;
+  static final _log = _$CompatV34NpLog.log;
 }

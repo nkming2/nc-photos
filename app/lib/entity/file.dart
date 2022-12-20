@@ -208,7 +208,7 @@ class Metadata with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted metadata
   static const version = 4;
 
-  static final _log = _$logMetadata;
+  static final _log = _$MetadataNpLog.log;
 }
 
 abstract class MetadataUpgrader {

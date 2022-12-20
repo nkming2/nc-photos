@@ -6,10 +6,9 @@ part of 'throttler.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logThrottler = Logger("throttler.Throttler");
-
 extension _$ThrottlerNpLog on Throttler {
   // ignore: unused_element
-  Logger get _log => _$logThrottler;
+  Logger get _log => log;
+
+  static final log = Logger("throttler.Throttler");
 }

@@ -119,7 +119,7 @@ class Account with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted accounts
   static const version = 2;
 
-  static final _log = _$logAccount;
+  static final _log = _$AccountNpLog.log;
 }
 
 extension AccountExtension on Account {

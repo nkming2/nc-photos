@@ -6,13 +6,11 @@ part of 'list_location_group.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListLocationGroup =
-    Logger("use_case.list_location_group.ListLocationGroup");
-
 extension _$ListLocationGroupNpLog on ListLocationGroup {
   // ignore: unused_element
-  Logger get _log => _$logListLocationGroup;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.list_location_group.ListLocationGroup");
 }
 
 // **************************************************************************

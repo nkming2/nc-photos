@@ -6,12 +6,11 @@ part of 'ls_dir.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logLsDirBloc = Logger("bloc.ls_dir.LsDirBloc");
-
 extension _$LsDirBlocNpLog on LsDirBloc {
   // ignore: unused_element
-  Logger get _log => _$logLsDirBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.ls_dir.LsDirBloc");
 }
 
 // **************************************************************************

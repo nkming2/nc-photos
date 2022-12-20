@@ -6,10 +6,9 @@ part of 'list_favorite.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListFavorite = Logger("use_case.list_favorite.ListFavorite");
-
 extension _$ListFavoriteNpLog on ListFavorite {
   // ignore: unused_element
-  Logger get _log => _$logListFavorite;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.list_favorite.ListFavorite");
 }

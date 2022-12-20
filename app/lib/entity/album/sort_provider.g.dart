@@ -6,13 +6,11 @@ part of 'sort_provider.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logAlbumSortProvider =
-    Logger("entity.album.sort_provider.AlbumSortProvider");
-
 extension _$AlbumSortProviderNpLog on AlbumSortProvider {
   // ignore: unused_element
-  Logger get _log => _$logAlbumSortProvider;
+  Logger get _log => log;
+
+  static final log = Logger("entity.album.sort_provider.AlbumSortProvider");
 }
 
 // **************************************************************************

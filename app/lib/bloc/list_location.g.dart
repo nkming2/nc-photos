@@ -6,12 +6,11 @@ part of 'list_location.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListLocationBloc = Logger("bloc.list_location.ListLocationBloc");
-
 extension _$ListLocationBlocNpLog on ListLocationBloc {
   // ignore: unused_element
-  Logger get _log => _$logListLocationBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.list_location.ListLocationBloc");
 }
 
 // **************************************************************************

@@ -6,19 +6,16 @@ part of 'data_source.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logShareRemoteDataSource =
-    Logger("entity.share.data_source.ShareRemoteDataSource");
-
 extension _$ShareRemoteDataSourceNpLog on ShareRemoteDataSource {
   // ignore: unused_element
-  Logger get _log => _$logShareRemoteDataSource;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$log_ShareParser = Logger("entity.share.data_source._ShareParser");
+  static final log = Logger("entity.share.data_source.ShareRemoteDataSource");
+}
 
 extension _$_ShareParserNpLog on _ShareParser {
   // ignore: unused_element
-  Logger get _log => _$log_ShareParser;
+  Logger get _log => log;
+
+  static final log = Logger("entity.share.data_source._ShareParser");
 }

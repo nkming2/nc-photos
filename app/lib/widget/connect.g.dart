@@ -6,10 +6,9 @@ part of 'connect.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$log_ConnectState = Logger("widget.connect._ConnectState");
-
 extension _$_ConnectStateNpLog on _ConnectState {
   // ignore: unused_element
-  Logger get _log => _$log_ConnectState;
+  Logger get _log => log;
+
+  static final log = Logger("widget.connect._ConnectState");
 }

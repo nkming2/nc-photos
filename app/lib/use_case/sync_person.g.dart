@@ -6,10 +6,9 @@ part of 'sync_person.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logSyncPerson = Logger("use_case.sync_person.SyncPerson");
-
 extension _$SyncPersonNpLog on SyncPerson {
   // ignore: unused_element
-  Logger get _log => _$logSyncPerson;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.sync_person.SyncPerson");
 }

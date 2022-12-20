@@ -6,19 +6,17 @@ part of 'enhanced_photo_browser.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$log_EnhancedPhotoBrowserState =
-    Logger("widget.enhanced_photo_browser._EnhancedPhotoBrowserState");
-
 extension _$_EnhancedPhotoBrowserStateNpLog on _EnhancedPhotoBrowserState {
   // ignore: unused_element
-  Logger get _log => _$log_EnhancedPhotoBrowserState;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$log_Builder = Logger("widget.enhanced_photo_browser._Builder");
+  static final log =
+      Logger("widget.enhanced_photo_browser._EnhancedPhotoBrowserState");
+}
 
 extension _$_BuilderNpLog on _Builder {
   // ignore: unused_element
-  Logger get _log => _$log_Builder;
+  Logger get _log => log;
+
+  static final log = Logger("widget.enhanced_photo_browser._Builder");
 }

@@ -6,10 +6,9 @@ part of 'share_local.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logShareLocal = Logger("use_case.share_local.ShareLocal");
-
 extension _$ShareLocalNpLog on ShareLocal {
   // ignore: unused_element
-  Logger get _log => _$logShareLocal;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.share_local.ShareLocal");
 }

@@ -6,12 +6,11 @@ part of 'scan_local_dir.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logScanLocalDirBloc = Logger("bloc.scan_local_dir.ScanLocalDirBloc");
-
 extension _$ScanLocalDirBlocNpLog on ScanLocalDirBloc {
   // ignore: unused_element
-  Logger get _log => _$logScanLocalDirBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.scan_local_dir.ScanLocalDirBloc");
 }
 
 // **************************************************************************

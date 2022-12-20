@@ -218,7 +218,7 @@ class Album with EquatableMixin {
   /// versioning of this class, use to upgrade old persisted album
   static const version = 8;
 
-  static final _log = _$logAlbum;
+  static final _log = _$AlbumNpLog.log;
 }
 
 @toString

@@ -180,5 +180,5 @@ class LsTrashbinBloc extends Bloc<LsTrashbinBlocEvent, LsTrashbinBlocState> {
 
   late Throttler _refreshThrottler;
 
-  static final _log = _$logLsTrashbinBloc;
+  static final _log = _$LsTrashbinBlocNpLog.log;
 }

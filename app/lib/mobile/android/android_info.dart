@@ -43,7 +43,7 @@ class AndroidInfo {
   final int sdkInt;
   final double totalMemMb;
 
-  static final _log = _$logAndroidInfo;
+  static final _log = _$AndroidInfoNpLog.log;
 }
 
 abstract class AndroidVersion {

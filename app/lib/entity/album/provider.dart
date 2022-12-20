@@ -65,7 +65,7 @@ abstract class AlbumProvider with EquatableMixin {
 
   AlbumProvider copyWith();
 
-  static final _log = _$logAlbumProvider;
+  static final _log = _$AlbumProviderNpLog.log;
 }
 
 abstract class AlbumProviderBase extends AlbumProvider {

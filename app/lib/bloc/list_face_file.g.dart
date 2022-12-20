@@ -6,12 +6,11 @@ part of 'list_face_file.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListFaceFileBloc = Logger("bloc.list_face_file.ListFaceFileBloc");
-
 extension _$ListFaceFileBlocNpLog on ListFaceFileBloc {
   // ignore: unused_element
-  Logger get _log => _$logListFaceFileBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.list_face_file.ListFaceFileBloc");
 }
 
 // **************************************************************************

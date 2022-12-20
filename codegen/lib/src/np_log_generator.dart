@@ -19,23 +19,21 @@ class NpLogGenerator extends GeneratorForAnnotation<NpLog> {
     if (element is ClassElement) {
       final clazz = element;
       return """
-// ignore: non_constant_identifier_names
-final _\$log${clazz.name} = Logger("${_buildLogTag(clazz)}");
-
 extension _\$${clazz.name}NpLog on ${clazz.name} {
   // ignore: unused_element
-  Logger get _log => _\$log${clazz.name};
+  Logger get _log => log;
+
+  static final log = Logger("${_buildLogTag(clazz)}");
 }
 """;
     } else if (element is ExtensionElement) {
       final extension = element;
       return """
-// ignore: non_constant_identifier_names
-final _\$log${extension.name} = Logger("${_buildLogTag(extension)}");
-
 extension _\$${extension.name}NpLog on ${extension.extendedType.element2!.name} {
   // ignore: unused_element
-  Logger get _log => _\$log${extension.name};
+  Logger get _log => log;
+
+  static final log = Logger("${_buildLogTag(extension)}");
 }
 """;
     } else {

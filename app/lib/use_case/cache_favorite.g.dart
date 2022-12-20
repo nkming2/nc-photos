@@ -6,10 +6,9 @@ part of 'cache_favorite.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logCacheFavorite = Logger("use_case.cache_favorite.CacheFavorite");
-
 extension _$CacheFavoriteNpLog on CacheFavorite {
   // ignore: unused_element
-  Logger get _log => _$logCacheFavorite;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.cache_favorite.CacheFavorite");
 }

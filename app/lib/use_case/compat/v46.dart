@@ -19,5 +19,5 @@ class CompatV46 {
     });
   }
 
-  static final _log = _$logCompatV46;
+  static final _log = _$CompatV46NpLog.log;
 }

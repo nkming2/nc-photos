@@ -6,12 +6,11 @@ part of 'ls_trashbin.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logLsTrashbinBloc = Logger("bloc.ls_trashbin.LsTrashbinBloc");
-
 extension _$LsTrashbinBlocNpLog on LsTrashbinBloc {
   // ignore: unused_element
-  Logger get _log => _$logLsTrashbinBloc;
+  Logger get _log => log;
+
+  static final log = Logger("bloc.ls_trashbin.LsTrashbinBloc");
 }
 
 // **************************************************************************

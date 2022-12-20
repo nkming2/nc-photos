@@ -538,5 +538,5 @@ class ScanAccountDirBloc
     logTag: "ScanAccountDirBloc.refresh",
   );
 
-  static final _log = _$logScanAccountDirBloc;
+  static final _log = _$ScanAccountDirBlocNpLog.log;
 }

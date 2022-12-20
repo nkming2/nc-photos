@@ -6,11 +6,9 @@ part of 'notification.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logNotificationManager =
-    Logger("mobile.notification.NotificationManager");
-
 extension _$NotificationManagerNpLog on NotificationManager {
   // ignore: unused_element
-  Logger get _log => _$logNotificationManager;
+  Logger get _log => log;
+
+  static final log = Logger("mobile.notification.NotificationManager");
 }

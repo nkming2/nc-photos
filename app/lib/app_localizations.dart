@@ -24,5 +24,5 @@ class L10n {
     }
   }
 
-  static final _log = _$logL10n;
+  static final _log = _$L10nNpLog.log;
 }

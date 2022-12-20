@@ -6,12 +6,11 @@ part of 'provider.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logAlbumProvider = Logger("entity.album.provider.AlbumProvider");
-
 extension _$AlbumProviderNpLog on AlbumProvider {
   // ignore: unused_element
-  Logger get _log => _$logAlbumProvider;
+  Logger get _log => log;
+
+  static final log = Logger("entity.album.provider.AlbumProvider");
 }
 
 // **************************************************************************

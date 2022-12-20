@@ -69,7 +69,7 @@ abstract class AlbumItem with EquatableMixin {
   final CiString addedBy;
   final DateTime addedAt;
 
-  static final _log = _$logAlbumItem;
+  static final _log = _$AlbumItemNpLog.log;
 }
 
 @toString

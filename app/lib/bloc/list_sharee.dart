@@ -107,5 +107,5 @@ class ListShareeBloc extends Bloc<ListShareeBlocEvent, ListShareeBlocState> {
     return shareeRepo.list(ev.account);
   }
 
-  static final _log = _$logListShareeBloc;
+  static final _log = _$ListShareeBlocNpLog.log;
 }

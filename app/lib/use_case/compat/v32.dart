@@ -53,5 +53,5 @@ class CompatV32 {
     return Exif(newData);
   }
 
-  static final _log = _$logCompatV32;
+  static final _log = _$CompatV32NpLog.log;
 }

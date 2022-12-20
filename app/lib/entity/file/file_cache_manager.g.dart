@@ -6,20 +6,17 @@ part of 'file_cache_manager.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logFileCacheLoader =
-    Logger("entity.file.file_cache_manager.FileCacheLoader");
-
 extension _$FileCacheLoaderNpLog on FileCacheLoader {
   // ignore: unused_element
-  Logger get _log => _$logFileCacheLoader;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logFileSqliteCacheUpdater =
-    Logger("entity.file.file_cache_manager.FileSqliteCacheUpdater");
+  static final log = Logger("entity.file.file_cache_manager.FileCacheLoader");
+}
 
 extension _$FileSqliteCacheUpdaterNpLog on FileSqliteCacheUpdater {
   // ignore: unused_element
-  Logger get _log => _$logFileSqliteCacheUpdater;
+  Logger get _log => log;
+
+  static final log =
+      Logger("entity.file.file_cache_manager.FileSqliteCacheUpdater");
 }

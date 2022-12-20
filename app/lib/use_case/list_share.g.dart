@@ -6,10 +6,9 @@ part of 'list_share.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logListShare = Logger("use_case.list_share.ListShare");
-
 extension _$ListShareNpLog on ListShare {
   // ignore: unused_element
-  Logger get _log => _$logListShare;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.list_share.ListShare");
 }

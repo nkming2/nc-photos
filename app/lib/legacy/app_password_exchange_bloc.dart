@@ -128,5 +128,5 @@ class AppPasswordExchangeBloc
     }
   }
 
-  static final _log = _$logAppPasswordExchangeBloc;
+  static final _log = _$AppPasswordExchangeBlocNpLog.log;
 }

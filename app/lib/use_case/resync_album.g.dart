@@ -6,10 +6,9 @@ part of 'resync_album.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logResyncAlbum = Logger("use_case.resync_album.ResyncAlbum");
-
 extension _$ResyncAlbumNpLog on ResyncAlbum {
   // ignore: unused_element
-  Logger get _log => _$logResyncAlbum;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.resync_album.ResyncAlbum");
 }

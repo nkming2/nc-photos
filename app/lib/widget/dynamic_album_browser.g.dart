@@ -6,13 +6,12 @@ part of 'dynamic_album_browser.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$log_DynamicAlbumBrowserState =
-    Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
-
 extension _$_DynamicAlbumBrowserStateNpLog on _DynamicAlbumBrowserState {
   // ignore: unused_element
-  Logger get _log => _$log_DynamicAlbumBrowserState;
+  Logger get _log => log;
+
+  static final log =
+      Logger("widget.dynamic_album_browser._DynamicAlbumBrowserState");
 }
 
 // **************************************************************************

@@ -6,36 +6,32 @@ part of 'file.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logMetadata = Logger("entity.file.Metadata");
-
 extension _$MetadataNpLog on Metadata {
   // ignore: unused_element
-  Logger get _log => _$logMetadata;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logMetadataUpgraderV1 = Logger("entity.file.MetadataUpgraderV1");
+  static final log = Logger("entity.file.Metadata");
+}
 
 extension _$MetadataUpgraderV1NpLog on MetadataUpgraderV1 {
   // ignore: unused_element
-  Logger get _log => _$logMetadataUpgraderV1;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logMetadataUpgraderV2 = Logger("entity.file.MetadataUpgraderV2");
+  static final log = Logger("entity.file.MetadataUpgraderV1");
+}
 
 extension _$MetadataUpgraderV2NpLog on MetadataUpgraderV2 {
   // ignore: unused_element
-  Logger get _log => _$logMetadataUpgraderV2;
-}
+  Logger get _log => log;
 
-// ignore: non_constant_identifier_names
-final _$logMetadataUpgraderV3 = Logger("entity.file.MetadataUpgraderV3");
+  static final log = Logger("entity.file.MetadataUpgraderV2");
+}
 
 extension _$MetadataUpgraderV3NpLog on MetadataUpgraderV3 {
   // ignore: unused_element
-  Logger get _log => _$logMetadataUpgraderV3;
+  Logger get _log => log;
+
+  static final log = Logger("entity.file.MetadataUpgraderV3");
 }
 
 // **************************************************************************

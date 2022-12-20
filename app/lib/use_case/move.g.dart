@@ -6,10 +6,9 @@ part of 'move.dart';
 // NpLogGenerator
 // **************************************************************************
 
-// ignore: non_constant_identifier_names
-final _$logMove = Logger("use_case.move.Move");
-
 extension _$MoveNpLog on Move {
   // ignore: unused_element
-  Logger get _log => _$logMove;
+  Logger get _log => log;
+
+  static final log = Logger("use_case.move.Move");
 }
