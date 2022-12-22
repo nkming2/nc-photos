@@ -1,5 +1,5 @@
 import 'package:code_gen_tester/code_gen_tester.dart';
-import 'package:np_codegen/src/np_log_generator.dart';
+import 'package:np_codegen_build/src/np_log_generator.dart';
 import 'package:test/test.dart';
 
 // dummy class to free us from importing the actual logger library

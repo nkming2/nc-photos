@@ -834,9 +834,16 @@ packages:
     source: hosted
     version: "2.0.1"
   np_codegen:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "../codegen"
+      relative: true
+    source: path
+    version: "1.0.0"
+  np_codegen_build:
+    dependency: "direct dev"
+    description:
+      path: "../codegen_build"
       relative: true
     source: path
     version: "1.0.0"
@@ -1287,11 +1294,20 @@ packages:
     source: hosted
     version: "1.0.0"
   to_string:
+    dependency: "direct main"
+    description:
+      path: to_string
+      ref: HEAD
+      resolved-ref: "104d4bf9db5ed8982ffb802c0acaaf1a3f0acf3a"
+      url: "https://gitlab.com/nkming2/dart-to-string"
+    source: git
+    version: "1.0.0"
+  to_string_build:
     dependency: "direct dev"
     description:
-      path: "."
-      ref: "1c8c2df0eace366a87eb5a5642b4528f3d7af3f4"
-      resolved-ref: "1c8c2df0eace366a87eb5a5642b4528f3d7af3f4"
+      path: to_string_build
+      ref: HEAD
+      resolved-ref: "104d4bf9db5ed8982ffb802c0acaaf1a3f0acf3a"
       url: "https://gitlab.com/nkming2/dart-to-string"
     source: git
     version: "1.0.0"

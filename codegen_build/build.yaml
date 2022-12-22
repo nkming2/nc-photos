@@ -1,6 +1,6 @@
 builders:
-  np_log:
-    import: "package:np_codegen/builder.dart"
+  np_log_build:
+    import: "package:np_codegen_build/builder.dart"
     builder_factories: ["npLogBuilder"]
     # The `partId` argument to `SharedPartBuilder` is "some_cool_builder"
     build_extensions: {".dart": [".np_log.g.part"]}

@@ -87,6 +87,8 @@ dependencies:
   native_device_orientation: ^1.1.0
   nc_photos_plugin:
     path: ../plugin
+  np_codegen:
+    path: ../codegen
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.6
@@ -97,6 +99,11 @@ dependencies:
   sqlite3: any
   sqlite3_flutter_libs: ^0.5.8
   synchronized: ^3.0.0
+  to_string:
+    git:
+      url: https://gitlab.com/nkming2/dart-to-string
+      ref: HEAD
+      path: to_string
   tuple: ^2.0.0
   url_launcher: ^6.0.3
   uuid: ^3.0.6
@@ -123,12 +130,13 @@ dev_dependencies:
     sdk: flutter
   # integration_test:
   #   sdk: flutter
-  np_codegen:
-    path: ../codegen
-  to_string:
+  np_codegen_build:
+    path: ../codegen_build
+  to_string_build:
     git:
       url: https://gitlab.com/nkming2/dart-to-string
-      ref: 1c8c2df0eace366a87eb5a5642b4528f3d7af3f4
+      ref: HEAD
+      path: to_string_build
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
