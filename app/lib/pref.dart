@@ -283,6 +283,20 @@ class Pref {
   Future<bool> setSeedColor(int value) => _set<int>(
       PrefKey.seedColor, value, (key, value) => provider.setInt(key, value));
 
+  bool? isVideoPlayerMute() => provider.getBool(PrefKey.isVideoPlayerMute);
+  bool isVideoPlayerMuteOr([bool def = false]) => isVideoPlayerMute() ?? def;
+  Future<bool> setVideoPlayerMute(bool value) => _set<bool>(
+      PrefKey.isVideoPlayerMute,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  bool? isVideoPlayerLoop() => provider.getBool(PrefKey.isVideoPlayerLoop);
+  bool isVideoPlayerLoopOr([bool def = false]) => isVideoPlayerLoop() ?? def;
+  Future<bool> setVideoPlayerLoop(bool value) => _set<bool>(
+      PrefKey.isVideoPlayerLoop,
+      value,
+      (key, value) => provider.setBool(key, value));
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -597,6 +611,8 @@ enum PrefKey {
   hasShownSaveEditResultDialog,
   isSlideshowReverse,
   seedColor,
+  isVideoPlayerMute,
+  isVideoPlayerLoop,
 
   // account pref
   isEnableFaceRecognitionApp,
@@ -676,6 +692,10 @@ extension on PrefKey {
         return "isSlideshowReverse";
       case PrefKey.seedColor:
         return "seedColor";
+      case PrefKey.isVideoPlayerMute:
+        return "isVideoPlayerMute";
+      case PrefKey.isVideoPlayerLoop:
+        return "isVideoPlayerLoop";
 
       // account pref
       case PrefKey.isEnableFaceRecognitionApp:

@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -106,6 +110,9 @@ class _VideoViewerState extends State<VideoViewer>
         },
       );
       await _controller.initialize();
+      final c = KiwiContainer().resolve<DiContainer>();
+      unawaited(_controller.setVolume(c.pref.isVideoPlayerMuteOr() ? 0 : 1));
+      unawaited(_controller.setLooping(c.pref.isVideoPlayerLoopOr()));
       widget.onLoaded?.call();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_key.currentContext != null) {
@@ -283,13 +290,12 @@ class _VideoViewerState extends State<VideoViewer>
   }
 
   void _onVolumnPressed() {
+    final willMute = _controller.value.volume != 0;
     setState(() {
-      if (_controller.value.volume == 0) {
-        _controller.setVolume(1);
-      } else {
-        _controller.setVolume(0);
-      }
+      _controller.setVolume(willMute ? 0 : 1);
     });
+    final c = KiwiContainer().resolve<DiContainer>();
+    c.pref.setVideoPlayerMute(willMute);
   }
 
   void _play() {
@@ -338,9 +344,12 @@ class _LoopToggleState extends State<_LoopToggle> {
       child: InkWell(
         borderRadius: const BorderRadius.all(Radius.circular(32)),
         onTap: () {
+          final willLoop = !widget.controller.value.isLooping;
           setState(() {
-            widget.controller.setLooping(!widget.controller.value.isLooping);
+            widget.controller.setLooping(willLoop);
           });
+          final c = KiwiContainer().resolve<DiContainer>();
+          c.pref.setVideoPlayerLoop(willLoop);
         },
         child: Padding(
           padding: const EdgeInsets.all(4),
