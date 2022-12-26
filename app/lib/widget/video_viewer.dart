@@ -213,6 +213,7 @@ class _VideoViewerState extends State<VideoViewer>
                             ),
                       ),
                     const SizedBox(width: 4),
+                    _LoopToggle(controller: _controller),
                     Tooltip(
                       message: _controller.value.volume == 0
                           ? L10n.global().unmuteTooltip
@@ -309,6 +310,49 @@ class _VideoViewerState extends State<VideoViewer>
   bool _isControllerInitialized = false;
   late VideoPlayerController _controller;
   var _isFinished = false;
+}
+
+class _LoopToggle extends StatefulWidget {
+  const _LoopToggle({
+    required this.controller,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _LoopToggleState();
+
+  final VideoPlayerController controller;
+}
+
+class _LoopToggleState extends State<_LoopToggle> {
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: L10n.global().loopTooltip,
+      child: InkWell(
+        borderRadius: const BorderRadius.all(Radius.circular(32)),
+        onTap: () {
+          setState(() {
+            widget.controller.setLooping(!widget.controller.value.isLooping);
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: AnimatedSwitcher(
+            duration: k.animationDurationNormal,
+            child: widget.controller.value.isLooping
+                ? const Icon(
+                    Icons.loop,
+                    key: Key("loop_on"),
+                  )
+                : const Icon(
+                    Icons.sync_disabled,
+                    key: Key("loop_off"),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 String _durationToString(Duration duration) {

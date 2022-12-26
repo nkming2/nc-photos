@@ -1497,6 +1497,10 @@
 	"@initialSyncMessage": {
 		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
 	},
+	"loopTooltip": "Loop",
+	"@loopTooltip": {
+		"description": "Enable or disable loop in the video player"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

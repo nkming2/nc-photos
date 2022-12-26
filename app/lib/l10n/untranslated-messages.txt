@@ -181,6 +181,7 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
+    "loopTooltip",
     "errorAlbumDowngrade"
   ],
 
@@ -378,6 +379,7 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
+    "loopTooltip",
     "errorAlbumDowngrade"
   ],
 
@@ -465,13 +467,15 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "es": [
     "connectingToServerInstruction",
     "settingsEnhanceMaxResolutionTitle2",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "fi": [
@@ -481,7 +485,8 @@
     "settingsSeedColorTitle",
     "settingsSeedColorDescription",
     "settingsSeedColorPickerTitle",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "fr": [
@@ -588,7 +593,8 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "pl": [
@@ -712,7 +718,8 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "pt": [
@@ -815,7 +822,8 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "ru": [
@@ -918,7 +926,8 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "zh": [
@@ -1021,7 +1030,8 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ],
 
   "zh_Hant": [
@@ -1124,6 +1134,7 @@
     "imageSaveOptionDialogContent",
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
-    "initialSyncMessage"
+    "initialSyncMessage",
+    "loopTooltip"
   ]
 }
