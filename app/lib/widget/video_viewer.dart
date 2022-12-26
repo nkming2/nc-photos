@@ -224,10 +224,17 @@ class _VideoViewerState extends State<VideoViewer>
                         onTap: _onVolumnPressed,
                         child: Padding(
                           padding: const EdgeInsets.all(4),
-                          child: Icon(
-                            _controller.value.volume == 0
-                                ? Icons.volume_mute_outlined
-                                : Icons.volume_up,
+                          child: AnimatedSwitcher(
+                            duration: k.animationDurationNormal,
+                            child: _controller.value.volume == 0
+                                ? const Icon(
+                                    Icons.volume_off_outlined,
+                                    key: Key("mute_on"),
+                                  )
+                                : const Icon(
+                                    Icons.volume_up_outlined,
+                                    key: Key("mute_off"),
+                                  ),
                           ),
                         ),
                       ),
