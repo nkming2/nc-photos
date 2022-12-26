@@ -221,31 +221,7 @@ class _VideoViewerState extends State<VideoViewer>
                       ),
                     const SizedBox(width: 4),
                     _LoopToggle(controller: _controller),
-                    Tooltip(
-                      message: _controller.value.volume == 0
-                          ? L10n.global().unmuteTooltip
-                          : L10n.global().muteTooltip,
-                      child: InkWell(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(32)),
-                        onTap: _onVolumnPressed,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: AnimatedSwitcher(
-                            duration: k.animationDurationNormal,
-                            child: _controller.value.volume == 0
-                                ? const Icon(
-                                    Icons.volume_off_outlined,
-                                    key: Key("mute_on"),
-                                  )
-                                : const Icon(
-                                    Icons.volume_up_outlined,
-                                    key: Key("mute_off"),
-                                  ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    _MuteToggle(controller: _controller),
                   ],
                 ),
               ),
@@ -287,15 +263,6 @@ class _VideoViewerState extends State<VideoViewer>
         _pause();
       });
     }
-  }
-
-  void _onVolumnPressed() {
-    final willMute = _controller.value.volume != 0;
-    setState(() {
-      _controller.setVolume(willMute ? 0 : 1);
-    });
-    final c = KiwiContainer().resolve<DiContainer>();
-    c.pref.setVideoPlayerMute(willMute);
   }
 
   void _play() {
@@ -363,6 +330,54 @@ class _LoopToggleState extends State<_LoopToggle> {
                 : const Icon(
                     Icons.sync_disabled,
                     key: Key("loop_off"),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MuteToggle extends StatefulWidget {
+  const _MuteToggle({
+    required this.controller,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _MuteToggleState();
+
+  final VideoPlayerController controller;
+}
+
+class _MuteToggleState extends State<_MuteToggle> {
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: widget.controller.value.volume == 0
+          ? L10n.global().unmuteTooltip
+          : L10n.global().muteTooltip,
+      child: InkWell(
+        borderRadius: const BorderRadius.all(Radius.circular(32)),
+        onTap: () {
+          final willMute = widget.controller.value.volume != 0;
+          setState(() {
+            widget.controller.setVolume(willMute ? 0 : 1);
+          });
+          final c = KiwiContainer().resolve<DiContainer>();
+          c.pref.setVideoPlayerMute(willMute);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: AnimatedSwitcher(
+            duration: k.animationDurationNormal,
+            child: widget.controller.value.volume == 0
+                ? const Icon(
+                    Icons.volume_off_outlined,
+                    key: Key("mute_on"),
+                  )
+                : const Icon(
+                    Icons.volume_up_outlined,
+                    key: Key("mute_off"),
                   ),
           ),
         ),
