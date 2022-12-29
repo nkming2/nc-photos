@@ -92,8 +92,6 @@ class _Indicator extends AnimatedWidget {
   Widget build(BuildContext context) {
     final thisValue = value ?? _progress.value;
     final stroke = size * .07;
-    final offsetX = size * .03;
-    final offsetY = size * .06;
     const curve = Curves.easeInOutQuad;
     return Transform.scale(
       scaleX: isInvert ? -1 : 1,
@@ -102,44 +100,35 @@ class _Indicator extends AnimatedWidget {
         padding: EdgeInsets.all(stroke / 2),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              flex: 3,
-              child: Transform.translate(
-                offset: Offset(offsetX, 0),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CircularProgressIndicator(
-                    strokeWidth: stroke,
-                    value: curve.transform((thisValue * 3).clamp(0, 1)),
-                  ),
+              flex: 6,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CircularProgressIndicator(
+                  strokeWidth: stroke,
+                  value: curve.transform((thisValue * 3).clamp(0, 1)),
                 ),
               ),
             ),
             Expanded(
-              flex: 5,
-              child: Transform.translate(
-                offset: Offset(0, -offsetY),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CircularProgressIndicator(
-                    strokeWidth: stroke,
-                    value: curve.transform((thisValue * 3 - 1).clamp(0, 1)),
-                  ),
+              flex: 11,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CircularProgressIndicator(
+                  strokeWidth: stroke,
+                  value: curve.transform((thisValue * 3 - 1).clamp(0, 1)),
                 ),
               ),
             ),
             Expanded(
-              flex: 3,
-              child: Transform.translate(
-                offset: Offset(-offsetX, 0),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CircularProgressIndicator(
-                    strokeWidth: stroke,
-                    value: curve.transform((thisValue * 3 - 2).clamp(0, 1)),
-                  ),
+              flex: 6,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CircularProgressIndicator(
+                  strokeWidth: stroke,
+                  value: curve.transform((thisValue * 3 - 2).clamp(0, 1)),
                 ),
               ),
             ),
