@@ -34,6 +34,7 @@ class VideoViewer extends StatefulWidget {
     this.onPause,
     this.isControlVisible = false,
     this.canPlay = true,
+    this.canLoop = true,
   }) : super(key: key);
 
   @override
@@ -48,6 +49,9 @@ class VideoViewer extends StatefulWidget {
   final VoidCallback? onPause;
   final bool isControlVisible;
   final bool canPlay;
+
+  /// If false, disable the loop control and always stop after playing once
+  final bool canLoop;
 }
 
 @npLog
@@ -112,7 +116,9 @@ class _VideoViewerState extends State<VideoViewer>
       await _controller.initialize();
       final c = KiwiContainer().resolve<DiContainer>();
       unawaited(_controller.setVolume(c.pref.isVideoPlayerMuteOr() ? 0 : 1));
-      unawaited(_controller.setLooping(c.pref.isVideoPlayerLoopOr()));
+      if (widget.canLoop) {
+        unawaited(_controller.setLooping(c.pref.isVideoPlayerLoopOr()));
+      }
       widget.onLoaded?.call();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_key.currentContext != null) {
@@ -220,7 +226,7 @@ class _VideoViewerState extends State<VideoViewer>
                             ),
                       ),
                     const SizedBox(width: 4),
-                    _LoopToggle(controller: _controller),
+                    if (widget.canLoop) _LoopToggle(controller: _controller),
                     _MuteToggle(controller: _controller),
                   ],
                 ),

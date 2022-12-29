@@ -226,6 +226,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
         Future.delayed(const Duration(seconds: 2), _onSlideshowTick);
       },
       isControlVisible: false,
+      canLoop: false,
     );
   }
 
