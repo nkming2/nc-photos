@@ -1297,7 +1297,7 @@ packages:
     dependency: "direct main"
     description:
       path: to_string
-      ref: HEAD
+      ref: "to_string-1.0.0"
       resolved-ref: "104d4bf9db5ed8982ffb802c0acaaf1a3f0acf3a"
       url: "https://gitlab.com/nkming2/dart-to-string"
     source: git
@@ -1306,8 +1306,8 @@ packages:
     dependency: "direct dev"
     description:
       path: to_string_build
-      ref: HEAD
-      resolved-ref: "104d4bf9db5ed8982ffb802c0acaaf1a3f0acf3a"
+      ref: "to_string_build-1.0.0"
+      resolved-ref: "334715f94312cf68fb3685e349d5623905fe9143"
       url: "https://gitlab.com/nkming2/dart-to-string"
     source: git
     version: "1.0.0"
