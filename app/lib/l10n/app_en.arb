@@ -453,6 +453,14 @@
 	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Features that are not ready for everyday use",
+	"settingsExpertTitle": "Advanced",
+	"@settingsExpertTitle": {
+		"description": "Settings that must be tweaked with caution"
+	},
+	"settingsExpertWarningText": "Please make sure you fully understand what each option does before proceeding",
+	"settingsClearCacheDatabaseTitle": "Clear file database",
+	"settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
+	"settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -1501,7 +1509,6 @@
 	"@loopTooltip": {
 		"description": "Enable or disable loop in the video player"
 	},
-
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

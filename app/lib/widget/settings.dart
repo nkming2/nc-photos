@@ -27,6 +27,7 @@ import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/root_picker.dart';
+import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
@@ -185,6 +186,12 @@ class _SettingsState extends State<Settings> {
                   description: L10n.global().settingsExperimentalDescription,
                   builder: () => _ExperimentalSettings(),
                 ),
+              _buildSubSettings(
+                context,
+                leading: const Icon(Icons.warning_amber),
+                label: L10n.global().settingsExpertTitle,
+                builder: () => const ExpertSettings(),
+              ),
               if (_isShowDevSettings)
                 _buildSubSettings(
                   context,
@@ -1643,10 +1650,6 @@ class _DevSettingsState extends State<_DevSettings> {
           delegate: SliverChildListDelegate(
             [
               ListTile(
-                title: const Text("Clear cache database"),
-                onTap: () => _clearCacheDb(),
-              ),
-              ListTile(
                 title: const Text("SQL:VACUUM"),
                 onTap: () => _runSqlVacuum(),
               ),
@@ -1655,29 +1658,6 @@ class _DevSettingsState extends State<_DevSettings> {
         ),
       ],
     );
-  }
-
-  Future<void> _clearCacheDb() async {
-    try {
-      final c = KiwiContainer().resolve<DiContainer>();
-      await c.sqliteDb.use((db) async {
-        await db.truncate();
-        final accounts = Pref().getAccounts3Or([]);
-        for (final a in accounts) {
-          await db.insertAccountOf(a);
-        }
-      });
-      SnackBarManager().showSnackBar(const SnackBar(
-        content: Text("Database cleared"),
-        duration: k.snackBarDurationShort,
-      ));
-    } catch (e, stackTrace) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-      _log.shout("[_clearCacheDb] Uncaught exception", e, stackTrace);
-    }
   }
 
   Future<void> _runSqlVacuum() async {
