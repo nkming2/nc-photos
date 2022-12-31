@@ -1,39 +1,63 @@
-import 'package:event_bus/event_bus.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/bloc/settings/theme.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'theme_settings.g.dart';
 
-class ThemeSettings extends StatefulWidget {
+class ThemeSettings extends StatelessWidget {
   const ThemeSettings({super.key});
 
   @override
-  createState() => _ThemeSettingsState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ThemeSettingsBloc(KiwiContainer().resolve<DiContainer>()),
+      child: const _WrappedThemeSettings(),
+    );
+  }
+}
+
+class _WrappedThemeSettings extends StatefulWidget {
+  const _WrappedThemeSettings();
+
+  @override
+  State<StatefulWidget> createState() => _WrappedThemeSettingsState();
 }
 
 @npLog
-class _ThemeSettingsState extends State<ThemeSettings> {
+class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
   @override
-  initState() {
+  void initState() {
     super.initState();
-    _isFollowSystemTheme = Pref().isFollowSystemThemeOr(false);
-    _isUseBlackInDarkTheme = Pref().isUseBlackInDarkThemeOr(false);
-    _seedColor = getSeedColor();
+    _errorSubscription =
+        context.read<ThemeSettingsBloc>().errorStream().listen((_) {
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().writePreferenceFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+    });
   }
 
   @override
-  build(BuildContext context) {
+  void dispose() {
+    _errorSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
         builder: (context) => _buildContent(context),
@@ -51,79 +75,66 @@ class _ThemeSettingsState extends State<ThemeSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              ListTile(
-                title: Text(L10n.global().settingsSeedColorTitle),
-                subtitle: Text(L10n.global().settingsSeedColorDescription),
-                trailing: Icon(
-                  Icons.circle,
-                  size: 32,
-                  color: _seedColor,
-                ),
-                onTap: () => _onSeedColorPressed(context),
+              BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+                buildWhen: (previous, current) =>
+                    previous.seedColor != current.seedColor,
+                builder: (context, state) {
+                  return ListTile(
+                    title: Text(L10n.global().settingsSeedColorTitle),
+                    subtitle: Text(L10n.global().settingsSeedColorDescription),
+                    trailing: Icon(
+                      Icons.circle,
+                      size: 32,
+                      color: state.seedColor,
+                    ),
+                    onTap: () => _onSeedColorPressed(context),
+                  );
+                },
               ),
               if (platform_k.isAndroid &&
                   AndroidInfo().sdkInt >= AndroidVersion.Q)
-                SwitchListTile(
-                  title: Text(L10n.global().settingsFollowSystemThemeTitle),
-                  value: _isFollowSystemTheme,
-                  onChanged: (value) => _onFollowSystemThemeChanged(value),
+                BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+                  buildWhen: (previous, current) =>
+                      previous.isFollowSystemTheme !=
+                      current.isFollowSystemTheme,
+                  builder: (context, state) {
+                    return SwitchListTile(
+                      title: Text(L10n.global().settingsFollowSystemThemeTitle),
+                      value: state.isFollowSystemTheme,
+                      onChanged: (value) {
+                        context
+                            .read<ThemeSettingsBloc>()
+                            .add(ThemeSettingsSetFollowSystemTheme(value));
+                      },
+                    );
+                  },
                 ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
-                subtitle: Text(_isUseBlackInDarkTheme
-                    ? L10n.global().settingsUseBlackInDarkThemeTrueDescription
-                    : L10n.global()
-                        .settingsUseBlackInDarkThemeFalseDescription),
-                value: _isUseBlackInDarkTheme,
-                onChanged: (value) =>
-                    _onUseBlackInDarkThemeChanged(context, value),
+              BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+                buildWhen: (previous, current) =>
+                    previous.isUseBlackInDarkTheme !=
+                    current.isUseBlackInDarkTheme,
+                builder: (context, state) {
+                  return SwitchListTile(
+                    title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
+                    subtitle: Text(state.isUseBlackInDarkTheme
+                        ? L10n.global()
+                            .settingsUseBlackInDarkThemeTrueDescription
+                        : L10n.global()
+                            .settingsUseBlackInDarkThemeFalseDescription),
+                    value: state.isUseBlackInDarkTheme,
+                    onChanged: (value) {
+                      context.read<ThemeSettingsBloc>().add(
+                          ThemeSettingsSetUseBlackInDarkTheme(
+                              value, Theme.of(context)));
+                    },
+                  );
+                },
               ),
             ],
           ),
         ),
       ],
     );
-  }
-
-  Future<void> _onFollowSystemThemeChanged(bool value) async {
-    final oldValue = _isFollowSystemTheme;
-    setState(() {
-      _isFollowSystemTheme = value;
-    });
-    if (await Pref().setFollowSystemTheme(value)) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    } else {
-      _log.severe("[_onFollowSystemThemeChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isFollowSystemTheme = oldValue;
-      });
-    }
-  }
-
-  Future<void> _onUseBlackInDarkThemeChanged(
-      BuildContext context, bool value) async {
-    final oldValue = _isUseBlackInDarkTheme;
-    setState(() {
-      _isUseBlackInDarkTheme = value;
-    });
-    if (await Pref().setUseBlackInDarkTheme(value)) {
-      if (Theme.of(context).brightness == Brightness.dark) {
-        KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-      }
-    } else {
-      _log.severe("[_onUseBlackInDarkThemeChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isUseBlackInDarkTheme = oldValue;
-      });
-    }
   }
 
   Future<void> _onSeedColorPressed(BuildContext context) async {
@@ -134,28 +145,12 @@ class _ThemeSettingsState extends State<ThemeSettings> {
     if (result == null) {
       return;
     }
-
-    final oldValue = _seedColor;
-    setState(() {
-      _seedColor = result;
-    });
-    if (await Pref().setSeedColor(result.withAlpha(0xFF).value)) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    } else {
-      _log.severe("[_onSeedColorPressed] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _seedColor = oldValue;
-      });
+    if (mounted) {
+      context.read<ThemeSettingsBloc>().add(ThemeSettingsSetSeedColor(result));
     }
   }
 
-  late bool _isFollowSystemTheme;
-  late bool _isUseBlackInDarkTheme;
-  late Color _seedColor;
+  late final StreamSubscription _errorSubscription;
 }
 
 class _SeedColorPicker extends StatefulWidget {
