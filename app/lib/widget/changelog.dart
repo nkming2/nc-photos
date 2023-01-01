@@ -293,6 +293,42 @@ class _Changelog550 extends StatelessWidget {
   }
 }
 
+class _Changelog560 extends StatelessWidget {
+  const _Changelog560();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _subSection("Changes"),
+        _bulletGroup(
+          const Text(
+              "Fixed files moved on server are sometimes not indexed by the app"),
+          [
+            const Text.rich(TextSpan(
+              children: [
+                TextSpan(
+                    text:
+                        "If you were affected by this, please clear the corrupted local database in "),
+                TextSpan(
+                  text: "Settings > Advanced > Clear file database",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )),
+          ],
+        ),
+        _bulletGroup(const Text("Added a loop button to the video player")),
+      ],
+    );
+  }
+}
+
 // ignore: unused_element
 class _ChangelogBanner extends StatelessWidget {
   const _ChangelogBanner({
@@ -391,6 +427,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  560: (_) => const [_Changelog560()],
   550: (_) => const [_Changelog550()],
   540: _buildChangelog540,
   530: _buildChangelog530,
