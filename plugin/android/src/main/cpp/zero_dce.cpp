@@ -11,7 +11,6 @@
 #include <exception>
 #include <jni.h>
 #include <tensorflow/lite/c/c_api.h>
-#include <tensorflow/lite/delegates/gpu/delegate.h>
 
 using namespace plugin;
 using namespace std;
@@ -85,11 +84,6 @@ vector<uint8_t> ZeroDce::inferAlphaMaps(const uint8_t *image,
                                         const size_t height) {
   InterpreterOptions options;
   options.setNumThreads(getNumberOfProcessors());
-
-  auto gpuOptions = TfLiteGpuDelegateOptionsV2Default();
-  auto gpuDelegate = AutoTfLiteDelegate(TfLiteGpuDelegateV2Create(&gpuOptions));
-  options.addDelegate(gpuDelegate.get());
-
   Interpreter interpreter(model, options);
   interpreter.allocateTensors();
 

@@ -55,17 +55,4 @@ private:
   TfLiteInterpreter *interpreter = nullptr;
 };
 
-class AutoTfLiteDelegate {
-public:
-  explicit AutoTfLiteDelegate(TfLiteDelegate *inst) : inst(inst) {}
-  ~AutoTfLiteDelegate();
-
-  TfLiteDelegate &operator*() { return *inst; }
-  TfLiteDelegate *operator->() { return inst; }
-  TfLiteDelegate *get() { return inst; }
-
-private:
-  TfLiteDelegate *const inst;
-};
-
 } // namespace tflite

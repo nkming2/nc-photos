@@ -12,7 +12,6 @@
 #include <exception>
 #include <jni.h>
 #include <tensorflow/lite/c/c_api.h>
-#include <tensorflow/lite/delegates/gpu/delegate.h>
 #include <vector>
 
 using namespace plugin;
@@ -185,11 +184,6 @@ ArbitraryStyleTransfer::transfer(const uint8_t *image, const size_t width,
 vector<float> ArbitraryStyleTransfer::predictStyle(const uint8_t *style) {
   InterpreterOptions options;
   options.setNumThreads(getNumberOfProcessors());
-
-  auto gpuOptions = TfLiteGpuDelegateOptionsV2Default();
-  auto gpuDelegate = AutoTfLiteDelegate(TfLiteGpuDelegateV2Create(&gpuOptions));
-  options.addDelegate(gpuDelegate.get());
-
   Interpreter interpreter(predictModel, options);
   interpreter.allocateTensors();
 

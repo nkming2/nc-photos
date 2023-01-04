@@ -22,10 +22,6 @@ add_library( tensorflowlite SHARED IMPORTED )
 set_target_properties( tensorflowlite PROPERTIES IMPORTED_LOCATION
     ${dependency_DIR}/tensorflowlite/jni/${ANDROID_ABI}/libtensorflowlite_jni.so )
 
-add_library( tensorflowlite_gpu SHARED IMPORTED )
-set_target_properties( tensorflowlite_gpu PROPERTIES IMPORTED_LOCATION
-    ${dependency_DIR}/tensorflowlite/jni/${ANDROID_ABI}/libtensorflowlite_gpu_jni.so )
-
 add_library( renderscript-intrinsics-replacement-toolkit SHARED IMPORTED )
 set_target_properties( renderscript-intrinsics-replacement-toolkit PROPERTIES IMPORTED_LOCATION
     ${dependency_DIR}/renderscript-intrinsics-replacement-toolkit/jni/${ANDROID_ABI}/librenderscript-toolkit.so )
@@ -93,6 +89,5 @@ target_link_libraries( # Specifies the target library.
                        ${log-lib}
                        ${android-lib}
                        tensorflowlite
-                       tensorflowlite_gpu
                        renderscript-intrinsics-replacement-toolkit
                        -fopenmp -static-openmp )
