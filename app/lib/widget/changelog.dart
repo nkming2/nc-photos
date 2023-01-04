@@ -329,6 +329,30 @@ class _Changelog560 extends StatelessWidget {
   }
 }
 
+class _Changelog570 extends StatelessWidget {
+  const _Changelog570();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _subSection("Changes"),
+        _bulletGroup(
+          const Text(
+              "Fixed broken enhancements that did nothing or produced weird results"),
+          [
+            const Text("Color pop"),
+            const Text("Low-light enhancement"),
+            const Text("Portrait blur"),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 // ignore: unused_element
 class _ChangelogBanner extends StatelessWidget {
   const _ChangelogBanner({
@@ -427,6 +451,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  570: (_) => const [_Changelog570()],
   560: (_) => const [_Changelog560()],
   550: (_) => const [_Changelog550()],
   540: _buildChangelog540,
