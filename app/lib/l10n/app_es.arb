@@ -217,6 +217,10 @@
 	"@connectingToServer2": {
 		"description": "Shown when the app is waiting for the user to sign in via an external browser"
 	},
+	"connectingToServerInstruction": "Por favor inicia sesión con el navegador que se ha abierto.",
+	"@connectingToServerInstruction": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
 	"nameInputHint": "Nombre",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
@@ -297,7 +301,7 @@
 	"@setupSettingsModifyLaterHint": {
 		"description": "Inform user that they can modify this setting after the setup process"
 	},
-	"setupHiddenPrefDirNoticeDetail": "Está aplicación crea una carpeta en Nextcloud para guardar las preferencias. Por favor no la modifiques o elimines a no ser que quieras desinstalar ésta aplicación.",
+	"setupHiddenPrefDirNoticeDetail": "Está aplicación crea una carpeta oculta en Nextcloud para guardar las preferencias. Por favor no la modifiques o elimines a no ser que quieras desinstalar ésta aplicación.",
 	"@setupHiddenPrefDirNoticeDetail": {
 		"description": "Inform user about the preference folder created by this app"
 	},
@@ -313,7 +317,7 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Soporte EXIF",
+	"settingsExifSupportTitle": "Escanear metadatos EXIF",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
 	},
@@ -321,7 +325,7 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsExifWifiOnlyTitle": "Proceso EXIF sólo conectado por Wi-Fi",
+	"settingsExifWifiOnlyTitle": "Escanear EXIF únicamente conectado por Wi-Fi",
 	"@settingsExifWifiOnlyTitle": {
 		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
 	},
@@ -347,15 +351,15 @@
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
-	"settingsShareFolderTitle": "Carpeta Share",
+	"settingsShareFolderTitle": "Carpeta 'share'",
 	"@settingsShareFolderTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsShareFolderDialogTitle": "Ubicación de la carpeta Share",
+	"settingsShareFolderDialogTitle": "Ubicación de la carpeta 'share'",
 	"@settingsShareFolderDialogTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
-	"settingsShareFolderDialogDescription": "Ésta configuración corresponde al parametro share_folder en config.php. Ambos valores DEBEN ser idénticos.\n\nPor favor, utiliza la misma carpeta que la configurada en config.php.",
+	"settingsShareFolderDialogDescription": "Ésta configuración corresponde al parametro 'share_folder' en config.php. Ambos valores DEBEN ser idénticos\n\nPor favor, utiliza la misma carpeta que la configurada en config.php",
 	"@settingsShareFolderDialogDescription": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
@@ -367,7 +371,7 @@
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
 	},
-	"settingsPhotosDescription": "Personaliza el contenido de la pestaña Fotos",
+	"settingsPhotosDescription": "Personaliza el contenido de la pestaña 'Fotos'",
 	"@settingsPhotosDescription": {
 		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
 	},
@@ -399,15 +403,15 @@
 	"@settingsImageEditTitle": {
 		"description": "Include settings for image enhancements and the image editor"
 	},
-	"settingsImageEditDescription": "Personaliza la mejora y edición de imágenes",
-	"settingsEnhanceMaxResolutionTitle": "Resolución máxima al guardar",
-	"settingsEnhanceMaxResolutionDescription": "Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga photos.",
+	"settingsImageEditDescription": "Personaliza la edición y retoque de imágenes",
+	"settingsEnhanceMaxResolutionTitle2": "Resolución máxima al guardar retoques",
+	"settingsEnhanceMaxResolutionDescription": "Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga.",
 	"settingsImageEditSaveResultsToServerTitle": "Guardar en el servidor",
 	"@settingsImageEditSaveResultsToServerTitle": {
 		"description": "Whether to save the edit/enhance results to server instead of the current device"
 	},
-	"settingsImageEditSaveResultsToServerTrueDescription": "Las imágenes se guardan en el servidor, pero si falla se guardan en el almacenamiento del dispositivo",
-	"settingsImageEditSaveResultsToServerFalseDescription": "Los resultados se guardan en éste dispositivo",
+	"settingsImageEditSaveResultsToServerTrueDescription": "Las imágenes editadas se guardarán en el servidor, pero si falla se guardarán en el dispositivo",
+	"settingsImageEditSaveResultsToServerFalseDescription": "Las imágenes editadas se guardan en éste dispositivo",
 	"settingsThemeTitle": "Apariencia",
 	"settingsThemeDescription": "Personaliza la apariencia de la app",
 	"settingsFollowSystemThemeTitle": "Tema del sistema",
@@ -443,12 +447,20 @@
 	"@settingsDoubleTapExitTitle": {
 		"description": "If enabled, users need to tap the back button twice to exit app"
 	},
-	"settingsPhotosTabSortByNameTitle": "Ordenar por nombre de archivo en Fotos",
+	"settingsPhotosTabSortByNameTitle": "Ordenar por nombre de archivo en 'Fotos'",
 	"@settingsPhotosTabSortByNameTitle": {
 		"description": "Sort photos listed in the Photos tab by filename (descending)"
 	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Características que no están listas para uso diario",
+	"settingsExpertTitle": "Avanzado",
+	"@settingsExpertTitle": {
+		"description": "Settings that must be tweaked with caution"
+	},
+	"settingsExpertWarningText": "Por favor asegúrate de que entiendes lo que hace cada opción antes de continuar.",
+	"settingsClearCacheDatabaseTitle": "Limpiar base de datos de archivos.",
+	"settingsClearCacheDatabaseDescription": "Limpia la información de archivos cacheados y realiza una resincronización completa con el servidor.",
+	"settingsClearCacheDatabaseSuccessNotification": "Base de datos limpiada con éxito. Es recomendable que reinicies la aplicación.",
 	"settingsAboutSectionTitle": "Acerca de",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -1253,13 +1265,13 @@
 	},
 	"enhanceButtonLabel": "RETOCAR",
 	"enhanceIntroDialogTitle": "Retoca tus fotos",
-	"enhanceIntroDialogDescription": "Tus fotos son procesadas localmente en tu dispositivo. Por defecto, son reducidas a 2048x1536. Puedes ajustar la resolución de guardado en Ajustes",
+	"enhanceIntroDialogDescription": "Tus fotos son procesadas localmente en tu dispositivo. Por defecto, son reducidas a 2048x1536. Puedes ajustar la resolución de guardado en Ajustes>Editor",
 	"enhanceLowLightTitle": "Mejorar poca luz",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
 	},
-	"enhanceLowLightDescription": "Ilumina tus fotos tomadas en entornos oscuros",
-	"enhanceLowLightParamBrightnessLabel": "Brillo",
+	"enhanceLowLightDescription": "Ilumina tu foto tomada en entornos oscuros",
+	"enhanceLowLightParamBrightnessLabel": "Iluminación",
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
@@ -1275,7 +1287,7 @@
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
 	},
-	"enhancePortraitBlurDescription": "Desenfoca el fondo de tus fotos. Obtén el mejor resultado en retratos",
+	"enhancePortraitBlurDescription": "Desenfoca el fondo de tu foto. Obtendrás mejores resultados en retratos",
 	"enhancePortraitBlurParamBlurLabel": "Desenfoque",
 	"@enhancePortraitBlurParamBlurLabel": {
 		"description": "This parameter sets the radius of the blur filter"
@@ -1284,7 +1296,7 @@
 	"@enhanceSuperResolution4xTitle": {
 		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
 	},
-	"enhanceSuperResolution4xDescription": "Agranda tus fotos 4 veces su resolución original (mira la ayuda para detalles sobre cómo se aplica la máxima resolución)",
+	"enhanceSuperResolution4xDescription": "Incrementa 4 veces la resolución original de tu foto (mira la ayuda para saber cómo se aplica la máxima resolución)",
 	"enhanceStyleTransferTitle": "Fusionar estilo",
 	"@enhanceStyleTransferTitle": {
 		"description": "Transfer the image style from a reference image to a photo"
@@ -1293,16 +1305,16 @@
 	"@enhanceStyleTransferStyleDialogTitle": {
 		"description": "Pick a reference image for the style transfer algorithm"
 	},
-	"enhanceStyleTransferStyleDialogDescription": "Transfiere el estilo de imagen de una imagen de referencia a tus fotos",
+	"enhanceStyleTransferStyleDialogDescription": "Transfiere a tu foto el estilo de una imagen elegida",
 	"enhanceStyleTransferNoStyleSelectedNotification": "Por favor, elige un estilo",
 	"@enhanceStyleTransferNoStyleSelectedNotification": {
 		"description": "Show this error if users did not pick a reference image"
 	},
-	"enhanceColorPopTitle": "Explosión de color",
+	"enhanceColorPopTitle": "Resaltar color",
 	"@enhanceColorPopTitle": {
 		"description": "Desaturate the background of a photo"
 	},
-	"enhanceColorPopDescription": "Desatura el fondo de tus fotos, Obtén el mejor resultado en retratos.",	
+	"enhanceColorPopDescription": "Reduce la saturación del fondo de tu foto. Obtendrás mejores resultados en retratos",	
 	"enhanceGenericParamWeightLabel": "Intensidad",
 	"@enhanceGenericParamWeightLabel": {
 		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
@@ -1311,7 +1323,7 @@
 	"@enhanceRetouchTitle": {
 		"description": "Automatically improve your photo"
 	},
-	"enhanceRetouchDescription": "Retoca tus fotos automáticamente, mejora el color y el estado general",
+	"enhanceRetouchDescription": "Retoca tu foto automáticamente. Mejora el color y el estado general",
 	"doubleTapExitNotification": "Toca otra vez para salir",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
@@ -1410,11 +1422,11 @@
 	"@searchFilterOptionAnyLabel": {
 		"description": "This is the default option for all search filters. Filters with this value will be ignored"
 	},
-	"searchFilterOptionTrueLabel": "Verdadero",
+	"searchFilterOptionTrueLabel": "Si",
 	"@searchFilterOptionTrueLabel": {
 		"description": "Positive option for a boolean filter"
 	},
-	"searchFilterOptionFalseLabel": "Falso",
+	"searchFilterOptionFalseLabel": "No",
 	"@searchFilterOptionFalseLabel": {
 		"description": "Negative option for a boolean filter"
 	},
@@ -1465,7 +1477,7 @@
 	"@gpsPlaceAboutDialogTitle": {
 		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
 	},
-	"gpsPlaceAboutDialogContent": "El lugar mostrado aquí sólo es una estimación y no garantiza ninguna precisión.",
+	"gpsPlaceAboutDialogContent": "Los lugares mostrados aquí sólo son una estimación y no garantizan ninguna precisión.",
 	"@gpsPlaceAboutDialogContent": {
 		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
 	},
@@ -1489,7 +1501,15 @@
 	"@imageSaveOptionDialogServerButtonLabel": {
 		"description": "Save the image on your Nextcloud server"
 	},
-	"errorUnauthenticated": "Acceso sin identificación. Por favor inicia sesión otra vez si el problema continúa.",
+	"initialSyncMessage": "Sincronizando con tu servidor por primera vez",
+	"@initialSyncMessage": {
+		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+	},
+	"loopTooltip": "Bucle",
+	"@loopTooltip": {
+		"description": "Enable or disable loop in the video player"
+	},
+	"errorUnauthenticated": "No estás autentificado. Por favor inicia sesión otra vez si el problema continúa.",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
 	},
@@ -1505,7 +1525,7 @@
 	"@errorInvalidBaseUrl": {
 		"description": "Error message when the base URL is invalid"
 	},
-	"errorWrongPassword": "No se pudo autentificar. Verifica tu usuario y contraseña.Unable to authenticate.",
+	"errorWrongPassword": "No se pudo autentificar. Verifica tu usuario y contraseña.",
 	"@errorWrongPassword": {
 		"description": "Error message when the username or password is wrong"
 	},
