@@ -13,13 +13,6 @@ extension _$ApiNpLog on Api {
   static final log = Logger("api.api.Api");
 }
 
-extension _$ApiFilesNpLog on ApiFiles {
-  // ignore: unused_element
-  Logger get _log => log;
-
-  static final log = Logger("api.api.ApiFiles");
-}
-
 extension _$ApiOcsDavDirectNpLog on ApiOcsDavDirect {
   // ignore: unused_element
   Logger get _log => log;
@@ -40,6 +33,13 @@ extension _$ApiOcsFacerecognitionPersonFacesNpLog
   Logger get _log => log;
 
   static final log = Logger("api.api.ApiOcsFacerecognitionPersonFaces");
+}
+
+extension _$ApiFilesNpLog on ApiFiles {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("api.api.ApiFiles");
 }
 
 extension _$ApiOcsFilesSharingSharesNpLog on ApiOcsFilesSharingShares {
