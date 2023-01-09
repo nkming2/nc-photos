@@ -58,6 +58,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 part 'home_photos.g.dart';
 
+class HomePhotosBackToTopEvent {
+  const HomePhotosBackToTopEvent();
+}
+
 class HomePhotos extends StatefulWidget {
   const HomePhotos({
     Key? key,
@@ -85,10 +89,12 @@ class _HomePhotosState extends State<HomePhotos>
     _web?.onInitState();
     _prefUpdatedListener.begin();
     _imageProcessorUploadSuccessListener?.begin();
+    _onBackToTopListener.begin();
   }
 
   @override
   dispose() {
+    _onBackToTopListener.end();
     _prefUpdatedListener.end();
     _imageProcessorUploadSuccessListener?.end();
     _web?.onDispose();
@@ -524,6 +530,10 @@ class _HomePhotosState extends State<HomePhotos>
     _hasFiredMetadataTask.value = false;
   }
 
+  void _onBackToTop(HomePhotosBackToTopEvent ev) {
+    _scrollController.jumpTo(0);
+  }
+
   Future<void> _tryStartMetadataTask({
     bool ignoreFired = false,
   }) async {
@@ -765,6 +775,8 @@ class _HomePhotosState extends State<HomePhotos>
       ? null
       : NativeEventListener<ImageProcessorUploadSuccessEvent>(
           _onImageProcessorUploadSuccessEvent);
+  late final _onBackToTopListener =
+      AppEventListener<HomePhotosBackToTopEvent>(_onBackToTop);
 
   late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
 

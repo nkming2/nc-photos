@@ -1,3 +1,4 @@
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -126,39 +127,32 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget _buildPage(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return _buildPhotosPage(context);
+        return HomePhotos(
+          account: widget.account,
+        );
 
       case 1:
-        return _buildSearchPage(context);
+        return HomeSearch(
+          account: widget.account,
+        );
 
       case 2:
-        return _buildAlbumsPage(context);
+        return HomeAlbums(
+          account: widget.account,
+        );
 
       default:
         throw ArgumentError("Invalid page index: $index");
     }
   }
 
-  Widget _buildPhotosPage(BuildContext context) {
-    return HomePhotos(
-      account: widget.account,
-    );
-  }
-
-  Widget _buildSearchPage(BuildContext context) {
-    return HomeSearch(
-      account: widget.account,
-    );
-  }
-
-  Widget _buildAlbumsPage(BuildContext context) {
-    return HomeAlbums(
-      account: widget.account,
-    );
-  }
-
   void _onTapNavItem(int index) {
     if (index == _nextPage) {
+      if (index == 0) {
+        KiwiContainer()
+            .resolve<EventBus>()
+            .fire(const HomePhotosBackToTopEvent());
+      }
       return;
     }
 
