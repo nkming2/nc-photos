@@ -158,6 +158,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void _onTapNavItem(int index) {
+    if (index == _nextPage) {
+      return;
+    }
+
     _pageController.jumpToPage(index);
     setState(() {
       _nextPage = index;
