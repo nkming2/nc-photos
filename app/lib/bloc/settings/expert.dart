@@ -10,7 +10,7 @@ import 'package:to_string/to_string.dart';
 
 part 'expert.g.dart';
 
-@autoCopyWith
+@genCopyWith
 @toString
 class ExpertSettingsState {
   const ExpertSettingsState({
@@ -67,7 +67,7 @@ class ExpertSettingsBloc
           await db.insertAccountOf(a);
         }
       });
-      emit(state.copyWith(lastSuccessful: Nullable(ev)));
+      emit(state.copyWith(lastSuccessful: ev));
     } catch (e, stackTrace) {
       _log.shout("[_onClearCacheDatabase] Uncaught exception", e, stackTrace);
       _errorStream.add(ExpertSettingsError(ev, e, stackTrace));

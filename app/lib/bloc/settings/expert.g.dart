@@ -6,17 +6,29 @@ part of 'expert.dart';
 // CopyWithGenerator
 // **************************************************************************
 
-extension $ExpertSettingsStateCopyWith on ExpertSettingsState {
-  ExpertSettingsState copyWith(
-          {Nullable<ExpertSettingsEvent>? lastSuccessful}) =>
-      _$copyWith(lastSuccessful: lastSuccessful);
+abstract class $ExpertSettingsStateCopyWithWorker {
+  ExpertSettingsState call({ExpertSettingsEvent? lastSuccessful});
+}
 
-  ExpertSettingsState _$copyWith(
-      {Nullable<ExpertSettingsEvent>? lastSuccessful}) {
+class _$ExpertSettingsStateCopyWithWorkerImpl
+    implements $ExpertSettingsStateCopyWithWorker {
+  _$ExpertSettingsStateCopyWithWorkerImpl(this.that);
+
+  @override
+  ExpertSettingsState call({dynamic lastSuccessful = copyWithNull}) {
     return ExpertSettingsState(
-        lastSuccessful:
-            lastSuccessful != null ? lastSuccessful.obj : this.lastSuccessful);
+        lastSuccessful: lastSuccessful == copyWithNull
+            ? that.lastSuccessful
+            : lastSuccessful as ExpertSettingsEvent?);
   }
+
+  final ExpertSettingsState that;
+}
+
+extension $ExpertSettingsStateCopyWith on ExpertSettingsState {
+  $ExpertSettingsStateCopyWithWorker get copyWith => _$copyWith;
+  $ExpertSettingsStateCopyWithWorker get _$copyWith =>
+      _$ExpertSettingsStateCopyWithWorkerImpl(this);
 }
 
 // **************************************************************************

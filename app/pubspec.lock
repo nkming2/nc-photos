@@ -301,20 +301,20 @@ packages:
     dependency: "direct main"
     description:
       path: copy_with
-      ref: "copy_with-1.0.0"
-      resolved-ref: c3ef6b3b5337f99ee7c0e1fb655bacf635d8b072
+      ref: "copy_with-1.2.0"
+      resolved-ref: c7522d73c206268302dca99b092e59e49b4fc085
       url: "https://gitlab.com/nkming2/dart-copy-with"
     source: git
-    version: "1.0.0"
+    version: "1.2.0"
   copy_with_build:
     dependency: "direct dev"
     description:
       path: copy_with_build
-      ref: "copy_with_build-1.0.0"
-      resolved-ref: "8303676d56dc16bc2fb1e38ad95c5d97b493e613"
+      ref: "copy_with_build-1.2.0"
+      resolved-ref: c7522d73c206268302dca99b092e59e49b4fc085
       url: "https://gitlab.com/nkming2/dart-copy-with"
     source: git
-    version: "1.0.0"
+    version: "1.2.0"
   coverage:
     dependency: transitive
     description:

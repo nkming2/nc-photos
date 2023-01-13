@@ -14,7 +14,7 @@ import 'package:to_string/to_string.dart';
 
 part 'theme.g.dart';
 
-@autoCopyWith
+@genCopyWith
 @toString
 class ThemeSettingsState {
   const ThemeSettingsState({

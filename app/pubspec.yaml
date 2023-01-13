@@ -44,7 +44,7 @@ dependencies:
     git:
       url: https://gitlab.com/nkming2/dart-copy-with
       path: copy_with
-      ref: copy_with-1.0.0
+      ref: copy_with-1.2.0
   devicelocale: ^0.5.0
   device_info_plus: ^4.0.0
   draggable_scrollbar:
@@ -133,7 +133,7 @@ dev_dependencies:
     git:
       url: https://gitlab.com/nkming2/dart-copy-with
       path: copy_with_build
-      ref: copy_with_build-1.0.0
+      ref: copy_with_build-1.2.0
   drift_dev: ^1.7.0
   flutter_lints: ^2.0.1
   flutter_test:

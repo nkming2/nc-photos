@@ -6,26 +6,37 @@ part of 'theme.dart';
 // CopyWithGenerator
 // **************************************************************************
 
-extension $ThemeSettingsStateCopyWith on ThemeSettingsState {
-  ThemeSettingsState copyWith(
-          {bool? isFollowSystemTheme,
-          bool? isUseBlackInDarkTheme,
-          Color? seedColor}) =>
-      _$copyWith(
-          isFollowSystemTheme: isFollowSystemTheme,
-          isUseBlackInDarkTheme: isUseBlackInDarkTheme,
-          seedColor: seedColor);
-
-  ThemeSettingsState _$copyWith(
+abstract class $ThemeSettingsStateCopyWithWorker {
+  ThemeSettingsState call(
       {bool? isFollowSystemTheme,
       bool? isUseBlackInDarkTheme,
-      Color? seedColor}) {
+      Color? seedColor});
+}
+
+class _$ThemeSettingsStateCopyWithWorkerImpl
+    implements $ThemeSettingsStateCopyWithWorker {
+  _$ThemeSettingsStateCopyWithWorkerImpl(this.that);
+
+  @override
+  ThemeSettingsState call(
+      {dynamic isFollowSystemTheme,
+      dynamic isUseBlackInDarkTheme,
+      dynamic seedColor}) {
     return ThemeSettingsState(
-        isFollowSystemTheme: isFollowSystemTheme ?? this.isFollowSystemTheme,
+        isFollowSystemTheme:
+            isFollowSystemTheme as bool? ?? that.isFollowSystemTheme,
         isUseBlackInDarkTheme:
-            isUseBlackInDarkTheme ?? this.isUseBlackInDarkTheme,
-        seedColor: seedColor ?? this.seedColor);
+            isUseBlackInDarkTheme as bool? ?? that.isUseBlackInDarkTheme,
+        seedColor: seedColor as Color? ?? that.seedColor);
   }
+
+  final ThemeSettingsState that;
+}
+
+extension $ThemeSettingsStateCopyWith on ThemeSettingsState {
+  $ThemeSettingsStateCopyWithWorker get copyWith => _$copyWith;
+  $ThemeSettingsStateCopyWithWorker get _$copyWith =>
+      _$ThemeSettingsStateCopyWithWorkerImpl(this);
 }
 
 // **************************************************************************
