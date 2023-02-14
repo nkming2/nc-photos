@@ -39,9 +39,9 @@ class SyncPerson {
     final cache = await _c.personRepoLocal.list(account);
     int personSorter(Person a, Person b) => a.name.compareTo(b.name);
     final diff = list_util.diffWith<Person>(cache, remote, personSorter);
-    final inserts = diff.item1;
+    final inserts = diff.onlyInB;
     _log.info("[call] New people: ${inserts.toReadableString()}");
-    final deletes = diff.item2;
+    final deletes = diff.onlyInA;
     _log.info("[call] Removed people: ${deletes.toReadableString()}");
     final updates = remote.where((r) {
       final c = cache.firstWhereOrNull((c) => c.name == r.name);

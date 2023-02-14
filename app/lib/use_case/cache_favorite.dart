@@ -34,9 +34,9 @@ class CacheFavorite {
           Map.fromEntries(cache.map((e) => MapEntry(e.fileId, e.rowId)));
       final diff =
           list_util.diff(cacheMap.keys.sorted(Comparable.compare), remote);
-      final newFileIds = diff.item1;
+      final newFileIds = diff.onlyInB;
       _log.info("[call] New favorites: ${newFileIds.toReadableString()}");
-      final removedFildIds = diff.item2;
+      final removedFildIds = diff.onlyInA;
       _log.info(
           "[call] Removed favorites: ${removedFildIds.toReadableString()}");
 

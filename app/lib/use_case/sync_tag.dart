@@ -28,9 +28,9 @@ class SyncTag {
     final remote = (await _c.tagRepoRemote.list(account))..sort(tagSorter);
     final cache = (await _c.tagRepoLocal.list(account))..sort(tagSorter);
     final diff = list_util.diffWith<Tag>(cache, remote, tagSorter);
-    final inserts = diff.item1;
+    final inserts = diff.onlyInB;
     _log.info("[call] New tags: ${inserts.toReadableString()}");
-    final deletes = diff.item2;
+    final deletes = diff.onlyInA;
     _log.info("[call] Removed tags: ${deletes.toReadableString()}");
     final updates = remote.where((r) {
       final c = cache.firstWhereOrNull((c) => c.id == r.id);

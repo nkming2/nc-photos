@@ -138,16 +138,16 @@ class FileSqliteCacheUpdater {
       final dirFiles = await dirFileQuery.get();
       final diff = list_util.diff(dirFiles.map((e) => e.child),
           _childRowIds.sorted(Comparable.compare));
-      if (diff.item1.isNotEmpty) {
+      if (diff.onlyInB.isNotEmpty) {
         await db.batch((batch) {
           // insert new children
           batch.insertAll(db.dirFiles,
-              diff.item1.map((k) => sql.DirFile(dir: _dirRowId!, child: k)));
+              diff.onlyInB.map((k) => sql.DirFile(dir: _dirRowId!, child: k)));
         });
       }
-      if (diff.item2.isNotEmpty) {
+      if (diff.onlyInA.isNotEmpty) {
         // remove entries from the DirFiles table first
-        await diff.item2.withPartitionNoReturn((sublist) async {
+        await diff.onlyInA.withPartitionNoReturn((sublist) async {
           final deleteQuery = db.delete(db.dirFiles)
             ..where((t) => t.child.isIn(sublist))
             ..where((t) =>
@@ -157,7 +157,7 @@ class FileSqliteCacheUpdater {
 
         // select files having another dir parent under this account (i.e.,
         // moved files)
-        final moved = await diff.item2.withPartition((sublist) async {
+        final moved = await diff.onlyInA.withPartition((sublist) async {
           final query = db.selectOnly(db.dirFiles).join([
             sql.innerJoin(db.accountFiles,
                 db.accountFiles.file.equalsExp(db.dirFiles.dir)),
@@ -168,7 +168,7 @@ class FileSqliteCacheUpdater {
             ..where(db.dirFiles.child.isIn(sublist));
           return query.map((r) => r.read(db.dirFiles.child)!).get();
         }, sql.maxByFileIdsSize);
-        final removed = diff.item2.where((e) => !moved.contains(e)).toList();
+        final removed = diff.onlyInA.where((e) => !moved.contains(e)).toList();
         if (removed.isNotEmpty) {
           // delete obsolete children
           await _removeSqliteFiles(db, dbAccount, removed);
