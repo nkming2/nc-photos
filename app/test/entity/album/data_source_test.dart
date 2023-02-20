@@ -6,7 +6,7 @@ import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:test/test.dart';

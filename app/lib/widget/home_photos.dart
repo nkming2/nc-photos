@@ -20,7 +20,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;

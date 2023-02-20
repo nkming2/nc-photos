@@ -6,7 +6,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;

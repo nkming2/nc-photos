@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 

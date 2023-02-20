@@ -3,8 +3,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/favorite.dart';
-import 'package:nc_photos/entity/sqlite_table.dart' as sql;
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:test/test.dart';
 

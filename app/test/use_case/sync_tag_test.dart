@@ -1,9 +1,8 @@
 import 'package:drift/drift.dart' as sql;
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite_table.dart' as sql;
-import 'package:nc_photos/entity/sqlite_table_converter.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/use_case/sync_tag.dart';

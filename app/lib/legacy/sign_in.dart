@@ -7,7 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/legacy/connect.dart';

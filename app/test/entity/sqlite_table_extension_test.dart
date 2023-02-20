@@ -1,7 +1,6 @@
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite_table.dart' as sql;
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
 import 'package:test/test.dart';
 

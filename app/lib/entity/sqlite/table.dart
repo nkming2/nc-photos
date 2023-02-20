@@ -1,10 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:logging/logging.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:np_codegen/np_codegen.dart';
-
-part 'sqlite_table.g.dart';
 
 class Servers extends Table {
   IntColumn get rowId => integer().autoIncrement()();
@@ -33,7 +27,7 @@ class Files extends Table {
   TextColumn get contentType => text().nullable()();
   TextColumn get etag => text().nullable()();
   DateTimeColumn get lastModified =>
-      dateTime().map(const _DateTimeConverter()).nullable()();
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
   BoolColumn get isCollection => boolean().nullable()();
   IntColumn get usedBytes => integer().nullable()();
   BoolColumn get hasPreview => boolean().nullable()();
@@ -59,9 +53,9 @@ class AccountFiles extends Table {
   BoolColumn get isFavorite => boolean().nullable()();
   BoolColumn get isArchived => boolean().nullable()();
   DateTimeColumn get overrideDateTime =>
-      dateTime().map(const _DateTimeConverter()).nullable()();
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
   DateTimeColumn get bestDateTime =>
-      dateTime().map(const _DateTimeConverter())();
+      dateTime().map(const SqliteDateTimeConverter())();
 
   @override
   get uniqueKeys => [
@@ -76,7 +70,7 @@ class Images extends Table {
   IntColumn get accountFile =>
       integer().references(AccountFiles, #rowId, onDelete: KeyAction.cascade)();
   DateTimeColumn get lastUpdated =>
-      dateTime().map(const _DateTimeConverter())();
+      dateTime().map(const SqliteDateTimeConverter())();
   TextColumn get fileEtag => text().nullable()();
   IntColumn get width => integer().nullable()();
   IntColumn get height => integer().nullable()();
@@ -84,7 +78,7 @@ class Images extends Table {
 
   // exif columns
   DateTimeColumn get dateTimeOriginal =>
-      dateTime().map(const _DateTimeConverter()).nullable()();
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
 
   @override
   get primaryKey => {accountFile};
@@ -114,7 +108,7 @@ class Trashes extends Table {
   TextColumn get filename => text()();
   TextColumn get originalLocation => text()();
   DateTimeColumn get deletionTime =>
-      dateTime().map(const _DateTimeConverter())();
+      dateTime().map(const SqliteDateTimeConverter())();
 
   @override
   get primaryKey => {file};
@@ -140,7 +134,7 @@ class Albums extends Table {
   TextColumn get fileEtag => text().nullable()();
   IntColumn get version => integer()();
   DateTimeColumn get lastUpdated =>
-      dateTime().map(const _DateTimeConverter())();
+      dateTime().map(const SqliteDateTimeConverter())();
   TextColumn get name => text()();
 
   // provider
@@ -161,7 +155,8 @@ class AlbumShares extends Table {
       integer().references(Albums, #rowId, onDelete: KeyAction.cascade)();
   TextColumn get userId => text()();
   TextColumn get displayName => text().nullable()();
-  DateTimeColumn get sharedAt => dateTime().map(const _DateTimeConverter())();
+  DateTimeColumn get sharedAt =>
+      dateTime().map(const SqliteDateTimeConverter())();
 
   @override
   get primaryKey => {album, userId};
@@ -196,118 +191,8 @@ class Persons extends Table {
       ];
 }
 
-// remember to also update the truncate method after adding a new table
-@npLog
-@DriftDatabase(
-  tables: [
-    Servers,
-    Accounts,
-    Files,
-    Images,
-    ImageLocations,
-    Trashes,
-    AccountFiles,
-    DirFiles,
-    Albums,
-    AlbumShares,
-    Tags,
-    Persons,
-  ],
-)
-class SqliteDb extends _$SqliteDb {
-  SqliteDb({
-    QueryExecutor? executor,
-  }) : super(executor ?? platform.openSqliteConnection());
-
-  SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
-
-  @override
-  get schemaVersion => 4;
-
-  @override
-  get migration => MigrationStrategy(
-        onCreate: (m) async {
-          await customStatement("PRAGMA journal_mode=WAL;");
-          await m.createAll();
-
-          await m.createIndex(Index("files_server_index",
-              "CREATE INDEX files_server_index ON files(server);"));
-          await m.createIndex(Index("files_file_id_index",
-              "CREATE INDEX files_file_id_index ON files(file_id);"));
-          await m.createIndex(Index("files_content_type_index",
-              "CREATE INDEX files_content_type_index ON files(content_type);"));
-
-          await m.createIndex(Index("account_files_file_index",
-              "CREATE INDEX account_files_file_index ON account_files(file);"));
-          await m.createIndex(Index("account_files_relative_path_index",
-              "CREATE INDEX account_files_relative_path_index ON account_files(relative_path);"));
-          await m.createIndex(Index("account_files_best_date_time_index",
-              "CREATE INDEX account_files_best_date_time_index ON account_files(best_date_time);"));
-
-          await m.createIndex(Index("dir_files_dir_index",
-              "CREATE INDEX dir_files_dir_index ON dir_files(dir);"));
-          await m.createIndex(Index("dir_files_child_index",
-              "CREATE INDEX dir_files_child_index ON dir_files(child);"));
-
-          await m.createIndex(Index("album_shares_album_index",
-              "CREATE INDEX album_shares_album_index ON album_shares(album);"));
-
-          await _createIndexV2(m);
-          await _createIndexV3(m);
-        },
-        onUpgrade: (m, from, to) async {
-          _log.info("[onUpgrade] $from -> $to");
-          try {
-            await transaction(() async {
-              if (from < 2) {
-                await m.createTable(tags);
-                await m.createTable(persons);
-                await _createIndexV2(m);
-              }
-              if (from < 3) {
-                await m.createTable(imageLocations);
-                await _createIndexV3(m);
-              }
-              if (from < 4) {
-                await m.addColumn(albums, albums.fileEtag);
-              }
-            });
-          } catch (e, stackTrace) {
-            _log.shout("[onUpgrade] Failed upgrading sqlite db", e, stackTrace);
-            rethrow;
-          }
-        },
-        beforeOpen: (details) async {
-          await customStatement("PRAGMA foreign_keys = ON;");
-          // technically we have a platform side lock to ensure only one
-          // transaction is running in any isolates, but for some reason we are
-          // still seeing database is locked error in crashlytics, let see if
-          // this helps
-          await customStatement("PRAGMA busy_timeout = 5000;");
-        },
-      );
-
-  Future<void> _createIndexV2(Migrator m) async {
-    await m.createIndex(Index("tags_server_index",
-        "CREATE INDEX tags_server_index ON tags(server);"));
-    await m.createIndex(Index("persons_account_index",
-        "CREATE INDEX persons_account_index ON persons(account);"));
-  }
-
-  Future<void> _createIndexV3(Migrator m) async {
-    await m.createIndex(Index("image_locations_name_index",
-        "CREATE INDEX image_locations_name_index ON image_locations(name);"));
-    await m.createIndex(Index("image_locations_country_code_index",
-        "CREATE INDEX image_locations_country_code_index ON image_locations(country_code);"));
-    await m.createIndex(Index("image_locations_admin1_index",
-        "CREATE INDEX image_locations_admin1_index ON image_locations(admin1);"));
-    await m.createIndex(Index("image_locations_admin2_index",
-        "CREATE INDEX image_locations_admin2_index ON image_locations(admin2);"));
-  }
-}
-
-class _DateTimeConverter extends TypeConverter<DateTime, DateTime> {
-  const _DateTimeConverter();
+class SqliteDateTimeConverter extends TypeConverter<DateTime, DateTime> {
+  const SqliteDateTimeConverter();
 
   @override
   DateTime? mapToDart(DateTime? fromDb) => fromDb?.toUtc();

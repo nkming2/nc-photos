@@ -4,7 +4,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_codegen/np_codegen.dart';
 
 part 'populate_person.g.dart';

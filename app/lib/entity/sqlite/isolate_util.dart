@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite_table.dart';
+import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/k.dart' as platform_k;

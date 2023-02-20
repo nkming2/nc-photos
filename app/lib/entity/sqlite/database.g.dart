@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sqlite_table.dart';
+part of 'database.dart';
 
 // **************************************************************************
 // MoorGenerator
@@ -989,7 +989,7 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class AccountFile extends DataClass implements Insertable<AccountFile> {
@@ -1428,9 +1428,9 @@ class $AccountFilesTable extends AccountFiles
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
   static TypeConverter<DateTime, DateTime> $converter1 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class Image extends DataClass implements Insertable<Image> {
@@ -1815,9 +1815,9 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
   static TypeConverter<DateTime, DateTime> $converter1 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class ImageLocation extends DataClass implements Insertable<ImageLocation> {
@@ -2489,7 +2489,7 @@ class $TrashesTable extends Trashes with TableInfo<$TrashesTable, Trash> {
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class DirFile extends DataClass implements Insertable<DirFile> {
@@ -3253,7 +3253,7 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class AlbumShare extends DataClass implements Insertable<AlbumShare> {
@@ -3515,7 +3515,7 @@ class $AlbumSharesTable extends AlbumShares
   }
 
   static TypeConverter<DateTime, DateTime> $converter0 =
-      const _DateTimeConverter();
+      const SqliteDateTimeConverter();
 }
 
 class Tag extends DataClass implements Insertable<Tag> {
@@ -4199,5 +4199,5 @@ extension _$SqliteDbNpLog on SqliteDb {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("entity.sqlite_table.SqliteDb");
+  static final log = Logger("entity.sqlite.database.SqliteDb");
 }

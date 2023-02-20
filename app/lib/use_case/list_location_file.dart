@@ -3,8 +3,9 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite_table_converter.dart';
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
+import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
 

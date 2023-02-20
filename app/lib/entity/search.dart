@@ -1,7 +1,7 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/sqlite_table_extension.dart' as sql;
+import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:to_string/to_string.dart';
 

@@ -7,7 +7,7 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
-import 'package:nc_photos/entity/sqlite_table.dart' as sql;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/or_null.dart';
