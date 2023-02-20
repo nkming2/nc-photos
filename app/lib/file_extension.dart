@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as path_lib;
 import 'package:mime/mime.dart';
+import 'package:path/path.dart' as path_lib;
 
 extension FileExtension on File {
   Future<String?> readMime() async {

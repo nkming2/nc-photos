@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos_plugin/src/exception.dart';
