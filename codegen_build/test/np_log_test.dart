@@ -15,12 +15,11 @@ void main() {
 
   test("NpLog", () async {
     await expectGen("Test", completion("""
-// ignore: non_constant_identifier_names
-final _\$logTest = Logger("np_log.Test");
-
 extension _\$TestNpLog on Test {
   // ignore: unused_element
-  Logger get _log => _\$logTest;
+  Logger get _log => log;
+
+  static final log = Logger("np_log.Test");
 }
 """));
   });
