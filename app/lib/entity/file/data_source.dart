@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -13,15 +13,15 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
-import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:path/path.dart' as path_lib;
-import 'package:xml/xml.dart';
 
 part 'data_source.g.dart';
 
@@ -92,20 +92,22 @@ class FileWebdavDataSource implements FileDataSource {
   @override
   remove(Account account, File f) async {
     _log.info("[remove] ${f.path}");
-    final response = await Api(account).files().delete(path: f.path);
+    final response =
+        await ApiUtil.fromAccount(account).files().delete(path: f.path);
     if (!response.isGood) {
       _log.severe("[remove] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
   }
 
   @override
   getBinary(Account account, File f) async {
     _log.info("[getBinary] ${f.path}");
-    final response = await Api(account).files().get(path: f.path);
+    final response =
+        await ApiUtil.fromAccount(account).files().get(path: f.path);
     if (!response.isGood) {
       _log.severe("[getBinary] Failed requesting server: $response");
       throw ApiException(
@@ -119,8 +121,9 @@ class FileWebdavDataSource implements FileDataSource {
   @override
   putBinary(Account account, String path, Uint8List content) async {
     _log.info("[putBinary] $path");
-    final response =
-        await Api(account).files().put(path: path, content: content);
+    final response = await ApiUtil.fromAccount(account)
+        .files()
+        .put(path: path, content: content);
     if (!response.isGood) {
       _log.severe("[putBinary] Failed requesting server: $response");
       throw ApiException(
@@ -162,7 +165,7 @@ class FileWebdavDataSource implements FileDataSource {
       if (OrNull.isSetNull(overrideDateTime)) "app:override-date-time",
       if (OrNull.isSetNull(location)) "app:location",
     ];
-    final response = await Api(account).files().proppatch(
+    final response = await ApiUtil.fromAccount(account).files().proppatch(
           path: f.path,
           namespaces: {
             "com.nkming.nc_photos": "app",
@@ -188,7 +191,7 @@ class FileWebdavDataSource implements FileDataSource {
     bool? shouldOverwrite,
   }) async {
     _log.info("[copy] ${f.path} to $destination");
-    final response = await Api(account).files().copy(
+    final response = await ApiUtil.fromAccount(account).files().copy(
           path: f.path,
           destinationUrl: "${account.url}/$destination",
           overwrite: shouldOverwrite,
@@ -216,7 +219,7 @@ class FileWebdavDataSource implements FileDataSource {
     bool? shouldOverwrite,
   }) async {
     _log.info("[move] ${f.path} to $destination");
-    final response = await Api(account).files().move(
+    final response = await ApiUtil.fromAccount(account).files().move(
           path: f.path,
           destinationUrl: "${account.url}/$destination",
           overwrite: shouldOverwrite,
@@ -233,7 +236,7 @@ class FileWebdavDataSource implements FileDataSource {
   @override
   createDir(Account account, String path) async {
     _log.info("[createDir] $path");
-    final response = await Api(account).files().mkcol(
+    final response = await ApiUtil.fromAccount(account).files().mkcol(
           path: path,
         );
     if (!response.isGood) {
@@ -273,7 +276,7 @@ class FileWebdavDataSource implements FileDataSource {
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
-    final response = await Api(account).files().propfind(
+    final response = await ApiUtil.fromAccount(account).files().propfind(
           path: dir.path,
           depth: depth,
           getlastmodified: getlastmodified,
@@ -308,11 +311,11 @@ class FileWebdavDataSource implements FileDataSource {
               "Server responed with an error: HTTP ${response.statusCode}");
     }
 
-    final xml = XmlDocument.parse(response.body);
-    var files = await WebdavResponseParser().parseFiles(xml);
+    final apiFiles = await api.FileParser().parse(response.body);
     // _log.fine("[list] Parsed files: [$files]");
     bool hasNoMediaMarker = false;
-    files = files
+    final files = apiFiles
+        .map(ApiFileConverter.fromApi)
         .forEachLazy((f) {
           if (file_util.isNoMediaMarker(f)) {
             hasNoMediaMarker = true;

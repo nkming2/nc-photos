@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/android/self_signed_cert.dart';
-import 'package:nc_photos/type.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/type.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';

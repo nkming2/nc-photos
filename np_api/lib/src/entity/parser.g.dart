@@ -1,15 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'webdav_response_parser.dart';
+part of 'parser.dart';
 
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
-extension _$WebdavResponseParserNpLog on WebdavResponseParser {
+extension _$XmlResponseParserNpLog on XmlResponseParser {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log =
-      Logger("entity.webdav_response_parser.WebdavResponseParser");
+  static final log = Logger("src.entity.parser.XmlResponseParser");
 }

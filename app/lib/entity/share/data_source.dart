@@ -2,14 +2,16 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/type.dart';
+import 'package:nc_photos/np_api_util.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'data_source.g.dart';
 
@@ -22,63 +24,69 @@ class ShareRemoteDataSource implements ShareDataSource {
     bool? isIncludeReshare,
   }) async {
     _log.info("[list] ${file.path}");
-    final response = await Api(account).ocs().filesSharing().shares().get(
-          path: file.strippedPath,
-          reshares: isIncludeReshare,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get(
+              path: file.strippedPath,
+              reshares: isIncludeReshare,
+            );
     return _onListResult(response);
   }
 
   @override
   listDir(Account account, File dir) async {
     _log.info("[listDir] ${dir.path}");
-    final response = await Api(account).ocs().filesSharing().shares().get(
-          path: dir.strippedPath,
-          subfiles: true,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get(
+              path: dir.strippedPath,
+              subfiles: true,
+            );
     return _onListResult(response);
   }
 
   @override
   listAll(Account account) async {
     _log.info("[listAll] $account");
-    final response = await Api(account).ocs().filesSharing().shares().get();
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get();
     return _onListResult(response);
   }
 
   @override
   reverseList(Account account, File file) async {
     _log.info("[reverseList] ${file.path}");
-    final response = await Api(account).ocs().filesSharing().shares().get(
-          path: file.strippedPath,
-          sharedWithMe: true,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get(
+              path: file.strippedPath,
+              sharedWithMe: true,
+            );
     return _onListResult(response);
   }
 
   @override
   reverseListAll(Account account) async {
     _log.info("[reverseListAll] $account");
-    final response = await Api(account).ocs().filesSharing().shares().get(
-          sharedWithMe: true,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get(
+              sharedWithMe: true,
+            );
     return _onListResult(response);
   }
 
   @override
   create(Account account, File file, String shareWith) async {
     _log.info("[create] Share '${file.path}' with '$shareWith'");
-    final response = await Api(account).ocs().filesSharing().shares().post(
-          path: file.strippedPath,
-          shareType: ShareType.user.toValue(),
-          shareWith: shareWith,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().post(
+              path: file.strippedPath,
+              shareType: ShareType.user.toValue(),
+              shareWith: shareWith,
+            );
     if (!response.isGood) {
       _log.severe("[create] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
 
     final json = jsonDecode(response.body);
@@ -93,17 +101,18 @@ class ShareRemoteDataSource implements ShareDataSource {
     String? password,
   }) async {
     _log.info("[createLink] Share '${file.path}' with a share link");
-    final response = await Api(account).ocs().filesSharing().shares().post(
-          path: file.strippedPath,
-          shareType: ShareType.publicLink.toValue(),
-          password: password,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().shares().post(
+              path: file.strippedPath,
+              shareType: ShareType.publicLink.toValue(),
+              password: password,
+            );
     if (!response.isGood) {
       _log.severe("[create] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
 
     final json = jsonDecode(response.body);
@@ -114,29 +123,31 @@ class ShareRemoteDataSource implements ShareDataSource {
   @override
   delete(Account account, Share share) async {
     _log.info("[delete] $share");
-    final response =
-        await Api(account).ocs().filesSharing().share(share.id).delete();
+    final response = await ApiUtil.fromAccount(account)
+        .ocs()
+        .filesSharing()
+        .share(share.id)
+        .delete();
     if (!response.isGood) {
       _log.severe("[delete] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
   }
 
-  List<Share> _onListResult(Response response) {
+  Future<List<Share>> _onListResult(api.Response response) async {
     if (!response.isGood) {
       _log.severe("[_onListResult] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
 
-    final json = jsonDecode(response.body);
-    final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
-    return _ShareParser().parseList(dataJson);
+    final apiShares = await api.ShareParser().parse(response.body);
+    return apiShares.map(ApiShareConverter.fromApi).toList();
   }
 }
 

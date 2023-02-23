@@ -92,8 +92,12 @@ dependencies:
   native_device_orientation: ^1.1.0
   nc_photos_plugin:
     path: ../plugin
+  np_api:
+    path: ../np_api
   np_codegen:
     path: ../codegen
+  np_common:
+    path: ../np_common
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.6
@@ -116,7 +120,6 @@ dependencies:
   visibility_detector: ^0.3.3
   wakelock: ^0.6.2
   woozy_search: ^2.0.3
-  xml: ^6.1.0
 
 dependency_overrides:
   video_player_android:

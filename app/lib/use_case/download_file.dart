@@ -1,9 +1,9 @@
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/download.dart';
 
 class DownloadFile {
@@ -18,7 +18,7 @@ class DownloadFile {
     return platform.DownloadBuilder().build(
       url: url,
       headers: {
-        "authorization": Api.getAuthorizationHeaderValue(account),
+        "authorization": AuthUtil.fromAccount(account).toHeaderValue(),
       },
       mimeType: file.contentType,
       filename: file.filename,

@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/np_api_util.dart';
 
 class AlbumBrowserAppBar extends StatelessWidget {
   const AlbumBrowserAppBar({
@@ -124,7 +124,7 @@ Widget? _getAppBarCover(
             cacheManager: CoverCacheManager.inst,
             imageUrl: coverPreviewUrl,
             httpHeaders: {
-              "Authorization": Api.getAuthorizationHeaderValue(account),
+              "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
             },
             filterQuality: FilterQuality.high,
             errorWidget: (context, url, error) {

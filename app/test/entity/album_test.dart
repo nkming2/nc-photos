@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -7,7 +6,8 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/type.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;

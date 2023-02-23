@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -15,6 +14,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 
 part 'data_source.g.dart';
 

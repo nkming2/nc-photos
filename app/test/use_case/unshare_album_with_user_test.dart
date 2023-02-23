@@ -1,8 +1,8 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/use_case/unshare_album_with_user.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';

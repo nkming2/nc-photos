@@ -1,6 +1,5 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -14,6 +13,7 @@ import 'package:nc_photos/use_case/list_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 
 part 'unshare_file_from_album.g.dart';
 

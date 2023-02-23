@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/home_search_suggestion.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
@@ -18,6 +17,7 @@ import 'package:nc_photos/widget/person_browser.dart';
 import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/tag_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 
 part 'home_search_suggestion.g.dart';
 

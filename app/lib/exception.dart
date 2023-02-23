@@ -1,4 +1,4 @@
-import 'package:nc_photos/api/api.dart';
+import 'package:np_api/np_api.dart';
 
 class CacheNotFoundException implements Exception {
   CacheNotFoundException([this.message]);

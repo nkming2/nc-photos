@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
@@ -13,6 +12,7 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/material3.dart';
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
@@ -282,7 +282,7 @@ class _ImageEditorState extends State<ImageEditor> {
       3072,
       _buildFilterList(),
       headers: {
-        "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+        "Authorization": AuthUtil.fromAccount(widget.account).toHeaderValue(),
       },
       isSaveToServer: c.pref.isSaveEditResultToServerOr(),
     );

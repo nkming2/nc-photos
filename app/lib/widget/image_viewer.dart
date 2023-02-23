@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -12,6 +11,7 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -99,7 +99,7 @@ class RemoteImageViewer extends StatefulWidget {
     LargeImageCacheManager.inst.getFileStream(
       _getImageUrl(account, file),
       headers: {
-        "Authorization": Api.getAuthorizationHeaderValue(account),
+        "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
       },
     );
   }
@@ -157,7 +157,7 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
                   widget.account, widget.file),
               httpHeaders: {
                 "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
+                    AuthUtil.fromAccount(widget.account).toHeaderValue(),
               },
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
@@ -170,7 +170,7 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
               imageUrl: _getImageUrl(widget.account, widget.file),
               httpHeaders: {
                 "Authorization":
-                    Api.getAuthorizationHeaderValue(widget.account),
+                    AuthUtil.fromAccount(widget.account).toHeaderValue(),
               },
               fit: BoxFit.contain,
               fadeInDuration: const Duration(),

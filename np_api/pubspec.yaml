@@ -1,0 +1,75 @@
+name: np_api
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  equatable: ^2.0.0
+  flutter:
+    sdk: flutter
+  http: ^0.13.1
+  logging: ^1.0.1
+  np_codegen:
+    path: ../codegen
+  np_common:
+    path: ../np_common
+  to_string:
+    git:
+      url: https://gitlab.com/nkming2/dart-to-string
+      ref: to_string-1.0.0
+      path: to_string
+  xml: ^6.1.0
+
+dev_dependencies:
+  build_runner: ^2.1.11
+  flutter_lints: ^2.0.0
+  np_codegen_build:
+    path: ../codegen_build
+  test: any
+  to_string_build:
+    git:
+      url: https://gitlab.com/nkming2/dart-to-string
+      ref: to_string_build-1.0.0
+      path: to_string_build
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # To add assets to your package, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+  #
+  # For details regarding assets in packages, see
+  # https://flutter.dev/assets-and-images/#from-packages
+  #
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # To add custom fonts to your package, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts in packages, see
+  # https://flutter.dev/custom-fonts/#from-packages

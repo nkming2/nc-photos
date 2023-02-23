@@ -1,4 +1,4 @@
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/string_extension.dart';
 
 extension DoubleExtension on double {
   /// Same as toStringAsFixed but with trailing zeros truncated

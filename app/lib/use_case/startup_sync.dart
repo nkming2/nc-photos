@@ -9,11 +9,11 @@ import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
-import 'package:nc_photos/type.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/use_case/sync_person.dart';
 import 'package:nc_photos/use_case/sync_tag.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/type.dart';
 
 part 'startup_sync.g.dart';
 

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:nc_photos/type.dart';
+import 'package:np_common/type.dart';
 import 'package:path/path.dart' as path_lib;
 
 int compareFileDescriptorDateTimeDescending(

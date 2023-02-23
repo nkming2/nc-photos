@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
-import 'package:nc_photos/ci_string.dart';
+import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/type.dart';
+import 'package:nc_photos/np_api_util.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'data_source.g.dart';
 
@@ -16,10 +18,11 @@ class ShareeRemoteDataSource implements ShareeDataSource {
   @override
   list(Account account) async {
     _log.info("[list]");
-    final response = await Api(account).ocs().filesSharing().sharees().get(
-          itemType: "file",
-          lookup: false,
-        );
+    final response =
+        await ApiUtil.fromAccount(account).ocs().filesSharing().sharees().get(
+              itemType: "file",
+              lookup: false,
+            );
     if (!response.isGood) {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
@@ -28,9 +31,8 @@ class ShareeRemoteDataSource implements ShareeDataSource {
               "Server responed with an error: HTTP ${response.statusCode}");
     }
 
-    final json = jsonDecode(response.body);
-    final sharees = _ShareeParser()(json);
-    return sharees;
+    final apiShares = await api.ShareeParser().parse(response.body);
+    return apiShares.map(ApiShareeConverter.fromApi).toList();
   }
 }
 

@@ -9,7 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_sharee.dart';
 import 'package:nc_photos/bloc/search_suggestion.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -21,6 +20,7 @@ import 'package:nc_photos/use_case/unshare_album_with_user.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 
 part 'share_album_dialog.g.dart';
 

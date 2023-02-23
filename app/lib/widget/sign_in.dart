@@ -12,12 +12,12 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/pref_util.dart' as pref_util;
-import 'package:nc_photos/string_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/connect.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/string_extension.dart';
 
 part 'sign_in.g.dart';
 

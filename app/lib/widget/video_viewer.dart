@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
@@ -110,7 +110,7 @@ class _VideoViewerState extends State<VideoViewer>
       _controller = VideoPlayerController.network(
         url,
         httpHeaders: {
-          "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+          "Authorization": AuthUtil.fromAccount(widget.account).toHeaderValue(),
         },
       );
       await _controller.initialize();

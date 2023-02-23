@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/np_api_util.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -96,7 +96,7 @@ class AppPasswordExchangeBloc
 
   /// Query the app password for [account]
   static Future<String> _exchangePassword(Account account) async {
-    final response = await Api(account).request(
+    final response = await ApiUtil.fromAccount(account).request(
       "GET",
       "ocs/v2.php/core/getapppassword",
       header: {

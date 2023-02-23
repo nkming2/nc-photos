@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:nc_photos/account.dart';
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_api/src/type.dart';
+import 'package:np_api/src/util.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:to_string/to_string.dart';
 import 'package:xml/xml.dart';
 
 part 'api.g.dart';
@@ -16,52 +13,11 @@ part 'files_api.dart';
 part 'files_sharing_api.dart';
 part 'systemtag_api.dart';
 
-@toString
-class Response {
-  Response(this.statusCode, this.headers, this.body);
-
-  bool get isGood => _isHttpStatusGood(statusCode);
-
-  @override
-  String toString() => _$toString();
-
-  final int statusCode;
-  @Format(r"...")
-  final Map<String, String> headers;
-
-  /// Content of the response body, String if isResponseString == true during
-  /// request, Uint8List otherwise
-  @Format(
-      r"${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}")
-  final dynamic body;
-}
-
-class BasicAuth {
-  BasicAuth(this.username, this.password);
-
-  BasicAuth.fromAccount(Account account)
-      : this(
-          account.username2,
-          account.password,
-        );
-
-  @override
-  toString() {
-    final authString = base64.encode(utf8.encode("$username:$password"));
-    return "Basic $authString";
-  }
-
-  final String username;
-  final String password;
-}
-
 @npLog
 class Api {
-  Api(Account account)
-      : _baseUrl = Uri.parse(account.url),
-        _auth = BasicAuth.fromAccount(account);
+  const Api(this.baseUrl, BasicAuth this.auth);
 
-  Api.fromBaseUrl(Uri baseUrl) : _baseUrl = baseUrl;
+  const Api.fromBaseUrl(this.baseUrl) : auth = null;
 
   ApiFiles files() => ApiFiles(this);
 
@@ -70,10 +26,6 @@ class Api {
   ApiSystemtags systemtags() => ApiSystemtags(this);
 
   ApiSystemtagsRelations systemtagsRelations() => ApiSystemtagsRelations(this);
-
-  static String getAuthorizationHeaderValue(Account account) {
-    return BasicAuth.fromAccount(account).toString();
-  }
 
   Future<Response> request(
     String method,
@@ -86,9 +38,9 @@ class Api {
   }) async {
     final url = _makeUri(endpoint, queryParameters: queryParameters);
     final req = http.Request(method, url);
-    if (_auth != null) {
+    if (auth != null) {
       req.headers.addAll({
-        "authorization": _auth.toString(),
+        "authorization": auth!.toHeaderValue(),
       });
     }
     if (header != null) {
@@ -104,7 +56,7 @@ class Api {
     }
     final response =
         await http.Response.fromStream(await http.Client().send(req));
-    if (!_isHttpStatusGood(response.statusCode)) {
+    if (!isHttpStatusGood(response.statusCode)) {
       if (response.statusCode == 404) {
         _log.severe(
           "[request] HTTP $method (${response.statusCode}): $endpoint",
@@ -124,19 +76,17 @@ class Api {
     String endpoint, {
     Map<String, String>? queryParameters,
   }) {
-    final path = _baseUrl.path + "/$endpoint";
-    if (_baseUrl.scheme == "http") {
-      return Uri.http(_baseUrl.authority, path, queryParameters);
+    final path = "${baseUrl.path}/$endpoint";
+    if (baseUrl.scheme == "http") {
+      return Uri.http(baseUrl.authority, path, queryParameters);
     } else {
-      return Uri.https(_baseUrl.authority, path, queryParameters);
+      return Uri.https(baseUrl.authority, path, queryParameters);
     }
   }
 
-  final Uri _baseUrl;
-  BasicAuth? _auth;
+  final Uri baseUrl;
+  final BasicAuth? auth;
 }
-
-bool _isHttpStatusGood(int status) => status ~/ 100 == 2;
 
 class ApiOcs {
   ApiOcs(this._api);

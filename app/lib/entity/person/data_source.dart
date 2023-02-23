@@ -2,13 +2,15 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/type.dart';
+import 'package:nc_photos/np_api_util.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/type.dart';
 
 part 'data_source.g.dart';
 
@@ -19,18 +21,21 @@ class PersonRemoteDataSource implements PersonDataSource {
   @override
   list(Account account) async {
     _log.info("[list] $account");
-    final response = await Api(account).ocs().facerecognition().persons().get();
+    final response = await ApiUtil.fromAccount(account)
+        .ocs()
+        .facerecognition()
+        .persons()
+        .get();
     if (!response.isGood) {
       _log.severe("[list] Failed requesting server: $response");
       throw ApiException(
-          response: response,
-          message:
-              "Server responed with an error: HTTP ${response.statusCode}");
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
     }
 
-    final json = jsonDecode(response.body);
-    final List<JsonObj> dataJson = json["ocs"]["data"].cast<JsonObj>();
-    return _PersonParser().parseList(dataJson);
+    final apiPersons = await api.PersonParser().parse(response.body);
+    return apiPersons.map(ApiPersonConverter.fromApi).toList();
   }
 }
 

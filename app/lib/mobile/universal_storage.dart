@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:nc_photos/platform/universal_storage.dart' as itf;
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 

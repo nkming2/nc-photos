@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -19,6 +18,7 @@ import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:tuple/tuple.dart';
 
 class FilesBuilder {

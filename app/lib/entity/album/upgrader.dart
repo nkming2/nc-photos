@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/type.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 import 'package:tuple/tuple.dart';
 
 part 'upgrader.g.dart';

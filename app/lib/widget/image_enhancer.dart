@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -18,6 +17,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -191,7 +191,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxHeightOr(),
           args["iteration"] ?? 8,
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );
@@ -205,7 +206,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxHeightOr(),
           args["radius"] ?? 16,
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );
@@ -218,7 +220,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );
@@ -235,7 +238,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           args["styleUri"],
           args["weight"],
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );
@@ -249,7 +253,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxHeightOr(),
           args["weight"],
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );
@@ -262,7 +267,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
           headers: {
-            "Authorization": Api.getAuthorizationHeaderValue(widget.account),
+            "Authorization":
+                AuthUtil.fromAccount(widget.account).toHeaderValue(),
           },
           isSaveToServer: widget.isSaveToServer,
         );

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/cache_manager_util.dart';
@@ -17,6 +16,7 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -102,7 +102,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
                   imageUrl: previewUrl,
                   httpHeaders: {
                     "Authorization":
-                        Api.getAuthorizationHeaderValue(widget.account),
+                        AuthUtil.fromAccount(widget.account).toHeaderValue(),
                   },
                   fadeInDuration: const Duration(),
                   filterQuality: FilterQuality.high,

@@ -6,12 +6,12 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_tag.dart';
 import 'package:nc_photos/bloc/search_suggestion.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
+import 'package:np_common/ci_string.dart';
 
 class TagPickerDialog extends StatefulWidget {
   const TagPickerDialog({

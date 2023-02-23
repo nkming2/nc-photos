@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;

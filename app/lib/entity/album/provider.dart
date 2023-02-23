@@ -9,8 +9,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/type.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 
 part 'provider.g.dart';

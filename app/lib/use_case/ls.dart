@@ -1,6 +1,6 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/string_extension.dart';
 
 class Ls {
   Ls(this.fileRepo);

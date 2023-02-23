@@ -1,14 +1,14 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
+import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
-import 'package:nc_photos/entity/webdav_response_parser.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/np_api_util.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
-import 'package:xml/xml.dart';
 
 part 'data_source.g.dart';
 
@@ -20,7 +20,7 @@ class TaggedFileRemoteDataSource implements TaggedFileDataSource {
   list(Account account, File dir, List<Tag> tags) async {
     _log.info(
         "[list] ${tags.map((t) => t.displayName).toReadableString()} under ${dir.path}");
-    final response = await Api(account).files().report(
+    final response = await ApiUtil.fromAccount(account).files().report(
           path: dir.path,
           systemtag: tags.map((t) => t.id).toList(),
         );
@@ -32,7 +32,7 @@ class TaggedFileRemoteDataSource implements TaggedFileDataSource {
               "Server responed with an error: HTTP ${response.statusCode}");
     }
 
-    final xml = XmlDocument.parse(response.body);
-    return WebdavResponseParser().parseTaggedFiles(xml);
+    final apiTaggedFiles = await api.TaggedFileParser().parse(response.body);
+    return apiTaggedFiles.map(ApiTaggedFileConverter.fromApi).toList();
   }
 }

@@ -1,11 +1,11 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
 
 bool isSupportedMime(String mime) => supportedFormatMimes.contains(mime);

@@ -1,4 +1,4 @@
-import 'package:nc_photos/ci_string.dart';
+import 'package:np_common/ci_string.dart';
 
 /// Convert a ISO 3166-1 alpha-2 code into country name
 String? alpha2CodeToName(String cc) => _ccMap.byCc(cc);

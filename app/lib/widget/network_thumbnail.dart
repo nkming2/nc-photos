@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/np_api_util.dart';
 
 /// A square thumbnail widget for a file
 class NetworkRectThumbnail extends StatelessWidget {
@@ -46,7 +46,7 @@ class NetworkRectThumbnail extends StatelessWidget {
         imageUrl: imageUrl,
         // imageUrl: "",
         httpHeaders: {
-          "Authorization": Api.getAuthorizationHeaderValue(account),
+          "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
         },
         fadeInDuration: const Duration(),
         filterQuality: FilterQuality.high,

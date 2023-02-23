@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/ci_string.dart';
+import 'package:np_common/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 

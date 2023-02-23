@@ -1,11 +1,10 @@
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/webdav_response_parser.dart';
+import 'package:np_api/src/entity/entity.dart';
+import 'package:np_api/src/entity/file_parser.dart';
 import 'package:test/test.dart';
-import 'package:xml/xml.dart';
 
 void main() {
-  group("WebdavFileParser", () {
-    group("parseFiles", () {
+  group("FileParser", () {
+    group("parse", () {
       test("file", _files);
       test("file w/ 404 properties", _files404props);
       test("file w/ metadata", _filesMetadata);
@@ -19,7 +18,7 @@ void main() {
 }
 
 Future<void> _files() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -41,11 +40,11 @@ Future<void> _files() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      href: "/remote.php/dav/files/admin/Nextcloud intro.mp4",
       contentLength: 3963036,
       contentType: "video/mp4",
       etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
@@ -58,7 +57,7 @@ Future<void> _files() async {
 }
 
 Future<void> _files404props() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -87,11 +86,11 @@ Future<void> _files404props() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      href: "/remote.php/dav/files/admin/Nextcloud intro.mp4",
       contentLength: 3963036,
       contentType: "video/mp4",
       etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
@@ -104,7 +103,7 @@ Future<void> _files404props() async {
 }
 
 Future<void> _filesMetadata() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -127,11 +126,11 @@ Future<void> _filesMetadata() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      href: "/remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
       contentLength: 797325,
       contentType: "image/jpeg",
       etag: "8950e39a034e369237d9285e2d815a50",
@@ -139,18 +138,16 @@ Future<void> _filesMetadata() async {
       hasPreview: true,
       fileId: 123,
       isCollection: false,
-      metadata: Metadata(
-        lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
-        fileEtag: "8950e39a034e369237d9285e2d815a50",
-        imageWidth: 3000,
-        imageHeight: 2000,
-      ),
+      customProperties: {
+        "com.nkming.nc_photos:metadata":
+            "{\"version\":2,\"lastUpdated\":\"2021-01-02T03:04:05.678Z\",\"fileEtag\":\"8950e39a034e369237d9285e2d815a50\",\"imageWidth\":3000,\"imageHeight\":2000}",
+      },
     ),
   ]);
 }
 
 Future<void> _filesIsArchived() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -172,24 +169,26 @@ Future<void> _filesIsArchived() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      href: "/remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
       contentLength: 797325,
       contentType: "image/jpeg",
       etag: "8950e39a034e369237d9285e2d815a50",
       lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
       hasPreview: true,
       isCollection: false,
-      isArchived: true,
+      customProperties: {
+        "com.nkming.nc_photos:is-archived": "true",
+      },
     ),
   ]);
 }
 
 Future<void> _filesOverrideDateTime() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -211,24 +210,26 @@ Future<void> _filesOverrideDateTime() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
+      href: "/remote.php/dav/files/admin/Photos/Nextcloud community.jpg",
       contentLength: 797325,
       contentType: "image/jpeg",
       etag: "8950e39a034e369237d9285e2d815a50",
       lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
       hasPreview: true,
       isCollection: false,
-      overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
+      customProperties: {
+        "com.nkming.nc_photos:override-date-time": "2021-01-02T03:04:05.000Z",
+      },
     ),
   ]);
 }
 
 Future<void> _filesMultiple() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -266,11 +267,11 @@ Future<void> _filesMultiple() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      href: "/remote.php/dav/files/admin/Nextcloud intro.mp4",
       contentLength: 3963036,
       contentType: "video/mp4",
       etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
@@ -280,7 +281,7 @@ Future<void> _filesMultiple() async {
       isCollection: false,
     ),
     File(
-      path: "remote.php/dav/files/admin/Nextcloud.png",
+      href: "/remote.php/dav/files/admin/Nextcloud.png",
       contentLength: 50598,
       contentType: "image/png",
       etag: "48689d5b17c449d9db492ffe8f7ab8a6",
@@ -288,18 +289,16 @@ Future<void> _filesMultiple() async {
       hasPreview: true,
       fileId: 124,
       isCollection: false,
-      metadata: Metadata(
-        fileEtag: "48689d5b17c449d9db492ffe8f7ab8a6",
-        imageWidth: 500,
-        imageHeight: 500,
-        lastUpdated: DateTime.utc(2021, 1, 2, 3, 4, 5, 678),
-      ),
+      customProperties: {
+        "com.nkming.nc_photos:metadata":
+            "{\"version\":2,\"lastUpdated\":\"2021-01-02T03:04:05.678000Z\",\"fileEtag\":\"48689d5b17c449d9db492ffe8f7ab8a6\",\"imageWidth\":500,\"imageHeight\":500}",
+      },
     ),
   ]);
 }
 
 Future<void> _filesDir() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -329,11 +328,11 @@ Future<void> _filesDir() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Photos",
+      href: "/remote.php/dav/files/admin/Photos/",
       etag: "123456789abcd",
       lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
       isCollection: true,
@@ -344,7 +343,7 @@ Future<void> _filesDir() async {
 }
 
 Future<void> _filesServerHostedInSubdir() async {
-  final xml = XmlDocument.parse("""
+  const xml = """
 <?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:"
 	xmlns:s="http://sabredav.org/ns"
@@ -366,11 +365,11 @@ Future<void> _filesServerHostedInSubdir() async {
 		</d:propstat>
 	</d:response>
 </d:multistatus>
-""");
-  final results = await WebdavResponseParser().parseFiles(xml);
+""";
+  final results = await FileParser().parse(xml);
   expect(results, [
     File(
-      path: "remote.php/dav/files/admin/Nextcloud intro.mp4",
+      href: "/nextcloud/remote.php/dav/files/admin/Nextcloud intro.mp4",
       contentLength: 3963036,
       contentType: "video/mp4",
       etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",

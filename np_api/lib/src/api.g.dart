@@ -10,21 +10,21 @@ extension _$ApiNpLog on Api {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.Api");
+  static final log = Logger("src.api.Api");
 }
 
 extension _$ApiOcsDavDirectNpLog on ApiOcsDavDirect {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsDavDirect");
+  static final log = Logger("src.api.ApiOcsDavDirect");
 }
 
 extension _$ApiOcsFacerecognitionPersonsNpLog on ApiOcsFacerecognitionPersons {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsFacerecognitionPersons");
+  static final log = Logger("src.api.ApiOcsFacerecognitionPersons");
 }
 
 extension _$ApiOcsFacerecognitionPersonFacesNpLog
@@ -32,58 +32,47 @@ extension _$ApiOcsFacerecognitionPersonFacesNpLog
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsFacerecognitionPersonFaces");
+  static final log = Logger("src.api.ApiOcsFacerecognitionPersonFaces");
 }
 
 extension _$ApiFilesNpLog on ApiFiles {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiFiles");
+  static final log = Logger("src.api.ApiFiles");
 }
 
 extension _$ApiOcsFilesSharingSharesNpLog on ApiOcsFilesSharingShares {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsFilesSharingShares");
+  static final log = Logger("src.api.ApiOcsFilesSharingShares");
 }
 
 extension _$ApiOcsFilesSharingShareNpLog on ApiOcsFilesSharingShare {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsFilesSharingShare");
+  static final log = Logger("src.api.ApiOcsFilesSharingShare");
 }
 
 extension _$ApiOcsFilesSharingShareesNpLog on ApiOcsFilesSharingSharees {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiOcsFilesSharingSharees");
+  static final log = Logger("src.api.ApiOcsFilesSharingSharees");
 }
 
 extension _$ApiSystemtagsNpLog on ApiSystemtags {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiSystemtags");
+  static final log = Logger("src.api.ApiSystemtags");
 }
 
 extension _$ApiSystemtagsRelationsFilesNpLog on ApiSystemtagsRelationsFiles {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.api.ApiSystemtagsRelationsFiles");
-}
-
-// **************************************************************************
-// ToStringGenerator
-// **************************************************************************
-
-extension _$ResponseToString on Response {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "Response {statusCode: $statusCode, headers: ..., body: ${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}}";
-  }
+  static final log = Logger("src.api.ApiSystemtagsRelationsFiles");
 }

@@ -1,4 +1,4 @@
-import 'package:nc_photos/string_extension.dart';
+import 'package:np_common/string_extension.dart';
 
 /// Case-insensitive string
 class CiString implements Comparable<Object> {

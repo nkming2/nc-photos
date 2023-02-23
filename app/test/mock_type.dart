@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/ci_string.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/favorite.dart';
@@ -19,6 +18,7 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/future_util.dart' as future_util;
 import 'package:nc_photos/or_null.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:path/path.dart' as path_lib;
 
 /// Mock of [AlbumRepo] where all methods will throw UnimplementedError
