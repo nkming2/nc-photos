@@ -4,7 +4,7 @@ import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
 import 'package:test/test.dart';
 
-import '../test_util.dart' as util;
+import '../../test_util.dart' as util;
 
 void main() {
   group("SqliteDbExtension", () {
