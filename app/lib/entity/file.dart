@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -93,7 +94,7 @@ class Metadata with EquatableMixin {
     this.imageWidth,
     this.imageHeight,
     this.exif,
-  }) : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc();
+  }) : lastUpdated = (lastUpdated ?? clock.now()).toUtc();
 
   @override
   // ignore: hash_and_equals

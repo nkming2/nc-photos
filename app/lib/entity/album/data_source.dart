@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:clock/clock.dart';
 import 'package:drift/drift.dart' as sql;
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -94,7 +95,7 @@ class AlbumRemoteDataSource implements AlbumDataSource {
 
   String _makeAlbumFileName() {
     // just make up something
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final timestamp = clock.now().millisecondsSinceEpoch;
     final random = Random().nextInt(0xFFFFFF);
     return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}.nc_album.json";
   }

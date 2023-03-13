@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -48,7 +49,7 @@ class AddSelectionToAlbumHandler {
           final selected = selectedFiles
               .map((f) => AlbumFileItem(
                     addedBy: account.userId,
-                    addedAt: DateTime.now(),
+                    addedAt: clock.now(),
                     file: f,
                   ))
               .toList();

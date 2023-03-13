@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -134,7 +135,7 @@ class _PhotoListItemBuilder {
 
   PhotoListItemBuilderResult _fromSortedItems(
       Account account, List<FileDescriptor> files) {
-    final today = DateTime.now();
+    final today = clock.now();
     final memoryAlbumHelper = smartAlbumConfig != null
         ? MemoryAlbumHelper(
             today: today, dayRange: smartAlbumConfig!.memoriesDayRange)

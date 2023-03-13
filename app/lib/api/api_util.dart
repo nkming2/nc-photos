@@ -1,6 +1,7 @@
 /// Helper functions working with remote Nextcloud server
 import 'dart:convert';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -193,13 +194,13 @@ class InitiateLoginResponse {
 class InitiateLoginPollOptions {
   InitiateLoginPollOptions(this.token, String endpoint)
       : endpoint = Uri.parse(endpoint),
-        _validUntil = DateTime.now().add(const Duration(minutes: 20));
+        _validUntil = clock.now().add(const Duration(minutes: 20));
 
   @override
   String toString() => _$toString();
 
   bool isTokenValid() {
-    return DateTime.now().isBefore(_validUntil);
+    return clock.now().isBefore(_validUntil);
   }
 
   @Format(r"${kDebugMode ? $? : '***'}")

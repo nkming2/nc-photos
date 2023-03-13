@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/date_time_extension.dart';
@@ -41,7 +42,7 @@ class MemoryAlbumHelper {
   MemoryAlbumHelper({
     DateTime? today,
     required int dayRange,
-  })  : today = (today?.toLocal() ?? DateTime.now()).toMidnight(),
+  })  : today = (today?.toLocal() ?? clock.now()).toMidnight(),
         dayRange = math.max(dayRange, 0);
 
   void addFile(FileDescriptor f) {

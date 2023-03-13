@@ -38,6 +38,7 @@ dependencies:
   bloc_concurrency: ^0.2.0
   cached_network_image: ^3.2.1
   circular_reveal_animation: ^2.0.1
+  clock: ^1.1.1
   collection: ^1.15.0
   connectivity_plus: ^2.0.2
   copy_with:

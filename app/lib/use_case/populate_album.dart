@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -56,7 +57,7 @@ class PopulateAlbum {
         }
         products.addAll((result as List).cast<File>().map((f) => AlbumFileItem(
               addedBy: account.userId,
-              addedAt: DateTime.now(),
+              addedAt: clock.now(),
               file: f,
             )));
       }
@@ -73,7 +74,7 @@ class PopulateAlbum {
     final files = await ListTaggedFile(c)(account, provider.tags);
     products.addAll(files.map((f) => AlbumFileItem(
           addedBy: account.userId,
-          addedAt: DateTime.now(),
+          addedAt: clock.now(),
           file: f,
         )));
     return products;
@@ -93,7 +94,7 @@ class PopulateAlbum {
         .where((f) => file_util.isSupportedFormat(f))
         .map((f) => AlbumFileItem(
               addedBy: account.userId,
-              addedAt: DateTime.now(),
+              addedAt: clock.now(),
               file: f,
             ))
         .toList();

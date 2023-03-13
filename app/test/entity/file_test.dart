@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -837,7 +838,7 @@ void main() {
       });
 
       test("lastModified", () {
-        final now = DateTime.now();
+        final now = clock.now();
         final file = src.copyWith(lastModified: now);
         expect(
             file,
@@ -1022,7 +1023,7 @@ void main() {
       });
 
       test("trashbinDeletionTime", () {
-        final now = DateTime.now();
+        final now = clock.now();
         final file = src.copyWith(trashbinDeletionTime: now);
         expect(
             file,

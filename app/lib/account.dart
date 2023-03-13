@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -52,7 +53,7 @@ class Account with EquatableMixin {
   }
 
   static String newId() {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final timestamp = clock.now().millisecondsSinceEpoch;
     final random = Random().nextInt(0xFFFFFF);
     return "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, '0')}";
   }

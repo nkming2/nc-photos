@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -46,7 +47,7 @@ class _SplashState extends State<Splash> {
 
   Future<void> _doWork() async {
     if (Pref().getFirstRunTime() == null) {
-      await Pref().setFirstRunTime(DateTime.now().millisecondsSinceEpoch);
+      await Pref().setFirstRunTime(clock.now().millisecondsSinceEpoch);
     }
     if (_shouldUpgrade()) {
       setState(() {

@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
@@ -100,7 +101,8 @@ DateTime getBestDateTime({
   DateTime? overrideDateTime,
   DateTime? dateTimeOriginal,
   DateTime? lastModified,
-}) => overrideDateTime ?? dateTimeOriginal ?? lastModified ?? DateTime.now().toUtc();
+}) =>
+    overrideDateTime ?? dateTimeOriginal ?? lastModified ?? clock.now().toUtc();
 
 final supportedFormatMimes = [
   "image/jpeg",

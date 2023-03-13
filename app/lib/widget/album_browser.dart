@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -670,7 +671,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
           items: [
             AlbumLabelItem(
               addedBy: widget.account.userId,
-              addedAt: DateTime.now(),
+              addedAt: clock.now(),
               text: value,
             ),
             ..._sortedItems,

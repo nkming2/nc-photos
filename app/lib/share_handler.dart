@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
@@ -317,7 +318,7 @@ class ShareHandler {
       FileRepo fileRepo, Account account, String name) async {
     // add a intermediate dir to allow shared dirs having the same name. Since
     // the dir names are public, we can't add random pre/suffix
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final timestamp = clock.now().millisecondsSinceEpoch;
     final random = Random().nextInt(0xFFFFFF);
     final dirName =
         "${timestamp.toRadixString(16)}-${random.toRadixString(16).padLeft(6, "0")}";

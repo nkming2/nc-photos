@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -35,7 +36,7 @@ class Album with EquatableMixin {
     this.shares,
     this.albumFile,
     int? savedVersion,
-  })  : lastUpdated = (lastUpdated ?? DateTime.now()).toUtc(),
+  })  : lastUpdated = (lastUpdated ?? clock.now()).toUtc(),
         savedVersion = savedVersion ?? version;
 
   static Album? fromJson(
@@ -227,7 +228,7 @@ class AlbumShare with EquatableMixin {
     required this.userId,
     this.displayName,
     DateTime? sharedAt,
-  }) : sharedAt = (sharedAt ?? DateTime.now()).toUtc();
+  }) : sharedAt = (sharedAt ?? clock.now()).toUtc();
 
   factory AlbumShare.fromJson(JsonObj json) {
     return AlbumShare(

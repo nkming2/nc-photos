@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
@@ -14,7 +15,7 @@ class DoubleTapExitHandler {
     if (!Pref().isDoubleTapExitOr()) {
       return true;
     }
-    final now = DateTime.now().toUtc();
+    final now = clock.now().toUtc();
     _lastBackButtonAt ??= now.subtract(const Duration(days: 1));
     if (now.difference(_lastBackButtonAt!) < const Duration(seconds: 5)) {
       return true;

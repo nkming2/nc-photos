@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
@@ -104,7 +105,7 @@ Future<void> _missing() async {
           fdMime: null,
           fdIsArchived: false,
           fdIsFavorite: false,
-          fdDateTime: DateTime.now(),
+          fdDateTime: clock.now(),
         ),
       ],
     ),

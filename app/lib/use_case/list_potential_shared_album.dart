@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -44,7 +45,7 @@ class ListPotentialSharedAlbum {
       final timestamp = int.parse(match.group(1)!, radix: 16);
       final time = DateTime.fromMillisecondsSinceEpoch(timestamp);
       _log.fine("[_checkFileName] Timestamp: $time");
-      if (time.isAfter(DateTime.now())) {
+      if (time.isAfter(clock.now())) {
         _log.warning("[_checkFileName] Invalid timestamp: ${f.path}");
         return false;
       }
