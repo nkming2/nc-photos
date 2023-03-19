@@ -26,7 +26,6 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
-import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -101,7 +100,7 @@ class Viewer extends StatefulWidget {
 class _ViewerState extends State<Viewer>
     with DisposableManagerMixin<Viewer>, ViewerControllersMixin<Viewer> {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _streamFilesView = widget.streamFiles;
   }
@@ -112,6 +111,10 @@ class _ViewerState extends State<Viewer>
     return Theme(
       data: buildDarkTheme(),
       child: Scaffold(
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: _isShowAppBar ? _buildAppBar(context) : null,
+        bottomNavigationBar: _isShowAppBar ? _buildBottomAppBar(context) : null,
         body: Builder(
           builder: (context) => _buildContent(context, originalBrightness),
         ),
@@ -147,67 +150,52 @@ class _ViewerState extends State<Viewer>
               setState(() {});
             },
           ),
-          _buildBottomAppBar(context),
-          _buildAppBar(context),
+          if (_isShowAppBar)
+            Container(
+              // + status bar height
+              height: kToolbarHeight + MediaQuery.of(context).padding.top,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0, -1),
+                  end: Alignment(0, 1),
+                  colors: [
+                    Color.fromARGB(192, 0, 0, 0),
+                    Color.fromARGB(0, 0, 0, 0),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     final index =
         _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
     final file = _streamFilesView[index];
-    return Wrap(
-      children: [
-        AnimatedVisibility(
-          opacity: _isShowAppBar ? 1.0 : 0.0,
-          duration: k.animationDurationNormal,
-          child: Stack(
-            children: [
-              Container(
-                // + status bar height
-                height: kToolbarHeight + MediaQuery.of(context).padding.top,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(0, -1),
-                    end: Alignment(0, 1),
-                    colors: [
-                      Color.fromARGB(192, 0, 0, 0),
-                      Color.fromARGB(0, 0, 0, 0),
-                    ],
-                  ),
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      actions: [
+        if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
+          (_pageStates[index]?.favoriteOverride ?? file.fdIsFavorite) == true
+              ? IconButton(
+                  icon: const Icon(Icons.star),
+                  tooltip: L10n.global().unfavoriteTooltip,
+                  onPressed: () => _onUnfavoritePressed(index),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.star_border),
+                  tooltip: L10n.global().favoriteTooltip,
+                  onPressed: () => _onFavoritePressed(index),
                 ),
-              ),
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                actions: [
-                  if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
-                    (_pageStates[index]?.favoriteOverride ??
-                                file.fdIsFavorite) ==
-                            true
-                        ? IconButton(
-                            icon: const Icon(Icons.star),
-                            tooltip: L10n.global().unfavoriteTooltip,
-                            onPressed: () => _onUnfavoritePressed(index),
-                          )
-                        : IconButton(
-                            icon: const Icon(Icons.star_border),
-                            tooltip: L10n.global().favoriteTooltip,
-                            onPressed: () => _onFavoritePressed(index),
-                          ),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      tooltip: L10n.global().detailsTooltip,
-                      onPressed: _onDetailsPressed,
-                    ),
-                  ],
-                ],
-              ),
-            ],
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            tooltip: L10n.global().detailsTooltip,
+            onPressed: _onDetailsPressed,
           ),
-        ),
+        ],
       ],
     );
   }
@@ -216,49 +204,37 @@ class _ViewerState extends State<Viewer>
     final index =
         _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
     final file = _streamFilesView[index];
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Material(
-        type: MaterialType.transparency,
-        child: AnimatedVisibility(
-          opacity: (_isShowAppBar && !_isDetailPaneActive) ? 1.0 : 0.0,
-          duration: !_isDetailPaneActive
-              ? k.animationDurationNormal
-              : const Duration(milliseconds: 1),
-          child: ViewerBottomAppBar(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.share_outlined),
-                tooltip: L10n.global().shareTooltip,
-                onPressed: () => _onSharePressed(context),
-              ),
-              if (features.isSupportEnhancement &&
-                  ImageEnhancer.isSupportedFormat(file)) ...[
-                IconButton(
-                  icon: const Icon(Icons.tune_outlined),
-                  tooltip: L10n.global().editTooltip,
-                  onPressed: () => _onEditPressed(context),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.auto_fix_high_outlined),
-                  tooltip: L10n.global().enhanceTooltip,
-                  onPressed: () => _onEnhancePressed(context),
-                ),
-              ],
-              IconButton(
-                icon: const Icon(Icons.download_outlined),
-                tooltip: L10n.global().downloadTooltip,
-                onPressed: _onDownloadPressed,
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_outlined),
-                tooltip: L10n.global().deleteTooltip,
-                onPressed: () => _onDeletePressed(context),
-              ),
-            ],
-          ),
+    return ViewerBottomAppBar(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.share_outlined),
+          tooltip: L10n.global().shareTooltip,
+          onPressed: () => _onSharePressed(context),
         ),
-      ),
+        if (features.isSupportEnhancement &&
+            ImageEnhancer.isSupportedFormat(file)) ...[
+          IconButton(
+            icon: const Icon(Icons.tune_outlined),
+            tooltip: L10n.global().editTooltip,
+            onPressed: () => _onEditPressed(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.auto_fix_high_outlined),
+            tooltip: L10n.global().enhanceTooltip,
+            onPressed: () => _onEnhancePressed(context),
+          ),
+        ],
+        IconButton(
+          icon: const Icon(Icons.download_outlined),
+          tooltip: L10n.global().downloadTooltip,
+          onPressed: _onDownloadPressed,
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete_outlined),
+          tooltip: L10n.global().deleteTooltip,
+          onPressed: () => _onDeletePressed(context),
+        ),
+      ],
     );
   }
 

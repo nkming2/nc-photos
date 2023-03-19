@@ -192,6 +192,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
         color: colorScheme.onInverseSurface,
       ),
       actionTextColor: colorScheme.inversePrimary,
+      behavior: SnackBarBehavior.floating,
     ),
     extensions: [
       M3(
