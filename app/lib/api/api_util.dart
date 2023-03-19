@@ -109,6 +109,12 @@ String getFacePreviewUrlRelative(
   return "index.php/apps/facerecognition/face/$faceId/thumb/$size";
 }
 
+String getAccountAvatarUrl(Account account, int size) =>
+    "${account.url}/${getAccountAvatarUrlRelative(account, size)}";
+
+String getAccountAvatarUrlRelative(Account account, int size) =>
+    "avatar/${account.userId}/$size";
+
 /// Initiate a login with Nextclouds login flow v2: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
 Future<InitiateLoginResponse> initiateLogin(Uri uri) async {
   final response = await Api.fromBaseUrl(uri).request(

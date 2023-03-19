@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/help_utils.dart' as help_utils;
@@ -39,19 +41,32 @@ class HomeSliverAppBar extends StatelessWidget {
           );
         },
         child: AppBarTitleContainer(
-          title: Text(accountLabel ?? account.address),
-          subtitle: accountLabel == null ? Text(account.username2) : null,
-          icon: isShowProgressIcon
-              ? const AppBarCircularProgressIndicator()
-              : (account.scheme == "http"
+          title: Row(
+            children: [
+              account.scheme == "http"
                   ? Icon(
                       Icons.no_encryption_outlined,
                       color: Theme.of(context).colorScheme.error,
+                      size: 16,
                     )
                   : Icon(
                       Icons.https,
                       color: Theme.of(context).colorScheme.primary,
-                    )),
+                      size: 16,
+                    ),
+              Expanded(
+                child: Text(
+                  accountLabel ?? account.address,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
+          ),
+          subtitle: accountLabel == null ? Text(account.username2) : null,
+          icon: isShowProgressIcon
+              ? const AppBarCircularProgressIndicator()
+              : _LeadingView(account: account),
         ),
       ),
       scrolledUnderBackgroundColor:
@@ -137,4 +152,24 @@ class _DarkModeSwitch extends StatelessWidget {
   }
 
   final ValueChanged<bool>? onChanged;
+}
+
+class _LeadingView extends StatelessWidget {
+  const _LeadingView({
+    required this.account,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: CachedNetworkImage(
+        imageUrl: api_util.getAccountAvatarUrl(account, 64),
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+      ),
+    );
+  }
+
+  final Account account;
 }
