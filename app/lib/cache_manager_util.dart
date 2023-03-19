@@ -40,7 +40,7 @@ class ThumbnailCacheManager {
     Config(
       key,
       stalePeriod: const Duration(days: 30),
-      maxNrOfCacheObjects: 20000,
+      maxNrOfCacheObjects: 50000,
     ),
   );
 }
