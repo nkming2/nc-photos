@@ -213,6 +213,14 @@
 			}
 		}
 	},
+	"connectingToServer2": "Esperando pela autorização do servidor",
+	"@connectingToServer2": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
+	"connectingToServerInstruction": "Por favor autentique pelo navegador",
+	"@connectingToServerInstruction": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
 	"nameInputHint": "Nome",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
@@ -231,11 +239,15 @@
 	},
 	"signInHeaderText": "Cadastre seu servidor Nextcloud",
 	"@signInHeaderText": {
-		"description": "Inform user what to do in sign in widget"
+		"description": "(deprecated, may be removed in the future)"
 	},
-	"signIn2faHintText": "Use uma senha de aplicativo caso tenha habilitado a autenticação de dois fatores na sua conta Nextcloud",
+	"signIn2faHintText": "Use uma senha de aplicativo se você possui 2fa habilitada no servidor",
 	"@signIn2faHintText": {
-		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+		"description": "(deprecated, may be removed in the future)"
+	},
+	"signInHeaderText2": "Nextcloud\nSLogar-se",
+	"@signInHeaderText2": {
+		"description": "Sign in to Nextcloud server"
 	},
 	"serverAddressInputHint": "Endereço do servidor",
 	"@serverAddressInputHint": {
@@ -301,6 +313,10 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
+	"settingsLanguageOptionSystemDefaultLabel": "O padrão do sistema",
+	"@settingsLanguageOptionSystemDefaultLabel": {
+		"description": "Follow the Android system language"
+	},
 	"settingsExifSupportTitle": "Suporte a EXIF",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
@@ -308,6 +324,14 @@
 	"settingsExifSupportTrueSubtitle": "Requer consumo de dados elevado",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsExifWifiOnlyTitle": "Processar EXIF somente pelo Wi-Fi",
+	"@settingsExifWifiOnlyTitle": {
+		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+	},
+	"settingsExifWifiOnlyFalseSubtitle": "Pode consumir dados móveis",
+	"@settingsExifWifiOnlyFalseSubtitle": {
+		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Memórias",
 	"@settingsMemoriesTitle": {
@@ -318,10 +342,11 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Conta",
-	"settingsAccountPageTitle": "Configurações da conta",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
+	"settingsAccountLabelTitle": "Apelido",
+	"@settingsAccountLabelTitle": {
+		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
 	},
+	"settingsAccountLabelDescription": "Set a label to be shown in place of the server URL",
 	"settingsIncludedFoldersTitle": "Pastas inclusas",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
@@ -346,50 +371,96 @@
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
 	},
-	"settingsViewerTitle": "Visualização",
-	"settingsViewerDescription": "Modifique a visualização de imagem e vídeo",
-	"settingsViewerPageTitle": "Configurações de visualização",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
+	"settingsPhotosDescription": "Customize os conteúdos mostrados na aba Fotos",
+	"@settingsPhotosDescription": {
+		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
 	},
-	"settingsScreenBrightnessTitle": "Brilho de tela",
-	"settingsScreenBrightnessDescription": "Sobreescreva o brilho de tela do sistema",
-	"settingsForceRotationTitle": "Ignorar a trava de rotação da tela",
-	"settingsForceRotationDescription": "Gira a tela mesmo que a rotação esteja desativada no sistema",
+	"settingsMemoriesRangeTitle": "Janela de data para memórias",
+	"@settingsMemoriesRangeTitle": {
+		"description": "How many adjacent days to be inclded in memories for a particular year"
+	},
+	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} dia} other{+-{range} dias}}",
+	"@settingsMemoriesRangeValueText": {
+		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+		"placeholders": {
+			"range": {
+				"example": "1"
+			}
+		}
+	},
+	"settingsViewerTitle": "Visualização",
+	"settingsViewerDescription": "Customize a visualização de image e video",
+	"settingsScreenBrightnessTitle": "Brilho da tela",
+	"settingsScreenBrightnessDescription": "Ignora o nivel de brilho do sistema",
+	"settingsForceRotationTitle": "Ignorar a trava de rotação do sistema",
+	"settingsForceRotationDescription": "Rodar a tela mesmo que a rotação do sistema estiver travada",
 	"settingsMapProviderTitle": "Provedor de mapa",
 	"settingsAlbumTitle": "Álbum",
-	"settingsAlbumDescription": "Personalizar os álbuns",
-	"settingsAlbumPageTitle": "Configurações do álbum",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
+	"settingsAlbumDescription": "Customize os albuns",
+	"settingsShowDateInAlbumTitle": "Agrupe as fotos por data",
+	"settingsShowDateInAlbumDescription": "Se aplica apenas quando está organizado cronologicamente",
+	"settingsImageEditTitle": "Editor",
+	"@settingsImageEditTitle": {
+		"description": "Include settings for image enhancements and the image editor"
 	},
-	"settingsShowDateInAlbumTitle": "Organize as fotos por data",
-	"settingsShowDateInAlbumDescription": "Aplica-se apenas quando os álbuns são organizados por data",
+	"settingsImageEditDescription": "Customize o editor de aprimoramento de imagens",
+	"settingsEnhanceMaxResolutionTitle2": "Resolução das imagens aprimoradas",
+	"settingsEnhanceMaxResolutionDescription": "Resoluções de entrara maiores que a determinada serão reduzidas. Fotos em alta resolução requerem significativamente mais memória RAM e processamento. Por gentileza reduza o parâmetro de resolução das imagens aprimoradas caso o app trave",
+	"settingsImageEditSaveResultsToServerTitle": "Salve os resultados diretamente no servidor",
+	"@settingsImageEditSaveResultsToServerTitle": {
+		"description": "Whether to save the edit/enhance results to server instead of the current device"
+	},
+	"settingsImageEditSaveResultsToServerTrueDescription": "Os resultados são salvos no servidor, e caso encontre problemas, salva localmente",
+	"settingsImageEditSaveResultsToServerFalseDescription": "Os resultados são salvos localmente",
 	"settingsThemeTitle": "Tema",
-	"settingsThemeDescription": "Personalize a aparência do app",
-	"settingsThemePageTitle": "Configurações de tema",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
+	"settingsThemeDescription": "Customize a aparência do app",
 	"settingsFollowSystemThemeTitle": "Seguir o tema do sistema",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
 	},
-	"settingsUseBlackInDarkThemeTitle": "Tema escuro",
+	"settingsSeedColorTitle": "Cor do tema",
+	"@settingsSeedColorTitle": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorDescription": "Pode ser usado para customizar todas as cores do app",
+	"@settingsSeedColorDescription": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorPickerTitle": "Escolha uma cor",
+	"@settingsSeedColorPickerTitle": {
+		"description": "Dialog to customize the colors used in app"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Tema mais escuro",
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
 	},
-	"settingsUseBlackInDarkThemeTrueDescription": "Use fundo preto no tema escuro",
+	"settingsUseBlackInDarkThemeTrueDescription": "Usar fundo com preto absoluto",
 	"@settingsUseBlackInDarkThemeTrueDescription": {
 		"description": "When black in dark theme is set to true"
 	},
-	"settingsUseBlackInDarkThemeFalseDescription": "Use fundo cinza no tema escuro",
+	"settingsUseBlackInDarkThemeFalseDescription": "Use fundo com cinza escuro",
 	"@settingsUseBlackInDarkThemeFalseDescription": {
 		"description": "When black in dark theme is set to false"
 	},
+	"settingsMiscellaneousTitle": "Miscelânea",
+	"settingsDoubleTapExitTitle": "Toque duas vezes para sair do app",
+	"@settingsDoubleTapExitTitle": {
+		"description": "If enabled, users need to tap the back button twice to exit app"
+	},
+	"settingsPhotosTabSortByNameTitle": "Organize fotos por nome do arquivo",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
+	},
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Novidades que não estão prontas ao uso do dia a dia",
-	"settingsExperimentalPageTitle": "Configurações experimentais",
+	"settingsExpertTitle": "Avançado",
+	"@settingsExpertTitle": {
+		"description": "Settings that must be tweaked with caution"
+	},
+	"settingsExpertWarningText": "Entenda os riscos e objetivos de cada opção antes de prosseguir",
+	"settingsClearCacheDatabaseTitle": "Clear file database",
+	"settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
+	"settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
 	"settingsAboutSectionTitle": "Sobre",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -594,7 +665,15 @@
 	"@sortOptionTimeDescendingLabel": {
 		"description": "Sort by time, in descending order"
 	},
-	"sortOptionAlbumNameLabel": "Nome do álbum",
+	"sortOptionFilenameAscendingLabel": "Por nome de arquivo",
+	"@sortOptionFilenameAscendingLabel": {
+		"description": "Sort by filename, in ascending order"
+	},
+	"sortOptionFilenameDescendingLabel": "Por nome de arquivo (Z-A)",
+	"@sortOptionFilenameDescendingLabel": {
+		"description": "Sort by filename, in descending order"
+	},
+	"sortOptionAlbumNameLabel": "Por nome do álbum",
 	"@sortOptionAlbumNameLabel": {
 		"description": "Sort by album name, in ascending order"
 	},
@@ -835,24 +914,33 @@
 	"@slideshowSetupDialogRepeatTitle": {
 		"description": "Whether to restart the slideshow from the beginning after the last slide"
 	},
+	"slideshowSetupDialogReverseTitle": "De trás pra frente",
+	"@slideshowSetupDialogReverseTitle": {
+		"description": "Se deve-se tocar o slideshow de trás pra frente"
+	},
 	"linkCopiedNotification": "Link copiado",
 	"@linkCopiedNotification": {
 		"description": "Copied the share link to clipboard"
 	},
-	"shareMethodDialogTitle": "Compartilhar com",
+	"shareMethodDialogTitle": "Compartilhe como",
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "File",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
+	"shareMethodPreviewTitle": "Previsão",
+	"@shareMethodPreviewTitle": {
+		"description": "Compartilhe uma previsão do arquivo"
 	},
-	"shareMethodFileDescription": "Baixa o arquivo e compartilha com outros apps",
+	"shareMethodPreviewDescription": "Compartilha um arquivo com qualidade menor para outros aplicativos (apenas para imagens)",
+	"shareMethodOriginalFileTitle": "Original file",
+	"@shareMethodOriginalFileTitle": {
+		"description": "Share the original file"
+	},
+	"shareMethodOriginalFileDescription": "Baixa o arquivo original e compartilhe com outros appps",
 	"shareMethodPublicLinkTitle": "Link público",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
 	},
-	"shareMethodPublicLinkDescription": "Cria um link púlbico através do servidor. Qualquer um com o link tem acesso ao arquivo",
+	"shareMethodPublicLinkDescription": "Cria um endereço público no servidor. Qualquer pessoa com o endereço pode acessar o arquivo",
 	"shareMethodPasswordLinkTitle": "Link protegido por senha",
 	"@shareMethodPasswordLinkTitle": {
 		"description": "Create a password protected share link on server and share it"
@@ -1022,7 +1110,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "CONSERTAR",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Consertar tudo",
@@ -1171,7 +1259,256 @@
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
 	},
-
+	"enhanceTooltip": "Aprimorar",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceButtonLabel": "APRIMORAR",
+	"enhanceIntroDialogTitle": "Aprimore uma foto",
+	"enhanceIntroDialogDescription": "Suas fotos são processadas localmente no aparelho. Por padrão, elas são reduzidas a 2048x1536. Você pode ajustar a resolução en configurações",
+	"enhanceLowLightTitle": "Retoque para pouca luz",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
+	"enhanceLowLightDescription": "Clareia as fotos tiradas em ambientes com pouca luz",
+	"enhanceLowLightParamBrightnessLabel": "Brilho",
+	"@enhanceLowLightParamBrightnessLabel": {
+		"description": "This parameter sets how much brighter the output will be"
+	},
+	"collectionEditedPhotosLabel": "Editatas (local)",
+	"@collectionEditedPhotosLabel": {
+		"description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+	},
+	"deletePermanentlyLocalConfirmationDialogContent": "Itens selecionados serão apagados permanentemente do aparelho.\n\nEssa ação é irreversível",
+	"@deletePermanentlyLocalConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items from the current device"
+	},
+	"enhancePortraitBlurTitle": "Desfoque para de retrato",
+	"@enhancePortraitBlurTitle": {
+		"description": "Blur the background of a photo"
+	},
+	"enhancePortraitBlurDescription": "Desfoca o plano de fundo das imagens. Funcioma melhor para retratos",
+	"enhancePortraitBlurParamBlurLabel": "Nível de desfoque",
+	"@enhancePortraitBlurParamBlurLabel": {
+		"description": "This parameter sets the radius of the blur filter"
+	},
+	"enhanceSuperResolution4xTitle": "Super-resolução (4x)",
+	"@enhanceSuperResolution4xTitle": {
+		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+	},
+	"enhanceSuperResolution4xDescription": "Aumenta as fotos em 4x (veja a Ajuda para detalhes)",
+	"enhanceStyleTransferTitle": "Transferir estilo",
+	"@enhanceStyleTransferTitle": {
+		"description": "Transfer the image style from a reference image to a photo"
+	},
+	"enhanceStyleTransferStyleDialogTitle": "Selecione um estilo",
+	"@enhanceStyleTransferStyleDialogTitle": {
+		"description": "Pick a reference image for the style transfer algorithm"
+	},
+	"enhanceStyleTransferStyleDialogDescription": "Transfere um estilo de uma imagem de referencia para outra",
+	"enhanceStyleTransferNoStyleSelectedNotification": "Por favor, selecione um estilo",
+	"@enhanceStyleTransferNoStyleSelectedNotification": {
+		"description": "Show this error if users did not pick a reference image"
+	},
+	"enhanceColorPopTitle": "Destaque de cores",
+	"@enhanceColorPopTitle": {
+		"description": "Desaturate the background of a photo"
+	},
+	"enhanceColorPopDescription": "Torna o fundo preto e branco. Funciona melhor com retratos",
+	"enhanceGenericParamWeightLabel": "Intensidade",
+	"@enhanceGenericParamWeightLabel": {
+		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+	},
+	"enhanceRetouchTitle": "Auto-retoque",
+	"@enhanceRetouchTitle": {
+		"description": "Automatically improve your photo"
+	},
+	"enhanceRetouchDescription": "Aprimora as fotos de forma automatizada. Melhora a matiz e saturação",
+	"doubleTapExitNotification": "Toque novamente pra sair",
+	"@doubleTapExitNotification": {
+		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+	},
+	"imageEditDiscardDialogTitle": "Descartar modificações?",
+	"@imageEditDiscardDialogTitle": {
+		"description": "Warn before dismissing image editor (e.g., user pressing back button)"
+	},
+	"imageEditDiscardDialogContent": "Suas mudanças não foram salvas",
+	"discardButtonLabel": "DESCARTAR",
+	"@discardButtonLabel": {
+		"description": "Discard the current unsaved content"
+	},
+	"saveTooltip": "SALVAR",
+	"@saveTooltip": {
+		"description": "Save the current content"
+	},
+	"imageEditColorBrightness": "Brilho",
+	"@imageEditColorBrightness": {
+		"description": "Adjust the brightness of an image"
+	},
+	"imageEditColorContrast": "Contrate",
+	"@imageEditColorContrast": {
+		"description": "Adjust the contrast of an image"
+	},
+	"imageEditColorWhitePoint": "Branco referencial",
+	"@imageEditColorWhitePoint": {
+		"description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+	},
+	"imageEditColorBlackPoint": "Preto referencial",
+	"@imageEditColorBlackPoint": {
+		"description": "Adjust the black point of an image"
+	},
+	"imageEditColorSaturation": "Saturação",
+	"@imageEditColorSaturation": {
+		"description": "Adjust the color saturation of an image"
+	},
+	"imageEditColorWarmth": "Temperatura de cor",
+	"@imageEditColorWarmth": {
+		"description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+	},
+	"imageEditColorTint": "Matiz",
+	"@imageEditColorTint": {
+		"description": "Shift colors from a green to a magenta tint"
+	},
+	"imageEditTitle": "Previsão das edições",
+	"@imageEditTitle": {
+		"description": "Title of the image editor"
+	},
+	"imageEditToolbarColorLabel": "Cor",
+	"@imageEditToolbarColorLabel": {
+		"description": "Label of the color tools. These can be used to adjust the color of an image"
+	},
+	"imageEditToolbarTransformLabel": "Transforme",
+	"@imageEditToolbarTransformLabel": {
+		"description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+	},
+	"imageEditTransformOrientation": "Orientação",
+	"@imageEditTransformOrientation": {
+		"description": "Change the orientation of the image, 90 degree per step"
+	},
+	"imageEditTransformOrientationClockwise": "Para a direita",
+	"@imageEditTransformOrientationClockwise": {
+		"description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformOrientationCounterclockwise": "Para a esquerda",
+	"@imageEditTransformOrientationCounterclockwise": {
+		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+	},
+	"imageEditTransformCrop": "Cortar",
+	"@imageEditTransformCrop": {
+		"description": "Crop the image"
+	},
+	"categoriesLabel": "Categorias",
+	"searchLandingPeopleListEmptyText": "Toque em ajuda para aprender como configurar",
+	"@searchLandingPeopleListEmptyText": {
+		"description": "Shown in the search landing page under the People section when there are no people"
+	},
+	"searchLandingCategoryVideosLabel": "Vídeos",
+	"@searchLandingCategoryVideosLabel": {
+		"description": "Search all videos"
+	},
+	"searchFilterButtonLabel": "FILTROS",
+	"@searchFilterButtonLabel": {
+		"description": "Modify search filters"
+	},
+	"searchFilterDialogTitle": "Filtros de buscaSearch filters",
+	"@searchFilterDialogTitle": {
+		"description": "Dialog to modify search filters"
+	},
+	"applyButtonLabel": "APLICAR",
+	"@applyButtonLabel": {
+		"description": "A confirmation button, typically in a dialog, that apply the current settings"
+	},
+	"searchFilterOptionAnyLabel": "Todas",
+	"@searchFilterOptionAnyLabel": {
+		"description": "This is the default option for all search filters. Filters with this value will be ignored"
+	},
+	"searchFilterOptionTrueLabel": "Verdadeiro",
+	"@searchFilterOptionTrueLabel": {
+		"description": "Positive option for a boolean filter"
+	},
+	"searchFilterOptionFalseLabel": "Falso",
+	"@searchFilterOptionFalseLabel": {
+		"description": "Negative option for a boolean filter"
+	},
+	"searchFilterTypeLabel": "Tipo",
+	"@searchFilterTypeLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterTypeOptionImageLabel": "Imagem",
+	"@searchFilterTypeOptionImageLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeImageText": "imagens",
+	"@searchFilterBubbleTypeImageText": {
+		"description": "List of active search filters shown in the result page (by file type, image)"
+	},
+	"searchFilterTypeOptionVideoLabel": "Vídeo",
+	"@searchFilterTypeOptionVideoLabel": {
+		"description": "Filter search results by file type"
+	},
+	"searchFilterBubbleTypeVideoText": "vídeos",
+	"@searchFilterBubbleTypeVideoText": {
+		"description": "List of active search filters shown in the result page (by file type, video)"
+	},
+	"searchFilterFavoriteLabel": "Favoritas",
+	"@searchFilterFavoriteLabel": {
+		"description": "Filter search results by whether it's in favorites"
+	},
+	"searchFilterBubbleFavoriteTrueText": "favoritas",
+	"@searchFilterBubbleFavoriteTrueText": {
+		"description": "List of active search filters shown in the result page (by favorites, true)"
+	},
+	"searchFilterBubbleFavoriteFalseText": "não favoritas",
+	"@searchFilterBubbleFavoriteFalseText": {
+		"description": "List of active search filters shown in the result page (by favorites, false)"
+	},
+	"showAllButtonLabel": "MOSTRE TUDO",
+	"@showAllButtonLabel": {
+		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+	},
+	"gpsPlaceText": "Próximo a {place}",
+	"@gpsPlaceText": {
+		"description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+		"placeholders": {
+			"place": {}
+		}
+	},
+	"gpsPlaceAboutDialogTitle": "Sobre o lugar",
+	"@gpsPlaceAboutDialogTitle": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"gpsPlaceAboutDialogContent": "A localização é uma estimativa grosseira e não garante precisão. Não representa nossas visões ou opiniões sobre regiões disputadas.",
+	"@gpsPlaceAboutDialogContent": {
+		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+	},
+	"collectionPlacesLabel": "Lugares",
+	"@collectionPlacesLabel": {
+		"description": "Browse photos grouped by place"
+	},
+	"imageSaveOptionDialogTitle": "Salvando o resultado",
+	"@imageSaveOptionDialogTitle": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogContent": "Selecione onde salvar esse e futuros arquivos processados. Se você escolheu o servidor, e houve falha no upload, ele será salvo no aparelho.",
+	"@imageSaveOptionDialogContent": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
+	"imageSaveOptionDialogDeviceButtonLabel": "APARELHO",
+	"@imageSaveOptionDialogDeviceButtonLabel": {
+		"description": "Save the image on the current device"
+	},
+	"imageSaveOptionDialogServerButtonLabel": "SERVIDOR",
+	"@imageSaveOptionDialogServerButtonLabel": {
+		"description": "Save the image on your Nextcloud server"
+	},
+	"initialSyncMessage": "Sincronizando com o servidor pela primeira vez",
+	"@initialSyncMessage": {
+		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+	},
+	"loopTooltip": "Reinício automático",
+	"@loopTooltip": {
+		"description": "Enable or disable loop in the video player"
+	},
 	"errorUnauthenticated": "Acesso não autenticado. Por favor faça login novamente se o problema persistir",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
