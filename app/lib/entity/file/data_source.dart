@@ -720,8 +720,14 @@ class FileCachedDataSource implements FileDataSource {
 
   @override
   remove(Account account, File f) async {
-    await _sqliteDbSrc.remove(account, f);
     await _remoteSrc.remove(account, f);
+    try {
+      await _sqliteDbSrc.remove(account, f);
+    } catch (e, stackTrace) {
+      // ignore cache failure
+      _log.warning(
+          "Failed while remove: ${logFilename(f.strippedPath)}", e, stackTrace);
+    }
   }
 
   @override
