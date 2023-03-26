@@ -12,7 +12,7 @@ part 'crop_controller.g.dart';
 /// Crop editor
 ///
 /// This widget only work when width == device width!
-class CropController extends StatefulWidget {
+class CropController extends StatelessWidget {
   const CropController({
     Key? key,
     required this.image,
@@ -21,7 +21,33 @@ class CropController extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  createState() => _CropControllerState();
+  Widget build(BuildContext context) {
+    return Padding(
+      // to make cropping works on phone using gesture navigation
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: _WrappedCropController(
+        image: image,
+        initialState: initialState,
+        onCropChanged: onCropChanged,
+      ),
+    );
+  }
+
+  final Rgba8Image image;
+  final TransformArguments? initialState;
+  final ValueChanged<TransformArguments>? onCropChanged;
+}
+
+class _WrappedCropController extends StatefulWidget {
+  const _WrappedCropController({
+    Key? key,
+    required this.image,
+    required this.initialState,
+    this.onCropChanged,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _WrappedCropControllerState();
 
   final Rgba8Image image;
   final TransformArguments? initialState;
@@ -29,7 +55,7 @@ class CropController extends StatefulWidget {
 }
 
 @npLog
-class _CropControllerState extends State<CropController> {
+class _WrappedCropControllerState extends State<_WrappedCropController> {
   @override
   initState() {
     super.initState();
@@ -223,14 +249,10 @@ class _CropControllerState extends State<CropController> {
       final renderObj = context.findRenderObject() as RenderBox?;
       if (renderObj?.hasSize == true && renderObj!.size.width > 16) {
         // the renderbox height is always max
-        if (renderObj.size.width == MediaQuery.of(context).size.width) {
-          final height =
-              renderObj.size.width / widget.image.width * widget.image.height;
-          _size = Size(renderObj.size.width, height);
-          _offsetY = (renderObj.size.height - height) / 2;
-        } else {
-          _size = renderObj.size;
-        }
+        final height =
+            renderObj.size.width / widget.image.width * widget.image.height;
+        _size = Size(renderObj.size.width, height);
+        _offsetY = (renderObj.size.height - height) / 2;
       }
       _log.info("[_tryUpdateSize] size = $_size, offsetY: $_offsetY");
       if (_size == null) {
