@@ -20,7 +20,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/use_case/create_album.dart';
+import 'package:nc_photos/use_case/album/create_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';

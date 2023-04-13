@@ -90,10 +90,10 @@ class FileWebdavDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) async {
-    _log.info("[remove] ${f.path}");
+  remove(Account account, FileDescriptor f) async {
+    _log.info("[remove] ${f.fdPath}");
     final response =
-        await ApiUtil.fromAccount(account).files().delete(path: f.path);
+        await ApiUtil.fromAccount(account).files().delete(path: f.fdPath);
     if (!response.isGood) {
       _log.severe("[remove] Failed requesting server: $response");
       throw ApiException(
@@ -435,8 +435,8 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) {
-    _log.info("[remove] ${f.path}");
+  remove(Account account, FileDescriptor f) {
+    _log.info("[remove] ${f.fdPath}");
     return FileSqliteCacheRemover(_c)(account, f);
   }
 
@@ -719,7 +719,7 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) async {
+  remove(Account account, FileDescriptor f) async {
     await _remoteSrc.remove(account, f);
     try {
       await _sqliteDbSrc.remove(account, f);

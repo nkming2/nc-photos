@@ -344,10 +344,10 @@ class PhotoListLabel extends StatelessWidget {
   build(BuildContext context) {
     return Container(
       alignment: AlignmentDirectional.centerStart,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.labelLarge,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),

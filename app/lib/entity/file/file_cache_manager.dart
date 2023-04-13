@@ -359,7 +359,7 @@ class FileSqliteCacheRemover {
   static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
 
   /// Remove a file/dir from cache
-  Future<void> call(Account account, File f) async {
+  Future<void> call(Account account, FileDescriptor f) async {
     await _c.sqliteDb.use((db) async {
       final dbAccount = await db.accountOf(account);
       final rowIds = await db.accountFileRowIdsOf(f, sqlAccount: dbAccount);

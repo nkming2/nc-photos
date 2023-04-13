@@ -63,6 +63,27 @@ extension _$ApiOcsFilesSharingShareesNpLog on ApiOcsFilesSharingSharees {
   static final log = Logger("src.api.ApiOcsFilesSharingSharees");
 }
 
+extension _$ApiPhotosAlbumsNpLog on ApiPhotosAlbums {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("src.api.ApiPhotosAlbums");
+}
+
+extension _$ApiPhotosAlbumNpLog on ApiPhotosAlbum {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("src.api.ApiPhotosAlbum");
+}
+
+extension _$ApiStatusNpLog on ApiStatus {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("src.api.ApiStatus");
+}
+
 extension _$ApiSystemtagsNpLog on ApiSystemtags {
   // ignore: unused_element
   Logger get _log => log;

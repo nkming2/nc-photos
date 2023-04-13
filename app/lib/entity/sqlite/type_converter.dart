@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
@@ -107,6 +108,19 @@ class SqliteAlbumConverter {
             ))
         .toList();
     return sql.CompleteAlbumCompanion(dbAlbum, dbAlbumShares ?? []);
+  }
+}
+
+class SqliteFileDescriptorConverter {
+  static FileDescriptor fromSql(String userId, sql.FileDescriptor f) {
+    return FileDescriptor(
+      fdPath: "remote.php/dav/files/$userId/${f.relativePath}",
+      fdId: f.fileId,
+      fdMime: f.contentType,
+      fdIsArchived: f.isArchived ?? false,
+      fdIsFavorite: f.isFavorite ?? false,
+      fdDateTime: f.bestDateTime,
+    );
   }
 }
 
@@ -236,6 +250,43 @@ class SqlitePersonConverter {
         name: Value(person.name),
         thumbFaceId: Value(person.thumbFaceId),
         count: Value(person.count),
+      );
+}
+
+class SqliteNcAlbumConverter {
+  static NcAlbum fromSql(String userId, sql.NcAlbum ncAlbum) => NcAlbum(
+        path: "remote.php/dav/photos/$userId/albums/${ncAlbum.relativePath}",
+        lastPhoto: ncAlbum.lastPhoto,
+        nbItems: ncAlbum.nbItems,
+        location: ncAlbum.location,
+        dateStart: ncAlbum.dateStart,
+        dateEnd: ncAlbum.dateEnd,
+        collaborators: [],
+      );
+
+  static sql.NcAlbumsCompanion toSql(sql.Account? dbAccount, NcAlbum ncAlbum) =>
+      sql.NcAlbumsCompanion(
+        account:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
+        relativePath: Value(ncAlbum.strippedPath),
+        lastPhoto: Value(ncAlbum.lastPhoto),
+        nbItems: Value(ncAlbum.nbItems),
+        location: Value(ncAlbum.location),
+        dateStart: Value(ncAlbum.dateStart),
+        dateEnd: Value(ncAlbum.dateEnd),
+      );
+}
+
+class SqliteNcAlbumItemConverter {
+  static int fromSql(sql.NcAlbumItem item) => item.fileId;
+
+  static sql.NcAlbumItemsCompanion toSql(
+    sql.NcAlbum parent,
+    int fileId,
+  ) =>
+      sql.NcAlbumItemsCompanion(
+        parent: Value(parent.rowId),
+        fileId: Value(fileId),
       );
 }
 

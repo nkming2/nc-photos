@@ -37,9 +37,8 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/startup_sync.dart';
-import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
-import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -51,6 +50,7 @@ import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -442,10 +442,8 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return AddSelectionToAlbumHandler(c)(
+    return const AddSelectionToCollectionHandler()(
       context: context,
-      account: widget.account,
       selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)
@@ -1032,7 +1030,8 @@ class _SmartAlbumList extends StatelessWidget {
                 : NetworkRectThumbnail.imageUrlForFile(account, coverFile),
             label: a.name,
             onTap: () {
-              album_browser_util.push(context, account, a);
+              Navigator.of(context).pushNamed(SmartAlbumBrowser.routeName,
+                  arguments: SmartAlbumBrowserArguments(account, a));
             },
           );
         },

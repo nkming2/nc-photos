@@ -125,6 +125,37 @@ class DirFiles extends Table {
   get primaryKey => {dir, child};
 }
 
+class NcAlbums extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get account =>
+      integer().references(Accounts, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get relativePath => text()();
+  IntColumn get lastPhoto => integer().nullable()();
+  IntColumn get nbItems => integer()();
+  TextColumn get location => text().nullable()();
+  DateTimeColumn get dateStart =>
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
+  DateTimeColumn get dateEnd =>
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
+
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+        {account, relativePath},
+      ];
+}
+
+class NcAlbumItems extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get parent =>
+      integer().references(NcAlbums, #rowId, onDelete: KeyAction.cascade)();
+  IntColumn get fileId => integer()();
+
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+        {parent, fileId},
+      ];
+}
+
 class Albums extends Table {
   IntColumn get rowId => integer().autoIncrement()();
   IntColumn get file => integer()

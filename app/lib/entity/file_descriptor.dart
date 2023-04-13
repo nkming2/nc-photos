@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:np_common/type.dart';
 import 'package:path/path.dart' as path_lib;
 
@@ -107,4 +108,14 @@ extension FileDescriptorExtension on FileDescriptor {
 
   /// hashCode to be used with [compareServerIdentity]
   int get identityHashCode => fdId.hashCode;
+
+  File toFile() {
+    return File(
+      path: fdPath,
+      fileId: fdId,
+      contentType: fdMime,
+      isArchived: fdIsArchived,
+      isFavorite: fdIsFavorite,
+    );
+  }
 }

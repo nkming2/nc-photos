@@ -31,6 +31,13 @@ packages:
       url: "https://gitlab.com/nc-photos/plus_plugins"
     source: git
     version: "3.1.1"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   args:
     dependency: transitive
     description:
@@ -336,6 +343,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.2"
+  dart_code_metrics:
+    dependency: "direct dev"
+    description:
+      name: dart_code_metrics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.19.1"
   dart_style:
     dependency: transitive
     description:
@@ -1055,12 +1069,12 @@ packages:
     source: hosted
     version: "4.0.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.27.4"
+    version: "0.27.7"
   screen_brightness:
     dependency: "direct main"
     description:

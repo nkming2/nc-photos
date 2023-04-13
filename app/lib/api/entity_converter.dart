@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -92,6 +93,22 @@ class ApiFileConverter {
   }
 
   static final _log = _$ApiFileConverterNpLog.log;
+}
+
+class ApiNcAlbumConverter {
+  static NcAlbum fromApi(api.NcAlbum album) {
+    return NcAlbum(
+      path: album.href,
+      lastPhoto: (album.lastPhoto ?? -1) < 0 ? null : album.lastPhoto,
+      nbItems: album.nbItems ?? 0,
+      location: album.location,
+      dateStart: (album.dateRange?["start"] as int?)
+          ?.run((d) => DateTime.fromMillisecondsSinceEpoch(d * 1000)),
+      dateEnd: (album.dateRange?["end"] as int?)
+          ?.run((d) => DateTime.fromMillisecondsSinceEpoch(d * 1000)),
+      collaborators: const [],
+    );
+  }
 }
 
 class ApiPersonConverter {

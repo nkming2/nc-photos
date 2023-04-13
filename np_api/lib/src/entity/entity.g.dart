@@ -27,6 +27,13 @@ extension _$FileToString on File {
   }
 }
 
+extension _$NcAlbumToString on NcAlbum {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NcAlbum {href: $href, lastPhoto: $lastPhoto, nbItems: $nbItems, location: $location, dateRange: $dateRange}";
+  }
+}
+
 extension _$PersonToString on Person {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
@@ -45,6 +52,13 @@ extension _$ShareeToString on Sharee {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "Sharee {type: $type, label: $label, shareType: $shareType, shareWith: $shareWith, shareWithDisplayNameUnique: $shareWithDisplayNameUnique}";
+  }
+}
+
+extension _$StatusToString on Status {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "Status {version: $version, versionString: $versionString}";
   }
 }
 

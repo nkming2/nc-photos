@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 
 part 'entity.g.dart';
@@ -100,6 +101,35 @@ class File with EquatableMixin {
   final String? trashbinOriginalLocation;
   final DateTime? trashbinDeletionTime;
   final Map<String, String>? customProperties;
+}
+
+@toString
+class NcAlbum with EquatableMixin {
+  const NcAlbum({
+    required this.href,
+    required this.lastPhoto,
+    required this.nbItems,
+    required this.location,
+    required this.dateRange,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        href,
+        lastPhoto,
+        nbItems,
+        location,
+        dateRange,
+      ];
+
+  final String href;
+  final int? lastPhoto;
+  final int? nbItems;
+  final String? location;
+  final JsonObj? dateRange;
 }
 
 @toString
@@ -205,6 +235,26 @@ class Sharee with EquatableMixin {
   final int shareType;
   final String shareWith;
   final String? shareWithDisplayNameUnique;
+}
+
+@toString
+class Status with EquatableMixin {
+  const Status({
+    required this.version,
+    required this.versionString,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        version,
+        versionString,
+      ];
+
+  final String version;
+  final String versionString;
 }
 
 @toString

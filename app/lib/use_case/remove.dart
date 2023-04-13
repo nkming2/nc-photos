@@ -12,12 +12,13 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/stream_extension.dart';
-import 'package:nc_photos/use_case/list_album.dart';
+import 'package:nc_photos/use_case/album/list_album.dart';
+import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
-import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'remove.g.dart';
 
@@ -33,12 +34,11 @@ class Remove {
       DiContainer.has(c, DiType.fileRepo) &&
       DiContainer.has(c, DiType.shareRepo);
 
-  /// Remove files
-  Future<void> call(
+  /// Remove list of [files] and return the removed count
+  Future<int> call(
     Account account,
-    List<File> files, {
-    void Function(File file, Object error, StackTrace stackTrace)?
-        onRemoveFileFailed,
+    List<FileDescriptor> files, {
+    ErrorWithValueIndexedHandler<FileDescriptor>? onError,
     bool shouldCleanUp = true,
   }) async {
     // need to cleanup first, otherwise we can't unshare the files
@@ -47,19 +47,25 @@ class Remove {
     } else {
       await _cleanUpAlbums(account, files);
     }
-    for (final f in files) {
+    var count = 0;
+    for (final pair in files.withIndex()) {
+      final i = pair.item1;
+      final f = pair.item2;
       try {
         await _c.fileRepo.remove(account, f);
+        ++count;
         KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, f));
       } catch (e, stackTrace) {
-        _log.severe("[call] Failed while remove: ${logFilename(f.path)}", e,
+        _log.severe("[call] Failed while remove: ${logFilename(f.fdPath)}", e,
             stackTrace);
-        onRemoveFileFailed?.call(f, e, stackTrace);
+        onError?.call(i, f, e, stackTrace);
       }
     }
+    return count;
   }
 
-  Future<void> _cleanUpAlbums(Account account, List<File> removes) async {
+  Future<void> _cleanUpAlbums(
+      Account account, List<FileDescriptor> removes) async {
     final albums = await ListAlbum(_c)(account).whereType<Album>().toList();
     // figure out which files need to be unshared with whom
     final unshares = <FileServerIdentityComparator, Set<CiString>>{};

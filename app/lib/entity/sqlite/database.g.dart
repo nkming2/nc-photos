@@ -4157,6 +4157,639 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   }
 }
 
+class NcAlbum extends DataClass implements Insertable<NcAlbum> {
+  final int rowId;
+  final int account;
+  final String relativePath;
+  final int? lastPhoto;
+  final int nbItems;
+  final String? location;
+  final DateTime? dateStart;
+  final DateTime? dateEnd;
+  NcAlbum(
+      {required this.rowId,
+      required this.account,
+      required this.relativePath,
+      this.lastPhoto,
+      required this.nbItems,
+      this.location,
+      this.dateStart,
+      this.dateEnd});
+  factory NcAlbum.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return NcAlbum(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      account: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
+      relativePath: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
+      lastPhoto: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_photo']),
+      nbItems: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}nb_items'])!,
+      location: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}location']),
+      dateStart: $NcAlbumsTable.$converter0.mapToDart(const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_start'])),
+      dateEnd: $NcAlbumsTable.$converter1.mapToDart(const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_end'])),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['account'] = Variable<int>(account);
+    map['relative_path'] = Variable<String>(relativePath);
+    if (!nullToAbsent || lastPhoto != null) {
+      map['last_photo'] = Variable<int?>(lastPhoto);
+    }
+    map['nb_items'] = Variable<int>(nbItems);
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String?>(location);
+    }
+    if (!nullToAbsent || dateStart != null) {
+      final converter = $NcAlbumsTable.$converter0;
+      map['date_start'] = Variable<DateTime?>(converter.mapToSql(dateStart));
+    }
+    if (!nullToAbsent || dateEnd != null) {
+      final converter = $NcAlbumsTable.$converter1;
+      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd));
+    }
+    return map;
+  }
+
+  NcAlbumsCompanion toCompanion(bool nullToAbsent) {
+    return NcAlbumsCompanion(
+      rowId: Value(rowId),
+      account: Value(account),
+      relativePath: Value(relativePath),
+      lastPhoto: lastPhoto == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastPhoto),
+      nbItems: Value(nbItems),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      dateStart: dateStart == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateStart),
+      dateEnd: dateEnd == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateEnd),
+    );
+  }
+
+  factory NcAlbum.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NcAlbum(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      account: serializer.fromJson<int>(json['account']),
+      relativePath: serializer.fromJson<String>(json['relativePath']),
+      lastPhoto: serializer.fromJson<int?>(json['lastPhoto']),
+      nbItems: serializer.fromJson<int>(json['nbItems']),
+      location: serializer.fromJson<String?>(json['location']),
+      dateStart: serializer.fromJson<DateTime?>(json['dateStart']),
+      dateEnd: serializer.fromJson<DateTime?>(json['dateEnd']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'account': serializer.toJson<int>(account),
+      'relativePath': serializer.toJson<String>(relativePath),
+      'lastPhoto': serializer.toJson<int?>(lastPhoto),
+      'nbItems': serializer.toJson<int>(nbItems),
+      'location': serializer.toJson<String?>(location),
+      'dateStart': serializer.toJson<DateTime?>(dateStart),
+      'dateEnd': serializer.toJson<DateTime?>(dateEnd),
+    };
+  }
+
+  NcAlbum copyWith(
+          {int? rowId,
+          int? account,
+          String? relativePath,
+          Value<int?> lastPhoto = const Value.absent(),
+          int? nbItems,
+          Value<String?> location = const Value.absent(),
+          Value<DateTime?> dateStart = const Value.absent(),
+          Value<DateTime?> dateEnd = const Value.absent()}) =>
+      NcAlbum(
+        rowId: rowId ?? this.rowId,
+        account: account ?? this.account,
+        relativePath: relativePath ?? this.relativePath,
+        lastPhoto: lastPhoto.present ? lastPhoto.value : this.lastPhoto,
+        nbItems: nbItems ?? this.nbItems,
+        location: location.present ? location.value : this.location,
+        dateStart: dateStart.present ? dateStart.value : this.dateStart,
+        dateEnd: dateEnd.present ? dateEnd.value : this.dateEnd,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbum(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('lastPhoto: $lastPhoto, ')
+          ..write('nbItems: $nbItems, ')
+          ..write('location: $location, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, account, relativePath, lastPhoto,
+      nbItems, location, dateStart, dateEnd);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NcAlbum &&
+          other.rowId == this.rowId &&
+          other.account == this.account &&
+          other.relativePath == this.relativePath &&
+          other.lastPhoto == this.lastPhoto &&
+          other.nbItems == this.nbItems &&
+          other.location == this.location &&
+          other.dateStart == this.dateStart &&
+          other.dateEnd == this.dateEnd);
+}
+
+class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
+  final Value<int> rowId;
+  final Value<int> account;
+  final Value<String> relativePath;
+  final Value<int?> lastPhoto;
+  final Value<int> nbItems;
+  final Value<String?> location;
+  final Value<DateTime?> dateStart;
+  final Value<DateTime?> dateEnd;
+  const NcAlbumsCompanion({
+    this.rowId = const Value.absent(),
+    this.account = const Value.absent(),
+    this.relativePath = const Value.absent(),
+    this.lastPhoto = const Value.absent(),
+    this.nbItems = const Value.absent(),
+    this.location = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+  });
+  NcAlbumsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int account,
+    required String relativePath,
+    this.lastPhoto = const Value.absent(),
+    required int nbItems,
+    this.location = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+  })  : account = Value(account),
+        relativePath = Value(relativePath),
+        nbItems = Value(nbItems);
+  static Insertable<NcAlbum> custom({
+    Expression<int>? rowId,
+    Expression<int>? account,
+    Expression<String>? relativePath,
+    Expression<int?>? lastPhoto,
+    Expression<int>? nbItems,
+    Expression<String?>? location,
+    Expression<DateTime?>? dateStart,
+    Expression<DateTime?>? dateEnd,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (account != null) 'account': account,
+      if (relativePath != null) 'relative_path': relativePath,
+      if (lastPhoto != null) 'last_photo': lastPhoto,
+      if (nbItems != null) 'nb_items': nbItems,
+      if (location != null) 'location': location,
+      if (dateStart != null) 'date_start': dateStart,
+      if (dateEnd != null) 'date_end': dateEnd,
+    });
+  }
+
+  NcAlbumsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? account,
+      Value<String>? relativePath,
+      Value<int?>? lastPhoto,
+      Value<int>? nbItems,
+      Value<String?>? location,
+      Value<DateTime?>? dateStart,
+      Value<DateTime?>? dateEnd}) {
+    return NcAlbumsCompanion(
+      rowId: rowId ?? this.rowId,
+      account: account ?? this.account,
+      relativePath: relativePath ?? this.relativePath,
+      lastPhoto: lastPhoto ?? this.lastPhoto,
+      nbItems: nbItems ?? this.nbItems,
+      location: location ?? this.location,
+      dateStart: dateStart ?? this.dateStart,
+      dateEnd: dateEnd ?? this.dateEnd,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (account.present) {
+      map['account'] = Variable<int>(account.value);
+    }
+    if (relativePath.present) {
+      map['relative_path'] = Variable<String>(relativePath.value);
+    }
+    if (lastPhoto.present) {
+      map['last_photo'] = Variable<int?>(lastPhoto.value);
+    }
+    if (nbItems.present) {
+      map['nb_items'] = Variable<int>(nbItems.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String?>(location.value);
+    }
+    if (dateStart.present) {
+      final converter = $NcAlbumsTable.$converter0;
+      map['date_start'] =
+          Variable<DateTime?>(converter.mapToSql(dateStart.value));
+    }
+    if (dateEnd.present) {
+      final converter = $NcAlbumsTable.$converter1;
+      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd.value));
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('lastPhoto: $lastPhoto, ')
+          ..write('nbItems: $nbItems, ')
+          ..write('location: $location, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NcAlbumsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _accountMeta = const VerificationMeta('account');
+  @override
+  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
+      'account', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
+  final VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
+  @override
+  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
+      'relative_path', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _lastPhotoMeta = const VerificationMeta('lastPhoto');
+  @override
+  late final GeneratedColumn<int?> lastPhoto = GeneratedColumn<int?>(
+      'last_photo', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _nbItemsMeta = const VerificationMeta('nbItems');
+  @override
+  late final GeneratedColumn<int?> nbItems = GeneratedColumn<int?>(
+      'nb_items', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _locationMeta = const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String?> location = GeneratedColumn<String?>(
+      'location', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _dateStartMeta = const VerificationMeta('dateStart');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateStart =
+      GeneratedColumn<DateTime?>('date_start', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($NcAlbumsTable.$converter0);
+  final VerificationMeta _dateEndMeta = const VerificationMeta('dateEnd');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateEnd =
+      GeneratedColumn<DateTime?>('date_end', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($NcAlbumsTable.$converter1);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        account,
+        relativePath,
+        lastPhoto,
+        nbItems,
+        location,
+        dateStart,
+        dateEnd
+      ];
+  @override
+  String get aliasedName => _alias ?? 'nc_albums';
+  @override
+  String get actualTableName => 'nc_albums';
+  @override
+  VerificationContext validateIntegrity(Insertable<NcAlbum> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    } else if (isInserting) {
+      context.missing(_accountMeta);
+    }
+    if (data.containsKey('relative_path')) {
+      context.handle(
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
+    } else if (isInserting) {
+      context.missing(_relativePathMeta);
+    }
+    if (data.containsKey('last_photo')) {
+      context.handle(_lastPhotoMeta,
+          lastPhoto.isAcceptableOrUnknown(data['last_photo']!, _lastPhotoMeta));
+    }
+    if (data.containsKey('nb_items')) {
+      context.handle(_nbItemsMeta,
+          nbItems.isAcceptableOrUnknown(data['nb_items']!, _nbItemsMeta));
+    } else if (isInserting) {
+      context.missing(_nbItemsMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    }
+    context.handle(_dateStartMeta, const VerificationResult.success());
+    context.handle(_dateEndMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {account, relativePath},
+      ];
+  @override
+  NcAlbum map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return NcAlbum.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $NcAlbumsTable createAlias(String alias) {
+    return $NcAlbumsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converter0 =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converter1 =
+      const SqliteDateTimeConverter();
+}
+
+class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
+  final int rowId;
+  final int parent;
+  final int fileId;
+  NcAlbumItem(
+      {required this.rowId, required this.parent, required this.fileId});
+  factory NcAlbumItem.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return NcAlbumItem(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      parent: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent'])!,
+      fileId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}file_id'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['parent'] = Variable<int>(parent);
+    map['file_id'] = Variable<int>(fileId);
+    return map;
+  }
+
+  NcAlbumItemsCompanion toCompanion(bool nullToAbsent) {
+    return NcAlbumItemsCompanion(
+      rowId: Value(rowId),
+      parent: Value(parent),
+      fileId: Value(fileId),
+    );
+  }
+
+  factory NcAlbumItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NcAlbumItem(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      parent: serializer.fromJson<int>(json['parent']),
+      fileId: serializer.fromJson<int>(json['fileId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'parent': serializer.toJson<int>(parent),
+      'fileId': serializer.toJson<int>(fileId),
+    };
+  }
+
+  NcAlbumItem copyWith({int? rowId, int? parent, int? fileId}) => NcAlbumItem(
+        rowId: rowId ?? this.rowId,
+        parent: parent ?? this.parent,
+        fileId: fileId ?? this.fileId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumItem(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('fileId: $fileId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, parent, fileId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NcAlbumItem &&
+          other.rowId == this.rowId &&
+          other.parent == this.parent &&
+          other.fileId == this.fileId);
+}
+
+class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
+  final Value<int> rowId;
+  final Value<int> parent;
+  final Value<int> fileId;
+  const NcAlbumItemsCompanion({
+    this.rowId = const Value.absent(),
+    this.parent = const Value.absent(),
+    this.fileId = const Value.absent(),
+  });
+  NcAlbumItemsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int parent,
+    required int fileId,
+  })  : parent = Value(parent),
+        fileId = Value(fileId);
+  static Insertable<NcAlbumItem> custom({
+    Expression<int>? rowId,
+    Expression<int>? parent,
+    Expression<int>? fileId,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (parent != null) 'parent': parent,
+      if (fileId != null) 'file_id': fileId,
+    });
+  }
+
+  NcAlbumItemsCompanion copyWith(
+      {Value<int>? rowId, Value<int>? parent, Value<int>? fileId}) {
+    return NcAlbumItemsCompanion(
+      rowId: rowId ?? this.rowId,
+      parent: parent ?? this.parent,
+      fileId: fileId ?? this.fileId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (parent.present) {
+      map['parent'] = Variable<int>(parent.value);
+    }
+    if (fileId.present) {
+      map['file_id'] = Variable<int>(fileId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumItemsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('fileId: $fileId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $NcAlbumItemsTable extends NcAlbumItems
+    with TableInfo<$NcAlbumItemsTable, NcAlbumItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NcAlbumItemsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _parentMeta = const VerificationMeta('parent');
+  @override
+  late final GeneratedColumn<int?> parent = GeneratedColumn<int?>(
+      'parent', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES nc_albums (row_id) ON DELETE CASCADE');
+  final VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
+  @override
+  late final GeneratedColumn<int?> fileId = GeneratedColumn<int?>(
+      'file_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [rowId, parent, fileId];
+  @override
+  String get aliasedName => _alias ?? 'nc_album_items';
+  @override
+  String get actualTableName => 'nc_album_items';
+  @override
+  VerificationContext validateIntegrity(Insertable<NcAlbumItem> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('parent')) {
+      context.handle(_parentMeta,
+          parent.isAcceptableOrUnknown(data['parent']!, _parentMeta));
+    } else if (isInserting) {
+      context.missing(_parentMeta);
+    }
+    if (data.containsKey('file_id')) {
+      context.handle(_fileIdMeta,
+          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
+    } else if (isInserting) {
+      context.missing(_fileIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {parent, fileId},
+      ];
+  @override
+  NcAlbumItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return NcAlbumItem.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $NcAlbumItemsTable createAlias(String alias) {
+    return $NcAlbumItemsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$SqliteDb extends GeneratedDatabase {
   _$SqliteDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   _$SqliteDb.connect(DatabaseConnection c) : super.connect(c);
@@ -4172,6 +4805,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
   late final $TagsTable tags = $TagsTable(this);
   late final $PersonsTable persons = $PersonsTable(this);
+  late final $NcAlbumsTable ncAlbums = $NcAlbumsTable(this);
+  late final $NcAlbumItemsTable ncAlbumItems = $NcAlbumItemsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -4187,7 +4822,9 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         albums,
         albumShares,
         tags,
-        persons
+        persons,
+        ncAlbums,
+        ncAlbumItems
       ];
 }
 

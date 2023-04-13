@@ -4,12 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/use_case/list_album.dart';
+import 'package:nc_photos/use_case/collection/list_collection.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/use_case/list_person.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
@@ -24,13 +25,13 @@ part 'home_search_suggestion.g.dart';
 abstract class HomeSearchResult {}
 
 @toString
-class HomeSearchAlbumResult implements HomeSearchResult {
-  const HomeSearchAlbumResult(this.album);
+class HomeSearchCollectionResult implements HomeSearchResult {
+  const HomeSearchCollectionResult(this.collection);
 
   @override
   String toString() => _$toString();
 
-  final Album album;
+  final Collection collection;
 }
 
 @toString
@@ -125,7 +126,7 @@ class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
 @npLog
 class HomeSearchSuggestionBloc
     extends Bloc<HomeSearchSuggestionBlocEvent, HomeSearchSuggestionBlocState> {
-  HomeSearchSuggestionBloc(this.account)
+  HomeSearchSuggestionBloc(this.account, this.collectionsController)
       : super(const HomeSearchSuggestionBlocInit()) {
     final c = KiwiContainer().resolve<DiContainer>();
     assert(require(c));
@@ -187,13 +188,19 @@ class HomeSearchSuggestionBloc
       Emitter<HomeSearchSuggestionBlocState> emit) async {
     final product = <_Searcheable>[];
     try {
-      final albums = await ListAlbum(_c)(account)
-          .where((event) => event is Album)
+      var collections = collectionsController
+          .peekStream()
+          .data
+          .map((e) => e.collection)
           .toList();
-      product.addAll(albums.map((a) => _AlbumSearcheable(a)));
-      _log.info("[_onEventPreloadData] Loaded ${albums.length} albums");
+      if (collections.isEmpty) {
+        collections = await ListCollection(_c)(account).last;
+      }
+      product.addAll(collections.map(_CollectionSearcheable.new));
+      _log.info(
+          "[_onEventPreloadData] Loaded ${collections.length} collections");
     } catch (e) {
-      _log.warning("[_onEventPreloadData] Failed while ListAlbum", e);
+      _log.warning("[_onEventPreloadData] Failed while ListCollection", e);
     }
     try {
       final tags = await ListTag(_c)(account);
@@ -239,6 +246,7 @@ class HomeSearchSuggestionBloc
   }
 
   final Account account;
+  final CollectionsController collectionsController;
   late final DiContainer _c;
 
   final _search = Woozy<_Searcheable>(limit: 10);
@@ -249,16 +257,16 @@ abstract class _Searcheable {
   HomeSearchResult toResult();
 }
 
-class _AlbumSearcheable implements _Searcheable {
-  const _AlbumSearcheable(this.album);
+class _CollectionSearcheable implements _Searcheable {
+  const _CollectionSearcheable(this.collection);
 
   @override
-  toKeywords() => [album.name.toCi()];
+  toKeywords() => [collection.name.toCi()];
 
   @override
-  toResult() => HomeSearchAlbumResult(album);
+  toResult() => HomeSearchCollectionResult(collection);
 
-  final Album album;
+  final Collection collection;
 }
 
 class _TagSearcheable implements _Searcheable {

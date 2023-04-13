@@ -20,8 +20,11 @@ bool isSupportedImageMime(String mime) =>
 bool isSupportedImageFormat(FileDescriptor file) =>
     isSupportedImageMime(file.fdMime ?? "");
 
+bool isSupportedVideoMime(String mime) =>
+    supportedVideoFormatMimes.contains(mime);
+
 bool isSupportedVideoFormat(FileDescriptor file) =>
-    isSupportedFormat(file) && file.fdMime?.startsWith("video/") == true;
+    isSupportedVideoMime(file.fdMime ?? "");
 
 bool isMetadataSupportedMime(String mime) =>
     _metadataSupportedFormatMimes.contains(mime);
@@ -32,21 +35,22 @@ bool isMetadataSupportedFormat(FileDescriptor file) =>
 bool isTrash(Account account, FileDescriptor file) =>
     file.fdPath.startsWith(api_util.getTrashbinPath(account));
 
-bool isAlbumFile(Account account, File file) =>
-    file.path.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
+bool isAlbumFile(Account account, FileDescriptor file) =>
+    file.fdPath.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
 
 /// Return if [file] is located under [dir]
 ///
 /// Return false if [file] is [dir] itself (since it's not "under")
 ///
 /// See [isOrUnderDir]
-bool isUnderDir(File file, File dir) => file.path.startsWith("${dir.path}/");
+bool isUnderDir(FileDescriptor file, FileDescriptor dir) =>
+    file.fdPath.startsWith("${dir.fdPath}/");
 
 /// Return if [file] is [dir] or located under [dir]
 ///
 /// See [isUnderDir]
-bool isOrUnderDir(File file, File dir) =>
-    file.path == dir.path || isUnderDir(file, dir);
+bool isOrUnderDir(FileDescriptor file, FileDescriptor dir) =>
+    file.fdPath == dir.fdPath || isUnderDir(file, dir);
 
 /// Convert a stripped path to a full path
 ///
@@ -117,6 +121,9 @@ final supportedFormatMimes = [
 
 final supportedImageFormatMimes =
     supportedFormatMimes.where((f) => f.startsWith("image/")).toList();
+
+final supportedVideoFormatMimes =
+    supportedFormatMimes.where((f) => f.startsWith("video/")).toList();
 
 const _metadataSupportedFormatMimes = [
   "image/jpeg",

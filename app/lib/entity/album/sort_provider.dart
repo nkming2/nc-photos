@@ -1,14 +1,12 @@
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/iterable_extension.dart';
+import 'package:nc_photos/entity/collection_item/album_item_adapter.dart';
+import 'package:nc_photos/entity/collection_item/sorter.dart';
+import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'sort_provider.g.dart';
 
@@ -33,6 +31,22 @@ abstract class AlbumSortProvider with EquatableMixin {
     }
   }
 
+  factory AlbumSortProvider.fromCollectionItemSort(
+      CollectionItemSort itemSort) {
+    switch (itemSort) {
+      case CollectionItemSort.manual:
+        return const AlbumNullSortProvider();
+      case CollectionItemSort.dateAscending:
+        return const AlbumTimeSortProvider(isAscending: true);
+      case CollectionItemSort.dateDescending:
+        return const AlbumTimeSortProvider(isAscending: false);
+      case CollectionItemSort.nameAscending:
+        return const AlbumFilenameSortProvider(isAscending: true);
+      case CollectionItemSort.nameDescending:
+        return const AlbumFilenameSortProvider(isAscending: false);
+    }
+  }
+
   JsonObj toJson() {
     String getType() {
       if (this is AlbumNullSortProvider) {
@@ -53,7 +67,31 @@ abstract class AlbumSortProvider with EquatableMixin {
   }
 
   /// Return a sorted copy of [items]
-  List<AlbumItem> sort(List<AlbumItem> items);
+  List<AlbumItem> sort(List<AlbumItem> items) {
+    final type = toCollectionItemSort();
+    final sorter = CollectionSorter.fromSortType(type);
+    return sorter(items.map(AlbumAdaptedCollectionItem.fromItem).toList())
+        .whereType<AlbumAdaptedCollectionItem>()
+        .map((e) => e.albumItem)
+        .toList();
+  }
+
+  CollectionItemSort toCollectionItemSort() {
+    final that = this;
+    if (that is AlbumNullSortProvider) {
+      return CollectionItemSort.manual;
+    } else if (that is AlbumTimeSortProvider) {
+      return that.isAscending
+          ? CollectionItemSort.dateAscending
+          : CollectionItemSort.dateDescending;
+    } else if (that is AlbumFilenameSortProvider) {
+      return that.isAscending
+          ? CollectionItemSort.nameAscending
+          : CollectionItemSort.nameDescending;
+    } else {
+      throw StateError("Unknown type: ${sort.runtimeType}");
+    }
+  }
 
   JsonObj _toContentJson();
 
@@ -71,11 +109,6 @@ class AlbumNullSortProvider extends AlbumSortProvider {
 
   @override
   String toString() => _$toString();
-
-  @override
-  sort(List<AlbumItem> items) {
-    return List.from(items);
-  }
 
   @override
   get props => [];
@@ -124,37 +157,6 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   @override
   String toString() => _$toString();
 
-  @override
-  sort(List<AlbumItem> items) {
-    DateTime? prevFileTime;
-    return items
-        .map((e) {
-          if (e is AlbumFileItem) {
-            // take the file time
-            prevFileTime = e.file.bestDateTime;
-          }
-          // for non file items, use the sibling file's time
-          return Tuple2(prevFileTime, e);
-        })
-        .stableSorted((x, y) {
-          if (x.item1 == null && y.item1 == null) {
-            return 0;
-          } else if (x.item1 == null) {
-            return -1;
-          } else if (y.item1 == null) {
-            return 1;
-          } else {
-            if (isAscending) {
-              return x.item1!.compareTo(y.item1!);
-            } else {
-              return y.item1!.compareTo(x.item1!);
-            }
-          }
-        })
-        .map((e) => e.item2)
-        .toList();
-  }
-
   static const _type = "time";
 }
 
@@ -173,37 +175,6 @@ class AlbumFilenameSortProvider extends AlbumReversibleSortProvider {
 
   @override
   String toString() => _$toString();
-
-  @override
-  sort(List<AlbumItem> items) {
-    String? prevFilename;
-    return items
-        .map((e) {
-          if (e is AlbumFileItem) {
-            // take the file name
-            prevFilename = e.file.filename;
-          }
-          // for non file items, use the sibling file's name
-          return Tuple2(prevFilename, e);
-        })
-        .stableSorted((x, y) {
-          if (x.item1 == null && y.item1 == null) {
-            return 0;
-          } else if (x.item1 == null) {
-            return -1;
-          } else if (y.item1 == null) {
-            return 1;
-          } else {
-            if (isAscending) {
-              return compareNatural(x.item1!, y.item1!);
-            } else {
-              return compareNatural(y.item1!, x.item1!);
-            }
-          }
-        })
-        .map((e) => e.item2)
-        .toList();
-  }
 
   static const _type = "filename";
 }

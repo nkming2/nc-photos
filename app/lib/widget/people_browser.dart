@@ -9,14 +9,15 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_person.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
-import 'package:nc_photos/widget/person_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'people_browser.g.dart';
@@ -152,8 +153,13 @@ class _PeopleBrowserState extends State<PeopleBrowser> {
   }
 
   void _onItemTap(Person person) {
-    Navigator.pushNamed(context, PersonBrowser.routeName,
-        arguments: PersonBrowserArguments(widget.account, person));
+    Navigator.pushNamed(
+      context,
+      CollectionBrowser.routeName,
+      arguments: CollectionBrowserArguments(
+        CollectionBuilder.byPerson(widget.account, person),
+      ),
+    );
   }
 
   void _transformItems(List<Person> items) {

@@ -1,7 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
@@ -10,23 +15,20 @@ import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/album_browser.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
-import 'package:nc_photos/widget/album_picker.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/changelog.dart';
+import 'package:nc_photos/widget/collection_browser.dart';
+import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/connect.dart';
-import 'package:nc_photos/widget/dynamic_album_browser.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/people_browser.dart';
-import 'package:nc_photos/widget/person_browser.dart';
-import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -39,7 +41,6 @@ import 'package:nc_photos/widget/sign_in.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/splash.dart';
-import 'package:nc_photos/widget/tag_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
@@ -47,13 +48,24 @@ import 'package:np_codegen/np_codegen.dart';
 
 part 'my_app.g.dart';
 
-class MyApp extends StatefulWidget {
-  const MyApp({
-    Key? key,
-  }) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    final DiContainer _c = KiwiContainer().resolve<DiContainer>();
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (_) => AccountController(),
+        ),
+        RepositoryProvider(
+          create: (_) => PrefController(_c),
+        ),
+      ],
+      child: const _WrappedApp(),
+    );
+  }
 
   static RouteObserver get routeObserver => _routeObserver;
 
@@ -63,8 +75,15 @@ class MyApp extends StatefulWidget {
   static late BuildContext _globalContext;
 }
 
+class _WrappedApp extends StatefulWidget {
+  const _WrappedApp();
+
+  @override
+  State<StatefulWidget> createState() => _WrappedAppState();
+}
+
 @npLog
-class _MyAppState extends State<MyApp>
+class _WrappedAppState extends State<_WrappedApp>
     implements SnackBarHandler, NavigationHandler {
   @override
   void initState() {
@@ -139,11 +158,20 @@ class _MyAppState extends State<MyApp>
   @override
   getNavigator() => _navigatorKey.currentState;
 
-  Map<String, WidgetBuilder> _getRouter() => {
-        Setup.routeName: (context) => const Setup(),
-        SignIn.routeName: (context) => const SignIn(),
-        Splash.routeName: (context) => const Splash(),
-        legacy.SignIn.routeName: (_) => const legacy.SignIn(),
+  Map<String, Route Function()> _getRouter() => {
+        Setup.routeName: () => MaterialPageRoute(
+              builder: (context) => const Setup(),
+            ),
+        SignIn.routeName: () => MaterialPageRoute(
+              builder: (context) => const SignIn(),
+            ),
+        Splash.routeName: () => MaterialPageRoute(
+              builder: (context) => const Splash(),
+            ),
+        legacy.SignIn.routeName: () => MaterialPageRoute(
+              builder: (context) => const legacy.SignIn(),
+            ),
+        CollectionPicker.routeName: CollectionPicker.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -155,34 +183,29 @@ class _MyAppState extends State<MyApp>
     route ??= _handleConnectLegacyRoute(settings);
     route ??= _handleHomeRoute(settings);
     route ??= _handleRootPickerRoute(settings);
-    route ??= _handleAlbumBrowserRoute(settings);
     route ??= _handleSettingsRoute(settings);
     route ??= _handleArchiveBrowserRoute(settings);
-    route ??= _handleDynamicAlbumBrowserRoute(settings);
     route ??= _handleAlbumDirPickerRoute(settings);
     route ??= _handleAlbumImporterRoute(settings);
     route ??= _handleTrashbinBrowserRoute(settings);
     route ??= _handleTrashbinViewerRoute(settings);
-    route ??= _handlePersonBrowserRoute(settings);
     route ??= _handleSlideshowViewerRoute(settings);
     route ??= _handleSharingBrowserRoute(settings);
     route ??= _handleSharedFileViewerRoute(settings);
     route ??= _handleAlbumShareOutlierBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
     route ??= _handleShareFolderPickerRoute(settings);
-    route ??= _handleAlbumPickerRoute(settings);
     route ??= _handleSmartAlbumBrowserRoute(settings);
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
-    route ??= _handleTagBrowserRoute(settings);
     route ??= _handlePeopleBrowserRoute(settings);
-    route ??= _handlePlaceBrowserRoute(settings);
     route ??= _handlePlacesBrowserRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
+    route ??= _handleCollectionBrowserRoute(settings);
     return route;
   }
 
@@ -197,9 +220,7 @@ class _MyAppState extends State<MyApp>
   Route<dynamic>? _handleBasicRoute(RouteSettings settings) {
     for (final e in _getRouter().entries) {
       if (e.key == settings.name) {
-        return MaterialPageRoute(
-          builder: e.value,
-        );
+        return e.value();
       }
     }
     return null;
@@ -246,6 +267,8 @@ class _MyAppState extends State<MyApp>
     try {
       if (settings.name == Home.routeName && settings.arguments != null) {
         final args = settings.arguments as HomeArguments;
+        // move this elsewhere later
+        context.read<AccountController>().setCurrentAccount(args.account);
         return Home.buildRoute(args);
       }
     } catch (e) {
@@ -262,19 +285,6 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleRootPickerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleAlbumBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == AlbumBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as AlbumBrowserArguments;
-        return AlbumBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handleAlbumBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -301,20 +311,6 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleArchiveBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleDynamicAlbumBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == DynamicAlbumBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as DynamicAlbumBrowserArguments;
-        return DynamicAlbumBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleDynamicAlbumBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -370,19 +366,6 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleTrashbinViewerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handlePersonBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PersonBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PersonBrowserArguments;
-        return PersonBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePersonBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -468,19 +451,6 @@ class _MyAppState extends State<MyApp>
     } catch (e) {
       _log.severe(
           "[_handleShareFolderPickerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleAlbumPickerRoute(RouteSettings settings) {
-    try {
-      if (settings.name == AlbumPicker.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as AlbumPickerArguments;
-        return AlbumPicker.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handleAlbumPickerRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -574,18 +544,6 @@ class _MyAppState extends State<MyApp>
     return null;
   }
 
-  Route<dynamic>? _handleTagBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == TagBrowser.routeName && settings.arguments != null) {
-        final args = settings.arguments as TagBrowserArguments;
-        return TagBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handleTagBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
   Route<dynamic>? _handlePeopleBrowserRoute(RouteSettings settings) {
     try {
       if (settings.name == PeopleBrowser.routeName &&
@@ -595,19 +553,6 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handlePlaceBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PlaceBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PlaceBrowserArguments;
-        return PlaceBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePlaceBrowserRoute] Failed while handling route", e);
     }
     return null;
   }
@@ -653,6 +598,20 @@ class _MyAppState extends State<MyApp>
       }
     } catch (e) {
       _log.severe("[_handleImageEnhancerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleCollectionBrowserRoute(RouteSettings settings) {
+    try {
+      if (settings.name == CollectionBrowser.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as CollectionBrowserArguments;
+        return CollectionBrowser.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleCollectionBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

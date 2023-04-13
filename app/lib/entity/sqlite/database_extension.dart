@@ -42,6 +42,32 @@ extension FileListExtension on List<app.File> {
   }
 }
 
+class FileDescriptor {
+  const FileDescriptor({
+    required this.relativePath,
+    required this.fileId,
+    required this.contentType,
+    required this.isArchived,
+    required this.isFavorite,
+    required this.bestDateTime,
+  });
+
+  final String relativePath;
+  final int fileId;
+  final String? contentType;
+  final bool? isArchived;
+  final bool? isFavorite;
+  final DateTime bestDateTime;
+}
+
+extension FileDescriptorListExtension on List<FileDescriptor> {
+  List<app.FileDescriptor> convertToAppFileDescriptor(app.Account account) {
+    return map((f) =>
+            SqliteFileDescriptorConverter.fromSql(account.userId.toString(), f))
+        .toList();
+  }
+}
+
 class AlbumWithShare {
   const AlbumWithShare(this.album, this.share);
 
@@ -73,6 +99,20 @@ class AccountFileRowIdsWithFileId {
   final int accountRowId;
   final int fileRowId;
   final int fileId;
+}
+
+class ByAccount {
+  const ByAccount.sql(Account account) : this._(sqlAccount: account);
+
+  const ByAccount.app(app.Account account) : this._(appAccount: account);
+
+  const ByAccount._({
+    this.sqlAccount,
+    this.appAccount,
+  }) : assert((sqlAccount != null) != (appAccount != null));
+
+  final Account? sqlAccount;
+  final app.Account? appAccount;
 }
 
 extension SqliteDbExtension on SqliteDb {
@@ -234,7 +274,7 @@ extension SqliteDbExtension on SqliteDb {
   ///
   /// Only one of [sqlAccount] and [appAccount] must be passed
   Future<AccountFileRowIds?> accountFileRowIdsOfOrNull(
-    app.File file, {
+    app.FileDescriptor file, {
     Account? sqlAccount,
     app.Account? appAccount,
   }) {
@@ -250,9 +290,9 @@ extension SqliteDbExtension on SqliteDb {
       } else {
         q.setAppAccount(appAccount!);
       }
-      if (file.fileId != null) {
-        q.byFileId(file.fileId!);
-      } else {
+      try {
+        q.byFileId(file.fdId);
+      } catch (_) {
         q.byRelativePath(file.strippedPathWithEmpty);
       }
       return q.build()..limit(1);
@@ -268,7 +308,7 @@ extension SqliteDbExtension on SqliteDb {
 
   /// See [accountFileRowIdsOfOrNull]
   Future<AccountFileRowIds> accountFileRowIdsOf(
-    app.File file, {
+    app.FileDescriptor file, {
     Account? sqlAccount,
     app.Account? appAccount,
   }) =>
@@ -396,6 +436,45 @@ extension SqliteDbExtension on SqliteDb {
               r.readTableOrNull(trashes),
             ))
         .get();
+  }
+
+  /// Query [FileDescriptor]s by fileId
+  ///
+  /// Returned files are NOT guaranteed to be sorted as [fileIds]
+  Future<List<FileDescriptor>> fileDescriptorsByFileIds(
+      ByAccount account, Iterable<int> fileIds) {
+    return fileIds.withPartition((sublist) {
+      final query = queryFiles().run((q) {
+        q.setQueryMode(
+          FilesQueryMode.expression,
+          expressions: [
+            accountFiles.relativePath,
+            files.fileId,
+            files.contentType,
+            accountFiles.isArchived,
+            accountFiles.isFavorite,
+            accountFiles.bestDateTime,
+          ],
+        );
+        if (account.sqlAccount != null) {
+          q.setSqlAccount(account.sqlAccount!);
+        } else {
+          q.setAppAccount(account.appAccount!);
+        }
+        q.byFileIds(sublist);
+        return q.build();
+      });
+      return query
+          .map((r) => FileDescriptor(
+                relativePath: r.read(accountFiles.relativePath)!,
+                fileId: r.read(files.fileId)!,
+                contentType: r.read(files.contentType),
+                isArchived: r.read(accountFiles.isArchived),
+                isFavorite: r.read(accountFiles.isFavorite),
+                bestDateTime: r.read(accountFiles.bestDateTime)!,
+              ))
+          .get();
+    }, maxByFileIdsSize);
   }
 
   Future<List<Tag>> allTags({
@@ -553,6 +632,8 @@ extension SqliteDbExtension on SqliteDb {
     await delete(albumShares).go();
     await delete(tags).go();
     await delete(persons).go();
+    await delete(ncAlbums).go();
+    await delete(ncAlbumItems).go();
 
     // reset the auto increment counter
     await customStatement("UPDATE sqlite_sequence SET seq=0;");

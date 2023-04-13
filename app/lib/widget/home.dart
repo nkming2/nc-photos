@@ -14,7 +14,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
-import 'package:nc_photos/widget/home_albums.dart';
+import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/home_photos.dart';
 import 'package:nc_photos/widget/home_search.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -137,9 +137,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
 
       case 2:
-        return HomeAlbums(
-          account: widget.account,
-        );
+        return const HomeCollections();
 
       default:
         throw ArgumentError("Invalid page index: $index");

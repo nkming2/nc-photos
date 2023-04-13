@@ -575,7 +575,7 @@ class FileRepo {
       dataSrc.listMinimal(account, dir);
 
   /// See [FileDataSource.remove]
-  Future<void> remove(Account account, File file) =>
+  Future<void> remove(Account account, FileDescriptor file) =>
       dataSrc.remove(account, file);
 
   /// See [FileDataSource.getBinary]
@@ -659,7 +659,7 @@ abstract class FileDataSource {
   Future<List<File>> listMinimal(Account account, File dir);
 
   /// Remove file
-  Future<void> remove(Account account, File f);
+  Future<void> remove(Account account, FileDescriptor f);
 
   /// Read file as binary array
   Future<Uint8List> getBinary(Account account, File f);

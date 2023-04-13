@@ -17,7 +17,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
-import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
@@ -249,10 +249,8 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
   }
 
   Future<void> _onSelectionAddPressed(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return AddSelectionToAlbumHandler(c)(
+    return const AddSelectionToCollectionHandler()(
       context: context,
-      account: widget.account,
       selection: selectedListItems
           .whereType<_FileListItem>()
           .map((e) => e.file)

@@ -1,7 +1,7 @@
 import 'package:np_api/np_api.dart';
 
 class CacheNotFoundException implements Exception {
-  CacheNotFoundException([this.message]);
+  const CacheNotFoundException([this.message]);
 
   @override
   toString() {
@@ -91,6 +91,15 @@ class InterruptedException implements Exception {
 
   @override
   toString() => "InterruptedException: $message";
+
+  final dynamic message;
+}
+
+class AlbumItemPermissionException implements Exception {
+  const AlbumItemPermissionException([this.message]);
+
+  @override
+  toString() => "AlbumItemPermissionException: $message";
 
   final dynamic message;
 }

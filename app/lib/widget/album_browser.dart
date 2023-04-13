@@ -27,16 +27,16 @@ import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
-import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:nc_photos/widget/album_browser_mixin.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/draggable_item_list_mixin.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
-import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -438,10 +438,8 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   }
 
   Future<void> _onSelectionAddPressed(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return AddSelectionToAlbumHandler(c)(
+    return const AddSelectionToCollectionHandler()(
       context: context,
-      account: widget.account,
       selection: selectedListItems
           .whereType<_FileListItem>()
           .map((e) => e.file)
@@ -718,10 +716,12 @@ class _AlbumBrowserState extends State<AlbumBrowser>
   void _transformItems() {
     if (_editAlbum != null) {
       // edit mode
-      _sortedItems =
-          _editAlbum!.sortProvider.sort(_getAlbumItemsOf(_editAlbum!));
+      // _sortedItems =
+      //     _editAlbum!.sortProvider.sort(_getAlbumItemsOf(_editAlbum!));
+      _sortedItems = _getAlbumItemsOf(_editAlbum!);
     } else {
-      _sortedItems = _album!.sortProvider.sort(_getAlbumItemsOf(_album!));
+      // _sortedItems = _album!.sortProvider.sort(_getAlbumItemsOf(_album!));
+      _sortedItems = _getAlbumItemsOf(_album!);
     }
     _backingFiles = _sortedItems
         .whereType<AlbumFileItem>()

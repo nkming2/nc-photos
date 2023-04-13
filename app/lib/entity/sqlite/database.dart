@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/entity/file.dart' as app;
-import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_descriptor.dart' as app;
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart';
 import 'package:nc_photos/entity/sqlite/isolate_util.dart';
@@ -19,6 +19,7 @@ import 'package:np_codegen/np_codegen.dart';
 
 part 'database.g.dart';
 part 'database_extension.dart';
+part 'database/nc_album_extension.dart';
 
 // remember to also update the truncate method after adding a new table
 @npLog
@@ -36,6 +37,8 @@ part 'database_extension.dart';
     AlbumShares,
     Tags,
     Persons,
+    NcAlbums,
+    NcAlbumItems,
   ],
 )
 class SqliteDb extends _$SqliteDb {

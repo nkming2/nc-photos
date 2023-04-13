@@ -446,12 +446,13 @@ class _DynamicAlbumBrowserState extends State<DynamicAlbumBrowser>
     await Remove(KiwiContainer().resolve<DiContainer>())(
       widget.account,
       selected.map((e) => e.file).toList(),
-      onRemoveFileFailed: (file, e, stackTrace) {
+      onError: (_, f, e, stackTrace) {
         _log.shout(
-            "[_onSelectionDeletePressed] Failed while removing file: ${logFilename(file.path)}",
-            e,
-            stackTrace);
-        successes.removeWhere((item) => item.file.compareServerIdentity(file));
+          "[_onSelectionDeletePressed] Failed while removing file: ${logFilename(f.fdPath)}",
+          e,
+          stackTrace,
+        );
+        successes.removeWhere((item) => item.file.compareServerIdentity(f));
       },
     );
 

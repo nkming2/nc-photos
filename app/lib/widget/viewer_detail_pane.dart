@@ -32,7 +32,7 @@ import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
-import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -410,10 +410,8 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onAddToAlbumPressed(BuildContext context) {
     assert(_file != null);
-    final c = KiwiContainer().resolve<DiContainer>();
-    return AddSelectionToAlbumHandler(c)(
+    return const AddSelectionToCollectionHandler()(
       context: context,
-      account: widget.account,
       selection: [_file!],
       clearSelection: () {},
     );

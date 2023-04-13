@@ -320,6 +320,8 @@ Future<void> _truncate() async {
       "album_shares",
       "tags",
       "persons",
+      "nc_albums",
+      "nc_album_items",
     });
     for (final t in tables) {
       expect(

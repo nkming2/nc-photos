@@ -481,7 +481,7 @@ class ScanAccountDirBloc
     return files;
   }
 
-  bool _isFileOfInterest(File file) {
+  bool _isFileOfInterest(FileDescriptor file) {
     if (!file_util.isSupportedFormat(file)) {
       return false;
     }

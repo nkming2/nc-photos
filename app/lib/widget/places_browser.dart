@@ -8,6 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_location.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -15,9 +16,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
-import 'package:nc_photos/widget/place_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'places_browser.g.dart';
@@ -175,16 +176,14 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
     }
   }
 
-  void _onPlaceTap(LocationGroup location) {
-    Navigator.pushNamed(context, PlaceBrowser.routeName,
-        arguments: PlaceBrowserArguments(
-            widget.account, location.place, location.countryCode));
-  }
-
-  void _onCountryTap(LocationGroup location) {
-    Navigator.pushNamed(context, PlaceBrowser.routeName,
-        arguments:
-            PlaceBrowserArguments(widget.account, null, location.countryCode));
+  void _onLocationTap(LocationGroup location) {
+    Navigator.pushNamed(
+      context,
+      CollectionBrowser.routeName,
+      arguments: CollectionBrowserArguments(
+        CollectionBuilder.byLocationGroup(widget.account, location),
+      ),
+    );
   }
 
   void _transformItems(LocationGroupResult? result) {
@@ -210,7 +209,7 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
               place: e.place,
               thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
                   widget.account, e.latestFileId),
-              onTap: () => _onPlaceTap(e),
+              onTap: () => _onLocationTap(e),
             ))
         .toList();
     _countryItems = result.countryCode
@@ -220,7 +219,7 @@ class _PlacesBrowserState extends State<PlacesBrowser> {
               country: e.place,
               thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
                   widget.account, e.latestFileId),
-              onTap: () => _onCountryTap(e),
+              onTap: () => _onLocationTap(e),
             ))
         .toList();
   }

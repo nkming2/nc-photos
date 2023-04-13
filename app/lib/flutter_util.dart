@@ -20,6 +20,8 @@ class CustomizableMaterialPageRoute extends MaterialPageRoute {
 
 String getImageHeroTag(FileDescriptor file) => "imageHero(${file.fdPath})";
 
+String getCollectionHeroTag(String coverUrl) => "collectionHero($coverUrl)";
+
 // copied from flutter
 Widget defaultHeroFlightShuttleBuilder(
   BuildContext flightContext,

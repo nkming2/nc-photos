@@ -11,6 +11,8 @@ part 'direct_api.dart';
 part 'face_recognition_api.dart';
 part 'files_api.dart';
 part 'files_sharing_api.dart';
+part 'photos_api.dart';
+part 'status_api.dart';
 part 'systemtag_api.dart';
 
 @npLog
@@ -22,6 +24,8 @@ class Api {
   ApiFiles files() => ApiFiles(this);
 
   ApiOcs ocs() => ApiOcs(this);
+
+  ApiPhotos photos(String userId) => ApiPhotos(this, userId);
 
   ApiSystemtags systemtags() => ApiSystemtags(this);
 

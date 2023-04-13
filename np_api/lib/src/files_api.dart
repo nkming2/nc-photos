@@ -252,7 +252,7 @@ class ApiFiles {
     try {
       return await _api.request("MKCOL", path);
     } catch (e) {
-      _log.severe("[mkcol] Failed while get", e);
+      _log.severe("[mkcol] Failed while MKCOL", e);
       rethrow;
     }
   }
