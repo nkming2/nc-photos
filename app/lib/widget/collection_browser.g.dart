@@ -28,6 +28,7 @@ abstract class $_StateCopyWithWorker {
       List<CollectionItem>? editItems,
       List<_Item>? editTransformedItems,
       CollectionItemSort? editSort,
+      bool? isDragging,
       ExceptionEvent? error,
       String? message});
 }
@@ -51,6 +52,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic editItems = copyWithNull,
       dynamic editTransformedItems = copyWithNull,
       dynamic editSort = copyWithNull,
+      dynamic isDragging,
       dynamic error = copyWithNull,
       dynamic message = copyWithNull}) {
     return _State(
@@ -79,6 +81,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         editSort: editSort == copyWithNull
             ? that.editSort
             : editSort as CollectionItemSort?,
+        isDragging: isDragging as bool? ?? that.isDragging,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?,
         message: message == copyWithNull ? that.message : message as String?);
   }
@@ -125,7 +128,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, error: $error, message: $message}";
+    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, error: $error, message: $message}";
   }
 }
 
@@ -247,6 +250,13 @@ extension _$_DeleteSelectedItemsToString on _DeleteSelectedItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_DeleteSelectedItems {}";
+  }
+}
+
+extension _$_SetDraggingToString on _SetDragging {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetDragging {flag: $flag}";
   }
 }
 

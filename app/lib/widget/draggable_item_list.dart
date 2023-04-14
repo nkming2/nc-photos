@@ -26,6 +26,7 @@ class DraggableItemList<T extends DraggableItemMetadata>
     required this.itemDragFeedbackBuilder,
     required this.staggeredTileBuilder,
     this.onDragResult,
+    this.onDraggingChanged,
   });
 
   @override
@@ -43,6 +44,9 @@ class DraggableItemList<T extends DraggableItemMetadata>
   ///
   /// [results] contains the rearranged items
   final void Function(List<T> results)? onDragResult;
+
+  /// Called when user started (true) or ended (false) dragging
+  final ValueChanged<bool>? onDraggingChanged;
 }
 
 @npLog
@@ -62,6 +66,12 @@ class _DraggableItemListState<T extends DraggableItemMetadata>
             feedback: widget.itemDragFeedbackBuilder?.call(context, i, meta),
             onDropBefore: (data) => _onMoved(data.index, i, true),
             onDropAfter: (data) => _onMoved(data.index, i, false),
+            onDragStarted: () {
+              widget.onDraggingChanged?.call(true);
+            },
+            onDragEndedAny: () {
+              widget.onDraggingChanged?.call(false);
+            },
             feedbackSize: Size(widget.maxCrossAxisExtent * .65,
                 widget.maxCrossAxisExtent * .65),
             child: widget.itemBuilder(context, i, meta),

@@ -18,6 +18,7 @@ class _State {
     this.editItems,
     this.editTransformedItems,
     this.editSort,
+    required this.isDragging,
     this.error,
     this.message,
   });
@@ -37,6 +38,7 @@ class _State {
       isSelectionManageableFile: true,
       isEditMode: false,
       isEditBusy: false,
+      isDragging: false,
     );
   }
 
@@ -61,6 +63,8 @@ class _State {
   final List<CollectionItem>? editItems;
   final List<_Item>? editTransformedItems;
   final CollectionItemSort? editSort;
+
+  final bool isDragging;
 
   final ExceptionEvent? error;
   final String? message;
@@ -233,6 +237,16 @@ class _DeleteSelectedItems implements _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _SetDragging implements _Event {
+  const _SetDragging(this.flag);
+
+  @override
+  String toString() => _$toString();
+
+  final bool flag;
 }
 
 @toString

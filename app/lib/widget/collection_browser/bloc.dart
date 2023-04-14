@@ -36,6 +36,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
         transformer: concurrent());
     on<_DeleteSelectedItems>(_onDeleteSelectedItems);
 
+    on<_SetDragging>(_onSetDragging);
+
     on<_SetError>(_onSetError);
     on<_SetMessage>(_onSetMessage);
 
@@ -285,6 +287,11 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
         ));
       }
     }
+  }
+
+  void _onSetDragging(_SetDragging ev, Emitter<_State> emit) {
+    _log.info("$ev");
+    emit(state.copyWith(isDragging: ev.flag));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

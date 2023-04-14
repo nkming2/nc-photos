@@ -191,55 +191,59 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
           child: Stack(
             fit: StackFit.expand,
             children: [
-              CustomScrollView(
-                slivers: [
-                  _BlocBuilder(
-                    buildWhen: (previous, current) =>
-                        previous.selectedItems.isEmpty !=
-                            current.selectedItems.isEmpty ||
-                        previous.isEditMode != current.isEditMode,
-                    builder: (context, state) {
-                      if (state.isEditMode) {
-                        return const _EditAppBar();
-                      } else if (state.selectedItems.isNotEmpty) {
-                        return const _SelectionAppBar();
-                      } else {
-                        return const _AppBar();
-                      }
-                    },
-                  ),
-                  SliverToBoxAdapter(
-                    child: _BlocBuilder(
+              Listener(
+                onPointerMove: (event) => _onPointerMove(context, event),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    _BlocBuilder(
                       buildWhen: (previous, current) =>
-                          previous.isLoading != current.isLoading,
-                      builder: (context, state) => state.isLoading
-                          ? const LinearProgressIndicator()
-                          : const SizedBox(height: 4),
-                    ),
-                  ),
-                  _BlocBuilder(
-                    buildWhen: (previous, current) =>
-                        previous.isEditMode != current.isEditMode,
-                    builder: (context, state) {
-                      if (!state.isEditMode) {
-                        return const _ContentList();
-                      } else {
-                        if (state.collection.capabilities
-                            .contains(CollectionCapability.manualSort)) {
-                          return const _EditContentList();
+                          previous.selectedItems.isEmpty !=
+                              current.selectedItems.isEmpty ||
+                          previous.isEditMode != current.isEditMode,
+                      builder: (context, state) {
+                        if (state.isEditMode) {
+                          return const _EditAppBar();
+                        } else if (state.selectedItems.isNotEmpty) {
+                          return const _SelectionAppBar();
                         } else {
-                          return const SliverIgnorePointer(
-                            ignoring: true,
-                            sliver: SliverOpacity(
-                              opacity: .25,
-                              sliver: _ContentList(),
-                            ),
-                          );
+                          return const _AppBar();
                         }
-                      }
-                    },
-                  ),
-                ],
+                      },
+                    ),
+                    SliverToBoxAdapter(
+                      child: _BlocBuilder(
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading,
+                        builder: (context, state) => state.isLoading
+                            ? const LinearProgressIndicator()
+                            : const SizedBox(height: 4),
+                      ),
+                    ),
+                    _BlocBuilder(
+                      buildWhen: (previous, current) =>
+                          previous.isEditMode != current.isEditMode,
+                      builder: (context, state) {
+                        if (!state.isEditMode) {
+                          return const _ContentList();
+                        } else {
+                          if (state.collection.capabilities
+                              .contains(CollectionCapability.manualSort)) {
+                            return const _EditContentList();
+                          } else {
+                            return const SliverIgnorePointer(
+                              ignoring: true,
+                              sliver: SliverOpacity(
+                                opacity: .25,
+                                sliver: _ContentList(),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               _BlocBuilder(
                 buildWhen: (previous, current) =>
@@ -263,7 +267,52 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
     );
   }
 
+  void _onPointerMove(BuildContext context, PointerMoveEvent event) {
+    final bloc = context.read<_Bloc>();
+    if (!bloc.state.isDragging) {
+      return;
+    }
+    if (event.position.dy >= MediaQuery.of(context).size.height - 100) {
+      // near bottom of screen
+      if (_isDragScrollingDown == true) {
+        return;
+      }
+      // using an arbitrary big number to save time needed to calculate the
+      // actual extent
+      const maxExtent = 1000000000.0;
+      _log.fine("[_onPointerMove] Begin scrolling down");
+      if (_scrollController.offset <
+          _scrollController.position.maxScrollExtent) {
+        _scrollController.animateTo(maxExtent,
+            duration: Duration(
+                milliseconds:
+                    ((maxExtent - _scrollController.offset) * 1.6).round()),
+            curve: Curves.linear);
+        _isDragScrollingDown = true;
+      }
+    } else if (event.position.dy <= 100) {
+      // near top of screen
+      if (_isDragScrollingDown == false) {
+        return;
+      }
+      _log.fine("[_onPointerMove] Begin scrolling up");
+      if (_scrollController.offset > 0) {
+        _scrollController.animateTo(0,
+            duration: Duration(
+                milliseconds: (_scrollController.offset * 1.6).round()),
+            curve: Curves.linear);
+        _isDragScrollingDown = false;
+      }
+    } else if (_isDragScrollingDown != null) {
+      _log.fine("[_onPointerMove] Stop scrolling");
+      _scrollController.jumpTo(_scrollController.offset);
+      _isDragScrollingDown = null;
+    }
+  }
+
   late final _bloc = context.read<_Bloc>();
+  final _scrollController = ScrollController();
+  bool? _isDragScrollingDown;
 }
 
 class _ContentList extends StatelessWidget {
@@ -353,6 +402,9 @@ class _EditContentList extends StatelessWidget {
                 staggeredTileBuilder: (_, item) => item.staggeredTile,
                 onDragResult: (results) {
                   context.read<_Bloc>().add(_EditManualSort(results));
+                },
+                onDraggingChanged: (value) {
+                  context.read<_Bloc>().add(_SetDragging(value));
                 },
               );
             } else {
