@@ -231,13 +231,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                               .contains(CollectionCapability.manualSort)) {
                             return const _EditContentList();
                           } else {
-                            return const SliverIgnorePointer(
-                              ignoring: true,
-                              sliver: SliverOpacity(
-                                opacity: .25,
-                                sliver: _ContentList(),
-                              ),
-                            );
+                            return const _UnmodifiableEditContentList();
                           }
                         }
                       },
@@ -420,6 +414,46 @@ class _EditContentList extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+/// Unmodifiable content list under edit mode
+class _UnmodifiableEditContentList extends StatelessWidget {
+  const _UnmodifiableEditContentList();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverIgnorePointer(
+      ignoring: true,
+      sliver: SliverOpacity(
+        opacity: .25,
+        sliver: StreamBuilder<int>(
+          stream: context.read<PrefController>().albumBrowserZoomLevel,
+          initialData:
+              context.read<PrefController>().albumBrowserZoomLevel.value,
+          builder: (_, zoomLevel) {
+            if (zoomLevel.hasError) {
+              context.read<_Bloc>().add(_SetMessage(
+                  L10n.global().writePreferenceFailureNotification));
+            }
+            return _BlocBuilder(
+              buildWhen: (previous, current) =>
+                  previous.editTransformedItems != current.editTransformedItems,
+              builder: (context, state) {
+                return SelectableItemList<_Item>(
+                  maxCrossAxisExtent: photo_list_util
+                      .getThumbSize(zoomLevel.requireData)
+                      .toDouble(),
+                  items: state.editTransformedItems ?? state.transformedItems,
+                  itemBuilder: (context, _, item) => item.buildWidget(context),
+                  staggeredTileBuilder: (_, item) => item.staggeredTile,
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
