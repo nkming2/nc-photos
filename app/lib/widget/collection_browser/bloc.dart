@@ -18,6 +18,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     on<_LoadItems>(_onLoad);
     on<_TransformItems>(_onTransformItems);
 
+    on<_Download>(_onDownload);
+
     on<_BeginEdit>(_onBeginEdit);
     on<_EditName>(_onEditName);
     on<_AddLabelToCollection>(_onAddLabelToCollection);
@@ -101,6 +103,17 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
       }
     }
     emit(newState);
+  }
+
+  void _onDownload(_Download ev, Emitter<_State> emit) {
+    _log.info("$ev");
+    if (state.items.isNotEmpty) {
+      unawaited(DownloadHandler(_c).downloadFiles(
+        account,
+        state.items.whereType<CollectionFileItem>().map((e) => e.file).toList(),
+        parentDir: state.collection.name,
+      ));
+    }
   }
 
   void _onBeginEdit(_BeginEdit ev, Emitter<_State> emit) {

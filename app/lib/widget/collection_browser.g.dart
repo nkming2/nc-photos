@@ -153,6 +153,13 @@ extension _$_TransformItemsToString on _TransformItems {
   }
 }
 
+extension _$_DownloadToString on _Download {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_Download {}";
+  }
+}
+
 extension _$_BeginEditToString on _BeginEdit {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

@@ -33,20 +33,28 @@ class _AppBar extends StatelessWidget {
           },
         ),
         if (capabilities.contains(CollectionCapability.rename))
-          PopupMenuButton<_MenuOption>(
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-            itemBuilder: (context) {
-              return [
-                if (capabilities.contains(CollectionCapability.rename))
-                  PopupMenuItem(
-                    value: _MenuOption.edit,
-                    child: Text(L10n.global().editTooltip),
-                  ),
-              ];
-            },
-            onSelected: (option) {
-              _onMenuSelected(context, option);
-            },
+          _BlocBuilder(
+            buildWhen: (previous, current) => previous.items != current.items,
+            builder: (context, state) => PopupMenuButton<_MenuOption>(
+              tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+              itemBuilder: (context) {
+                return [
+                  if (capabilities.contains(CollectionCapability.rename))
+                    PopupMenuItem(
+                      value: _MenuOption.edit,
+                      child: Text(L10n.global().editTooltip),
+                    ),
+                  if (state.items.isNotEmpty)
+                    PopupMenuItem(
+                      value: _MenuOption.download,
+                      child: Text(L10n.global().downloadTooltip),
+                    ),
+                ];
+              },
+              onSelected: (option) {
+                _onMenuSelected(context, option);
+              },
+            ),
           ),
       ],
     );
@@ -56,6 +64,9 @@ class _AppBar extends StatelessWidget {
     switch (option) {
       case _MenuOption.edit:
         context.read<_Bloc>().add(const _BeginEdit());
+        break;
+      case _MenuOption.download:
+        context.read<_Bloc>().add(const _Download());
         break;
     }
   }
@@ -343,6 +354,7 @@ class _EditAppBar extends StatelessWidget {
 
 enum _MenuOption {
   edit,
+  download,
 }
 
 enum _SelectionMenuOption {

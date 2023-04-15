@@ -105,6 +105,14 @@ class _TransformItems implements _Event {
 }
 
 @toString
+class _Download implements _Event {
+  const _Download();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
 class _BeginEdit implements _Event {
   const _BeginEdit();
 
