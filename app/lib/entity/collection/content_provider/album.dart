@@ -42,11 +42,11 @@ class CollectionAlbumProvider implements CollectionContentProvider {
 
   @override
   List<CollectionCapability> get capabilities => [
+        CollectionCapability.sort,
+        CollectionCapability.rename,
         if (album.provider is AlbumStaticProvider) ...[
           CollectionCapability.manualItem,
-          CollectionCapability.sort,
           CollectionCapability.manualSort,
-          CollectionCapability.rename,
           CollectionCapability.labelItem,
         ],
       ];
