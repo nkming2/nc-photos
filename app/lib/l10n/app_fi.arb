@@ -213,6 +213,14 @@
 			}
 		}
 	},
+	"connectingToServer2": "Odotetaan palvelimen tunnistautumista",
+	"@connectingToServer2": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
+	"connectingToServerInstruction": "Kirjaudu auenneen selaimen kautta",
+	"@connectingToServerInstruction": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
 	"nameInputHint": "Nimi",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
@@ -236,6 +244,10 @@
 	"signIn2faHintText": "Käytä sovellussalasanaa, jos käytössäsi on kaksivaiheinen tunnistautuminen",
 	"@signIn2faHintText": {
 		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
+	"signInHeaderText2": "Nextcloud\nKirjaudu sisään",
+	"@signInHeaderText2": {
+		"description": "Sign in to Nextcloud server"
 	},
 	"serverAddressInputHint": "Palvelimen osoite",
 	"@serverAddressInputHint": {
@@ -406,6 +418,18 @@
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
 	},
+	"settingsSeedColorTitle": "Teeman väri",
+	"@settingsSeedColorTitle": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorDescription": "Käytetään määrittämään sovelluksen kaikkia värejä",
+	"@settingsSeedColorDescription": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorPickerTitle": "Valitse väri",
+	"@settingsSeedColorPickerTitle": {
+		"description": "Dialog to customize the colors used in app"
+	},
 	"settingsUseBlackInDarkThemeTitle": "Tumma teema",
 	"@settingsUseBlackInDarkThemeTitle": {
 		"description": "Make the dark theme darker"
@@ -429,6 +453,14 @@
 	},
 	"settingsExperimentalTitle": "Kokeellinen",
 	"settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
+	"settingsExpertTitle": "Edistyneet",
+	"@settingsExpertTitle": {
+		"description": "Settings that must be tweaked with caution"
+	},
+	"settingsExpertWarningText": "Varmista, että olet ymmärtänyt jokaisen vaihtoehdon ennen kuin teet mitään",
+	"settingsClearCacheDatabaseTitle": "Puhdista tietokanta",
+	"settingsClearCacheDatabaseDescription": "Puhdista välitiedostot ja aloita uudelleen synkronointi palvelimen kanssa",
+	"settingsClearCacheDatabaseSuccessNotification": "Tietokannan puhdistus onnistui. Käynnistä sovellus uudelleen",
 	"settingsAboutSectionTitle": "Tietoa",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -1469,7 +1501,14 @@
 	"@imageSaveOptionDialogServerButtonLabel": {
 		"description": "Save the image on your Nextcloud server"
 	},
-
+	"initialSyncMessage": "Synkronoidaan palvelimen kanssa ensimmäistä kertaa",
+	"@initialSyncMessage": {
+		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+	},
+	"loopTooltip": "Uudelleentoista",
+	"@loopTooltip": {
+		"description": "Enable or disable loop in the video player"
+	},
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

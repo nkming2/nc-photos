@@ -296,19 +296,7 @@
   ],
 
   "fi": [
-    "connectingToServer2",
-    "connectingToServerInstruction",
-    "signInHeaderText2",
-    "settingsSeedColorTitle",
-    "settingsSeedColorDescription",
-    "settingsSeedColorPickerTitle",
-    "settingsExpertTitle",
-    "settingsExpertWarningText",
-    "settingsClearCacheDatabaseTitle",
-    "settingsClearCacheDatabaseDescription",
-    "settingsClearCacheDatabaseSuccessNotification",
-    "initialSyncMessage",
-    "loopTooltip"
+    
   ],
 
   "fr": [
