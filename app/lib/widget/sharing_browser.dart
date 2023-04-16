@@ -251,9 +251,8 @@ class _SharingBrowserState extends State<SharingBrowser> {
     }
   }
 
-  Future<void> _onAlbumShareItemTap(
-      BuildContext context, ListSharingAlbum share) {
-    return album_browser_util.push(context, widget.account, share.album);
+  void _onAlbumShareItemTap(BuildContext context, ListSharingAlbum share) {
+    album_browser_util.push(context, widget.account, share.album);
   }
 
   void _transformItems(List<ListSharingItem> items) {

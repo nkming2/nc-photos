@@ -243,9 +243,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           stackTrace);
     }
     if (newAlbum != null && mounted) {
-      unawaited(
-        album_browser_util.pushReplacement(context, account, newAlbum!),
-      );
+      album_browser_util.pushReplacement(context, account, newAlbum!);
     }
   }
 
