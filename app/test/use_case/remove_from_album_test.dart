@@ -74,7 +74,7 @@ Future<void> _removeLastFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(items: []),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),

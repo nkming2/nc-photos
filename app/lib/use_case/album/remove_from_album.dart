@@ -103,7 +103,7 @@ class RemoveFromAlbum {
           true) {
         // revert to auto cover so [UpdateAutoAlbumCover] can do its work
         newAlbum = newAlbum.copyWith(
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
         );
         isNeedUpdate = true;
         break;

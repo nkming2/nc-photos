@@ -65,7 +65,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 /// Cover selected automatically by us
 @toString
 class AlbumAutoCoverProvider extends AlbumCoverProvider {
-  AlbumAutoCoverProvider({
+  const AlbumAutoCoverProvider({
     this.coverFile,
   });
 
@@ -73,7 +73,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
     return AlbumAutoCoverProvider(
       coverFile: json["coverFile"] == null
           ? null
-          : File.fromJson(json["coverFile"].cast<String, dynamic>()),
+          : FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
     );
   }
 
@@ -81,7 +81,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   String toString() => _$toString();
 
   @override
-  getCover(Album album) {
+  FileDescriptor? getCover(Album album) {
     if (coverFile == null) {
       try {
         // use the latest file as cover
@@ -103,18 +103,18 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   }
 
   @override
-  get props => [
+  List<Object?> get props => [
         coverFile,
       ];
 
   @override
-  _toContentJson() {
+  JsonObj _toContentJson() {
     return {
       if (coverFile != null) "coverFile": coverFile!.toJson(),
     };
   }
 
-  final File? coverFile;
+  final FileDescriptor? coverFile;
 
   static const _type = "auto";
 }

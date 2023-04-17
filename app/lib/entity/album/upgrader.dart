@@ -252,31 +252,44 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
     _log.fine("[call] Upgrade v8 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     try {
-      if (result["coverProvider"]["type"] != "manual") {
+      if (result["coverProvider"]["type"] == "manual") {
+        final content = (result["coverProvider"]["content"]["coverFile"] as Map)
+            .cast<String, dynamic>();
+        final fd = _fileJsonToFileDescriptorJson(content);
+        result["coverProvider"]["content"]["coverFile"] = fd;
+      } else if (result["coverProvider"]["type"] == "auto") {
+        final content =
+            (result["coverProvider"]["content"]["coverFile"] as Map?)
+                ?.cast<String, dynamic>();
+        if (content != null) {
+          final fd = _fileJsonToFileDescriptorJson(content);
+          result["coverProvider"]["content"]["coverFile"] = fd;
+        }
+        return result;
+      } else {
         return result;
       }
-      final content = (result["coverProvider"]["content"]["coverFile"] as Map)
-          .cast<String, dynamic>();
-      final fd = {
-        "fdPath": content["path"],
-        "fdId": content["fileId"],
-        "fdMime": content["contentType"],
-        "fdIsArchived": content["isArchived"] ?? false,
-        "fdIsFavorite": content["isFavorite"] ?? false,
-        "fdDateTime": content["overrideDateTime"] ??
-            (content["metadata"]?["exif"]?["DateTimeOriginal"] as String?)?.run(
-                (d) =>
-                    Exif.dateTimeFormat.parse(d).toUtc().toIso8601String()) ??
-            content["lastModified"] ??
-            clock.now().toUtc().toIso8601String(),
-      };
-      result["coverProvider"]["content"]["coverFile"] = fd;
     } catch (e, stackTrace) {
       // this upgrade is not a must, if it failed then just leave it and it'll
       // be upgraded the next time the album is saved
       _log.shout("[call] Failed while upgrade", e, stackTrace);
     }
     return result;
+  }
+
+  static JsonObj _fileJsonToFileDescriptorJson(JsonObj json) {
+    return {
+      "fdPath": json["path"],
+      "fdId": json["fileId"],
+      "fdMime": json["contentType"],
+      "fdIsArchived": json["isArchived"] ?? false,
+      "fdIsFavorite": json["isFavorite"] ?? false,
+      "fdDateTime": json["overrideDateTime"] ??
+          (json["metadata"]?["exif"]?["DateTimeOriginal"] as String?)?.run(
+              (d) => Exif.dateTimeFormat.parse(d).toUtc().toIso8601String()) ??
+          json["lastModified"] ??
+          clock.now().toUtc().toIso8601String(),
+    };
   }
 
   /// File path for logging only

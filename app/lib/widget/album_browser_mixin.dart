@@ -211,7 +211,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           await UpdateAlbum(albumRepo)(
               account,
               album.copyWith(
-                coverProvider: AlbumAutoCoverProvider(),
+                coverProvider: const AlbumAutoCoverProvider(),
               ));
         },
         L10n.global().unsetAlbumCoverProcessingNotification,

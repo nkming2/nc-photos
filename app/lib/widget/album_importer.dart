@@ -245,7 +245,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
           provider: AlbumDirProvider(
             dirs: [p],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumTimeSortProvider(isAscending: false),
         );
         _log.info("[_createAllAlbums] Creating dir album: $album");

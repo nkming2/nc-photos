@@ -50,7 +50,7 @@ class EditAlbum {
     if (cover != null) {
       if (cover.obj == null) {
         newAlbum = newAlbum.copyWith(
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
         );
       } else {
         newAlbum = newAlbum.copyWith(

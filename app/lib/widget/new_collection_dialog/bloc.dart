@@ -73,7 +73,7 @@ class _Bloc extends Bloc<_Event, _State> {
           album: Album(
             name: state.formValue.name,
             provider: AlbumStaticProvider(items: const []),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumTimeSortProvider(isAscending: false),
           ),
         );
@@ -84,7 +84,7 @@ class _Bloc extends Bloc<_Event, _State> {
           album: Album(
             name: state.formValue.name,
             provider: AlbumDirProvider(dirs: state.formValue.dirs),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumTimeSortProvider(isAscending: false),
           ),
         );
@@ -95,7 +95,7 @@ class _Bloc extends Bloc<_Event, _State> {
           album: Album(
             name: state.formValue.name,
             provider: AlbumTagProvider(tags: state.formValue.tags),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumTimeSortProvider(isAscending: false),
           ),
         );

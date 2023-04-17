@@ -20,7 +20,7 @@ extension _$AlbumCoverProviderNpLog on AlbumCoverProvider {
 extension _$AlbumAutoCoverProviderToString on AlbumAutoCoverProvider {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumAutoCoverProvider {coverFile: ${coverFile == null ? null : "${coverFile!.path}"}}";
+    return "AlbumAutoCoverProvider {coverFile: ${coverFile == null ? null : "${coverFile!.fdPath}"}}";
   }
 }
 
