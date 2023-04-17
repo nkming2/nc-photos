@@ -60,6 +60,8 @@ enum CollectionCapability {
   rename,
   // text labels
   labelItem,
+  // set the cover image
+  manualCover,
 }
 
 /// Provide the actual content of a collection
@@ -80,6 +82,10 @@ abstract class CollectionContentProvider {
   DateTime get lastModified;
 
   /// Return the capabilities of the collection
+  ///
+  /// Notice that the capabilities returned here represent all the capabilities
+  /// that this implementation supports. In practice there may be extra runtime
+  /// requirements that mask some of them (e.g., user permissions)
   List<CollectionCapability> get capabilities;
 
   /// Return the sort type

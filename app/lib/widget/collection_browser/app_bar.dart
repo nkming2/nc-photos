@@ -5,58 +5,69 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // capability can't be changed once the collection is created
-    final capabilities = context.read<_Bloc>().state.collection.capabilities;
-    return SliverAppBar(
-      floating: true,
-      expandedHeight: 160,
-      flexibleSpace: FlexibleSpaceBar(
-        background: const _AppBarCover(),
-        title: _BlocBuilder(
-          buildWhen: (previous, current) =>
-              previous.collection.name != current.collection.name,
-          builder: (context, state) => Text(
-            state.collection.name,
-            style: TextStyle(
-              color: Theme.of(context).appBarTheme.foregroundColor,
+    final c = KiwiContainer().resolve<DiContainer>();
+    return _BlocBuilder(
+      buildWhen: (previous, current) =>
+          previous.items != current.items ||
+          previous.collection != current.collection,
+      builder: (context, state) {
+        final bloc = context.read<_Bloc>();
+        final adapter = CollectionAdapter.of(c, bloc.account, state.collection);
+        final canRename = adapter.isPermitted(CollectionCapability.rename);
+        final canManualCover =
+            adapter.isPermitted(CollectionCapability.manualCover);
+
+        final actions = <Widget>[
+          ZoomMenuButton(
+            initialZoom: 0,
+            minZoom: 0,
+            maxZoom: 2,
+            onZoomChanged: (value) {
+              context.read<PrefController>().setAlbumBrowserZoomLevel(value);
+            },
+          ),
+        ];
+        if (state.items.isNotEmpty || canRename) {
+          actions.add(PopupMenuButton<_MenuOption>(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            itemBuilder: (_) => [
+              if (canRename)
+                PopupMenuItem(
+                  value: _MenuOption.edit,
+                  child: Text(L10n.global().editTooltip),
+                ),
+              if (canManualCover && adapter.isManualCover())
+                PopupMenuItem(
+                  value: _MenuOption.unsetCover,
+                  child: Text(L10n.global().unsetAlbumCoverTooltip),
+                ),
+              if (state.items.isNotEmpty)
+                PopupMenuItem(
+                  value: _MenuOption.download,
+                  child: Text(L10n.global().downloadTooltip),
+                ),
+            ],
+            onSelected: (option) {
+              _onMenuSelected(context, option);
+            },
+          ));
+        }
+
+        return SliverAppBar(
+          floating: true,
+          expandedHeight: 160,
+          flexibleSpace: FlexibleSpaceBar(
+            background: const _AppBarCover(),
+            title: Text(
+              state.collection.name,
+              style: TextStyle(
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
             ),
           ),
-        ),
-      ),
-      actions: [
-        ZoomMenuButton(
-          initialZoom: 0,
-          minZoom: 0,
-          maxZoom: 2,
-          onZoomChanged: (value) {
-            context.read<PrefController>().setAlbumBrowserZoomLevel(value);
-          },
-        ),
-        if (capabilities.contains(CollectionCapability.rename))
-          _BlocBuilder(
-            buildWhen: (previous, current) => previous.items != current.items,
-            builder: (context, state) => PopupMenuButton<_MenuOption>(
-              tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-              itemBuilder: (context) {
-                return [
-                  if (capabilities.contains(CollectionCapability.rename))
-                    PopupMenuItem(
-                      value: _MenuOption.edit,
-                      child: Text(L10n.global().editTooltip),
-                    ),
-                  if (state.items.isNotEmpty)
-                    PopupMenuItem(
-                      value: _MenuOption.download,
-                      child: Text(L10n.global().downloadTooltip),
-                    ),
-                ];
-              },
-              onSelected: (option) {
-                _onMenuSelected(context, option);
-              },
-            ),
-          ),
-      ],
+          actions: actions,
+        );
+      },
     );
   }
 
@@ -64,6 +75,9 @@ class _AppBar extends StatelessWidget {
     switch (option) {
       case _MenuOption.edit:
         context.read<_Bloc>().add(const _BeginEdit());
+        break;
+      case _MenuOption.unsetCover:
+        context.read<_Bloc>().add(const _UnsetCover());
         break;
       case _MenuOption.download:
         context.read<_Bloc>().add(const _Download());
@@ -145,8 +159,8 @@ class _SelectionAppBar extends StatelessWidget {
           PopupMenuButton<_SelectionMenuOption>(
             tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
             itemBuilder: (context) => [
-              if (state.collection.capabilities
-                      .contains(CollectionCapability.manualItem) &&
+              if (context.read<_Bloc>().isCollectionCapabilityPermitted(
+                      CollectionCapability.manualItem) &&
                   state.isSelectionRemovable)
                 PopupMenuItem(
                   value: _SelectionMenuOption.removeFromAlbum,
@@ -237,7 +251,11 @@ class _EditAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final capabilities = context.read<_Bloc>().state.collection.capabilities;
+    final capabilitiesAdapter = CollectionAdapter.of(
+      KiwiContainer().resolve<DiContainer>(),
+      context.read<_Bloc>().account,
+      context.read<_Bloc>().state.collection,
+    );
     return SliverAppBar(
       floating: true,
       expandedHeight: 160,
@@ -274,13 +292,13 @@ class _EditAppBar extends StatelessWidget {
         },
       ),
       actions: [
-        if (capabilities.contains(CollectionCapability.labelItem))
+        if (capabilitiesAdapter.isPermitted(CollectionCapability.labelItem))
           IconButton(
             icon: const Icon(Icons.text_fields),
             tooltip: L10n.global().albumAddTextTooltip,
             onPressed: () => _onAddTextPressed(context),
           ),
-        if (capabilities.contains(CollectionCapability.sort))
+        if (capabilitiesAdapter.isPermitted(CollectionCapability.sort))
           IconButton(
             icon: const Icon(Icons.sort_by_alpha),
             tooltip: L10n.global().sortTooltip,
@@ -354,6 +372,7 @@ class _EditAppBar extends StatelessWidget {
 
 enum _MenuOption {
   edit,
+  unsetCover,
   download,
 }
 

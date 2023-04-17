@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -17,6 +18,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/album/add_file_to_album.dart';
 import 'package:nc_photos/use_case/album/edit_album.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
@@ -75,8 +77,9 @@ class CollectionAlbumAdapter implements CollectionAdapter {
     String? name,
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
+    OrNull<FileDescriptor>? cover,
   }) async {
-    assert(name != null || items != null || itemSort != null);
+    assert(name != null || items != null || itemSort != null || cover != null);
     final newItems = items?.run((items) => items
         .map((e) {
           if (e is AlbumAdaptedCollectionItem) {
@@ -101,6 +104,7 @@ class CollectionAlbumAdapter implements CollectionAdapter {
       name: name,
       items: newItems,
       itemSort: itemSort,
+      cover: cover,
     );
     return collection.copyWith(
       name: name,
@@ -185,17 +189,38 @@ class CollectionAlbumAdapter implements CollectionAdapter {
   }
 
   @override
-  bool isItemsRemovable(List<CollectionItem> items) {
-    if (_provider.album.albumFile!.isOwned(account.userId)) {
+  bool isItemRemovable(CollectionItem item) {
+    if (_provider.album.provider is! AlbumStaticProvider) {
+      return false;
+    }
+    if (_provider.album.albumFile?.isOwned(account.userId) == true) {
       return true;
     }
-    return items
-        .whereType<AlbumAdaptedCollectionItem>()
-        .any((e) => e.albumItem.addedBy == account.userId);
+    if (item is! AlbumAdaptedCollectionItem) {
+      _log.warning("[isItemRemovable] Unknown item type: ${item.runtimeType}");
+      return true;
+    }
+    return item.albumItem.addedBy == account.userId;
   }
 
   @override
   Future<void> remove() => RemoveAlbum(_c)(account, _provider.album);
+
+  @override
+  bool isPermitted(CollectionCapability capability) {
+    if (!_provider.capabilities.contains(capability)) {
+      return false;
+    }
+    if (_provider.album.albumFile?.isOwned(account.userId) == true) {
+      return true;
+    } else {
+      return _provider.guestCapabilities.contains(capability);
+    }
+  }
+
+  @override
+  bool isManualCover() =>
+      _provider.album.coverProvider is AlbumManualCoverProvider;
 
   final DiContainer _c;
   final Account account;

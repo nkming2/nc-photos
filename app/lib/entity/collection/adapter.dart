@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:np_common/type.dart';
 
 abstract class CollectionAdapter {
@@ -51,13 +52,11 @@ abstract class CollectionAdapter {
   });
 
   /// Edit this collection
-  ///
-  /// [name] and [items] are optional params and if not null, set the value to
-  /// this collection
   Future<Collection> edit({
     String? name,
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
+    OrNull<FileDescriptor>? cover,
   });
 
   /// Remove [items] from this collection and return the removed count
@@ -70,10 +69,16 @@ abstract class CollectionAdapter {
   /// Convert a [NewCollectionItem] to an adapted one
   Future<CollectionItem> adaptToNewItem(NewCollectionItem original);
 
-  bool isItemsRemovable(List<CollectionItem> items);
+  bool isItemRemovable(CollectionItem item);
 
   /// Remove this collection
   Future<void> remove();
+
+  /// Return if this capability is allowed
+  bool isPermitted(CollectionCapability capability);
+
+  /// Return if the cover of this collection has been manually set
+  bool isManualCover();
 }
 
 abstract class CollectionItemAdapter {

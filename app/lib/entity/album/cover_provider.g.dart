@@ -27,7 +27,7 @@ extension _$AlbumAutoCoverProviderToString on AlbumAutoCoverProvider {
 extension _$AlbumManualCoverProviderToString on AlbumManualCoverProvider {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumManualCoverProvider {coverFile: ${coverFile.path}}";
+    return "AlbumManualCoverProvider {coverFile: ${coverFile.fdPath}}";
   }
 }
 

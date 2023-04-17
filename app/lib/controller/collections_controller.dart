@@ -9,6 +9,8 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
@@ -157,6 +159,7 @@ class CollectionsController {
     String? name,
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
+    OrNull<FileDescriptor>? cover,
   }) async {
     try {
       final c = await _mutex.protect(() async {
@@ -166,6 +169,7 @@ class CollectionsController {
           name: name,
           items: items,
           itemSort: itemSort,
+          cover: cover,
         );
       });
       _updateCollection(c, items);

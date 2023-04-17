@@ -29,6 +29,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     on<_DoneEdit>(_onDoneEdit, transformer: concurrent());
     on<_CancelEdit>(_onCancelEdit);
 
+    on<_UnsetCover>(_onUnsetCover);
+
     on<_SetSelectedItems>(_onSetSelectedItems);
     on<_DownloadSelectedItems>(_onDownloadSelectedItems);
     on<_AddSelectedItemsToCollection>(_onAddSelectedItemsToCollection);
@@ -66,12 +68,18 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     return super.close();
   }
 
+  bool isCollectionCapabilityPermitted(CollectionCapability capability) {
+    return CollectionAdapter.of(_c, account, state.collection)
+        .isPermitted(capability);
+  }
+
   @override
   String get tag => _log.fullName;
 
   void _onUpdateCollection(_UpdateCollection ev, Emitter<_State> emit) {
     _log.info("$ev");
     emit(state.copyWith(collection: ev.collection));
+    _updateCover(emit);
   }
 
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) {
@@ -94,15 +102,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {
     _log.info("$ev");
     final result = _transformItems(ev.items, state.collection.itemSort);
-    var newState = state.copyWith(transformedItems: result.transformed);
-    if (state.coverUrl == null) {
-      // if cover is not managed by the collection, use the first item
-      final cover = _getCoverUrlOnNewItem(result.sorted);
-      if (cover != null) {
-        newState = newState.copyWith(coverUrl: cover);
-      }
-    }
-    emit(newState);
+    emit(state.copyWith(transformedItems: result.transformed));
+    _updateCover(emit);
   }
 
   void _onDownload(_Download ev, Emitter<_State> emit) {
@@ -128,8 +129,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   void _onAddLabelToCollection(_AddLabelToCollection ev, Emitter<_State> emit) {
     _log.info("$ev");
-    assert(
-        state.collection.capabilities.contains(CollectionCapability.labelItem));
+    assert(isCollectionCapabilityPermitted(CollectionCapability.labelItem));
     emit(state.copyWith(
       editItems: [
         NewCollectionLabelItem(ev.label, clock.now().toUtc()),
@@ -149,8 +149,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   void _onEditManualSort(_EditManualSort ev, Emitter<_State> emit) {
     _log.info("$ev");
-    assert(state.collection.capabilities
-        .contains(CollectionCapability.manualSort));
+    assert(isCollectionCapabilityPermitted(CollectionCapability.manualSort));
     emit(state.copyWith(
       editSort: CollectionItemSort.manual,
       editItems:
@@ -204,15 +203,20 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     ));
   }
 
+  void _onUnsetCover(_UnsetCover ev, Emitter<_State> emit) {
+    _log.info("$ev");
+    collectionsController.edit(state.collection, cover: OrNull(null));
+  }
+
   void _onSetSelectedItems(_SetSelectedItems ev, Emitter<_State> emit) {
     _log.info("$ev");
+    final adapter = CollectionAdapter.of(_c, account, state.collection);
     emit(state.copyWith(
       selectedItems: ev.items,
-      isSelectionRemovable: CollectionAdapter.of(_c, account, state.collection)
-          .isItemsRemovable(ev.items
-              .whereType<_ActualItem>()
-              .map((e) => e.original)
-              .toList()),
+      isSelectionRemovable: ev.items
+          .whereType<_ActualItem>()
+          .map((e) => e.original)
+          .any(adapter.isItemRemovable),
     ));
   }
 
@@ -403,23 +407,20 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     );
   }
 
-  String? _getCoverUrlOnNewItem(List<CollectionItem> sortedItems) {
+  String? _getCoverUrlByItems() {
     try {
       final firstFile =
-          (sortedItems.firstWhereOrNull((i) => i is CollectionFileItem)
-                  as CollectionFileItem?)
-              ?.file;
-      if (firstFile != null) {
-        return api_util.getFilePreviewUrlByFileId(
-          account,
-          firstFile.fdId,
-          width: k.coverSize,
-          height: k.coverSize,
-          isKeepAspectRatio: false,
-        );
-      }
-    } catch (_) {}
-    return null;
+          state.transformedItems.whereType<_FileItem>().first.file;
+      return api_util.getFilePreviewUrlByFileId(
+        account,
+        firstFile.fdId,
+        width: k.coverSize,
+        height: k.coverSize,
+        isKeepAspectRatio: false,
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   static String? _getCoverUrl(Collection collection) {
@@ -427,6 +428,14 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
       return collection.contentProvider.getCoverUrl(k.coverSize, k.coverSize);
     } catch (_) {
       return null;
+    }
+  }
+
+  void _updateCover(Emitter<_State> emit) {
+    var coverUrl = _getCoverUrl(state.collection);
+    coverUrl ??= _getCoverUrlByItems();
+    if (coverUrl != state.coverUrl) {
+      emit(state.copyWith(coverUrl: coverUrl));
     }
   }
 

@@ -4,7 +4,6 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:clock/clock.dart';
-import 'package:collection/collection.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,6 +36,7 @@ import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/archive_file.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
@@ -227,8 +227,10 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                         if (!state.isEditMode) {
                           return const _ContentList();
                         } else {
-                          if (state.collection.capabilities
-                              .contains(CollectionCapability.manualSort)) {
+                          if (context
+                              .read<_Bloc>()
+                              .isCollectionCapabilityPermitted(
+                                  CollectionCapability.manualSort)) {
                             return const _EditContentList();
                           } else {
                             return const _UnmodifiableEditContentList();
@@ -314,16 +316,18 @@ class _ContentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<_Bloc>();
     return StreamBuilder<int>(
       stream: context.read<PrefController>().albumBrowserZoomLevel,
       initialData: context.read<PrefController>().albumBrowserZoomLevel.value,
       builder: (_, zoomLevel) {
         if (zoomLevel.hasError) {
-          context.read<_Bloc>().add(
+          bloc.add(
               _SetMessage(L10n.global().writePreferenceFailureNotification));
         }
         return _BlocBuilder(
           buildWhen: (previous, current) =>
+              previous.collection != current.collection ||
               previous.transformedItems != current.transformedItems ||
               previous.selectedItems != current.selectedItems,
           builder: (context, state) {
@@ -336,9 +340,7 @@ class _ContentList extends StatelessWidget {
               staggeredTileBuilder: (_, item) => item.staggeredTile,
               selectedItems: state.selectedItems,
               onSelectionChange: (_, selected) {
-                context
-                    .read<_Bloc>()
-                    .add(_SetSelectedItems(items: selected.cast()));
+                bloc.add(_SetSelectedItems(items: selected.cast()));
               },
               onItemTap: (context, index, _) {
                 final actualIndex = index -
@@ -349,12 +351,19 @@ class _ContentList extends StatelessWidget {
                 Navigator.of(context).pushNamed(
                   Viewer.routeName,
                   arguments: ViewerArguments(
-                    context.read<_Bloc>().account,
+                    bloc.account,
                     state.transformedItems
                         .whereType<_FileItem>()
                         .map((e) => e.file)
                         .toList(),
                     actualIndex,
+                    fromCollection: ViewerCollectionData(
+                      state.collection,
+                      state.transformedItems
+                          .whereType<_ActualItem>()
+                          .map((e) => e.original)
+                          .toList(),
+                    ),
                   ),
                 );
               },
@@ -383,8 +392,8 @@ class _EditContentList extends StatelessWidget {
           buildWhen: (previous, current) =>
               previous.editTransformedItems != current.editTransformedItems,
           builder: (context, state) {
-            if (state.collection.capabilities
-                .contains(CollectionCapability.manualSort)) {
+            if (context.read<_Bloc>().isCollectionCapabilityPermitted(
+                CollectionCapability.manualSort)) {
               return DraggableItemList<_Item>(
                 maxCrossAxisExtent: photo_list_util
                     .getThumbSize(zoomLevel.requireData)

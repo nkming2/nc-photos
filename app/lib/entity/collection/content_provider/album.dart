@@ -44,9 +44,18 @@ class CollectionAlbumProvider implements CollectionContentProvider {
   List<CollectionCapability> get capabilities => [
         CollectionCapability.sort,
         CollectionCapability.rename,
+        CollectionCapability.manualCover,
         if (album.provider is AlbumStaticProvider) ...[
           CollectionCapability.manualItem,
           CollectionCapability.manualSort,
+          CollectionCapability.labelItem,
+        ],
+      ];
+
+  /// Capabilities when this album is shared to this user by someone else
+  List<CollectionCapability> get guestCapabilities => [
+        if (album.provider is AlbumStaticProvider) ...[
+          CollectionCapability.manualItem,
           CollectionCapability.labelItem,
         ],
       ];

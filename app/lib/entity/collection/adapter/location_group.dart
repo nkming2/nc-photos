@@ -48,6 +48,10 @@ class CollectionLocationGroupAdapter
     throw UnsupportedError("Operation not supported");
   }
 
+  @override
+  bool isPermitted(CollectionCapability capability) =>
+      _provider.capabilities.contains(capability);
+
   final DiContainer _c;
   final Account account;
   final Collection collection;

@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/find_file_descriptor.dart';
 import 'package:nc_photos/use_case/nc_album/add_file_to_nc_album.dart';
 import 'package:nc_photos/use_case/nc_album/edit_nc_album.dart';
@@ -75,9 +76,10 @@ class CollectionNcAlbumAdapter implements CollectionAdapter {
     String? name,
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
+    OrNull<FileDescriptor>? cover,
   }) async {
     assert(name != null);
-    if (items != null || itemSort != null) {
+    if (items != null || itemSort != null || cover != null) {
       _log.warning(
           "[edit] Nextcloud album does not support editing item or sort");
     }
@@ -131,12 +133,17 @@ class CollectionNcAlbumAdapter implements CollectionAdapter {
   }
 
   @override
-  bool isItemsRemovable(List<CollectionItem> items) {
-    return true;
-  }
+  bool isItemRemovable(CollectionItem item) => true;
 
   @override
   Future<void> remove() => RemoveNcAlbum(_c)(account, _provider.album);
+
+  @override
+  bool isPermitted(CollectionCapability capability) =>
+      _provider.capabilities.contains(capability);
+
+  @override
+  bool isManualCover() => false;
 
   Future<NcAlbum> _syncRemote() async {
     final remote = await ListNcAlbum(_c)(account).last;

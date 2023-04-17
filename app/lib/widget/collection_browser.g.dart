@@ -216,6 +216,13 @@ extension _$_CancelEditToString on _CancelEdit {
   }
 }
 
+extension _$_UnsetCoverToString on _UnsetCover {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_UnsetCover {}";
+  }
+}
+
 extension _$_SetSelectedItemsToString on _SetSelectedItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

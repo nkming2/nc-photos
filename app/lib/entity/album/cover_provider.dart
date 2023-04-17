@@ -122,13 +122,14 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
 /// Cover picked by user
 @toString
 class AlbumManualCoverProvider extends AlbumCoverProvider {
-  AlbumManualCoverProvider({
+  const AlbumManualCoverProvider({
     required this.coverFile,
   });
 
   factory AlbumManualCoverProvider.fromJson(JsonObj json) {
     return AlbumManualCoverProvider(
-      coverFile: File.fromJson(json["coverFile"].cast<String, dynamic>()),
+      coverFile:
+          FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
     );
   }
 
@@ -136,21 +137,21 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
   String toString() => _$toString();
 
   @override
-  getCover(Album album) => coverFile;
+  FileDescriptor? getCover(Album album) => coverFile;
 
   @override
-  get props => [
+  List<Object?> get props => [
         coverFile,
       ];
 
   @override
-  _toContentJson() {
+  JsonObj _toContentJson() {
     return {
       "coverFile": coverFile.toJson(),
     };
   }
 
-  final File coverFile;
+  final FileDescriptor coverFile;
 
   static const _type = "manual";
 }

@@ -206,8 +206,7 @@ class _SmartAlbumBrowserState extends State<SmartAlbumBrowser>
       }
     }
     Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
-            album: widget.album));
+        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
   }
 
   void _onDownloadPressed() {

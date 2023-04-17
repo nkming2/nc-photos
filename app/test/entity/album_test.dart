@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -1758,6 +1759,12 @@ void main() {
             });
       });
     });
+
+    group("AlbumUpgraderV8", () {
+      test("non manual cover", _upgradeV8NonManualCover);
+      test("manual cover", _upgradeV8ManualCover);
+      test("manual cover (exif time)", _upgradeV8ManualExifTime);
+    });
   });
 }
 
@@ -1883,6 +1890,195 @@ void _toAppDbJsonShares() {
   });
 }
 
+void _upgradeV8NonManualCover() {
+  final json = <String, dynamic>{
+    "version": 8,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "memory",
+      "content": <String, dynamic>{
+        "coverFile": <String, dynamic>{
+          "fdPath": "remote.php/dav/files/admin/test1.jpg",
+          "fdId": 1,
+          "fdMime": null,
+          "fdIsArchived": false,
+          "fdIsFavorite": false,
+          "fdDateTime": "2020-01-02T03:04:05.678901Z",
+        },
+      },
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "albumFile": <String, dynamic>{
+      "path": "remote.php/dav/files/admin/test1.json",
+    },
+  };
+  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+    "version": 8,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "memory",
+      "content": <String, dynamic>{
+        "coverFile": <String, dynamic>{
+          "fdPath": "remote.php/dav/files/admin/test1.jpg",
+          "fdId": 1,
+          "fdMime": null,
+          "fdIsArchived": false,
+          "fdIsFavorite": false,
+          "fdDateTime": "2020-01-02T03:04:05.678901Z",
+        },
+      },
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "albumFile": <String, dynamic>{
+      "path": "remote.php/dav/files/admin/test1.json",
+    },
+  });
+}
+
+void _upgradeV8ManualCover() {
+  withClock(Clock.fixed(DateTime.utc(2020, 1, 2, 3, 4, 5)), () {
+    final json = <String, dynamic>{
+      "version": 8,
+      "lastUpdated": "2020-01-02T03:04:05.678901Z",
+      "provider": <String, dynamic>{
+        "type": "static",
+        "content": <String, dynamic>{
+          "items": [],
+        },
+      },
+      "coverProvider": <String, dynamic>{
+        "type": "manual",
+        "content": <String, dynamic>{
+          "coverFile": <String, dynamic>{
+            "path": "remote.php/dav/files/admin/test1.jpg",
+            "fileId": 1,
+          },
+        },
+      },
+      "sortProvider": <String, dynamic>{
+        "type": "null",
+        "content": <String, dynamic>{},
+      },
+      "albumFile": <String, dynamic>{
+        "path": "remote.php/dav/files/admin/test1.json",
+      },
+    };
+    expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+      "version": 8,
+      "lastUpdated": "2020-01-02T03:04:05.678901Z",
+      "provider": <String, dynamic>{
+        "type": "static",
+        "content": <String, dynamic>{
+          "items": [],
+        },
+      },
+      "coverProvider": <String, dynamic>{
+        "type": "manual",
+        "content": <String, dynamic>{
+          "coverFile": <String, dynamic>{
+            "fdPath": "remote.php/dav/files/admin/test1.jpg",
+            "fdId": 1,
+            "fdMime": null,
+            "fdIsArchived": false,
+            "fdIsFavorite": false,
+            "fdDateTime": "2020-01-02T03:04:05.000Z",
+          },
+        },
+      },
+      "sortProvider": <String, dynamic>{
+        "type": "null",
+        "content": <String, dynamic>{},
+      },
+      "albumFile": <String, dynamic>{
+        "path": "remote.php/dav/files/admin/test1.json",
+      },
+    });
+  });
+}
+
+void _upgradeV8ManualExifTime() {
+  final json = <String, dynamic>{
+    "version": 8,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "manual",
+      "content": <String, dynamic>{
+        "coverFile": <String, dynamic>{
+          "path": "remote.php/dav/files/admin/test1.jpg",
+          "fileId": 1,
+          "metadata": <String, dynamic>{
+            "exif": <String, dynamic>{
+              "DateTimeOriginal": "2020:01:02 03:04:05",
+            },
+          },
+        },
+      },
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "albumFile": <String, dynamic>{
+      "path": "remote.php/dav/files/admin/test1.json",
+    },
+  };
+  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+    "version": 8,
+    "lastUpdated": "2020-01-02T03:04:05.678901Z",
+    "provider": <String, dynamic>{
+      "type": "static",
+      "content": <String, dynamic>{
+        "items": [],
+      },
+    },
+    "coverProvider": <String, dynamic>{
+      "type": "manual",
+      "content": <String, dynamic>{
+        "coverFile": <String, dynamic>{
+          "fdPath": "remote.php/dav/files/admin/test1.jpg",
+          "fdId": 1,
+          "fdMime": null,
+          "fdIsArchived": false,
+          "fdIsFavorite": false,
+          // dart does not provide a way to mock timezone
+          "fdDateTime": DateTime(2020, 1, 2, 3, 4, 5).toUtc().toIso8601String(),
+        },
+      },
+    },
+    "sortProvider": <String, dynamic>{
+      "type": "null",
+      "content": <String, dynamic>{},
+    },
+    "albumFile": <String, dynamic>{
+      "path": "remote.php/dav/files/admin/test1.json",
+    },
+  });
+}
+
 class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   const _NullAlbumUpgraderFactory();
 
@@ -1900,4 +2096,6 @@ class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   buildV6() => null;
   @override
   buildV7() => null;
+  @override
+  AlbumUpgraderV8? buildV8() => null;
 }

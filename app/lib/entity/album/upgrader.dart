@@ -1,8 +1,10 @@
+import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
@@ -238,6 +240,49 @@ class AlbumUpgraderV7 implements AlbumUpgrader {
   final String? logFilePath;
 }
 
+/// Upgrade v8 Album to v9
+@npLog
+class AlbumUpgraderV8 implements AlbumUpgrader {
+  const AlbumUpgraderV8({
+    this.logFilePath,
+  });
+
+  @override
+  JsonObj? call(JsonObj json) {
+    _log.fine("[call] Upgrade v8 Album for file: $logFilePath");
+    final result = JsonObj.from(json);
+    try {
+      if (result["coverProvider"]["type"] != "manual") {
+        return result;
+      }
+      final content = (result["coverProvider"]["content"]["coverFile"] as Map)
+          .cast<String, dynamic>();
+      final fd = {
+        "fdPath": content["path"],
+        "fdId": content["fileId"],
+        "fdMime": content["contentType"],
+        "fdIsArchived": content["isArchived"] ?? false,
+        "fdIsFavorite": content["isFavorite"] ?? false,
+        "fdDateTime": content["overrideDateTime"] ??
+            (content["metadata"]?["exif"]?["DateTimeOriginal"] as String?)?.run(
+                (d) =>
+                    Exif.dateTimeFormat.parse(d).toUtc().toIso8601String()) ??
+            content["lastModified"] ??
+            clock.now().toUtc().toIso8601String(),
+      };
+      result["coverProvider"]["content"]["coverFile"] = fd;
+    } catch (e, stackTrace) {
+      // this upgrade is not a must, if it failed then just leave it and it'll
+      // be upgraded the next time the album is saved
+      _log.shout("[call] Failed while upgrade", e, stackTrace);
+    }
+    return result;
+  }
+
+  /// File path for logging only
+  final String? logFilePath;
+}
+
 abstract class AlbumUpgraderFactory {
   const AlbumUpgraderFactory();
 
@@ -248,6 +293,7 @@ abstract class AlbumUpgraderFactory {
   AlbumUpgraderV5? buildV5();
   AlbumUpgraderV6? buildV6();
   AlbumUpgraderV7? buildV7();
+  AlbumUpgraderV8? buildV8();
 }
 
 class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
@@ -281,6 +327,9 @@ class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
 
   @override
   buildV7() => AlbumUpgraderV7(logFilePath: logFilePath);
+
+  @override
+  AlbumUpgraderV8? buildV8() => AlbumUpgraderV8(logFilePath: logFilePath);
 
   final Account account;
   final File? albumFile;

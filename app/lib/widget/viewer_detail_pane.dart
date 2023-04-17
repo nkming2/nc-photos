@@ -2,32 +2,32 @@ import 'dart:async';
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/double_extension.dart';
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/adapter.dart';
+import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/location_util.dart' as location_util;
-import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_file_tag.dart';
-import 'package:nc_photos/use_case/update_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
@@ -41,13 +41,20 @@ import 'package:tuple/tuple.dart';
 
 part 'viewer_detail_pane.g.dart';
 
+class ViewerSingleCollectionData {
+  const ViewerSingleCollectionData(this.collection, this.item);
+
+  final Collection collection;
+  final CollectionItem item;
+}
+
 class ViewerDetailPane extends StatefulWidget {
   const ViewerDetailPane({
     Key? key,
     required this.account,
     required this.fd,
-    this.album,
-    required this.onRemoveFromAlbumPressed,
+    this.fromCollection,
+    required this.onRemoveFromCollectionPressed,
     required this.onArchivePressed,
     required this.onUnarchivePressed,
     this.onSlideshowPressed,
@@ -59,10 +66,10 @@ class ViewerDetailPane extends StatefulWidget {
   final Account account;
   final FileDescriptor fd;
 
-  /// The album this file belongs to, or null
-  final Album? album;
+  /// Data of the collection this file belongs to, or null
+  final ViewerSingleCollectionData? fromCollection;
 
-  final void Function(BuildContext context) onRemoveFromAlbumPressed;
+  final void Function(BuildContext context) onRemoveFromCollectionPressed;
   final void Function(BuildContext context) onArchivePressed;
   final void Function(BuildContext context) onUnarchivePressed;
   final VoidCallback? onSlideshowPressed;
@@ -148,11 +155,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     _DetailPaneButton(
                       icon: Icons.remove_outlined,
                       label: L10n.global().removeFromAlbumTooltip,
-                      onPressed: () => widget.onRemoveFromAlbumPressed(context),
+                      onPressed: () =>
+                          widget.onRemoveFromCollectionPressed(context),
                     ),
-                  if (widget.album != null &&
-                      widget.album!.albumFile?.isOwned(widget.account.userId) ==
-                          true)
+                  if (_canSetCover)
                     _DetailPaneButton(
                       icon: Icons.photo_album_outlined,
                       label: L10n.global().useAsAlbumCoverTooltip,
@@ -384,27 +390,21 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _onSetAlbumCoverPressed(BuildContext context) async {
     assert(_file != null);
-    assert(widget.album != null);
+    assert(widget.fromCollection != null);
     _log.info(
-        "[_onSetAlbumCoverPressed] Set '${widget.fd.fdPath}' as album cover for '${widget.album!.name}'");
+        "[_onSetAlbumCoverPressed] Set '${widget.fd.fdPath}' as album cover for '${widget.fromCollection!.collection.name}'");
     try {
-      await NotifiedAction(
-        () async {
-          await UpdateAlbum(_c.albumRepo)(
-              widget.account,
-              widget.album!.copyWith(
-                coverProvider: AlbumManualCoverProvider(
-                  coverFile: _file!,
-                ),
-              ));
-        },
-        L10n.global().setAlbumCoverProcessingNotification,
-        L10n.global().setAlbumCoverSuccessNotification,
-        failureText: L10n.global().setAlbumCoverFailureNotification,
-      )();
+      await context.read<AccountController>().collectionsController.edit(
+            widget.fromCollection!.collection,
+            cover: OrNull(_file!),
+          );
     } catch (e, stackTrace) {
       _log.shout("[_onSetAlbumCoverPressed] Failed while updating album", e,
           stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().setAlbumCoverFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
     }
   }
 
@@ -459,27 +459,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     });
   }
 
-  bool _checkCanRemoveFromAlbum() {
-    if (widget.album == null ||
-        widget.album!.provider is! AlbumStaticProvider) {
-      return false;
-    }
-    if (widget.album!.albumFile?.isOwned(widget.account.userId) == true) {
-      return true;
-    }
-    try {
-      final thisItem = AlbumStaticProvider.of(widget.album!)
-          .items
-          .whereType<AlbumFileItem>()
-          .firstWhere(
-              (element) => element.file.compareServerIdentity(widget.fd));
-      if (thisItem.addedBy == widget.account.userId) {
-        return true;
-      }
-    } catch (_) {}
-    return false;
-  }
-
   late final DiContainer _c;
 
   File? _file;
@@ -495,9 +474,17 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   final _tags = <String>[];
 
-  late final bool _canRemoveFromAlbum = _checkCanRemoveFromAlbum();
-
   var _shouldBlockGpsMap = true;
+
+  late final bool _canRemoveFromAlbum = widget.fromCollection?.run((d) =>
+          CollectionAdapter.of(_c, widget.account, d.collection)
+              .isItemRemovable(widget.fromCollection!.item)) ??
+      false;
+
+  late final bool _canSetCover = widget.fromCollection?.run((d) =>
+          CollectionAdapter.of(_c, widget.account, d.collection)
+              .isPermitted(CollectionCapability.manualCover)) ??
+      false;
 }
 
 class _DetailPaneButton extends StatelessWidget {

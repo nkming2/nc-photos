@@ -188,6 +188,14 @@ class _CancelEdit implements _Event {
   String toString() => _$toString();
 }
 
+@toString
+class _UnsetCover implements _Event {
+  const _UnsetCover();
+
+  @override
+  String toString() => _$toString();
+}
+
 /// Set the currently selected items
 @toString
 class _SetSelectedItems implements _Event {

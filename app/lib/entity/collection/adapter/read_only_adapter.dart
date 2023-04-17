@@ -4,6 +4,7 @@ import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/or_null.dart';
 import 'package:np_common/type.dart';
 
 /// A read-only collection that does not support modifying its items
@@ -22,6 +23,7 @@ mixin CollectionReadOnlyAdapter implements CollectionAdapter {
     String? name,
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
+    OrNull<FileDescriptor>? cover,
   }) {
     throw UnsupportedError("Operation not supported");
   }
@@ -36,7 +38,8 @@ mixin CollectionReadOnlyAdapter implements CollectionAdapter {
   }
 
   @override
-  bool isItemsRemovable(List<CollectionItem> items) {
-    return false;
-  }
+  bool isItemRemovable(CollectionItem item) => false;
+
+  @override
+  bool isManualCover() => false;
 }

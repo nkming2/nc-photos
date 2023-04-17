@@ -353,8 +353,7 @@ class _AlbumBrowserState extends State<AlbumBrowser>
       }
     }
     Navigator.pushNamed(context, Viewer.routeName,
-        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex,
-            album: _album));
+        arguments: ViewerArguments(widget.account, _backingFiles, fileIndex));
   }
 
   Future<void> _onSharePressed(BuildContext context) async {
