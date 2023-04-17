@@ -30,7 +30,7 @@ class FileDescriptor with EquatableMixin {
         fdMime: json["fdMime"],
         fdIsArchived: json["fdIsArchived"],
         fdIsFavorite: json["fdIsFavorite"],
-        fdDateTime: json["fdDateTime"],
+        fdDateTime: DateTime.parse(json["fdDateTime"]),
       );
 
   JsonObj toJson() => {
@@ -39,7 +39,7 @@ class FileDescriptor with EquatableMixin {
         "fdMime": fdMime,
         "fdIsArchived": fdIsArchived,
         "fdIsFavorite": fdIsFavorite,
-        "fdDateTime": fdDateTime,
+        "fdDateTime": fdDateTime.toUtc().toIso8601String(),
       };
 
   @override
