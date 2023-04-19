@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
@@ -13,7 +16,8 @@ import 'package:tuple/tuple.dart';
 part 'upgrader.g.dart';
 
 abstract class AlbumUpgrader {
-  JsonObj? call(JsonObj json);
+  JsonObj? doJson(JsonObj json);
+  sql.Album? doDb(sql.Album dbObj);
 }
 
 /// Upgrade v1 Album to v2
@@ -24,13 +28,16 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
+  doJson(JsonObj json) {
     // v1 album items are corrupted in one of the updates, drop it
-    _log.fine("[call] Upgrade v1 Album for file: $logFilePath");
+    _log.fine("[doJson] Upgrade v1 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     result["items"] = [];
     return result;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -44,9 +51,9 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
+  doJson(JsonObj json) {
     // move v2 items to v3 provider
-    _log.fine("[call] Upgrade v2 Album for file: $logFilePath");
+    _log.fine("[doJson] Upgrade v2 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     result["provider"] = <String, dynamic>{
       "type": "static",
@@ -64,6 +71,9 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
     return result;
   }
 
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
+
   /// File path for logging only
   final String? logFilePath;
 }
@@ -76,9 +86,9 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
+  doJson(JsonObj json) {
     // move v3 items to v4 provider
-    _log.fine("[call] Upgrade v3 Album for file: $logFilePath");
+    _log.fine("[doJson] Upgrade v3 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     // add the descending time sort provider
     result["sortProvider"] = <String, dynamic>{
@@ -89,6 +99,9 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
     };
     return result;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -102,8 +115,8 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
-    _log.fine("[call] Upgrade v4 Album for file: $logFilePath");
+  doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v4 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     try {
       if (result["provider"]["type"] != "static") {
@@ -153,10 +166,13 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
     } catch (e, stackTrace) {
       // this upgrade is not a must, if it failed then just leave it and it'll
       // be upgraded the next time the album is saved
-      _log.shout("[call] Failed while upgrade", e, stackTrace);
+      _log.shout("[doJson] Failed while upgrade", e, stackTrace);
     }
     return result;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -172,8 +188,8 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
-    _log.fine("[call] Upgrade v5 Album for file: $logFilePath");
+  doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v5 Album for file: $logFilePath");
     final result = JsonObj.from(json);
     try {
       if (result["provider"]["type"] != "static") {
@@ -194,10 +210,13 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
     } catch (e, stackTrace) {
       // this upgrade is not a must, if it failed then just leave it and it'll
       // be upgraded the next time the album is saved
-      _log.shout("[call] Failed while upgrade", e, stackTrace);
+      _log.shout("[doJson] Failed while upgrade", e, stackTrace);
     }
     return result;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   final Account account;
   final File? albumFile;
@@ -214,10 +233,13 @@ class AlbumUpgraderV6 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
-    _log.fine("[call] Upgrade v6 Album for file: $logFilePath");
+  doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v6 Album for file: $logFilePath");
     return json;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -231,10 +253,13 @@ class AlbumUpgraderV7 implements AlbumUpgrader {
   });
 
   @override
-  call(JsonObj json) {
-    _log.fine("[call] Upgrade v7 Album for file: $logFilePath");
+  doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v7 Album for file: $logFilePath");
     return json;
   }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -248,33 +273,48 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
   });
 
   @override
-  JsonObj? call(JsonObj json) {
-    _log.fine("[call] Upgrade v8 Album for file: $logFilePath");
+  JsonObj? doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v8 Album for file: $logFilePath");
     final result = JsonObj.from(json);
-    try {
-      if (result["coverProvider"]["type"] == "manual") {
-        final content = (result["coverProvider"]["content"]["coverFile"] as Map)
-            .cast<String, dynamic>();
+    if (result["coverProvider"]["type"] == "manual") {
+      final content = (result["coverProvider"]["content"]["coverFile"] as Map)
+          .cast<String, dynamic>();
+      final fd = _fileJsonToFileDescriptorJson(content);
+      result["coverProvider"]["content"]["coverFile"] = fd;
+    } else if (result["coverProvider"]["type"] == "auto") {
+      final content = (result["coverProvider"]["content"]["coverFile"] as Map?)
+          ?.cast<String, dynamic>();
+      if (content != null) {
         final fd = _fileJsonToFileDescriptorJson(content);
         result["coverProvider"]["content"]["coverFile"] = fd;
-      } else if (result["coverProvider"]["type"] == "auto") {
-        final content =
-            (result["coverProvider"]["content"]["coverFile"] as Map?)
-                ?.cast<String, dynamic>();
-        if (content != null) {
-          final fd = _fileJsonToFileDescriptorJson(content);
-          result["coverProvider"]["content"]["coverFile"] = fd;
-        }
-        return result;
-      } else {
-        return result;
       }
-    } catch (e, stackTrace) {
-      // this upgrade is not a must, if it failed then just leave it and it'll
-      // be upgraded the next time the album is saved
-      _log.shout("[call] Failed while upgrade", e, stackTrace);
     }
     return result;
+  }
+
+  @override
+  sql.Album? doDb(sql.Album dbObj) {
+    _log.fine("[doDb] Upgrade v8 Album for file: $logFilePath");
+    if (dbObj.coverProviderType == "manual") {
+      final content = (jsonDecode(dbObj.coverProviderContent) as Map)
+          .cast<String, dynamic>();
+      final converted = _fileJsonToFileDescriptorJson(
+          (content["coverFile"] as Map).cast<String, dynamic>());
+      return dbObj.copyWith(
+        coverProviderContent: jsonEncode({"coverFile": converted}),
+      );
+    } else if (dbObj.coverProviderType == "auto") {
+      final content = (jsonDecode(dbObj.coverProviderContent) as Map)
+          .cast<String, dynamic>();
+      if (content["coverFile"] != null) {
+        final converted = _fileJsonToFileDescriptorJson(
+            (content["coverFile"] as Map).cast<String, dynamic>());
+        return dbObj.copyWith(
+          coverProviderContent: jsonEncode({"coverFile": converted}),
+        );
+      }
+    }
+    return dbObj;
   }
 
   static JsonObj _fileJsonToFileDescriptorJson(JsonObj json) {

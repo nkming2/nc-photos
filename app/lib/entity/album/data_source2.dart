@@ -175,8 +175,13 @@ class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
             try {
               final queriedFile = sql.SqliteFileConverter.fromSql(
                   account.userId.toString(), item["file"]);
+              var dbAlbum = item["album"] as sql.Album;
+              if (dbAlbum.version < 9) {
+                dbAlbum = AlbumUpgraderV8(logFilePath: queriedFile.path)
+                    .doDb(dbAlbum)!;
+              }
               return sql.SqliteAlbumConverter.fromSql(
-                  item["album"], queriedFile, item["shares"] ?? []);
+                  dbAlbum, queriedFile, item["shares"] ?? []);
             } catch (e, stackTrace) {
               _log.severe("[getAlbums] Failed while converting DB entry", e,
                   stackTrace);

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:clock/clock.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -8,6 +10,7 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:test/test.dart';
@@ -1033,7 +1036,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV1()(json), <String, dynamic>{
+      expect(AlbumUpgraderV1().doJson(json), <String, dynamic>{
         "version": 1,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "items": [],
@@ -1061,7 +1064,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV2()(json), <String, dynamic>{
+      expect(AlbumUpgraderV2().doJson(json), <String, dynamic>{
         "version": 2,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "provider": <String, dynamic>{
@@ -1116,7 +1119,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV3()(json), <String, dynamic>{
+      expect(AlbumUpgraderV3().doJson(json), <String, dynamic>{
         "version": 3,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "provider": <String, dynamic>{
@@ -1182,7 +1185,7 @@ void main() {
             "path": "remote.php/dav/files/admin/test1.json",
           },
         };
-        expect(AlbumUpgraderV4()(json), <String, dynamic>{
+        expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
           "version": 4,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1252,7 +1255,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1320,7 +1323,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1403,7 +1406,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1476,7 +1479,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1556,7 +1559,7 @@ void main() {
             "ownerId": "admin",
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1626,7 +1629,7 @@ void main() {
             "path": "remote.php/dav/files/admin/test1.json",
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1692,7 +1695,7 @@ void main() {
             },
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1760,7 +1763,7 @@ void main() {
           ownerId: "admin".toCi(),
         );
         expect(
-            AlbumUpgraderV5(account, albumFile: albumFile)(json),
+            AlbumUpgraderV5(account, albumFile: albumFile).doJson(json),
             <String, dynamic>{
               "version": 5,
               "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -1796,16 +1799,32 @@ void main() {
     });
 
     group("AlbumUpgraderV8", () {
-      test("non manual cover", _upgradeV8NonManualCover);
+      group("doJson", () {
+        test("non manual cover", _upgradeV8JsonNonManualCover);
 
-      group("manual cover", () {
-        test("now", _upgradeV8ManualNow);
-        test("exif time", _upgradeV8ManualExifTime);
+        group("manual cover", () {
+          test("now", _upgradeV8JsonManualNow);
+          test("exif time", _upgradeV8JsonManualExifTime);
+        });
+
+        group("auto cover", () {
+          test("null", _upgradeV8JsonAutoNull);
+          test("last modified", _upgradeV8JsonAutoLastModified);
+        });
       });
 
-      group("auto cover", () {
-        test("null", _upgradeV8AutoNull);
-        test("last modified", _upgradeV8AutoLastModified);
+      group("doDb", () {
+        test("non manual cover", _upgradeV8DbNonManualCover);
+
+        group("manual cover", () {
+          test("now", _upgradeV8DbManualNow);
+          test("exif time", _upgradeV8DbManualExifTime);
+        });
+
+        group("auto cover", () {
+          test("null", _upgradeV8DbAutoNull);
+          test("last modified", _upgradeV8DbAutoLastModified);
+        });
       });
     });
   });
@@ -1933,7 +1952,7 @@ void _toAppDbJsonShares() {
   });
 }
 
-void _upgradeV8NonManualCover() {
+void _upgradeV8JsonNonManualCover() {
   final json = <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -1964,7 +1983,7 @@ void _upgradeV8NonManualCover() {
       "path": "remote.php/dav/files/admin/test1.json",
     },
   };
-  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+  expect(const AlbumUpgraderV8().doJson(json), <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
     "provider": <String, dynamic>{
@@ -1996,7 +2015,7 @@ void _upgradeV8NonManualCover() {
   });
 }
 
-void _upgradeV8ManualNow() {
+void _upgradeV8JsonManualNow() {
   withClock(Clock.fixed(DateTime.utc(2020, 1, 2, 3, 4, 5)), () {
     final json = <String, dynamic>{
       "version": 8,
@@ -2024,7 +2043,7 @@ void _upgradeV8ManualNow() {
         "path": "remote.php/dav/files/admin/test1.json",
       },
     };
-    expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+    expect(const AlbumUpgraderV8().doJson(json), <String, dynamic>{
       "version": 8,
       "lastUpdated": "2020-01-02T03:04:05.678901Z",
       "provider": <String, dynamic>{
@@ -2057,7 +2076,7 @@ void _upgradeV8ManualNow() {
   });
 }
 
-void _upgradeV8ManualExifTime() {
+void _upgradeV8JsonManualExifTime() {
   final json = <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -2089,7 +2108,7 @@ void _upgradeV8ManualExifTime() {
       "path": "remote.php/dav/files/admin/test1.json",
     },
   };
-  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+  expect(const AlbumUpgraderV8().doJson(json), <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
     "provider": <String, dynamic>{
@@ -2122,7 +2141,7 @@ void _upgradeV8ManualExifTime() {
   });
 }
 
-void _upgradeV8AutoNull() {
+void _upgradeV8JsonAutoNull() {
   final json = <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -2144,7 +2163,7 @@ void _upgradeV8AutoNull() {
       "path": "remote.php/dav/files/admin/test1.json",
     },
   };
-  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+  expect(const AlbumUpgraderV8().doJson(json), <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
     "provider": <String, dynamic>{
@@ -2167,7 +2186,7 @@ void _upgradeV8AutoNull() {
   });
 }
 
-void _upgradeV8AutoLastModified() {
+void _upgradeV8JsonAutoLastModified() {
   final json = <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -2195,7 +2214,7 @@ void _upgradeV8AutoLastModified() {
       "path": "remote.php/dav/files/admin/test1.json",
     },
   };
-  expect(const AlbumUpgraderV8()(json), <String, dynamic>{
+  expect(const AlbumUpgraderV8().doJson(json), <String, dynamic>{
     "version": 8,
     "lastUpdated": "2020-01-02T03:04:05.678901Z",
     "provider": <String, dynamic>{
@@ -2213,7 +2232,6 @@ void _upgradeV8AutoLastModified() {
           "fdMime": null,
           "fdIsArchived": false,
           "fdIsFavorite": false,
-          // dart does not provide a way to mock timezone
           "fdDateTime": "2020-01-02T03:04:05.000Z",
         },
       },
@@ -2226,6 +2244,250 @@ void _upgradeV8AutoLastModified() {
       "path": "remote.php/dav/files/admin/test1.json",
     },
   });
+}
+
+void _upgradeV8DbNonManualCover() {
+  final dbObj = sql.Album(
+    rowId: 1,
+    file: 1,
+    fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+    version: 8,
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+    name: "test1",
+    providerType: "static",
+    providerContent: """{"items": []}""",
+    coverProviderType: "memory",
+    coverProviderContent: _stripJsonString("""{
+      "coverFile": {
+        "fdPath": "remote.php/dav/files/admin/test1.jpg",
+        "fdId": 1,
+        "fdMime": null,
+        "fdIsArchived": false,
+        "fdIsFavorite": false,
+        "fdDateTime": "2020-01-02T03:04:05.678901Z"
+      }
+    }"""),
+    sortProviderType: "null",
+    sortProviderContent: "{}",
+  );
+  expect(
+    const AlbumUpgraderV8().doDb(dbObj),
+    sql.Album(
+      rowId: 1,
+      file: 1,
+      fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+      version: 8,
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test1",
+      providerType: "static",
+      providerContent: """{"items": []}""",
+      coverProviderType: "memory",
+      coverProviderContent: _stripJsonString("""{
+        "coverFile": {
+          "fdPath": "remote.php/dav/files/admin/test1.jpg",
+          "fdId": 1,
+          "fdMime": null,
+          "fdIsArchived": false,
+          "fdIsFavorite": false,
+          "fdDateTime": "2020-01-02T03:04:05.678901Z"
+        }
+      }"""),
+      sortProviderType: "null",
+      sortProviderContent: "{}",
+    ),
+  );
+}
+
+void _upgradeV8DbManualNow() {
+  withClock(Clock.fixed(DateTime.utc(2020, 1, 2, 3, 4, 5)), () {
+    final dbObj = sql.Album(
+      rowId: 1,
+      file: 1,
+      fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+      version: 8,
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test1",
+      providerType: "static",
+      providerContent: """{"items": []}""",
+      coverProviderType: "manual",
+      coverProviderContent: _stripJsonString("""{
+        "coverFile": {
+          "path": "remote.php/dav/files/admin/test1.jpg",
+          "fileId": 1
+        }
+      }"""),
+      sortProviderType: "null",
+      sortProviderContent: "{}",
+    );
+    expect(
+      const AlbumUpgraderV8().doDb(dbObj),
+      sql.Album(
+        rowId: 1,
+        file: 1,
+        fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+        version: 8,
+        lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+        name: "test1",
+        providerType: "static",
+        providerContent: """{"items": []}""",
+        coverProviderType: "manual",
+        coverProviderContent: _stripJsonString("""{
+          "coverFile": {
+            "fdPath": "remote.php/dav/files/admin/test1.jpg",
+            "fdId": 1,
+            "fdMime": null,
+            "fdIsArchived": false,
+            "fdIsFavorite": false,
+            "fdDateTime": "2020-01-02T03:04:05.000Z"
+          }
+        }"""),
+        sortProviderType: "null",
+        sortProviderContent: "{}",
+      ),
+    );
+  });
+}
+
+void _upgradeV8DbManualExifTime() {
+  final dbObj = sql.Album(
+    rowId: 1,
+    file: 1,
+    fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+    version: 8,
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+    name: "test1",
+    providerType: "static",
+    providerContent: """{"items": []}""",
+    coverProviderType: "manual",
+    coverProviderContent: _stripJsonString("""{
+      "coverFile": {
+        "path": "remote.php/dav/files/admin/test1.jpg",
+        "fileId": 1,
+        "metadata": {
+          "exif": {
+            "DateTimeOriginal": "2020:01:02 03:04:05"
+          }
+        }
+      }
+    }"""),
+    sortProviderType: "null",
+    sortProviderContent: "{}",
+  );
+  // dart does not provide a way to mock timezone
+  final dateTime = DateTime(2020, 1, 2, 3, 4, 5).toUtc().toIso8601String();
+  expect(
+    const AlbumUpgraderV8().doDb(dbObj),
+    sql.Album(
+      rowId: 1,
+      file: 1,
+      fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+      version: 8,
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test1",
+      providerType: "static",
+      providerContent: """{"items": []}""",
+      coverProviderType: "manual",
+      coverProviderContent: _stripJsonString("""{
+        "coverFile": {
+          "fdPath": "remote.php/dav/files/admin/test1.jpg",
+          "fdId": 1,
+          "fdMime": null,
+          "fdIsArchived": false,
+          "fdIsFavorite": false,
+          "fdDateTime": "$dateTime"
+        }
+      }"""),
+      sortProviderType: "null",
+      sortProviderContent: "{}",
+    ),
+  );
+}
+
+void _upgradeV8DbAutoNull() {
+  final dbObj = sql.Album(
+    rowId: 1,
+    file: 1,
+    fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+    version: 8,
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+    name: "test1",
+    providerType: "static",
+    providerContent: """{"items": []}""",
+    coverProviderType: "auto",
+    coverProviderContent: "{}",
+    sortProviderType: "null",
+    sortProviderContent: "{}",
+  );
+  expect(
+    const AlbumUpgraderV8().doDb(dbObj),
+    sql.Album(
+      rowId: 1,
+      file: 1,
+      fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+      version: 8,
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test1",
+      providerType: "static",
+      providerContent: """{"items": []}""",
+      coverProviderType: "auto",
+      coverProviderContent: "{}",
+      sortProviderType: "null",
+      sortProviderContent: "{}",
+    ),
+  );
+}
+
+void _upgradeV8DbAutoLastModified() {
+  final dbObj = sql.Album(
+    rowId: 1,
+    file: 1,
+    fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+    version: 8,
+    lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+    name: "test1",
+    providerType: "static",
+    providerContent: """{"items": []}""",
+    coverProviderType: "auto",
+    coverProviderContent: _stripJsonString("""{
+      "coverFile": {
+        "path": "remote.php/dav/files/admin/test1.jpg",
+        "fileId": 1,
+        "lastModified": "2020-01-02T03:04:05.000Z"
+      }
+    }"""),
+    sortProviderType: "null",
+    sortProviderContent: "{}",
+  );
+  expect(
+    const AlbumUpgraderV8().doDb(dbObj),
+    sql.Album(
+      rowId: 1,
+      file: 1,
+      fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
+      version: 8,
+      lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
+      name: "test1",
+      providerType: "static",
+      providerContent: """{"items": []}""",
+      coverProviderType: "auto",
+      coverProviderContent: _stripJsonString("""{
+      "coverFile": {
+        "fdPath": "remote.php/dav/files/admin/test1.jpg",
+        "fdId": 1,
+        "fdMime": null,
+        "fdIsArchived": false,
+        "fdIsFavorite": false,
+        "fdDateTime": "2020-01-02T03:04:05.000Z"
+      }
+    }"""),
+      sortProviderType: "null",
+      sortProviderContent: "{}",
+    ),
+  );
+}
+
+String _stripJsonString(String str) {
+  return jsonEncode(jsonDecode(str));
 }
 
 class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
