@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:test/test.dart';
@@ -224,7 +225,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.678901Z",
               },
             },
           },
@@ -234,23 +240,29 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(
-              json,
-              upgraderFactory: const _NullAlbumUpgraderFactory(),
+          Album.fromJson(
+            json,
+            upgraderFactory: const _NullAlbumUpgraderFactory(),
+          ),
+          Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [],
             ),
-            Album(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-              name: "",
-              provider: AlbumStaticProvider(
-                items: [],
+            coverProvider: AlbumAutoCoverProvider(
+              coverFile: FileDescriptor(
+                fdPath: "remote.php/dav/files/admin/test1.jpg",
+                fdId: 1,
+                fdMime: null,
+                fdIsFavorite: false,
+                fdIsArchived: false,
+                fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               ),
-              coverProvider: AlbumAutoCoverProvider(
-                coverFile: File(
-                  path: "remote.php/dav/files/admin/test1.jpg",
-                ),
-              ),
-              sortProvider: const AlbumNullSortProvider(),
-            ));
+            ),
+            sortProvider: const AlbumNullSortProvider(),
+          ),
+        );
       });
 
       test("AlbumTimeSortProvider", () {
@@ -558,10 +570,13 @@ void main() {
             items: [],
           ),
           coverProvider: AlbumAutoCoverProvider(
-            coverFile: File(
-              path: "remote.php/dav/files/admin/test1.jpg",
-              fileId: 1,
-              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
+            coverFile: FileDescriptor(
+              fdPath: "remote.php/dav/files/admin/test1.jpg",
+              fdId: 1,
+              fdMime: null,
+              fdIsFavorite: false,
+              fdIsArchived: false,
+              fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
             ),
           ),
           sortProvider: const AlbumNullSortProvider(),
@@ -851,10 +866,13 @@ void main() {
             items: [],
           ),
           coverProvider: AlbumAutoCoverProvider(
-            coverFile: File(
-              path: "remote.php/dav/files/admin/test1.jpg",
-              fileId: 1,
-              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
+            coverFile: FileDescriptor(
+              fdPath: "remote.php/dav/files/admin/test1.jpg",
+              fdId: 1,
+              fdMime: null,
+              fdIsFavorite: false,
+              fdIsArchived: false,
+              fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
             ),
           ),
           sortProvider: const AlbumNullSortProvider(),
