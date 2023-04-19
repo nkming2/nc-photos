@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/or_null.dart';
@@ -180,7 +181,7 @@ Future<void> _dbUpdateExisting() async {
         ),
       ],
     ),
-    coverProvider: AlbumManualCoverProvider(coverFile: files[1]),
+    coverProvider: AlbumManualCoverProvider(coverFile: files[1].toDescriptor()),
     sortProvider: const AlbumTimeSortProvider(isAscending: true),
   );
   final src = AlbumSqliteDbDataSource(c);
@@ -260,7 +261,7 @@ Future<void> _dbUpdateShares() async {
         ),
       ],
     ),
-    coverProvider: AlbumManualCoverProvider(coverFile: files[1]),
+    coverProvider: AlbumManualCoverProvider(coverFile: files[1].toDescriptor()),
     sortProvider: const AlbumTimeSortProvider(isAscending: true),
     shares: OrNull([
       AlbumShare(
@@ -322,7 +323,7 @@ Future<void> _dbUpdateDeleteShares() async {
         ),
       ],
     ),
-    coverProvider: AlbumManualCoverProvider(coverFile: files[1]),
+    coverProvider: AlbumManualCoverProvider(coverFile: files[1].toDescriptor()),
     sortProvider: const AlbumTimeSortProvider(isAscending: true),
     shares: OrNull(null),
   );

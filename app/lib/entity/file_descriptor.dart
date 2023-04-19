@@ -33,14 +33,16 @@ class FileDescriptor with EquatableMixin {
         fdDateTime: DateTime.parse(json["fdDateTime"]),
       );
 
-  JsonObj toJson() => {
-        "fdPath": fdPath,
-        "fdId": fdId,
-        "fdMime": fdMime,
-        "fdIsArchived": fdIsArchived,
-        "fdIsFavorite": fdIsFavorite,
-        "fdDateTime": fdDateTime.toUtc().toIso8601String(),
+  static JsonObj toJson(FileDescriptor that) => {
+        "fdPath": that.fdPath,
+        "fdId": that.fdId,
+        "fdMime": that.fdMime,
+        "fdIsArchived": that.fdIsArchived,
+        "fdIsFavorite": that.fdIsFavorite,
+        "fdDateTime": that.fdDateTime.toUtc().toIso8601String(),
       };
+
+  JsonObj toFdJson() => toJson(this);
 
   @override
   get props => [

@@ -558,7 +558,12 @@ void main() {
             items: [],
           ),
           coverProvider: AlbumAutoCoverProvider(
-              coverFile: File(path: "remote.php/dav/files/admin/test1.jpg")),
+            coverFile: File(
+              path: "remote.php/dav/files/admin/test1.jpg",
+              fileId: 1,
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
+            ),
+          ),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
@@ -575,7 +580,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.000Z",
               },
             },
           },
@@ -843,6 +853,8 @@ void main() {
           coverProvider: AlbumAutoCoverProvider(
             coverFile: File(
               path: "remote.php/dav/files/admin/test1.jpg",
+              fileId: 1,
+              lastModified: DateTime.utc(2020, 1, 2, 3, 4, 5),
             ),
           ),
           sortProvider: const AlbumNullSortProvider(),
@@ -861,7 +873,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.000Z",
               },
             },
           },

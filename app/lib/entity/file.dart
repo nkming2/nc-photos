@@ -390,7 +390,6 @@ class File with EquatableMixin implements FileDescriptor {
   @override
   String toString() => _$toString();
 
-  @override
   JsonObj toJson() {
     return {
       "path": path,
@@ -418,6 +417,9 @@ class File with EquatableMixin implements FileDescriptor {
       if (location != null) "location": location!.toJson(),
     };
   }
+
+  @override
+  JsonObj toFdJson() => FileDescriptor.toJson(this);
 
   File copyWith({
     String? path,
@@ -537,6 +539,15 @@ extension FileExtension on File {
       );
 
   bool isOwned(CiString userId) => ownerId == null || ownerId == userId;
+
+  FileDescriptor toDescriptor() => FileDescriptor(
+        fdPath: path,
+        fdId: fileId!,
+        fdMime: contentType,
+        fdIsArchived: isArchived ?? false,
+        fdIsFavorite: isFavorite ?? false,
+        fdDateTime: bestDateTime,
+      );
 }
 
 class FileServerIdentityComparator {

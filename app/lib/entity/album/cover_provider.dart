@@ -110,7 +110,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
   @override
   JsonObj _toContentJson() {
     return {
-      if (coverFile != null) "coverFile": coverFile!.toJson(),
+      if (coverFile != null) "coverFile": coverFile!.toFdJson(),
     };
   }
 
@@ -147,7 +147,7 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
   @override
   JsonObj _toContentJson() {
     return {
-      "coverFile": coverFile.toJson(),
+      "coverFile": coverFile.toFdJson(),
     };
   }
 
@@ -183,7 +183,7 @@ class AlbumMemoryCoverProvider extends AlbumCoverProvider {
 
   @override
   _toContentJson() => {
-        "coverFile": coverFile.toJson(),
+        "coverFile": coverFile.toFdJson(),
       };
 
   final FileDescriptor coverFile;
