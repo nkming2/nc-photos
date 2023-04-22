@@ -24,6 +24,7 @@ mixin CollectionReadOnlyAdapter implements CollectionAdapter {
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<CollectionItem>? knownItems,
   }) {
     throw UnsupportedError("Operation not supported");
   }

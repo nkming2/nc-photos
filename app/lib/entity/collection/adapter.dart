@@ -57,6 +57,7 @@ abstract class CollectionAdapter {
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<CollectionItem>? knownItems,
   });
 
   /// Remove [items] from this collection and return the removed count

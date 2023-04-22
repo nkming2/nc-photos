@@ -76,6 +76,9 @@ class CollectionItemsController {
     return _dataStreamController.stream;
   }
 
+  /// Peek the stream and return the current value
+  CollectionItemStreamData peekStream() => _dataStreamController.stream.value;
+
   /// Add list of [files] to [collection]
   Future<void> addFiles(List<FileDescriptor> files) async {
     final isInited = _isDataStreamInited;

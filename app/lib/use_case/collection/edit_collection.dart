@@ -19,6 +19,11 @@ class EditCollection {
   /// - Sort [items] (set [items] and/or [itemSort])
   /// - Set album [cover]
   ///
+  /// Optionally you may provide a list of known collection items. If
+  /// [knownItems] is not null, it may be used as a hint for the implementors
+  /// when updating the underlying collection (e.g., setting the latest item as
+  /// cover image)
+  ///
   /// \* To add files to a collection, use [AddFileToCollection] instead
   Future<Collection> call(
     Account account,
@@ -27,12 +32,14 @@ class EditCollection {
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<CollectionItem>? knownItems,
   }) =>
       CollectionAdapter.of(_c, account, collection).edit(
         name: name,
         items: items,
         itemSort: itemSort,
         cover: cover,
+        knownItems: knownItems,
       );
 
   final DiContainer _c;

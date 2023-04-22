@@ -77,26 +77,25 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
     );
   }
 
+  static FileDescriptor? getCoverByItems(List<AlbumItem> items) {
+    return items
+        .whereType<AlbumFileItem>()
+        .map((e) => e.file)
+        .where((element) =>
+            file_util.isSupportedFormat(element) &&
+            (element.hasPreview ?? false))
+        .sorted(compareFileDateTimeDescending)
+        .firstOrNull;
+  }
+
   @override
   String toString() => _$toString();
 
   @override
   FileDescriptor? getCover(Album album) {
     if (coverFile == null) {
-      try {
-        // use the latest file as cover
-        return AlbumStaticProvider.of(album)
-            .items
-            .whereType<AlbumFileItem>()
-            .map((e) => e.file)
-            .where((element) =>
-                file_util.isSupportedFormat(element) &&
-                (element.hasPreview ?? false))
-            .sorted(compareFileDateTimeDescending)
-            .first;
-      } catch (_) {
-        return null;
-      }
+      // use the latest file as cover
+      return getCoverByItems(AlbumStaticProvider.of(album).items);
     } else {
       return coverFile;
     }

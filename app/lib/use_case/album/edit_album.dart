@@ -26,6 +26,7 @@ class EditAlbum {
     List<AlbumItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<AlbumItem>? knownItems,
   }) async {
     _log.info(
         "[call] Edit album ${album.name}, name: $name, items: $items, itemSort: $itemSort, cover: $cover");
@@ -49,8 +50,9 @@ class EditAlbum {
     }
     if (cover != null) {
       if (cover.obj == null) {
+        final coverFile = _getCoverFile(knownItems);
         newAlbum = newAlbum.copyWith(
-          coverProvider: const AlbumAutoCoverProvider(),
+          coverProvider: AlbumAutoCoverProvider(coverFile: coverFile),
         );
       } else {
         newAlbum = newAlbum.copyWith(
@@ -63,6 +65,14 @@ class EditAlbum {
     }
     await UpdateAlbum(_c.albumRepo)(account, newAlbum);
     return newAlbum;
+  }
+
+  FileDescriptor? _getCoverFile(List<AlbumItem>? items) {
+    if (items?.isEmpty ?? true) {
+      return null;
+    } else {
+      return AlbumAutoCoverProvider.getCoverByItems(items!);
+    }
   }
 
   final DiContainer _c;

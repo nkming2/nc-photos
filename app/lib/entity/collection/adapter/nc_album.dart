@@ -77,6 +77,7 @@ class CollectionNcAlbumAdapter implements CollectionAdapter {
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<CollectionItem>? knownItems,
   }) async {
     assert(name != null);
     if (items != null || itemSort != null || cover != null) {

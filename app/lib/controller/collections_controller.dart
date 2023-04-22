@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
@@ -163,6 +164,9 @@ class CollectionsController {
   }) async {
     try {
       final c = await _mutex.protect(() async {
+        final found = _dataStreamController.value.data.firstWhereOrNull(
+            (ev) => ev.collection.compareIdentity(collection));
+        final item = found?.controller.peekStream();
         return await EditCollection(_c)(
           account,
           collection,
@@ -170,6 +174,7 @@ class CollectionsController {
           items: items,
           itemSort: itemSort,
           cover: cover,
+          knownItems: (item?.items.isEmpty ?? true) ? null : item!.items,
         );
       });
       _updateCollection(c, items);

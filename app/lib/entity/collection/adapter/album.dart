@@ -79,6 +79,7 @@ class CollectionAlbumAdapter implements CollectionAdapter {
     List<CollectionItem>? items,
     CollectionItemSort? itemSort,
     OrNull<FileDescriptor>? cover,
+    List<CollectionItem>? knownItems,
   }) async {
     assert(name != null || items != null || itemSort != null || cover != null);
     final newItems = items?.run((items) => items
@@ -106,6 +107,10 @@ class CollectionAlbumAdapter implements CollectionAdapter {
       items: newItems,
       itemSort: itemSort,
       cover: cover,
+      knownItems: knownItems
+          ?.whereType<AlbumAdaptedCollectionItem>()
+          .map((e) => e.albumItem)
+          .toList(),
     );
     return collection.copyWith(
       name: name,
