@@ -92,7 +92,9 @@ class CachedAlbumRepo2 implements AlbumRepo2 {
     // query remote
     final outdated = [
       ...failed,
-      ...cachedGroup[false]?.map((e) => e.albumFile!) ?? const <File>[],
+      ...cachedGroup[false]?.map((e) =>
+              albumFiles.firstWhere(e.albumFile!.compareServerIdentity)) ??
+          const <File>[],
     ];
     final remote =
         await remoteDataSrc.getAlbums(account, outdated, onError: onError);
