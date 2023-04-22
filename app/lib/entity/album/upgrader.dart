@@ -323,7 +323,8 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
       "fdId": json["fileId"],
       "fdMime": json["contentType"],
       "fdIsArchived": json["isArchived"] ?? false,
-      "fdIsFavorite": json["isFavorite"] ?? false,
+      // File.isFavorite is serialized as int
+      "fdIsFavorite": json["isFavorite"] == 1,
       "fdDateTime": json["overrideDateTime"] ??
           (json["metadata"]?["exif"]?["DateTimeOriginal"] as String?)?.run(
               (d) => Exif.dateTimeFormat.parse(d).toUtc().toIso8601String()) ??
