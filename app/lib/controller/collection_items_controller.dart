@@ -21,6 +21,7 @@ import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/add_file_to_collection.dart';
 import 'package:nc_photos/use_case/collection/list_collection_item.dart';
 import 'package:nc_photos/use_case/collection/remove_from_collection.dart';
+import 'package:nc_photos/use_case/collection/update_collection_post_load.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -289,6 +290,11 @@ class CollectionItemsController {
           items: items,
           hasNext: false,
         ));
+        final newCollection =
+            await UpdateCollectionPostLoad(_c)(account, collection, items);
+        if (newCollection != null) {
+          onCollectionUpdated(newCollection);
+        }
       }
     } catch (e, stackTrace) {
       _dataStreamController

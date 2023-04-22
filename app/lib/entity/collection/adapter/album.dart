@@ -24,6 +24,7 @@ import 'package:nc_photos/use_case/album/edit_album.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
 import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
+import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
 import 'package:tuple/tuple.dart';
@@ -221,6 +222,23 @@ class CollectionAlbumAdapter implements CollectionAdapter {
   @override
   bool isManualCover() =>
       _provider.album.coverProvider is AlbumManualCoverProvider;
+
+  @override
+  Future<Collection?> updatePostLoad(List<CollectionItem> items) async {
+    final album = await UpdateAlbumWithActualItems(_c.albumRepo)(
+      account,
+      _provider.album,
+      items
+          .whereType<AlbumAdaptedCollectionItem>()
+          .map((e) => e.albumItem)
+          .toList(),
+    );
+    if (!identical(album, _provider.album)) {
+      return CollectionBuilder.byAlbum(account, album);
+    } else {
+      return null;
+    }
+  }
 
   final DiContainer _c;
   final Account account;

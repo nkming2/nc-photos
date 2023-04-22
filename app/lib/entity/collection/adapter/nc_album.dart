@@ -145,6 +145,10 @@ class CollectionNcAlbumAdapter implements CollectionAdapter {
   @override
   bool isManualCover() => false;
 
+  @override
+  Future<Collection?> updatePostLoad(List<CollectionItem> items) =>
+      Future.value(null);
+
   Future<NcAlbum> _syncRemote() async {
     final remote = await ListNcAlbum(_c)(account).last;
     return remote.firstWhere((e) => e.compareIdentity(_provider.album));

@@ -42,4 +42,8 @@ mixin CollectionReadOnlyAdapter implements CollectionAdapter {
 
   @override
   bool isManualCover() => false;
+
+  @override
+  Future<Collection?> updatePostLoad(List<CollectionItem> items) =>
+      Future.value(null);
 }

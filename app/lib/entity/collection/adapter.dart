@@ -79,6 +79,10 @@ abstract class CollectionAdapter {
 
   /// Return if the cover of this collection has been manually set
   bool isManualCover();
+
+  /// Called when the collection items belonging to this collection is first
+  /// loaded
+  Future<Collection?> updatePostLoad(List<CollectionItem> items);
 }
 
 abstract class CollectionItemAdapter {
