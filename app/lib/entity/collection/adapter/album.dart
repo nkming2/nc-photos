@@ -251,5 +251,3 @@ class CollectionAlbumAdapter implements CollectionAdapter {
 
   final CollectionAlbumProvider _provider;
 }
-
-// class CollectionAlbumItemAdapter implements CollectionItemAdapter {}
