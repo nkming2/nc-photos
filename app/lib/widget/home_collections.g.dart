@@ -96,7 +96,7 @@ extension _$_ItemNpLog on _Item {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, loadError: $loadError, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, removeError: $removeError}";
+    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, error: $error, removeError: $removeError}";
   }
 }
 
