@@ -113,6 +113,14 @@ class _Download implements _Event {
 }
 
 @toString
+class _Export implements _Event {
+  const _Export();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
 class _BeginEdit implements _Event {
   const _BeginEdit();
 

@@ -43,6 +43,7 @@ import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
+import 'package:nc_photos/widget/export_collection_dialog.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/file_sharer.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';

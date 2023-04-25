@@ -41,11 +41,16 @@ class _AppBar extends StatelessWidget {
                   value: _MenuOption.unsetCover,
                   child: Text(L10n.global().unsetAlbumCoverTooltip),
                 ),
-              if (state.items.isNotEmpty)
+              if (state.items.isNotEmpty) ...[
                 PopupMenuItem(
                   value: _MenuOption.download,
                   child: Text(L10n.global().downloadTooltip),
                 ),
+                const PopupMenuItem(
+                  value: _MenuOption.export,
+                  child: Text("Export"),
+                ),
+              ],
             ],
             onSelected: (option) {
               _onMenuSelected(context, option);
@@ -82,6 +87,24 @@ class _AppBar extends StatelessWidget {
       case _MenuOption.download:
         context.read<_Bloc>().add(const _Download());
         break;
+      case _MenuOption.export:
+        _onExportSelected(context);
+        break;
+    }
+  }
+
+  Future<void> _onExportSelected(BuildContext context) async {
+    final bloc = context.read<_Bloc>();
+    final result = await showDialog<Collection>(
+      context: context,
+      builder: (_) => ExportCollectionDialog(
+        account: bloc.account,
+        collection: bloc.state.collection,
+        items: bloc.state.items,
+      ),
+    );
+    if (result != null) {
+      Navigator.of(context).pop();
     }
   }
 }
@@ -374,6 +397,7 @@ enum _MenuOption {
   edit,
   unsetCover,
   download,
+  export,
 }
 
 enum _SelectionMenuOption {
