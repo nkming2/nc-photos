@@ -38,13 +38,12 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
       onData: (data) => state.copyWith(
         collections: data.data.map((d) => d.collection).toList(),
         isLoading: data.hasNext,
-        loadError: null,
       ),
       onError: (e, stackTrace) {
         _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
         return state.copyWith(
           isLoading: false,
-          loadError: ExceptionEvent(e, stackTrace),
+          error: ExceptionEvent(e, stackTrace),
         );
       },
     );

@@ -106,8 +106,8 @@ class CollectionItemsController {
         return;
       }
     }
-    ExceptionEvent? error;
 
+    ExceptionEvent? error;
     final failed = <FileDescriptor>[];
     await _mutex.protect(() async {
       await AddFileToCollection(_c)(
@@ -165,6 +165,7 @@ class CollectionItemsController {
         unawaited(_load());
       }
     });
+    error?.throwMe();
   }
 
   /// Remove list of [items] from [collection]
@@ -180,8 +181,8 @@ class CollectionItemsController {
                 .toList(),
           ));
     }
-    ExceptionEvent? error;
 
+    ExceptionEvent? error;
     final failed = <CollectionItem>[];
     await _mutex.protect(() async {
       await RemoveFromCollection(_c)(
@@ -212,6 +213,7 @@ class CollectionItemsController {
         unawaited(_load());
       }
     });
+    error?.throwMe();
   }
 
   /// Delete list of [files] from your server
@@ -241,8 +243,8 @@ class CollectionItemsController {
     } else {
       toDelete = files;
     }
-    ExceptionEvent? error;
 
+    ExceptionEvent? error;
     final failed = <CollectionItem>[];
     await _mutex.protect(() async {
       await Remove(_c)(
@@ -271,6 +273,7 @@ class CollectionItemsController {
         unawaited(_load());
       }
     });
+    error?.throwMe();
   }
 
   /// Replace items in the stream, for internal use only

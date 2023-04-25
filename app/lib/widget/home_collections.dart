@@ -98,13 +98,11 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
           },
         ),
         BlocListener<_Bloc, _State>(
-          listenWhen: (previous, current) =>
-              previous.loadError != current.loadError,
+          listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
-            if (state.loadError != null && isPageVisible()) {
+            if (state.error != null && isPageVisible()) {
               SnackBarManager().showSnackBar(SnackBar(
-                content:
-                    Text(exception_util.toUserString(state.loadError!.error)),
+                content: Text(exception_util.toUserString(state.error!.error)),
                 duration: k.snackBarDurationNormal,
               ));
             }

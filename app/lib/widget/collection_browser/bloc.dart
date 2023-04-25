@@ -242,7 +242,11 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     if (selectedFiles.isNotEmpty) {
       final targetController = collectionsController.stream.value
           .itemsControllerByCollection(ev.collection);
-      unawaited(targetController.addFiles(selectedFiles));
+      targetController.addFiles(selectedFiles).onError((e, stackTrace) {
+        if (e != null) {
+          add(_SetError(e, stackTrace));
+        }
+      });
     }
   }
 

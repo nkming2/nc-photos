@@ -14,6 +14,8 @@ import 'package:np_codegen/np_codegen.dart';
 
 part 'add_selection_to_collection_handler.g.dart';
 
+/// To bridge code not yet utilizing [CollectionsController] to work with those
+/// that do
 @npLog
 class AddSelectionToCollectionHandler {
   const AddSelectionToCollectionHandler();
@@ -38,20 +40,11 @@ class AddSelectionToCollectionHandler {
           .stream
           .value
           .itemsControllerByCollection(collection);
-      Object? error;
-      final s = controller.stream.listen((_) {}, onError: (e) => error = e);
       await controller.addFiles(selection);
-      await s.cancel();
-      if (error != null) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().addSelectedToAlbumFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-      }
     } catch (e, stackTrace) {
       _log.shout("[call] Exception", e, stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().addSelectedToAlbumFailureNotification),
+        content: Text(L10n.global().addToAlbumFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     }

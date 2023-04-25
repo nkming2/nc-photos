@@ -7,9 +7,9 @@ class _State {
     required this.collections,
     required this.sort,
     required this.isLoading,
-    required this.loadError,
     required this.transformedItems,
     required this.selectedItems,
+    this.error,
     required this.removeError,
   });
 
@@ -18,7 +18,6 @@ class _State {
       collections: [],
       sort: collection_util.CollectionSort.dateDescending,
       isLoading: false,
-      loadError: null,
       transformedItems: [],
       selectedItems: {},
       removeError: null,
@@ -31,10 +30,10 @@ class _State {
   final List<Collection> collections;
   final collection_util.CollectionSort sort;
   final bool isLoading;
-  final ExceptionEvent? loadError;
   final List<_Item> transformedItems;
   final Set<_Item> selectedItems;
 
+  final ExceptionEvent? error;
   final ExceptionEvent? removeError;
 }
 

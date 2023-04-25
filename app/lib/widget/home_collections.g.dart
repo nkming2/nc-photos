@@ -17,9 +17,9 @@ abstract class $_StateCopyWithWorker {
       {List<Collection>? collections,
       collection_util.CollectionSort? sort,
       bool? isLoading,
-      ExceptionEvent? loadError,
       List<_Item>? transformedItems,
       Set<_Item>? selectedItems,
+      ExceptionEvent? error,
       ExceptionEvent? removeError});
 }
 
@@ -31,20 +31,18 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       {dynamic collections,
       dynamic sort,
       dynamic isLoading,
-      dynamic loadError = copyWithNull,
       dynamic transformedItems,
       dynamic selectedItems,
+      dynamic error = copyWithNull,
       dynamic removeError = copyWithNull}) {
     return _State(
         collections: collections as List<Collection>? ?? that.collections,
         sort: sort as collection_util.CollectionSort? ?? that.sort,
         isLoading: isLoading as bool? ?? that.isLoading,
-        loadError: loadError == copyWithNull
-            ? that.loadError
-            : loadError as ExceptionEvent?,
         transformedItems:
             transformedItems as List<_Item>? ?? that.transformedItems,
         selectedItems: selectedItems as Set<_Item>? ?? that.selectedItems,
+        error: error == copyWithNull ? that.error : error as ExceptionEvent?,
         removeError: removeError == copyWithNull
             ? that.removeError
             : removeError as ExceptionEvent?);
