@@ -80,7 +80,8 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
         .map((e) => e.file)
         .where((element) =>
             file_util.isSupportedFormat(element) &&
-            (element.hasPreview ?? false))
+            (element.hasPreview ?? false) &&
+            element.fileId != null)
         .sorted(compareFileDateTimeDescending)
         .firstOrNull;
   }
