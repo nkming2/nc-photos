@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
+import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/collection.dart';
@@ -12,7 +13,9 @@ part 'nc_album.g.dart';
 /// Album provided by our app
 @genCopyWith
 @toString
-class CollectionNcAlbumProvider implements CollectionContentProvider {
+class CollectionNcAlbumProvider
+    with EquatableMixin
+    implements CollectionContentProvider {
   const CollectionNcAlbumProvider({
     required this.account,
     required this.album,
@@ -43,7 +46,11 @@ class CollectionNcAlbumProvider implements CollectionContentProvider {
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
 
   @override
-  String? getCoverUrl(int width, int height) {
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  }) {
     if (album.lastPhoto == null) {
       return null;
     } else {
@@ -52,10 +59,13 @@ class CollectionNcAlbumProvider implements CollectionContentProvider {
         album.lastPhoto!,
         width: width,
         height: height,
-        isKeepAspectRatio: false,
+        isKeepAspectRatio: isKeepAspectRatio ?? false,
       );
     }
   }
+
+  @override
+  List<Object?> get props => [account, album];
 
   final Account account;
   final NcAlbum album;

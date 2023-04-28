@@ -1,4 +1,5 @@
 import 'package:copy_with/copy_with.dart';
+import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/collection_item/sorter.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:to_string/to_string.dart';
@@ -8,7 +9,7 @@ part 'collection.g.dart';
 /// Describe a group of items
 @genCopyWith
 @toString
-class Collection {
+class Collection with EquatableMixin {
   const Collection({
     required this.name,
     required this.contentProvider,
@@ -40,10 +41,24 @@ class Collection {
   CollectionItemSort get itemSort => contentProvider.itemSort;
 
   /// See [CollectionContentProvider.getCoverUrl]
-  String? getCoverUrl(int width, int height) =>
-      contentProvider.getCoverUrl(width, height);
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  }) =>
+      contentProvider.getCoverUrl(
+        width,
+        height,
+        isKeepAspectRatio: isKeepAspectRatio,
+      );
 
   CollectionSorter getSorter() => CollectionSorter.fromSortType(itemSort);
+
+  @override
+  List<Object?> get props => [
+        name,
+        contentProvider,
+      ];
 
   final String name;
   final CollectionContentProvider contentProvider;
@@ -65,7 +80,7 @@ enum CollectionCapability {
 }
 
 /// Provide the actual content of a collection
-abstract class CollectionContentProvider {
+abstract class CollectionContentProvider with EquatableMixin {
   const CollectionContentProvider();
 
   /// Unique FourCC of this provider type
@@ -95,5 +110,11 @@ abstract class CollectionContentProvider {
   ///
   /// The [width] and [height] are provided as a hint only, implementations are
   /// free to ignore them if it's not supported
-  String? getCoverUrl(int width, int height);
+  ///
+  /// [isKeepAspectRatio] is only a hint and implementations may ignore it
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  });
 }

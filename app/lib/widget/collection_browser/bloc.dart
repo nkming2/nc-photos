@@ -8,6 +8,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     required this.collectionsController,
     required Collection collection,
   })  : _c = container,
+        _isAdHocCollection = !collectionsController.stream.value.data
+            .any((e) => e.collection.compareIdentity(collection)),
         super(_State.init(
           collection: collection,
           coverUrl: _getCoverUrl(collection),
@@ -45,14 +47,16 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     on<_SetError>(_onSetError);
     on<_SetMessage>(_onSetMessage);
 
-    _collectionControllerSubscription =
-        collectionsController.stream.listen((event) {
-      final c = event.data
-          .firstWhere((d) => state.collection.compareIdentity(d.collection));
-      if (!identical(c, state.collection)) {
-        add(_UpdateCollection(c.collection));
-      }
-    });
+    if (!_isAdHocCollection) {
+      _collectionControllerSubscription =
+          collectionsController.stream.listen((event) {
+        final c = event.data
+            .firstWhere((d) => state.collection.compareIdentity(d.collection));
+        if (!identical(c, state.collection)) {
+          add(_UpdateCollection(c.collection));
+        }
+      });
+    }
     _itemsControllerSubscription = itemsController.stream.listen(
       (_) {},
       onError: (e, stackTrace) {
@@ -447,6 +451,10 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
   final Account account;
   final CollectionsController collectionsController;
   late final CollectionItemsController itemsController;
+
+  /// Specify if the supplied [collection] is an "inline" one, which means it's
+  /// not returned from the collection controller but rather created temporarily
+  final bool _isAdHocCollection;
 
   StreamSubscription? _collectionControllerSubscription;
   StreamSubscription? _itemsControllerSubscription;

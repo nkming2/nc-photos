@@ -1,4 +1,5 @@
 import 'package:copy_with/copy_with.dart';
+import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:np_common/string_extension.dart';
 import 'package:to_string/to_string.dart';
@@ -8,7 +9,7 @@ part 'nc_album.g.dart';
 /// Server-side album since Nextcloud 25
 @toString
 @genCopyWith
-class NcAlbum {
+class NcAlbum with EquatableMixin {
   NcAlbum({
     required String path,
     required this.lastPhoto,
@@ -36,6 +37,17 @@ class NcAlbum {
 
   @override
   String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        path,
+        lastPhoto,
+        nbItems,
+        location,
+        dateStart,
+        dateEnd,
+        collaborators,
+      ];
 
   final String path;
 

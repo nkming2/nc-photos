@@ -1,15 +1,12 @@
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/album/sort_provider.dart';
-import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;
 
 void main() {
-  group("MemoryAlbumHelper", () {
+  group("MemoryCollectionHelper", () {
     test("same year", _sameYear);
     test("next year", _nextYear);
     group("prev year", () {
@@ -54,8 +51,9 @@ void main() {
 /// File: 2021-02-01
 /// Expect: empty
 void _sameYear() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 2, 3));
   obj.addFile(file);
@@ -69,8 +67,9 @@ void _sameYear() {
 /// File: 2022-02-03
 /// Expect: empty
 void _nextYear() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2022, 2, 3));
   obj.addFile(file);
@@ -83,24 +82,19 @@ void _nextYear() {
 /// File: 2020-02-03
 /// Expect: [2020]
 void _prevYear() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 3));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2020",
-        provider:
-            AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2020, month: 2, day: 3, cover: file),
       ),
     ],
   );
@@ -112,8 +106,9 @@ void _prevYear() {
 /// File: 2020-01-31
 /// Expect: empty
 void _prevYear3DaysBefore() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 31));
   obj.addFile(file);
@@ -126,24 +121,19 @@ void _prevYear3DaysBefore() {
 /// File: 2020-02-01
 /// Expect: [2020]
 void _prevYear2DaysBefore() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 1));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2020",
-        provider:
-            AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2020, month: 2, day: 3, cover: file),
       ),
     ],
   );
@@ -155,8 +145,9 @@ void _prevYear2DaysBefore() {
 /// File: 2020-02-06
 /// Expect: empty
 void _prevYear3DaysAfter() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 6));
   obj.addFile(file);
@@ -169,24 +160,19 @@ void _prevYear3DaysAfter() {
 /// File: 2020-02-05
 /// Expect: [2020]
 void _prevYear2DaysAfter() {
+  final account = util.buildAccount();
   final today = DateTime(2021, 2, 3);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 5));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2020",
-        provider:
-            AlbumMemoryProvider(year: 2020, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2020, month: 2, day: 3, cover: file),
       ),
     ],
   );
@@ -198,8 +184,9 @@ void _prevYear2DaysAfter() {
 /// File: 2019-02-26
 /// Expect: empty
 void _onFeb29AddFeb26() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 26));
   obj.addFile(file);
@@ -212,24 +199,19 @@ void _onFeb29AddFeb26() {
 /// File: 2019-02-27
 /// Expect: [2019]
 void _onFeb29AddFeb27() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 27));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2019",
-        provider:
-            AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2019, month: 2, day: 29, cover: file),
       ),
     ],
   );
@@ -241,8 +223,9 @@ void _onFeb29AddFeb27() {
 /// File: 2019-03-04
 /// Expect: empty
 void _onFeb29AddMar4() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 4));
   obj.addFile(file);
@@ -255,24 +238,19 @@ void _onFeb29AddMar4() {
 /// File: 2019-03-03
 /// Expect: [2019]
 void _onFeb29AddMar3() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 3));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2019",
-        provider:
-            AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2019, month: 2, day: 29, cover: file),
       ),
     ],
   );
@@ -284,8 +262,9 @@ void _onFeb29AddMar3() {
 /// File: 2016-03-03
 /// Expect: empty
 void _onFeb29AddMar3LeapYear() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 3));
   obj.addFile(file);
@@ -298,24 +277,19 @@ void _onFeb29AddMar3LeapYear() {
 /// File: 2016-03-02
 /// Expect: [2016]
 void _onFeb29AddMar2LeapYear() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 2, 29);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 2));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2016",
-        provider:
-            AlbumMemoryProvider(year: 2016, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2016, month: 2, day: 29, cover: file),
       ),
     ],
   );
@@ -327,8 +301,9 @@ void _onFeb29AddMar2LeapYear() {
 /// File: 2019-12-31
 /// Expect: empty
 void _onJan1AddDec31() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 1, 1);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 12, 31));
   obj.addFile(file);
@@ -341,24 +316,19 @@ void _onJan1AddDec31() {
 /// File: 2018-12-31
 /// Expect: [2019]
 void _onJan1AddDec31PrevYear() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 1, 1);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2018, 12, 31));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2019",
-        provider:
-            AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2019, month: 1, day: 1, cover: file),
       ),
     ],
   );
@@ -370,24 +340,19 @@ void _onJan1AddDec31PrevYear() {
 /// File: 2020-01-01
 /// Expect: [2019]
 void _onDec31AddJan1() {
+  final account = util.buildAccount();
   final today = DateTime(2020, 12, 31);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 2);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 1));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2019",
-        provider:
-            AlbumMemoryProvider(year: 2019, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2019, month: 12, day: 31, cover: file),
       ),
     ],
   );
@@ -399,24 +364,19 @@ void _onDec31AddJan1() {
 /// File: 2021-05-15
 /// Expect: [2022]
 void _onMay15AddMay15Range0() {
+  final account = util.buildAccount();
   final today = DateTime(2022, 5, 15);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 0);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 0);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 15));
   obj.addFile(file);
   expect(
-    obj
-        .build(_nameBuilder)
-        .map((a) => a.copyWith(lastUpdated: OrNull(DateTime(2021))))
-        .toList(),
+    obj.build(_nameBuilder).toList(),
     [
-      Album(
+      Collection(
         name: "2021",
-        provider:
-            AlbumMemoryProvider(year: 2021, month: today.month, day: today.day),
-        coverProvider: AlbumMemoryCoverProvider(coverFile: file),
-        sortProvider: const AlbumTimeSortProvider(isAscending: false),
-        lastUpdated: DateTime(2021),
+        contentProvider: CollectionMemoryProvider(
+            account: account, year: 2021, month: 5, day: 15, cover: file),
       ),
     ],
   );
@@ -428,8 +388,9 @@ void _onMay15AddMay15Range0() {
 /// File: 2021-05-16
 /// Expect: []
 void _onMay15AddMay16Range0() {
+  final account = util.buildAccount();
   final today = DateTime(2022, 5, 15);
-  final obj = MemoryAlbumHelper(today: today, dayRange: 0);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: 0);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));
   obj.addFile(file);
@@ -442,8 +403,9 @@ void _onMay15AddMay16Range0() {
 /// File: 2021-05-16
 /// Expect: []
 void _onMay15AddMay16RangeNegative() {
+  final account = util.buildAccount();
   final today = DateTime(2022, 5, 15);
-  final obj = MemoryAlbumHelper(today: today, dayRange: -1);
+  final obj = MemoryCollectionHelper(account, today: today, dayRange: -1);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));
   obj.addFile(file);

@@ -4,11 +4,13 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter/album.dart';
 import 'package:nc_photos/entity/collection/adapter/location_group.dart';
+import 'package:nc_photos/entity/collection/adapter/memory.dart';
 import 'package:nc_photos/entity/collection/adapter/nc_album.dart';
 import 'package:nc_photos/entity/collection/adapter/person.dart';
 import 'package:nc_photos/entity/collection/adapter/tag.dart';
 import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection/content_provider/location_group.dart';
+import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection/content_provider/person.dart';
 import 'package:nc_photos/entity/collection/content_provider/tag.dart';
@@ -29,6 +31,8 @@ abstract class CollectionAdapter {
         return CollectionAlbumAdapter(c, account, collection);
       case CollectionLocationGroupProvider:
         return CollectionLocationGroupAdapter(c, account, collection);
+      case CollectionMemoryProvider:
+        return CollectionMemoryAdapter(c, account, collection);
       case CollectionNcAlbumProvider:
         return CollectionNcAlbumAdapter(c, account, collection);
       case CollectionPersonProvider:

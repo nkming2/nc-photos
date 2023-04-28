@@ -284,28 +284,3 @@ abstract class AlbumSmartProvider extends AlbumProviderBase {
     throw UnimplementedError();
   }
 }
-
-/// Memory album is created based on dates
-@ToString(extraParams: r"{bool isDeep = false}")
-class AlbumMemoryProvider extends AlbumSmartProvider {
-  AlbumMemoryProvider({
-    required this.year,
-    required this.month,
-    required this.day,
-  }) : super(latestItemTime: DateTime(year, month, day));
-
-  @override
-  String toString({bool isDeep = false}) => _$toString(isDeep: isDeep);
-
-  @override
-  get props => [
-        ...super.props,
-        year,
-        month,
-        day,
-      ];
-
-  final int year;
-  final int month;
-  final int day;
-}

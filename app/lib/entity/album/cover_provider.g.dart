@@ -30,10 +30,3 @@ extension _$AlbumManualCoverProviderToString on AlbumManualCoverProvider {
     return "AlbumManualCoverProvider {coverFile: ${coverFile.fdPath}}";
   }
 }
-
-extension _$AlbumMemoryCoverProviderToString on AlbumMemoryCoverProvider {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "AlbumMemoryCoverProvider {coverFile: ${coverFile.fdPath}}";
-  }
-}

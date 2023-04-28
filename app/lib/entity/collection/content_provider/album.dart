@@ -1,4 +1,5 @@
 import 'package:copy_with/copy_with.dart';
+import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
@@ -12,7 +13,9 @@ part 'album.g.dart';
 /// Album provided by our app
 @genCopyWith
 @toString
-class CollectionAlbumProvider implements CollectionContentProvider {
+class CollectionAlbumProvider
+    with EquatableMixin
+    implements CollectionContentProvider {
   const CollectionAlbumProvider({
     required this.account,
     required this.album,
@@ -64,7 +67,11 @@ class CollectionAlbumProvider implements CollectionContentProvider {
   CollectionItemSort get itemSort => album.sortProvider.toCollectionItemSort();
 
   @override
-  String? getCoverUrl(int width, int height) {
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  }) {
     final fd = album.coverProvider.getCover(album);
     if (fd == null) {
       return null;
@@ -74,10 +81,13 @@ class CollectionAlbumProvider implements CollectionContentProvider {
         fd.fdId,
         width: width,
         height: height,
-        isKeepAspectRatio: false,
+        isKeepAspectRatio: isKeepAspectRatio ?? false,
       );
     }
   }
+
+  @override
+  List<Object?> get props => [account, album];
 
   final Account account;
   final Album album;

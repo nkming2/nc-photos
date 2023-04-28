@@ -8,8 +8,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
@@ -32,8 +30,6 @@ class PopulateAlbum {
       return _populateDirAlbum(account, album);
     } else if (album.provider is AlbumTagProvider) {
       return _populateTagAlbum(account, album);
-    } else if (album.provider is AlbumMemoryProvider) {
-      return _populateMemoryAlbum(account, album);
     } else {
       throw ArgumentError(
           "Unknown album provider: ${album.provider.runtimeType}");
@@ -78,26 +74,6 @@ class PopulateAlbum {
           file: f,
         )));
     return products;
-  }
-
-  Future<List<AlbumItem>> _populateMemoryAlbum(
-      Account account, Album album) async {
-    assert(album.provider is AlbumMemoryProvider);
-    final provider = album.provider as AlbumMemoryProvider;
-    final date = DateTime(provider.year, provider.month, provider.day);
-    final dayRange = _c.pref.getMemoriesRangeOr();
-    final from = date.subtract(Duration(days: dayRange));
-    final to = date.add(Duration(days: dayRange + 1));
-    final files = await FileSqliteDbDataSource(_c).listByDate(
-        account, from.millisecondsSinceEpoch, to.millisecondsSinceEpoch);
-    return files
-        .where((f) => file_util.isSupportedFormat(f))
-        .map((f) => AlbumFileItem(
-              addedBy: account.userId,
-              addedAt: clock.now(),
-              file: f,
-            ))
-        .toList();
   }
 
   final DiContainer _c;

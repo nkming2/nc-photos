@@ -1,10 +1,13 @@
 import 'package:clock/clock.dart';
+import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/tag.dart';
 
-class CollectionTagProvider implements CollectionContentProvider {
+class CollectionTagProvider
+    with EquatableMixin
+    implements CollectionContentProvider {
   CollectionTagProvider({
     required this.account,
     required this.tags,
@@ -29,7 +32,15 @@ class CollectionTagProvider implements CollectionContentProvider {
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
 
   @override
-  String? getCoverUrl(int width, int height) => null;
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  }) =>
+      null;
+
+  @override
+  List<Object?> get props => [account, tags];
 
   final Account account;
   final List<Tag> tags;

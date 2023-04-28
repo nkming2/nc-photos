@@ -18,7 +18,7 @@ import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
@@ -38,19 +38,18 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/startup_sync.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
-import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/settings.dart';
-import 'package:nc_photos/widget/smart_album_browser.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -192,7 +191,7 @@ class _HomePhotosState extends State<HomePhotos>
                       _web?.buildContent(context),
                       if (AccountPref.of(widget.account)
                               .isEnableMemoryAlbumOr(true) &&
-                          _smartAlbums.isNotEmpty)
+                          _smartCollections.isNotEmpty)
                         _buildSmartAlbumList(context),
                       BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
                         bloc: _bloc,
@@ -352,9 +351,9 @@ class _HomePhotosState extends State<HomePhotos>
 
   Widget _buildSmartAlbumList(BuildContext context) {
     return SliverToBoxAdapter(
-      child: _SmartAlbumList(
+      child: _SmartCollectionList(
         account: widget.account,
-        albums: _smartAlbums,
+        collections: _smartCollections,
       ),
     );
   }
@@ -613,7 +612,7 @@ class _HomePhotosState extends State<HomePhotos>
           setState(() {
             _backingFiles = result.backingFiles;
             itemStreamListItems = result.listItems;
-            _smartAlbums = result.smartAlbums;
+            _smartCollections = result.smartCollections;
 
             if (isPostSuccess) {
               _isScrollbarVisible = true;
@@ -680,7 +679,7 @@ class _HomePhotosState extends State<HomePhotos>
       final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
           AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
-                  _smartAlbums.isNotEmpty
+                  _smartCollections.isNotEmpty
               ? _SmartAlbumItem.height
               : 0;
       // scroll extent = list height - widget viewport height
@@ -745,7 +744,7 @@ class _HomePhotosState extends State<HomePhotos>
   late final _queryProgressBloc = ProgressBloc();
 
   var _backingFiles = <FileDescriptor>[];
-  var _smartAlbums = <Album>[];
+  var _smartCollections = <Collection>[];
 
   final _buildItemQueue =
       ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
@@ -1006,10 +1005,10 @@ class _MetadataTaskLoadingIcon extends AnimatedWidget {
   Animation<double> get _progress => listenable as Animation<double>;
 }
 
-class _SmartAlbumList extends StatelessWidget {
-  const _SmartAlbumList({
+class _SmartCollectionList extends StatelessWidget {
+  const _SmartCollectionList({
     required this.account,
-    required this.albums,
+    required this.collections,
   });
 
   @override
@@ -1019,19 +1018,20 @@ class _SmartAlbumList extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        itemCount: albums.length,
+        itemCount: collections.length,
         itemBuilder: (context, index) {
-          final a = albums[index];
-          final coverFile = a.coverProvider.getCover(a);
+          final c = collections[index];
           return _SmartAlbumItem(
             account: account,
-            previewUrl: coverFile == null
-                ? null
-                : NetworkRectThumbnail.imageUrlForFile(account, coverFile),
-            label: a.name,
+            previewUrl: c.getCoverUrl(
+              k.photoThumbSize,
+              k.photoThumbSize,
+              isKeepAspectRatio: true,
+            ),
+            label: c.name,
             onTap: () {
-              Navigator.of(context).pushNamed(SmartAlbumBrowser.routeName,
-                  arguments: SmartAlbumBrowserArguments(account, a));
+              Navigator.of(context).pushNamed(CollectionBrowser.routeName,
+                  arguments: CollectionBrowserArguments(c));
             },
           );
         },
@@ -1041,7 +1041,7 @@ class _SmartAlbumList extends StatelessWidget {
   }
 
   final Account account;
-  final List<Album> albums;
+  final List<Collection> collections;
 }
 
 class _SmartAlbumItem extends StatelessWidget {

@@ -37,10 +37,3 @@ extension _$AlbumTagProviderToString on AlbumTagProvider {
     return "AlbumTagProvider {latestItemTime: $latestItemTime, tags: ${tags.map((t) => t.displayName).toReadableString()}}";
   }
 }
-
-extension _$AlbumMemoryProviderToString on AlbumMemoryProvider {
-  String _$toString({bool isDeep = false}) {
-    // ignore: unnecessary_string_interpolations
-    return "AlbumMemoryProvider {latestItemTime: $latestItemTime, year: $year, month: $month, day: $day}";
-  }
-}

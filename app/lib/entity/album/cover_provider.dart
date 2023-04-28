@@ -26,9 +26,6 @@ abstract class AlbumCoverProvider with EquatableMixin {
       case AlbumManualCoverProvider._type:
         return AlbumManualCoverProvider.fromJson(
             content.cast<String, dynamic>());
-      case AlbumMemoryCoverProvider._type:
-        return AlbumMemoryCoverProvider.fromJson(
-            content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -153,39 +150,4 @@ class AlbumManualCoverProvider extends AlbumCoverProvider {
   final FileDescriptor coverFile;
 
   static const _type = "manual";
-}
-
-/// Cover selected when building a Memory album
-@toString
-class AlbumMemoryCoverProvider extends AlbumCoverProvider {
-  AlbumMemoryCoverProvider({
-    required this.coverFile,
-  });
-
-  factory AlbumMemoryCoverProvider.fromJson(JsonObj json) {
-    return AlbumMemoryCoverProvider(
-      coverFile:
-          FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
-    );
-  }
-
-  @override
-  String toString() => _$toString();
-
-  @override
-  getCover(Album album) => coverFile;
-
-  @override
-  get props => [
-        coverFile,
-      ];
-
-  @override
-  _toContentJson() => {
-        "coverFile": coverFile.toFdJson(),
-      };
-
-  final FileDescriptor coverFile;
-
-  static const _type = "memory";
 }
