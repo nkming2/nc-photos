@@ -14,7 +14,7 @@ class NotificationManager implements itf.NotificationManager {
   notify(itf.Notification n) async {
     if (n is itf.LogSaveSuccessfulNotification) {
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().downloadSuccessNotification),
+        content: Text(L10n.global().captureLogSuccessNotification),
         duration: k.snackBarDurationShort,
       ));
     } else {

@@ -87,7 +87,7 @@ class _AlbumBrowserEditAppBarState extends State<AlbumBrowserEditAppBar> {
             if (_controller.text.isNotEmpty == true) {
               return null;
             } else {
-              return L10n.global().albumNameInputInvalidEmpty;
+              return L10n.global().nameInputInvalidEmpty;
             }
           },
           onSaved: (_) {

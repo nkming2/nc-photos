@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "Všechny položky úspěšně přidány do alba {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Nepodařilo se přidat položky do alba",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Přidat do alba",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Úspěšně přidáno do alba {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Nepodařilo se přidat do alba",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Mazání 1 položky} other{Mazání {count} položek}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,10 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Odebrat vybrané z alba",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
 	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 položka odebrána z alba} =2{2 položky odebrány z alba} =3{3 položky odebrány z alba} =4{4 položky odebrány z alba} other{{count} položek odebráno z alba}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
@@ -186,10 +152,6 @@
 	"createAlbumTooltip": "Nové album",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
-	},
-	"createAlbumFailureNotification": "Nepodařilo se vytvořit album",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
 	},
 	"albumSize": "{count, plural, =0{Prázdné} =1{1 položka} =2{2 položky} =3{3 položky} =4{4 položky} other{{count} položek}}",
 	"@albumSize": {
@@ -224,10 +186,6 @@
 	"nameInputHint": "Název",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Zadejte název alba",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "PŘESKOČIT",
 	"@skipButtonLabel": {
@@ -706,7 +664,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Vyhledávání",
-	"albumSearchTextFieldHint": "Hledat alba",
 	"clearTooltip": "Vymazat",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -776,18 +733,6 @@
 	"albumSharedLabel": "Sdílené",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "Nastavování fotky jako obal alba",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Obal alba úspěšně nastaven",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Nepodařilo se nastavit obal alba",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "Zpracovávání metadat obrázků na pozadí",
 	"@metadataTaskProcessingNotification": {
@@ -869,10 +814,6 @@
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
-	"unsetAlbumCoverFailureNotification": "Nepodařilo se zrušit nastavení obalu",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Ztlumit",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -884,15 +825,6 @@
 	"collectionPeopleLabel": "Lidé",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 fotka} =2{2 fotky} =3{3 fotky} =4{4 fotky} other{{count} fotek}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Prezentace",
 	"@slideshowTooltip": {
@@ -1039,12 +971,12 @@
 	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Přidat do sbírky",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Přidat do sbírky",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Přidávání alba {album} do vaší sbírky",
-	"@addToCollectionProcessingNotification": {
+	"addToCollectionsViewProcessingNotification": "Přidávání alba {album} do vaší sbírky",
+	"@addToCollectionsViewProcessingNotification": {
 		"description": "Adding an album to your collection",
 		"placeholders": {
 			"album": {
@@ -1052,8 +984,8 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "Album {album} úspěšně přidáno do vaší sbírky",
-	"@addToCollectionSuccessNotification": {
+	"addToCollectionsViewSuccessNotification": "Album {album} úspěšně přidáno do vaší sbírky",
+	"@addToCollectionsViewSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
 			"album": {
@@ -1194,18 +1126,6 @@
 	"createCollectionDialogFolderDescription": "Zobrazit fotky uvnitř složky",
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
-	},
-	"convertAlbumTooltip": "Převést na album",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Tento převod je nevratný",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Sbírka úspěšně převedena na album",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"collectionFavoritesLabel": "Oblíbené",
 	"@collectionFavoritesLabel": {

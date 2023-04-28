@@ -91,7 +91,7 @@ class _WrappedExportCollectionDialogState
             );
           } else {
             return AlertDialog(
-              title: const Text("Export collection"),
+              title: Text(L10n.global().exportCollectionDialogTitle),
               content: Form(
                 key: _formKey,
                 child: Container(
@@ -148,7 +148,7 @@ class _NameTextField extends StatelessWidget {
       initialValue: context.read<_Bloc>().state.formValue.name,
       validator: (value) {
         if (value!.isEmpty) {
-          return L10n.global().albumNameInputInvalidEmpty;
+          return L10n.global().nameInputInvalidEmpty;
         }
         return null;
       },

@@ -237,7 +237,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
     } catch (e, stacktrace) {
       _log.shout("[_onNewCollectionPressed] Failed", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().createAlbumFailureNotification),
+        content: Text(L10n.global().createCollectionFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     }

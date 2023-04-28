@@ -8,10 +8,6 @@
 	"@photosTabLabel": {
 		"description": "Label of the tab that lists user photos"
 	},
-	"albumsTabLabel": "Albums",
-	"@albumsTabLabel": {
-		"description": "Label of the tab that lists user albums"
-	},
 	"zoomTooltip": "Zoom",
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
@@ -32,36 +28,6 @@
 				"example": "1"
 			}
 		}
-	},
-	"addSelectedToAlbumSuccessNotification": "Tous les éléments ont été ajoutés à {album} avec succès",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Échec de l'ajout d'éléments à l'album",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Ajouter à l'album",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Ajouté à {album} avec succès",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Échec de l'ajout à l'album",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
 	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Suppression de 1 élément} other{Suppression de {count} éléments}}",
 	"@deleteSelectedProcessingNotification": {
@@ -153,10 +119,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Supprimer la sélection de l'album",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
 	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 élément supprimé de l'album} other{{count} éléments supprimés de l'album}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
@@ -187,10 +149,6 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"createAlbumFailureNotification": "Échec de la création de l'album",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
-	},
 	"albumSize": "{count, plural, =0{Empty} =1{1 élément} other{{count} éléments}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
@@ -216,10 +174,6 @@
 	"nameInputHint": "Nom",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Veuillez saisir le nom de l'album",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "IGNORER",
 	"@skipButtonLabel": {
@@ -318,10 +272,6 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Compte",
-	"settingsAccountPageTitle": "Paramètres du compte",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
 	"settingsIncludedFoldersTitle": "Dossiers inclus",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
@@ -348,10 +298,6 @@
 	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Customize the image/video viewer",
-	"settingsViewerPageTitle": "Viewer settings",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Luminosité écran",
 	"settingsScreenBrightnessDescription": "Remplacer le niveau de luminosité du système",
 	"settingsForceRotationTitle": "Ignorer le verrouillage de la rotation",
@@ -359,18 +305,10 @@
 	"settingsMapProviderTitle": "Fournisseur de carte",
 	"settingsAlbumTitle": "Album",
 	"settingsAlbumDescription": "Personnaliser les albums",
-	"settingsAlbumPageTitle": "Paramètres des albums",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "Regrouper les photos par date",
 	"settingsShowDateInAlbumDescription": "Appliquer uniquement lorsque l'album est trié par heure",
 	"settingsThemeTitle": "Thème",
 	"settingsThemeDescription": "Personnalisez l'apparence de l'application",
-	"settingsThemePageTitle": "Réglage des thèmes",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "Suivre le thème du système",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -389,7 +327,6 @@
 	},
 	"settingsExperimentalTitle": "Expérimental",
 	"settingsExperimentalDescription": "Des fonctionnalités qui ne sont pas prêtes pour une utilisation quotidienne",
-	"settingsExperimentalPageTitle": "Paramètres expérimentaux",
 	"settingsAboutSectionTitle": "À propos",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -627,7 +564,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Chercher",
-	"albumSearchTextFieldHint": "Rechercher des albums",
 	"clearTooltip": "Nettoyer",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -697,18 +633,6 @@
 	"albumSharedLabel": "Partagé",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "Définir une photo comme couverture d'album",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Couverture changé avec succès",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Échec du changement de couverture",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "Traitement des métadonnées de l'image en arrière-plan",
 	"@metadataTaskProcessingNotification": {
@@ -784,10 +708,6 @@
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
-	"unsetAlbumCoverFailureNotification": "Échec de la suppression de la couverture",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Mettre en sourdine",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -799,15 +719,6 @@
 	"collectionPeopleLabel": "Personnes",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 photo} other{{count} photos}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Diaporama",
 	"@slideshowTooltip": {
@@ -837,11 +748,6 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "Fichier",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
-	},
-	"shareMethodFileDescription": "Téléchargez le fichier et partagez-le avec d'autres applications",
 	"shareMethodPublicLinkTitle": "Lien public",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
@@ -938,19 +844,19 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "Supprimer le dossier ?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "Ce dossier a été créé par l'application pour partager plusieurs fichiers sous forme de lien. Il n'est désormais plus partagé avec aucun tiers, voulez-vous supprimer ce dossier ?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Ajouter à la collection",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Ajouter à la collection",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Ajout de {album} à votre collection",
-	"@addToCollectionProcessingNotification": {
+	"addToCollectionsViewProcessingNotification": "Ajout de {album} à votre collection",
+	"@addToCollectionsViewProcessingNotification": {
 		"description": "Adding an album to your collection",
 		"placeholders": {
 			"album": {
@@ -958,8 +864,8 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "{album} a été ajouté avec succès à votre collection",
-	"@addToCollectionSuccessNotification": {
+	"addToCollectionsViewSuccessNotification": "{album} a été ajouté avec succès à votre collection",
+	"@addToCollectionsViewSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
 			"album": {
@@ -968,7 +874,7 @@
 		}
 	},
 	"shareAlbumDialogTitle": "Partager avec un utilisateur",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
 	"shareAlbumSuccessNotification": "Album partagé avec {user}",
@@ -1016,7 +922,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "RÉPARER",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Tout réparer",
@@ -1101,18 +1007,6 @@
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
 	},
-	"convertAlbumTooltip": "Convertir en album",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Cette conversion est irréversible",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "La collection a été convertie en album avec succès",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"collectionFavoritesLabel": "Favoris",
 	"@collectionFavoritesLabel": {
 		"description": "Browse photos added to favorites"
@@ -1165,7 +1059,6 @@
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
 	},
-
 	"errorUnauthenticated": "Accès non authentifié. Veuillez vous reconnecter si le problème persiste",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "Selección añadida a {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "No se pudo añadir selección al álbum",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Añadir a álbum",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Añadido a {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Error al añadir al álbum",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Borrando 1 elemento} other{Borrando {count} elementos}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,10 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Quitar selección del álbum",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
 	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 elemento quitado del álbum} other{{count} elementos quitados del álbum}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
@@ -186,10 +152,6 @@
 	"createAlbumTooltip": "Crear nuevo álbum",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
-	},
-	"createAlbumFailureNotification": "Error al crear álbum",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
 	},
 	"albumSize": "{count, plural, =0{Empty} =1{1 elemento} other{{count} elementos}}",
 	"@albumSize": {
@@ -224,10 +186,6 @@
 	"nameInputHint": "Nombre",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Introduce un nombre para el álbum",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "SALTAR",
 	"@skipButtonLabel": {
@@ -706,7 +664,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Buscar",
-	"albumSearchTextFieldHint": "Buscar álbumes",
 	"clearTooltip": "Limpiar",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -773,21 +730,9 @@
 	"@deletePermanentlyConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items"
 	},
-    "albumSharedLabel": "Compartido",
+	"albumSharedLabel": "Compartido",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "Estableciendo foto como portada del álbum",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Portada establecida",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Fallo al establecer portada",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "Procesando metadatos en segundo plano",
 	"@metadataTaskProcessingNotification": {
@@ -869,10 +814,6 @@
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
-	"unsetAlbumCoverFailureNotification": "Error al quitar portada",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Silenciar",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -884,15 +825,6 @@
 	"collectionPeopleLabel": "Personas",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 foto} other{{count} fotos}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Presentación de diapositivas",
 	"@slideshowTooltip": {
@@ -917,7 +849,7 @@
 	"slideshowSetupDialogReverseTitle": "Orden inverso",
 	"@slideshowSetupDialogReverseTitle": {
 		"description": "Whether to play the slideshow in reverse order"
-	},	
+	},
 	"linkCopiedNotification": "Enlace copiado",
 	"@linkCopiedNotification": {
 		"description": "Copied the share link to clipboard"
@@ -1032,19 +964,19 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "¿Borrar carpeta?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "Ésta carpeta fue creada por la app para compartir múltiples archivos en un enlace. Ya no se comparte con nadie, ¿quieres borrarla?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Añadir a colección",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Añadir a colección",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Añadiendo {album} a tu colección",
-	"@addToCollectionProcessingNotification": {
+	"addToCollectionsViewProcessingNotification": "Añadiendo {album} a tu colección",
+	"@addToCollectionsViewProcessingNotification": {
 		"description": "Adding an album to your collection",
 		"placeholders": {
 			"album": {
@@ -1052,8 +984,8 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "Añadido {album} a tu colección",
-	"@addToCollectionSuccessNotification": {
+	"addToCollectionsViewSuccessNotification": "Añadido {album} a tu colección",
+	"@addToCollectionsViewSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
 			"album": {
@@ -1062,7 +994,7 @@
 		}
 	},
 	"shareAlbumDialogTitle": "Compartir con un usuario",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
 	"shareAlbumSuccessNotification": "Álbum compartido con {user}",
@@ -1110,7 +1042,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "REPARAR",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Reparar todo",
@@ -1194,18 +1126,6 @@
 	"createCollectionDialogFolderDescription": "Muestra fotos de una carpeta",
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
-	},
-	"convertAlbumTooltip": "Convertir a álbum independiente",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Esta conversión es irreversible",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Collección convertida a álbum",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"collectionFavoritesLabel": "Favoritos",
 	"@collectionFavoritesLabel": {
@@ -1314,7 +1234,7 @@
 	"@enhanceColorPopTitle": {
 		"description": "Desaturate the background of a photo"
 	},
-	"enhanceColorPopDescription": "Reduce la saturación del fondo de tu foto. Obtendrás mejores resultados en retratos",	
+	"enhanceColorPopDescription": "Reduce la saturación del fondo de tu foto. Obtendrás mejores resultados en retratos",
 	"enhanceGenericParamWeightLabel": "Intensidad",
 	"@enhanceGenericParamWeightLabel": {
 		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."

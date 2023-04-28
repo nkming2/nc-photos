@@ -46,9 +46,9 @@ class _AppBar extends StatelessWidget {
                   value: _MenuOption.download,
                   child: Text(L10n.global().downloadTooltip),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: _MenuOption.export,
-                  child: Text("Export"),
+                  child: Text(L10n.global().exportCollectionTooltip),
                 ),
               ],
             ],
@@ -174,7 +174,7 @@ class _SelectionAppBar extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.add_outlined),
-            tooltip: L10n.global().addToAlbumTooltip,
+            tooltip: L10n.global().addItemToCollectionTooltip,
             onPressed: () {
               _onSelectionAddPressed(context);
             },
@@ -295,7 +295,7 @@ class _EditAppBar extends StatelessWidget {
             if (context.read<_Bloc>().state.currentEditName.isNotEmpty) {
               return null;
             } else {
-              return L10n.global().albumNameInputInvalidEmpty;
+              return L10n.global().nameInputInvalidEmpty;
             }
           },
           onChanged: (value) {

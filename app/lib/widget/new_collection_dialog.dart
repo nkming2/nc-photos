@@ -193,7 +193,7 @@ class _NameTextField extends StatelessWidget {
       ),
       validator: (value) {
         if (value!.isEmpty) {
-          return L10n.global().albumNameInputInvalidEmpty;
+          return L10n.global().nameInputInvalidEmpty;
         }
         return null;
       },
@@ -261,7 +261,7 @@ enum _ProviderOption {
       case tag:
         return L10n.global().createCollectionDialogTagLabel;
       case ncAlbum:
-        return "Nextcloud Album";
+        return L10n.global().createCollectionDialogNextcloudAlbumLabel;
     }
   }
 
@@ -274,7 +274,7 @@ enum _ProviderOption {
       case tag:
         return L10n.global().createCollectionDialogTagDescription;
       case ncAlbum:
-        return "Server-side album, require Nextcloud 25 or above";
+        return L10n.global().createCollectionDialogNextcloudAlbumDescription;
     }
   }
 }

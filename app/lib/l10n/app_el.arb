@@ -12,10 +12,6 @@
 	"@collectionsTooltip": {
 		"description": "Groups of photos, e.g., albums, trash bin, etc"
 	},
-	"albumsTabLabel": "Συλλογές",
-	"@albumsTabLabel": {
-		"description": "Label of the tab that lists user albums"
-	},
 	"zoomTooltip": "Εστίαση",
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
@@ -36,36 +32,6 @@
 				"example": "1"
 			}
 		}
-	},
-	"addSelectedToAlbumSuccessNotification": "Επιτυχής προσθήκη όλων των αντικειμένων στη συλλογή {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Αποτυχία προσθήκης αντικειμένων σε συλλογή",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Προσθήκη σε συλλογή",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Επιτυχής προσθήκη στη συλλογή {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Αποτυχία προσθήκης σε συλλογή",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
 	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Διαγραφή 1 αντικειμένου} other{Διαγραφή {count} αντικειμένων}}",
 	"@deleteSelectedProcessingNotification": {
@@ -157,10 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Αφαίρεση επιλεγμένων από τη συλλογή",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
 	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 αντικείμενο αφαιρέθηκε από τη συλλογή} other{{count} αντικείμενα αφαιρέθηκαν από τη συλλογή}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
@@ -191,10 +153,6 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"createAlbumFailureNotification": "Αποτυχία δημιουργίας συλλογής",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
-	},
 	"albumSize": "{count, plural, =0{Empty} =1{1 αντικείμενο} other{{count} αντικείμενα}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
@@ -220,10 +178,6 @@
 	"nameInputHint": "Όνομα",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Προσθέστε όνομα συλλογής",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "ΠΑΡΑΒΛΕΨΗ",
 	"@skipButtonLabel": {
@@ -318,10 +272,6 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Λογαριασμός",
-	"settingsAccountPageTitle": "Ρυθμίσεις λογαριασμού",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
 	"settingsIncludedFoldersTitle": "Περιλαμβανόμενοι φάκελοι",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
@@ -348,10 +298,6 @@
 	},
 	"settingsViewerTitle": "Προβολέας",
 	"settingsViewerDescription": "Customize the image/video viewer",
-	"settingsViewerPageTitle": "Ρυθμίσεις προβολέα",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Φωτεινότητα οθόνης",
 	"settingsScreenBrightnessDescription": "Παράκαμψη του επιπέδου φωτεινότητας του συστήματος",
 	"settingsForceRotationTitle": "Αγνόηση κλειδώματος περιστροφής οθόνης",
@@ -359,25 +305,11 @@
 	"settingsMapProviderTitle": "Πάροχος χάρτη",
 	"settingsAlbumTitle": "Άλμπουμ",
 	"settingsAlbumDescription": "Επεξεργασία άλμπουμ",
-	"settingsAlbumPageTitle": "Ρυθμίσεις άλμπουμ",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "Ομαδοποίηση φωτογραφιών κατά ημερομηνία",
 	"settingsShowDateInAlbumDescription": "Εφαρμογή μόνο όταν το άλμπουμ είναι ταξινομημένο κατά χρόνο",
-	"settingsPhotoEnhancementTitle": "Βελτίωση φωτογραφιών",
-	"settingsPhotoEnhancementPageTitle": "Ρυθμίσεις βελτίωσης φωτογραφιών",
-	"@settingsPhotoEnhancementPageTitle": {
-		"description": "Dedicated page for photo enhancement settings"
-	},
-	"settingsEnhanceMaxResolutionTitle": "Μέγιστη απόδοση ανάλυσης",
 	"settingsEnhanceMaxResolutionDescription": "Οι φωτογραφίες μεγαλύτερες από την επιλεγμένη ανάλυση θα μειωθούν.\n\nΟι φωτογραφίες υψηλής ανάλυσης απαιτούν πολύ περισσότερη μνήμη και χρόνο για επεξεργασία. Μειώστε αυτή τη ρύθμιση εάν η εφαρμογή διακοπεί κατά τη βελτίωση των φωτογραφιών.",
 	"settingsThemeTitle": "Εμφάνιση",
 	"settingsThemeDescription": "Προσαρμογή της εμφάνισης της εφαρμογής",
-	"settingsThemePageTitle": "Ρυθμίσεις εμφάνισης",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "Χρήση εμφάνισης συστήματος",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -395,14 +327,12 @@
 		"description": "When black in dark theme is set to false"
 	},
 	"settingsMiscellaneousTitle": "Διάφορα",
-	"settingsMiscellaneousPageTitle": "Διάφορες ρυθμίσεις",
 	"settingsPhotosTabSortByNameTitle": "Ταξινόμηση κατά όνομα αρχείου στις Φωτογραφίες",
 	"@settingsPhotosTabSortByNameTitle": {
 		"description": "Sort photos listed in the Photos tab by filename (descending)"
 	},
 	"settingsExperimentalTitle": "Πειραματικά",
 	"settingsExperimentalDescription": "Χαρακτηριστικά που δεν είναι έτοιμα για καθημερινή χρήση",
-	"settingsExperimentalPageTitle": "Πειραματικές ρυθμίσεις",
 	"settingsAboutSectionTitle": "Σχετικά",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -471,10 +401,6 @@
 	"connectButtonLabel": "ΣΥΝΔΕΣΗ",
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
-	},
-	"rootPickerSkipConfirmationDialogContent": "Θα συμπεριληφθούν όλοι οι φάκελοί σας",
-	"@rootPickerSkipConfirmationDialogContent": {
-		"description": "Inform user what happens after skipping root picker"
 	},
 	"megapixelCount": "{count}MP",
 	"@megapixelCount": {
@@ -571,34 +497,6 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Απλή",
-	"@createAlbumDialogBasicLabel": {
-		"description": "Simple album"
-	},
-	"createAlbumDialogBasicDescription": "Η απλή συλλογή οργανώνει φωτογραφίες ανεξάρτητα από την ιεραρχία αρχείων στον διακομιστή",
-	"@createAlbumDialogBasicDescription": {
-		"description": "Describe what a simple album is"
-	},
-	"createAlbumDialogFolderBasedLabel": "Με βάση το φάκελο",
-	"@createAlbumDialogFolderBasedLabel": {
-		"description": "Folder based album"
-	},
-	"createAlbumDialogFolderBasedDescription": "Η συλλογή με βάση το φάκελο αντικατοπτρίζει το περιεχόμενο ενός φακέλου",
-	"@createAlbumDialogFolderBasedDescription": {
-		"description": "Describe what a folder based album is"
-	},
-	"convertBasicAlbumMenuLabel": "Μετατροπή σε απλή συλλογή",
-	"@convertBasicAlbumMenuLabel": {
-		"description": "Convert a non-simple album to a simple one"
-	},
-	"convertBasicAlbumConfirmationDialogTitle": "Μετατροπή σε απλή συλλογή",
-	"@convertBasicAlbumConfirmationDialogTitle": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumConfirmationDialogContent": "Η διαχείριση των περιεχομένων αυτής της συλλογής δε θα γίνεται πλέον από την εφαρμογή. Θα μπορείτε να προσθέτετε ή να αφαιρείτε ελεύθερα φωτογραφίες.\n\nΑυτή η μετατροπή είναι μη αναστρέψιμη",
-	"@convertBasicAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
 	"sortOptionFilenameAscendingLabel": "Όνομα αρχείου",
 	"@sortOptionFilenameAscendingLabel": {
 		"description": "Sort by filename, in ascending order"
@@ -618,10 +516,6 @@
 	"sortOptionManualLabel": "Χειροκίνητα",
 	"@sortOptionManualLabel": {
 		"description": "Sort manually"
-	},
-	"convertBasicAlbumSuccessNotification": "Επιτυχής μετατροπή συλλογής",
-	"@convertBasicAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"importFoldersTooltip": "Εισαγωγή φακέλων",
 	"@importFoldersTooltip": {
@@ -712,18 +606,6 @@
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
 	},
-	"setAlbumCoverProcessingNotification": "Ορισμός φωτογραφίας ως εξώφυλλου άλμπουμ",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Επιτυχής ορισμός φωτογραφίας εξωφύλλου",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Αποτυχία ορισμού φωτογραφίας εξωφύλλου",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
-	},
 	"metadataTaskProcessingNotification": "Επεξεργασία μεταδεδομένων εικόνας στο παρασκήνιο",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
@@ -805,10 +687,6 @@
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
-	"unsetAlbumCoverFailureNotification": "Αποτυχία αφαίρεσης εξωφύλλου",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Σίγαση",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -820,15 +698,6 @@
 	"collectionPeopleLabel": "Πρόσωπα",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 φωτογραφία} other{{count} φωτογραφίες}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Παρουσίαση",
 	"@slideshowTooltip": {
@@ -858,11 +727,6 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "Αρχείο",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
-	},
-	"shareMethodFileDescription": "Λήψη αρχείου και κοινοποίηση σε άλλες εφαρμογές",
 	"shareMethodPublicLinkTitle": "Δημόσιος σύνδεσμος",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
@@ -959,19 +823,19 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "Διαγραφή φακέλου;",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "Αυτός ο φάκελος δημιουργήθηκε από την εφαρμογή για κοινή χρήση πολλών αρχείων ως σύνδεσμος. Δεν είναι πλέον κοινόχρηστο με κανένα μέρος, θέλετε να διαγράψετε αυτόν τον φάκελο;",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Προσθήκη στη συλλογή",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Προσθήκη στη συλλογή",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Προσθήκη του άλμπουμ {album} στη συλλογή",
-	"@addToCollectionProcessingNotification": {
+	"addToCollectionsViewProcessingNotification": "Προσθήκη του άλμπουμ {album} στη συλλογή",
+	"@addToCollectionsViewProcessingNotification": {
 		"description": "Adding an album to your collection",
 		"placeholders": {
 			"album": {
@@ -979,8 +843,8 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "Το άλμπουμ {album} προστέθηκε στη συλλογή με επιτυχία",
-	"@addToCollectionSuccessNotification": {
+	"addToCollectionsViewSuccessNotification": "Το άλμπουμ {album} προστέθηκε στη συλλογή με επιτυχία",
+	"@addToCollectionsViewSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
 			"album": {
@@ -989,7 +853,7 @@
 		}
 	},
 	"shareAlbumDialogTitle": "Κοινοποίηση με χρήστη",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
 	"shareAlbumSuccessNotification": "Το άλμπουμ κοινοποιήθηκε στο χρήστη {user}",
@@ -1037,7 +901,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "ΕΠΙΔΙΟΡΘΩΣΗ",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Επιδιόρθωση όλων",
@@ -1122,18 +986,6 @@
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
 	},
-	"convertAlbumTooltip": "Μετατροπή σε άλμπουμ",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Αυτή η μετατροπή είναι μη αναστρέψιμη",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Η συλλογή μετατράπηκε σε άλμπουμ με επιτυχία",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"collectionFavoritesLabel": "Αγαπημένα",
 	"@collectionFavoritesLabel": {
 		"description": "Browse photos added to favorites"
@@ -1201,10 +1053,6 @@
 	"@enhanceLowLightParamBrightnessLabel": {
 		"description": "This parameter sets how much brighter the output will be"
 	},
-	"collectionEnhancedPhotosLabel": "Βελτιωμένες",
-	"@collectionEnhancedPhotosLabel": {
-		"description": "List photos enhanced by the app"
-	},
 	"deletePermanentlyLocalConfirmationDialogContent": "Τα επιλεγμένα στοιχεία θα διαγραφούν οριστικά από αυτήν τη συσκευή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
 	"@deletePermanentlyLocalConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items from the current device"
@@ -1226,7 +1074,6 @@
 		"description": "Transfer the image style from a reference image to a photo"
 	},
 	"searchTooltip": "Αναζήτηση",
-	"albumSearchTextFieldHint": "Αναζήτηση συλλογής",
 	"clearTooltip": "Εκκαθάριση",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -1235,7 +1082,6 @@
 	"@listNoResultsText": {
 		"description": "When there's nothing in a list"
 	},
-
 	"changelogTitle": "Αρχείο αλλαγών",
 	"@changelogTitle": {
 		"description": "Title of the changelog dialog"

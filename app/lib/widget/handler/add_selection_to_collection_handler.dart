@@ -44,7 +44,7 @@ class AddSelectionToCollectionHandler {
     } catch (e, stackTrace) {
       _log.shout("[call] Exception", e, stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().addToAlbumFailureNotification),
+        content: Text(L10n.global().addItemToCollectionFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     }

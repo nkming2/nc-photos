@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "Выбранные фото добавлены в альбом {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Воскресная прогулка"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Не удалось добавить фото в альбом",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Добавить в альбом",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Добавлено в альбом {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Воскресная прогулка"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Не удалось добавить в альбом",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Удаление фото} other{Удаление {count} фото}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,10 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Убрать выбранное из альбома",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
 	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 фото убрано из альбома} other{{count} фото убрано из альбома}}",
 	"@removeSelectedFromAlbumSuccessNotification": {
 		"description": "Inform user that the selected items are removed from an album successfully",
@@ -187,10 +153,6 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"createAlbumFailureNotification": "Не удалось создать альбом",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
-	},
 	"albumSize": "{count, plural, =0{Пустой} =1{1 фото} other{{count} фото}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
@@ -216,10 +178,6 @@
 	"nameInputHint": "Название альбома",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Пожалуйста, укажите название альбома",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "ПРОПУСТИТЬ",
 	"@skipButtonLabel": {
@@ -309,20 +267,12 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-    "settingsViewerTitle": "Просмотр",
+	"settingsViewerTitle": "Просмотр",
 	"settingsViewerDescription": "Настройки просмотра фото/видео",
-	"settingsViewerPageTitle": "Настройки просмотра",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsShowDateInAlbumTitle": "Группировать фото по дате",
 	"settingsShowDateInAlbumDescription": "Применяется только в том случае, если альбом отсортирован по времени",
 	"settingsThemeTitle": "Оформление",
 	"settingsThemeDescription": "Настройки внешнего вида приложения",
-	"settingsThemePageTitle": "Настройки оформления",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsScreenBrightnessTitle": "Яркость экрана",
 	"settingsScreenBrightnessDescription": "Настройка яркости экрана независимо от системных настроек",
 	"settingsForceRotationTitle": "Игнорировать блокировку поворота экрана",
@@ -330,10 +280,6 @@
 	"settingsMapProviderTitle": "Постащик карт",
 	"settingsAlbumTitle": "Альбомы",
 	"settingsAlbumDescription": "Настройки альбомов",
-	"settingsAlbumPageTitle": "Настройки альбомов",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsFollowSystemThemeTitle": "Использовать системные настройки",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -394,10 +340,6 @@
 	"connectButtonLabel": "ПОДКЛЮЧИТЬСЯ",
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
-	},
-	"rootPickerSkipConfirmationDialogContent": "Будут выбраны все файлы",
-	"@rootPickerSkipConfirmationDialogContent": {
-		"description": "Inform user what happens after skipping root picker"
 	},
 	"megapixelCount": "{count} Мп",
 	"@megapixelCount": {
@@ -494,38 +436,6 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Обычный",
-	"@createAlbumDialogBasicLabel": {
-		"description": "Simple album"
-	},
-	"createAlbumDialogBasicDescription": "Обычный альбом позволяет организовать фотографии независимо от структуры папок на сервере",
-	"@createAlbumDialogBasicDescription": {
-		"description": "Describe what a simple album is"
-	},
-	"createAlbumDialogFolderBasedLabel": "Основанный на папках",
-	"@createAlbumDialogFolderBasedLabel": {
-		"description": "Folder based album"
-	},
-	"createAlbumDialogFolderBasedDescription": "Основанный на папках альбом показывает содержимое добавленных в него папок",
-	"@createAlbumDialogFolderBasedDescription": {
-		"description": "Describe what a folder based album is"
-	},
-	"convertBasicAlbumMenuLabel": "Преобразовать в обычный альбом",
-	"@convertBasicAlbumMenuLabel": {
-		"description": "Convert a non-simple album to a simple one"
-	},
-	"convertBasicAlbumConfirmationDialogTitle": "Преобразование в обычный альбом",
-	"@convertBasicAlbumConfirmationDialogTitle": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumConfirmationDialogContent": "Приложение больше не будет управлять содержимым этого альбома. Вы сможете свободно добавлять и удалять фотографии.\n\nЭто преобразование необратимо",
-	"@convertBasicAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumSuccessNotification": "Альбом преобразован",
-	"@convertBasicAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"importFoldersTooltip": "Импорт папки",
 	"@importFoldersTooltip": {
 		"description": "Menu entry in the album page to import folders as albums"
@@ -591,7 +501,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Поиск",
-	"albumSearchTextFieldHint": "Поиск альбомов",
 	"clearTooltip": "Очистить",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -662,18 +571,6 @@
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
 	},
-	"setAlbumCoverProcessingNotification": "Изменение обложки альбома",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Обложка альбома изменена",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Не удалось изменить обложку альбома",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
-	},
 	"metadataTaskProcessingNotification": "Обрабатываются метаданные изображений",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
@@ -686,7 +583,7 @@
 	"useAsAlbumCoverTooltip": "Использовать как обложку альбома",
 	"helpTooltip": "Справка",
 	"helpButtonLabel": "СПРАВКА",
-    "removeFromAlbumTooltip": "Убрать из альбома",
+	"removeFromAlbumTooltip": "Убрать из альбома",
 	"@removeFromAlbumTooltip": {
 		"description": "Remove the opened photo from an album"
 	},
@@ -726,7 +623,7 @@
 	"@whitelistCertButtonLabel": {
 		"description": "Label of the whitelist certificate button"
 	},
-    "fileSharedByDescription": "Поделился пользователь",
+	"fileSharedByDescription": "Поделился пользователь",
 	"@fileSharedByDescription": {
 		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
 	},
@@ -754,13 +651,8 @@
 	"@unsetAlbumCoverSuccessNotification": {
 		"description": "Unset the cover of the opened album successfully"
 	},
-	"unsetAlbumCoverFailureNotification": "Не удалось сбросить обложку альбома",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Убрать звук",
 	"unmuteTooltip": "Включить звук",
-
 	"errorUnauthenticated": "Неавторизованный доступ. Если ошибка возникает снова, попробуйте перелогиниться",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
@@ -794,10 +686,6 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "Учётная запись",
-	"settingsAccountPageTitle": "Настройки учётной записи",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
 	"settingsIncludedFoldersTitle": "Выбранные папки",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
@@ -824,7 +712,6 @@
 	},
 	"settingsExperimentalTitle": "Экспериментальные",
 	"settingsExperimentalDescription": "Функции, которые не готовы к повседневному использованию",
-	"settingsExperimentalPageTitle": "Экспериментальные настройки",
 	"settingsAboutSectionTitle": "О программе",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -861,15 +748,6 @@
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
 	},
-	"personPhotoCountText": "{count, plural, =1{1 фото} other{{count} фото}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"slideshowTooltip": "Слайд-шоу",
 	"@slideshowTooltip": {
 		"description": "A button to start a slideshow from the current collection"
@@ -898,11 +776,6 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "Файл",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
-	},
-	"shareMethodFileDescription": "Скачайте файл и поделитесь им с другими приложениями",
 	"shareMethodPublicLinkTitle": "Общедоступная ссылка",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
@@ -999,19 +872,19 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "Удалить папку?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "Эта папка была создана предоставления общего доступа к нескольким файлами в виде ссылки. Теперь она больше не используется для общего доступа с другими пользователями, хотите удалить эту папку?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Добавить в коллекцию",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Добавить в коллекцию",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Добавление {album} в коллекцию",
-	"@addToCollectionProcessingNotification": {
+	"addToCollectionsViewProcessingNotification": "Добавление {album} в коллекцию",
+	"@addToCollectionsViewProcessingNotification": {
 		"description": "Adding an album to your collection",
 		"placeholders": {
 			"album": {
@@ -1019,8 +892,8 @@
 			}
 		}
 	},
-	"addToCollectionSuccessNotification": "{album} успешно добавлен в коллекцию",
-	"@addToCollectionSuccessNotification": {
+	"addToCollectionsViewSuccessNotification": "{album} успешно добавлен в коллекцию",
+	"@addToCollectionsViewSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully",
 		"placeholders": {
 			"album": {
@@ -1029,7 +902,7 @@
 		}
 	},
 	"shareAlbumDialogTitle": "Предоставить общий доступ пользователю",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
 	"shareAlbumSuccessNotification": "Ползователю {user} предоставлен общий доступ к альбому",
@@ -1077,7 +950,7 @@
 		"description": "Fix an issue"
 	},
 	"fixButtonLabel": "ИСПРАВИТЬ",
-	"@fixButtonLabel":{
+	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Исправить всё",
@@ -1161,18 +1034,6 @@
 	"createCollectionDialogFolderDescription": "Показать фото внутри папки",
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
-	},
-	"convertAlbumTooltip": "Конвертировать в альбом",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Это изменение нельзя отменить",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Коллекция успешно преобразована в альбом",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"collectionFavoritesLabel": "Избранное",
 	"@collectionFavoritesLabel": {

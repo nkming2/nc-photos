@@ -147,7 +147,7 @@ class _AppBar extends StatelessWidget {
     return _BlocBuilder(
       buildWhen: (previous, current) => previous.isLoading != current.isLoading,
       builder: (context, state) => SliverAppBar(
-        title: Text(L10n.global().addToAlbumTooltip),
+        title: Text(L10n.global().addItemToCollectionTooltip),
         floating: true,
         leading:
             state.isLoading ? const AppBarCircularProgressIndicator() : null,

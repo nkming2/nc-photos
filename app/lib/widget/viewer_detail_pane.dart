@@ -166,7 +166,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     ),
                   _DetailPaneButton(
                     icon: Icons.add,
-                    label: L10n.global().addToAlbumTooltip,
+                    label: L10n.global().addItemToCollectionTooltip,
                     onPressed: () => _onAddToAlbumPressed(context),
                   ),
                   if (widget.fd.fdIsArchived == true)
@@ -402,7 +402,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       _log.shout("[_onSetAlbumCoverPressed] Failed while updating album", e,
           stackTrace);
       SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().setAlbumCoverFailureNotification),
+        content: Text(L10n.global().setCollectionCoverFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
     }

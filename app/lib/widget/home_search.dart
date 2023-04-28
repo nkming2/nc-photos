@@ -241,7 +241,7 @@ class _HomeSearchState extends State<HomeSearch>
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          tooltip: L10n.global().addToAlbumTooltip,
+          tooltip: L10n.global().addItemToCollectionTooltip,
           onPressed: () => _onSelectionAddToAlbumPressed(context),
         ),
         PopupMenuButton<_SelectionMenuOption>(

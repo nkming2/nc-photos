@@ -1,7 +1,20 @@
 {
+  "cs": [
+    "nameInputInvalidEmpty",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
+  ],
+
   "de": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -83,9 +96,9 @@
     "copyItemsFailureNotification",
     "unshareLinkShareDirDialogTitle",
     "unshareLinkShareDirDialogContent",
-    "addToCollectionTooltip",
-    "addToCollectionProcessingNotification",
-    "addToCollectionSuccessNotification",
+    "addToCollectionsViewTooltip",
+    "addToCollectionsViewProcessingNotification",
+    "addToCollectionsViewSuccessNotification",
     "shareAlbumDialogTitle",
     "shareAlbumSuccessNotification",
     "shareAlbumSuccessWithErrorNotification",
@@ -113,9 +126,6 @@
     "createCollectionDialogAlbumDescription",
     "createCollectionDialogFolderLabel",
     "createCollectionDialogFolderDescription",
-    "convertAlbumTooltip",
-    "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification",
     "collectionFavoritesLabel",
     "favoriteTooltip",
     "favoriteSuccessNotification",
@@ -199,12 +209,21 @@
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
     "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription",
     "errorAlbumDowngrade"
   ],
 
   "el": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -292,17 +311,45 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
+  ],
+
+  "es": [
+    "nameInputInvalidEmpty",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "fi": [
-    
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "fr": [
     "collectionsTooltip",
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -409,12 +456,21 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "pl": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -454,9 +510,6 @@
     "createCollectionDialogAlbumDescription",
     "createCollectionDialogFolderLabel",
     "createCollectionDialogFolderDescription",
-    "convertAlbumTooltip",
-    "convertAlbumConfirmationDialogContent",
-    "convertAlbumSuccessNotification",
     "collectionFavoritesLabel",
     "favoriteTooltip",
     "favoriteSuccessNotification",
@@ -539,12 +592,33 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
+  ],
+
+  "pt": [
+    "nameInputInvalidEmpty",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "ru": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -648,12 +722,21 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "zh": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -757,12 +840,21 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ],
 
   "zh_Hant": [
     "connectingToServer2",
     "connectingToServerInstruction",
+    "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsExifWifiOnlyTitle",
@@ -866,6 +958,14 @@
     "imageSaveOptionDialogDeviceButtonLabel",
     "imageSaveOptionDialogServerButtonLabel",
     "initialSyncMessage",
-    "loopTooltip"
+    "loopTooltip",
+    "createCollectionFailureNotification",
+    "addItemToCollectionTooltip",
+    "addItemToCollectionFailureNotification",
+    "setCollectionCoverFailureNotification",
+    "exportCollectionTooltip",
+    "exportCollectionDialogTitle",
+    "createCollectionDialogNextcloudAlbumLabel",
+    "createCollectionDialogNextcloudAlbumDescription"
   ]
 }

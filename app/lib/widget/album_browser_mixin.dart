@@ -88,7 +88,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           IconButton(
             onPressed: () => _onAddToCollectionPressed(context, account, album),
             icon: const Icon(Icons.library_add),
-            tooltip: L10n.global().addToCollectionTooltip,
+            tooltip: L10n.global().addToCollectionsViewTooltip,
           ),
         ...(actions ?? []),
         if (menuItemBuilder != null || menuItems.isNotEmpty)
@@ -216,7 +216,7 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
         },
         L10n.global().unsetAlbumCoverProcessingNotification,
         L10n.global().unsetAlbumCoverSuccessNotification,
-        failureText: L10n.global().unsetAlbumCoverFailureNotification,
+        failureText: L10n.global().setCollectionCoverFailureNotification,
       )();
     } catch (e, stackTrace) {
       _log.shout(
@@ -233,8 +233,8 @@ mixin AlbumBrowserMixin<T extends StatefulWidget>
           newAlbum = await ImportPendingSharedAlbum(
               KiwiContainer().resolve<DiContainer>())(account, album);
         },
-        L10n.global().addToCollectionProcessingNotification(album.name),
-        L10n.global().addToCollectionSuccessNotification(album.name),
+        L10n.global().addToCollectionsViewProcessingNotification(album.name),
+        L10n.global().addToCollectionsViewSuccessNotification(album.name),
       )();
     } catch (e, stackTrace) {
       _log.shout(

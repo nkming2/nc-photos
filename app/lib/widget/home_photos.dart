@@ -270,7 +270,7 @@ class _HomePhotosState extends State<HomePhotos>
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          tooltip: L10n.global().addToAlbumTooltip,
+          tooltip: L10n.global().addItemToCollectionTooltip,
           onPressed: () {
             _onSelectionAddToAlbumPressed(context);
           },
