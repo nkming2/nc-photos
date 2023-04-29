@@ -14,7 +14,7 @@ enum CollectionSort {
   }
 }
 
-extension CollectionListExtension on List<Collection> {
+extension CollectionListExtension on Iterable<Collection> {
   List<Collection> sortedBy(CollectionSort by) {
     return map<Tuple2<Comparable, Collection>>((e) {
       switch (by) {
