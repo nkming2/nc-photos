@@ -281,16 +281,20 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
           .cast<String, dynamic>();
       final fd = _fileJsonToFileDescriptorJson(content);
       // some very old album file may contain files w/o id
-      if (fd["fdId"] == null) {
+      if (fd["fdId"] != null) {
         result["coverProvider"]["content"]["coverFile"] = fd;
+      } else {
+        result["coverProvider"]["content"] = {};
       }
     } else if (result["coverProvider"]["type"] == "auto") {
       final content = (result["coverProvider"]["content"]["coverFile"] as Map?)
           ?.cast<String, dynamic>();
       if (content != null) {
         final fd = _fileJsonToFileDescriptorJson(content);
-        if (fd["fdId"] == null) {
+        if (fd["fdId"] != null) {
           result["coverProvider"]["content"]["coverFile"] = fd;
+        } else {
+          result["coverProvider"]["content"] = {};
         }
       }
     }
@@ -305,18 +309,26 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
           .cast<String, dynamic>();
       final converted = _fileJsonToFileDescriptorJson(
           (content["coverFile"] as Map).cast<String, dynamic>());
-      return dbObj.copyWith(
-        coverProviderContent: jsonEncode({"coverFile": converted}),
-      );
+      if (converted["fdId"] != null) {
+        return dbObj.copyWith(
+          coverProviderContent: jsonEncode({"coverFile": converted}),
+        );
+      } else {
+        return dbObj.copyWith(coverProviderContent: "{}");
+      }
     } else if (dbObj.coverProviderType == "auto") {
       final content = (jsonDecode(dbObj.coverProviderContent) as Map)
           .cast<String, dynamic>();
       if (content["coverFile"] != null) {
         final converted = _fileJsonToFileDescriptorJson(
             (content["coverFile"] as Map).cast<String, dynamic>());
-        return dbObj.copyWith(
-          coverProviderContent: jsonEncode({"coverFile": converted}),
-        );
+        if (converted["fdId"] != null) {
+          return dbObj.copyWith(
+            coverProviderContent: jsonEncode({"coverFile": converted}),
+          );
+        } else {
+          return dbObj.copyWith(coverProviderContent: "{}");
+        }
       }
     }
     return dbObj;

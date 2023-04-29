@@ -91,7 +91,7 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
 
   @override
   FileDescriptor? getCover(Album album) {
-    if (coverFile == null) {
+    if (coverFile == null && album.provider is AlbumStaticProvider) {
       // use the latest file as cover
       return getCoverByItems(AlbumStaticProvider.of(album).items);
     } else {
