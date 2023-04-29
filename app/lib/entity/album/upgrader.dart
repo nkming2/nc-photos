@@ -280,13 +280,18 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
       final content = (result["coverProvider"]["content"]["coverFile"] as Map)
           .cast<String, dynamic>();
       final fd = _fileJsonToFileDescriptorJson(content);
-      result["coverProvider"]["content"]["coverFile"] = fd;
+      // some very old album file may contain files w/o id
+      if (fd["fdId"] == null) {
+        result["coverProvider"]["content"]["coverFile"] = fd;
+      }
     } else if (result["coverProvider"]["type"] == "auto") {
       final content = (result["coverProvider"]["content"]["coverFile"] as Map?)
           ?.cast<String, dynamic>();
       if (content != null) {
         final fd = _fileJsonToFileDescriptorJson(content);
-        result["coverProvider"]["content"]["coverFile"] = fd;
+        if (fd["fdId"] == null) {
+          result["coverProvider"]["content"]["coverFile"] = fd;
+        }
       }
     }
     return result;
