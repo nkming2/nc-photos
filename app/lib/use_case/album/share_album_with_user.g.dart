@@ -11,5 +11,5 @@ extension _$ShareAlbumWithUserNpLog on ShareAlbumWithUser {
   Logger get _log => log;
 
   static final log =
-      Logger("use_case.share_album_with_user.ShareAlbumWithUser");
+      Logger("use_case.album.share_album_with_user.ShareAlbumWithUser");
 }

@@ -14,6 +14,7 @@ import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'unshare_file_from_album.g.dart';
 
@@ -35,7 +36,7 @@ class UnshareFileFromAlbum {
     Album album,
     List<File> files,
     List<CiString> unshareWith, {
-    void Function(Share)? onUnshareFileFailed,
+    ErrorWithValueHandler<Share>? onUnshareFileFailed,
   }) async {
     _log.info(
         "[call] Unshare ${files.length} files from album '${album.name}' with ${unshareWith.length} users");
@@ -85,14 +86,14 @@ class UnshareFileFromAlbum {
   }
 
   Future<void> _unshare(Account account, List<Share> shares,
-      void Function(Share)? onUnshareFileFailed) async {
+      ErrorWithValueHandler<Share>? onUnshareFileFailed) async {
     for (final s in shares) {
       try {
         await RemoveShare(_c.shareRepo)(account, s);
       } catch (e, stackTrace) {
         _log.severe(
             "[_unshare] Failed while RemoveShare: ${s.path}", e, stackTrace);
-        onUnshareFileFailed?.call(s);
+        onUnshareFileFailed?.call(s, e, stackTrace);
       }
     }
   }

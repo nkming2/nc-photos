@@ -1,5 +1,6 @@
 import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/sorter.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:to_string/to_string.dart';
@@ -40,6 +41,9 @@ class Collection with EquatableMixin {
   /// See [CollectionContentProvider.itemSort]
   CollectionItemSort get itemSort => contentProvider.itemSort;
 
+  /// See [CollectionContentProvider.sharees]
+  List<CollectionShare> get shares => contentProvider.shares;
+
   /// See [CollectionContentProvider.getCoverUrl]
   String? getCoverUrl(
     int width,
@@ -77,6 +81,8 @@ enum CollectionCapability {
   labelItem,
   // set the cover image
   manualCover,
+  // share the collection with other user on the same server
+  share,
 }
 
 /// Provide the actual content of a collection
@@ -105,6 +111,10 @@ abstract class CollectionContentProvider with EquatableMixin {
 
   /// Return the sort type
   CollectionItemSort get itemSort;
+
+  /// Return list of users who have access to this collection, excluding the
+  /// current user
+  List<CollectionShare> get shares;
 
   /// Return the URL of the cover image if available
   ///

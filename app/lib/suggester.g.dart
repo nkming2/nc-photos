@@ -1,15 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'unshare_album_with_user.dart';
+part of 'suggester.dart';
 
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
-extension _$UnshareAlbumWithUserNpLog on UnshareAlbumWithUser {
+extension _$SuggesterNpLog on Suggester {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log =
-      Logger("use_case.unshare_album_with_user.UnshareAlbumWithUser");
+  static final log = Logger("suggester.Suggester");
 }

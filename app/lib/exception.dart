@@ -103,3 +103,18 @@ class AlbumItemPermissionException implements Exception {
 
   final dynamic message;
 }
+
+class CollectionPartialShareException implements Exception {
+  const CollectionPartialShareException([this.message]);
+
+  @override
+  String toString() {
+    if (message == null) {
+      return "CollectionPartialShareException";
+    } else {
+      return "CollectionPartialShareException: $message";
+    }
+  }
+
+  final dynamic message;
+}

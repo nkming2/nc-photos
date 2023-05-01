@@ -14,11 +14,14 @@ import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection/content_provider/person.dart';
 import 'package:nc_photos/entity/collection/content_provider/tag.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 
 abstract class CollectionAdapter {
@@ -68,6 +71,18 @@ abstract class CollectionAdapter {
   Future<int> removeItems(
     List<CollectionItem> items, {
     ErrorWithValueIndexedHandler<CollectionItem>? onError,
+    required ValueChanged<Collection> onCollectionUpdated,
+  });
+
+  /// Share the collection with [sharee]
+  Future<CollectionShareResult> share(
+    Sharee sharee, {
+    required ValueChanged<Collection> onCollectionUpdated,
+  });
+
+  /// Unshare the collection with a user
+  Future<CollectionShareResult> unshare(
+    CiString userId, {
     required ValueChanged<Collection> onCollectionUpdated,
   });
 

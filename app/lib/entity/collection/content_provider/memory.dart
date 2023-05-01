@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/object_extension.dart';
@@ -38,6 +39,9 @@ class CollectionMemoryProvider
 
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
+
+  @override
+  List<CollectionShare> get shares => [];
 
   @override
   String? getCoverUrl(

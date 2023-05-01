@@ -2,7 +2,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
-import 'package:nc_photos/entity/collection/adapter/read_only_adapter.dart';
+import 'package:nc_photos/entity/collection/adapter/adapter_mixin.dart';
 import 'package:nc_photos/entity/collection/content_provider/person.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/basic_item.dart';
@@ -12,7 +12,10 @@ import 'package:nc_photos/use_case/list_face.dart';
 import 'package:nc_photos/use_case/populate_person.dart';
 
 class CollectionPersonAdapter
-    with CollectionReadOnlyAdapter
+    with
+        CollectionAdapterReadOnlyTag,
+        CollectionAdapterUnremovableTag,
+        CollectionAdapterUnshareableTag
     implements CollectionAdapter {
   CollectionPersonAdapter(this._c, this.account, this.collection)
       : assert(require(_c)),
@@ -43,11 +46,6 @@ class CollectionPersonAdapter
     } else {
       throw UnsupportedError("Unsupported type: ${original.runtimeType}");
     }
-  }
-
-  @override
-  Future<void> remove() {
-    throw UnsupportedError("Operation not supported");
   }
 
   @override

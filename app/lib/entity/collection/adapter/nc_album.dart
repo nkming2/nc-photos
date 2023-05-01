@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
+import 'package:nc_photos/entity/collection/adapter/adapter_mixin.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/basic_item.dart';
@@ -27,7 +28,9 @@ import 'package:np_common/type.dart';
 part 'nc_album.g.dart';
 
 @npLog
-class CollectionNcAlbumAdapter implements CollectionAdapter {
+class CollectionNcAlbumAdapter
+    with CollectionAdapterUnshareableTag
+    implements CollectionAdapter {
   CollectionNcAlbumAdapter(this._c, this.account, this.collection)
       : assert(require(_c)),
         _provider = collection.contentProvider as CollectionNcAlbumProvider;

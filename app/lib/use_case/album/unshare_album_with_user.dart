@@ -7,12 +7,13 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/use_case/album/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
-import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'unshare_album_with_user.g.dart';
 
@@ -31,7 +32,7 @@ class UnshareAlbumWithUser {
     Account account,
     Album album,
     CiString shareWith, {
-    void Function(Share)? onUnshareFileFailed,
+    ErrorWithValueHandler<Share>? onUnshareFileFailed,
   }) async {
     assert(album.provider is AlbumStaticProvider);
     // remove the share from album file
@@ -59,7 +60,7 @@ class UnshareAlbumWithUser {
     Account account,
     Album album,
     CiString shareWith, {
-    void Function(Share)? onUnshareFileFailed,
+    ErrorWithValueHandler<Share>? onUnshareFileFailed,
   }) async {
     // remove share from the album file
     final albumShares = await ListShare(_c)(account, album.albumFile!);
@@ -71,7 +72,7 @@ class UnshareAlbumWithUser {
             "[_deleteFileShares] Failed unsharing album file '${logFilename(album.albumFile?.path)}' with '$shareWith'",
             e,
             stackTrace);
-        onUnshareFileFailed?.call(s);
+        onUnshareFileFailed?.call(s, e, stackTrace);
       }
     }
 

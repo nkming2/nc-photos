@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/tag.dart';
 
@@ -30,6 +31,9 @@ class CollectionTagProvider
 
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
+
+  @override
+  List<CollectionShare> get shares => [];
 
   @override
   String? getCoverUrl(

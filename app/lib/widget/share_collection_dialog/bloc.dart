@@ -1,0 +1,147 @@
+part of '../share_collection_dialog.dart';
+
+@npLog
+class _Bloc extends Bloc<_Event, _State> {
+  _Bloc({
+    required DiContainer container,
+    required this.account,
+    required this.collectionsController,
+    required Collection collection,
+  })  : _c = container,
+        super(_State.init(
+          collection: collection,
+        )) {
+    on<_UpdateCollection>(_onUpdateCollection);
+    on<_LoadSharee>(_onLoadSharee);
+    on<_RefreshSuggester>(_onRefreshSuggester);
+
+    on<_ShareEventTag>((ev, emit) {
+      if (ev is _Share) {
+        return _onShare(ev, emit);
+      } else if (ev is _Unshare) {
+        return _onUnshare(ev, emit);
+      } else {
+        throw UnimplementedError();
+      }
+    });
+
+    on<_SetError>(_onSetError);
+
+    _collectionControllerSubscription = collectionsController.stream.listen(
+      (event) {
+        final c = event.data
+            .firstWhere((d) => state.collection.compareIdentity(d.collection));
+        if (!identical(c, state.collection)) {
+          add(_UpdateCollection(c.collection));
+        }
+      },
+      onError: (e, stackTrace) {
+        add(_SetError(e, stackTrace));
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _collectionControllerSubscription?.cancel();
+    return super.close();
+  }
+
+  @override
+  void onChange(Change<_State> change) {
+    if (change.currentState.sharees != change.nextState.sharees ||
+        change.currentState.collection != change.nextState.collection ||
+        change.currentState.processingShares !=
+            change.nextState.processingShares) {
+      add(const _RefreshSuggester());
+    }
+    super.onChange(change);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    add(_SetError(error, stackTrace));
+    super.onError(error, stackTrace);
+  }
+
+  void _onUpdateCollection(_UpdateCollection ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(collection: ev.collection));
+  }
+
+  Future<void> _onLoadSharee(_LoadSharee ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    final sharees = await _c.shareeRepo.list(account);
+    emit(state.copyWith(sharees: sharees));
+  }
+
+  void _onRefreshSuggester(_RefreshSuggester ev, Emitter<_State> emit) {
+    _log.info(ev);
+    final searchable = state.sharees
+            ?.where((s) =>
+                !state.collection.shares.any((e) => e.userId == s.shareWith))
+            .where((s) =>
+                !state.processingShares.any((e) => e.userId == s.shareWith))
+            .where((s) => s.shareWith != account.userId)
+            .toList() ??
+        [];
+    emit(state.copyWith(
+      shareeSuggester: Suggester<Sharee>(
+        items: searchable,
+        itemToKeywords: (item) => [item.shareWith, item.label.toCi()],
+        maxResult: 10,
+      ),
+    ));
+  }
+
+  Future<void> _onShare(_Share ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    if (state.collection.shares.any((s) => s.userId == ev.sharee.shareWith) ||
+        state.processingShares.any((s) => s.userId == ev.sharee.shareWith)) {
+      _log.fine("[_onShare] Already shared with sharee: ${ev.sharee}");
+      return;
+    }
+    emit(state.copyWith(
+      processingShares: [
+        ...state.processingShares,
+        CollectionShare(
+          userId: ev.sharee.shareWith,
+          username: ev.sharee.label,
+        ),
+      ],
+    ));
+    await collectionsController.share(state.collection, ev.sharee);
+    emit(state.copyWith(
+      processingShares: state.processingShares
+          .where((s) => s.userId != ev.sharee.shareWith)
+          .toList(),
+    ));
+  }
+
+  Future<void> _onUnshare(_Unshare ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    emit(state.copyWith(
+      processingShares: [
+        ...state.processingShares,
+        ev.share,
+      ],
+    ));
+    await collectionsController.unshare(state.collection, ev.share.userId);
+    emit(state.copyWith(
+      processingShares: state.processingShares
+          .where((s) => s.userId != ev.share.userId)
+          .toList(),
+    ));
+  }
+
+  void _onSetError(_SetError ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
+  }
+
+  final DiContainer _c;
+  final Account account;
+  final CollectionsController collectionsController;
+
+  StreamSubscription? _collectionControllerSubscription;
+}

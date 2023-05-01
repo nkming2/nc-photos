@@ -15,8 +15,8 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/use_case/share_album_with_user.dart';
-import 'package:nc_photos/use_case/unshare_album_with_user.dart';
+import 'package:nc_photos/use_case/album/share_album_with_user.dart';
+import 'package:nc_photos/use_case/album/unshare_album_with_user.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -240,7 +240,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           widget.account,
           _album,
           sharee,
-          onShareFileFailed: (_) {
+          onShareFileFailed: (_, __, ___) {
             hasFailure = true;
           },
         );
@@ -279,7 +279,7 @@ class _ShareAlbumDialogState extends State<ShareAlbumDialog> {
           widget.account,
           _album,
           share.shareWith,
-          onUnshareFileFailed: (_) {
+          onUnshareFileFailed: (_, __, ___) {
             hasFailure = true;
           },
         );

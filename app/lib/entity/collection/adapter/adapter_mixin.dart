@@ -1,14 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 
 /// A read-only collection that does not support modifying its items
-mixin CollectionReadOnlyAdapter implements CollectionAdapter {
+mixin CollectionAdapterReadOnlyTag implements CollectionAdapter {
   @override
   Future<int> addFiles(
     List<FileDescriptor> files, {
@@ -47,4 +50,29 @@ mixin CollectionReadOnlyAdapter implements CollectionAdapter {
   @override
   Future<Collection?> updatePostLoad(List<CollectionItem> items) =>
       Future.value(null);
+}
+
+mixin CollectionAdapterUnremovableTag implements CollectionAdapter {
+  @override
+  Future<void> remove() {
+    throw UnsupportedError("Operation not supported");
+  }
+}
+
+mixin CollectionAdapterUnshareableTag implements CollectionAdapter {
+  @override
+  Future<CollectionShareResult> share(
+    Sharee sharee, {
+    required ValueChanged<Collection> onCollectionUpdated,
+  }) {
+    throw UnsupportedError("Operation not supported");
+  }
+
+  @override
+  Future<CollectionShareResult> unshare(
+    CiString userId, {
+    required ValueChanged<Collection> onCollectionUpdated,
+  }) {
+    throw UnsupportedError("Operation not supported");
+  }
 }

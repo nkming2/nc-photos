@@ -2,7 +2,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
-import 'package:nc_photos/entity/collection/adapter/read_only_adapter.dart';
+import 'package:nc_photos/entity/collection/adapter/adapter_mixin.dart';
 import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/basic_item.dart';
@@ -11,7 +11,10 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/use_case/list_location_file.dart';
 
 class CollectionMemoryAdapter
-    with CollectionReadOnlyAdapter
+    with
+        CollectionAdapterReadOnlyTag,
+        CollectionAdapterUnremovableTag,
+        CollectionAdapterUnshareableTag
     implements CollectionAdapter {
   CollectionMemoryAdapter(this._c, this.account, this.collection)
       : assert(require(_c)),
@@ -40,11 +43,6 @@ class CollectionMemoryAdapter
     } else {
       throw UnsupportedError("Unsupported type: ${original.runtimeType}");
     }
-  }
-
-  @override
-  Future<void> remove() {
-    throw UnsupportedError("Operation not supported");
   }
 
   @override

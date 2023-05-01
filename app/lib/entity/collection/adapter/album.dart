@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
@@ -10,12 +11,14 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/collection/content_provider/album.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/album_item_adapter.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
@@ -23,9 +26,12 @@ import 'package:nc_photos/use_case/album/add_file_to_album.dart';
 import 'package:nc_photos/use_case/album/edit_album.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
 import 'package:nc_photos/use_case/album/remove_from_album.dart';
+import 'package:nc_photos/use_case/album/share_album_with_user.dart';
+import 'package:nc_photos/use_case/album/unshare_album_with_user.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:tuple/tuple.dart';
 
@@ -171,6 +177,50 @@ class CollectionAlbumAdapter implements CollectionAdapter {
       }
       return 0;
     }
+  }
+
+  @override
+  Future<CollectionShareResult> share(
+    Sharee sharee, {
+    required ValueChanged<Collection> onCollectionUpdated,
+  }) async {
+    var fileFailed = false;
+    final newAlbum = await ShareAlbumWithUser(_c.shareRepo, _c.albumRepo)(
+      account,
+      _provider.album,
+      sharee,
+      onShareFileFailed: (f, e, stackTrace) {
+        _log.severe("[share] Failed to share file: ${logFilename(f.path)}", e,
+            stackTrace);
+        fileFailed = true;
+      },
+    );
+    onCollectionUpdated(CollectionBuilder.byAlbum(account, newAlbum));
+    return fileFailed
+        ? CollectionShareResult.partial
+        : CollectionShareResult.ok;
+  }
+
+  @override
+  Future<CollectionShareResult> unshare(
+    CiString userId, {
+    required ValueChanged<Collection> onCollectionUpdated,
+  }) async {
+    var fileFailed = false;
+    final newAlbum = await UnshareAlbumWithUser(_c)(
+      account,
+      _provider.album,
+      userId,
+      onUnshareFileFailed: (f, e, stackTrace) {
+        _log.severe("[unshare] Failed to unshare file: ${logFilename(f.path)}",
+            e, stackTrace);
+        fileFailed = true;
+      },
+    );
+    onCollectionUpdated(CollectionBuilder.byAlbum(account, newAlbum));
+    return fileFailed
+        ? CollectionShareResult.partial
+        : CollectionShareResult.ok;
   }
 
   @override

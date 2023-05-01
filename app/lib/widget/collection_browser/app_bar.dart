@@ -16,6 +16,7 @@ class _AppBar extends StatelessWidget {
         final canRename = adapter.isPermitted(CollectionCapability.rename);
         final canManualCover =
             adapter.isPermitted(CollectionCapability.manualCover);
+        final canShare = adapter.isPermitted(CollectionCapability.share);
 
         final actions = <Widget>[
           ZoomMenuButton(
@@ -26,6 +27,12 @@ class _AppBar extends StatelessWidget {
               context.read<PrefController>().setAlbumBrowserZoomLevel(value);
             },
           ),
+          if (canShare)
+            IconButton(
+              onPressed: () => _onSharePressed(context),
+              icon: const Icon(Icons.share),
+              tooltip: L10n.global().shareTooltip,
+            ),
         ];
         if (state.items.isNotEmpty || canRename) {
           actions.add(PopupMenuButton<_MenuOption>(
@@ -106,6 +113,17 @@ class _AppBar extends StatelessWidget {
     if (result != null) {
       Navigator.of(context).pop();
     }
+  }
+
+  Future<void> _onSharePressed(BuildContext context) async {
+    final bloc = context.read<_Bloc>();
+    await showDialog(
+      context: context,
+      builder: (_) => ShareCollectionDialog(
+        account: bloc.account,
+        collection: bloc.state.collection,
+      ),
+    );
   }
 }
 

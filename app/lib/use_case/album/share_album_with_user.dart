@@ -13,6 +13,7 @@ import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 part 'share_album_with_user.g.dart';
 
@@ -24,7 +25,7 @@ class ShareAlbumWithUser {
     Account account,
     Album album,
     Sharee sharee, {
-    void Function(File)? onShareFileFailed,
+    ErrorWithValueHandler<File>? onShareFileFailed,
   }) async {
     assert(album.provider is AlbumStaticProvider);
     final newShares = (album.shares ?? [])
@@ -55,7 +56,7 @@ class ShareAlbumWithUser {
     Account account,
     Album album,
     CiString shareWith, {
-    void Function(File)? onShareFileFailed,
+    ErrorWithValueHandler<File>? onShareFileFailed,
   }) async {
     final files = AlbumStaticProvider.of(album)
         .items
@@ -70,7 +71,7 @@ class ShareAlbumWithUser {
           "[_createFileShares] Failed sharing album file '${logFilename(album.albumFile?.path)}' with '$shareWith'",
           e,
           stackTrace);
-      onShareFileFailed?.call(album.albumFile!);
+      onShareFileFailed?.call(album.albumFile!, e, stackTrace);
     }
     for (final f in files) {
       _log.info("[_createFileShares] Sharing '${f.path}' with '$shareWith'");
@@ -81,7 +82,7 @@ class ShareAlbumWithUser {
             "[_createFileShares] Failed sharing file '${logFilename(f.path)}' with '$shareWith'",
             e,
             stackTrace);
-        onShareFileFailed?.call(f);
+        onShareFileFailed?.call(f, e, stackTrace);
       }
     }
   }

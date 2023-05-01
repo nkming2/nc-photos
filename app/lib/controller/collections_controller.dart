@@ -8,16 +8,22 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/collection_items_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sharee.dart';
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
 import 'package:nc_photos/use_case/collection/list_collection.dart';
 import 'package:nc_photos/use_case/collection/remove_collections.dart';
+import 'package:nc_photos/use_case/collection/share_collection.dart';
+import 'package:nc_photos/use_case/collection/unshare_collection.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -178,6 +184,54 @@ class CollectionsController {
         );
       });
       _updateCollection(c, items);
+    } catch (e, stackTrace) {
+      _dataStreamController.addError(e, stackTrace);
+    }
+  }
+
+  Future<void> share(Collection collection, Sharee sharee) async {
+    try {
+      Collection? newCollection;
+      final result = await _mutex.protect(() async {
+        return await ShareCollection(_c)(
+          account,
+          collection,
+          sharee,
+          onCollectionUpdated: (c) {
+            newCollection = c;
+          },
+        );
+      });
+      if (newCollection != null) {
+        _updateCollection(newCollection!);
+      }
+      if (result == CollectionShareResult.partial) {
+        _dataStreamController.addError(const CollectionPartialShareException());
+      }
+    } catch (e, stackTrace) {
+      _dataStreamController.addError(e, stackTrace);
+    }
+  }
+
+  Future<void> unshare(Collection collection, CiString userId) async {
+    try {
+      Collection? newCollection;
+      final result = await _mutex.protect(() async {
+        return await UnshareCollection(_c)(
+          account,
+          collection,
+          userId,
+          onCollectionUpdated: (c) {
+            newCollection = c;
+          },
+        );
+      });
+      if (newCollection != null) {
+        _updateCollection(newCollection!);
+      }
+      if (result == CollectionShareResult.partial) {
+        _dataStreamController.addError(const CollectionPartialShareException());
+      }
     } catch (e, stackTrace) {
       _dataStreamController.addError(e, stackTrace);
     }

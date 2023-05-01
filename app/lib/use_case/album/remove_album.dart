@@ -6,10 +6,10 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/use_case/album/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
-import 'package:nc_photos/use_case/unshare_file_from_album.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:np_codegen/np_codegen.dart';
 

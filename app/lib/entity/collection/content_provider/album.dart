@@ -5,6 +5,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:to_string/to_string.dart';
 
@@ -52,6 +53,7 @@ class CollectionAlbumProvider
           CollectionCapability.manualItem,
           CollectionCapability.manualSort,
           CollectionCapability.labelItem,
+          CollectionCapability.share,
         ],
       ];
 
@@ -65,6 +67,17 @@ class CollectionAlbumProvider
 
   @override
   CollectionItemSort get itemSort => album.sortProvider.toCollectionItemSort();
+
+  @override
+  List<CollectionShare> get shares =>
+      album.shares
+          ?.where((s) => s.userId != account.userId)
+          .map((s) => CollectionShare(
+                userId: s.userId,
+                username: s.displayName ?? s.userId.raw,
+              ))
+          .toList() ??
+      const [];
 
   @override
   String? getCoverUrl(
