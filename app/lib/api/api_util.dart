@@ -7,8 +7,9 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:np_api/np_api.dart';
+import 'package:np_api/np_api.dart' hide NcAlbumItem;
 import 'package:to_string/to_string.dart';
 
 part 'api_util.g.dart';
@@ -75,6 +76,18 @@ String getFilePreviewUrlByFileId(
   url = "$url&a=${isKeepAspectRatio ? 1 : 0}";
   return url;
 }
+
+/// Return the preview image URL for an item in [NcAlbum]. We can't use the
+/// generic file preview url because collaborative albums do not create a file
+/// share for photos not belonging to you, that means you can only access the
+/// file view the Photos API
+String getNcAlbumFilePreviewUrl(
+  Account account,
+  NcAlbumItem item, {
+  required int width,
+  required int height,
+}) =>
+    "${account.url}/apps/photos/api/v1/preview/${item.fileId}?x=$width&y=$height";
 
 String getFileUrl(Account account, FileDescriptor file) {
   return "${account.url}/${getFileUrlRelative(file)}";

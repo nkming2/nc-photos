@@ -4,8 +4,8 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/nc_album.dart';
-import 'package:nc_photos/entity/nc_album/item.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
@@ -85,9 +85,21 @@ class NcAlbumRemoteDataSource implements NcAlbumDataSource {
     _log.info(
         "[getItems] account: ${account.userId}, album: ${album.strippedPath}");
     final response = await ApiUtil.fromAccount(account).files().propfind(
-          path: album.path,
-          fileid: 1,
-        );
+      path: album.path,
+      getlastmodified: 1,
+      getetag: 1,
+      getcontenttype: 1,
+      getcontentlength: 1,
+      hasPreview: 1,
+      fileid: 1,
+      favorite: 1,
+      customProperties: [
+        "nc:file-metadata-size",
+        "nc:face-detections",
+        "nc:realpath",
+        "oc:permissions",
+      ],
+    );
     if (!response.isGood) {
       _log.severe("[getItems] Failed requesting server: $response");
       throw ApiException(
@@ -96,11 +108,10 @@ class NcAlbumRemoteDataSource implements NcAlbumDataSource {
       );
     }
 
-    final apiFiles = await api.FileParser().parse(response.body);
+    final apiFiles = await api.NcAlbumItemParser().parse(response.body);
     return apiFiles
         .where((f) => f.fileId != null)
-        .map(ApiFileConverter.fromApi)
-        .map((f) => NcAlbumItem(f.fileId!))
+        .map(ApiNcAlbumItemConverter.fromApi)
         .toList();
   }
 }
@@ -161,7 +172,19 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
         parentRelativePath: album.strippedPath,
       );
     });
-    return dbItems.map((i) => NcAlbumItem(i.fileId)).toList();
+    return dbItems
+        .map((i) {
+          try {
+            return SqliteNcAlbumItemConverter.fromSql(
+                account.userId.toString(), album.strippedPath, i);
+          } catch (e, stackTrace) {
+            _log.severe(
+                "[getItems] Failed while converting DB entry", e, stackTrace);
+            return null;
+          }
+        })
+        .whereNotNull()
+        .toList();
   }
 
   @override
@@ -213,25 +236,32 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
       final existingItems = await db.ncAlbumItemsByParent(
         parent: dbAlbum!,
       );
-      final idDiff = list_util.diff(
-        existingItems.map((e) => e.fileId).sorted((a, b) => a.compareTo(b)),
-        remote.map((e) => e.fileId).sorted((a, b) => a.compareTo(b)),
+      final diff = list_util.diffWith<NcAlbumItem>(
+        existingItems
+            .map((e) => SqliteNcAlbumItemConverter.fromSql(
+                account.userId.raw, album.strippedPath, e))
+            .sorted(NcAlbumItemExtension.identityComparator),
+        remote.sorted(NcAlbumItemExtension.identityComparator),
+        NcAlbumItemExtension.identityComparator,
       );
-      if (idDiff.onlyInA.isNotEmpty || idDiff.onlyInB.isNotEmpty) {
+      if (diff.onlyInA.isNotEmpty || diff.onlyInB.isNotEmpty) {
         await db.batch((batch) async {
-          for (final id in idDiff.onlyInB) {
+          for (final item in diff.onlyInB) {
             // new
             batch.insert(
               db.ncAlbumItems,
-              SqliteNcAlbumItemConverter.toSql(dbAlbum, id),
+              SqliteNcAlbumItemConverter.toSql(dbAlbum, item),
             );
           }
-          // removed
-          batch.deleteWhere(
-            db.ncAlbumItems,
-            (sql.$NcAlbumItemsTable t) =>
-                t.parent.equals(dbAlbum.rowId) & t.fileId.isIn(idDiff.onlyInA),
-          );
+          final rmIds = diff.onlyInA.map((e) => e.fileId).toList();
+          if (rmIds.isNotEmpty) {
+            // removed
+            batch.deleteWhere(
+              db.ncAlbumItems,
+              (sql.$NcAlbumItemsTable t) =>
+                  t.parent.equals(dbAlbum.rowId) & t.fileId.isIn(rmIds),
+            );
+          }
         });
       }
     });

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/nc_album.dart';
-import 'package:nc_photos/entity/nc_album/item.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'repo.g.dart';

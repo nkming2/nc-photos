@@ -47,7 +47,8 @@ class _PhotoItem extends _FileItem {
     required super.original,
     required super.file,
     required this.account,
-  }) : _previewUrl = NetworkRectThumbnail.imageUrlForFile(account, file);
+  }) : _previewUrl = _getCollectionFilePreviewUrl(
+            account, original as CollectionFileItem);
 
   @override
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
@@ -75,7 +76,8 @@ class _VideoItem extends _FileItem {
     required super.original,
     required super.file,
     required this.account,
-  }) : _previewUrl = NetworkRectThumbnail.imageUrlForFile(account, file);
+  }) : _previewUrl = _getCollectionFilePreviewUrl(
+            account, original as CollectionFileItem);
 
   @override
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
@@ -173,4 +175,14 @@ class _DateItem extends _Item {
   }
 
   final DateTime date;
+}
+
+String _getCollectionFilePreviewUrl(Account account, CollectionFileItem item) {
+  if (item is CollectionFileItemNcAlbumItemAdapter) {
+    return item.localFile == null
+        ? NetworkRectThumbnail.imageUrlForNcAlbumFile(account, item.item)
+        : NetworkRectThumbnail.imageUrlForFile(account, item.file);
+  } else {
+    return NetworkRectThumbnail.imageUrlForFile(account, item.file);
+  }
 }

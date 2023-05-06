@@ -1,7 +1,7 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/nc_album.dart';
-import 'package:nc_photos/entity/nc_album/item.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 
 class ListNcAlbumItem {
   ListNcAlbumItem(this._c) : assert(require(_c));

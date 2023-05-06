@@ -49,7 +49,7 @@ class SqliteDb extends _$SqliteDb {
   SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
 
   @override
-  get schemaVersion => 4;
+  get schemaVersion => 5;
 
   @override
   get migration => MigrationStrategy(
@@ -97,6 +97,10 @@ class SqliteDb extends _$SqliteDb {
               }
               if (from < 4) {
                 await m.addColumn(albums, albums.fileEtag);
+              }
+              if (from < 5) {
+                await m.createTable(ncAlbums);
+                await m.createTable(ncAlbumItems);
               }
             });
           } catch (e, stackTrace) {

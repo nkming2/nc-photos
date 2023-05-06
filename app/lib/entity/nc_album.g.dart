@@ -67,3 +67,10 @@ extension _$NcAlbumToString on NcAlbum {
     return "NcAlbum {path: $path, lastPhoto: $lastPhoto, nbItems: $nbItems, location: $location, dateStart: $dateStart, dateEnd: $dateEnd, collaborators: [length: ${collaborators.length}]}";
   }
 }
+
+extension _$NcAlbumCollaboratorToString on NcAlbumCollaborator {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NcAlbumCollaborator {id: $id, label: $label, type: $type}";
+  }
+}

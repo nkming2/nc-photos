@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
@@ -254,15 +255,21 @@ class SqlitePersonConverter {
 }
 
 class SqliteNcAlbumConverter {
-  static NcAlbum fromSql(String userId, sql.NcAlbum ncAlbum) => NcAlbum(
-        path: "remote.php/dav/photos/$userId/albums/${ncAlbum.relativePath}",
-        lastPhoto: ncAlbum.lastPhoto,
-        nbItems: ncAlbum.nbItems,
-        location: ncAlbum.location,
-        dateStart: ncAlbum.dateStart,
-        dateEnd: ncAlbum.dateEnd,
-        collaborators: [],
-      );
+  static NcAlbum fromSql(String userId, sql.NcAlbum ncAlbum) {
+    final json = ncAlbum.collaborators
+        .run((obj) => (jsonDecode(obj) as List).cast<Map>());
+    return NcAlbum(
+      path: "remote.php/dav/photos/$userId/albums/${ncAlbum.relativePath}",
+      lastPhoto: ncAlbum.lastPhoto,
+      nbItems: ncAlbum.nbItems,
+      location: ncAlbum.location,
+      dateStart: ncAlbum.dateStart,
+      dateEnd: ncAlbum.dateEnd,
+      collaborators: json
+          .map((e) => NcAlbumCollaborator.fromJson(e.cast<String, dynamic>()))
+          .toList(),
+    );
+  }
 
   static sql.NcAlbumsCompanion toSql(sql.Account? dbAccount, NcAlbum ncAlbum) =>
       sql.NcAlbumsCompanion(
@@ -274,19 +281,44 @@ class SqliteNcAlbumConverter {
         location: Value(ncAlbum.location),
         dateStart: Value(ncAlbum.dateStart),
         dateEnd: Value(ncAlbum.dateEnd),
+        collaborators: Value(
+            jsonEncode(ncAlbum.collaborators.map((c) => c.toJson()).toList())),
       );
 }
 
 class SqliteNcAlbumItemConverter {
-  static int fromSql(sql.NcAlbumItem item) => item.fileId;
+  static NcAlbumItem fromSql(
+          String userId, String albumRelativePath, sql.NcAlbumItem item) =>
+      NcAlbumItem(
+        path:
+            "remote.php/dav/photos/$userId/albums/$albumRelativePath/${item.relativePath}",
+        fileId: item.fileId,
+        contentLength: item.contentLength,
+        contentType: item.contentType,
+        etag: item.etag,
+        lastModified: item.lastModified,
+        hasPreview: item.hasPreview,
+        isFavorite: item.isFavorite,
+        fileMetadataWidth: item.fileMetadataWidth,
+        fileMetadataHeight: item.fileMetadataHeight,
+      );
 
   static sql.NcAlbumItemsCompanion toSql(
     sql.NcAlbum parent,
-    int fileId,
+    NcAlbumItem item,
   ) =>
       sql.NcAlbumItemsCompanion(
         parent: Value(parent.rowId),
-        fileId: Value(fileId),
+        relativePath: Value(item.strippedPath),
+        fileId: Value(item.fileId),
+        contentLength: Value(item.contentLength),
+        contentType: Value(item.contentType),
+        etag: Value(item.etag),
+        lastModified: Value(item.lastModified),
+        hasPreview: Value(item.hasPreview),
+        isFavorite: Value(item.isFavorite),
+        fileMetadataWidth: Value(item.fileMetadataWidth),
+        fileMetadataHeight: Value(item.fileMetadataHeight),
       );
 }
 

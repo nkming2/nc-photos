@@ -6,9 +6,9 @@ part of 'entity_converter.dart';
 // NpLogGenerator
 // **************************************************************************
 
-extension _$ApiFileConverterNpLog on ApiFileConverter {
+extension _$_NpLog on _ {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("api.entity_converter.ApiFileConverter");
+  static final log = Logger("api.entity_converter._");
 }

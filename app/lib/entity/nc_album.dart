@@ -1,7 +1,9 @@
 import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
+import 'package:np_common/ci_string.dart';
 import 'package:np_common/string_extension.dart';
+import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 
 part 'nc_album.g.dart';
@@ -109,4 +111,31 @@ extension NcAlbumExtension on NcAlbum {
   int get identityHashCode => path.hashCode;
 }
 
-class NcAlbumCollaborator {}
+@toString
+class NcAlbumCollaborator {
+  const NcAlbumCollaborator({
+    required this.id,
+    required this.label,
+    required this.type,
+  });
+
+  factory NcAlbumCollaborator.fromJson(JsonObj json) => NcAlbumCollaborator(
+        id: CiString(json["id"]),
+        label: json["label"],
+        type: json["type"],
+      );
+
+  JsonObj toJson() => {
+        "id": id.raw,
+        "label": label,
+        "type": type,
+      };
+
+  @override
+  String toString() => _$toString();
+
+  final CiString id;
+  final String label;
+  // right now it's unclear what this variable represents
+  final int type;
+}

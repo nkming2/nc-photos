@@ -111,6 +111,55 @@ class NcAlbum with EquatableMixin {
     required this.nbItems,
     required this.location,
     required this.dateRange,
+    required this.collaborators,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props =>
+      [href, lastPhoto, nbItems, location, dateRange, collaborators];
+
+  final String href;
+  final int? lastPhoto;
+  final int? nbItems;
+  final String? location;
+  final JsonObj? dateRange;
+  final List<NcAlbumCollaborator> collaborators;
+}
+
+@toString
+class NcAlbumCollaborator with EquatableMixin {
+  const NcAlbumCollaborator({
+    required this.id,
+    required this.label,
+    required this.type,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [id, label, type];
+
+  final String id;
+  final String label;
+  final int type;
+}
+
+@ToString(ignoreNull: true)
+class NcAlbumItem with EquatableMixin {
+  const NcAlbumItem({
+    required this.href,
+    this.fileId,
+    this.contentLength,
+    this.contentType,
+    this.etag,
+    this.lastModified,
+    this.hasPreview,
+    this.favorite,
+    this.fileMetadataSize,
   });
 
   @override
@@ -119,17 +168,25 @@ class NcAlbum with EquatableMixin {
   @override
   List<Object?> get props => [
         href,
-        lastPhoto,
-        nbItems,
-        location,
-        dateRange,
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        hasPreview,
+        favorite,
+        fileMetadataSize,
       ];
 
   final String href;
-  final int? lastPhoto;
-  final int? nbItems;
-  final String? location;
-  final JsonObj? dateRange;
+  final int? fileId;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final bool? hasPreview;
+  final bool? favorite;
+  final JsonObj? fileMetadataSize;
 }
 
 @toString

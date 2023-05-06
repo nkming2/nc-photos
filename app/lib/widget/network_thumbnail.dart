@@ -5,6 +5,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 
@@ -34,6 +35,14 @@ class NetworkRectThumbnail extends StatelessWidget {
         width: k.photoThumbSize,
         height: k.photoThumbSize,
         isKeepAspectRatio: true,
+      );
+
+  static String imageUrlForNcAlbumFile(Account account, NcAlbumItem item) =>
+      api_util.getNcAlbumFilePreviewUrl(
+        account,
+        item,
+        width: k.photoThumbSize,
+        height: k.photoThumbSize,
       );
 
   @override

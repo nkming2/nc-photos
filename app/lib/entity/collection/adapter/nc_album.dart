@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/collection/adapter/adapter_mixin.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/basic_item.dart';
+import 'package:nc_photos/entity/collection_item/nc_album_item_adapter.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -41,14 +42,20 @@ class CollectionNcAlbumAdapter
   @override
   Stream<List<CollectionItem>> listItem() {
     return ListNcAlbumItem(_c)(account, _provider.album)
-        .asyncMap((items) => FindFileDescriptor(_c)(
-              account,
-              items.map((e) => e.fileId).toList(),
-              onFileNotFound: (fileId) {
-                _log.severe("[listItem] File not found: $fileId");
-              },
-            ))
-        .map((files) => files.map(BasicCollectionFileItem.new).toList());
+        .asyncMap((items) async {
+      final found = await FindFileDescriptor(_c)(
+        account,
+        items.map((e) => e.fileId).toList(),
+        onFileNotFound: (fileId) {
+          // happens when this is a file shared with you
+          _log.warning("[listItem] File not found: $fileId");
+        },
+      );
+      return items.map((i) {
+        final f = found.firstWhereOrNull((e) => e.fdId == i.fileId);
+        return CollectionFileItemNcAlbumItemAdapter(i, f);
+      }).toList();
+    });
   }
 
   @override

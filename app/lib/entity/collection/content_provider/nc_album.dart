@@ -41,13 +41,19 @@ class CollectionNcAlbumProvider
   List<CollectionCapability> get capabilities => [
         CollectionCapability.manualItem,
         CollectionCapability.rename,
+        // CollectionCapability.share,
       ];
 
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
 
   @override
-  List<CollectionShare> get shares => [];
+  List<CollectionShare> get shares => album.collaborators
+      .map((c) => CollectionShare(
+            userId: c.id,
+            username: c.label,
+          ))
+      .toList();
 
   @override
   String? getCoverUrl(

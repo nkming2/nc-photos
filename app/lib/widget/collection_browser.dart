@@ -25,6 +25,7 @@ import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
+import 'package:nc_photos/entity/collection_item/nc_album_item_adapter.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/sorter.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';

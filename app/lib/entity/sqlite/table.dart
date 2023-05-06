@@ -137,6 +137,7 @@ class NcAlbums extends Table {
       dateTime().map(const SqliteDateTimeConverter()).nullable()();
   DateTimeColumn get dateEnd =>
       dateTime().map(const SqliteDateTimeConverter()).nullable()();
+  TextColumn get collaborators => text()();
 
   @override
   List<Set<Column>>? get uniqueKeys => [
@@ -148,7 +149,17 @@ class NcAlbumItems extends Table {
   IntColumn get rowId => integer().autoIncrement()();
   IntColumn get parent =>
       integer().references(NcAlbums, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get relativePath => text()();
   IntColumn get fileId => integer()();
+  IntColumn get contentLength => integer().nullable()();
+  TextColumn get contentType => text().nullable()();
+  TextColumn get etag => text().nullable()();
+  DateTimeColumn get lastModified =>
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
+  BoolColumn get hasPreview => boolean().nullable()();
+  BoolColumn get isFavorite => boolean().nullable()();
+  IntColumn get fileMetadataWidth => integer().nullable()();
+  IntColumn get fileMetadataHeight => integer().nullable()();
 
   @override
   List<Set<Column>>? get uniqueKeys => [

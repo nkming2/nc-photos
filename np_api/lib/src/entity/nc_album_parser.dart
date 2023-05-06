@@ -20,6 +20,7 @@ class NcAlbumParser extends XmlResponseParser {
     int? nbItems;
     String? location;
     JsonObj? dateRange;
+    List<NcAlbumCollaborator>? collaborators;
 
     for (final child in element.children.whereType<XmlElement>()) {
       if (child.matchQualifiedName("href",
@@ -44,6 +45,7 @@ class NcAlbumParser extends XmlResponseParser {
         nbItems = propParser.nbItems;
         location = propParser.location;
         dateRange = propParser.dateRange;
+        collaborators = propParser.collaborators;
       }
     }
 
@@ -53,6 +55,7 @@ class NcAlbumParser extends XmlResponseParser {
       nbItems: nbItems,
       location: location,
       dateRange: dateRange,
+      collaborators: collaborators ?? const [],
     );
   }
 }
@@ -79,14 +82,44 @@ class _PropParser {
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _dateRange =
             child.innerText.isEmpty ? null : jsonDecode(child.innerText);
+      } else if (child.matchQualifiedName("collaborators",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final cc in child.children.whereType<XmlElement>()) {
+          if (cc.matchQualifiedName("collaborator",
+              prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+            _collaborators ??= [];
+            _collaborators!.add(_parseCollaborator(cc));
+          }
+        }
       }
     }
+  }
+
+  NcAlbumCollaborator _parseCollaborator(XmlElement element) {
+    late String id;
+    late String label;
+    late int type;
+    for (final child in element.children.whereType<XmlElement>()) {
+      switch (child.localName) {
+        case "id":
+          id = child.innerText;
+          break;
+        case "label":
+          label = child.innerText;
+          break;
+        case "type":
+          type = int.parse(child.innerText);
+          break;
+      }
+    }
+    return NcAlbumCollaborator(id: id, label: label, type: type);
   }
 
   int? get lastPhoto => _lastPhoto;
   int? get nbItems => _nbItems;
   String? get location => _location;
   JsonObj? get dateRange => _dateRange;
+  List<NcAlbumCollaborator>? get collaborators => _collaborators;
 
   final Map<String, String> namespaces;
 
@@ -94,6 +127,7 @@ class _PropParser {
   int? _nbItems;
   String? _location;
   JsonObj? _dateRange;
+  List<NcAlbumCollaborator>? _collaborators;
 }
 
 List<NcAlbum> _parseNcAlbumsIsolate(String response) {
