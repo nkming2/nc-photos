@@ -7,7 +7,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:np_api/np_api.dart' hide NcAlbumItem;
 import 'package:to_string/to_string.dart';
@@ -46,6 +45,11 @@ String getFilePreviewUrlRelative(
   if (file_util.isTrash(account, file)) {
     // trashbin does not support preview.png endpoint
     url = "index.php/apps/files_trashbin/preview?fileId=${file.fdId}";
+  } else if (file_util.isNcAlbumFile(account, file)) {
+    // We can't use the generic file preview url because collaborative albums do
+    // not create a file share for photos not belonging to you, that means you
+    // can only access the file view the Photos API
+    url = "apps/photos/api/v1/preview/${file.fdId}?x=$width&y=$height";
   } else {
     url = "index.php/core/preview?fileId=${file.fdId}";
   }
@@ -76,18 +80,6 @@ String getFilePreviewUrlByFileId(
   url = "$url&a=${isKeepAspectRatio ? 1 : 0}";
   return url;
 }
-
-/// Return the preview image URL for an item in [NcAlbum]. We can't use the
-/// generic file preview url because collaborative albums do not create a file
-/// share for photos not belonging to you, that means you can only access the
-/// file view the Photos API
-String getNcAlbumFilePreviewUrl(
-  Account account,
-  NcAlbumItem item, {
-  required int width,
-  required int height,
-}) =>
-    "${account.url}/apps/photos/api/v1/preview/${item.fileId}?x=$width&y=$height";
 
 String getFileUrl(Account account, FileDescriptor file) {
   return "${account.url}/${getFileUrlRelative(file)}";

@@ -1,4 +1,5 @@
 import 'package:nc_photos/entity/file.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/string_extension.dart';
 import 'package:to_string/to_string.dart';
 
@@ -40,10 +41,10 @@ extension NcAlbumItemExtension on NcAlbumItem {
   /// WebDAV file path: remote.php/dav/photos/{userId}/albums/{album}/{strippedPath}.
   /// If this path points to the user's root album path, return "."
   String get strippedPath {
-    if (!path.startsWith("remote.php/dav/photos/")) {
+    if (!path.startsWith("${api.ApiPhotos.path}/")) {
       return path;
     }
-    var begin = "remote.php/dav/photos/".length;
+    var begin = "${api.ApiPhotos.path}/".length;
     begin = path.indexOf("/", begin);
     if (begin == -1) {
       return path;

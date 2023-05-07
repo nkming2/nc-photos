@@ -6,6 +6,8 @@ class ApiPhotos {
   ApiPhotosAlbums albums() => ApiPhotosAlbums(this);
   ApiPhotosAlbum album(String name) => ApiPhotosAlbum(this, name);
 
+  static String get path => "remote.php/dav/photos";
+
   final Api api;
   final String userId;
 }
@@ -22,7 +24,7 @@ class ApiPhotosAlbums {
     dateRange,
     collaborators,
   }) async {
-    final endpoint = "remote.php/dav/photos/${photos.userId}/albums";
+    final endpoint = "${ApiPhotos.path}/${photos.userId}/albums";
     try {
       if (lastPhoto == null &&
           nbItems == null &&
@@ -96,7 +98,7 @@ class ApiPhotosAlbum {
     fileid,
     permissions,
   }) async {
-    final endpoint = "remote.php/dav/photos/${photos.userId}/albums/$albumId";
+    final endpoint = "${ApiPhotos.path}/${photos.userId}/albums/$albumId";
     try {
       final bool hasDavNs = (getcontentlength != null ||
           getcontenttype != null ||
@@ -178,7 +180,7 @@ class ApiPhotosAlbum {
 
   Future<Response> mkcol() async {
     try {
-      final endpoint = "remote.php/dav/photos/${photos.userId}/albums/$albumId";
+      final endpoint = "${ApiPhotos.path}/${photos.userId}/albums/$albumId";
       return await api.request("MKCOL", endpoint);
     } catch (e) {
       _log.severe("[mkcol] Failed while MKCOL", e);
@@ -188,7 +190,7 @@ class ApiPhotosAlbum {
 
   Future<Response> delete() async {
     try {
-      final endpoint = "remote.php/dav/photos/${photos.userId}/albums/$albumId";
+      final endpoint = "${ApiPhotos.path}/${photos.userId}/albums/$albumId";
       return await api.request("DELETE", endpoint);
     } catch (e) {
       _log.severe("[delete] Failed while DELETE", e);

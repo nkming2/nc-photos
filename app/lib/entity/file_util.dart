@@ -5,6 +5,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/string_extension.dart';
 import 'package:path/path.dart' as path_lib;
@@ -37,6 +38,9 @@ bool isTrash(Account account, FileDescriptor file) =>
 
 bool isAlbumFile(Account account, FileDescriptor file) =>
     file.fdPath.startsWith(remote_storage_util.getRemoteAlbumsDir(account));
+
+bool isNcAlbumFile(Account account, FileDescriptor file) =>
+    file.fdPath.startsWith("${api.ApiPhotos.path}/");
 
 /// Return if [file] is located under [dir]
 ///

@@ -16,6 +16,7 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
 
 extension SqlTagListExtension on List<sql.Tag> {
@@ -259,7 +260,7 @@ class SqliteNcAlbumConverter {
     final json = ncAlbum.collaborators
         .run((obj) => (jsonDecode(obj) as List).cast<Map>());
     return NcAlbum(
-      path: "remote.php/dav/photos/$userId/albums/${ncAlbum.relativePath}",
+      path: "${api.ApiPhotos.path}/$userId/albums/${ncAlbum.relativePath}",
       lastPhoto: ncAlbum.lastPhoto,
       nbItems: ncAlbum.nbItems,
       location: ncAlbum.location,
@@ -291,7 +292,7 @@ class SqliteNcAlbumItemConverter {
           String userId, String albumRelativePath, sql.NcAlbumItem item) =>
       NcAlbumItem(
         path:
-            "remote.php/dav/photos/$userId/albums/$albumRelativePath/${item.relativePath}",
+            "${api.ApiPhotos.path}/$userId/albums/$albumRelativePath/${item.relativePath}",
         fileId: item.fileId,
         contentLength: item.contentLength,
         contentType: item.contentType,

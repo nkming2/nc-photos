@@ -1,6 +1,7 @@
 import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/string_extension.dart';
 import 'package:np_common/type.dart';
@@ -27,7 +28,7 @@ class NcAlbum with EquatableMixin {
     required String name,
   }) {
     return NcAlbum(
-      path: "remote.php/dav/photos/${account.userId}/albums/$name",
+      path: "${api.ApiPhotos.path}/${account.userId}/albums/$name",
       lastPhoto: null,
       nbItems: 0,
       location: null,
