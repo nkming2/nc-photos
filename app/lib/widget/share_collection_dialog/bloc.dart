@@ -60,7 +60,14 @@ class _Bloc extends Bloc<_Event, _State> {
 
   @override
   void onError(Object error, StackTrace stackTrace) {
-    add(_SetError(error, stackTrace));
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
     super.onError(error, stackTrace);
   }
 
@@ -144,4 +151,5 @@ class _Bloc extends Bloc<_Event, _State> {
   final CollectionsController collectionsController;
 
   StreamSubscription? _collectionControllerSubscription;
+  var _isHandlingError = false;
 }
