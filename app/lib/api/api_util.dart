@@ -81,6 +81,16 @@ String getFilePreviewUrlByFileId(
   return url;
 }
 
+/// Return the preview image URL for [fileId], using the new Photos API in
+/// Nextcloud 25
+String getPhotosApiFilePreviewUrlByFileId(
+  Account account,
+  int fileId, {
+  required int width,
+  required int height,
+}) =>
+    "${account.url}/apps/photos/api/v1/preview/$fileId?x=$width&y=$height";
+
 String getFileUrl(Account account, FileDescriptor file) {
   return "${account.url}/${getFileUrlRelative(file)}";
 }

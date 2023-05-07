@@ -64,12 +64,11 @@ class CollectionNcAlbumProvider
     if (album.lastPhoto == null) {
       return null;
     } else {
-      return api_util.getFilePreviewUrlByFileId(
+      return api_util.getPhotosApiFilePreviewUrlByFileId(
         account,
         album.lastPhoto!,
         width: width,
         height: height,
-        isKeepAspectRatio: isKeepAspectRatio ?? false,
       );
     }
   }
