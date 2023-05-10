@@ -13,6 +13,7 @@ class StatusParser {
     return Status(
       version: json["version"],
       versionString: json["versionstring"],
+      productName: json["productname"],
     );
   }
 }

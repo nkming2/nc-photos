@@ -27,6 +27,8 @@ class Api {
 
   ApiPhotos photos(String userId) => ApiPhotos(this, userId);
 
+  ApiStatus status() => ApiStatus(this);
+
   ApiSystemtags systemtags() => ApiSystemtags(this);
 
   ApiSystemtagsRelations systemtagsRelations() => ApiSystemtagsRelations(this);

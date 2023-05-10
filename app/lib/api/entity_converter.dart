@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/tag.dart';
@@ -177,6 +178,16 @@ class ApiShareeConverter {
     "deck": ShareeType.deck,
     "lookup": ShareeType.lookup,
   };
+}
+
+class ApiStatusConverter {
+  static ServerStatus fromApi(api.Status status) {
+    return ServerStatus(
+      versionRaw: status.version,
+      versionName: status.versionString,
+      productName: status.productName,
+    );
+  }
 }
 
 class ApiTagConverter {

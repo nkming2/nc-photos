@@ -5,6 +5,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/person.dart';
@@ -126,7 +127,8 @@ class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
 @npLog
 class HomeSearchSuggestionBloc
     extends Bloc<HomeSearchSuggestionBlocEvent, HomeSearchSuggestionBlocState> {
-  HomeSearchSuggestionBloc(this.account, this.collectionsController)
+  HomeSearchSuggestionBloc(
+      this.account, this.collectionsController, this.serverController)
       : super(const HomeSearchSuggestionBlocInit()) {
     final c = KiwiContainer().resolve<DiContainer>();
     assert(require(c));
@@ -194,7 +196,9 @@ class HomeSearchSuggestionBloc
           .map((e) => e.collection)
           .toList();
       if (collections.isEmpty) {
-        collections = await ListCollection(_c)(account).last;
+        collections = await ListCollection(_c,
+                serverController: serverController)(account)
+            .last;
       }
       product.addAll(collections.map(_CollectionSearcheable.new));
       _log.info(
@@ -247,6 +251,7 @@ class HomeSearchSuggestionBloc
 
   final Account account;
   final CollectionsController collectionsController;
+  final ServerController serverController;
   late final DiContainer _c;
 
   final _search = Woozy<_Searcheable>(limit: 10);

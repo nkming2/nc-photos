@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -64,6 +68,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
     _animationController.value = 1;
+
+    // call once to pre-cache the value
+    unawaited(context
+        .read<AccountController>()
+        .serverController
+        .status
+        .first
+        .then((value) {
+      _log.info("Server status: $value");
+    }));
   }
 
   @override

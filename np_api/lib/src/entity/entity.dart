@@ -299,6 +299,7 @@ class Status with EquatableMixin {
   const Status({
     required this.version,
     required this.versionString,
+    required this.productName,
   });
 
   @override
@@ -308,10 +309,12 @@ class Status with EquatableMixin {
   List<Object?> get props => [
         version,
         versionString,
+        productName,
       ];
 
   final String version;
   final String versionString;
+  final String productName;
 }
 
 @toString

@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/collection_items_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/util.dart';
@@ -64,6 +65,7 @@ class CollectionsController {
   CollectionsController(
     this._c, {
     required this.account,
+    required this.serverController,
   });
 
   void dispose() {
@@ -264,7 +266,7 @@ class CollectionsController {
       hasNext: false,
     );
     final completer = Completer();
-    ListCollection(_c)(account).listen(
+    ListCollection(_c, serverController: serverController)(account).listen(
       (c) {
         lastData = CollectionStreamEvent(
           data: _prepareDataFor(c),
@@ -325,6 +327,7 @@ class CollectionsController {
 
   final DiContainer _c;
   final Account account;
+  final ServerController serverController;
 
   var _isDataStreamInited = false;
   final _dataStreamController = BehaviorSubject.seeded(

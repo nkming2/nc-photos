@@ -1,16 +1,21 @@
 import 'dart:async';
 
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/nc_album.dart';
+import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/use_case/album/list_album2.dart';
 import 'package:nc_photos/use_case/nc_album/list_nc_album.dart';
 
 class ListCollection {
-  ListCollection(this._c) : assert(require(_c));
+  ListCollection(
+    this._c, {
+    required this.serverController,
+  }) : assert(require(_c));
 
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.albumRepo2) &&
@@ -51,23 +56,29 @@ class ListCollection {
         onDone();
       },
     );
-    ListNcAlbum(_c)(account).listen(
-      (event) {
-        ncAlbums = event;
-        notify();
-      },
-      onDone: () {
-        isNcAlbumDone = true;
-        onDone();
-      },
-      onError: (e, stackTrace) {
-        controller.addError(e, stackTrace);
-        isNcAlbumDone = true;
-        onDone();
-      },
-    );
+    if (serverController.status.hasValue &&
+        serverController.status.value.majorVersion < 25) {
+      isNcAlbumDone = true;
+    } else {
+      ListNcAlbum(_c)(account).listen(
+        (event) {
+          ncAlbums = event;
+          notify();
+        },
+        onDone: () {
+          isNcAlbumDone = true;
+          onDone();
+        },
+        onError: (e, stackTrace) {
+          controller.addError(e, stackTrace);
+          isNcAlbumDone = true;
+          onDone();
+        },
+      );
+    }
     return controller.stream;
   }
 
   final DiContainer _c;
+  final ServerController serverController;
 }
