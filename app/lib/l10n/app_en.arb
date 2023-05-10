@@ -431,6 +431,10 @@
 	"@settingsVersionTitle": {
 		"description": "Title of the version data item"
 	},
+	"settingsServerVersionTitle": "Server",
+	"@settingsServerVersionTitle": {
+		"description": "This item will show the server software version, e.g., Nextcloud 25"
+	},
 	"settingsSourceCodeTitle": "Source code",
 	"@settingsSourceCodeTitle": {
 		"description": "Title of the source code item"

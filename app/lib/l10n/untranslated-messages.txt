@@ -1,6 +1,7 @@
 {
   "cs": [
     "nameInputInvalidEmpty",
+    "settingsServerVersionTitle",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
     "addItemToCollectionFailureNotification",
@@ -58,6 +59,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "rootPickerSkipConfirmationDialogContent2",
     "timeSecondInputHint",
     "sortOptionFilenameAscendingLabel",
@@ -248,6 +250,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "slideshowSetupDialogReverseTitle",
     "shareMethodPreviewTitle",
     "shareMethodPreviewDescription",
@@ -324,6 +327,7 @@
 
   "es": [
     "nameInputInvalidEmpty",
+    "settingsServerVersionTitle",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
     "addItemToCollectionFailureNotification",
@@ -335,6 +339,7 @@
   ],
 
   "fi": [
+    "settingsServerVersionTitle",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
     "addItemToCollectionFailureNotification",
@@ -377,6 +382,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "helpTooltip",
@@ -498,6 +504,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",
@@ -605,6 +612,7 @@
 
   "pt": [
     "nameInputInvalidEmpty",
+    "settingsServerVersionTitle",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
     "addItemToCollectionFailureNotification",
@@ -646,6 +654,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",
@@ -764,6 +773,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",
@@ -882,6 +892,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",
