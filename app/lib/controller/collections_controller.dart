@@ -91,6 +91,27 @@ class CollectionsController {
   /// Peek the stream and return the current value
   CollectionStreamEvent peekStream() => _dataStreamController.stream.value;
 
+  /// Reload the data
+  ///
+  /// The data will be loaded automatically when the stream is first listened so
+  /// it's not necessary to call this method for that purpose
+  Future<void> reload() async {
+    var results = <Collection>[];
+    final completer = Completer();
+    ListCollection(_c, serverController: serverController)(account).listen(
+      (c) {
+        results = c;
+      },
+      onError: _dataStreamController.addError,
+      onDone: () => completer.complete(),
+    );
+    await completer.future;
+    _dataStreamController.add(CollectionStreamEvent(
+      data: _prepareDataFor(results),
+      hasNext: false,
+    ));
+  }
+
   Future<Collection> createNew(Collection collection) async {
     // we can't simply add the collection argument to the stream because
     // the collection may not be a complete workable instance
@@ -99,7 +120,7 @@ class CollectionsController {
           data: _prepareDataFor([
             created,
             ...v.data.map((e) => e.collection),
-          ], shouldRemoveCache: false),
+          ]),
         ));
     return created;
   }
@@ -246,7 +267,7 @@ class CollectionsController {
     ListCollection(_c)(account).listen(
       (c) {
         lastData = CollectionStreamEvent(
-          data: _prepareDataFor(c, shouldRemoveCache: true),
+          data: _prepareDataFor(c),
           hasNext: true,
         );
         _dataStreamController.add(lastData);
@@ -258,10 +279,7 @@ class CollectionsController {
     _dataStreamController.add(lastData.copyWith(hasNext: false));
   }
 
-  List<CollectionStreamData> _prepareDataFor(
-    List<Collection> collections, {
-    required bool shouldRemoveCache,
-  }) {
+  List<CollectionStreamData> _prepareDataFor(List<Collection> collections) {
     final data = <CollectionStreamData>[];
     final keys = <_CollectionKey>[];
     for (final c in collections) {

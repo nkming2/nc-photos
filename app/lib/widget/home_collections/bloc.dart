@@ -8,6 +8,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     required this.prefController,
   }) : super(_State.init()) {
     on<_LoadCollections>(_onLoad);
+    on<_ReloadCollections>(_onReload);
     on<_TransformItems>(_onTransformItems);
 
     on<_SetSelectedItems>(_onSetSelectedItems);
@@ -47,6 +48,11 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
         );
       },
     );
+  }
+
+  void _onReload(_ReloadCollections ev, Emitter<_State> emit) {
+    _log.info("[_onReload] $ev");
+    unawaited(controller.reload());
   }
 
   Future<void> _onTransformItems(

@@ -50,6 +50,14 @@ class _LoadCollections implements _Event {
   String toString() => _$toString();
 }
 
+@toString
+class _ReloadCollections implements _Event {
+  const _ReloadCollections();
+
+  @override
+  String toString() => _$toString();
+}
+
 /// Transform the collection list (e.g., filtering, sorting, etc)
 @toString
 class _TransformItems implements _Event {

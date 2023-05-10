@@ -107,6 +107,13 @@ extension _$_LoadCollectionsToString on _LoadCollections {
   }
 }
 
+extension _$_ReloadCollectionsToString on _ReloadCollections {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ReloadCollections {}";
+  }
+}
+
 extension _$_TransformItemsToString on _TransformItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

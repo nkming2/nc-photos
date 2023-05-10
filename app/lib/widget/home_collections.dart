@@ -123,91 +123,102 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
       ],
       child: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              _BlocBuilder(
-                buildWhen: (previous, current) =>
-                    previous.selectedItems.isEmpty !=
-                    current.selectedItems.isEmpty,
-                builder: (context, state) => state.selectedItems.isEmpty
-                    ? const _AppBar()
-                    : const _SelectionAppBar(),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                sliver: _BlocBuilder(
+          RefreshIndicator(
+            onRefresh: () async {
+              _bloc.add(const _ReloadCollections());
+              await _bloc.stream.first;
+            },
+            child: CustomScrollView(
+              slivers: [
+                _BlocBuilder(
                   buildWhen: (previous, current) =>
                       previous.selectedItems.isEmpty !=
                       current.selectedItems.isEmpty,
-                  builder: (context, state) => _ButtonGrid(
-                    account: _bloc.account,
-                    isEnabled: state.selectedItems.isEmpty,
-                    onSharingPressed: () {
-                      Navigator.of(context).pushNamed(SharingBrowser.routeName,
-                          arguments: SharingBrowserArguments(_bloc.account));
-                    },
-                    onEnhancedPhotosPressed: () {
-                      Navigator.of(context).pushNamed(
-                          EnhancedPhotoBrowser.routeName,
-                          arguments: const EnhancedPhotoBrowserArguments(null));
-                    },
-                    onArchivePressed: () {
-                      Navigator.of(context).pushNamed(ArchiveBrowser.routeName,
-                          arguments: ArchiveBrowserArguments(_bloc.account));
-                    },
-                    onTrashbinPressed: () {
-                      Navigator.of(context).pushNamed(TrashbinBrowser.routeName,
-                          arguments: TrashbinBrowserArguments(_bloc.account));
-                    },
-                    onNewCollectionPressed: () {
-                      _onNewCollectionPressed(context);
-                    },
-                  ),
+                  builder: (context, state) => state.selectedItems.isEmpty
+                      ? const _AppBar()
+                      : const _SelectionAppBar(),
                 ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 8),
-              ),
-              _BlocBuilder(
-                buildWhen: (previous, current) =>
-                    previous.transformedItems != current.transformedItems ||
-                    previous.selectedItems != current.selectedItems,
-                builder: (context, state) => SliverPadding(
+                SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  sliver: SelectableItemList(
-                    maxCrossAxisExtent: 256,
-                    childBorderRadius: BorderRadius.zero,
-                    indicatorAlignment: const Alignment(-.92, -.92),
-                    items: state.transformedItems,
-                    itemBuilder: (_, __, metadata) {
-                      final item = metadata as _Item;
-                      return _ItemView(
-                        account: _bloc.account,
-                        item: item,
-                      );
-                    },
-                    staggeredTileBuilder: (_, __) =>
-                        const StaggeredTile.count(1, 1),
-                    selectedItems: state.selectedItems,
-                    onSelectionChange: (_, selected) {
-                      _bloc.add(_SetSelectedItems(items: selected.cast()));
-                    },
-                    onItemTap: (context, _, metadata) {
-                      final item = metadata as _Item;
-                      Navigator.of(context).pushNamed(
-                        CollectionBrowser.routeName,
-                        arguments: CollectionBrowserArguments(item.collection),
-                      );
-                    },
+                  sliver: _BlocBuilder(
+                    buildWhen: (previous, current) =>
+                        previous.selectedItems.isEmpty !=
+                        current.selectedItems.isEmpty,
+                    builder: (context, state) => _ButtonGrid(
+                      account: _bloc.account,
+                      isEnabled: state.selectedItems.isEmpty,
+                      onSharingPressed: () {
+                        Navigator.of(context).pushNamed(
+                            SharingBrowser.routeName,
+                            arguments: SharingBrowserArguments(_bloc.account));
+                      },
+                      onEnhancedPhotosPressed: () {
+                        Navigator.of(context).pushNamed(
+                            EnhancedPhotoBrowser.routeName,
+                            arguments:
+                                const EnhancedPhotoBrowserArguments(null));
+                      },
+                      onArchivePressed: () {
+                        Navigator.of(context).pushNamed(
+                            ArchiveBrowser.routeName,
+                            arguments: ArchiveBrowserArguments(_bloc.account));
+                      },
+                      onTrashbinPressed: () {
+                        Navigator.of(context).pushNamed(
+                            TrashbinBrowser.routeName,
+                            arguments: TrashbinBrowserArguments(_bloc.account));
+                      },
+                      onNewCollectionPressed: () {
+                        _onNewCollectionPressed(context);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: NavigationBarTheme.of(context).height,
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 8),
                 ),
-              ),
-            ],
+                _BlocBuilder(
+                  buildWhen: (previous, current) =>
+                      previous.transformedItems != current.transformedItems ||
+                      previous.selectedItems != current.selectedItems,
+                  builder: (context, state) => SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    sliver: SelectableItemList(
+                      maxCrossAxisExtent: 256,
+                      childBorderRadius: BorderRadius.zero,
+                      indicatorAlignment: const Alignment(-.92, -.92),
+                      items: state.transformedItems,
+                      itemBuilder: (_, __, metadata) {
+                        final item = metadata as _Item;
+                        return _ItemView(
+                          account: _bloc.account,
+                          item: item,
+                        );
+                      },
+                      staggeredTileBuilder: (_, __) =>
+                          const StaggeredTile.count(1, 1),
+                      selectedItems: state.selectedItems,
+                      onSelectionChange: (_, selected) {
+                        _bloc.add(_SetSelectedItems(items: selected.cast()));
+                      },
+                      onItemTap: (context, _, metadata) {
+                        final item = metadata as _Item;
+                        Navigator.of(context).pushNamed(
+                          CollectionBrowser.routeName,
+                          arguments:
+                              CollectionBrowserArguments(item.collection),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: NavigationBarTheme.of(context).height,
+                  ),
+                ),
+              ],
+            ),
           ),
           const Align(
             alignment: Alignment.bottomCenter,
