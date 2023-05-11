@@ -6,6 +6,7 @@ class _Bloc extends Bloc<_Event, _State> {
     required this.account,
     required Set<_ProviderOption> supportedProviders,
   }) : super(_State.init(
+          account: account,
           supportedProviders: supportedProviders,
         )) {
     on<_FormEvent>(_onFormEvent);
@@ -63,6 +64,8 @@ class _Bloc extends Bloc<_Event, _State> {
         contentProvider: _buildProvider(),
       ),
     ));
+    unawaited(AccountPref.of(account)
+        .setLastNewCollectionType(state.formValue.provider.index));
   }
 
   CollectionContentProvider _buildProvider() {

@@ -25,11 +25,26 @@ class _State {
   });
 
   factory _State.init({
+    required Account account,
     required Set<_ProviderOption> supportedProviders,
   }) {
+    final prevType =
+        AccountPref.of(account).getLastNewCollectionType()?.run((t) {
+      try {
+        return _ProviderOption.values[t];
+      } catch (_) {
+        return null;
+      }
+    });
+    var provider = prevType ?? _ProviderOption.ncAlbum;
+    if (!supportedProviders.contains(provider)) {
+      provider = _ProviderOption.appAlbum;
+    }
     return _State(
       supportedProviders: supportedProviders,
-      formValue: const _FormValue(),
+      formValue: _FormValue(
+        provider: provider,
+      ),
       showDialog: true,
     );
   }

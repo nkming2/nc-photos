@@ -382,6 +382,18 @@ class AccountPref {
     }
   }
 
+  int? getLastNewCollectionType() =>
+      provider.getInt(PrefKey.lastNewCollectionType);
+  int getLastNewCollectionTypeOr(int def) => getLastNewCollectionType() ?? def;
+  Future<bool> setLastNewCollectionType(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.lastNewCollectionType);
+    } else {
+      return _set<int>(PrefKey.lastNewCollectionType, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
+
   Future<bool> _set<T>(PrefKey key, T value,
       Future<bool> Function(PrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
@@ -621,6 +633,7 @@ enum PrefKey {
   isEnableMemoryAlbum,
   touchRootEtag,
   accountLabel,
+  lastNewCollectionType,
 }
 
 extension on PrefKey {
@@ -710,6 +723,8 @@ extension on PrefKey {
         return "touchRootEtag";
       case PrefKey.accountLabel:
         return "accountLabel";
+      case PrefKey.lastNewCollectionType:
+        return "lastNewCollectionType";
     }
   }
 }
