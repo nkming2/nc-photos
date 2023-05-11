@@ -11,6 +11,10 @@ import 'package:rxdart/rxdart.dart';
 
 part 'server_controller.g.dart';
 
+enum ServerFeature {
+  ncAlbum,
+}
+
 @npLog
 class ServerController {
   ServerController({
@@ -22,6 +26,14 @@ class ServerController {
       unawaited(_load());
     }
     return _statusStreamContorller.stream;
+  }
+
+  bool isSupported(ServerFeature feature) {
+    switch (feature) {
+      case ServerFeature.ncAlbum:
+        return !_statusStreamContorller.hasValue ||
+            _statusStreamContorller.value.majorVersion >= 25;
+    }
   }
 
   Future<void> _load() => _getStatus();

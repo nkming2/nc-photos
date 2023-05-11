@@ -7,7 +7,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/nc_album.dart';
-import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/use_case/album/list_album2.dart';
 import 'package:nc_photos/use_case/nc_album/list_nc_album.dart';
 
@@ -56,8 +55,7 @@ class ListCollection {
         onDone();
       },
     );
-    if (serverController.status.hasValue &&
-        serverController.status.value.majorVersion < 25) {
+    if (!serverController.isSupported(ServerFeature.ncAlbum)) {
       isNcAlbumDone = true;
     } else {
       ListNcAlbum(_c)(account).listen(
