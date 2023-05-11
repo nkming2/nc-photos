@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -19,6 +20,8 @@ import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
@@ -47,7 +50,11 @@ class NewCollectionDialog extends StatelessWidget {
         account: account,
         supportedProviders: {
           _ProviderOption.appAlbum,
-          _ProviderOption.ncAlbum,
+          if (context
+              .read<AccountController>()
+              .serverController
+              .isSupported(ServerFeature.ncAlbum))
+            _ProviderOption.ncAlbum,
           if (isAllowDynamic) ...{
             _ProviderOption.dir,
             _ProviderOption.tag,
