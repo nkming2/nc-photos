@@ -263,24 +263,3 @@ class AlbumTagProvider extends AlbumDynamicProvider {
 
   static const _type = "tag";
 }
-
-/// Smart albums are created only by the app and not the user
-abstract class AlbumSmartProvider extends AlbumProviderBase {
-  AlbumSmartProvider({
-    DateTime? latestItemTime,
-  }) : super(latestItemTime: latestItemTime);
-
-  @override
-  AlbumSmartProvider copyWith({
-    OrNull<DateTime>? latestItemTime,
-  }) {
-    // Smart albums do not support copying
-    throw UnimplementedError();
-  }
-
-  @override
-  toContentJson() {
-    // Smart albums do not support saving
-    throw UnimplementedError();
-  }
-}
