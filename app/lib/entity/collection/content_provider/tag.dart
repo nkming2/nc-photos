@@ -44,6 +44,9 @@ class CollectionTagProvider
       null;
 
   @override
+  bool get isDynamicCollection => true;
+
+  @override
   List<Object?> get props => [account, tags];
 
   final Account account;

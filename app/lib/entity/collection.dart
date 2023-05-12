@@ -58,6 +58,9 @@ class Collection with EquatableMixin {
 
   CollectionSorter getSorter() => CollectionSorter.fromSortType(itemSort);
 
+  /// See [CollectionContentProvider.isDynamicCollection]
+  bool get isDynamicCollection => contentProvider.isDynamicCollection;
+
   @override
   List<Object?> get props => [
         name,
@@ -127,4 +130,10 @@ abstract class CollectionContentProvider with EquatableMixin {
     int height, {
     bool? isKeepAspectRatio,
   });
+
+  /// Return whether this is a dynamic collection
+  ///
+  /// A collection is defined as a dynamic one when the items are not specified
+  /// explicitly by the user, but rather derived from some conditions
+  bool get isDynamicCollection;
 }

@@ -49,6 +49,9 @@ class CollectionPersonProvider
   }
 
   @override
+  bool get isDynamicCollection => true;
+
+  @override
   List<Object?> get props => [account, person];
 
   final Account account;

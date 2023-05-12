@@ -100,6 +100,9 @@ class CollectionAlbumProvider
   }
 
   @override
+  bool get isDynamicCollection => album.provider is! AlbumStaticProvider;
+
+  @override
   List<Object?> get props => [account, album];
 
   final Account account;

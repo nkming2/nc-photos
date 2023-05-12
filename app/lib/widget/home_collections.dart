@@ -240,11 +240,16 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
       if (collection == null) {
         return;
       }
-      // open the newly created collection
-      unawaited(Navigator.of(context).pushNamed(
-        CollectionBrowser.routeName,
-        arguments: CollectionBrowserArguments(collection),
-      ));
+      // Right now we don't have a way to add photos inside the
+      // CollectionBrowser, eventually we should add that and remove this
+      // branching
+      if (collection.isDynamicCollection) {
+        // open the newly created collection
+        unawaited(Navigator.of(context).pushNamed(
+          CollectionBrowser.routeName,
+          arguments: CollectionBrowserArguments(collection),
+        ));
+      }
     } catch (e, stacktrace) {
       _log.shout("[_onNewCollectionPressed] Failed", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(

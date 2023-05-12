@@ -51,6 +51,9 @@ class CollectionLocationGroupProvider
   }
 
   @override
+  bool get isDynamicCollection => true;
+
+  @override
   List<Object?> get props => [account, location];
 
   final Account account;

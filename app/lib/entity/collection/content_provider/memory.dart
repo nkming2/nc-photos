@@ -59,6 +59,9 @@ class CollectionMemoryProvider
   }
 
   @override
+  bool get isDynamicCollection => true;
+
+  @override
   String toString() => _$toString();
 
   @override
