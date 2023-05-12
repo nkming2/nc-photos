@@ -41,7 +41,7 @@ class Collection with EquatableMixin {
   /// See [CollectionContentProvider.itemSort]
   CollectionItemSort get itemSort => contentProvider.itemSort;
 
-  /// See [CollectionContentProvider.sharees]
+  /// See [CollectionContentProvider.shares]
   List<CollectionShare> get shares => contentProvider.shares;
 
   /// See [CollectionContentProvider.getCoverUrl]
