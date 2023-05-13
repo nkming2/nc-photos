@@ -29,6 +29,7 @@ import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/album/share_album_with_user.dart';
 import 'package:nc_photos/use_case/album/unshare_album_with_user.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
+import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
@@ -260,7 +261,13 @@ class CollectionAlbumAdapter implements CollectionAdapter {
   }
 
   @override
-  Future<void> remove() => RemoveAlbum(_c)(account, _provider.album);
+  Future<void> remove() {
+    if (_provider.album.albumFile?.isOwned(account.userId) == true) {
+      return RemoveAlbum(_c)(account, _provider.album);
+    } else {
+      return UnimportSharedAlbum(_c)(account, _provider.album);
+    }
+  }
 
   @override
   bool isPermitted(CollectionCapability capability) {
