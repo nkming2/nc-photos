@@ -13,6 +13,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/asset.dart' as asset;
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
@@ -39,8 +40,10 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/archive_file.dart';
+import 'package:nc_photos/use_case/collection/import_pending_shared_collection.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/widget/asset_icon.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
 import 'package:nc_photos/widget/export_collection_dialog.dart';
@@ -161,6 +164,18 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                   _bloc.add(_TransformEditItems(
                     items: state.editItems!,
                   ));
+                }
+              },
+            ),
+            BlocListener<_Bloc, _State>(
+              listenWhen: (previous, current) =>
+                  previous.importResult != current.importResult,
+              listener: (context, state) {
+                if (state.importResult != null) {
+                  Navigator.of(context).pushReplacementNamed(
+                    CollectionBrowser.routeName,
+                    arguments: CollectionBrowserArguments(state.importResult!),
+                  );
                 }
               },
             ),

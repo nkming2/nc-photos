@@ -19,6 +19,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     on<_UpdateCollection>(_onUpdateCollection);
     on<_LoadItems>(_onLoad);
     on<_TransformItems>(_onTransformItems);
+    on<_ImportPendingSharedCollection>(_onImportPendingSharedCollection);
 
     on<_Download>(_onDownload);
 
@@ -56,6 +57,8 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
           add(_UpdateCollection(c.collection));
         }
       });
+    } else {
+      _log.info("[_Bloc] Ad hoc collection");
     }
     _itemsControllerSubscription = itemsController.stream.listen(
       (_) {},
@@ -119,6 +122,15 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
         parentDir: state.collection.name,
       ));
     }
+  }
+
+  Future<void> _onImportPendingSharedCollection(
+      _ImportPendingSharedCollection ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    // pending collections are always ad hoc
+    final newCollection =
+        await ImportPendingSharedCollection(_c)(account, state.collection);
+    emit(state.copyWith(importResult: newCollection));
   }
 
   void _onBeginEdit(_BeginEdit ev, Emitter<_State> emit) {

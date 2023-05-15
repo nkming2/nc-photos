@@ -33,6 +33,12 @@ class _AppBar extends StatelessWidget {
               icon: const Icon(Icons.share),
               tooltip: L10n.global().shareTooltip,
             ),
+          if (state.collection.isPendingSharedAlbum)
+            IconButton(
+              onPressed: () => _onAddToCollectionsViewPressed(context),
+              icon: const AssetIcon(asset.icAddCollectionsOutlined24),
+              tooltip: L10n.global().addToCollectionsViewTooltip,
+            ),
         ];
         if (state.items.isNotEmpty || canRename) {
           actions.add(PopupMenuButton<_MenuOption>(
@@ -124,6 +130,10 @@ class _AppBar extends StatelessWidget {
         collection: bloc.state.collection,
       ),
     );
+  }
+
+  Future<void> _onAddToCollectionsViewPressed(BuildContext context) async {
+    context.read<_Bloc>().add(const _ImportPendingSharedCollection());
   }
 }
 

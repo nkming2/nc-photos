@@ -75,4 +75,9 @@ mixin CollectionAdapterUnshareableTag implements CollectionAdapter {
   }) {
     throw UnsupportedError("Operation not supported");
   }
+
+  @override
+  Future<Collection> importPendingShared() {
+    throw UnsupportedError("Operation not supported");
+  }
 }

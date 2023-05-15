@@ -28,6 +28,7 @@ import 'package:nc_photos/use_case/album/remove_album.dart';
 import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/album/share_album_with_user.dart';
 import 'package:nc_photos/use_case/album/unshare_album_with_user.dart';
+import 'package:nc_photos/use_case/import_pending_shared_album.dart';
 import 'package:nc_photos/use_case/preprocess_album.dart';
 import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
@@ -222,6 +223,13 @@ class CollectionAlbumAdapter implements CollectionAdapter {
     return fileFailed
         ? CollectionShareResult.partial
         : CollectionShareResult.ok;
+  }
+
+  @override
+  Future<Collection> importPendingShared() async {
+    final newAlbum =
+        await ImportPendingSharedAlbum(_c)(account, _provider.album);
+    return CollectionBuilder.byAlbum(account, newAlbum);
   }
 
   @override

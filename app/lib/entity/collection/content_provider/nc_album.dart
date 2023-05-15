@@ -77,6 +77,9 @@ class CollectionNcAlbumProvider
   bool get isDynamicCollection => false;
 
   @override
+  bool get isPendingSharedAlbum => false;
+
+  @override
   List<Object?> get props => [account, album];
 
   final Account account;

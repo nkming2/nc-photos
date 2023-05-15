@@ -62,6 +62,9 @@ class CollectionMemoryProvider
   bool get isDynamicCollection => true;
 
   @override
+  bool get isPendingSharedAlbum => false;
+
+  @override
   String toString() => _$toString();
 
   @override

@@ -61,6 +61,9 @@ class Collection with EquatableMixin {
   /// See [CollectionContentProvider.isDynamicCollection]
   bool get isDynamicCollection => contentProvider.isDynamicCollection;
 
+  /// See [CollectionContentProvider.isPendingSharedAlbum]
+  bool get isPendingSharedAlbum => contentProvider.isPendingSharedAlbum;
+
   @override
   List<Object?> get props => [
         name,
@@ -136,4 +139,10 @@ abstract class CollectionContentProvider with EquatableMixin {
   /// A collection is defined as a dynamic one when the items are not specified
   /// explicitly by the user, but rather derived from some conditions
   bool get isDynamicCollection;
+
+  /// Return whether this is a shared album pending to be added
+  ///
+  /// In some implementation, shared album does not immediately get added to the
+  /// collections list
+  bool get isPendingSharedAlbum;
 }

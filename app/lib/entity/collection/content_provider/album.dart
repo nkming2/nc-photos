@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:to_string/to_string.dart';
 
 part 'album.g.dart';
@@ -101,6 +102,12 @@ class CollectionAlbumProvider
 
   @override
   bool get isDynamicCollection => album.provider is! AlbumStaticProvider;
+
+  @override
+  bool get isPendingSharedAlbum =>
+      album.albumFile?.path.startsWith(
+          remote_storage_util.getRemotePendingSharedAlbumsDir(account)) ==
+      true;
 
   @override
   List<Object?> get props => [account, album];

@@ -52,6 +52,9 @@ class CollectionPersonProvider
   bool get isDynamicCollection => true;
 
   @override
+  bool get isPendingSharedAlbum => false;
+
+  @override
   List<Object?> get props => [account, person];
 
   final Account account;

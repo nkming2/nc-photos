@@ -19,6 +19,7 @@ class _State {
     this.editTransformedItems,
     this.editSort,
     required this.isDragging,
+    this.importResult,
     this.error,
     this.message,
   });
@@ -66,6 +67,8 @@ class _State {
 
   final bool isDragging;
 
+  final Collection? importResult;
+
   final ExceptionEvent? error;
   final String? message;
 }
@@ -102,6 +105,14 @@ class _TransformItems implements _Event {
   String toString() => _$toString();
 
   final List<CollectionItem> items;
+}
+
+@toString
+class _ImportPendingSharedCollection implements _Event {
+  const _ImportPendingSharedCollection();
+
+  @override
+  String toString() => _$toString();
 }
 
 @toString

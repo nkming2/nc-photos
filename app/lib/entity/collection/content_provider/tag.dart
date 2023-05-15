@@ -47,6 +47,9 @@ class CollectionTagProvider
   bool get isDynamicCollection => true;
 
   @override
+  bool get isPendingSharedAlbum => false;
+
+  @override
   List<Object?> get props => [account, tags];
 
   final Account account;

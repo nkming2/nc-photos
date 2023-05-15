@@ -86,6 +86,9 @@ abstract class CollectionAdapter {
     required ValueChanged<Collection> onCollectionUpdated,
   });
 
+  /// Import a pending shared collection and return the resulting collection
+  Future<Collection> importPendingShared();
+
   /// Convert a [NewCollectionItem] to an adapted one
   Future<CollectionItem> adaptToNewItem(NewCollectionItem original);
 
