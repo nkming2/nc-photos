@@ -161,7 +161,6 @@ class _ShareeInputViewState extends State<_ShareeInputView> {
               hintText: L10n.global().addUserInputHint,
             ),
           ),
-          direction: AxisDirection.up,
           suggestionsCallback: _onSearch,
           itemBuilder: (context, suggestion) => ListTile(
             title: Text(suggestion.label),
