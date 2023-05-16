@@ -2,6 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:np_common/type.dart';
 import 'package:path/path.dart' as path_lib;
+import 'package:to_string/to_string.dart';
+
+part 'file_descriptor.g.dart';
 
 int compareFileDescriptorDateTimeDescending(
     FileDescriptor x, FileDescriptor y) {
@@ -14,6 +17,7 @@ int compareFileDescriptorDateTimeDescending(
   }
 }
 
+@toString
 class FileDescriptor with EquatableMixin {
   const FileDescriptor({
     required this.fdPath,
@@ -41,6 +45,9 @@ class FileDescriptor with EquatableMixin {
         "fdIsFavorite": that.fdIsFavorite,
         "fdDateTime": that.fdDateTime.toUtc().toIso8601String(),
       };
+
+  @override
+  String toString() => _$toString();
 
   JsonObj toFdJson() => toJson(this);
 
