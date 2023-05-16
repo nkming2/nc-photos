@@ -191,9 +191,7 @@ class FileSqliteCacheUpdater {
   ) async {
     // query list of rowIds for files in [remoteFiles]
     final rowIds = await db.accountFileRowIdsByFileIds(
-      remoteFiles.map((f) => f.fileId!),
-      sqlAccount: dbAccount,
-    );
+        sql.ByAccount.sql(dbAccount), remoteFiles.map((f) => f.fileId!));
     final rowIdsMap = Map.fromEntries(rowIds.map((e) => MapEntry(e.fileId, e)));
 
     final inserts = <sql.CompleteFileCompanion>[];

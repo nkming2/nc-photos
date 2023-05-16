@@ -42,8 +42,8 @@ class CacheFavorite {
 
       var updateCount = 0;
       if (newFileIds.isNotEmpty) {
-        final rowIds = await db.accountFileRowIdsByFileIds(newFileIds,
-            sqlAccount: dbAccount);
+        final rowIds = await db.accountFileRowIdsByFileIds(
+            sql.ByAccount.sql(dbAccount), newFileIds);
         final counts =
             await rowIds.map((id) => id.accountFileRowId).withPartition(
           (sublist) async {

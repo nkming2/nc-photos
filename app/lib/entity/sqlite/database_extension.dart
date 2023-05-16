@@ -320,11 +320,7 @@ extension SqliteDbExtension on SqliteDb {
   ///
   /// Returned files are NOT guaranteed to be sorted as [fileIds]
   Future<List<AccountFileRowIdsWithFileId>> accountFileRowIdsByFileIds(
-    Iterable<int> fileIds, {
-    Account? sqlAccount,
-    app.Account? appAccount,
-  }) {
-    assert((sqlAccount != null) != (appAccount != null));
+      ByAccount account, Iterable<int> fileIds) {
     return fileIds.withPartition((sublist) {
       final query = queryFiles().run((q) {
         q.setQueryMode(FilesQueryMode.expression, expressions: [
@@ -333,10 +329,10 @@ extension SqliteDbExtension on SqliteDb {
           accountFiles.file,
           files.fileId,
         ]);
-        if (sqlAccount != null) {
-          q.setSqlAccount(sqlAccount);
+        if (account.sqlAccount != null) {
+          q.setSqlAccount(account.sqlAccount!);
         } else {
-          q.setAppAccount(appAccount!);
+          q.setAppAccount(account.appAccount!);
         }
         q.byFileIds(sublist);
         return q.build();
@@ -475,6 +471,16 @@ extension SqliteDbExtension on SqliteDb {
               ))
           .get();
     }, maxByFileIdsSize);
+  }
+
+  Future<void> moveFileByFileId(
+      ByAccount account, int fileId, String destinationRelativePath) async {
+    final rowId = (await accountFileRowIdsByFileIds(account, [fileId])).first;
+    final q = update(accountFiles)
+      ..where((t) => t.rowId.equals(rowId.accountFileRowId));
+    await q.write(AccountFilesCompanion(
+      relativePath: Value(destinationRelativePath),
+    ));
   }
 
   Future<List<Tag>> allTags({

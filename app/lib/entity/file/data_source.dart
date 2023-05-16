@@ -549,13 +549,20 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  move(
+  Future<void> move(
     Account account,
     File f,
     String destination, {
     bool? shouldOverwrite,
   }) async {
-    // do nothing
+    _log.info("[move] ${f.path} to $destination");
+    await _c.sqliteDb.use((db) async {
+      await db.moveFileByFileId(
+        sql.ByAccount.app(account),
+        f.fileId!,
+        File(path: destination).strippedPathWithEmpty,
+      );
+    });
   }
 
   @override
@@ -786,7 +793,7 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  move(
+  Future<void> move(
     Account account,
     File f,
     String destination, {
@@ -794,6 +801,13 @@ class FileCachedDataSource implements FileDataSource {
   }) async {
     await _remoteSrc.move(account, f, destination,
         shouldOverwrite: shouldOverwrite);
+    try {
+      await _sqliteDbSrc.move(account, f, destination);
+    } catch (e, stackTrace) {
+      // ignore cache failure
+      _log.warning(
+          "Failed while move: ${logFilename(f.strippedPath)}", e, stackTrace);
+    }
   }
 
   @override
