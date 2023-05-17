@@ -521,13 +521,18 @@ class _ItemView extends StatelessWidget {
         icon = const Icon(Icons.folder);
         break;
     }
+    String subtitle = "";
+    if (item.isShared) {
+      subtitle = "${L10n.global().albumSharedLabel} | ";
+    }
+    subtitle += item.subtitle ?? "";
     return CollectionGridItem(
       cover: _CollectionCover(
         account: account,
         url: item.coverUrl,
       ),
       title: item.name,
-      subtitle: item.subtitle,
+      subtitle: subtitle,
       icon: icon,
     );
   }

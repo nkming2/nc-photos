@@ -9,7 +9,7 @@ enum _ItemType {
 
 @npLog
 class _Item implements SelectableItemMetadata {
-  _Item(this.collection) {
+  _Item(this.collection) : isShared = collection.shares.isNotEmpty {
     if (collection.count != null) {
       _subtitle = L10n.global().albumSize(collection.count!);
     }
@@ -61,6 +61,8 @@ class _Item implements SelectableItemMetadata {
   }
 
   final Collection collection;
+  final bool isShared;
+
   String? _subtitle;
   String? _coverUrl;
   late _ItemType _itemType;
