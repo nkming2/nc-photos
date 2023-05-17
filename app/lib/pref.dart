@@ -182,14 +182,6 @@ class Pref {
   Future<bool> setGpsMapProvider(int value) => _set<int>(PrefKey.gpsMapProvider,
       value, (key, value) => provider.setInt(key, value));
 
-  bool? isLabEnableSharedAlbum() =>
-      provider.getBool(PrefKey.labEnableSharedAlbum);
-  bool isLabEnableSharedAlbumOr(bool def) => isLabEnableSharedAlbum() ?? def;
-  Future<bool> setLabEnableSharedAlbum(bool value) => _set<bool>(
-      PrefKey.labEnableSharedAlbum,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   bool? hasShownSharedAlbumInfo() =>
       provider.getBool(PrefKey.hasShownSharedAlbumInfo);
   bool hasShownSharedAlbumInfoOr(bool def) => hasShownSharedAlbumInfo() ?? def;

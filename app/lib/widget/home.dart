@@ -60,13 +60,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
-      _importPotentialSharedAlbum().then((value) {
-        if (value.isNotEmpty) {
-          AccountPref.of(widget.account).setNewSharedAlbum(true);
-        }
-      });
-    }
+    _importPotentialSharedAlbum().then((value) {
+      if (value.isNotEmpty) {
+        AccountPref.of(widget.account).setNewSharedAlbum(true);
+      }
+    });
     _animationController.value = 1;
 
     // call once to pre-cache the value

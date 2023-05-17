@@ -66,18 +66,14 @@ class _SharingBrowserState extends State<SharingBrowser> {
   @override
   initState() {
     super.initState();
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
-      _importPotentialSharedAlbum().whenComplete(() {
-        _initBloc();
-      });
-      AccountPref.of(widget.account).run((obj) {
-        if (obj.hasNewSharedAlbumOr()) {
-          obj.setNewSharedAlbum(false);
-        }
-      });
-    } else {
+    _importPotentialSharedAlbum().whenComplete(() {
       _initBloc();
-    }
+    });
+    AccountPref.of(widget.account).run((obj) {
+      if (obj.hasNewSharedAlbumOr()) {
+        obj.setNewSharedAlbum(false);
+      }
+    });
   }
 
   @override
