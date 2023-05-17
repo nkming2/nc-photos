@@ -509,7 +509,7 @@ class _ItemView extends StatelessWidget {
     Widget? icon;
     switch (item.itemType) {
       case _ItemType.ncAlbum:
-        icon = const ImageIcon(AssetImage("assets/ic_nextcloud_album.png"));
+        icon = const Icon(Icons.cloud);
         break;
       case _ItemType.album:
         icon = null;
