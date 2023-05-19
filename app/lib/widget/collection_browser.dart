@@ -25,6 +25,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
+import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/sorter.dart';
@@ -43,6 +44,7 @@ import 'package:nc_photos/use_case/archive_file.dart';
 import 'package:nc_photos/use_case/collection/import_pending_shared_collection.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/asset_icon.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
@@ -56,6 +58,7 @@ import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
 import 'package:nc_photos/widget/selectable_item_list.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/share_collection_dialog.dart';
+import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
@@ -128,6 +131,11 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
   void initState() {
     super.initState();
     _bloc.add(const _LoadItems());
+
+    if (_bloc.state.collection.shares.isNotEmpty &&
+        _bloc.state.collection.contentProvider is CollectionAlbumProvider) {
+      _showSharedAlbumInfoDialog();
+    }
   }
 
   @override
@@ -320,6 +328,17 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
       _log.fine("[_onPointerMove] Stop scrolling");
       _scrollController.jumpTo(_scrollController.offset);
       _isDragScrollingDown = null;
+    }
+  }
+
+  Future<void> _showSharedAlbumInfoDialog() async {
+    final pref = KiwiContainer().resolve<DiContainer>().pref;
+    if (!pref.hasShownSharedAlbumInfoOr(false)) {
+      return showDialog(
+        context: context,
+        builder: (_) => const SharedAlbumInfoDialog(),
+        barrierDismissible: false,
+      );
     }
   }
 
