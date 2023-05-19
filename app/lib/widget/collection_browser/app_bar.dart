@@ -64,6 +64,11 @@ class _AppBar extends StatelessWidget {
                   child: Text(L10n.global().exportCollectionTooltip),
                 ),
               ],
+              if (state.collection.contentProvider is CollectionAlbumProvider)
+                PopupMenuItem(
+                  value: _MenuOption.albumFixShare,
+                  child: Text(L10n.global().fixSharesTooltip),
+                ),
             ],
             onSelected: (option) {
               _onMenuSelected(context, option);
@@ -103,6 +108,9 @@ class _AppBar extends StatelessWidget {
       case _MenuOption.export:
         _onExportSelected(context);
         break;
+      case _MenuOption.albumFixShare:
+        _onAlbumFixShareSelected(context);
+        break;
     }
   }
 
@@ -119,6 +127,16 @@ class _AppBar extends StatelessWidget {
     if (result != null) {
       Navigator.of(context).pop();
     }
+  }
+
+  void _onAlbumFixShareSelected(BuildContext context) {
+    final bloc = context.read<_Bloc>();
+    final collection = bloc.state.collection;
+    final album = (collection.contentProvider as CollectionAlbumProvider).album;
+    Navigator.of(context).pushNamed(
+      AlbumShareOutlierBrowser.routeName,
+      arguments: AlbumShareOutlierBrowserArguments(bloc.account, album),
+    );
   }
 
   Future<void> _onSharePressed(BuildContext context) async {
@@ -426,6 +444,7 @@ enum _MenuOption {
   unsetCover,
   download,
   export,
+  albumFixShare,
 }
 
 enum _SelectionMenuOption {
