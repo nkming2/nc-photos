@@ -39,6 +39,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/archive_file.dart';
 import 'package:nc_photos/use_case/collection/import_pending_shared_collection.dart';
@@ -184,6 +185,26 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                     CollectionBrowser.routeName,
                     arguments: CollectionBrowserArguments(state.importResult!),
                   );
+                }
+              },
+            ),
+            BlocListener<_Bloc, _State>(
+              listenWhen: (previous, current) =>
+                  previous.isEditMode != current.isEditMode,
+              listener: (context, state) {
+                final c = KiwiContainer().resolve<DiContainer>();
+                final bloc = context.read<_Bloc>();
+                final canSort =
+                    CollectionAdapter.of(c, bloc.account, state.collection)
+                        .isPermitted(CollectionCapability.manualSort);
+                if (canSort &&
+                    !SessionStorage().hasShowDragRearrangeNotification) {
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content:
+                        Text(L10n.global().albumEditDragRearrangeNotification),
+                    duration: k.snackBarDurationNormal,
+                  ));
+                  SessionStorage().hasShowDragRearrangeNotification = true;
                 }
               },
             ),
