@@ -224,13 +224,13 @@ class _SettingsState extends State<Settings> {
                     .valueOrNull,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const ListTile(
-                      title: Text("Server"),
+                    return ListTile(
+                      title: Text(L10n.global().settingsServerVersionTitle),
                     );
                   } else {
                     final status = snapshot.requireData!;
                     return ListTile(
-                      title: const Text("Server"),
+                      title: Text(L10n.global().settingsServerVersionTitle),
                       subtitle: Text(
                           "${status.productName} ${status.majorVersion} (${status.versionName})"),
                     );
