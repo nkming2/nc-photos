@@ -119,15 +119,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 élément supprimé de l'album} other{{count} éléments supprimés de l'album}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Échec de la suppression des éléments de l'album",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -504,10 +495,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Modifier l'album",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Terminé",
 	"editTooltip": "Modifier",
 	"editAccountConflictFailureNotification": "Un compte existe déjà avec les mêmes paramètres",
@@ -700,14 +687,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "Suppression de la couverture",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Couverture enlevé avec succès",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
 	"muteTooltip": "Mettre en sourdine",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -855,49 +834,13 @@
 	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionsViewProcessingNotification": "Ajout de {album} à votre collection",
-	"@addToCollectionsViewProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionsViewSuccessNotification": "{album} a été ajouté avec succès à votre collection",
-	"@addToCollectionsViewSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
 	"shareAlbumDialogTitle": "Partager avec un utilisateur",
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
-	"shareAlbumSuccessNotification": "Album partagé avec {user}",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
 	"shareAlbumSuccessWithErrorNotification": "Album partagé avec {user}, mais échec du partage de certains fichiers",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "Suppression de partage de l'album avec {user}",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"

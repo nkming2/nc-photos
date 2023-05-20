@@ -123,15 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 αντικείμενο αφαιρέθηκε από τη συλλογή} other{{count} αντικείμενα αφαιρέθηκαν από τη συλλογή}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Αποτυχία αφαίρεσης αντικειμένων από τη συλλογή",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -534,10 +525,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Επεξεργασία συλλογής",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Έγινε",
 	"editTooltip": "Edit",
 	"editAccountConflictFailureNotification": "An account already exists with the same settings",
@@ -678,14 +665,6 @@
 	"unsetAlbumCoverTooltip": "Αφαίρεση εξώφυλλου",
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
-	},
-	"unsetAlbumCoverProcessingNotification": "Το εξώφυλλο αφαιρείται",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Επιτυχής αφαίρεση εξωφύλλου",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
 	},
 	"muteTooltip": "Σίγαση",
 	"@muteTooltip": {
@@ -834,49 +813,13 @@
 	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionsViewProcessingNotification": "Προσθήκη του άλμπουμ {album} στη συλλογή",
-	"@addToCollectionsViewProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionsViewSuccessNotification": "Το άλμπουμ {album} προστέθηκε στη συλλογή με επιτυχία",
-	"@addToCollectionsViewSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
 	"shareAlbumDialogTitle": "Κοινοποίηση με χρήστη",
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
-	"shareAlbumSuccessNotification": "Το άλμπουμ κοινοποιήθηκε στο χρήστη {user}",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
 	"shareAlbumSuccessWithErrorNotification": "Το άλμπουμ κοινοποιήθηκε στο χρήστη {user}, αλλά απέτυχε να μοιραστεί ορισμένα αρχεία",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "Καταργήθηκε η κοινή χρήση του άλμπουμ με το χρήστη {user}",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"

@@ -123,15 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 kohde poistettu albumista} other{{count} kohdetta poistettu albumista}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Kohteiden poistaminen albumista epäonnistui",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -596,10 +587,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Muokkaa albumia",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Valmis",
 	"editTooltip": "Edit",
 	"editAccountConflictFailureNotification": "Käyttäjätunnus samoilla asetuksilla on jo olemassa",
@@ -806,14 +793,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "Poistetaan albumin kantta",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Albumin kannen poisto onnistui",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
 	"muteTooltip": "Mykistä",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -975,49 +954,13 @@
 	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionsViewProcessingNotification": "Lisätään {album} kokoelmaasi",
-	"@addToCollectionsViewProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionsViewSuccessNotification": "{album} lisätty kokoelmaasi",
-	"@addToCollectionsViewSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
 	"shareAlbumDialogTitle": "Jaa toisen käyttäjän kanssa",
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
-	"shareAlbumSuccessNotification": "Albumi jaettu käyttäjän {user} kanssa",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
 	"shareAlbumSuccessWithErrorNotification": "Albumi jaettu käyttäjän {user} kanssa. Joidenkin tiedostojen jako kuitenkin epäonnistui",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "Albumin jakaminen käyttäjän kanssa {user} lopetettu",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"

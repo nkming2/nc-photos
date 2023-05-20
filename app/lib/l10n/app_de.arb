@@ -123,15 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 Element vom Album entfernt} other{{count} Elemente vom Album entfernt}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Fehler beim Entfernen von Elementen aus dem Album",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -463,10 +454,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Album bearbeiten",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Fertig",
 	"editTooltip": "Bearbeiten",
 	"editAccountConflictFailureNotification": "Es existiert bereits ein Konto mit denselben Einstellungen",
@@ -659,14 +646,6 @@
 	"unsetAlbumCoverTooltip": "Cover aufheben",
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
-	},
-	"unsetAlbumCoverProcessingNotification": "Cover aufheben",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Coever erfolgreich aufgehoben",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
 	},
 	"muteTooltip": "Stumm",
 	"@muteTooltip": {
