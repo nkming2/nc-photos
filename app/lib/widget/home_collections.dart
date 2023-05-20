@@ -113,8 +113,9 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
               previous.removeError != current.removeError,
           listener: (context, state) {
             if (state.removeError != null && isPageVisible()) {
-              SnackBarManager().showSnackBar(const SnackBar(
-                content: Text('Failed to remove some collections'),
+              SnackBarManager().showSnackBar(SnackBar(
+                content:
+                    Text(L10n.global().removeCollectionsFailedNotification),
                 duration: k.snackBarDurationNormal,
               ));
             }
