@@ -13,6 +13,7 @@ import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
@@ -21,6 +22,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/suggester.dart';
+import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
 import 'package:to_string/to_string.dart';
@@ -87,6 +89,10 @@ class _WrappedShareCollectionDialogState
                 SnackBarManager().showSnackBar(SnackBar(
                   content: Text(L10n.global()
                       .shareAlbumSuccessWithErrorNotification(e.shareeName)),
+                  action: SnackBarAction(
+                    label: L10n.global().fixButtonLabel,
+                    onPressed: _onFixPressed,
+                  ),
                   duration: k.snackBarDurationNormal,
                 ));
               } else if (state.error!.error
@@ -96,6 +102,10 @@ class _WrappedShareCollectionDialogState
                 SnackBarManager().showSnackBar(SnackBar(
                   content: Text(L10n.global()
                       .unshareAlbumSuccessWithErrorNotification(e.shareeName)),
+                  action: SnackBarAction(
+                    label: L10n.global().fixButtonLabel,
+                    onPressed: _onFixPressed,
+                  ),
                   duration: k.snackBarDurationNormal,
                 ));
               } else {
@@ -133,6 +143,16 @@ class _WrappedShareCollectionDialogState
           );
         },
       ),
+    );
+  }
+
+  void _onFixPressed() {
+    final bloc = context.read<_Bloc>();
+    final collection = bloc.state.collection;
+    final album = (collection.contentProvider as CollectionAlbumProvider).album;
+    Navigator.of(context).pushNamed(
+      AlbumShareOutlierBrowser.routeName,
+      arguments: AlbumShareOutlierBrowserArguments(bloc.account, album),
     );
   }
 
