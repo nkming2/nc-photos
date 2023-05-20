@@ -117,12 +117,15 @@ class _Bloc extends Bloc<_Event, _State> {
         ),
       ],
     ));
-    await collectionsController.share(state.collection, ev.sharee);
-    emit(state.copyWith(
-      processingShares: state.processingShares
-          .where((s) => s.userId != ev.sharee.shareWith)
-          .toList(),
-    ));
+    try {
+      await collectionsController.share(state.collection, ev.sharee);
+    } finally {
+      emit(state.copyWith(
+        processingShares: state.processingShares
+            .where((s) => s.userId != ev.sharee.shareWith)
+            .toList(),
+      ));
+    }
   }
 
   Future<void> _onUnshare(_Unshare ev, Emitter<_State> emit) async {
@@ -133,12 +136,15 @@ class _Bloc extends Bloc<_Event, _State> {
         ev.share,
       ],
     ));
-    await collectionsController.unshare(state.collection, ev.share.userId);
-    emit(state.copyWith(
-      processingShares: state.processingShares
-          .where((s) => s.userId != ev.share.userId)
-          .toList(),
-    ));
+    try {
+      await collectionsController.unshare(state.collection, ev.share);
+    } finally {
+      emit(state.copyWith(
+        processingShares: state.processingShares
+            .where((s) => s.userId != ev.share.userId)
+            .toList(),
+      ));
+    }
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

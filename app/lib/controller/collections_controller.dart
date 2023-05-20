@@ -24,7 +24,6 @@ import 'package:nc_photos/use_case/collection/remove_collections.dart';
 import 'package:nc_photos/use_case/collection/share_collection.dart';
 import 'package:nc_photos/use_case/collection/unshare_collection.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -229,21 +228,22 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController.addError(const CollectionPartialShareException());
+        _dataStreamController
+            .addError(CollectionPartialShareException(sharee.shareWith.raw));
       }
     } catch (e, stackTrace) {
       _dataStreamController.addError(e, stackTrace);
     }
   }
 
-  Future<void> unshare(Collection collection, CiString userId) async {
+  Future<void> unshare(Collection collection, CollectionShare share) async {
     try {
       Collection? newCollection;
       final result = await _mutex.protect(() async {
         return await UnshareCollection(_c)(
           account,
           collection,
-          userId,
+          share.userId,
           onCollectionUpdated: (c) {
             newCollection = c;
           },
@@ -253,7 +253,8 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController.addError(const CollectionPartialShareException());
+        _dataStreamController
+            .addError(CollectionPartialUnshareException(share.username));
       }
     } catch (e, stackTrace) {
       _dataStreamController.addError(e, stackTrace);

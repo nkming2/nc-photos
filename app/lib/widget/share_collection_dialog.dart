@@ -83,9 +83,19 @@ class _WrappedShareCollectionDialogState
           listener: (context, state) {
             if (state.error != null) {
               if (state.error!.error is CollectionPartialShareException) {
-                // TODO localize string
-                SnackBarManager().showSnackBar(const SnackBar(
-                  content: Text("Collection shared partially"),
+                final e = state.error!.error as CollectionPartialShareException;
+                SnackBarManager().showSnackBar(SnackBar(
+                  content: Text(L10n.global()
+                      .shareAlbumSuccessWithErrorNotification(e.shareeName)),
+                  duration: k.snackBarDurationNormal,
+                ));
+              } else if (state.error!.error
+                  is CollectionPartialUnshareException) {
+                final e =
+                    state.error!.error as CollectionPartialUnshareException;
+                SnackBarManager().showSnackBar(SnackBar(
+                  content: Text(L10n.global()
+                      .unshareAlbumSuccessWithErrorNotification(e.shareeName)),
                   duration: k.snackBarDurationNormal,
                 ));
               } else {

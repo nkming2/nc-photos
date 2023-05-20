@@ -1,4 +1,4 @@
-import 'package:np_api/np_api.dart';
+import 'package:np_api/np_api.dart' as api;
 
 class CacheNotFoundException implements Exception {
   const CacheNotFoundException([this.message]);
@@ -30,7 +30,7 @@ class ApiException implements Exception {
     }
   }
 
-  final Response response;
+  final api.Response response;
   final dynamic message;
 }
 
@@ -105,7 +105,7 @@ class AlbumItemPermissionException implements Exception {
 }
 
 class CollectionPartialShareException implements Exception {
-  const CollectionPartialShareException([this.message]);
+  const CollectionPartialShareException(this.shareeName, [this.message]);
 
   @override
   String toString() {
@@ -116,5 +116,22 @@ class CollectionPartialShareException implements Exception {
     }
   }
 
+  final String shareeName;
+  final dynamic message;
+}
+
+class CollectionPartialUnshareException implements Exception {
+  const CollectionPartialUnshareException(this.shareeName, [this.message]);
+
+  @override
+  String toString() {
+    if (message == null) {
+      return "CollectionPartialUnshareException";
+    } else {
+      return "CollectionPartialUnshareException: $message";
+    }
+  }
+
+  final String shareeName;
   final dynamic message;
 }
