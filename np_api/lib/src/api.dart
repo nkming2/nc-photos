@@ -60,6 +60,7 @@ class Api {
     } else if (bodyBytes != null) {
       req.bodyBytes = bodyBytes;
     }
+    _log.finer(req.url);
     final response =
         await http.Response.fromStream(await http.Client().send(req));
     if (!isHttpStatusGood(response.statusCode)) {
