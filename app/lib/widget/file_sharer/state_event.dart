@@ -135,3 +135,14 @@ class _SetPasswordLinkDetails implements _Event {
   final String? albumName;
   final String password;
 }
+
+@toString
+class _SetError implements _Event {
+  const _SetError(this.error, [this.stackTrace]);
+
+  @override
+  String toString() => _$toString();
+
+  final Object error;
+  final StackTrace? stackTrace;
+}

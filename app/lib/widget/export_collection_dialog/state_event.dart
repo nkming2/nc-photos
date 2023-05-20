@@ -69,3 +69,14 @@ class _SubmitForm extends _FormEvent {
   @override
   String toString() => _$toString();
 }
+
+@toString
+class _SetError implements _Event {
+  const _SetError(this.error, [this.stackTrace]);
+
+  @override
+  String toString() => _$toString();
+
+  final Object error;
+  final StackTrace? stackTrace;
+}

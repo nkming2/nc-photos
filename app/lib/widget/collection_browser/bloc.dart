@@ -75,6 +75,19 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     return super.close();
   }
 
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
+    super.onError(error, stackTrace);
+  }
+
   bool isCollectionCapabilityPermitted(CollectionCapability capability) {
     return CollectionAdapter.of(_c, account, state.collection)
         .isPermitted(capability);
@@ -470,6 +483,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   StreamSubscription? _collectionControllerSubscription;
   StreamSubscription? _itemsControllerSubscription;
+  var _isHandlingError = false;
 }
 
 class _TransformResult {

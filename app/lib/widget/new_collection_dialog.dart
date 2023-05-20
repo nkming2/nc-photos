@@ -18,6 +18,7 @@ import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/tag.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
@@ -87,6 +88,17 @@ class _WrappedNewCollectionDialogState
           listenWhen: (previous, current) =>
               previous.result != current.result && current.result != null,
           listener: _onResult,
+        ),
+        BlocListener<_Bloc, _State>(
+          listenWhen: (previous, current) => previous.error != current.error,
+          listener: (context, state) {
+            if (state.error != null) {
+              SnackBarManager().showSnackBar(SnackBar(
+                content: Text(exception_util.toUserString(state.error!.error)),
+                duration: k.snackBarDurationNormal,
+              ));
+            }
+          },
         ),
       ],
       child: BlocBuilder<_Bloc, _State>(

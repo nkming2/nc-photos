@@ -11,6 +11,21 @@ class _Bloc extends Bloc<_Event, _State> {
         )) {
     on<_FormEvent>(_onFormEvent);
     on<_HideDialog>(_onHideDialog);
+
+    on<_SetError>(_onSetError);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
+    super.onError(error, stackTrace);
   }
 
   void _onFormEvent(_FormEvent ev, Emitter<_State> emit) {
@@ -68,6 +83,11 @@ class _Bloc extends Bloc<_Event, _State> {
         .setLastNewCollectionType(state.formValue.provider.index));
   }
 
+  void _onSetError(_SetError ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
+  }
+
   CollectionContentProvider _buildProvider() {
     switch (state.formValue.provider) {
       case _ProviderOption.appAlbum:
@@ -115,4 +135,6 @@ class _Bloc extends Bloc<_Event, _State> {
   }
 
   final Account account;
+
+  var _isHandlingError = false;
 }

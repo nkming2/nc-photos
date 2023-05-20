@@ -9,11 +9,25 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     on<_LoadCollections>(_onLoad);
     on<_TransformItems>(_onTransformItems);
     on<_SelectCollection>(_onSelectCollection);
+
     on<_SetError>(_onSetError);
   }
 
   @override
   String get tag => _log.fullName;
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
+    super.onError(error, stackTrace);
+  }
 
   Future<void> _onLoad(_LoadCollections ev, Emitter<_State> emit) async {
     _log.info(ev);
@@ -60,4 +74,6 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   final Account account;
   final CollectionsController controller;
+
+  var _isHandlingError = false;
 }

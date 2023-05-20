@@ -22,6 +22,7 @@ class _State {
     required this.formValue,
     this.result,
     required this.showDialog,
+    this.error,
   });
 
   factory _State.init({
@@ -55,6 +56,8 @@ class _State {
   final _FormValue formValue;
   final Collection? result;
   final bool showDialog;
+
+  final ExceptionEvent? error;
 }
 
 abstract class _Event {
@@ -119,4 +122,15 @@ class _HideDialog extends _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _SetError implements _Event {
+  const _SetError(this.error, [this.stackTrace]);
+
+  @override
+  String toString() => _$toString();
+
+  final Object error;
+  final StackTrace? stackTrace;
 }

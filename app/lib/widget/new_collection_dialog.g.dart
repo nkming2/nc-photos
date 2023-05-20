@@ -43,7 +43,11 @@ extension $_FormValueCopyWith on _FormValue {
 }
 
 abstract class $_StateCopyWithWorker {
-  _State call({_FormValue? formValue, Collection? result, bool? showDialog});
+  _State call(
+      {_FormValue? formValue,
+      Collection? result,
+      bool? showDialog,
+      ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -51,12 +55,16 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
 
   @override
   _State call(
-      {dynamic formValue, dynamic result = copyWithNull, dynamic showDialog}) {
+      {dynamic formValue,
+      dynamic result = copyWithNull,
+      dynamic showDialog,
+      dynamic error = copyWithNull}) {
     return _State(
         supportedProviders: that.supportedProviders,
         formValue: formValue as _FormValue? ?? that.formValue,
         result: result == copyWithNull ? that.result : result as Collection?,
-        showDialog: showDialog as bool? ?? that.showDialog);
+        showDialog: showDialog as bool? ?? that.showDialog,
+        error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
   final _State that;
@@ -130,5 +138,12 @@ extension _$_HideDialogToString on _HideDialog {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_HideDialog {}";
+  }
+}
+
+extension _$_SetErrorToString on _SetError {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetError {error: $error, stackTrace: $stackTrace}";
   }
 }

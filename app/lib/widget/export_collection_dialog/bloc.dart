@@ -9,6 +9,21 @@ class _Bloc extends Bloc<_Event, _State> {
     required this.items,
   }) : super(_State.init()) {
     on<_FormEvent>(_onFormEvent);
+
+    on<_SetError>(_onSetError);
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
+    super.onError(error, stackTrace);
   }
 
   Future<void> _onFormEvent(_FormEvent ev, Emitter<_State> emit) async {
@@ -49,15 +64,20 @@ class _Bloc extends Bloc<_Event, _State> {
           break;
       }
       emit(state.copyWith(result: result));
-    } catch (e, stackTrace) {
-      _log.severe("[_onSubmitForm] Failed while exporting", e, stackTrace);
     } finally {
       emit(state.copyWith(isExporting: false));
     }
+  }
+
+  void _onSetError(_SetError ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
   }
 
   final Account account;
   final CollectionsController collectionsController;
   final Collection collection;
   final List<CollectionItem> items;
+
+  var _isHandlingError = false;
 }
