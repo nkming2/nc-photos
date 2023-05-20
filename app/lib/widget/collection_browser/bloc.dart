@@ -140,10 +140,11 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
   Future<void> _onImportPendingSharedCollection(
       _ImportPendingSharedCollection ev, Emitter<_State> emit) async {
     _log.info(ev);
-    // pending collections are always ad hoc
-    final newCollection =
-        await ImportPendingSharedCollection(_c)(account, state.collection);
-    emit(state.copyWith(importResult: newCollection));
+    final newCollection = await collectionsController
+        .importPendingSharedCollection(state.collection);
+    if (newCollection != null) {
+      emit(state.copyWith(importResult: newCollection));
+    }
   }
 
   void _onBeginEdit(_BeginEdit ev, Emitter<_State> emit) {

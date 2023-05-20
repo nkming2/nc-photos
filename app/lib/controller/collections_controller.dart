@@ -19,6 +19,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
+import 'package:nc_photos/use_case/collection/import_pending_shared_collection.dart';
 import 'package:nc_photos/use_case/collection/list_collection.dart';
 import 'package:nc_photos/use_case/collection/remove_collections.dart';
 import 'package:nc_photos/use_case/collection/share_collection.dart';
@@ -258,6 +259,25 @@ class CollectionsController {
       }
     } catch (e, stackTrace) {
       _dataStreamController.addError(e, stackTrace);
+    }
+  }
+
+  /// See [ImportPendingSharedCollection]
+  Future<Collection?> importPendingSharedCollection(
+      Collection collection) async {
+    try {
+      final newCollection =
+          await ImportPendingSharedCollection(_c)(account, collection);
+      _dataStreamController.addWithValue((v) => v.copyWith(
+            data: _prepareDataFor([
+              newCollection,
+              ...v.data.map((e) => e.collection),
+            ]),
+          ));
+      return newCollection;
+    } catch (e, stackTrace) {
+      _dataStreamController.addError(e, stackTrace);
+      return null;
     }
   }
 
