@@ -5,6 +5,10 @@ import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'changelog.g.dart';
+part 'changelog/changelog_550.dart';
+part 'changelog/changelog_560.dart';
+part 'changelog/changelog_570.dart';
+part 'changelog/changelog_580.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -241,140 +245,6 @@ List<Widget> _buildChangelog540(BuildContext context) {
     _subSection("Localization"),
     _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
   ];
-}
-
-class _Changelog550 extends StatelessWidget {
-  const _Changelog550();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _subSection("Changes"),
-        _bulletGroup(
-          const Text("Reworked app theme for Material 3"),
-          [
-            const Text(
-                "You can now customize the app color in Settings > Theme"),
-          ],
-        ),
-        _bulletGroup(
-          const Text("Optimized startup performance with large libraries"),
-          [
-            const Text("Completely reworked how the app handles file data"),
-            const Text(
-                "Loading a large library should take less time, especially on devices with slower storage I/O"),
-          ],
-        ),
-        _bulletGroup(
-          const Text("Migrated to Nextcloud login flow (by @steffenmalisi)"),
-          [
-            const Text("Great thanks to @steffenmalisi!"),
-          ],
-        ),
-        _bulletGroup(
-          const Text("Lots of bug fixes, notably,"),
-          [
-            const Text("Unresponsive video player control"),
-            const Text(
-                "Broken EXIF support for HEIC files created by Samsung devices"),
-            const Text("EXIF date time not updating correctly"),
-            const Text(
-                "Thanks @invario, @luckkmaxx, @wonx1 for their bug reports!"),
-          ],
-        ),
-        _sectionPadding(),
-        _subSection("Localization"),
-        _bulletGroup(const Text("Updated Finnish (by pHamala)")),
-        _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
-      ],
-    );
-  }
-}
-
-class _Changelog560 extends StatelessWidget {
-  const _Changelog560();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _subSection("Changes"),
-        _bulletGroup(
-          const Text(
-              "Fixed files moved on server are sometimes not indexed by the app"),
-          [
-            const Text.rich(TextSpan(
-              children: [
-                TextSpan(
-                    text:
-                        "If you were affected by this, please clear the corrupted local database in "),
-                TextSpan(
-                  text: "Settings > Advanced > Clear file database",
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            )),
-          ],
-        ),
-        _bulletGroup(const Text("Added a loop button to the video player")),
-      ],
-    );
-  }
-}
-
-class _Changelog570 extends StatelessWidget {
-  const _Changelog570();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _subSection("Changes"),
-        _bulletGroup(
-          const Text(
-              "Fixed broken enhancements that did nothing or produced weird results"),
-          [
-            const Text("Color pop"),
-            const Text("Low-light enhancement"),
-            const Text("Portrait blur"),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _Changelog580 extends StatelessWidget {
-  const _Changelog580();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _subSection("Changes"),
-        _bulletGroup(const Text(
-            "Themed icon on Android 13+ (contributed by fischer-felix)")),
-        _bulletGroup(const Text("Various bugfixes and UI improvements")),
-        _sectionPadding(),
-        _subSection("Localization"),
-        _bulletGroup(const Text("Updated Czech (by Fjuro)")),
-        _bulletGroup(const Text("Updated Portuguese (by fernosan)")),
-        _bulletGroup(const Text("Updated Spanish (by luckkmaxx)")),
-      ],
-    );
-  }
 }
 
 // ignore: unused_element
