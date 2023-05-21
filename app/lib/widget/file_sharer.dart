@@ -22,7 +22,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
-import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/use_case/copy.dart';
 import 'package:nc_photos/use_case/create_dir.dart';
 import 'package:nc_photos/use_case/create_share.dart';
@@ -83,16 +83,17 @@ class _WrappedFileSharer extends StatelessWidget {
           listener: (context, state) {
             if (state.error != null) {
               if (state.error!.error is PermissionException) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(L10n.global().errorNoStoragePermission),
+                AppToast.showToast(
+                  context,
+                  msg: L10n.global().errorNoStoragePermission,
                   duration: k.snackBarDurationNormal,
-                ));
+                );
               } else {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
+                AppToast.showToast(
+                  context,
+                  msg: exception_util.toUserString(state.error!.error),
                   duration: k.snackBarDurationNormal,
-                ));
+                );
               }
             }
           },
@@ -102,10 +103,11 @@ class _WrappedFileSharer extends StatelessWidget {
               previous.message != current.message,
           listener: (context, state) {
             if (state.message != null) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(state.message!),
+              AppToast.showToast(
+                context,
+                msg: state.message!,
                 duration: k.snackBarDurationNormal,
-              ));
+              );
             }
           },
         ),

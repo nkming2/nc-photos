@@ -59,6 +59,7 @@ dependencies:
     git:
       url: https://gitlab.com/nc-photos/exifdart.git
       ref: 1.3.0
+  fluttertoast: ^8.2.1
   flutter_background_service:
     git:
       url: https://gitlab.com/nc-photos/flutter_background_service.git

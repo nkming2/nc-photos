@@ -23,7 +23,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/tag_picker_dialog.dart';
@@ -93,10 +93,11 @@ class _WrappedNewCollectionDialogState
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
+              AppToast.showToast(
+                context,
+                msg: exception_util.toUserString(state.error!.error),
                 duration: k.snackBarDurationNormal,
-              ));
+              );
             }
           },
         ),
@@ -188,8 +189,9 @@ class _WrappedNewCollectionDialogState
         ..pop(collection);
     } catch (e, stackTrace) {
       _log.shout("[_onResult] Failed", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
+      unawaited(AppToast.showToast(
+        context,
+        msg: exception_util.toUserString(e),
         duration: k.snackBarDurationNormal,
       ));
       Navigator.of(context)

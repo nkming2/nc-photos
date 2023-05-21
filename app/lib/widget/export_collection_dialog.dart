@@ -14,7 +14,7 @@ import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
@@ -73,10 +73,11 @@ class _WrappedExportCollectionDialogState
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (_, state) {
             if (state.error != null) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
+              AppToast.showToast(
+                context,
+                msg: exception_util.toUserString(state.error!.error),
                 duration: k.snackBarDurationNormal,
-              ));
+              );
             }
           },
         ),
