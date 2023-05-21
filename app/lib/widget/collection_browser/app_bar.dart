@@ -295,7 +295,7 @@ class _SelectionAppBar extends StatelessWidget {
     }
     final result = await showDialog(
       context: context,
-      builder: (context) => FileSharer(
+      builder: (context) => FileSharerDialog(
         account: bloc.account,
         files: selected,
       ),

@@ -37,10 +37,10 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 
-part 'file_sharer.g.dart';
-part 'file_sharer/bloc.dart';
-part 'file_sharer/state_event.dart';
-part 'file_sharer/type.dart';
+part 'file_sharer_dialog.g.dart';
+part 'file_sharer_dialog/bloc.dart';
+part 'file_sharer_dialog/state_event.dart';
+part 'file_sharer_dialog/type.dart';
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 
@@ -48,8 +48,8 @@ typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 ///
 /// Return true if the files are actually shared, false if user cancelled or
 /// some errors occurred (e.g., missing permission)
-class FileSharer extends StatelessWidget {
-  const FileSharer({
+class FileSharerDialog extends StatelessWidget {
+  const FileSharerDialog({
     super.key,
     required this.account,
     required this.files,
@@ -63,7 +63,7 @@ class FileSharer extends StatelessWidget {
         account: account,
         files: files,
       ),
-      child: const _WrappedFileSharer(),
+      child: const _WrappedFileSharerDialog(),
     );
   }
 
@@ -71,8 +71,8 @@ class FileSharer extends StatelessWidget {
   final List<FileDescriptor> files;
 }
 
-class _WrappedFileSharer extends StatelessWidget {
-  const _WrappedFileSharer();
+class _WrappedFileSharerDialog extends StatelessWidget {
+  const _WrappedFileSharerDialog();
 
   @override
   Widget build(BuildContext context) {
