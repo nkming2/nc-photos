@@ -105,7 +105,6 @@
     "unshareAlbumSuccessWithErrorNotification",
     "fixSharesTooltip",
     "fixTooltip",
-    "fixButtonLabel",
     "fixAllTooltip",
     "missingShareDescription",
     "extraShareDescription",
@@ -339,6 +338,7 @@
   ],
 
   "fi": [
+    "nameInputInvalidEmpty",
     "settingsServerVersionTitle",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
