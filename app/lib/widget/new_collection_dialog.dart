@@ -192,7 +192,9 @@ class _WrappedNewCollectionDialogState
         content: Text(exception_util.toUserString(e)),
         duration: k.snackBarDurationNormal,
       ));
-      Navigator.of(context).pop();
+      Navigator.of(context)
+        ..pop()
+        ..pop();
     }
   }
 
