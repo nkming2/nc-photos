@@ -20,10 +20,12 @@ import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/toast.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/tag_picker_dialog.dart';
@@ -127,6 +129,12 @@ class _WrappedNewCollectionDialogState
               ),
             ),
             actions: [
+              TextButton(
+                onPressed: () {
+                  launch(help_util.collectionTypesUrl);
+                },
+                child: Text(L10n.global().learnMoreButtonLabel),
+              ),
               TextButton(
                 onPressed: () => _onOkPressed(context),
                 child: Text(MaterialLocalizations.of(context).okButtonLabel),

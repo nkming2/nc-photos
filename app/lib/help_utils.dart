@@ -11,3 +11,4 @@ const enhanceStyleTransferUrl = "https://bit.ly/3agpTcF";
 const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
 const enhanceRetouchUrl = "https://bit.ly/3Ds2cea";
 const editPhotosUrl = "https://bit.ly/3v82oKA";
+const collectionTypesUrl = "https://bit.ly/3ML0w3p";
