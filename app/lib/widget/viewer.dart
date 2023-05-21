@@ -5,26 +5,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/collection_items_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/item.dart';
-import 'package:nc_photos/entity/album/provider.dart';
+import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/adapter.dart';
+import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/notified_action.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/share_handler.dart';
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
-import 'package:nc_photos/use_case/remove_from_album.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -44,18 +48,25 @@ import 'package:np_codegen/np_codegen.dart';
 
 part 'viewer.g.dart';
 
+class ViewerCollectionData {
+  const ViewerCollectionData(this.collection, this.items);
+
+  final Collection collection;
+  final List<CollectionItem> items;
+}
+
 class ViewerArguments {
-  ViewerArguments(
+  const ViewerArguments(
     this.account,
     this.streamFiles,
     this.startIndex, {
-    this.album,
+    this.fromCollection,
   });
 
   final Account account;
   final List<FileDescriptor> streamFiles;
   final int startIndex;
-  final Album? album;
+  final ViewerCollectionData? fromCollection;
 }
 
 class Viewer extends StatefulWidget {
@@ -73,7 +84,7 @@ class Viewer extends StatefulWidget {
     required this.account,
     required this.streamFiles,
     required this.startIndex,
-    this.album,
+    this.fromCollection,
   }) : super(key: key);
 
   Viewer.fromArgs(ViewerArguments args, {Key? key})
@@ -82,7 +93,7 @@ class Viewer extends StatefulWidget {
           account: args.account,
           streamFiles: args.streamFiles,
           startIndex: args.startIndex,
-          album: args.album,
+          fromCollection: args.fromCollection,
         );
 
   @override
@@ -92,8 +103,8 @@ class Viewer extends StatefulWidget {
   final List<FileDescriptor> streamFiles;
   final int startIndex;
 
-  /// The album these files belongs to, or null
-  final Album? album;
+  /// Data of the collection these files belongs to, or null
+  final ViewerCollectionData? fromCollection;
 }
 
 @npLog
@@ -304,9 +315,11 @@ class _ViewerState extends State<Viewer>
                                 child: ViewerDetailPane(
                                   account: widget.account,
                                   fd: _streamFilesView[index],
-                                  album: widget.album,
-                                  onRemoveFromAlbumPressed:
-                                      _onRemoveFromAlbumPressed,
+                                  fromCollection: widget.fromCollection?.run(
+                                      (d) => ViewerSingleCollectionData(
+                                          d.collection, d.items[index])),
+                                  onRemoveFromCollectionPressed:
+                                      _onRemoveFromCollectionPressed,
                                   onArchivePressed: _onArchivePressed,
                                   onUnarchivePressed: _onUnarchivePressed,
                                   onSlideshowPressed: _onSlideshowPressed,
@@ -666,30 +679,27 @@ class _ViewerState extends State<Viewer>
     _removeCurrentItemFromStream(context, index);
   }
 
-  void _onRemoveFromAlbumPressed(BuildContext context) {
-    assert(widget.album!.provider is AlbumStaticProvider);
+  Future<void> _onRemoveFromCollectionPressed(BuildContext context) async {
+    assert(CollectionAdapter.of(KiwiContainer().resolve<DiContainer>(),
+            widget.account, widget.fromCollection!.collection)
+        .isPermitted(CollectionCapability.manualItem));
     final index = _viewerController.currentPage;
-    final c = KiwiContainer().resolve<DiContainer>();
     final file = _streamFilesView[index];
-    _log.info("[_onRemoveFromAlbumPressed] Remove file: ${file.fdPath}");
-    NotifiedAction(
-      () async {
-        final selectedFile =
-            (await InflateFileDescriptor(c)(widget.account, [file])).first;
-        final thisItem = AlbumStaticProvider.of(widget.album!)
-            .items
-            .whereType<AlbumFileItem>()
-            .firstWhere((e) => e.file.compareServerIdentity(selectedFile));
-        await RemoveFromAlbum(KiwiContainer().resolve<DiContainer>())(
-            widget.account, widget.album!, [thisItem]);
-      },
-      null,
-      L10n.global().removeSelectedFromAlbumSuccessNotification(1),
-      failureText: L10n.global().removeSelectedFromAlbumFailureNotification,
-    ).call().catchError((e, stackTrace) {
-      _log.shout("[_onRemoveFromAlbumPressed] Failed while updating album", e,
-          stackTrace);
-    });
+    _log.info("[_onRemoveFromCollectionPressed] Remove file: ${file.fdPath}");
+    try {
+      final itemsController = _findCollectionItemsController(context);
+      final item = itemsController.stream.value.items
+          .whereType<CollectionFileItem>()
+          .firstWhere((i) => i.file.compareServerIdentity(file));
+      await itemsController.removeItems([item]);
+    } catch (e, stackTrace) {
+      _log.shout("[_onRemoveFromCollectionPressed] Failed while updating album",
+          e, stackTrace);
+      SnackBarManager().showSnackBar(SnackBar(
+        content: Text(L10n.global().removeSelectedFromAlbumFailureNotification),
+        duration: k.snackBarDurationNormal,
+      ));
+    }
     _removeCurrentItemFromStream(context, index);
   }
 
@@ -827,6 +837,19 @@ class _ViewerState extends State<Viewer>
   void _onDetailPaneClosed() {
     _isShowDetailPane = false;
     _isClosingDetailPane = false;
+  }
+
+  CollectionItemsController _findCollectionItemsController(
+      BuildContext context) {
+    return context
+        .read<AccountController>()
+        .collectionsController
+        .stream
+        .value
+        .data
+        .firstWhere((d) =>
+            d.collection.compareIdentity(widget.fromCollection!.collection))
+        .controller;
   }
 
   bool _canSwitchPage() => !_isZoomed;

@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -178,14 +181,14 @@ class _SettingsState extends State<Settings> {
                 label: L10n.global().settingsMiscellaneousTitle,
                 builder: () => const _MiscSettings(),
               ),
-              if (_enabledExperiments.isNotEmpty)
-                _buildSubSettings(
-                  context,
-                  leading: const Icon(Icons.science_outlined),
-                  label: L10n.global().settingsExperimentalTitle,
-                  description: L10n.global().settingsExperimentalDescription,
-                  builder: () => _ExperimentalSettings(),
-                ),
+              // if (_enabledExperiments.isNotEmpty)
+              //   _buildSubSettings(
+              //     context,
+              //     leading: const Icon(Icons.science_outlined),
+              //     label: L10n.global().settingsExperimentalTitle,
+              //     description: L10n.global().settingsExperimentalDescription,
+              //     builder: () => _ExperimentalSettings(),
+              //   ),
               _buildSubSettings(
                 context,
                 leading: const Icon(Icons.warning_amber),
@@ -208,6 +211,29 @@ class _SettingsState extends State<Settings> {
                     setState(() {
                       _isShowDevSettings = true;
                     });
+                  }
+                },
+              ),
+              StreamBuilder<ServerStatus?>(
+                stream:
+                    context.read<AccountController>().serverController.status,
+                initialData: context
+                    .read<AccountController>()
+                    .serverController
+                    .status
+                    .valueOrNull,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return ListTile(
+                      title: Text(L10n.global().settingsServerVersionTitle),
+                    );
+                  } else {
+                    final status = snapshot.requireData!;
+                    return ListTile(
+                      title: Text(L10n.global().settingsServerVersionTitle),
+                      subtitle: Text(
+                          "${status.productName} ${status.majorVersion} (${status.versionName})"),
+                    );
                   }
                 },
               ),
@@ -1556,73 +1582,6 @@ class _MiscSettingsState extends State<_MiscSettings> {
   late bool _isDoubleTapExit;
 }
 
-class _ExperimentalSettings extends StatefulWidget {
-  @override
-  createState() => _ExperimentalSettingsState();
-}
-
-@npLog
-class _ExperimentalSettingsState extends State<_ExperimentalSettings> {
-  @override
-  initState() {
-    super.initState();
-    _isEnableSharedAlbum = Pref().isLabEnableSharedAlbumOr(false);
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsExperimentalTitle),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              if (_enabledExperiments.contains(_Experiment.sharedAlbum))
-                SwitchListTile(
-                  title: const Text("Shared album"),
-                  subtitle:
-                      const Text("Share albums with users on the same server"),
-                  value: _isEnableSharedAlbum,
-                  onChanged: (value) => _onEnableSharedAlbumChanged(value),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onEnableSharedAlbumChanged(bool value) async {
-    final oldValue = _isEnableSharedAlbum;
-    setState(() {
-      _isEnableSharedAlbum = value;
-    });
-    if (!await Pref().setLabEnableSharedAlbum(value)) {
-      _log.severe("[_onEnableSharedAlbumChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isEnableSharedAlbum = oldValue;
-      });
-    }
-  }
-
-  late bool _isEnableSharedAlbum;
-}
-
 class _DevSettings extends StatefulWidget {
   @override
   createState() => _DevSettingsState();
@@ -1692,10 +1651,5 @@ Widget _buildCaption(BuildContext context, String label) {
   );
 }
 
-enum _Experiment {
-  sharedAlbum,
-}
-
-final _enabledExperiments = [
-  _Experiment.sharedAlbum,
-];
+// final _enabledExperiments = [
+// ];

@@ -1,8 +1,10 @@
 import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/album/repo2.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -16,7 +18,11 @@ import 'package:nc_photos/touch_manager.dart';
 
 enum DiType {
   albumRepo,
+  albumRepoRemote,
   albumRepoLocal,
+  albumRepo2,
+  albumRepo2Remote,
+  albumRepo2Local,
   faceRepo,
   fileRepo,
   fileRepoRemote,
@@ -33,6 +39,9 @@ enum DiType {
   taggedFileRepo,
   localFileRepo,
   searchRepo,
+  ncAlbumRepo,
+  ncAlbumRepoRemote,
+  ncAlbumRepoLocal,
   pref,
   sqliteDb,
   touchManager,
@@ -41,7 +50,11 @@ enum DiType {
 class DiContainer {
   DiContainer({
     AlbumRepo? albumRepo,
+    AlbumRepo? albumRepoRemote,
     AlbumRepo? albumRepoLocal,
+    AlbumRepo2? albumRepo2,
+    AlbumRepo2? albumRepo2Remote,
+    AlbumRepo2? albumRepo2Local,
     FaceRepo? faceRepo,
     FileRepo? fileRepo,
     FileRepo? fileRepoRemote,
@@ -58,11 +71,18 @@ class DiContainer {
     TaggedFileRepo? taggedFileRepo,
     LocalFileRepo? localFileRepo,
     SearchRepo? searchRepo,
+    NcAlbumRepo? ncAlbumRepo,
+    NcAlbumRepo? ncAlbumRepoRemote,
+    NcAlbumRepo? ncAlbumRepoLocal,
     Pref? pref,
     sql.SqliteDb? sqliteDb,
     TouchManager? touchManager,
   })  : _albumRepo = albumRepo,
+        _albumRepoRemote = albumRepoRemote,
         _albumRepoLocal = albumRepoLocal,
+        _albumRepo2 = albumRepo2,
+        _albumRepo2Remote = albumRepo2Remote,
+        _albumRepo2Local = albumRepo2Local,
         _faceRepo = faceRepo,
         _fileRepo = fileRepo,
         _fileRepoRemote = fileRepoRemote,
@@ -79,6 +99,9 @@ class DiContainer {
         _taggedFileRepo = taggedFileRepo,
         _localFileRepo = localFileRepo,
         _searchRepo = searchRepo,
+        _ncAlbumRepo = ncAlbumRepo,
+        _ncAlbumRepoRemote = ncAlbumRepoRemote,
+        _ncAlbumRepoLocal = ncAlbumRepoLocal,
         _pref = pref,
         _sqliteDb = sqliteDb,
         _touchManager = touchManager;
@@ -89,8 +112,16 @@ class DiContainer {
     switch (type) {
       case DiType.albumRepo:
         return contianer._albumRepo != null;
+      case DiType.albumRepoRemote:
+        return contianer._albumRepoRemote != null;
       case DiType.albumRepoLocal:
         return contianer._albumRepoLocal != null;
+      case DiType.albumRepo2:
+        return contianer._albumRepo2 != null;
+      case DiType.albumRepo2Remote:
+        return contianer._albumRepo2Remote != null;
+      case DiType.albumRepo2Local:
+        return contianer._albumRepo2Local != null;
       case DiType.faceRepo:
         return contianer._faceRepo != null;
       case DiType.fileRepo:
@@ -123,6 +154,12 @@ class DiContainer {
         return contianer._localFileRepo != null;
       case DiType.searchRepo:
         return contianer._searchRepo != null;
+      case DiType.ncAlbumRepo:
+        return contianer._ncAlbumRepo != null;
+      case DiType.ncAlbumRepoRemote:
+        return contianer._ncAlbumRepoRemote != null;
+      case DiType.ncAlbumRepoLocal:
+        return contianer._ncAlbumRepoLocal != null;
       case DiType.pref:
         return contianer._pref != null;
       case DiType.sqliteDb:
@@ -134,6 +171,7 @@ class DiContainer {
 
   DiContainer copyWith({
     OrNull<AlbumRepo>? albumRepo,
+    OrNull<AlbumRepo2>? albumRepo2,
     OrNull<FaceRepo>? faceRepo,
     OrNull<FileRepo>? fileRepo,
     OrNull<PersonRepo>? personRepo,
@@ -144,12 +182,14 @@ class DiContainer {
     OrNull<TaggedFileRepo>? taggedFileRepo,
     OrNull<LocalFileRepo>? localFileRepo,
     OrNull<SearchRepo>? searchRepo,
+    OrNull<NcAlbumRepo>? ncAlbumRepo,
     OrNull<Pref>? pref,
     OrNull<sql.SqliteDb>? sqliteDb,
     OrNull<TouchManager>? touchManager,
   }) {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
+      albumRepo2: albumRepo2 == null ? _albumRepo2 : albumRepo2.obj,
       faceRepo: faceRepo == null ? _faceRepo : faceRepo.obj,
       fileRepo: fileRepo == null ? _fileRepo : fileRepo.obj,
       personRepo: personRepo == null ? _personRepo : personRepo.obj,
@@ -161,6 +201,7 @@ class DiContainer {
           taggedFileRepo == null ? _taggedFileRepo : taggedFileRepo.obj,
       localFileRepo: localFileRepo == null ? _localFileRepo : localFileRepo.obj,
       searchRepo: searchRepo == null ? _searchRepo : searchRepo.obj,
+      ncAlbumRepo: ncAlbumRepo == null ? _ncAlbumRepo : ncAlbumRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
@@ -168,7 +209,11 @@ class DiContainer {
   }
 
   AlbumRepo get albumRepo => _albumRepo!;
+  AlbumRepo get albumRepoRemote => _albumRepoRemote!;
   AlbumRepo get albumRepoLocal => _albumRepoLocal!;
+  AlbumRepo2 get albumRepo2 => _albumRepo2!;
+  AlbumRepo2 get albumRepo2Remote => _albumRepo2Remote!;
+  AlbumRepo2 get albumRepo2Local => _albumRepo2Local!;
   FaceRepo get faceRepo => _faceRepo!;
   FileRepo get fileRepo => _fileRepo!;
   FileRepo get fileRepoRemote => _fileRepoRemote!;
@@ -185,6 +230,9 @@ class DiContainer {
   TaggedFileRepo get taggedFileRepo => _taggedFileRepo!;
   LocalFileRepo get localFileRepo => _localFileRepo!;
   SearchRepo get searchRepo => _searchRepo!;
+  NcAlbumRepo get ncAlbumRepo => _ncAlbumRepo!;
+  NcAlbumRepo get ncAlbumRepoRemote => _ncAlbumRepoRemote!;
+  NcAlbumRepo get ncAlbumRepoLocal => _ncAlbumRepoLocal!;
   TouchManager get touchManager => _touchManager!;
 
   sql.SqliteDb get sqliteDb => _sqliteDb!;
@@ -195,9 +243,29 @@ class DiContainer {
     _albumRepo = v;
   }
 
+  set albumRepoRemote(AlbumRepo v) {
+    assert(_albumRepoRemote == null);
+    _albumRepoRemote = v;
+  }
+
   set albumRepoLocal(AlbumRepo v) {
     assert(_albumRepoLocal == null);
     _albumRepoLocal = v;
+  }
+
+  set albumRepo2(AlbumRepo2 v) {
+    assert(_albumRepo2 == null);
+    _albumRepo2 = v;
+  }
+
+  set albumRepo2Remote(AlbumRepo2 v) {
+    assert(_albumRepo2Remote == null);
+    _albumRepo2Remote = v;
+  }
+
+  set albumRepo2Local(AlbumRepo2 v) {
+    assert(_albumRepo2Local == null);
+    _albumRepo2Local = v;
   }
 
   set faceRepo(FaceRepo v) {
@@ -280,6 +348,21 @@ class DiContainer {
     _searchRepo = v;
   }
 
+  set ncAlbumRepo(NcAlbumRepo v) {
+    assert(_ncAlbumRepo == null);
+    _ncAlbumRepo = v;
+  }
+
+  set ncAlbumRepoRemote(NcAlbumRepo v) {
+    assert(_ncAlbumRepoRemote == null);
+    _ncAlbumRepoRemote = v;
+  }
+
+  set ncAlbumRepoLocal(NcAlbumRepo v) {
+    assert(_ncAlbumRepoLocal == null);
+    _ncAlbumRepoLocal = v;
+  }
+
   set touchManager(TouchManager v) {
     assert(_touchManager == null);
     _touchManager = v;
@@ -296,9 +379,13 @@ class DiContainer {
   }
 
   AlbumRepo? _albumRepo;
+  AlbumRepo? _albumRepoRemote;
   // Explicitly request a AlbumRepo backed by local source
   AlbumRepo? _albumRepoLocal;
   FaceRepo? _faceRepo;
+  AlbumRepo2? _albumRepo2;
+  AlbumRepo2? _albumRepo2Remote;
+  AlbumRepo2? _albumRepo2Local;
   FileRepo? _fileRepo;
   // Explicitly request a FileRepo backed by remote source
   FileRepo? _fileRepoRemote;
@@ -316,6 +403,9 @@ class DiContainer {
   TaggedFileRepo? _taggedFileRepo;
   LocalFileRepo? _localFileRepo;
   SearchRepo? _searchRepo;
+  NcAlbumRepo? _ncAlbumRepo;
+  NcAlbumRepo? _ncAlbumRepoRemote;
+  NcAlbumRepo? _ncAlbumRepoLocal;
   TouchManager? _touchManager;
 
   sql.SqliteDb? _sqliteDb;
@@ -323,14 +413,28 @@ class DiContainer {
 }
 
 extension DiContainerExtension on DiContainer {
+  /// Uses remote repo if available
+  ///
+  /// Notice that not all repo support this
+  DiContainer withRemoteRepo() => copyWith(
+        albumRepo: OrNull(albumRepoRemote),
+        albumRepo2: OrNull(albumRepo2Remote),
+        fileRepo: OrNull(fileRepoRemote),
+        personRepo: OrNull(personRepoRemote),
+        tagRepo: OrNull(tagRepoRemote),
+        ncAlbumRepo: OrNull(ncAlbumRepoRemote),
+      );
+
   /// Uses local repo if available
   ///
   /// Notice that not all repo support this
   DiContainer withLocalRepo() => copyWith(
         albumRepo: OrNull(albumRepoLocal),
+        albumRepo2: OrNull(albumRepo2Local),
         fileRepo: OrNull(fileRepoLocal),
         personRepo: OrNull(personRepoLocal),
         tagRepo: OrNull(tagRepoLocal),
+        ncAlbumRepo: OrNull(ncAlbumRepoLocal),
       );
 
   DiContainer withLocalAlbumRepo() =>

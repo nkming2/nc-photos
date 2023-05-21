@@ -182,14 +182,6 @@ class Pref {
   Future<bool> setGpsMapProvider(int value) => _set<int>(PrefKey.gpsMapProvider,
       value, (key, value) => provider.setInt(key, value));
 
-  bool? isLabEnableSharedAlbum() =>
-      provider.getBool(PrefKey.labEnableSharedAlbum);
-  bool isLabEnableSharedAlbumOr(bool def) => isLabEnableSharedAlbum() ?? def;
-  Future<bool> setLabEnableSharedAlbum(bool value) => _set<bool>(
-      PrefKey.labEnableSharedAlbum,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   bool? hasShownSharedAlbumInfo() =>
       provider.getBool(PrefKey.hasShownSharedAlbumInfo);
   bool hasShownSharedAlbumInfoOr(bool def) => hasShownSharedAlbumInfo() ?? def;
@@ -379,6 +371,18 @@ class AccountPref {
     } else {
       return _set<String>(PrefKey.accountLabel, value,
           (key, value) => provider.setString(key, value));
+    }
+  }
+
+  int? getLastNewCollectionType() =>
+      provider.getInt(PrefKey.lastNewCollectionType);
+  int getLastNewCollectionTypeOr(int def) => getLastNewCollectionType() ?? def;
+  Future<bool> setLastNewCollectionType(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.lastNewCollectionType);
+    } else {
+      return _set<int>(PrefKey.lastNewCollectionType, value,
+          (key, value) => provider.setInt(key, value));
     }
   }
 
@@ -621,6 +625,7 @@ enum PrefKey {
   isEnableMemoryAlbum,
   touchRootEtag,
   accountLabel,
+  lastNewCollectionType,
 }
 
 extension on PrefKey {
@@ -710,6 +715,8 @@ extension on PrefKey {
         return "touchRootEtag";
       case PrefKey.accountLabel:
         return "accountLabel";
+      case PrefKey.lastNewCollectionType:
+        return "lastNewCollectionType";
     }
   }
 }

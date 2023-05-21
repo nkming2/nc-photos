@@ -10,6 +10,7 @@ import 'package:nc_photos/bloc/list_sharing.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
+import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -20,7 +21,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
-import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
@@ -65,18 +66,14 @@ class _SharingBrowserState extends State<SharingBrowser> {
   @override
   initState() {
     super.initState();
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
-      _importPotentialSharedAlbum().whenComplete(() {
-        _initBloc();
-      });
-      AccountPref.of(widget.account).run((obj) {
-        if (obj.hasNewSharedAlbumOr()) {
-          obj.setNewSharedAlbum(false);
-        }
-      });
-    } else {
+    _importPotentialSharedAlbum().whenComplete(() {
       _initBloc();
-    }
+    });
+    AccountPref.of(widget.account).run((obj) {
+      if (obj.hasNewSharedAlbumOr()) {
+        obj.setNewSharedAlbum(false);
+      }
+    });
   }
 
   @override
@@ -251,9 +248,13 @@ class _SharingBrowserState extends State<SharingBrowser> {
     }
   }
 
-  Future<void> _onAlbumShareItemTap(
-      BuildContext context, ListSharingAlbum share) {
-    return album_browser_util.push(context, widget.account, share.album);
+  void _onAlbumShareItemTap(BuildContext context, ListSharingAlbum share) {
+    Navigator.of(context).pushNamed(
+      CollectionBrowser.routeName,
+      arguments: CollectionBrowserArguments(
+        CollectionBuilder.byAlbum(widget.account, share.album),
+      ),
+    );
   }
 
   void _transformItems(List<ListSharingItem> items) {

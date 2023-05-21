@@ -1,5 +1,4 @@
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
@@ -10,17 +9,17 @@ class DownloadFile {
   /// Create a new download but don't start it yet
   Download build(
     Account account,
-    File file, {
+    FileDescriptor file, {
     String? parentDir,
     bool? shouldNotify,
   }) {
-    final url = "${account.url}/${file.path}";
+    final url = "${account.url}/${file.fdPath}";
     return platform.DownloadBuilder().build(
       url: url,
       headers: {
         "authorization": AuthUtil.fromAccount(account).toHeaderValue(),
       },
-      mimeType: file.contentType,
+      mimeType: file.fdMime,
       filename: file.filename,
       parentDir: parentDir,
       shouldNotify: shouldNotify,
@@ -32,7 +31,7 @@ class DownloadFile {
   /// See [DownloadBuilder]
   Future<dynamic> call(
     Account account,
-    File file, {
+    FileDescriptor file, {
     String? parentDir,
     bool? shouldNotify,
   }) =>

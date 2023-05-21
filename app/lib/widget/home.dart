@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -14,7 +18,7 @@ import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
-import 'package:nc_photos/widget/home_albums.dart';
+import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/home_photos.dart';
 import 'package:nc_photos/widget/home_search.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -56,14 +60,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-    if (Pref().isLabEnableSharedAlbumOr(false)) {
-      _importPotentialSharedAlbum().then((value) {
-        if (value.isNotEmpty) {
-          AccountPref.of(widget.account).setNewSharedAlbum(true);
-        }
-      });
-    }
+    _importPotentialSharedAlbum().then((value) {
+      if (value.isNotEmpty) {
+        AccountPref.of(widget.account).setNewSharedAlbum(true);
+      }
+    });
     _animationController.value = 1;
+
+    // call once to pre-cache the value
+    unawaited(context
+        .read<AccountController>()
+        .serverController
+        .status
+        .first
+        .then((value) {
+      _log.info("Server status: $value");
+    }));
   }
 
   @override
@@ -137,9 +149,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
 
       case 2:
-        return HomeAlbums(
-          account: widget.account,
-        );
+        return const HomeCollections();
 
       default:
         throw ArgumentError("Invalid page index: $index");

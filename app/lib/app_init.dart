@@ -8,6 +8,8 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
+import 'package:nc_photos/entity/album/data_source2.dart';
+import 'package:nc_photos/entity/album/repo2.dart';
 import 'package:nc_photos/entity/face.dart';
 import 'package:nc_photos/entity/face/data_source.dart';
 import 'package:nc_photos/entity/favorite.dart';
@@ -16,6 +18,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
+import 'package:nc_photos/entity/nc_album/data_source.dart';
+import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/data_source.dart';
 import 'package:nc_photos/entity/search.dart';
@@ -198,7 +202,12 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.sqliteDb = await _createDb(isolateType);
 
   c.albumRepo = AlbumRepo(AlbumCachedDataSource(c));
+  c.albumRepoRemote = AlbumRepo(AlbumRemoteDataSource());
   c.albumRepoLocal = AlbumRepo(AlbumSqliteDbDataSource(c));
+  c.albumRepo2 = CachedAlbumRepo2(
+      const AlbumRemoteDataSource2(), AlbumSqliteDbDataSource2(c.sqliteDb));
+  c.albumRepo2Remote = const BasicAlbumRepo2(AlbumRemoteDataSource2());
+  c.albumRepo2Local = BasicAlbumRepo2(AlbumSqliteDbDataSource2(c.sqliteDb));
   c.faceRepo = const FaceRepo(FaceRemoteDataSource());
   c.fileRepo = FileRepo(FileCachedDataSource(c));
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
@@ -214,6 +223,11 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
   c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c));
+  c.ncAlbumRepo = CachedNcAlbumRepo(
+      const NcAlbumRemoteDataSource(), NcAlbumSqliteDbDataSource(c.sqliteDb));
+  c.ncAlbumRepoRemote = const BasicNcAlbumRepo(NcAlbumRemoteDataSource());
+  c.ncAlbumRepoLocal = BasicNcAlbumRepo(NcAlbumSqliteDbDataSource(c.sqliteDb));
+
   c.touchManager = TouchManager(c);
 
   if (platform_k.isAndroid) {

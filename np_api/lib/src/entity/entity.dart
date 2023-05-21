@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 
 part 'entity.g.dart';
@@ -100,6 +101,92 @@ class File with EquatableMixin {
   final String? trashbinOriginalLocation;
   final DateTime? trashbinDeletionTime;
   final Map<String, String>? customProperties;
+}
+
+@toString
+class NcAlbum with EquatableMixin {
+  const NcAlbum({
+    required this.href,
+    required this.lastPhoto,
+    required this.nbItems,
+    required this.location,
+    required this.dateRange,
+    required this.collaborators,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props =>
+      [href, lastPhoto, nbItems, location, dateRange, collaborators];
+
+  final String href;
+  final int? lastPhoto;
+  final int? nbItems;
+  final String? location;
+  final JsonObj? dateRange;
+  final List<NcAlbumCollaborator> collaborators;
+}
+
+@toString
+class NcAlbumCollaborator with EquatableMixin {
+  const NcAlbumCollaborator({
+    required this.id,
+    required this.label,
+    required this.type,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [id, label, type];
+
+  final String id;
+  final String label;
+  final int type;
+}
+
+@ToString(ignoreNull: true)
+class NcAlbumItem with EquatableMixin {
+  const NcAlbumItem({
+    required this.href,
+    this.fileId,
+    this.contentLength,
+    this.contentType,
+    this.etag,
+    this.lastModified,
+    this.hasPreview,
+    this.favorite,
+    this.fileMetadataSize,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        href,
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        hasPreview,
+        favorite,
+        fileMetadataSize,
+      ];
+
+  final String href;
+  final int? fileId;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final bool? hasPreview;
+  final bool? favorite;
+  final JsonObj? fileMetadataSize;
 }
 
 @toString
@@ -205,6 +292,29 @@ class Sharee with EquatableMixin {
   final int shareType;
   final String shareWith;
   final String? shareWithDisplayNameUnique;
+}
+
+@toString
+class Status with EquatableMixin {
+  const Status({
+    required this.version,
+    required this.versionString,
+    required this.productName,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        version,
+        versionString,
+        productName,
+      ];
+
+  final String version;
+  final String versionString;
+  final String productName;
 }
 
 @toString

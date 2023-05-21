@@ -20,20 +20,13 @@ extension _$AlbumCoverProviderNpLog on AlbumCoverProvider {
 extension _$AlbumAutoCoverProviderToString on AlbumAutoCoverProvider {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumAutoCoverProvider {coverFile: ${coverFile == null ? null : "${coverFile!.path}"}}";
+    return "AlbumAutoCoverProvider {coverFile: ${coverFile == null ? null : "${coverFile!.fdPath}"}}";
   }
 }
 
 extension _$AlbumManualCoverProviderToString on AlbumManualCoverProvider {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumManualCoverProvider {coverFile: ${coverFile.path}}";
-  }
-}
-
-extension _$AlbumMemoryCoverProviderToString on AlbumMemoryCoverProvider {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "AlbumMemoryCoverProvider {coverFile: ${coverFile.fdPath}}";
+    return "AlbumManualCoverProvider {coverFile: ${coverFile.fdPath}}";
   }
 }

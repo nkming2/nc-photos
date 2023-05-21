@@ -61,9 +61,9 @@ class RemoveSelectionHandler {
     await Remove(KiwiContainer().resolve<DiContainer>())(
       account,
       selectedFiles,
-      onRemoveFileFailed: (file, e, stackTrace) {
+      onError: (_, file, e, stackTrace) {
         _log.shout(
-            "[call] Failed while removing file: ${logFilename(file.path)}",
+            "[call] Failed while removing file: ${logFilename(file.fdPath)}",
             e,
             stackTrace);
         ++failureCount;

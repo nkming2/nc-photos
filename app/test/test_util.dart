@@ -478,12 +478,11 @@ Future<void> insertFiles(
 Future<void> insertDirRelation(
     sql.SqliteDb db, Account account, File dir, Iterable<File> children) async {
   final dbAccount = await db.accountOf(account);
-  final dirRowIds = (await db
-          .accountFileRowIdsByFileIds([dir.fileId!], sqlAccount: dbAccount))
+  final dirRowIds = (await db.accountFileRowIdsByFileIds(
+          sql.ByAccount.sql(dbAccount), [dir.fileId!]))
       .first;
   final childRowIds = await db.accountFileRowIdsByFileIds(
-      [dir, ...children].map((f) => f.fileId!),
-      sqlAccount: dbAccount);
+      sql.ByAccount.sql(dbAccount), [dir, ...children].map((f) => f.fileId!));
   await db.batch((batch) {
     batch.insertAll(
       db.dirFiles,

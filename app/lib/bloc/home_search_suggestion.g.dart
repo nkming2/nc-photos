@@ -18,10 +18,10 @@ extension _$HomeSearchSuggestionBlocNpLog on HomeSearchSuggestionBloc {
 // ToStringGenerator
 // **************************************************************************
 
-extension _$HomeSearchAlbumResultToString on HomeSearchAlbumResult {
+extension _$HomeSearchCollectionResultToString on HomeSearchCollectionResult {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "HomeSearchAlbumResult {album: $album}";
+    return "HomeSearchCollectionResult {collection: $collection}";
   }
 }
 

@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "Alle Elemente wurden erfolgreich zu {album} hinzugefügt",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Fehler beim Hinzufügen von Elementen zum Album",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Zum Album hinzufügen",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Erfolgreich zu {album} hinzugefügt",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Fehler beim Hinzufügen zum Album",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Lösche 1 Element} other{Lösche {count} Elemente}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,19 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Ausgewählte aus Album entfernen",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 Element vom Album entfernt} other{{count} Elemente vom Album entfernt}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Fehler beim Entfernen von Elementen aus dem Album",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -186,10 +143,6 @@
 	"createAlbumTooltip": "Neues Album",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
-	},
-	"createAlbumFailureNotification": "Fehler beim Erstellen des Albums",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
 	},
 	"albumSize": "{count, plural, =0{Leer} =1{1 Element} other{{count} Elemente}}",
 	"@albumSize": {
@@ -216,10 +169,6 @@
 	"nameInputHint": "Name",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Bitte geben Sie den Albumnamen ein",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "ÜBERSPRINGEN",
 	"@skipButtonLabel": {
@@ -311,20 +260,12 @@
 	},
 	"settingsViewerTitle": "Viewer",
 	"settingsViewerDescription": "Den Bild-/Video-Viewer anpassen",
-	"settingsViewerPageTitle": "Viewer-Einstellungen",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "Bildschirmhelligkeit",
 	"settingsScreenBrightnessDescription": "Bildschirmhelligkeit des Systems überschreiben",
 	"settingsForceRotationTitle": "Rotationssperre ignorieren",
 	"settingsForceRotationDescription": "Drehen Sie den Bildschirm, auch wenn die automatische Drehung deaktiviert ist",
 	"settingsThemeTitle": "Thema",
 	"settingsThemeDescription": "Passen Sie das Erscheinungsbild der App an",
-	"settingsThemePageTitle": "Themen Einstellungen",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "Systemthema folgen",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -401,10 +342,6 @@
 	"connectButtonLabel": "VERBINDEN",
 	"@connectButtonLabel": {
 		"description": "Label of the connect button"
-	},
-	"rootPickerSkipConfirmationDialogContent": "Alle Ihre Dateien werden aufgenommen",
-	"@rootPickerSkipConfirmationDialogContent": {
-		"description": "Inform user what happens after skipping root picker"
 	},
 	"megapixelCount": "{count}MP",
 	"@megapixelCount": {
@@ -500,38 +437,6 @@
 	"@albumDirPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"createAlbumDialogBasicLabel": "Einfach",
-	"@createAlbumDialogBasicLabel": {
-		"description": "Simple album"
-	},
-	"createAlbumDialogBasicDescription": "Einfaches Album organisiert Fotos unabhängig von der Dateihierarchie auf dem Server",
-	"@createAlbumDialogBasicDescription": {
-		"description": "Describe what a simple album is"
-	},
-	"createAlbumDialogFolderBasedLabel": "Ordnerbasiert",
-	"@createAlbumDialogFolderBasedLabel": {
-		"description": "Folder based album"
-	},
-	"createAlbumDialogFolderBasedDescription": "Ordnerbasiertes Album spiegelt den Inhalt eines Ordners wieder",
-	"@createAlbumDialogFolderBasedDescription": {
-		"description": "Describe what a folder based album is"
-	},
-	"convertBasicAlbumMenuLabel": "In einfaches Album umwandeln",
-	"@convertBasicAlbumMenuLabel": {
-		"description": "Convert a non-simple album to a simple one"
-	},
-	"convertBasicAlbumConfirmationDialogTitle": "In einfaches Album umwandeln",
-	"@convertBasicAlbumConfirmationDialogTitle": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumConfirmationDialogContent": "Der Inhalt dieses Albums wird nicht mehr von der App verwaltet. Sie können Fotos frei hinzufügen oder entfernen.\n\nDiese Konvertierung ist nicht rückgängig zu machen",
-	"@convertBasicAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertBasicAlbumSuccessNotification": "Album erfolgreich umgewandelt",
-	"@convertBasicAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"importFoldersTooltip": "Ordner importieren",
 	"@importFoldersTooltip": {
 		"description": "Menu entry in the album page to import folders as albums"
@@ -548,10 +453,6 @@
 	"albumImporterProgressText": "Importiere Ordner",
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
-	},
-	"editAlbumMenuLabel": "Album bearbeiten",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
 	},
 	"doneButtonTooltip": "Fertig",
 	"editTooltip": "Bearbeiten",
@@ -605,7 +506,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Suche",
-	"albumSearchTextFieldHint": "Suche Alben",
 	"clearTooltip": "Leeren",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -675,18 +575,6 @@
 	"albumSharedLabel": "Geteilt",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "Foto als Albumcover einstellen",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Albumcover erfolgreich eingestellt",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Fehler beim Einstellen des Albumcovers",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "Bildmetadaten im Hintergrund verarbeiten",
 	"@metadataTaskProcessingNotification": {
@@ -759,18 +647,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "Cover aufheben",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Coever erfolgreich aufgehoben",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
-	"unsetAlbumCoverFailureNotification": "Fehler beim Aufheben des Covers",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Stumm",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -782,15 +658,6 @@
 	"collectionPeopleLabel": "Personen",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 Foto} other{{count} Fotos}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"errorUnauthenticated": "Nicht authentifizierter Zugriff. Bitte melden Sie sich erneut an, wenn das Problem weiterhin besteht",
 	"@errorUnauthenticated": {

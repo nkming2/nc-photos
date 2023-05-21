@@ -8,6 +8,7 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search_landing.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -18,10 +19,9 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
-import 'package:nc_photos/widget/person_browser.dart';
-import 'package:nc_photos/widget/place_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -225,15 +225,21 @@ class _SearchLandingState extends State<SearchLanding> {
   }
 
   void _onPersonItemTap(Person person) {
-    Navigator.pushNamed(context, PersonBrowser.routeName,
-        arguments: PersonBrowserArguments(widget.account, person));
+    Navigator.pushNamed(
+      context,
+      CollectionBrowser.routeName,
+      arguments: CollectionBrowserArguments(
+        CollectionBuilder.byPerson(widget.account, person),
+      ),
+    );
   }
 
   void _onLocationItemTap(LocationGroup location) {
     Navigator.of(context).pushNamed(
-      PlaceBrowser.routeName,
-      arguments: PlaceBrowserArguments(
-          widget.account, location.place, location.countryCode),
+      CollectionBrowser.routeName,
+      arguments: CollectionBrowserArguments(
+        CollectionBuilder.byLocationGroup(widget.account, location),
+      ),
     );
   }
 

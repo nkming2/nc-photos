@@ -191,9 +191,7 @@ class FileSqliteCacheUpdater {
   ) async {
     // query list of rowIds for files in [remoteFiles]
     final rowIds = await db.accountFileRowIdsByFileIds(
-      remoteFiles.map((f) => f.fileId!),
-      sqlAccount: dbAccount,
-    );
+        sql.ByAccount.sql(dbAccount), remoteFiles.map((f) => f.fileId!));
     final rowIdsMap = Map.fromEntries(rowIds.map((e) => MapEntry(e.fileId, e)));
 
     final inserts = <sql.CompleteFileCompanion>[];
@@ -359,7 +357,7 @@ class FileSqliteCacheRemover {
   static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
 
   /// Remove a file/dir from cache
-  Future<void> call(Account account, File f) async {
+  Future<void> call(Account account, FileDescriptor f) async {
     await _c.sqliteDb.use((db) async {
       final dbAccount = await db.accountOf(account);
       final rowIds = await db.accountFileRowIdsOf(f, sqlAccount: dbAccount);

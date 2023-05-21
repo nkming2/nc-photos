@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
+import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/widget/my_app.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -33,8 +34,9 @@ void main() async {
 @npLog
 class _BlocObserver extends BlocObserver {
   @override
-  onChange(BlocBase bloc, Change change) {
+  void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    _log.finer("${bloc.runtimeType} $change");
+    final tag = bloc is BlocTag ? (bloc as BlocTag).tag : bloc.runtimeType;
+    _log.finer("$tag $change");
   }
 }

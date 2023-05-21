@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/object_extension.dart';
@@ -49,12 +49,12 @@ class PhotoListItemBuilderResult {
   const PhotoListItemBuilderResult(
     this.backingFiles,
     this.listItems, {
-    this.smartAlbums = const [],
+    this.smartCollections = const [],
   });
 
   final List<FileDescriptor> backingFiles;
   final List<SelectableItem> listItems;
-  final List<Album> smartAlbums;
+  final List<Collection> smartCollections;
 }
 
 typedef PhotoListItemSorter = int Function(FileDescriptor, FileDescriptor);
@@ -137,7 +137,7 @@ class _PhotoListItemBuilder {
       Account account, List<FileDescriptor> files) {
     final today = clock.now();
     final memoryAlbumHelper = smartAlbumConfig != null
-        ? MemoryAlbumHelper(
+        ? MemoryCollectionHelper(account,
             today: today, dayRange: smartAlbumConfig!.memoriesDayRange)
         : null;
     final listItems = <SelectableItem>[];
@@ -155,7 +155,7 @@ class _PhotoListItemBuilder {
     return PhotoListItemBuilderResult(
       files,
       listItems,
-      smartAlbums: smartAlbums ?? [],
+      smartCollections: smartAlbums ?? [],
     );
   }
 

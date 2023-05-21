@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:clock/clock.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -6,11 +9,15 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;
+
+part 'album_test/album_upgrader_v8.dart';
 
 void main() {
   group("Album", () {
@@ -46,7 +53,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
-              coverProvider: AlbumAutoCoverProvider(),
+              coverProvider: const AlbumAutoCoverProvider(),
               sortProvider: const AlbumNullSortProvider(),
             ));
       });
@@ -82,7 +89,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
-              coverProvider: AlbumAutoCoverProvider(),
+              coverProvider: const AlbumAutoCoverProvider(),
               sortProvider: const AlbumNullSortProvider(),
             ));
       });
@@ -151,7 +158,7 @@ void main() {
                     ),
                   ],
                 ),
-                coverProvider: AlbumAutoCoverProvider(),
+                coverProvider: const AlbumAutoCoverProvider(),
                 sortProvider: const AlbumNullSortProvider(),
               ));
         });
@@ -202,7 +209,7 @@ void main() {
                     ),
                   ],
                 ),
-                coverProvider: AlbumAutoCoverProvider(),
+                coverProvider: const AlbumAutoCoverProvider(),
                 sortProvider: const AlbumNullSortProvider(),
               ));
         });
@@ -223,7 +230,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.678901Z",
               },
             },
           },
@@ -233,23 +245,29 @@ void main() {
           },
         };
         expect(
-            Album.fromJson(
-              json,
-              upgraderFactory: const _NullAlbumUpgraderFactory(),
+          Album.fromJson(
+            json,
+            upgraderFactory: const _NullAlbumUpgraderFactory(),
+          ),
+          Album(
+            lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
+            name: "",
+            provider: AlbumStaticProvider(
+              items: [],
             ),
-            Album(
-              lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
-              name: "",
-              provider: AlbumStaticProvider(
-                items: [],
+            coverProvider: AlbumAutoCoverProvider(
+              coverFile: FileDescriptor(
+                fdPath: "remote.php/dav/files/admin/test1.jpg",
+                fdId: 1,
+                fdMime: null,
+                fdIsFavorite: false,
+                fdIsArchived: false,
+                fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5, 678, 901),
               ),
-              coverProvider: AlbumAutoCoverProvider(
-                coverFile: File(
-                  path: "remote.php/dav/files/admin/test1.jpg",
-                ),
-              ),
-              sortProvider: const AlbumNullSortProvider(),
-            ));
+            ),
+            sortProvider: const AlbumNullSortProvider(),
+          ),
+        );
       });
 
       test("AlbumTimeSortProvider", () {
@@ -285,7 +303,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
-              coverProvider: AlbumAutoCoverProvider(),
+              coverProvider: const AlbumAutoCoverProvider(),
               sortProvider: const AlbumTimeSortProvider(
                 isAscending: true,
               ),
@@ -325,7 +343,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
-              coverProvider: AlbumAutoCoverProvider(),
+              coverProvider: const AlbumAutoCoverProvider(),
               sortProvider: const AlbumFilenameSortProvider(
                 isAscending: true,
               ),
@@ -368,7 +386,7 @@ void main() {
               provider: AlbumStaticProvider(
                 items: [],
               ),
-              coverProvider: AlbumAutoCoverProvider(),
+              coverProvider: const AlbumAutoCoverProvider(),
               sortProvider: const AlbumNullSortProvider(),
               albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
             ));
@@ -383,7 +401,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
@@ -414,7 +432,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
@@ -457,7 +475,7 @@ void main() {
                 ),
               ],
             ),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumNullSortProvider(),
           );
           expect(album.toRemoteJson(), <String, dynamic>{
@@ -515,7 +533,7 @@ void main() {
                 ),
               ],
             ),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumNullSortProvider(),
           );
           expect(album.toRemoteJson(), <String, dynamic>{
@@ -557,7 +575,15 @@ void main() {
             items: [],
           ),
           coverProvider: AlbumAutoCoverProvider(
-              coverFile: File(path: "remote.php/dav/files/admin/test1.jpg")),
+            coverFile: FileDescriptor(
+              fdPath: "remote.php/dav/files/admin/test1.jpg",
+              fdId: 1,
+              fdMime: null,
+              fdIsFavorite: false,
+              fdIsArchived: false,
+              fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
+            ),
+          ),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toRemoteJson(), <String, dynamic>{
@@ -574,7 +600,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.000Z",
               },
             },
           },
@@ -592,7 +623,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumTimeSortProvider(
             isAscending: true,
           ),
@@ -627,7 +658,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumFilenameSortProvider(
             isAscending: true,
           ),
@@ -666,7 +697,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
@@ -697,7 +728,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumNullSortProvider(),
         );
         expect(album.toAppDbJson(), <String, dynamic>{
@@ -740,7 +771,7 @@ void main() {
                 ),
               ],
             ),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumNullSortProvider(),
           );
           expect(album.toAppDbJson(), <String, dynamic>{
@@ -798,7 +829,7 @@ void main() {
                 ),
               ],
             ),
-            coverProvider: AlbumAutoCoverProvider(),
+            coverProvider: const AlbumAutoCoverProvider(),
             sortProvider: const AlbumNullSortProvider(),
           );
           expect(album.toAppDbJson(), <String, dynamic>{
@@ -840,8 +871,13 @@ void main() {
             items: [],
           ),
           coverProvider: AlbumAutoCoverProvider(
-            coverFile: File(
-              path: "remote.php/dav/files/admin/test1.jpg",
+            coverFile: FileDescriptor(
+              fdPath: "remote.php/dav/files/admin/test1.jpg",
+              fdId: 1,
+              fdMime: null,
+              fdIsFavorite: false,
+              fdIsArchived: false,
+              fdDateTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
             ),
           ),
           sortProvider: const AlbumNullSortProvider(),
@@ -860,7 +896,12 @@ void main() {
             "type": "auto",
             "content": <String, dynamic>{
               "coverFile": <String, dynamic>{
-                "path": "remote.php/dav/files/admin/test1.jpg",
+                "fdPath": "remote.php/dav/files/admin/test1.jpg",
+                "fdId": 1,
+                "fdMime": null,
+                "fdIsArchived": false,
+                "fdIsFavorite": false,
+                "fdDateTime": "2020-01-02T03:04:05.000Z",
               },
             },
           },
@@ -878,7 +919,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumTimeSortProvider(
             isAscending: true,
           ),
@@ -913,7 +954,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumFilenameSortProvider(
             isAscending: true,
           ),
@@ -950,7 +991,7 @@ void main() {
           provider: AlbumStaticProvider(
             items: [],
           ),
-          coverProvider: AlbumAutoCoverProvider(),
+          coverProvider: const AlbumAutoCoverProvider(),
           sortProvider: const AlbumNullSortProvider(),
           albumFile: File(path: "remote.php/dav/files/admin/test1.jpg"),
         );
@@ -997,7 +1038,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV1()(json), <String, dynamic>{
+      expect(AlbumUpgraderV1().doJson(json), <String, dynamic>{
         "version": 1,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "items": [],
@@ -1025,7 +1066,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV2()(json), <String, dynamic>{
+      expect(AlbumUpgraderV2().doJson(json), <String, dynamic>{
         "version": 2,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "provider": <String, dynamic>{
@@ -1080,7 +1121,7 @@ void main() {
           "path": "remote.php/dav/files/admin/test1.json",
         },
       };
-      expect(AlbumUpgraderV3()(json), <String, dynamic>{
+      expect(AlbumUpgraderV3().doJson(json), <String, dynamic>{
         "version": 3,
         "lastUpdated": "2020-01-02T03:04:05.678901Z",
         "provider": <String, dynamic>{
@@ -1146,7 +1187,7 @@ void main() {
             "path": "remote.php/dav/files/admin/test1.json",
           },
         };
-        expect(AlbumUpgraderV4()(json), <String, dynamic>{
+        expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
           "version": 4,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1216,7 +1257,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1284,7 +1325,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1367,7 +1408,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1440,7 +1481,7 @@ void main() {
               "path": "remote.php/dav/files/admin/test1.json",
             },
           };
-          expect(AlbumUpgraderV4()(json), <String, dynamic>{
+          expect(AlbumUpgraderV4().doJson(json), <String, dynamic>{
             "version": 4,
             "lastUpdated": "2020-01-02T03:04:05.678901Z",
             "provider": <String, dynamic>{
@@ -1520,7 +1561,7 @@ void main() {
             "ownerId": "admin",
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1590,7 +1631,7 @@ void main() {
             "path": "remote.php/dav/files/admin/test1.json",
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1656,7 +1697,7 @@ void main() {
             },
           },
         };
-        expect(AlbumUpgraderV5(account)(json), <String, dynamic>{
+        expect(AlbumUpgraderV5(account).doJson(json), <String, dynamic>{
           "version": 5,
           "lastUpdated": "2020-01-02T03:04:05.678901Z",
           "provider": <String, dynamic>{
@@ -1724,7 +1765,7 @@ void main() {
           ownerId: "admin".toCi(),
         );
         expect(
-            AlbumUpgraderV5(account, albumFile: albumFile)(json),
+            AlbumUpgraderV5(account, albumFile: albumFile).doJson(json),
             <String, dynamic>{
               "version": 5,
               "lastUpdated": "2020-01-02T03:04:05.678901Z",
@@ -1756,6 +1797,38 @@ void main() {
                 },
               },
             });
+      });
+    });
+
+    group("AlbumUpgraderV8", () {
+      group("doJson", () {
+        test("non manual cover", _upgradeV8JsonNonManualCover);
+
+        group("manual cover", () {
+          test("now", _upgradeV8JsonManualNow);
+          test("exif time", _upgradeV8JsonManualExifTime);
+        });
+
+        group("auto cover", () {
+          test("null", _upgradeV8JsonAutoNull);
+          test("last modified", _upgradeV8JsonAutoLastModified);
+          test("no file id", _upgradeV8JsonAutoNoFileId);
+        });
+      });
+
+      group("doDb", () {
+        test("non manual cover", _upgradeV8DbNonManualCover);
+
+        group("manual cover", () {
+          test("now", _upgradeV8DbManualNow);
+          test("exif time", _upgradeV8DbManualExifTime);
+        });
+
+        group("auto cover", () {
+          test("null", _upgradeV8DbAutoNull);
+          test("last modified", _upgradeV8DbAutoLastModified);
+          test("no file id", _upgradeV8DbAutoNoFileId);
+        });
       });
     });
   });
@@ -1799,7 +1872,7 @@ void _fromJsonShares() {
         provider: AlbumStaticProvider(
           items: [],
         ),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         shares: [util.buildAlbumShare(userId: "admin")],
       ));
@@ -1812,7 +1885,7 @@ void _toRemoteJsonShares() {
     provider: AlbumStaticProvider(
       items: [],
     ),
-    coverProvider: AlbumAutoCoverProvider(),
+    coverProvider: const AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
     shares: [util.buildAlbumShare(userId: "admin")],
   );
@@ -1851,7 +1924,7 @@ void _toAppDbJsonShares() {
     provider: AlbumStaticProvider(
       items: [],
     ),
-    coverProvider: AlbumAutoCoverProvider(),
+    coverProvider: const AlbumAutoCoverProvider(),
     sortProvider: const AlbumNullSortProvider(),
     shares: [util.buildAlbumShare(userId: "admin")],
   );
@@ -1883,6 +1956,10 @@ void _toAppDbJsonShares() {
   });
 }
 
+String _stripJsonString(String str) {
+  return jsonEncode(jsonDecode(str));
+}
+
 class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   const _NullAlbumUpgraderFactory();
 
@@ -1900,4 +1977,6 @@ class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {
   buildV6() => null;
   @override
   buildV7() => null;
+  @override
+  AlbumUpgraderV8? buildV8() => null;
 }

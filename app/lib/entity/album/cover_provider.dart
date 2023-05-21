@@ -26,9 +26,6 @@ abstract class AlbumCoverProvider with EquatableMixin {
       case AlbumManualCoverProvider._type:
         return AlbumManualCoverProvider.fromJson(
             content.cast<String, dynamic>());
-      case AlbumMemoryCoverProvider._type:
-        return AlbumMemoryCoverProvider.fromJson(
-            content.cast<String, dynamic>());
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -65,7 +62,7 @@ abstract class AlbumCoverProvider with EquatableMixin {
 /// Cover selected automatically by us
 @toString
 class AlbumAutoCoverProvider extends AlbumCoverProvider {
-  AlbumAutoCoverProvider({
+  const AlbumAutoCoverProvider({
     this.coverFile,
   });
 
@@ -73,48 +70,48 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
     return AlbumAutoCoverProvider(
       coverFile: json["coverFile"] == null
           ? null
-          : File.fromJson(json["coverFile"].cast<String, dynamic>()),
+          : FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
     );
+  }
+
+  static FileDescriptor? getCoverByItems(List<AlbumItem> items) {
+    return items
+        .whereType<AlbumFileItem>()
+        .map((e) => e.file)
+        .where((element) =>
+            file_util.isSupportedFormat(element) &&
+            (element.hasPreview ?? false) &&
+            element.fileId != null)
+        .sorted(compareFileDateTimeDescending)
+        .firstOrNull;
   }
 
   @override
   String toString() => _$toString();
 
   @override
-  getCover(Album album) {
-    if (coverFile == null) {
-      try {
-        // use the latest file as cover
-        return AlbumStaticProvider.of(album)
-            .items
-            .whereType<AlbumFileItem>()
-            .map((e) => e.file)
-            .where((element) =>
-                file_util.isSupportedFormat(element) &&
-                (element.hasPreview ?? false))
-            .sorted(compareFileDateTimeDescending)
-            .first;
-      } catch (_) {
-        return null;
-      }
+  FileDescriptor? getCover(Album album) {
+    if (coverFile == null && album.provider is AlbumStaticProvider) {
+      // use the latest file as cover
+      return getCoverByItems(AlbumStaticProvider.of(album).items);
     } else {
       return coverFile;
     }
   }
 
   @override
-  get props => [
+  List<Object?> get props => [
         coverFile,
       ];
 
   @override
-  _toContentJson() {
+  JsonObj _toContentJson() {
     return {
-      if (coverFile != null) "coverFile": coverFile!.toJson(),
+      if (coverFile != null) "coverFile": coverFile!.toFdJson(),
     };
   }
 
-  final File? coverFile;
+  final FileDescriptor? coverFile;
 
   static const _type = "auto";
 }
@@ -122,48 +119,12 @@ class AlbumAutoCoverProvider extends AlbumCoverProvider {
 /// Cover picked by user
 @toString
 class AlbumManualCoverProvider extends AlbumCoverProvider {
-  AlbumManualCoverProvider({
+  const AlbumManualCoverProvider({
     required this.coverFile,
   });
 
   factory AlbumManualCoverProvider.fromJson(JsonObj json) {
     return AlbumManualCoverProvider(
-      coverFile: File.fromJson(json["coverFile"].cast<String, dynamic>()),
-    );
-  }
-
-  @override
-  String toString() => _$toString();
-
-  @override
-  getCover(Album album) => coverFile;
-
-  @override
-  get props => [
-        coverFile,
-      ];
-
-  @override
-  _toContentJson() {
-    return {
-      "coverFile": coverFile.toJson(),
-    };
-  }
-
-  final File coverFile;
-
-  static const _type = "manual";
-}
-
-/// Cover selected when building a Memory album
-@toString
-class AlbumMemoryCoverProvider extends AlbumCoverProvider {
-  AlbumMemoryCoverProvider({
-    required this.coverFile,
-  });
-
-  factory AlbumMemoryCoverProvider.fromJson(JsonObj json) {
-    return AlbumMemoryCoverProvider(
       coverFile:
           FileDescriptor.fromJson(json["coverFile"].cast<String, dynamic>()),
     );
@@ -173,19 +134,21 @@ class AlbumMemoryCoverProvider extends AlbumCoverProvider {
   String toString() => _$toString();
 
   @override
-  getCover(Album album) => coverFile;
+  FileDescriptor? getCover(Album album) => coverFile;
 
   @override
-  get props => [
+  List<Object?> get props => [
         coverFile,
       ];
 
   @override
-  _toContentJson() => {
-        "coverFile": coverFile.toJson(),
-      };
+  JsonObj _toContentJson() {
+    return {
+      "coverFile": coverFile.toFdJson(),
+    };
+  }
 
   final FileDescriptor coverFile;
 
-  static const _type = "memory";
+  static const _type = "manual";
 }

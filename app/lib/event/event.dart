@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/pref.dart';
@@ -78,7 +79,7 @@ class FileRemovedEvent {
   FileRemovedEvent(this.account, this.file);
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
 }
 
 class FileTrashbinRestoredEvent {

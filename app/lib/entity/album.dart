@@ -46,49 +46,56 @@ class Album with EquatableMixin {
     final jsonVersion = json["version"];
     JsonObj? result = json;
     if (jsonVersion < 2) {
-      result = upgraderFactory?.buildV1()?.call(result);
+      result = upgraderFactory?.buildV1()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 3) {
-      result = upgraderFactory?.buildV2()?.call(result);
+      result = upgraderFactory?.buildV2()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 4) {
-      result = upgraderFactory?.buildV3()?.call(result);
+      result = upgraderFactory?.buildV3()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 5) {
-      result = upgraderFactory?.buildV4()?.call(result);
+      result = upgraderFactory?.buildV4()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 6) {
-      result = upgraderFactory?.buildV5()?.call(result);
+      result = upgraderFactory?.buildV5()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 7) {
-      result = upgraderFactory?.buildV6()?.call(result);
+      result = upgraderFactory?.buildV6()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
       }
     }
     if (jsonVersion < 8) {
-      result = upgraderFactory?.buildV7()?.call(result);
+      result = upgraderFactory?.buildV7()?.doJson(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
+    if (jsonVersion < 9) {
+      result = upgraderFactory?.buildV8()?.doJson(result);
       if (result == null) {
         _log.info("[fromJson] Version $jsonVersion not compatible");
         return null;
@@ -217,7 +224,7 @@ class Album with EquatableMixin {
   final int savedVersion;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 8;
+  static const version = 9;
 
   static final _log = _$AlbumNpLog.log;
 }

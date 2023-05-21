@@ -49,4 +49,8 @@ extension ListExtension<T> on List<T> {
     }
     return this;
   }
+
+  Future<List<U>> asyncMap<U>(Future<U> Function(T element) fn) {
+    return Stream.fromIterable(this).asyncMap(fn).toList();
+  }
 }

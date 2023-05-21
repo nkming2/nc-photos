@@ -1,6 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:np_common/type.dart';
 import 'package:path/path.dart' as path_lib;
+import 'package:to_string/to_string.dart';
+
+part 'file_descriptor.g.dart';
 
 int compareFileDescriptorDateTimeDescending(
     FileDescriptor x, FileDescriptor y) {
@@ -13,6 +17,7 @@ int compareFileDescriptorDateTimeDescending(
   }
 }
 
+@toString
 class FileDescriptor with EquatableMixin {
   const FileDescriptor({
     required this.fdPath,
@@ -29,17 +34,22 @@ class FileDescriptor with EquatableMixin {
         fdMime: json["fdMime"],
         fdIsArchived: json["fdIsArchived"],
         fdIsFavorite: json["fdIsFavorite"],
-        fdDateTime: json["fdDateTime"],
+        fdDateTime: DateTime.parse(json["fdDateTime"]),
       );
 
-  JsonObj toJson() => {
-        "fdPath": fdPath,
-        "fdId": fdId,
-        "fdMime": fdMime,
-        "fdIsArchived": fdIsArchived,
-        "fdIsFavorite": fdIsFavorite,
-        "fdDateTime": fdDateTime,
+  static JsonObj toJson(FileDescriptor that) => {
+        "fdPath": that.fdPath,
+        "fdId": that.fdId,
+        "fdMime": that.fdMime,
+        "fdIsArchived": that.fdIsArchived,
+        "fdIsFavorite": that.fdIsFavorite,
+        "fdDateTime": that.fdDateTime.toUtc().toIso8601String(),
       };
+
+  @override
+  String toString() => _$toString();
+
+  JsonObj toFdJson() => toJson(this);
 
   @override
   get props => [
@@ -107,4 +117,14 @@ extension FileDescriptorExtension on FileDescriptor {
 
   /// hashCode to be used with [compareServerIdentity]
   int get identityHashCode => fdId.hashCode;
+
+  File toFile() {
+    return File(
+      path: fdPath,
+      fileId: fdId,
+      contentType: fdMime,
+      isArchived: fdIsArchived,
+      isFavorite: fdIsFavorite,
+    );
+  }
 }

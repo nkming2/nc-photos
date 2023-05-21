@@ -25,7 +25,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
-import 'package:nc_photos/widget/handler/add_selection_to_album_handler.dart';
+import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_search_suggestion.dart';
@@ -241,7 +241,7 @@ class _HomeSearchState extends State<HomeSearch>
         ),
         IconButton(
           icon: const Icon(Icons.add),
-          tooltip: L10n.global().addToAlbumTooltip,
+          tooltip: L10n.global().addItemToCollectionTooltip,
           onPressed: () => _onSelectionAddToAlbumPressed(context),
         ),
         PopupMenuButton<_SelectionMenuOption>(
@@ -455,10 +455,8 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   Future<void> _onSelectionAddToAlbumPressed(BuildContext context) {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return AddSelectionToAlbumHandler(c)(
+    return const AddSelectionToCollectionHandler()(
       context: context,
-      account: widget.account,
       selection: selectedListItems
           .whereType<PhotoListFileItem>()
           .map((e) => e.file)

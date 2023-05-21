@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
@@ -147,7 +148,7 @@ class ListLocationBloc
   Future<LocationGroupResult> _query(ListLocationBlocQuery ev) =>
       ListLocationGroup(_c.withLocalRepo())(ev.account);
 
-  bool _isFileOfInterest(File file) {
+  bool _isFileOfInterest(FileDescriptor file) {
     if (!file_util.isSupportedFormat(file)) {
       return false;
     }

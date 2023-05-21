@@ -304,6 +304,7 @@ class ListSharingBloc extends Bloc<ListSharingBlocEvent, ListSharingBlocState> {
             s,
             File(
               path: webdavPath,
+              fileId: s.itemSource,
               isCollection: true,
             ),
           );

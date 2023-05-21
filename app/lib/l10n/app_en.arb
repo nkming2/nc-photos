@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "All items added to {album} successfully",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Failed adding items to album",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Add to album",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Added to {album} successfully",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Failed adding to album",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Deleting 1 item} other{Deleting {count} items}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,19 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Remove selected from album",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 item removed from album} other{{count} items removed from album}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Failed removing items from album",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -187,10 +144,6 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"createAlbumFailureNotification": "Failed creating album",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
-	},
 	"albumSize": "{count, plural, =0{Empty} =1{1 item} other{{count} items}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
@@ -202,7 +155,7 @@
 	},
 	"albumArchiveLabel": "Archive",
 	"@albumArchiveLabel": {
-		"description": "Archive"
+		"description": "A collection containing all archived photos"
 	},
 	"connectingToServer": "Connecting to\n{server}",
 	"@connectingToServer": {
@@ -225,9 +178,9 @@
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
 	},
-	"albumNameInputInvalidEmpty": "Please enter the album name",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
+	"nameInputInvalidEmpty": "Name is required",
+	"@nameInputInvalidEmpty": {
+		"description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
 	},
 	"skipButtonLabel": "SKIP",
 	"@skipButtonLabel": {
@@ -469,6 +422,10 @@
 	"@settingsVersionTitle": {
 		"description": "Title of the version data item"
 	},
+	"settingsServerVersionTitle": "Server",
+	"@settingsServerVersionTitle": {
+		"description": "This item will show the server software version, e.g., Nextcloud 25"
+	},
 	"settingsSourceCodeTitle": "Source code",
 	"@settingsSourceCodeTitle": {
 		"description": "Title of the source code item"
@@ -638,10 +595,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Edit album",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Done",
 	"editTooltip": "Edit",
 	"editAccountConflictFailureNotification": "An account already exists with the same settings",
@@ -706,7 +659,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Search",
-	"albumSearchTextFieldHint": "Search albums",
 	"clearTooltip": "Clear",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -777,18 +729,6 @@
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
 	},
-	"setAlbumCoverProcessingNotification": "Setting photo as album cover",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Set album cover successfully",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Failed setting album cover",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
-	},
 	"metadataTaskProcessingNotification": "Processing image metadata in background",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
@@ -807,7 +747,7 @@
 	},
 	"changelogTitle": "Changelog",
 	"@changelogTitle": {
-		"description": "Title of the changelog dialog"
+		"description": "Title of the changelog page"
 	},
 	"serverCertErrorDialogTitle": "Server certificate cannot be trusted",
 	"@serverCertErrorDialogTitle": {
@@ -861,18 +801,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "Unsetting cover",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Unset cover successfully",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
-	"unsetAlbumCoverFailureNotification": "Failed unsetting cover",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Mute",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -884,15 +812,6 @@
 	"collectionPeopleLabel": "People",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 photo} other{{count} photos}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Slideshow",
 	"@slideshowTooltip": {
@@ -1039,53 +958,17 @@
 	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Add to collection",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Add to Collections",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
-	},
-	"addToCollectionProcessingNotification": "Adding {album} to your collection",
-	"@addToCollectionProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionSuccessNotification": "Added {album} to your collection successfully",
-	"@addToCollectionSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
 	},
 	"shareAlbumDialogTitle": "Share with user",
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
-	"shareAlbumSuccessNotification": "Album shared with {user}",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
 	"shareAlbumSuccessWithErrorNotification": "Album shared with {user}, but failed to share some files",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "Album unshared with {user}",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"
@@ -1107,10 +990,6 @@
 	},
 	"fixTooltip": "Fix",
 	"@fixTooltip": {
-		"description": "Fix an issue"
-	},
-	"fixButtonLabel": "FIX",
-	"@fixButtonLabel": {
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Fix all",
@@ -1194,18 +1073,6 @@
 	"createCollectionDialogFolderDescription": "Show photos inside a folder",
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
-	},
-	"convertAlbumTooltip": "Convert to album",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "This conversion is nonreversible",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Converted collection to album successfully",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"collectionFavoritesLabel": "Favorites",
 	"@collectionFavoritesLabel": {
@@ -1509,6 +1376,34 @@
 	"@loopTooltip": {
 		"description": "Enable or disable loop in the video player"
 	},
+	"createCollectionFailureNotification": "Failed creating collection",
+	"@createCollectionFailureNotification": {
+		"description": "Inform user that a collection cannot be created"
+	},
+	"addItemToCollectionTooltip": "Add to collection",
+	"@addItemToCollectionTooltip": {
+		"description": "Add one or more items to a collection"
+	},
+	"addItemToCollectionFailureNotification": "Failed adding to collection",
+	"@addItemToCollectionFailureNotification": {
+		"description": "Inform user that the item cannot be added to a collection"
+	},
+	"setCollectionCoverFailureNotification": "Failed setting collection cover",
+	"@setCollectionCoverFailureNotification": {
+		"description": "Cannot set the opened item as the collection cover"
+	},
+	"exportCollectionTooltip": "Export",
+	"@exportCollectionTooltip": {
+		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+	},
+	"exportCollectionDialogTitle": "Export collection",
+	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
+	"@createCollectionDialogNextcloudAlbumLabel": {
+		"description": "Server-side albums that are available in Nextcloud 25+"
+	},
+	"createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
+	"removeCollectionsFailedNotification": "Failed to remove some collections",
+
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

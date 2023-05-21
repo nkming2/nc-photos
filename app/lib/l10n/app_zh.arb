@@ -33,36 +33,6 @@
 			}
 		}
 	},
-	"addSelectedToAlbumSuccessNotification": "成功添加已选项目到 {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "未能添加项目到相册",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "添加到相册",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "成功添加到 {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "未能添加到相册",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
-	},
 	"deleteSelectedProcessingNotification": "{count, plural, other{正在删除 {count} 个项目}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
@@ -153,19 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "从相册中移除已选项目",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, other{成功从相册中移除 {count} 个项目}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "未能从相册中移除项目",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -186,10 +143,6 @@
 	"createAlbumTooltip": "新建相册",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
-	},
-	"createAlbumFailureNotification": "未能新建相册",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
 	},
 	"albumSize": "{count, plural, other{{count} 项内容}}",
 	"@albumSize": {
@@ -216,10 +169,6 @@
 	"nameInputHint": "名称",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "请输入相册名称",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "跳过",
 	"@skipButtonLabel": {
@@ -318,10 +267,6 @@
 		"description": "Memory albums contain photos taken in a specific time range in the past"
 	},
 	"settingsAccountTitle": "帐号",
-	"settingsAccountPageTitle": "帐号设置",
-	"@settingsAccountPageTitle": {
-		"description": "Dedicated page for account settings"
-	},
 	"settingsIncludedFoldersTitle": "已选取的文件夹",
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
@@ -348,10 +293,6 @@
 	},
 	"settingsViewerTitle": "查看器",
 	"settingsViewerDescription": "设置照片和视频查看器",
-	"settingsViewerPageTitle": "查看器设置",
-	"@settingsViewerPageTitle": {
-		"description": "Dedicated page for viewer settings"
-	},
 	"settingsScreenBrightnessTitle": "屏幕亮度",
 	"settingsScreenBrightnessDescription": "覆盖系统亮度设置",
 	"settingsForceRotationTitle": "无视屏幕旋转锁定",
@@ -359,18 +300,10 @@
 	"settingsMapProviderTitle": "地图供应商",
 	"settingsAlbumTitle": "相册",
 	"settingsAlbumDescription": "设置相册",
-	"settingsAlbumPageTitle": "相册设置",
-	"@settingsAlbumPageTitle": {
-		"description": "Dedicated page for album settings"
-	},
 	"settingsShowDateInAlbumTitle": "显示日期分类",
 	"settingsShowDateInAlbumDescription": "只应用于以日期排序的相册",
 	"settingsThemeTitle": "主题",
 	"settingsThemeDescription": "设置 App 的外观",
-	"settingsThemePageTitle": "主题设置",
-	"@settingsThemePageTitle": {
-		"description": "Dedicated page for theme settings"
-	},
 	"settingsFollowSystemThemeTitle": "跟随系统主题",
 	"@settingsFollowSystemThemeTitle": {
 		"description": "Respect the system dark mode settings introduced on Android 10"
@@ -389,7 +322,6 @@
 	},
 	"settingsExperimentalTitle": "实验",
 	"settingsExperimentalDescription": "可能不稳定的实验性功能",
-	"settingsExperimentalPageTitle": "实验设置",
 	"settingsAboutSectionTitle": "关于",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -567,10 +499,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "修改相册",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "完成",
 	"editTooltip": "修改",
 	"editAccountConflictFailureNotification": "已存在相同设置的帐号",
@@ -627,7 +555,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "搜寻",
-	"albumSearchTextFieldHint": "搜寻相册",
 	"clearTooltip": "清除",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -697,18 +624,6 @@
 	"albumSharedLabel": "已分享",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "正在设置相册封面",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "成功设置相册封面",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "未能设置相册封面",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "正在背景读取照片的中继数据",
 	"@metadataTaskProcessingNotification": {
@@ -782,18 +697,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "正在取消设为相册封面",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "成功取消设为相册封面",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
-	"unsetAlbumCoverFailureNotification": "未能取消设为相册封面",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "静音",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -805,15 +708,6 @@
 	"collectionPeopleLabel": "人物",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, other{{count} 张照片}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "幻灯片",
 	"@slideshowTooltip": {
@@ -843,11 +737,6 @@
 	"@shareMethodDialogTitle": {
 		"description": "Let the user pick how they want to share"
 	},
-	"shareMethodFileTitle": "文件",
-	"@shareMethodFileTitle": {
-		"description": "Share the actual file"
-	},
-	"shareMethodFileDescription": "下载文件并分享到其他 App",
 	"shareMethodPublicLinkTitle": "公开链接",
 	"@shareMethodPublicLinkTitle": {
 		"description": "Create a share link on server and share it"
@@ -944,60 +833,24 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "删除文件夹?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "此文件夹本是 App 为了分享多文件而建立的，而此文件夹现在已没有任何分享，你希望删除此文件夹吗?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "添加到收藏库",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "添加到收藏库",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "正在添加 {album} 到收藏库",
-	"@addToCollectionProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionSuccessNotification": "成功添加 {album} 到收藏库",
-	"@addToCollectionSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
 	"shareAlbumDialogTitle": "分享给用户",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
-	},
-	"shareAlbumSuccessNotification": "成功分享相册给 {user}",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
 	},
 	"shareAlbumSuccessWithErrorNotification": "成功分享相册给 {user}，但部分照片未能分享",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "成功取消分享相册给 {user}",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"
@@ -1019,10 +872,6 @@
 	},
 	"fixTooltip": "修复",
 	"@fixTooltip": {
-		"description": "Fix an issue"
-	},
-	"fixButtonLabel": "修复",
-	"@fixButtonLabel":{
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "修复全部",
@@ -1107,18 +956,6 @@
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
 	},
-	"convertAlbumTooltip": "转换为相册",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "此转换为不可逆操作",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "成功转换照片集至相册",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
-	},
 	"collectionFavoritesLabel": "收藏",
 	"@collectionFavoritesLabel": {
 		"description": "Browse photos added to favorites"
@@ -1171,7 +1008,6 @@
 	"@metadataTaskPauseLowBatteryNotification": {
 		"description": "Shown when the app has paused reading image metadata due to low battery"
 	},
-
 	"errorUnauthenticated": "未授权的存取，若问题持续请重新登录",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"

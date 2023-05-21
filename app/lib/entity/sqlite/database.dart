@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/entity/file.dart' as app;
-import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_descriptor.dart' as app;
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart';
 import 'package:nc_photos/entity/sqlite/isolate_util.dart';
@@ -19,6 +19,7 @@ import 'package:np_codegen/np_codegen.dart';
 
 part 'database.g.dart';
 part 'database_extension.dart';
+part 'database/nc_album_extension.dart';
 
 // remember to also update the truncate method after adding a new table
 @npLog
@@ -36,6 +37,8 @@ part 'database_extension.dart';
     AlbumShares,
     Tags,
     Persons,
+    NcAlbums,
+    NcAlbumItems,
   ],
 )
 class SqliteDb extends _$SqliteDb {
@@ -46,7 +49,7 @@ class SqliteDb extends _$SqliteDb {
   SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
 
   @override
-  get schemaVersion => 4;
+  get schemaVersion => 5;
 
   @override
   get migration => MigrationStrategy(
@@ -94,6 +97,10 @@ class SqliteDb extends _$SqliteDb {
               }
               if (from < 4) {
                 await m.addColumn(albums, albums.fileEtag);
+              }
+              if (from < 5) {
+                await m.createTable(ncAlbums);
+                await m.createTable(ncAlbumItems);
               }
             });
           } catch (e, stackTrace) {

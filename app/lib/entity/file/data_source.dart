@@ -90,10 +90,10 @@ class FileWebdavDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) async {
-    _log.info("[remove] ${f.path}");
+  remove(Account account, FileDescriptor f) async {
+    _log.info("[remove] ${f.fdPath}");
     final response =
-        await ApiUtil.fromAccount(account).files().delete(path: f.path);
+        await ApiUtil.fromAccount(account).files().delete(path: f.fdPath);
     if (!response.isGood) {
       _log.severe("[remove] Failed requesting server: $response");
       throw ApiException(
@@ -435,8 +435,8 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) {
-    _log.info("[remove] ${f.path}");
+  remove(Account account, FileDescriptor f) {
+    _log.info("[remove] ${f.fdPath}");
     return FileSqliteCacheRemover(_c)(account, f);
   }
 
@@ -549,13 +549,20 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  move(
+  Future<void> move(
     Account account,
     File f,
     String destination, {
     bool? shouldOverwrite,
   }) async {
-    // do nothing
+    _log.info("[move] ${f.path} to $destination");
+    await _c.sqliteDb.use((db) async {
+      await db.moveFileByFileId(
+        sql.ByAccount.app(account),
+        f.fileId!,
+        File(path: destination).strippedPathWithEmpty,
+      );
+    });
   }
 
   @override
@@ -719,7 +726,7 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, File f) async {
+  remove(Account account, FileDescriptor f) async {
     await _remoteSrc.remove(account, f);
     try {
       await _sqliteDbSrc.remove(account, f);
@@ -786,7 +793,7 @@ class FileCachedDataSource implements FileDataSource {
   }
 
   @override
-  move(
+  Future<void> move(
     Account account,
     File f,
     String destination, {
@@ -794,6 +801,13 @@ class FileCachedDataSource implements FileDataSource {
   }) async {
     await _remoteSrc.move(account, f, destination,
         shouldOverwrite: shouldOverwrite);
+    try {
+      await _sqliteDbSrc.move(account, f, destination);
+    } catch (e, stackTrace) {
+      // ignore cache failure
+      _log.warning(
+          "Failed while move: ${logFilename(f.strippedPath)}", e, stackTrace);
+    }
   }
 
   @override

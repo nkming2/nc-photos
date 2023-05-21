@@ -3,11 +3,10 @@ import 'dart:math' as math;
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
 import 'package:nc_photos/date_time_extension.dart';
-import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/album/cover_provider.dart';
-import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -34,12 +33,13 @@ class DateGroupHelper {
   DateTime? _currentDate;
 }
 
-/// Build memory album from files
+/// Build memory collection from files
 ///
 /// Feb 29 is treated as Mar 1 on non leap years
 @npLog
-class MemoryAlbumHelper {
-  MemoryAlbumHelper({
+class MemoryCollectionHelper {
+  MemoryCollectionHelper(
+    this.account, {
     DateTime? today,
     required int dayRange,
   })  : today = (today?.toLocal() ?? clock.now()).toMidnight(),
@@ -65,16 +65,18 @@ class MemoryAlbumHelper {
   ///
   /// [nameBuilder] is a function that return the name of the album for a
   /// particular year
-  List<Album> build(String Function(int year) nameBuilder) {
+  List<Collection> build(String Function(int year) nameBuilder) {
     return _data.entries
         .sorted((a, b) => b.key.compareTo(a.key))
-        .map((e) => Album(
+        .map((e) => Collection(
               name: nameBuilder(e.key),
-              provider: AlbumMemoryProvider(
-                  year: e.key, month: today.month, day: today.day),
-              coverProvider:
-                  AlbumMemoryCoverProvider(coverFile: e.value.coverFile),
-              sortProvider: const AlbumTimeSortProvider(isAscending: false),
+              contentProvider: CollectionMemoryProvider(
+                account: account,
+                year: e.key,
+                month: today.month,
+                day: today.day,
+                cover: e.value.coverFile,
+              ),
             ))
         .toList();
   }
@@ -83,9 +85,9 @@ class MemoryAlbumHelper {
     final item = _data[year];
     final date = today.copyWith(year: year);
     if (item == null) {
-      _data[year] = _MemoryAlbumHelperItem(date, f);
+      _data[year] = _MemoryCollectionHelperItem(date, f);
     } else {
-      final coverDiff = _MemoryAlbumHelperItem.getCoverDiff(date, f);
+      final coverDiff = _MemoryCollectionHelperItem.getCoverDiff(date, f);
       if (coverDiff < item.coverDiff) {
         item.coverFile = f;
         item.coverDiff = coverDiff;
@@ -93,9 +95,10 @@ class MemoryAlbumHelper {
     }
   }
 
+  final Account account;
   final DateTime today;
   final int dayRange;
-  final _data = <int, _MemoryAlbumHelperItem>{};
+  final _data = <int, _MemoryCollectionHelperItem>{};
 }
 
 int getThumbSize(int zoomLevel) {
@@ -115,8 +118,8 @@ int getThumbSize(int zoomLevel) {
   }
 }
 
-class _MemoryAlbumHelperItem {
-  _MemoryAlbumHelperItem(this.date, this.coverFile)
+class _MemoryCollectionHelperItem {
+  _MemoryCollectionHelperItem(this.date, this.coverFile)
       : coverDiff = getCoverDiff(date, coverFile);
 
   static Duration getCoverDiff(DateTime date, FileDescriptor f) =>

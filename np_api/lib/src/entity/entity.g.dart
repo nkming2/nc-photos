@@ -27,6 +27,27 @@ extension _$FileToString on File {
   }
 }
 
+extension _$NcAlbumToString on NcAlbum {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NcAlbum {href: $href, lastPhoto: $lastPhoto, nbItems: $nbItems, location: $location, dateRange: $dateRange, collaborators: $collaborators}";
+  }
+}
+
+extension _$NcAlbumCollaboratorToString on NcAlbumCollaborator {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NcAlbumCollaborator {id: $id, label: $label, type: $type}";
+  }
+}
+
+extension _$NcAlbumItemToString on NcAlbumItem {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NcAlbumItem {href: $href, ${fileId == null ? "" : "fileId: $fileId, "}${contentLength == null ? "" : "contentLength: $contentLength, "}${contentType == null ? "" : "contentType: $contentType, "}${etag == null ? "" : "etag: $etag, "}${lastModified == null ? "" : "lastModified: $lastModified, "}${hasPreview == null ? "" : "hasPreview: $hasPreview, "}${favorite == null ? "" : "favorite: $favorite, "}${fileMetadataSize == null ? "" : "fileMetadataSize: $fileMetadataSize"}}";
+  }
+}
+
 extension _$PersonToString on Person {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
@@ -45,6 +66,13 @@ extension _$ShareeToString on Sharee {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "Sharee {type: $type, label: $label, shareType: $shareType, shareWith: $shareWith, shareWithDisplayNameUnique: $shareWithDisplayNameUnique}";
+  }
+}
+
+extension _$StatusToString on Status {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "Status {version: $version, versionString: $versionString}";
   }
 }
 

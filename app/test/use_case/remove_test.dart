@@ -119,7 +119,7 @@ Future<void> _removeAlbumFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(items: []),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -216,7 +216,7 @@ Future<void> _removeSharedAlbumFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(items: []),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
         shares: [
@@ -286,7 +286,7 @@ Future<void> _removeSharedAlbumSharedFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(items: []),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
         shares: [
@@ -351,7 +351,7 @@ Future<void> _removeSharedAlbumResyncedFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(items: []),
-        coverProvider: AlbumAutoCoverProvider(),
+        coverProvider: const AlbumAutoCoverProvider(),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
         shares: [

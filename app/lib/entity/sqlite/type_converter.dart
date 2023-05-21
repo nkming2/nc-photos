@@ -8,12 +8,15 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/nc_album.dart';
+import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
+import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
 
 extension SqlTagListExtension on List<sql.Tag> {
@@ -107,6 +110,19 @@ class SqliteAlbumConverter {
             ))
         .toList();
     return sql.CompleteAlbumCompanion(dbAlbum, dbAlbumShares ?? []);
+  }
+}
+
+class SqliteFileDescriptorConverter {
+  static FileDescriptor fromSql(String userId, sql.FileDescriptor f) {
+    return FileDescriptor(
+      fdPath: "remote.php/dav/files/$userId/${f.relativePath}",
+      fdId: f.fileId,
+      fdMime: f.contentType,
+      fdIsArchived: f.isArchived ?? false,
+      fdIsFavorite: f.isFavorite ?? false,
+      fdDateTime: f.bestDateTime,
+    );
   }
 }
 
@@ -236,6 +252,74 @@ class SqlitePersonConverter {
         name: Value(person.name),
         thumbFaceId: Value(person.thumbFaceId),
         count: Value(person.count),
+      );
+}
+
+class SqliteNcAlbumConverter {
+  static NcAlbum fromSql(String userId, sql.NcAlbum ncAlbum) {
+    final json = ncAlbum.collaborators
+        .run((obj) => (jsonDecode(obj) as List).cast<Map>());
+    return NcAlbum(
+      path: "${api.ApiPhotos.path}/$userId/albums/${ncAlbum.relativePath}",
+      lastPhoto: ncAlbum.lastPhoto,
+      nbItems: ncAlbum.nbItems,
+      location: ncAlbum.location,
+      dateStart: ncAlbum.dateStart,
+      dateEnd: ncAlbum.dateEnd,
+      collaborators: json
+          .map((e) => NcAlbumCollaborator.fromJson(e.cast<String, dynamic>()))
+          .toList(),
+    );
+  }
+
+  static sql.NcAlbumsCompanion toSql(sql.Account? dbAccount, NcAlbum ncAlbum) =>
+      sql.NcAlbumsCompanion(
+        account:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
+        relativePath: Value(ncAlbum.strippedPath),
+        lastPhoto: Value(ncAlbum.lastPhoto),
+        nbItems: Value(ncAlbum.nbItems),
+        location: Value(ncAlbum.location),
+        dateStart: Value(ncAlbum.dateStart),
+        dateEnd: Value(ncAlbum.dateEnd),
+        collaborators: Value(
+            jsonEncode(ncAlbum.collaborators.map((c) => c.toJson()).toList())),
+      );
+}
+
+class SqliteNcAlbumItemConverter {
+  static NcAlbumItem fromSql(
+          String userId, String albumRelativePath, sql.NcAlbumItem item) =>
+      NcAlbumItem(
+        path:
+            "${api.ApiPhotos.path}/$userId/albums/$albumRelativePath/${item.relativePath}",
+        fileId: item.fileId,
+        contentLength: item.contentLength,
+        contentType: item.contentType,
+        etag: item.etag,
+        lastModified: item.lastModified,
+        hasPreview: item.hasPreview,
+        isFavorite: item.isFavorite,
+        fileMetadataWidth: item.fileMetadataWidth,
+        fileMetadataHeight: item.fileMetadataHeight,
+      );
+
+  static sql.NcAlbumItemsCompanion toSql(
+    sql.NcAlbum parent,
+    NcAlbumItem item,
+  ) =>
+      sql.NcAlbumItemsCompanion(
+        parent: Value(parent.rowId),
+        relativePath: Value(item.strippedPath),
+        fileId: Value(item.fileId),
+        contentLength: Value(item.contentLength),
+        contentType: Value(item.contentType),
+        etag: Value(item.etag),
+        lastModified: Value(item.lastModified),
+        hasPreview: Value(item.hasPreview),
+        isFavorite: Value(item.isFavorite),
+        fileMetadataWidth: Value(item.fileMetadataWidth),
+        fileMetadataHeight: Value(item.fileMetadataHeight),
       );
 }
 

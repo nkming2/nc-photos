@@ -34,8 +34,8 @@ class UpdateAutoAlbumCover {
 
   Album _updateWithSortedItems(Album album, List<AlbumItem> sortedItems) {
     if (sortedItems.isEmpty) {
-      if (album.coverProvider != AlbumAutoCoverProvider()) {
-        return album.copyWith(coverProvider: AlbumAutoCoverProvider());
+      if (album.coverProvider != const AlbumAutoCoverProvider()) {
+        return album.copyWith(coverProvider: const AlbumAutoCoverProvider());
       } else {
         return album;
       }

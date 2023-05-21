@@ -1,4 +1,4 @@
- {
+{
 	"appTitle": "Photos",
 	"translator": "pHamala",
 	"@translator": {
@@ -32,36 +32,6 @@
 				"example": "1"
 			}
 		}
-	},
-	"addSelectedToAlbumSuccessNotification": "Kaikki kohteet lisätty albumiin {album}",
-	"@addSelectedToAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addSelectedToAlbumFailureNotification": "Kohteiden lisääminen albumiin epäonnistui",
-	"@addSelectedToAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be added to an album"
-	},
-	"addToAlbumTooltip": "Lisää albumiin",
-	"@addToAlbumTooltip": {
-		"description": "Add selected items to an album"
-	},
-	"addToAlbumSuccessNotification": "Lisätty albumiini {album}",
-	"@addToAlbumSuccessNotification": {
-		"description": "Inform user that the item is added to an album successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToAlbumFailureNotification": "Albumiin lisääminen epäonnistui",
-	"@addToAlbumFailureNotification": {
-		"description": "Inform user that the item cannot be added to an album"
 	},
 	"deleteSelectedProcessingNotification": "{count, plural, =1{Poistetaan 1 kohde} other{Poistetaan {count} kohdetta}}",
 	"@deleteSelectedProcessingNotification": {
@@ -153,19 +123,6 @@
 	"@deleteFailureNotification": {
 		"description": "Inform user that the item cannot be deleted"
 	},
-	"removeSelectedFromAlbumTooltip": "Poista valitut albumista",
-	"@removeSelectedFromAlbumTooltip": {
-		"description": "Tooltip of the button that remove selected items from an album"
-	},
-	"removeSelectedFromAlbumSuccessNotification": "{count, plural, =1{1 kohde poistettu albumista} other{{count} kohdetta poistettu albumista}}",
-	"@removeSelectedFromAlbumSuccessNotification": {
-		"description": "Inform user that the selected items are removed from an album successfully",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"removeSelectedFromAlbumFailureNotification": "Kohteiden poistaminen albumista epäonnistui",
 	"@removeSelectedFromAlbumFailureNotification": {
 		"description": "Inform user that the selected items cannot be removed from an album"
@@ -186,10 +143,6 @@
 	"createAlbumTooltip": "Uusi albumi",
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
-	},
-	"createAlbumFailureNotification": "Albumin luonti epäonnistui",
-	"@createAlbumFailureNotification": {
-		"description": "Inform user that an album cannot be created"
 	},
 	"albumSize": "{count, plural, =0{Empty} =1{1 kohde} other{{count} kohdetta}}",
 	"@albumSize": {
@@ -224,10 +177,6 @@
 	"nameInputHint": "Nimi",
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
-	},
-	"albumNameInputInvalidEmpty": "Lisää albumin nimi",
-	"@albumNameInputInvalidEmpty": {
-		"description": "Inform user that the album name input field cannot be empty"
 	},
 	"skipButtonLabel": "OHITA",
 	"@skipButtonLabel": {
@@ -638,10 +587,6 @@
 	"@albumImporterProgressText": {
 		"description": "Message shown while importing"
 	},
-	"editAlbumMenuLabel": "Muokkaa albumia",
-	"@editAlbumMenuLabel": {
-		"description": "Edit the opened album"
-	},
 	"doneButtonTooltip": "Valmis",
 	"editTooltip": "Edit",
 	"editAccountConflictFailureNotification": "Käyttäjätunnus samoilla asetuksilla on jo olemassa",
@@ -706,7 +651,6 @@
 		"description": "Downloading photos to be shared"
 	},
 	"searchTooltip": "Etsi",
-	"albumSearchTextFieldHint": "Search albums",
 	"clearTooltip": "Clear",
 	"@clearTooltip": {
 		"description": "Clear some sort of user input, typically a text field"
@@ -776,18 +720,6 @@
 	"albumSharedLabel": "Jaetut",
 	"@albumSharedLabel": {
 		"description": "A small label placed next to a shared album"
-	},
-	"setAlbumCoverProcessingNotification": "Aseta kuva albumin kansikuvaksi",
-	"@setAlbumCoverProcessingNotification": {
-		"description": "Setting the opened item as the album cover"
-	},
-	"setAlbumCoverSuccessNotification": "Kansikuva asetetttu onnistuneesti",
-	"@setAlbumCoverSuccessNotification": {
-		"description": "Set the opened item as the album cover successfully"
-	},
-	"setAlbumCoverFailureNotification": "Kansikuvan asetus epäonistui",
-	"@setAlbumCoverFailureNotification": {
-		"description": "Cannot set the opened item as the album cover"
 	},
 	"metadataTaskProcessingNotification": "Prosessoidaan kuvien metadataa taustalla",
 	"@metadataTaskProcessingNotification": {
@@ -861,18 +793,6 @@
 	"@unsetAlbumCoverTooltip": {
 		"description": "Unset the cover of the opened album"
 	},
-	"unsetAlbumCoverProcessingNotification": "Poistetaan albumin kantta",
-	"@unsetAlbumCoverProcessingNotification": {
-		"description": "Unsetting the cover of the opened album"
-	},
-	"unsetAlbumCoverSuccessNotification": "Albumin kannen poisto onnistui",
-	"@unsetAlbumCoverSuccessNotification": {
-		"description": "Unset the cover of the opened album successfully"
-	},
-	"unsetAlbumCoverFailureNotification": "Albumin kannen poisto epäonnistui",
-	"@unsetAlbumCoverFailureNotification": {
-		"description": "Cannot unset the cover of the opened album"
-	},
 	"muteTooltip": "Mykistä",
 	"@muteTooltip": {
 		"description": "Mute the video player"
@@ -884,15 +804,6 @@
 	"collectionPeopleLabel": "Ihmiset",
 	"@collectionPeopleLabel": {
 		"description": "Browse photos grouped by person"
-	},
-	"personPhotoCountText": "{count, plural, =1{1 kuva} other{{count} kuvat}}",
-	"@personPhotoCountText": {
-		"description": "Number of photos associated to a specific person",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
 	},
 	"slideshowTooltip": "Kuvasarja",
 	"@slideshowTooltip": {
@@ -1032,60 +943,24 @@
 		}
 	},
 	"unshareLinkShareDirDialogTitle": "Poista kansio?",
-	"@unshareLinkShareDirDialogTitle":  {
+	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
 	"unshareLinkShareDirDialogContent": "Sovellus loi tämän kansion jakaakseen useamman tiedoston samalla linkillä. Sitä ei enää jaeta kenenkään kanssa. Haluatko poistaa tämän kansion?",
-	"@unshareLinkShareDirDialogContent":  {
+	"@unshareLinkShareDirDialogContent": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
-	"addToCollectionTooltip": "Lisää kokoelmaan",
-	"@addToCollectionTooltip": {
+	"addToCollectionsViewTooltip": "Lisää kokoelmaan",
+	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
 	},
-	"addToCollectionProcessingNotification": "Lisätään {album} kokoelmaasi",
-	"@addToCollectionProcessingNotification": {
-		"description": "Adding an album to your collection",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
-	"addToCollectionSuccessNotification": "{album} lisätty kokoelmaasi",
-	"@addToCollectionSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully",
-		"placeholders": {
-			"album": {
-				"example": "Sunday Walk"
-			}
-		}
-	},
 	"shareAlbumDialogTitle": "Jaa toisen käyttäjän kanssa",
-	"@shareAlbumDialogTitle" : {
+	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
-	},
-	"shareAlbumSuccessNotification": "Albumi jaettu käyttäjän {user} kanssa",
-	"@shareAlbumSuccessNotification": {
-		"description": "Shared an album with another user successfully",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
 	},
 	"shareAlbumSuccessWithErrorNotification": "Albumi jaettu käyttäjän {user} kanssa. Joidenkin tiedostojen jako kuitenkin epäonnistui",
 	"@shareAlbumSuccessWithErrorNotification": {
 		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessNotification": "Albumin jakaminen käyttäjän kanssa {user} lopetettu",
-	"@unshareAlbumSuccessNotification": {
-		"description": "Unshared an album with another user successfully",
 		"placeholders": {
 			"user": {
 				"example": "Alice"
@@ -1107,10 +982,6 @@
 	},
 	"fixTooltip": "Korjaa",
 	"@fixTooltip": {
-		"description": "Fix an issue"
-	},
-	"fixButtonLabel": "KORJAA",
-	"@fixButtonLabel":{
 		"description": "Fix an issue"
 	},
 	"fixAllTooltip": "Korjaa kaikki",
@@ -1194,18 +1065,6 @@
 	"createCollectionDialogFolderDescription": "Näytä kaikki kansion kuvat",
 	"@createCollectionDialogFolderDescription": {
 		"description": "Describe how a folder collection works"
-	},
-	"convertAlbumTooltip": "Muuta albumiksi",
-	"@convertAlbumTooltip": {
-		"description": "Convert a non-album collection to an album"
-	},
-	"convertAlbumConfirmationDialogContent": "Muutosta ei voi perua",
-	"@convertAlbumConfirmationDialogContent": {
-		"description": "Make sure the user wants to perform the conversion"
-	},
-	"convertAlbumSuccessNotification": "Kokoelman muutos albumiksi onnistui",
-	"@convertAlbumSuccessNotification": {
-		"description": "Successfully converted the album"
 	},
 	"collectionFavoritesLabel": "Suosikit",
 	"@collectionFavoritesLabel": {

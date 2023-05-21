@@ -4157,6 +4157,1070 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   }
 }
 
+class NcAlbum extends DataClass implements Insertable<NcAlbum> {
+  final int rowId;
+  final int account;
+  final String relativePath;
+  final int? lastPhoto;
+  final int nbItems;
+  final String? location;
+  final DateTime? dateStart;
+  final DateTime? dateEnd;
+  final String collaborators;
+  NcAlbum(
+      {required this.rowId,
+      required this.account,
+      required this.relativePath,
+      this.lastPhoto,
+      required this.nbItems,
+      this.location,
+      this.dateStart,
+      this.dateEnd,
+      required this.collaborators});
+  factory NcAlbum.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return NcAlbum(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      account: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
+      relativePath: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
+      lastPhoto: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_photo']),
+      nbItems: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}nb_items'])!,
+      location: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}location']),
+      dateStart: $NcAlbumsTable.$converter0.mapToDart(const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_start'])),
+      dateEnd: $NcAlbumsTable.$converter1.mapToDart(const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_end'])),
+      collaborators: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}collaborators'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['account'] = Variable<int>(account);
+    map['relative_path'] = Variable<String>(relativePath);
+    if (!nullToAbsent || lastPhoto != null) {
+      map['last_photo'] = Variable<int?>(lastPhoto);
+    }
+    map['nb_items'] = Variable<int>(nbItems);
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String?>(location);
+    }
+    if (!nullToAbsent || dateStart != null) {
+      final converter = $NcAlbumsTable.$converter0;
+      map['date_start'] = Variable<DateTime?>(converter.mapToSql(dateStart));
+    }
+    if (!nullToAbsent || dateEnd != null) {
+      final converter = $NcAlbumsTable.$converter1;
+      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd));
+    }
+    map['collaborators'] = Variable<String>(collaborators);
+    return map;
+  }
+
+  NcAlbumsCompanion toCompanion(bool nullToAbsent) {
+    return NcAlbumsCompanion(
+      rowId: Value(rowId),
+      account: Value(account),
+      relativePath: Value(relativePath),
+      lastPhoto: lastPhoto == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastPhoto),
+      nbItems: Value(nbItems),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      dateStart: dateStart == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateStart),
+      dateEnd: dateEnd == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateEnd),
+      collaborators: Value(collaborators),
+    );
+  }
+
+  factory NcAlbum.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NcAlbum(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      account: serializer.fromJson<int>(json['account']),
+      relativePath: serializer.fromJson<String>(json['relativePath']),
+      lastPhoto: serializer.fromJson<int?>(json['lastPhoto']),
+      nbItems: serializer.fromJson<int>(json['nbItems']),
+      location: serializer.fromJson<String?>(json['location']),
+      dateStart: serializer.fromJson<DateTime?>(json['dateStart']),
+      dateEnd: serializer.fromJson<DateTime?>(json['dateEnd']),
+      collaborators: serializer.fromJson<String>(json['collaborators']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'account': serializer.toJson<int>(account),
+      'relativePath': serializer.toJson<String>(relativePath),
+      'lastPhoto': serializer.toJson<int?>(lastPhoto),
+      'nbItems': serializer.toJson<int>(nbItems),
+      'location': serializer.toJson<String?>(location),
+      'dateStart': serializer.toJson<DateTime?>(dateStart),
+      'dateEnd': serializer.toJson<DateTime?>(dateEnd),
+      'collaborators': serializer.toJson<String>(collaborators),
+    };
+  }
+
+  NcAlbum copyWith(
+          {int? rowId,
+          int? account,
+          String? relativePath,
+          Value<int?> lastPhoto = const Value.absent(),
+          int? nbItems,
+          Value<String?> location = const Value.absent(),
+          Value<DateTime?> dateStart = const Value.absent(),
+          Value<DateTime?> dateEnd = const Value.absent(),
+          String? collaborators}) =>
+      NcAlbum(
+        rowId: rowId ?? this.rowId,
+        account: account ?? this.account,
+        relativePath: relativePath ?? this.relativePath,
+        lastPhoto: lastPhoto.present ? lastPhoto.value : this.lastPhoto,
+        nbItems: nbItems ?? this.nbItems,
+        location: location.present ? location.value : this.location,
+        dateStart: dateStart.present ? dateStart.value : this.dateStart,
+        dateEnd: dateEnd.present ? dateEnd.value : this.dateEnd,
+        collaborators: collaborators ?? this.collaborators,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbum(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('lastPhoto: $lastPhoto, ')
+          ..write('nbItems: $nbItems, ')
+          ..write('location: $location, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('collaborators: $collaborators')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, account, relativePath, lastPhoto,
+      nbItems, location, dateStart, dateEnd, collaborators);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NcAlbum &&
+          other.rowId == this.rowId &&
+          other.account == this.account &&
+          other.relativePath == this.relativePath &&
+          other.lastPhoto == this.lastPhoto &&
+          other.nbItems == this.nbItems &&
+          other.location == this.location &&
+          other.dateStart == this.dateStart &&
+          other.dateEnd == this.dateEnd &&
+          other.collaborators == this.collaborators);
+}
+
+class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
+  final Value<int> rowId;
+  final Value<int> account;
+  final Value<String> relativePath;
+  final Value<int?> lastPhoto;
+  final Value<int> nbItems;
+  final Value<String?> location;
+  final Value<DateTime?> dateStart;
+  final Value<DateTime?> dateEnd;
+  final Value<String> collaborators;
+  const NcAlbumsCompanion({
+    this.rowId = const Value.absent(),
+    this.account = const Value.absent(),
+    this.relativePath = const Value.absent(),
+    this.lastPhoto = const Value.absent(),
+    this.nbItems = const Value.absent(),
+    this.location = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    this.collaborators = const Value.absent(),
+  });
+  NcAlbumsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int account,
+    required String relativePath,
+    this.lastPhoto = const Value.absent(),
+    required int nbItems,
+    this.location = const Value.absent(),
+    this.dateStart = const Value.absent(),
+    this.dateEnd = const Value.absent(),
+    required String collaborators,
+  })  : account = Value(account),
+        relativePath = Value(relativePath),
+        nbItems = Value(nbItems),
+        collaborators = Value(collaborators);
+  static Insertable<NcAlbum> custom({
+    Expression<int>? rowId,
+    Expression<int>? account,
+    Expression<String>? relativePath,
+    Expression<int?>? lastPhoto,
+    Expression<int>? nbItems,
+    Expression<String?>? location,
+    Expression<DateTime?>? dateStart,
+    Expression<DateTime?>? dateEnd,
+    Expression<String>? collaborators,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (account != null) 'account': account,
+      if (relativePath != null) 'relative_path': relativePath,
+      if (lastPhoto != null) 'last_photo': lastPhoto,
+      if (nbItems != null) 'nb_items': nbItems,
+      if (location != null) 'location': location,
+      if (dateStart != null) 'date_start': dateStart,
+      if (dateEnd != null) 'date_end': dateEnd,
+      if (collaborators != null) 'collaborators': collaborators,
+    });
+  }
+
+  NcAlbumsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? account,
+      Value<String>? relativePath,
+      Value<int?>? lastPhoto,
+      Value<int>? nbItems,
+      Value<String?>? location,
+      Value<DateTime?>? dateStart,
+      Value<DateTime?>? dateEnd,
+      Value<String>? collaborators}) {
+    return NcAlbumsCompanion(
+      rowId: rowId ?? this.rowId,
+      account: account ?? this.account,
+      relativePath: relativePath ?? this.relativePath,
+      lastPhoto: lastPhoto ?? this.lastPhoto,
+      nbItems: nbItems ?? this.nbItems,
+      location: location ?? this.location,
+      dateStart: dateStart ?? this.dateStart,
+      dateEnd: dateEnd ?? this.dateEnd,
+      collaborators: collaborators ?? this.collaborators,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (account.present) {
+      map['account'] = Variable<int>(account.value);
+    }
+    if (relativePath.present) {
+      map['relative_path'] = Variable<String>(relativePath.value);
+    }
+    if (lastPhoto.present) {
+      map['last_photo'] = Variable<int?>(lastPhoto.value);
+    }
+    if (nbItems.present) {
+      map['nb_items'] = Variable<int>(nbItems.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String?>(location.value);
+    }
+    if (dateStart.present) {
+      final converter = $NcAlbumsTable.$converter0;
+      map['date_start'] =
+          Variable<DateTime?>(converter.mapToSql(dateStart.value));
+    }
+    if (dateEnd.present) {
+      final converter = $NcAlbumsTable.$converter1;
+      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd.value));
+    }
+    if (collaborators.present) {
+      map['collaborators'] = Variable<String>(collaborators.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('lastPhoto: $lastPhoto, ')
+          ..write('nbItems: $nbItems, ')
+          ..write('location: $location, ')
+          ..write('dateStart: $dateStart, ')
+          ..write('dateEnd: $dateEnd, ')
+          ..write('collaborators: $collaborators')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NcAlbumsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _accountMeta = const VerificationMeta('account');
+  @override
+  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
+      'account', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
+  final VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
+  @override
+  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
+      'relative_path', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _lastPhotoMeta = const VerificationMeta('lastPhoto');
+  @override
+  late final GeneratedColumn<int?> lastPhoto = GeneratedColumn<int?>(
+      'last_photo', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _nbItemsMeta = const VerificationMeta('nbItems');
+  @override
+  late final GeneratedColumn<int?> nbItems = GeneratedColumn<int?>(
+      'nb_items', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _locationMeta = const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String?> location = GeneratedColumn<String?>(
+      'location', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _dateStartMeta = const VerificationMeta('dateStart');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateStart =
+      GeneratedColumn<DateTime?>('date_start', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($NcAlbumsTable.$converter0);
+  final VerificationMeta _dateEndMeta = const VerificationMeta('dateEnd');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateEnd =
+      GeneratedColumn<DateTime?>('date_end', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($NcAlbumsTable.$converter1);
+  final VerificationMeta _collaboratorsMeta =
+      const VerificationMeta('collaborators');
+  @override
+  late final GeneratedColumn<String?> collaborators = GeneratedColumn<String?>(
+      'collaborators', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        account,
+        relativePath,
+        lastPhoto,
+        nbItems,
+        location,
+        dateStart,
+        dateEnd,
+        collaborators
+      ];
+  @override
+  String get aliasedName => _alias ?? 'nc_albums';
+  @override
+  String get actualTableName => 'nc_albums';
+  @override
+  VerificationContext validateIntegrity(Insertable<NcAlbum> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    } else if (isInserting) {
+      context.missing(_accountMeta);
+    }
+    if (data.containsKey('relative_path')) {
+      context.handle(
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
+    } else if (isInserting) {
+      context.missing(_relativePathMeta);
+    }
+    if (data.containsKey('last_photo')) {
+      context.handle(_lastPhotoMeta,
+          lastPhoto.isAcceptableOrUnknown(data['last_photo']!, _lastPhotoMeta));
+    }
+    if (data.containsKey('nb_items')) {
+      context.handle(_nbItemsMeta,
+          nbItems.isAcceptableOrUnknown(data['nb_items']!, _nbItemsMeta));
+    } else if (isInserting) {
+      context.missing(_nbItemsMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    }
+    context.handle(_dateStartMeta, const VerificationResult.success());
+    context.handle(_dateEndMeta, const VerificationResult.success());
+    if (data.containsKey('collaborators')) {
+      context.handle(
+          _collaboratorsMeta,
+          collaborators.isAcceptableOrUnknown(
+              data['collaborators']!, _collaboratorsMeta));
+    } else if (isInserting) {
+      context.missing(_collaboratorsMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {account, relativePath},
+      ];
+  @override
+  NcAlbum map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return NcAlbum.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $NcAlbumsTable createAlias(String alias) {
+    return $NcAlbumsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converter0 =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converter1 =
+      const SqliteDateTimeConverter();
+}
+
+class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
+  final int rowId;
+  final int parent;
+  final String relativePath;
+  final int fileId;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final bool? hasPreview;
+  final bool? isFavorite;
+  final int? fileMetadataWidth;
+  final int? fileMetadataHeight;
+  NcAlbumItem(
+      {required this.rowId,
+      required this.parent,
+      required this.relativePath,
+      required this.fileId,
+      this.contentLength,
+      this.contentType,
+      this.etag,
+      this.lastModified,
+      this.hasPreview,
+      this.isFavorite,
+      this.fileMetadataWidth,
+      this.fileMetadataHeight});
+  factory NcAlbumItem.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return NcAlbumItem(
+      rowId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
+      parent: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent'])!,
+      relativePath: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
+      fileId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}file_id'])!,
+      contentLength: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}content_length']),
+      contentType: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}content_type']),
+      etag: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}etag']),
+      lastModified: $NcAlbumItemsTable.$converter0.mapToDart(
+          const DateTimeType().mapFromDatabaseResponse(
+              data['${effectivePrefix}last_modified'])),
+      hasPreview: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_preview']),
+      isFavorite: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_favorite']),
+      fileMetadataWidth: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}file_metadata_width']),
+      fileMetadataHeight: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}file_metadata_height']),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['parent'] = Variable<int>(parent);
+    map['relative_path'] = Variable<String>(relativePath);
+    map['file_id'] = Variable<int>(fileId);
+    if (!nullToAbsent || contentLength != null) {
+      map['content_length'] = Variable<int?>(contentLength);
+    }
+    if (!nullToAbsent || contentType != null) {
+      map['content_type'] = Variable<String?>(contentType);
+    }
+    if (!nullToAbsent || etag != null) {
+      map['etag'] = Variable<String?>(etag);
+    }
+    if (!nullToAbsent || lastModified != null) {
+      final converter = $NcAlbumItemsTable.$converter0;
+      map['last_modified'] =
+          Variable<DateTime?>(converter.mapToSql(lastModified));
+    }
+    if (!nullToAbsent || hasPreview != null) {
+      map['has_preview'] = Variable<bool?>(hasPreview);
+    }
+    if (!nullToAbsent || isFavorite != null) {
+      map['is_favorite'] = Variable<bool?>(isFavorite);
+    }
+    if (!nullToAbsent || fileMetadataWidth != null) {
+      map['file_metadata_width'] = Variable<int?>(fileMetadataWidth);
+    }
+    if (!nullToAbsent || fileMetadataHeight != null) {
+      map['file_metadata_height'] = Variable<int?>(fileMetadataHeight);
+    }
+    return map;
+  }
+
+  NcAlbumItemsCompanion toCompanion(bool nullToAbsent) {
+    return NcAlbumItemsCompanion(
+      rowId: Value(rowId),
+      parent: Value(parent),
+      relativePath: Value(relativePath),
+      fileId: Value(fileId),
+      contentLength: contentLength == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentLength),
+      contentType: contentType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentType),
+      etag: etag == null && nullToAbsent ? const Value.absent() : Value(etag),
+      lastModified: lastModified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModified),
+      hasPreview: hasPreview == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasPreview),
+      isFavorite: isFavorite == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isFavorite),
+      fileMetadataWidth: fileMetadataWidth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileMetadataWidth),
+      fileMetadataHeight: fileMetadataHeight == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileMetadataHeight),
+    );
+  }
+
+  factory NcAlbumItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NcAlbumItem(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      parent: serializer.fromJson<int>(json['parent']),
+      relativePath: serializer.fromJson<String>(json['relativePath']),
+      fileId: serializer.fromJson<int>(json['fileId']),
+      contentLength: serializer.fromJson<int?>(json['contentLength']),
+      contentType: serializer.fromJson<String?>(json['contentType']),
+      etag: serializer.fromJson<String?>(json['etag']),
+      lastModified: serializer.fromJson<DateTime?>(json['lastModified']),
+      hasPreview: serializer.fromJson<bool?>(json['hasPreview']),
+      isFavorite: serializer.fromJson<bool?>(json['isFavorite']),
+      fileMetadataWidth: serializer.fromJson<int?>(json['fileMetadataWidth']),
+      fileMetadataHeight: serializer.fromJson<int?>(json['fileMetadataHeight']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'parent': serializer.toJson<int>(parent),
+      'relativePath': serializer.toJson<String>(relativePath),
+      'fileId': serializer.toJson<int>(fileId),
+      'contentLength': serializer.toJson<int?>(contentLength),
+      'contentType': serializer.toJson<String?>(contentType),
+      'etag': serializer.toJson<String?>(etag),
+      'lastModified': serializer.toJson<DateTime?>(lastModified),
+      'hasPreview': serializer.toJson<bool?>(hasPreview),
+      'isFavorite': serializer.toJson<bool?>(isFavorite),
+      'fileMetadataWidth': serializer.toJson<int?>(fileMetadataWidth),
+      'fileMetadataHeight': serializer.toJson<int?>(fileMetadataHeight),
+    };
+  }
+
+  NcAlbumItem copyWith(
+          {int? rowId,
+          int? parent,
+          String? relativePath,
+          int? fileId,
+          Value<int?> contentLength = const Value.absent(),
+          Value<String?> contentType = const Value.absent(),
+          Value<String?> etag = const Value.absent(),
+          Value<DateTime?> lastModified = const Value.absent(),
+          Value<bool?> hasPreview = const Value.absent(),
+          Value<bool?> isFavorite = const Value.absent(),
+          Value<int?> fileMetadataWidth = const Value.absent(),
+          Value<int?> fileMetadataHeight = const Value.absent()}) =>
+      NcAlbumItem(
+        rowId: rowId ?? this.rowId,
+        parent: parent ?? this.parent,
+        relativePath: relativePath ?? this.relativePath,
+        fileId: fileId ?? this.fileId,
+        contentLength:
+            contentLength.present ? contentLength.value : this.contentLength,
+        contentType: contentType.present ? contentType.value : this.contentType,
+        etag: etag.present ? etag.value : this.etag,
+        lastModified:
+            lastModified.present ? lastModified.value : this.lastModified,
+        hasPreview: hasPreview.present ? hasPreview.value : this.hasPreview,
+        isFavorite: isFavorite.present ? isFavorite.value : this.isFavorite,
+        fileMetadataWidth: fileMetadataWidth.present
+            ? fileMetadataWidth.value
+            : this.fileMetadataWidth,
+        fileMetadataHeight: fileMetadataHeight.present
+            ? fileMetadataHeight.value
+            : this.fileMetadataHeight,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumItem(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('fileId: $fileId, ')
+          ..write('contentLength: $contentLength, ')
+          ..write('contentType: $contentType, ')
+          ..write('etag: $etag, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('hasPreview: $hasPreview, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('fileMetadataWidth: $fileMetadataWidth, ')
+          ..write('fileMetadataHeight: $fileMetadataHeight')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      rowId,
+      parent,
+      relativePath,
+      fileId,
+      contentLength,
+      contentType,
+      etag,
+      lastModified,
+      hasPreview,
+      isFavorite,
+      fileMetadataWidth,
+      fileMetadataHeight);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NcAlbumItem &&
+          other.rowId == this.rowId &&
+          other.parent == this.parent &&
+          other.relativePath == this.relativePath &&
+          other.fileId == this.fileId &&
+          other.contentLength == this.contentLength &&
+          other.contentType == this.contentType &&
+          other.etag == this.etag &&
+          other.lastModified == this.lastModified &&
+          other.hasPreview == this.hasPreview &&
+          other.isFavorite == this.isFavorite &&
+          other.fileMetadataWidth == this.fileMetadataWidth &&
+          other.fileMetadataHeight == this.fileMetadataHeight);
+}
+
+class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
+  final Value<int> rowId;
+  final Value<int> parent;
+  final Value<String> relativePath;
+  final Value<int> fileId;
+  final Value<int?> contentLength;
+  final Value<String?> contentType;
+  final Value<String?> etag;
+  final Value<DateTime?> lastModified;
+  final Value<bool?> hasPreview;
+  final Value<bool?> isFavorite;
+  final Value<int?> fileMetadataWidth;
+  final Value<int?> fileMetadataHeight;
+  const NcAlbumItemsCompanion({
+    this.rowId = const Value.absent(),
+    this.parent = const Value.absent(),
+    this.relativePath = const Value.absent(),
+    this.fileId = const Value.absent(),
+    this.contentLength = const Value.absent(),
+    this.contentType = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.hasPreview = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.fileMetadataWidth = const Value.absent(),
+    this.fileMetadataHeight = const Value.absent(),
+  });
+  NcAlbumItemsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int parent,
+    required String relativePath,
+    required int fileId,
+    this.contentLength = const Value.absent(),
+    this.contentType = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.hasPreview = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.fileMetadataWidth = const Value.absent(),
+    this.fileMetadataHeight = const Value.absent(),
+  })  : parent = Value(parent),
+        relativePath = Value(relativePath),
+        fileId = Value(fileId);
+  static Insertable<NcAlbumItem> custom({
+    Expression<int>? rowId,
+    Expression<int>? parent,
+    Expression<String>? relativePath,
+    Expression<int>? fileId,
+    Expression<int?>? contentLength,
+    Expression<String?>? contentType,
+    Expression<String?>? etag,
+    Expression<DateTime?>? lastModified,
+    Expression<bool?>? hasPreview,
+    Expression<bool?>? isFavorite,
+    Expression<int?>? fileMetadataWidth,
+    Expression<int?>? fileMetadataHeight,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (parent != null) 'parent': parent,
+      if (relativePath != null) 'relative_path': relativePath,
+      if (fileId != null) 'file_id': fileId,
+      if (contentLength != null) 'content_length': contentLength,
+      if (contentType != null) 'content_type': contentType,
+      if (etag != null) 'etag': etag,
+      if (lastModified != null) 'last_modified': lastModified,
+      if (hasPreview != null) 'has_preview': hasPreview,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (fileMetadataWidth != null) 'file_metadata_width': fileMetadataWidth,
+      if (fileMetadataHeight != null)
+        'file_metadata_height': fileMetadataHeight,
+    });
+  }
+
+  NcAlbumItemsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? parent,
+      Value<String>? relativePath,
+      Value<int>? fileId,
+      Value<int?>? contentLength,
+      Value<String?>? contentType,
+      Value<String?>? etag,
+      Value<DateTime?>? lastModified,
+      Value<bool?>? hasPreview,
+      Value<bool?>? isFavorite,
+      Value<int?>? fileMetadataWidth,
+      Value<int?>? fileMetadataHeight}) {
+    return NcAlbumItemsCompanion(
+      rowId: rowId ?? this.rowId,
+      parent: parent ?? this.parent,
+      relativePath: relativePath ?? this.relativePath,
+      fileId: fileId ?? this.fileId,
+      contentLength: contentLength ?? this.contentLength,
+      contentType: contentType ?? this.contentType,
+      etag: etag ?? this.etag,
+      lastModified: lastModified ?? this.lastModified,
+      hasPreview: hasPreview ?? this.hasPreview,
+      isFavorite: isFavorite ?? this.isFavorite,
+      fileMetadataWidth: fileMetadataWidth ?? this.fileMetadataWidth,
+      fileMetadataHeight: fileMetadataHeight ?? this.fileMetadataHeight,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (parent.present) {
+      map['parent'] = Variable<int>(parent.value);
+    }
+    if (relativePath.present) {
+      map['relative_path'] = Variable<String>(relativePath.value);
+    }
+    if (fileId.present) {
+      map['file_id'] = Variable<int>(fileId.value);
+    }
+    if (contentLength.present) {
+      map['content_length'] = Variable<int?>(contentLength.value);
+    }
+    if (contentType.present) {
+      map['content_type'] = Variable<String?>(contentType.value);
+    }
+    if (etag.present) {
+      map['etag'] = Variable<String?>(etag.value);
+    }
+    if (lastModified.present) {
+      final converter = $NcAlbumItemsTable.$converter0;
+      map['last_modified'] =
+          Variable<DateTime?>(converter.mapToSql(lastModified.value));
+    }
+    if (hasPreview.present) {
+      map['has_preview'] = Variable<bool?>(hasPreview.value);
+    }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool?>(isFavorite.value);
+    }
+    if (fileMetadataWidth.present) {
+      map['file_metadata_width'] = Variable<int?>(fileMetadataWidth.value);
+    }
+    if (fileMetadataHeight.present) {
+      map['file_metadata_height'] = Variable<int?>(fileMetadataHeight.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NcAlbumItemsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('fileId: $fileId, ')
+          ..write('contentLength: $contentLength, ')
+          ..write('contentType: $contentType, ')
+          ..write('etag: $etag, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('hasPreview: $hasPreview, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('fileMetadataWidth: $fileMetadataWidth, ')
+          ..write('fileMetadataHeight: $fileMetadataHeight')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $NcAlbumItemsTable extends NcAlbumItems
+    with TableInfo<$NcAlbumItemsTable, NcAlbumItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NcAlbumItemsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+      'row_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _parentMeta = const VerificationMeta('parent');
+  @override
+  late final GeneratedColumn<int?> parent = GeneratedColumn<int?>(
+      'parent', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES nc_albums (row_id) ON DELETE CASCADE');
+  final VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
+  @override
+  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
+      'relative_path', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
+  @override
+  late final GeneratedColumn<int?> fileId = GeneratedColumn<int?>(
+      'file_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _contentLengthMeta =
+      const VerificationMeta('contentLength');
+  @override
+  late final GeneratedColumn<int?> contentLength = GeneratedColumn<int?>(
+      'content_length', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _contentTypeMeta =
+      const VerificationMeta('contentType');
+  @override
+  late final GeneratedColumn<String?> contentType = GeneratedColumn<String?>(
+      'content_type', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _etagMeta = const VerificationMeta('etag');
+  @override
+  late final GeneratedColumn<String?> etag = GeneratedColumn<String?>(
+      'etag', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
+      lastModified = GeneratedColumn<DateTime?>(
+              'last_modified', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($NcAlbumItemsTable.$converter0);
+  final VerificationMeta _hasPreviewMeta = const VerificationMeta('hasPreview');
+  @override
+  late final GeneratedColumn<bool?> hasPreview = GeneratedColumn<bool?>(
+      'has_preview', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_preview IN (0, 1))');
+  final VerificationMeta _isFavoriteMeta = const VerificationMeta('isFavorite');
+  @override
+  late final GeneratedColumn<bool?> isFavorite = GeneratedColumn<bool?>(
+      'is_favorite', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_favorite IN (0, 1))');
+  final VerificationMeta _fileMetadataWidthMeta =
+      const VerificationMeta('fileMetadataWidth');
+  @override
+  late final GeneratedColumn<int?> fileMetadataWidth = GeneratedColumn<int?>(
+      'file_metadata_width', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _fileMetadataHeightMeta =
+      const VerificationMeta('fileMetadataHeight');
+  @override
+  late final GeneratedColumn<int?> fileMetadataHeight = GeneratedColumn<int?>(
+      'file_metadata_height', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        parent,
+        relativePath,
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        hasPreview,
+        isFavorite,
+        fileMetadataWidth,
+        fileMetadataHeight
+      ];
+  @override
+  String get aliasedName => _alias ?? 'nc_album_items';
+  @override
+  String get actualTableName => 'nc_album_items';
+  @override
+  VerificationContext validateIntegrity(Insertable<NcAlbumItem> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('parent')) {
+      context.handle(_parentMeta,
+          parent.isAcceptableOrUnknown(data['parent']!, _parentMeta));
+    } else if (isInserting) {
+      context.missing(_parentMeta);
+    }
+    if (data.containsKey('relative_path')) {
+      context.handle(
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
+    } else if (isInserting) {
+      context.missing(_relativePathMeta);
+    }
+    if (data.containsKey('file_id')) {
+      context.handle(_fileIdMeta,
+          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
+    } else if (isInserting) {
+      context.missing(_fileIdMeta);
+    }
+    if (data.containsKey('content_length')) {
+      context.handle(
+          _contentLengthMeta,
+          contentLength.isAcceptableOrUnknown(
+              data['content_length']!, _contentLengthMeta));
+    }
+    if (data.containsKey('content_type')) {
+      context.handle(
+          _contentTypeMeta,
+          contentType.isAcceptableOrUnknown(
+              data['content_type']!, _contentTypeMeta));
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
+    }
+    context.handle(_lastModifiedMeta, const VerificationResult.success());
+    if (data.containsKey('has_preview')) {
+      context.handle(
+          _hasPreviewMeta,
+          hasPreview.isAcceptableOrUnknown(
+              data['has_preview']!, _hasPreviewMeta));
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+          _isFavoriteMeta,
+          isFavorite.isAcceptableOrUnknown(
+              data['is_favorite']!, _isFavoriteMeta));
+    }
+    if (data.containsKey('file_metadata_width')) {
+      context.handle(
+          _fileMetadataWidthMeta,
+          fileMetadataWidth.isAcceptableOrUnknown(
+              data['file_metadata_width']!, _fileMetadataWidthMeta));
+    }
+    if (data.containsKey('file_metadata_height')) {
+      context.handle(
+          _fileMetadataHeightMeta,
+          fileMetadataHeight.isAcceptableOrUnknown(
+              data['file_metadata_height']!, _fileMetadataHeightMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {parent, fileId},
+      ];
+  @override
+  NcAlbumItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return NcAlbumItem.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $NcAlbumItemsTable createAlias(String alias) {
+    return $NcAlbumItemsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converter0 =
+      const SqliteDateTimeConverter();
+}
+
 abstract class _$SqliteDb extends GeneratedDatabase {
   _$SqliteDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   _$SqliteDb.connect(DatabaseConnection c) : super.connect(c);
@@ -4172,6 +5236,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
   late final $TagsTable tags = $TagsTable(this);
   late final $PersonsTable persons = $PersonsTable(this);
+  late final $NcAlbumsTable ncAlbums = $NcAlbumsTable(this);
+  late final $NcAlbumItemsTable ncAlbumItems = $NcAlbumItemsTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -4187,7 +5253,9 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         albums,
         albumShares,
         tags,
-        persons
+        persons,
+        ncAlbums,
+        ncAlbumItems
       ];
 }
 

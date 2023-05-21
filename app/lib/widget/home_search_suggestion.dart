@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/bloc/home_search_suggestion.dart';
-import 'package:nc_photos/entity/album.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -11,11 +13,8 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
-import 'package:nc_photos/widget/album_browser_util.dart' as album_browser_util;
+import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/person_browser.dart';
-import 'package:nc_photos/widget/place_browser.dart';
-import 'package:nc_photos/widget/tag_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
 
@@ -77,8 +76,11 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
   }
 
   void _initBloc() {
-    _bloc =
-        (widget.controller._bloc ??= HomeSearchSuggestionBloc(widget.account));
+    _bloc = (widget.controller._bloc ??= HomeSearchSuggestionBloc(
+      widget.account,
+      context.read<AccountController>().collectionsController,
+      context.read<AccountController>().serverController,
+    ));
     if (_bloc.state is! HomeSearchSuggestionBlocInit) {
       // process the current state
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -124,39 +126,55 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
     }
   }
 
-  void _onAlbumPressed(_AlbumListItem item) {
+  void _onCollectionPressed(_CollectionListItem item) {
     if (mounted) {
-      album_browser_util.push(context, widget.account, item.album);
+      Navigator.of(context).pushNamed(
+        CollectionBrowser.routeName,
+        arguments: CollectionBrowserArguments(item.collection),
+      );
     }
   }
 
   void _onTagPressed(_TagListItem item) {
     if (mounted) {
-      Navigator.of(context).pushNamed(TagBrowser.routeName,
-          arguments: TagBrowserArguments(widget.account, item.tag));
+      Navigator.of(context).pushNamed(
+        CollectionBrowser.routeName,
+        arguments: CollectionBrowserArguments(
+          CollectionBuilder.byTags(widget.account, [item.tag]),
+        ),
+      );
     }
   }
 
   void _onPersonPressed(_PersonListItem item) {
     if (mounted) {
-      Navigator.of(context).pushNamed(PersonBrowser.routeName,
-          arguments: PersonBrowserArguments(widget.account, item.person));
+      Navigator.pushNamed(
+        context,
+        CollectionBrowser.routeName,
+        arguments: CollectionBrowserArguments(
+          CollectionBuilder.byPerson(widget.account, item.person),
+        ),
+      );
     }
   }
 
   void _onLocationPressed(_LocationListItem item) {
     if (mounted) {
-      Navigator.of(context).pushNamed(PlaceBrowser.routeName,
-          arguments: PlaceBrowserArguments(
-              widget.account, item.location.place, item.location.countryCode));
+      Navigator.pushNamed(
+        context,
+        CollectionBrowser.routeName,
+        arguments: CollectionBrowserArguments(
+          CollectionBuilder.byLocationGroup(widget.account, item.location),
+        ),
+      );
     }
   }
 
   void _transformItems(List<HomeSearchResult> results) {
     final items = () sync* {
       for (final r in results) {
-        if (r is HomeSearchAlbumResult) {
-          yield _AlbumListItem(r.album, onTap: _onAlbumPressed);
+        if (r is HomeSearchCollectionResult) {
+          yield _CollectionListItem(r.collection, onTap: _onCollectionPressed);
         } else if (r is HomeSearchTagResult) {
           yield _TagListItem(r.tag, onTap: _onTagPressed);
         } else if (r is HomeSearchPersonResult) {
@@ -181,21 +199,21 @@ abstract class _ListItem {
   Widget buildWidget(BuildContext context);
 }
 
-class _AlbumListItem implements _ListItem {
-  const _AlbumListItem(
-    this.album, {
+class _CollectionListItem implements _ListItem {
+  const _CollectionListItem(
+    this.collection, {
     this.onTap,
   });
 
   @override
-  buildWidget(BuildContext context) => ListTile(
+  Widget buildWidget(BuildContext context) => ListTile(
         leading: const Icon(Icons.photo_album_outlined),
-        title: Text(album.name),
+        title: Text(collection.name),
         onTap: onTap == null ? null : () => onTap!(this),
       );
 
-  final Album album;
-  final void Function(_AlbumListItem)? onTap;
+  final Collection collection;
+  final void Function(_CollectionListItem item)? onTap;
 }
 
 class _TagListItem implements _ListItem {

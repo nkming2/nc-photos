@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -40,7 +41,7 @@ class Changelog extends StatelessWidget {
       );
 
   AppBar _buildAppBar() => AppBar(
-        title: const Text("Changelog"),
+        title: Text(L10n.global().changelogTitle),
         elevation: 0,
       );
 

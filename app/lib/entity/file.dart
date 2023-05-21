@@ -390,7 +390,6 @@ class File with EquatableMixin implements FileDescriptor {
   @override
   String toString() => _$toString();
 
-  @override
   JsonObj toJson() {
     return {
       "path": path,
@@ -418,6 +417,9 @@ class File with EquatableMixin implements FileDescriptor {
       if (location != null) "location": location!.toJson(),
     };
   }
+
+  @override
+  JsonObj toFdJson() => FileDescriptor.toJson(this);
 
   File copyWith({
     String? path,
@@ -537,6 +539,15 @@ extension FileExtension on File {
       );
 
   bool isOwned(CiString userId) => ownerId == null || ownerId == userId;
+
+  FileDescriptor toDescriptor() => FileDescriptor(
+        fdPath: path,
+        fdId: fileId!,
+        fdMime: contentType,
+        fdIsArchived: isArchived ?? false,
+        fdIsFavorite: isFavorite ?? false,
+        fdDateTime: bestDateTime,
+      );
 }
 
 class FileServerIdentityComparator {
@@ -575,7 +586,7 @@ class FileRepo {
       dataSrc.listMinimal(account, dir);
 
   /// See [FileDataSource.remove]
-  Future<void> remove(Account account, File file) =>
+  Future<void> remove(Account account, FileDescriptor file) =>
       dataSrc.remove(account, file);
 
   /// See [FileDataSource.getBinary]
@@ -659,7 +670,7 @@ abstract class FileDataSource {
   Future<List<File>> listMinimal(Account account, File dir);
 
   /// Remove file
-  Future<void> remove(Account account, File f);
+  Future<void> remove(Account account, FileDescriptor f);
 
   /// Read file as binary array
   Future<Uint8List> getBinary(Account account, File f);

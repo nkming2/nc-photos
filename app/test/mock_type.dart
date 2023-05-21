@@ -128,7 +128,7 @@ class MockFavoriteMemoryRepo extends MockFavoriteRepo {
 /// Mock of [FileDataSource] where all methods will throw UnimplementedError
 class MockFileDataSource implements FileDataSource {
   @override
-  Future<void> copy(Account account, File f, String destination,
+  Future<void> copy(Account account, FileDescriptor f, String destination,
       {bool? shouldOverwrite}) {
     throw UnimplementedError();
   }
@@ -170,7 +170,7 @@ class MockFileDataSource implements FileDataSource {
   }
 
   @override
-  Future<void> remove(Account account, File f) {
+  Future<void> remove(Account account, FileDescriptor f) {
     throw UnimplementedError();
   }
 
@@ -211,9 +211,9 @@ class MockFileMemoryDataSource extends MockFileDataSource {
   }
 
   @override
-  remove(Account account, File file) async {
+  remove(Account account, FileDescriptor file) async {
     files.removeWhere((f) {
-      if (file.isCollection == true) {
+      if ((file as File).isCollection == true) {
         return file_util.isOrUnderDir(f, file);
       } else {
         return f.compareServerIdentity(file);
@@ -230,7 +230,8 @@ class MockFileWebdavDataSource implements FileWebdavDataSource {
   const MockFileWebdavDataSource(this.src);
 
   @override
-  copy(Account account, File f, String destination, {bool? shouldOverwrite}) =>
+  copy(Account account, FileDescriptor f, String destination,
+          {bool? shouldOverwrite}) =>
       src.copy(account, f, destination, shouldOverwrite: shouldOverwrite);
 
   @override
@@ -264,7 +265,7 @@ class MockFileWebdavDataSource implements FileWebdavDataSource {
       src.putBinary(account, path, content);
 
   @override
-  remove(Account account, File f) => src.remove(account, f);
+  remove(Account account, FileDescriptor f) => src.remove(account, f);
 
   @override
   updateProperty(
