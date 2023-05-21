@@ -984,10 +984,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "OPRAVIT",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "Opravit vše",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"

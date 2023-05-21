@@ -843,10 +843,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "ΕΠΙΔΙΟΡΘΩΣΗ",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "Επιδιόρθωση όλων",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"

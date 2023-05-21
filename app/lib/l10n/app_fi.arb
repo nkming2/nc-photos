@@ -984,10 +984,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "KORJAA",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "Korjaa kaikki",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"

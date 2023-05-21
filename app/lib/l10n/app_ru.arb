@@ -892,10 +892,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "ИСПРАВИТЬ",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "Исправить всё",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"

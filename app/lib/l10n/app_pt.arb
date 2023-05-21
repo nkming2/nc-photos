@@ -984,10 +984,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "CONSERTAR",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "Consertar tudo",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"

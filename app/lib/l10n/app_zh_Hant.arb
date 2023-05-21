@@ -874,10 +874,6 @@
 	"@fixTooltip": {
 		"description": "Fix an issue"
 	},
-	"fixButtonLabel": "修正",
-	"@fixButtonLabel": {
-		"description": "Fix an issue"
-	},
 	"fixAllTooltip": "修正全部",
 	"@fixAllTooltip": {
 		"description": "Fix all listed issues"
