@@ -76,62 +76,66 @@ class _WrappedCollectionPickerState extends State<_WrappedCollectionPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<_Bloc, _State>(
-          listenWhen: (previous, current) =>
-              previous.collections != current.collections,
-          listener: (context, state) {
-            _bloc.add(_TransformItems(state.collections));
-          },
-        ),
-        BlocListener<_Bloc, _State>(
-          listenWhen: (previous, current) => previous.result != current.result,
-          listener: (context, state) {
-            if (state.result != null) {
-              Navigator.of(context).pop(state.result!);
-            }
-          },
-        ),
-        BlocListener<_Bloc, _State>(
-          listenWhen: (previous, current) => previous.error != current.error,
-          listener: (context, state) {
-            if (state.error != null) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
-                duration: k.snackBarDurationNormal,
-              ));
-            }
-          },
-        ),
-      ],
-      child: CustomScrollView(
-        slivers: [
-          const _AppBar(),
-          _BlocBuilder(
-            buildWhen: (previous, current) =>
-                previous.transformedItems != current.transformedItems,
-            builder: (context, state) => SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              sliver: SliverStaggeredGrid.extentBuilder(
-                maxCrossAxisExtent: 256,
-                staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
-                itemCount: state.transformedItems.length + 1,
-                itemBuilder: (_, index) {
-                  if (index == 0) {
-                    return _NewAlbumView();
-                  } else {
-                    final item = state.transformedItems[index - 1];
-                    return _ItemView(
-                      account: _bloc.account,
-                      item: item,
-                    );
-                  }
-                },
-              ),
-            ),
+    return Scaffold(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<_Bloc, _State>(
+            listenWhen: (previous, current) =>
+                previous.collections != current.collections,
+            listener: (context, state) {
+              _bloc.add(_TransformItems(state.collections));
+            },
+          ),
+          BlocListener<_Bloc, _State>(
+            listenWhen: (previous, current) =>
+                previous.result != current.result,
+            listener: (context, state) {
+              if (state.result != null) {
+                Navigator.of(context).pop(state.result!);
+              }
+            },
+          ),
+          BlocListener<_Bloc, _State>(
+            listenWhen: (previous, current) => previous.error != current.error,
+            listener: (context, state) {
+              if (state.error != null) {
+                SnackBarManager().showSnackBar(SnackBar(
+                  content:
+                      Text(exception_util.toUserString(state.error!.error)),
+                  duration: k.snackBarDurationNormal,
+                ));
+              }
+            },
           ),
         ],
+        child: CustomScrollView(
+          slivers: [
+            const _AppBar(),
+            _BlocBuilder(
+              buildWhen: (previous, current) =>
+                  previous.transformedItems != current.transformedItems,
+              builder: (context, state) => SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                sliver: SliverStaggeredGrid.extentBuilder(
+                  maxCrossAxisExtent: 256,
+                  staggeredTileBuilder: (_) => const StaggeredTile.count(1, 1),
+                  itemCount: state.transformedItems.length + 1,
+                  itemBuilder: (_, index) {
+                    if (index == 0) {
+                      return _NewAlbumView();
+                    } else {
+                      final item = state.transformedItems[index - 1];
+                      return _ItemView(
+                        account: _bloc.account,
+                        item: item,
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
