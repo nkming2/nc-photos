@@ -72,7 +72,7 @@ extension _$ShareeToString on Sharee {
 extension _$StatusToString on Status {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "Status {version: $version, versionString: $versionString}";
+    return "Status {version: $version, versionString: $versionString, productName: $productName}";
   }
 }
 
