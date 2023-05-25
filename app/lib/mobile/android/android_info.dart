@@ -22,7 +22,7 @@ class AndroidInfo {
 
   static Future<void> init() async {
     final info = await DeviceInfoPlugin().androidInfo;
-    final sdkInt = info.version.sdkInt!;
+    final sdkInt = info.version.sdkInt;
 
     final memInfo = await MemoryInfoPlugin().memoryInfo;
     final totalMemMb = memInfo.totalMem!.toDouble();

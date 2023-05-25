@@ -24,15 +24,15 @@ void main() async {
       statusBarColor: Colors.transparent,
     ));
   }
-  BlocOverrides.runZoned(
-    () => runApp(const MyApp()),
-    blocObserver: _BlocObserver(),
-    eventTransformer: sequential(),
-  );
+  Bloc.observer = const _BlocObserver();
+  Bloc.transformer = sequential();
+  runApp(const MyApp());
 }
 
 @npLog
 class _BlocObserver extends BlocObserver {
+  const _BlocObserver();
+
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
