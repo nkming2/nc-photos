@@ -338,17 +338,7 @@
   ],
 
   "fi": [
-    "nameInputInvalidEmpty",
-    "settingsServerVersionTitle",
-    "createCollectionFailureNotification",
-    "addItemToCollectionTooltip",
-    "addItemToCollectionFailureNotification",
-    "setCollectionCoverFailureNotification",
-    "exportCollectionTooltip",
-    "exportCollectionDialogTitle",
-    "createCollectionDialogNextcloudAlbumLabel",
-    "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+  
   ],
 
   "fr": [
