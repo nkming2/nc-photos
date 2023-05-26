@@ -157,11 +157,13 @@ class _ExifState extends State<_Exif> {
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(L10n.global().setupSettingsModifyLaterHint,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2!
-                    .copyWith(fontStyle: FontStyle.italic)),
+            child: Text(
+              L10n.global().setupSettingsModifyLaterHint,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontStyle: FontStyle.italic),
+            ),
           ),
           const SizedBox(height: 8),
         ],

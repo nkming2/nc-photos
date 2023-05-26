@@ -32,7 +32,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
           children: [
             Text(
               L10n.global().dateSubtitle,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
             Row(
               children: [
@@ -104,7 +104,7 @@ class _PhotoDateTimeEditDialogState extends State<PhotoDateTimeEditDialog> {
             const SizedBox(height: 16),
             Text(
               L10n.global().timeSubtitle,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
             Row(
               children: [

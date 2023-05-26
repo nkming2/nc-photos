@@ -91,7 +91,7 @@ class _SplashState extends State<Splash> {
                 Text(
                   L10n.global().appTitle,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             ),

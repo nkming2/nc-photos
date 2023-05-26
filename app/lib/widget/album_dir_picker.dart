@@ -63,7 +63,7 @@ class _AlbumDirPickerState extends State<AlbumDirPicker> {
               children: [
                 Text(
                   L10n.global().albumDirPickerHeaderText,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),

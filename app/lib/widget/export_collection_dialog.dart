@@ -196,7 +196,7 @@ class _ProviderDescription extends StatelessWidget {
           previous.formValue.provider != current.formValue.provider,
       builder: (context, state) => Text(
         state.formValue.provider.toDescription(context),
-        style: Theme.of(context).textTheme.bodyText2,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }

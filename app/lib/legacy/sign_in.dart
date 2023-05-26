@@ -79,7 +79,7 @@ class _SignInState extends State<SignIn> {
                           padding: const EdgeInsets.all(24),
                           child: Text(
                             L10n.global().signInHeaderText,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                             textAlign: TextAlign.center,
                           ),
                         ),

@@ -111,7 +111,7 @@ class _AlbumImporterState extends State<AlbumImporter> {
               children: [
                 Text(
                   L10n.global().albumImporterHeaderText,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
