@@ -74,7 +74,7 @@ class _SlideshowDialogState extends State<SlideshowDialog> {
           children: [
             Text(
               L10n.global().slideshowSetupDialogDurationTitle,
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
             Row(
               children: [

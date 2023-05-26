@@ -24,7 +24,7 @@
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
 	},
-	"selectionAppBarTitle": "{count, plural, =1{Vybrána {count}} =2{Vybrány 2} =3{Vybrány 3} =4{Vybrány 4} other{Vybráno {count}}}",
+	"selectionAppBarTitle": "{count, plural, =1{Vybrána {count}} few{Vybrány {count}} other{Vybráno {count}}}",
 	"@selectionAppBarTitle": {
 		"description": "Title of the contextual app bar that shows number of selected items",
 		"placeholders": {
@@ -46,7 +46,7 @@
 	"@deleteSelectedSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully"
 	},
-	"deleteSelectedFailureNotification": "{count, plural, =1{Nepodařilo se odstranit 1 položku} =2{Nepodařilo se odstranit 2 položky} =3{Nepodařilo se odstranit 3 položky} =4{Nepodařilo se odstranit 4 položky} other{Nepodařilo se odstranit {count} položek}}",
+	"deleteSelectedFailureNotification": "{count, plural, =1{Nepodařilo se odstranit 1 položku} few{Nepodařilo se odstranit {count} položky} other{Nepodařilo se odstranit {count} položek}}",
 	"@deleteSelectedFailureNotification": {
 		"description": "Inform user that some/all the selected items cannot be deleted",
 		"placeholders": {
@@ -72,7 +72,7 @@
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
 	},
-	"archiveSelectedFailureNotification": "{count, plural, =1{Nepodařilo se archivovat 1 položku} =2{Nepodařilo se archivovat 2 položky} =3{Nepodařilo se archivovat 3 položky} =4{Nepodařilo se archivovat 4 položky} other{Nepodařilo se archivovat {count} položek}}",
+	"archiveSelectedFailureNotification": "{count, plural, =1{Nepodařilo se archivovat 1 položku} few{Nepodařilo se archivovat {count} položky} other{Nepodařilo se archivovat {count} položek}}",
 	"@archiveSelectedFailureNotification": {
 		"description": "Cannot archive some of the selected items",
 		"placeholders": {
@@ -144,7 +144,7 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"albumSize": "{count, plural, =0{Prázdné} =1{1 položka} =2{2 položky} =3{3 položky} =4{4 položky} other{{count} položek}}",
+	"albumSize": "{count, plural, =0{Prázdné} =1{1 položka} few{{count} položky} other{{count} položek}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
 		"placeholders": {
@@ -328,7 +328,7 @@
 	"@settingsMemoriesRangeTitle": {
 		"description": "How many adjacent days to be inclded in memories for a particular year"
 	},
-	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} den} =2{+-{range} dny} =3{+-{range} dny} =4{+-{range} dny} other{+-{range} dní}}",
+	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} den} few{+-{range} dny} other{+-{range} dní}}",
 	"@settingsMemoriesRangeValueText": {
 		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
 		"placeholders": {
@@ -684,7 +684,7 @@
 	"@restoreSelectedSuccessNotification": {
 		"description": "Restored all selected items from trashbin successfully"
 	},
-	"restoreSelectedFailureNotification": "{count, plural, =1{Nepodařilo se obnovit 1 položku} =2{Nepodařilo se obnovit 2 položky} =3{Nepodařilo se obnovit 3 položky} =4{Nepodařilo se obnovit 4 položky} other{Nepodařilo se obnovit {count} položek}}",
+	"restoreSelectedFailureNotification": "{count, plural, =1{Nepodařilo se obnovit 1 položku} few{Nepodařilo se obnovit {count} položky} other{Nepodařilo se obnovit {count} položek}}",
 	"@restoreSelectedFailureNotification": {
 		"description": "Cannot restore some of the selected items from trashbin",
 		"placeholders": {
@@ -933,7 +933,7 @@
 	"@createShareProgressText": {
 		"description": "Message shown when sharing files"
 	},
-	"copyItemsFailureNotification": "{count, plural, =1{Nepodařilo se zkopírovat 1 položku} =2{Nepodařilo se zkopírovat 2 položky} =3{Nepodařilo se zkopírovat 3 položky} =4{Nepodařilo se zkopírovat 4 položky} other{Failed copying {count} items}}",
+	"copyItemsFailureNotification": "{count, plural, =1{Nepodařilo se zkopírovat 1 položku} few{Nepodařilo se zkopírovat {count} položky} other{Failed copying {count} items}}",
 	"@copyItemsFailureNotification": {
 		"description": "Error message shown when some files cannot be copied",
 		"placeholders": {

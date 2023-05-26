@@ -98,6 +98,9 @@ ThemeData buildDarkModeSwitchTheme(BuildContext context) {
       trackColor: MaterialStateProperty.all(theme.colorScheme.surfaceVariant),
       thumbColor: MaterialStateProperty.all(Colors.black87),
     ),
+    colorScheme: theme.colorScheme.copyWith(
+      outline: Colors.transparent,
+    ),
   );
 }
 

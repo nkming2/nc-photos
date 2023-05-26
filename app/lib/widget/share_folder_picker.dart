@@ -67,7 +67,7 @@ class _ShareFolderPickerState extends State<ShareFolderPicker> {
               children: [
                 Text(
                   L10n.global().settingsShareFolderDialogTitle,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),

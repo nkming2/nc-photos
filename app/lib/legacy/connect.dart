@@ -95,8 +95,8 @@ class _ConnectState extends State<Connect> {
             Text(
               L10n.global().connectingToServer(widget.account.url),
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
-            )
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ],
         ),
       ),
