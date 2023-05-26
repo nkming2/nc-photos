@@ -178,6 +178,10 @@
 	"@nameInputHint": {
 		"description": "Hint of the text field expecting name data"
 	},
+	"nameInputInvalidEmpty": "Nimi vaaditaan",
+	"@nameInputInvalidEmpty": {
+		"description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+	},
 	"skipButtonLabel": "OHITA",
 	"@skipButtonLabel": {
 		"description": "Label of the skip button"
@@ -417,6 +421,10 @@
 	"settingsVersionTitle": "Versio",
 	"@settingsVersionTitle": {
 		"description": "Title of the version data item"
+	},
+	"settingsServerVersionTitle": "Palvelin",
+	"@settingsServerVersionTitle": {
+		"description": "This item will show the server software version, e.g., Nextcloud 25"
 	},
 	"settingsSourceCodeTitle": "Lähdekoodi",
 	"@settingsSourceCodeTitle": {
@@ -1368,6 +1376,34 @@
 	"@loopTooltip": {
 		"description": "Enable or disable loop in the video player"
 	},
+	"createCollectionFailureNotification": "Kokoelman luonti epäonnistui",
+	"@createCollectionFailureNotification": {
+		"description": "Inform user that a collection cannot be created"
+	},
+	"addItemToCollectionTooltip": "Lisää kokoelmaan",
+	"@addItemToCollectionTooltip": {
+		"description": "Add one or more items to a collection"
+	},
+	"addItemToCollectionFailureNotification": "Kokoelmaan lisääminen epäonnistui",
+	"@addItemToCollectionFailureNotification": {
+		"description": "Inform user that the item cannot be added to a collection"
+	},
+	"setCollectionCoverFailureNotification": "Kokoelman kansikuvan asetus epäonnistui",
+	"@setCollectionCoverFailureNotification": {
+		"description": "Cannot set the opened item as the collection cover"
+	},
+	"exportCollectionTooltip": "Vie",
+	"@exportCollectionTooltip": {
+		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+	},
+	"exportCollectionDialogTitle": "Vie kokoelma",
+	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud albumi",
+	"@createCollectionDialogNextcloudAlbumLabel": {
+		"description": "Server-side albums that are available in Nextcloud 25+"
+	},
+	"createCollectionDialogNextcloudAlbumDescription": "Palvelimella sijoitettavat albumit vaativat vähintään Nextcloud-version 25",
+	"removeCollectionsFailedNotification": "Joidenkin kokoelmien poisto epäonnistui",
+	
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {
 		"description": "Error message when server responds with HTTP401"
