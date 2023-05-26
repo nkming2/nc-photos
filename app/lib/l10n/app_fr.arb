@@ -651,7 +651,7 @@
 	"@whitelistCertDialogTitle": {
 		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
 	},
-	"whitelistCertDialogContent": "Vous pouvez ajouter le certificat à la liste blanche pour que l'application l'accepte. AVERTISSEMENT : Cela pose un grand risque pour la sécurité. Assurez-vous que le certificat est auto-signé par vous ou une partie de confiance\n\nHôte : {hôte}\nEmpreinte digitale : {fingerprint}",
+	"whitelistCertDialogContent": "Vous pouvez ajouter le certificat à la liste blanche pour que l'application l'accepte. AVERTISSEMENT : Cela pose un grand risque pour la sécurité. Assurez-vous que le certificat est auto-signé par vous ou une partie de confiance\n\nHôte : {host}\nEmpreinte digitale : {fingerprint}",
 	"@whitelistCertDialogContent": {
 		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
 		"placeholders": {
