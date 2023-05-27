@@ -211,7 +211,7 @@ enum _ProviderOption {
       case appAlbum:
         return L10n.global().createCollectionDialogAlbumLabel;
       case ncAlbum:
-        return "Nextcloud Album";
+        return L10n.global().createCollectionDialogNextcloudAlbumLabel;
     }
   }
 
@@ -220,7 +220,7 @@ enum _ProviderOption {
       case appAlbum:
         return L10n.global().createCollectionDialogAlbumDescription;
       case ncAlbum:
-        return "Server-side album, require Nextcloud 25 or above";
+        return L10n.global().createCollectionDialogNextcloudAlbumDescription;
     }
   }
 }
