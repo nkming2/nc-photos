@@ -8,6 +8,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/exporter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
@@ -40,6 +41,14 @@ class ExportCollectionDialog extends StatelessWidget {
             context.read<AccountController>().collectionsController,
         collection: collection,
         items: items,
+        supportedProviders: {
+          _ProviderOption.appAlbum,
+          if (context
+              .read<AccountController>()
+              .serverController
+              .isSupported(ServerFeature.ncAlbum))
+            _ProviderOption.ncAlbum,
+        },
       ),
       child: const _WrappedExportCollectionDialog(),
     );
@@ -171,7 +180,9 @@ class _ProviderDropdown extends StatelessWidget {
       builder: (context, state) => DropdownButtonHideUnderline(
         child: DropdownButtonFormField<_ProviderOption>(
           value: state.formValue.provider,
-          items: _ProviderOption.values
+          items: context
+              .read<_Bloc>()
+              .supportedProviders
               .map((e) => DropdownMenuItem<_ProviderOption>(
                     value: e,
                     child: Text(e.toValueString(context)),

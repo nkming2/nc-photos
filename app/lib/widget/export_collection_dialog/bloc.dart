@@ -7,6 +7,7 @@ class _Bloc extends Bloc<_Event, _State> {
     required this.collectionsController,
     required this.collection,
     required this.items,
+    required this.supportedProviders,
   }) : super(_State.init()) {
     on<_FormEvent>(_onFormEvent);
 
@@ -78,6 +79,8 @@ class _Bloc extends Bloc<_Event, _State> {
   final CollectionsController collectionsController;
   final Collection collection;
   final List<CollectionItem> items;
+  @keep
+  final Set<_ProviderOption> supportedProviders;
 
   var _isHandlingError = false;
 }
