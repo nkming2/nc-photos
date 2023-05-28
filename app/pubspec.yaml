@@ -36,6 +36,7 @@ dependencies:
   battery_plus: ^4.0.1
   bloc_concurrency: ^0.2.2
   cached_network_image: ^3.2.3
+  cached_network_image_platform_interface: any
   circular_reveal_animation: ^2.0.1
   clock: ^1.1.1
   collection: ^1.15.0
@@ -64,6 +65,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter_background_service.git
       ref: v0.2.6-nc-photos-2
   flutter_bloc: ^8.1.2
+  flutter_cache_manager: any
   flutter_colorpicker: ^1.0.3
   flutter_isolate: ^2.0.4
   flutter_map: ^2.2.0
@@ -86,6 +88,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/kd-tree-dart.git
       ref: 0.2.0-nc-photos-1
   kiwi: ^4.1.0
+  latlong2: any
   logging: ^1.1.1
   memory_info: ^0.0.3
   mime: ^1.0.4
@@ -99,6 +102,7 @@ dependencies:
     path: ../codegen
   np_common:
     path: ../np_common
+  octo_image: any
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.15
