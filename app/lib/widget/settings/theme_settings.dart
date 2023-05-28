@@ -1,20 +1,25 @@
 import 'dart:async';
 
+import 'package:copy_with/copy_with.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/settings/theme.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:to_string/to_string.dart';
 
+part 'theme/bloc.dart';
+part 'theme/state_event.dart';
 part 'theme_settings.g.dart';
 
 class ThemeSettings extends StatelessWidget {
@@ -23,7 +28,7 @@ class ThemeSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ThemeSettingsBloc(KiwiContainer().resolve<DiContainer>()),
+      create: (_) => _Bloc(KiwiContainer().resolve<DiContainer>()),
       child: const _WrappedThemeSettings(),
     );
   }
@@ -41,8 +46,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
   @override
   void initState() {
     super.initState();
-    _errorSubscription =
-        context.read<ThemeSettingsBloc>().errorStream().listen((_) {
+    _errorSubscription = context.read<_Bloc>().errorStream().listen((_) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
         duration: k.snackBarDurationNormal,
@@ -75,7 +79,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+              BlocBuilder<_Bloc, _State>(
                 buildWhen: (previous, current) =>
                     previous.seedColor != current.seedColor,
                 builder: (context, state) {
@@ -93,7 +97,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
               ),
               if (platform_k.isAndroid &&
                   AndroidInfo().sdkInt >= AndroidVersion.Q)
-                BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+                BlocBuilder<_Bloc, _State>(
                   buildWhen: (previous, current) =>
                       previous.isFollowSystemTheme !=
                       current.isFollowSystemTheme,
@@ -102,14 +106,12 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
                       title: Text(L10n.global().settingsFollowSystemThemeTitle),
                       value: state.isFollowSystemTheme,
                       onChanged: (value) {
-                        context
-                            .read<ThemeSettingsBloc>()
-                            .add(ThemeSettingsSetFollowSystemTheme(value));
+                        context.read<_Bloc>().add(_SetFollowSystemTheme(value));
                       },
                     );
                   },
                 ),
-              BlocBuilder<ThemeSettingsBloc, ThemeSettingsState>(
+              BlocBuilder<_Bloc, _State>(
                 buildWhen: (previous, current) =>
                     previous.isUseBlackInDarkTheme !=
                     current.isUseBlackInDarkTheme,
@@ -123,9 +125,8 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
                             .settingsUseBlackInDarkThemeFalseDescription),
                     value: state.isUseBlackInDarkTheme,
                     onChanged: (value) {
-                      context.read<ThemeSettingsBloc>().add(
-                          ThemeSettingsSetUseBlackInDarkTheme(
-                              value, Theme.of(context)));
+                      context.read<_Bloc>().add(
+                          _SetUseBlackInDarkTheme(value, Theme.of(context)));
                     },
                   );
                 },
@@ -146,7 +147,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
       return;
     }
     if (mounted) {
-      context.read<ThemeSettingsBloc>().add(ThemeSettingsSetSeedColor(result));
+      context.read<_Bloc>().add(_SetSeedColor(result));
     }
   }
 

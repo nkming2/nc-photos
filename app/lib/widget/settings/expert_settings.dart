@@ -1,17 +1,21 @@
 import 'dart:async';
 
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/settings/expert.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:to_string/to_string.dart';
 
+part 'expert/bloc.dart';
+part 'expert/state_event.dart';
 part 'expert_settings.g.dart';
 
 class ExpertSettings extends StatelessWidget {
@@ -20,7 +24,7 @@ class ExpertSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ExpertSettingsBloc(KiwiContainer().resolve<DiContainer>()),
+      create: (_) => _Bloc(KiwiContainer().resolve<DiContainer>()),
       child: const _WrappedExpertSettings(),
     );
   }
@@ -38,9 +42,8 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings> {
   @override
   void initState() {
     super.initState();
-    _errorSubscription =
-        context.read<ExpertSettingsBloc>().errorStream().listen((error) {
-      if (error.ev is ExpertSettingsClearCacheDatabase) {
+    _errorSubscription = context.read<_Bloc>().errorStream().listen((error) {
+      if (error.ev is _ClearCacheDatabase) {
         SnackBarManager().showSnackBar(SnackBar(
           content: Text(exception_util.toUserString(error.error)),
           duration: k.snackBarDurationNormal,
@@ -59,12 +62,11 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
-        builder: (context) =>
-            BlocListener<ExpertSettingsBloc, ExpertSettingsState>(
+        builder: (context) => BlocListener<_Bloc, _State>(
           listenWhen: (previous, current) =>
               !identical(previous.lastSuccessful, current.lastSuccessful),
           listener: (context, state) {
-            if (state.lastSuccessful is ExpertSettingsClearCacheDatabase) {
+            if (state.lastSuccessful is _ClearCacheDatabase) {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -115,9 +117,7 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings> {
                       subtitle: Text(
                           L10n.global().settingsClearCacheDatabaseDescription),
                       onTap: () {
-                        context
-                            .read<ExpertSettingsBloc>()
-                            .add(ExpertSettingsClearCacheDatabase());
+                        context.read<_Bloc>().add(_ClearCacheDatabase());
                       },
                     ),
                   ],
