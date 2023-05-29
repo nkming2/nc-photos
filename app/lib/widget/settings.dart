@@ -9,9 +9,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/server_status.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -30,6 +28,7 @@ import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/root_picker.dart';
+import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
@@ -200,7 +199,7 @@ class _SettingsState extends State<Settings> {
                   context,
                   leading: const Icon(Icons.code_outlined),
                   label: "Developer options",
-                  builder: () => _DevSettings(),
+                  builder: () => const DeveloperSettings(),
                 ),
               _buildCaption(context, L10n.global().settingsAboutSectionTitle),
               ListTile(
@@ -1580,63 +1579,6 @@ class _MiscSettingsState extends State<_MiscSettings> {
 
   late bool _isPhotosTabSortByName;
   late bool _isDoubleTapExit;
-}
-
-class _DevSettings extends StatefulWidget {
-  @override
-  createState() => _DevSettingsState();
-}
-
-@npLog
-class _DevSettingsState extends State<_DevSettings> {
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        const SliverAppBar(
-          pinned: true,
-          title: Text("Developer options"),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              ListTile(
-                title: const Text("SQL:VACUUM"),
-                onTap: () => _runSqlVacuum(),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _runSqlVacuum() async {
-    try {
-      final c = KiwiContainer().resolve<DiContainer>();
-      await c.sqliteDb.useNoTransaction((db) async {
-        await db.customStatement("VACUUM;");
-      });
-      SnackBarManager().showSnackBar(const SnackBar(
-        content: Text("Finished successfully"),
-        duration: k.snackBarDurationShort,
-      ));
-    } catch (e, stackTrace) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-      _log.shout("[_runSqlVacuum] Uncaught exception", e, stackTrace);
-    }
-  }
 }
 
 Widget _buildCaption(BuildContext context, String label) {

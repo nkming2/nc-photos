@@ -54,10 +54,3 @@ extension _$_MiscSettingsStateNpLog on _MiscSettingsState {
 
   static final log = Logger("widget.settings._MiscSettingsState");
 }
-
-extension _$_DevSettingsStateNpLog on _DevSettingsState {
-  // ignore: unused_element
-  Logger get _log => log;
-
-  static final log = Logger("widget.settings._DevSettingsState");
-}
