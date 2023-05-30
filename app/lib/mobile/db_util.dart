@@ -3,6 +3,8 @@ import 'dart:io' as dart;
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/common.dart';
@@ -58,4 +60,14 @@ Future<CommonDatabase> openRawSqliteDbFromAsset(
     file.path,
     mode: isReadOnly ? OpenMode.readOnly : OpenMode.readWriteCreate,
   );
+}
+
+Future<dynamic> exportSqliteDb(sql.SqliteDb db) async {
+  final dir = await getApplicationDocumentsDirectory();
+  final file = dart.File(path_lib.join(dir.path, "export.sqlite"));
+  if (await file.exists()) {
+    await file.delete();
+  }
+  await db.customStatement("VACUUM INTO ?", [file.path]);
+  return MediaStore.copyFileToDownload(file.path);
 }
