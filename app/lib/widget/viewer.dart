@@ -150,6 +150,7 @@ class _ViewerState extends State<Viewer>
               child: CircularProgressIndicator(),
             ),
           HorizontalPageViewer(
+            key: _pageViewerKey,
             pageCount: _streamFilesView.length,
             pageBuilder: (context, i) =>
                 _buildPage(context, i, originalBrightness),
@@ -881,6 +882,8 @@ class _ViewerState extends State<Viewer>
 
   late List<FileDescriptor> _streamFilesView;
   bool _isStreamFilesCopy = false;
+
+  final _pageViewerKey = GlobalKey();
 
   static const _viewportFraction = 1.05;
 }
