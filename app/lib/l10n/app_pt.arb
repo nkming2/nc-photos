@@ -178,7 +178,7 @@
     "@nameInputHint": {
         "description": "Hint of the text field expecting name data"
     },
-    "nameInputInvalidEmpty": "",
+    "nameInputInvalidEmpty": "Name is required",
     "@nameInputInvalidEmpty": {
         "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
     },
@@ -422,7 +422,7 @@
     "@settingsVersionTitle": {
         "description": "Title of the version data item"
     },
-    "settingsServerVersionTitle": "",
+    "settingsServerVersionTitle": "Server",
     "@settingsServerVersionTitle": {
         "description": "This item will show the server software version, e.g., Nextcloud 25"
     },
@@ -1376,33 +1376,33 @@
     "@loopTooltip": {
         "description": "Enable or disable loop in the video player"
     },
-    "createCollectionFailureNotification": "",
+    "createCollectionFailureNotification": "Failed creating collection",
     "@createCollectionFailureNotification": {
         "description": "Inform user that a collection cannot be created"
     },
-    "addItemToCollectionTooltip": "",
+    "addItemToCollectionTooltip": "Add to collection",
     "@addItemToCollectionTooltip": {
         "description": "Add one or more items to a collection"
     },
-    "addItemToCollectionFailureNotification": "",
+    "addItemToCollectionFailureNotification": "Failed adding to collection",
     "@addItemToCollectionFailureNotification": {
         "description": "Inform user that the item cannot be added to a collection"
     },
-    "setCollectionCoverFailureNotification": "",
+    "setCollectionCoverFailureNotification": "Failed setting collection cover",
     "@setCollectionCoverFailureNotification": {
         "description": "Cannot set the opened item as the collection cover"
     },
-    "exportCollectionTooltip": "",
+    "exportCollectionTooltip": "Export",
     "@exportCollectionTooltip": {
         "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
     },
-    "exportCollectionDialogTitle": "",
-    "createCollectionDialogNextcloudAlbumLabel": "",
+    "exportCollectionDialogTitle": "Export collection",
+    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
     "@createCollectionDialogNextcloudAlbumLabel": {
         "description": "Server-side albums that are available in Nextcloud 25+"
     },
-    "createCollectionDialogNextcloudAlbumDescription": "",
-    "removeCollectionsFailedNotification": "",
+    "createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
+    "removeCollectionsFailedNotification": "Failed to remove some collections",
     "errorUnauthenticated": "Acesso não autenticado. Por favor faça login novamente se o problema persistir",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
