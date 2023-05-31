@@ -1,1439 +1,1438 @@
 {
-	"appTitle": "Photos",
-	"translator": "pHamala",
-	"@translator": {
-		"description": "Name of the translator(s) for this language"
-	},
-	"photosTabLabel": "Kuvat",
-	"@photosTabLabel": {
-		"description": "Label of the tab that lists user photos"
-	},
-	"collectionsTooltip": "Kokoelmat",
-	"@collectionsTooltip": {
-		"description": "Groups of photos, e.g., albums, trash bin, etc"
-	},
-	"zoomTooltip": "Tarkenna",
-	"@zoomTooltip": {
-		"description": "Tooltip of the zoom button"
-	},
-	"refreshMenuLabel": "Päivitä",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
-	"settingsMenuLabel": "Asetukset",
-	"@settingsMenuLabel": {
-		"description": "Label of the settings entry in menu"
-	},
-	"selectionAppBarTitle": "{count, plural, other{{count} valittu}}",
-	"@selectionAppBarTitle": {
-		"description": "Title of the contextual app bar that shows number of selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"deleteSelectedProcessingNotification": "{count, plural, =1{Poistetaan 1 kohde} other{Poistetaan {count} kohdetta}}",
-	"@deleteSelectedProcessingNotification": {
-		"description": "Inform user that the selected items are being deleted",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"deleteSelectedSuccessNotification": "Kaikki valitut kohteet poistettu onnistuneesti",
-	"@deleteSelectedSuccessNotification": {
-		"description": "Inform user that the selected items are deleted successfully"
-	},
-	"deleteSelectedFailureNotification": "{count, plural, =1{ 1 kohteen poistaminen epäonnistui} other{{count} kohteen poistaminen epäonnistui}}",
-	"@deleteSelectedFailureNotification": {
-		"description": "Inform user that some/all the selected items cannot be deleted",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"archiveTooltip": "Arkistoi",
-	"@archiveTooltip": {
-		"description": "Archive selected items"
-	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Arkistoi 1 kohdetta} other{Arkistoi {count} kohdetta}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"archiveSelectedSuccessNotification": "Kaikki valitut kohteet arkistoitu",
-	"@archiveSelectedSuccessNotification": {
-		"description": "Archived all selected items successfully"
-	},
-	"archiveSelectedFailureNotification": "{count, plural, =1{1 kohteen arkistointi epäonnistui} other{{count} kohteen arkistointi epäonnistui}}",
-	"@archiveSelectedFailureNotification": {
-		"description": "Cannot archive some of the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"unarchiveTooltip": "Peru arkistointi",
-	"@unarchiveTooltip": {
-		"description": "Unarchive selected items"
-	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{ 1 kohteen arkistointia perutaan} other{{count} kohteen arkistointia perutaan}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"unarchiveSelectedSuccessNotification": "Kaikkien kohteiden arkistointi peruttu",
-	"@unarchiveSelectedSuccessNotification": {
-		"description": "Unarchived all selected items successfully"
-	},
-	"unarchiveSelectedFailureNotification": "{count, plural, =1{1 kohteen arkistoinnin peruminen epäonnistui} other{{count} kohteen arkistoinnin peruminen epäonnistui}}",
-	"@unarchiveSelectedFailureNotification": {
-		"description": "Cannot unarchive some of the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"deleteTooltip": "Poista",
-	"@deleteTooltip": {
-		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Poistetaan kohdetta",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
-	},
-	"deleteSuccessNotification": "Kohde poistettu",
-	"@deleteSuccessNotification": {
-		"description": "Inform user that the item is deleted successfully"
-	},
-	"deleteFailureNotification": "Kohteen poistaminen epäonnistui",
-	"@deleteFailureNotification": {
-		"description": "Inform user that the item cannot be deleted"
-	},
-	"removeSelectedFromAlbumFailureNotification": "Kohteiden poistaminen albumista epäonnistui",
-	"@removeSelectedFromAlbumFailureNotification": {
-		"description": "Inform user that the selected items cannot be removed from an album"
-	},
-	"addServerTooltip": "Lisää palvelin",
-	"@addServerTooltip": {
-		"description": "Tooltip of the button that adds a new server"
-	},
-	"removeServerSuccessNotification": "Palvelin:{server} poistettu",
-	"@removeServerSuccessNotification": {
-		"description": "Inform user that a server is removed successfully",
-		"placeholders": {
-			"server": {
-				"example": "http://www.example.com"
-			}
-		}
-	},
-	"createAlbumTooltip": "Uusi albumi",
-	"@createAlbumTooltip": {
-		"description": "Tooltip of the button that creates a new album"
-	},
-	"albumSize": "{count, plural, =0{Empty} =1{1 kohde} other{{count} kohdetta}}",
-	"@albumSize": {
-		"description": "Number of items inside an album",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"albumArchiveLabel": "Arkistoi",
-	"@albumArchiveLabel": {
-		"description": "Archive"
-	},
-	"connectingToServer": "Yhdistetään \n{server}",
-	"@connectingToServer": {
-		"description": "Inform user that the app is connecting to a server",
-		"placeholders": {
-			"server": {
-				"example": "http://www.example.com"
-			}
-		}
-	},
-	"connectingToServer2": "Odotetaan palvelimen tunnistautumista",
-	"@connectingToServer2": {
-		"description": "Shown when the app is waiting for the user to sign in via an external browser"
-	},
-	"connectingToServerInstruction": "Kirjaudu auenneen selaimen kautta",
-	"@connectingToServerInstruction": {
-		"description": "Shown when the app is waiting for the user to sign in via an external browser"
-	},
-	"nameInputHint": "Nimi",
-	"@nameInputHint": {
-		"description": "Hint of the text field expecting name data"
-	},
-	"nameInputInvalidEmpty": "Nimi vaaditaan",
-	"@nameInputInvalidEmpty": {
-		"description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
-	},
-	"skipButtonLabel": "OHITA",
-	"@skipButtonLabel": {
-		"description": "Label of the skip button"
-	},
-	"confirmButtonLabel": "VAHVISTA",
-	"@confirmButtonLabel": {
-		"description": "Label of the confirm button"
-	},
-	"signInHeaderText": "Kirjaudu Nextcloud-palvelimeen",
-	"@signInHeaderText": {
-		"description": "Inform user what to do in sign in widget"
-	},
-	"signIn2faHintText": "Käytä sovellussalasanaa, jos käytössäsi on kaksivaiheinen tunnistautuminen",
-	"@signIn2faHintText": {
-		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
-	},
-	"signInHeaderText2": "Nextcloud\nKirjaudu sisään",
-	"@signInHeaderText2": {
-		"description": "Sign in to Nextcloud server"
-	},
-	"serverAddressInputHint": "Palvelimen osoite",
-	"@serverAddressInputHint": {
-		"description": "Hint of the text field expecting server address data"
-	},
-	"serverAddressInputInvalidEmpty": "Syötä palvelimen osoite",
-	"@serverAddressInputInvalidEmpty": {
-		"description": "Inform user that the server address input field cannot be empty"
-	},
-	"usernameInputHint": "Käyttäjätunnus",
-	"@usernameInputHint": {
-		"description": "Hint of the text field expecting username data"
-	},
-	"usernameInputInvalidEmpty": "Syötä käyttäjätunnus",
-	"@usernameInputInvalidEmpty": {
-		"description": "Inform user that the username input field cannot be empty"
-	},
-	"passwordInputHint": "Salasana",
-	"@passwordInputHint": {
-		"description": "Hint of the text field expecting password data"
-	},
-	"passwordInputInvalidEmpty": "Syötä salasana",
-	"@passwordInputInvalidEmpty": {
-		"description": "Inform user that the password input field cannot be empty"
-	},
-	"rootPickerHeaderText": "Valitse sisällytetyt kansiot",
-	"@rootPickerHeaderText": {
-		"description": "Inform user what to do in root picker widget"
-	},
-	"rootPickerSubHeaderText": "Ainoastaan kansion sisäisest kuvat näytetään. Paina Ohita sisällyttääksesi kaikki kuvat",
-	"@rootPickerSubHeaderText": {
-		"description": "Inform user what to do in root picker widget"
-	},
-	"rootPickerNavigateUpItemText": "(takaisin)",
-	"@rootPickerNavigateUpItemText": {
-		"description": "Text of the list item to navigate up the directory tree"
-	},
-	"rootPickerUnpickFailureNotification": "Kohteen valinta epäonnistui",
-	"@rootPickerUnpickFailureNotification": {
-		"description": "Failed while unpicking an item in the root picker list"
-	},
-	"rootPickerListEmptyNotification": "Valitse vähintään yksi kansio tai paina ohita sisällyttääksesi kaikki",
-	"@rootPickerListEmptyNotification": {
-		"description": "Error when user pressing confirm without picking any folders"
-	},
-	"setupWidgetTitle": "Aloitetaan",
-	"@setupWidgetTitle": {
-		"description": "Title of the introductory widget"
-	},
-	"setupSettingsModifyLaterHint": "Voit muuttaa tämän myöhemmin asetuksista",
-	"@setupSettingsModifyLaterHint": {
-		"description": "Inform user that they can modify this setting after the setup process"
-	},
-	"setupHiddenPrefDirNoticeDetail": "Tämä sovellus luo Nextcloud-palvelimeen kansion asetustiedostoja. Älä muokkaa tai poista kansiota ellet ole aikeissa poistaa sovellusta",
-	"@setupHiddenPrefDirNoticeDetail": {
-		"description": "Inform user about the preference folder created by this app"
-	},
-	"settingsWidgetTitle": "Asetukset",
-	"@settingsWidgetTitle": {
-		"description": "Title of the Settings widget"
-	},
-	"settingsLanguageTitle": "Kieli",
-	"@settingsLanguageTitle": {
-		"description": "Set display language"
-	},
-	"settingsLanguageOptionSystemDefaultLabel": "Järjestelmän oletus",
-	"@settingsLanguageOptionSystemDefaultLabel": {
-		"description": "Follow the Android system language"
-	},
-	"settingsExifSupportTitle": "EXIF-tuki",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
-	"settingsExifSupportTrueSubtitle": "Vaatii ylimääräistä verkon käyttöä",
-	"@settingsExifSupportTrueSubtitle": {
-		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Prosessoi tiedostoja vain kun WIFI-yhteys on käytettävissä",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Toimenpiteestä voi aiheutua data-maksuja",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
-	},
-	"settingsMemoriesTitle": "Muistot",
-	"@settingsMemoriesTitle": {
-		"description": "Memory albums contain photos taken in a specific time range in the past"
-	},
-	"settingsMemoriesSubtitle": "Näytä aiemmin otettuja kuvia",
-	"@settingsMemoriesSubtitle": {
-		"description": "Memory albums contain photos taken in a specific time range in the past"
-	},
-	"settingsAccountTitle": "Tili",
-	"settingsAccountLabelTitle": "Otsikko",
-	"@settingsAccountLabelTitle": {
-		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
-	},
-	"settingsAccountLabelDescription": "Aseta tunniste, joka näytetään palvelimen URL:n sijasta",
-	"settingsIncludedFoldersTitle": "Sisällytetyt kansiot",
-	"@settingsIncludedFoldersTitle": {
-		"description": "Change the included folders of an account"
-	},
-	"settingsShareFolderTitle": "Jaa kansio",
-	"@settingsShareFolderTitle": {
-		"description": "Set the share folder such that it matches the parameter in config.php"
-	},
-	"settingsShareFolderDialogTitle": "Paikanna jaettu kansio",
-	"@settingsShareFolderDialogTitle": {
-		"description": "Set the share folder such that it matches the parameter in config.php"
-	},
-	"settingsShareFolderDialogDescription": "Tämä asetus vaikuttaa share_folder parametreihini config.php -tiedostossa. Asetusten arvojen TÄYTYY olla identtisiä. \n\nPaikanna sama kansio, joka on määritetty config-php -tiedostossa.",
-	"@settingsShareFolderDialogDescription": {
-		"description": "Set the share folder such that it matches the parameter in config.php"
-	},
-	"settingsShareFolderPickerDescription": "Paikanna sama kansio, joka on määritetty config.php -tiedostossa. Paina oletusta, jos et ole määrittänyt parametrejä käsin.",
-	"@settingsShareFolderPickerDescription": {
-		"description": "Set the share folder such that it matches the parameter in config.php"
-	},
-	"settingsServerAppSectionTitle": "Palvelimen sovellustuki",
-	"@settingsServerAppSectionTitle": {
-		"description": "Enable/disable various server apps"
-	},
-	"settingsPhotosDescription": "Muokkaa Kuvat-välilehdellä näytettävää sisältöä",
-	"@settingsPhotosDescription": {
-		"description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
-	},
-	"settingsMemoriesRangeTitle": "Muistojen väli",
-	"@settingsMemoriesRangeTitle": {
-		"description": "How many adjacent days to be inclded in memories for a particular year"
-	},
-	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} päivä} other{+-{range} päivää}}",
-	"@settingsMemoriesRangeValueText": {
-		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
-		"placeholders": {
-			"range": {
-				"example": "1"
-			}
-		}
-	},
-	"settingsViewerTitle": "Katselin",
-	"settingsViewerDescription": "Muokkaa kuva/video -katselinta",
-	"settingsScreenBrightnessTitle": "Näytön kirkkaus",
-	"settingsScreenBrightnessDescription": "Ohita järjestelmän määrittämä kirkkaus",
-	"settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
-	"settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty",
-	"settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
-	"settingsAlbumTitle": "Albumi",
-	"settingsAlbumDescription": "Muokkaa albumeita",
-	"settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
-	"settingsShowDateInAlbumDescription": "Käytä vain kun albumi on lajiteltu ajan mukaan",
-	"settingsImageEditTitle": "Editori",
-	"@settingsImageEditTitle": {
-		"description": "Include settings for image enhancements and the image editor"
-	},
-	"settingsImageEditDescription": "Muokkaa kuvien parannusta ja kuvaeditoria",
-	"settingsEnhanceMaxResolutionTitle2": "Kuvaresoluutio muokkausta varten",
-	"settingsEnhanceMaxResolutionDescription": "Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.",
-	"settingsImageEditSaveResultsToServerTitle": "Tallenna muokkaus palvelimelle",
-	"@settingsImageEditSaveResultsToServerTitle": {
-		"description": "Whether to save the edit/enhance results to server instead of the current device"
-	},
-	"settingsImageEditSaveResultsToServerTrueDescription": "Muokkaukset tallennetaan palvelimelle. Virheen sattuessa muokkaukset tallennetaan paikallisesti laitteelle.",
-	"settingsImageEditSaveResultsToServerFalseDescription": "Muokkaukset tallennetaan paikallisesti tälle laitteelle.",
-	"settingsThemeTitle": "Teema",
-	"settingsThemeDescription": "Muokkaa sovelluksen ulkoasua",
-	"settingsFollowSystemThemeTitle": "Käytä järjestelmän teemaa",
-	"@settingsFollowSystemThemeTitle": {
-		"description": "Respect the system dark mode settings introduced on Android 10"
-	},
-	"settingsSeedColorTitle": "Teeman väri",
-	"@settingsSeedColorTitle": {
-		"description": "Customize the colors used in app"
-	},
-	"settingsSeedColorDescription": "Käytetään määrittämään sovelluksen kaikkia värejä",
-	"@settingsSeedColorDescription": {
-		"description": "Customize the colors used in app"
-	},
-	"settingsSeedColorPickerTitle": "Valitse väri",
-	"@settingsSeedColorPickerTitle": {
-		"description": "Dialog to customize the colors used in app"
-	},
-	"settingsUseBlackInDarkThemeTitle": "Tumma teema",
-	"@settingsUseBlackInDarkThemeTitle": {
-		"description": "Make the dark theme darker"
-	},
-	"settingsUseBlackInDarkThemeTrueDescription": "Käytä mustaa tummassa teemassa",
-	"@settingsUseBlackInDarkThemeTrueDescription": {
-		"description": "When black in dark theme is set to true"
-	},
-	"settingsUseBlackInDarkThemeFalseDescription": "Käytä tumman harmaata tummassa teemassa",
-	"@settingsUseBlackInDarkThemeFalseDescription": {
-		"description": "When black in dark theme is set to false"
-	},
-	"settingsMiscellaneousTitle": "Sekalaiset",
-	"settingsDoubleTapExitTitle": "Napauta kahdesti poistuaksesi",
-	"@settingsDoubleTapExitTitle": {
-		"description": "If enabled, users need to tap the back button twice to exit app"
-	},
-	"settingsPhotosTabSortByNameTitle": "Järjestä tiedostonimen mukaan",
-	"@settingsPhotosTabSortByNameTitle": {
-		"description": "Sort photos listed in the Photos tab by filename (descending)"
-	},
-	"settingsExperimentalTitle": "Kokeellinen",
-	"settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
-	"settingsExpertTitle": "Edistyneet",
-	"@settingsExpertTitle": {
-		"description": "Settings that must be tweaked with caution"
-	},
-	"settingsExpertWarningText": "Varmista, että olet ymmärtänyt jokaisen vaihtoehdon ennen kuin teet mitään",
-	"settingsClearCacheDatabaseTitle": "Puhdista tietokanta",
-	"settingsClearCacheDatabaseDescription": "Puhdista välitiedostot ja aloita uudelleen synkronointi palvelimen kanssa",
-	"settingsClearCacheDatabaseSuccessNotification": "Tietokannan puhdistus onnistui. Käynnistä sovellus uudelleen",
-	"settingsAboutSectionTitle": "Tietoa",
-	"@settingsAboutSectionTitle": {
-		"description": "Title of the about section in settings widget"
-	},
-	"settingsVersionTitle": "Versio",
-	"@settingsVersionTitle": {
-		"description": "Title of the version data item"
-	},
-	"settingsServerVersionTitle": "Palvelin",
-	"@settingsServerVersionTitle": {
-		"description": "This item will show the server software version, e.g., Nextcloud 25"
-	},
-	"settingsSourceCodeTitle": "Lähdekoodi",
-	"@settingsSourceCodeTitle": {
-		"description": "Title of the source code item"
-	},
-	"settingsBugReportTitle": "Ilmoita ongelmasta",
-	"@settingsBugReportTitle": {
-		"description": "Report issue"
-	},
-	"settingsCaptureLogsTitle": "Kaappaa lokitiedot",
-	"@settingsCaptureLogsTitle": {
-		"description": "Capture app logs for bug report"
-	},
-	"settingsCaptureLogsDescription": "Auta kehittäjää korjaamaan bugeja",
-	"settingsTranslatorTitle": "Kääntäjä",
-	"@settingsTranslatorTitle": {
-		"description": "Title of the translator item"
-	},
-	"writePreferenceFailureNotification": "Asetusten tallennus epäonnistui",
-	"@writePreferenceFailureNotification": {
-		"description": "Inform user that the preference file cannot be modified"
-	},
-	"enableButtonLabel": "OTA KÄYTTÖÖN",
-	"@enableButtonLabel": {
-		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "EXIF-tuen käyttöönotto tuo metadatasta lisätietoa kuten, kuvauspäivämäärä, kameramalli jne. Jotta sovellus voi lukea metadataa, käyttää se enemmän verkkoa täysikokoisten kuvien lataamista varten. Sovellus lataa ainoastaan Wi-Fi verkossa.",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Ota EXIF-tuki käyttöön",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
-	},
-	"captureLogDetails": "Lokitietojen tallenusta varten:\n\n1. Ota tämä asetus käyttöön\n2. Toista ongelma\n3. Poista tämä asetus käytöstä\n4. Etsi nc-photos.log -tiedosto latauskansiosta\n\n*Mikäli ongelma kaataa sovelluksen, lokitiedostoja ei pystytä tallentamaan. Tässä tapauksessa ota yhteyttä kehittäjään lisätietoja varten.",
-	"@captureLogDetails": {
-		"description": "Detailed description on capturing logs"
-	},
-	"captureLogSuccessNotification": "Lokitiedot tallennettu onnistuneesti",
-	"@captureLogSuccessNotification": {
-		"description": "Captured logs are successfully saved to the download directory"
-	},
-	"doneButtonLabel": "VALMIS",
-	"@doneButtonLabel": {
-		"description": "Label of the done button"
-	},
-	"nextButtonLabel": "SEURAAVA",
-	"@nextButtonLabel": {
-		"description": "Label of the next button"
-	},
-	"connectButtonLabel": "YHDISTÄ",
-	"@connectButtonLabel": {
-		"description": "Label of the connect button"
-	},
-	"rootPickerSkipConfirmationDialogContent2": "Kaikki tiedostosi sisällytetään. Tämä voi lisä muistinkäyttöä ja hidastaa suorituskykyä.",
-	"@rootPickerSkipConfirmationDialogContent2": {
-		"description": "Warn user not to include all files in their server"
-	},
-	"megapixelCount": "{count}MP",
-	"@megapixelCount": {
-		"description": "Resolution of an image in megapixel",
-		"placeholders": {
-			"count": {
-				"example": "1.3"
-			}
-		}
-	},
-	"secondCountSymbol": "{count}s",
-	"@secondCountSymbol": {
-		"description": "Number of seconds",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"millimeterCountSymbol": "{count}mm",
-	"@millimeterCountSymbol": {
-		"description": "Number of millimeters",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"detailsTooltip": "Tiedot",
-	"@detailsTooltip": {
-		"description": "Tooltip of the details button"
-	},
-	"downloadTooltip": "Lataus",
-	"@downloadTooltip": {
-		"description": "Tooltip of the download button"
-	},
-	"downloadProcessingNotification": "Ladataan tiedostoa",
-	"@downloadProcessingNotification": {
-		"description": "Inform user that the file is being downloaded"
-	},
-	"downloadSuccessNotification": "Tiedoston lataus onnistui",
-	"@downloadSuccessNotification": {
-		"description": "Inform user that the file is downloaded successfully"
-	},
-	"downloadFailureNotification": "Tiedoston lataus epäonnistui",
-	"@downloadFailureNotification": {
-		"description": "Inform user that the file cannot be downloaded"
-	},
-	"nextTooltip": "Seuraava",
-	"@nextTooltip": {
-		"description": "Tooltip of the next button"
-	},
-	"previousTooltip": "Edellinen",
-	"@previousTooltip": {
-		"description": "Tooltip of the previous button"
-	},
-	"webSelectRangeNotification": "Paina shift + napauta viimeistä kuvaa valitaksesi kuvat niiden välistä",
-	"@webSelectRangeNotification": {
-		"description": "Inform web user how to select items in range"
-	},
-	"mobileSelectRangeNotification": "Paina kohdetta pitkään valitaksesi kaikki niiden väliltä",
-	"@mobileSelectRangeNotification": {
-		"description": "Inform mobile user how to select items in range"
-	},
-	"updateDateTimeDialogTitle": "Muokkaa aikaa ja päiväystä",
-	"@updateDateTimeDialogTitle": {
-		"description": "Dialog to modify the date & time of a file"
-	},
-	"dateSubtitle": "Päivämäärä",
-	"timeSubtitle": "Aika",
-	"dateYearInputHint": "Vuosi",
-	"dateMonthInputHint": "Kuukausi",
-	"dateDayInputHint": "Päivä",
-	"timeHourInputHint": "Tunti",
-	"timeMinuteInputHint": "Minuutti",
-	"timeSecondInputHint": "Sekuntti",
-	"dateTimeInputInvalid": "Epäkelpo arvo",
-	"@dateTimeInputInvalid": {
-		"description": "Invalid date/time input (e.g., non-numeric characters)"
-	},
-	"updateDateTimeFailureNotification": "Ajan ja päiväyksen muuttaminen epäonnistui",
-	"@updateDateTimeFailureNotification": {
-		"description": "Failed to set the date & time of a file"
-	},
-	"albumDirPickerHeaderText": "Valitse mukana olevat albumit",
-	"@albumDirPickerHeaderText": {
-		"description": "Pick the folders for a folder based album"
-	},
-	"albumDirPickerSubHeaderText": "Ainoastaan valituissa kansioissa olevat kuvat näkyvät tässä albumissa",
-	"@albumDirPickerSubHeaderText": {
-		"description": "Pick the folders for a folder based album"
-	},
-	"albumDirPickerListEmptyNotification": "Valitse vähintään yksi albumi",
-	"@albumDirPickerListEmptyNotification": {
-		"description": "Error when user pressing confirm without picking any folders"
-	},
-	"importFoldersTooltip": "Tuo kansioita",
-	"@importFoldersTooltip": {
-		"description": "Menu entry in the album page to import folders as albums"
-	},
-	"albumImporterHeaderText": "Tuo kansiot albumeiksi",
-	"@albumImporterHeaderText": {
-		"description": "Import folders as albums"
-	},
-	"albumImporterSubHeaderText": "Suositellut albumit on listattu alapuolelle. Tiedostojen tuontinopeus riippuu tiedostojen määrästä palvelimella.",
-	"@albumImporterSubHeaderText": {
-		"description": "Import folders as albums"
-	},
-	"importButtonLabel": "TUO",
-	"albumImporterProgressText": "Importing folders",
-	"@albumImporterProgressText": {
-		"description": "Message shown while importing"
-	},
-	"doneButtonTooltip": "Valmis",
-	"editTooltip": "Edit",
-	"editAccountConflictFailureNotification": "Käyttäjätunnus samoilla asetuksilla on jo olemassa",
-	"@editAccountConflictFailureNotification": {
-		"description": "Error when user modified an account such that it's identical to another one"
-	},
-	"genericProcessingDialogContent": "Ole hyvä ja odota",
-	"@genericProcessingDialogContent": {
-		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
-	},
-	"sortTooltip": "Lajittele",
-	"sortOptionDialogTitle": "Sort by",
-	"@sortOptionDialogTitle": {
-		"description": "Select how the photos should be sorted"
-	},
-	"sortOptionTimeAscendingLabel": "Vanhin ensin",
-	"@sortOptionTimeAscendingLabel": {
-		"description": "Sort by time, in ascending order"
-	},
-	"sortOptionTimeDescendingLabel": "Uusin ensin",
-	"@sortOptionTimeDescendingLabel": {
-		"description": "Sort by time, in descending order"
-	},
-	"sortOptionFilenameAscendingLabel": "Tiedostonimi",
-	"@sortOptionFilenameAscendingLabel": {
-		"description": "Sort by filename, in ascending order"
-	},
-	"sortOptionFilenameDescendingLabel": "Tiedostonimi (laskeutuva)",
-	"@sortOptionFilenameDescendingLabel": {
-		"description": "Sort by filename, in descending order"
-	},
-	"sortOptionAlbumNameLabel": "Albumin nimi",
-	"@sortOptionAlbumNameLabel": {
-		"description": "Sort by album name, in ascending order"
-	},
-	"sortOptionAlbumNameDescendingLabel": "Albumin nimi (laskeva)",
-	"@sortOptionAlbumNameDescendingLabel": {
-		"description": "Sort by album name, in descending order"
-	},
-	"sortOptionManualLabel": "Käsin",
-	"@sortOptionManualLabel": {
-		"description": "Sort manually"
-	},
-	"albumEditDragRearrangeNotification": "Paina kohdetta pitkään järjestääksesi sen uudelleen käsin",
-	"@albumEditDragRearrangeNotification": {
-		"description": "Instructions on how to rearrange photos"
-	},
-	"albumAddTextTooltip": "Lisää teksti",
-	"@albumAddTextTooltip": {
-		"description": "Add some text that display between photos to an album"
-	},
-	"shareTooltip": "Jaa",
-	"@shareTooltip": {
-		"description": "Share selected items to other apps"
-	},
-	"shareSelectedEmptyNotification": "Valitse kuvia jaettavaksi",
-	"@shareSelectedEmptyNotification": {
-		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
-	},
-	"shareDownloadingDialogContent": "Ladataan",
-	"@shareDownloadingDialogContent": {
-		"description": "Downloading photos to be shared"
-	},
-	"searchTooltip": "Etsi",
-	"clearTooltip": "Clear",
-	"@clearTooltip": {
-		"description": "Clear some sort of user input, typically a text field"
-	},
-	"listNoResultsText": "Ei tuloksia",
-	"@listNoResultsText": {
-		"description": "When there's nothing in a list"
-	},
-	"listEmptyText": "Tyhjä",
-	"@listEmptyText": {
-		"description": "When there's nothing in a list"
-	},
-	"albumTrashLabel": "Roskakori",
-	"@albumTrashLabel": {
-		"description": "Deleted photos"
-	},
-	"restoreTooltip": "Palauta",
-	"@restoreTooltip": {
-		"description": "Restore selected items from trashbin"
-	},
-	"restoreSelectedProcessingNotification": "{count, plural, =1{Palautetaan 1 kohde} other{Palautetaan {count} kohdetta}}",
-	"@restoreSelectedProcessingNotification": {
-		"description": "Restoring selected items from trashbin",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"restoreSelectedSuccessNotification": "Kaikki kohteet palautettu onnistuneesti",
-	"@restoreSelectedSuccessNotification": {
-		"description": "Restored all selected items from trashbin successfully"
-	},
-	"restoreSelectedFailureNotification": "{count, plural, =1{1 kohteen palautus epäonnistui} other{{count} kohteen palautus epäonnistui}}",
-	"@restoreSelectedFailureNotification": {
-		"description": "Cannot restore some of the selected items from trashbin",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"restoreProcessingNotification": "Palautetaan kohdetta",
-	"@restoreProcessingNotification": {
-		"description": "Restoring the opened item from trashbin"
-	},
-	"restoreSuccessNotification": "Kohde palautettu onnistuneesti",
-	"@restoreSuccessNotification": {
-		"description": "Restored the opened item from trashbin successfully"
-	},
-	"restoreFailureNotification": "Kohteen palautus epäonnistui",
-	"@restoreFailureNotification": {
-		"description": "Cannot restore the opened item from trashbin"
-	},
-	"deletePermanentlyTooltip": "Poista lopullisesti",
-	"@deletePermanentlyTooltip": {
-		"description": "Permanently delete selected items from trashbin"
-	},
-	"deletePermanentlyConfirmationDialogTitle": "Poista lopullisesti",
-	"@deletePermanentlyConfirmationDialogTitle": {
-		"description": "Make sure the user wants to delete the items"
-	},
-	"deletePermanentlyConfirmationDialogContent": " Valitut kohteet poistetaan palvelimelta lopullisesti.\n\nTätä toimintoa ei voi perua",
-	"@deletePermanentlyConfirmationDialogContent": {
-		"description": "Make sure the user wants to delete the items"
-	},
-	"albumSharedLabel": "Jaetut",
-	"@albumSharedLabel": {
-		"description": "A small label placed next to a shared album"
-	},
-	"metadataTaskProcessingNotification": "Prosessoidaan kuvien metadataa taustalla",
-	"@metadataTaskProcessingNotification": {
-		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Odotetaan WiFi:ä",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
-	},
-	"configButtonLabel": "ASETUS",
-	"useAsAlbumCoverTooltip": "Use as album cover",
-	"helpTooltip": "Tuki",
-	"helpButtonLabel": "TUKI",
-	"removeFromAlbumTooltip": "Poista albumista",
-	"@removeFromAlbumTooltip": {
-		"description": "Remove the opened photo from an album"
-	},
-	"changelogTitle": "Muutosloki",
-	"@changelogTitle": {
-		"description": "Title of the changelog dialog"
-	},
-	"serverCertErrorDialogTitle": "Palvelisertifikaattiin ei voida luottaa",
-	"@serverCertErrorDialogTitle": {
-		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
-	},
-	"serverCertErrorDialogContent": "Palvelimeen on mahdollisesti murtauduttu tai joku yrittää mahdollisesti varastaa tietojasi",
-	"@serverCertErrorDialogContent": {
-		"description": "Warn user about an untrusted SSL certificate"
-	},
-	"advancedButtonLabel": "EDISTYNEET",
-	"@advancedButtonLabel": {
-		"description": "Label of the advanced button"
-	},
-	"whitelistCertDialogTitle": "Salli tuntematon sertifikaatti?",
-	"@whitelistCertDialogTitle": {
-		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
-	},
-	"whitelistCertDialogContent": "Voit sallia sertifikaatin ja saada sovelluksen hyväksymään sen. VAROITUS: Tämä on tietoturvariski! Varmista, että sertifikaatin on luonut sinä itse tai luotettava taho\n\nHost: {host}\nSormenjälki: {fingerprint}",
-	"@whitelistCertDialogContent": {
-		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
-		"placeholders": {
-			"host": {
-				"example": "www.example.com"
-			},
-			"fingerprint": {
-				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-			}
-		}
-	},
-	"whitelistCertButtonLabel": "HYVÄKSY RISKIT JA SALLI",
-	"@whitelistCertButtonLabel": {
-		"description": "Label of the whitelist certificate button"
-	},
-	"fileSharedByDescription": "Jaettu sinulle tältä käyttäjältä",
-	"@fileSharedByDescription": {
-		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
-	},
-	"emptyTrashbinTooltip": "Tyhjä roskakori",
-	"@emptyTrashbinTooltip": {
-		"description": "Permanently delete all items from trashbin"
-	},
-	"emptyTrashbinConfirmationDialogTitle": "Tyhjä roskakori",
-	"@emptyTrashbinConfirmationDialogTitle": {
-		"description": "Make sure the user wants to delete all items"
-	},
-	"emptyTrashbinConfirmationDialogContent": "Kaikki kohteet poistetaan lopullisesti palvelimelta\n\nTätä ei voi peruuttaa",
-	"@emptyTrashbinConfirmationDialogContent": {
-		"description": "Make sure the user wants to delete all items"
-	},
-	"unsetAlbumCoverTooltip": "Poista albumin kansi",
-	"@unsetAlbumCoverTooltip": {
-		"description": "Unset the cover of the opened album"
-	},
-	"muteTooltip": "Mykistä",
-	"@muteTooltip": {
-		"description": "Mute the video player"
-	},
-	"unmuteTooltip": "Poista mykistys",
-	"@unmuteTooltip": {
-		"description": "Unmute the video player"
-	},
-	"collectionPeopleLabel": "Ihmiset",
-	"@collectionPeopleLabel": {
-		"description": "Browse photos grouped by person"
-	},
-	"slideshowTooltip": "Kuvasarja",
-	"@slideshowTooltip": {
-		"description": "A button to start a slideshow from the current collection"
-	},
-	"slideshowSetupDialogTitle": "Aseta kuvasarja",
-	"@slideshowSetupDialogTitle": {
-		"description": "Setup slideshow before starting"
-	},
-	"slideshowSetupDialogDurationTitle": "Kuvan kesto (MM:SS)",
-	"@slideshowSetupDialogDurationTitle": {
-		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
-	},
-	"slideshowSetupDialogShuffleTitle": "Sekoita",
-	"@slideshowSetupDialogShuffleTitle": {
-		"description": "Whether to shuffle the collection"
-	},
-	"slideshowSetupDialogRepeatTitle": "Toista",
-	"@slideshowSetupDialogRepeatTitle": {
-		"description": "Whether to restart the slideshow from the beginning after the last slide"
-	},
-	"slideshowSetupDialogReverseTitle": "Käänteinen",
-	"@slideshowSetupDialogReverseTitle": {
-		"description": "Whether to play the slideshow in reverse order"
-	},
-	"linkCopiedNotification": "Linkki kopioitu",
-	"@linkCopiedNotification": {
-		"description": "Copied the share link to clipboard"
-	},
-	"shareMethodDialogTitle": "Jaa",
-	"@shareMethodDialogTitle": {
-		"description": "Let the user pick how they want to share"
-	},
-	"shareMethodPreviewTitle": "Esikatselu",
-	"@shareMethodPreviewTitle": {
-		"description": "Share the preview of a file"
-	},
-	"shareMethodPreviewDescription": "Jaa heikkolaatuisempi esikatselu muihin sovelluksiin (vain kuvat tuettu)",
-	"shareMethodOriginalFileTitle": "Alkuperäinen tiedosto",
-	"@shareMethodOriginalFileTitle": {
-		"description": "Share the original file"
-	},
-	"shareMethodOriginalFileDescription": "Lataa alkuperäinen tiedosto ja jaa se muiden sovellusten kanssa",
-	"shareMethodPublicLinkTitle": "Julkinen linkki",
-	"@shareMethodPublicLinkTitle": {
-		"description": "Create a share link on server and share it"
-	},
-	"shareMethodPublicLinkDescription": "Luo julkinen linkki palvelimelle. Kaikki linkinhaltijat voivat käyttää tiedostoa",
-	"shareMethodPasswordLinkTitle": "Password protected link",
-	"@shareMethodPasswordLinkTitle": {
-		"description": "Create a password protected share link on server and share it"
-	},
-	"shareMethodPasswordLinkDescription": "Luo uusi salasanasuojattu linkki palvelimelle",
-	"collectionSharingLabel": "Jaettu",
-	"@collectionSharingLabel": {
-		"description": "List items being shared by the current account"
-	},
-	"fileLastSharedDescription": "Jaettu viimeksi {date}",
-	"@fileLastSharedDescription": {
-		"description": "The date when this file was last shared by you",
-		"placeholders": {
-			"date": {
-				"example": "Jan 1, 2021",
-				"description": "The date string is formatted according to the current locale"
-			}
-		}
-	},
-	"fileLastSharedByOthersDescription": "{user} jakoi kanssasi {date}",
-	"@fileLastSharedByOthersDescription": {
-		"description": "The date when this file was shared with you",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			},
-			"date": {
-				"example": "Jan 1, 2021",
-				"description": "The date string is formatted according to the current locale"
-			}
-		}
-	},
-	"albumLastSharedByOthersDescription": "{user} jakoi albumin kanssasi {date}",
-	"@albumLastSharedByOthersDescription": {
-		"description": "The date when this album was shared with you",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			},
-			"date": {
-				"example": "Jan 1, 2021",
-				"description": "The date string is formatted according to the current locale"
-			}
-		}
-	},
-	"sharedWithLabel": "Jaettu",
-	"@sharedWithLabel": {
-		"description": "A list of users or links where this file is sharing with"
-	},
-	"unshareTooltip": "Poista jako",
-	"@unshareTooltip": {
-		"description": "Remove a share"
-	},
-	"unshareSuccessNotification": "Poistetut jaot",
-	"@unshareSuccessNotification": {
-		"description": "Removed a share"
-	},
-	"locationLabel": "Sijainti",
-	"@locationLabel": {
-		"description": "Show where the file is located"
-	},
-	"multipleFilesLinkShareDialogContent": "Nextcloud ei tue linkin jakoa usealle tiedostolle. Sovellus KOPIO sen sijaan tiedostot kansioon ja jakaa luodun kansion.",
-	"@multipleFilesLinkShareDialogContent": {
-		"description": "Dialog shown when sharing multiple files as link"
-	},
-	"folderNameInputHint": "Kansion nimi",
-	"@folderNameInputHint": {
-		"description": "Input field for folder name"
-	},
-	"folderNameInputInvalidEmpty": "Syötä kansion nimi",
-	"@folderNameInputInvalidEmpty": {
-		"description": "Folder name cannot be left empty"
-	},
-	"folderNameInputInvalidCharacters": "Sisältää sopimattomia merkkejä",
-	"@folderNameInputInvalidCharacters": {
-		"description": "Folder name contains characters that are not allowed"
-	},
-	"createShareProgressText": "Luodaan jakoa",
-	"@createShareProgressText": {
-		"description": "Message shown when sharing files"
-	},
-	"copyItemsFailureNotification": "{count, plural, =1{ 1 kohteen kopiointi epäonnistui} other{{count} kohteen kopiointi epäonnistui}}",
-	"@copyItemsFailureNotification": {
-		"description": "Error message shown when some files cannot be copied",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
-	"unshareLinkShareDirDialogTitle": "Poista kansio?",
-	"@unshareLinkShareDirDialogTitle": {
-		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-	},
-	"unshareLinkShareDirDialogContent": "Sovellus loi tämän kansion jakaakseen useamman tiedoston samalla linkillä. Sitä ei enää jaeta kenenkään kanssa. Haluatko poistaa tämän kansion?",
-	"@unshareLinkShareDirDialogContent": {
-		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-	},
-	"addToCollectionsViewTooltip": "Lisää kokoelmaan",
-	"@addToCollectionsViewTooltip": {
-		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
-	},
-	"shareAlbumDialogTitle": "Jaa toisen käyttäjän kanssa",
-	"@shareAlbumDialogTitle": {
-		"description": "Dialog to share an album with another user"
-	},
-	"shareAlbumSuccessWithErrorNotification": "Albumi jaettu käyttäjän {user} kanssa. Joidenkin tiedostojen jako kuitenkin epäonnistui",
-	"@shareAlbumSuccessWithErrorNotification": {
-		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"unshareAlbumSuccessWithErrorNotification": "Albumin jakaminen käyttäjän {user} kanssa lopetettu. Joidenkin tiedostojen jakaminen kuitenkin epäonnistui",
-	"@unshareAlbumSuccessWithErrorNotification": {
-		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"fixSharesTooltip": "Korjaa jaot",
-	"@fixSharesTooltip": {
-		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
-	},
-	"fixTooltip": "Korjaa",
-	"@fixTooltip": {
-		"description": "Fix an issue"
-	},
-	"fixAllTooltip": "Korjaa kaikki",
-	"@fixAllTooltip": {
-		"description": "Fix all listed issues"
-	},
-	"missingShareDescription": "Ei jaettu käyttäjäm {user} kanssa",
-	"@missingShareDescription": {
-		"description": "The album is shared with user but a file is NOT",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"extraShareDescription": "Jaettu käyttäjän {user} kanssa",
-	"@extraShareDescription": {
-		"description": "The album is NOT shared with user but a file is",
-		"placeholders": {
-			"user": {
-				"example": "Alice"
-			}
-		}
-	},
-	"defaultButtonLabel": "OLETUS",
-	"addUserInputHint": "Lisää käyttäjä",
-	"@addUserInputHint": {
-		"description": "Input a user name to share this album with"
-	},
-	"sharedAlbumInfoDialogTitle": "Uutena ominaisuutena jaetut albumit",
-	"@sharedAlbumInfoDialogTitle": {
-		"description": "This dialog is shown when user first open a shared album"
-	},
-	"sharedAlbumInfoDialogContent": "Jaetut albumit sallii useiden käyttäjien yhtäaikaisen pääsyn albumiin. Lue huolellisesti jaettujen albumien rajoitukset ennen käyttöä",
-	"@sharedAlbumInfoDialogContent": {
-		"description": "This dialog is shown when user first open a shared album"
-	},
-	"learnMoreButtonLabel": "LUE LISÄÄ",
-	"migrateDatabaseProcessingNotification": "Päivitetään tietokantaa",
-	"@migrateDatabaseProcessingNotification": {
-		"description": "Migrate database to work with the updated app"
-	},
-	"migrateDatabaseFailureNotification": "Tietokantojen yhdistäminen epäonnistui",
-	"memoryAlbumName": "{count, plural, =1{1 vuosi sitten} other{{count} vuotta sitten}}",
-	"@memoryAlbumName": {
-		"description": "Memory albums are generated by the app and include photos in the past years",
-		"placeholders": {
-			"count": {
-				"example": "2"
-			}
-		}
-	},
-	"homeFolderNotFoundDialogTitle": "Kotikansiota ei löytynyt",
-	"@homeFolderNotFoundDialogTitle": {
-		"description": "The app failed to scan the user's home folder on signing in"
-	},
-	"homeFolderNotFoundDialogContent": "Korjaa WebDAV URL-osoite. Löydät URL-osoitteen Nextloud-verkkokäyttöliittymästä.",
-	"@homeFolderNotFoundDialogContent": {
-		"description": "Ask the user to provide us the correct WebDAV URL"
-	},
-	"homeFolderInputInvalidEmpty": "Nimeä kotikansiosi",
-	"@homeFolderInputInvalidEmpty": {
-		"description": "Home folder can't be left empty"
-	},
-	"createCollectionTooltip": "Uusi kokoelma",
-	"@createCollectionTooltip": {
-		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-	},
-	"createCollectionDialogAlbumLabel": "Albumi",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Näytä kaikki palvelimelle lisäämäsi kuvat",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
-	"createCollectionDialogFolderLabel": "Kansio",
-	"@createCollectionDialogFolderLabel": {
-		"description": "Create a folder as collection"
-	},
-	"createCollectionDialogFolderDescription": "Näytä kaikki kansion kuvat",
-	"@createCollectionDialogFolderDescription": {
-		"description": "Describe how a folder collection works"
-	},
-	"collectionFavoritesLabel": "Suosikit",
-	"@collectionFavoritesLabel": {
-		"description": "Browse photos added to favorites"
-	},
-	"favoriteTooltip": "Suosikki",
-	"@favoriteTooltip": {
-		"description": "Add photo to favorites"
-	},
-	"favoriteSuccessNotification": "Lisää suosikkeihin",
-	"@favoriteSuccessNotification": {
-		"description": "Successfully added photos to favorites"
-	},
-	"favoriteFailureNotification": "Kuvien lisäys suosikkeihin epäonnistui",
-	"@favoriteFailureNotification": {
-		"description": "Failed adding photos to favorites"
-	},
-	"unfavoriteTooltip": "Poista suosikeista",
-	"@unfavoriteTooltip": {
-		"description": "Remove photo to favorites"
-	},
-	"unfavoriteSuccessNotification": "Poistettu suosikeista",
-	"@unfavoriteSuccessNotification": {
-		"description": "Successfully removed photos from favorites"
-	},
-	"unfavoriteFailureNotification": "Suosikeista poisto epäonnistui",
-	"@unfavoriteFailureNotification": {
-		"description": "Failed removing photos from favorites"
-	},
-	"createCollectionDialogTagLabel": "Tunniste",
-	"@createCollectionDialogTagLabel": {
-		"description": "Create a collection containing files with tags"
-	},
-	"createCollectionDialogTagDescription": "Näytä kuvat tietyillä tunnisteilla",
-	"@createCollectionDialogTagDescription": {
-		"description": "Describe how a tag collection works"
-	},
-	"addTagInputHint": "Lisää tunniste",
-	"@addTagInputHint": {
-		"description": "Input a tag"
-	},
-	"tagPickerNoTagSelectedNotification": "Lisää ainakin yksi tunniste",
-	"@tagPickerNoTagSelectedNotification": {
-		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
-	},
-	"backgroundServiceStopping": "Pysäytetään palvelua",
-	"@backgroundServiceStopping": {
-		"description": "The background service is stopping itself"
-	},
-	"metadataTaskPauseLowBatteryNotification": "Akku on vähissä",
-	"@metadataTaskPauseLowBatteryNotification": {
-		"description": "Shown when the app has paused reading image metadata due to low battery"
-	},
-	"enhanceTooltip": "Paranna",
-	"@enhanceTooltip": {
-		"description": "Enhance a photo"
-	},
-	"enhanceButtonLabel": "PARANNA",
-	"enhanceIntroDialogTitle": "Paranna kuviasi",
-	"enhanceIntroDialogDescription": "Kuviasi käsitellään paikallisesti laitteellasi. Oletuksena kuvat skaalataan resoluutioon 2048x1536. Voit muuttaa tämän resoluution asetuksista.",
-	"enhanceLowLightTitle": "Hämärässä otettujen kuvien parannus",
-	"@enhanceLowLightTitle": {
-		"description": "Enhance a photo taken in low-light environment"
-	},
-	"enhanceLowLightDescription": "Kirkasta hämärässä ympäristössä otettuja kuvia",
-	"enhanceLowLightParamBrightnessLabel": "Kirkkaus",
-	"@enhanceLowLightParamBrightnessLabel": {
-		"description": "This parameter sets how much brighter the output will be"
-	},
-	"collectionEditedPhotosLabel": "Muokatut (paikallinen)",
-	"@collectionEditedPhotosLabel": {
-		"description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
-	},
-	"deletePermanentlyLocalConfirmationDialogContent": "Valitut kuvat poistetaan lopullisesti laitteeltasi.\n\nTätä toimintoa ei voi perua.",
-	"@deletePermanentlyLocalConfirmationDialogContent": {
-		"description": "Make sure the user wants to delete the items from the current device"
-	},
-	"enhancePortraitBlurTitle": "Muotokuvan sumennus",
-	"@enhancePortraitBlurTitle": {
-		"description": "Blur the background of a photo"
-	},
-	"enhancePortraitBlurDescription": "Sumenna kuviesi taustaa, toimii parhaiten muotokuvien kanssa",
-	"enhancePortraitBlurParamBlurLabel": "Blurriness",
-	"@enhancePortraitBlurParamBlurLabel": {
-		"description": "This parameter sets the radius of the blur filter"
-	},
-	"enhanceSuperResolution4xTitle": "Super-resoluutio (4x)",
-	"@enhanceSuperResolution4xTitle": {
-		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
-	},
-	"enhanceSuperResolution4xDescription": "Skaalaa kuviesi resoluutiota jopa 4x normaalista resoluutiosta. (Lue kohta Apua saadaksesi lisätietoa, kuinka toiminto toimii.)",
-	"enhanceStyleTransferTitle": "Tyylin siirto",
-	"@enhanceStyleTransferTitle": {
-		"description": "Transfer the image style from a reference image to a photo"
-	},
-	"enhanceStyleTransferStyleDialogTitle": "Valitse tyyli",
-	"@enhanceStyleTransferStyleDialogTitle": {
-		"description": "Pick a reference image for the style transfer algorithm"
-	},
-	"enhanceStyleTransferStyleDialogDescription": "Siirrä kuvan tyyli vertailukuvasta omiin kuviisi.",
-	"enhanceStyleTransferNoStyleSelectedNotification": "Valitse tyyli",
-	"@enhanceStyleTransferNoStyleSelectedNotification": {
-		"description": "Show this error if users did not pick a reference image"
-	},
-	"enhanceColorPopTitle": "Värihyppy",
-	"@enhanceColorPopTitle": {
-		"description": "Desaturate the background of a photo"
-	},
-	"enhanceColorPopDescription": "Vähennä kuvien taustan saturaatiota, toimii parhaiten muotokuvien kanssa.",
-	"enhanceGenericParamWeightLabel": "Paino",
-	"@enhanceGenericParamWeightLabel": {
-		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
-	},
-	"enhanceRetouchTitle": "Automaattinen parannus",
-	"@enhanceRetouchTitle": {
-		"description": "Automatically improve your photo"
-	},
-	"enhanceRetouchDescription": "Paranna kuvia automaattisesti. Parantaa kuvien värisävyjä.",
-	"doubleTapExitNotification": "Napauta uudelleen poistuaksesi",
-	"@doubleTapExitNotification": {
-		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
-	},
-	"imageEditDiscardDialogTitle": "Hylkää muutokset?",
-	"@imageEditDiscardDialogTitle": {
-		"description": "Warn before dismissing image editor (e.g., user pressing back button)"
-	},
-	"imageEditDiscardDialogContent": "Muutoksia ei tallennettu",
-	"discardButtonLabel": "HYLKÄÄ",
-	"@discardButtonLabel": {
-		"description": "Discard the current unsaved content"
-	},
-	"saveTooltip": "Save",
-	"@saveTooltip": {
-		"description": "Save the current content"
-	},
-	"imageEditColorBrightness": "Kirkkaus",
-	"@imageEditColorBrightness": {
-		"description": "Adjust the brightness of an image"
-	},
-	"imageEditColorContrast": "Kontrasti",
-	"@imageEditColorContrast": {
-		"description": "Adjust the contrast of an image"
-	},
-	"imageEditColorWhitePoint": "Valkoinen piste",
-	"@imageEditColorWhitePoint": {
-		"description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
-	},
-	"imageEditColorBlackPoint": "Musta piste",
-	"@imageEditColorBlackPoint": {
-		"description": "Adjust the black point of an image"
-	},
-	"imageEditColorSaturation": "Saturaatio",
-	"@imageEditColorSaturation": {
-		"description": "Adjust the color saturation of an image"
-	},
-	"imageEditColorWarmth": "Lämpö",
-	"@imageEditColorWarmth": {
-		"description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
-	},
-	"imageEditColorTint": "Värisävy",
-	"@imageEditColorTint": {
-		"description": "Shift colors from a green to a magenta tint"
-	},
-	"imageEditTitle": "Esikatsele muutoksia",
-	"@imageEditTitle": {
-		"description": "Title of the image editor"
-	},
-	"imageEditToolbarColorLabel": "Väri",
-	"@imageEditToolbarColorLabel": {
-		"description": "Label of the color tools. These can be used to adjust the color of an image"
-	},
-	"imageEditToolbarTransformLabel": "Muuta",
-	"@imageEditToolbarTransformLabel": {
-		"description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
-	},
-	"imageEditTransformOrientation": "Kierto",
-	"@imageEditTransformOrientation": {
-		"description": "Change the orientation of the image, 90 degree per step"
-	},
-	"imageEditTransformOrientationClockwise": "myötäpäivään",
-	"@imageEditTransformOrientationClockwise": {
-		"description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
-	},
-	"imageEditTransformOrientationCounterclockwise": "vastapäivään",
-	"@imageEditTransformOrientationCounterclockwise": {
-		"description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
-	},
-	"imageEditTransformCrop": "Rajaa",
-	"@imageEditTransformCrop": {
-		"description": "Crop the image"
-	},
-	"categoriesLabel": "Luokat",
-	"searchLandingPeopleListEmptyText": "Paina kysymys-painiketta saadaksesi tietoa ominaisuuden asentamisesta",
-	"@searchLandingPeopleListEmptyText": {
-		"description": "Shown in the search landing page under the People section when there are no people"
-	},
-	"searchLandingCategoryVideosLabel": "Videot",
-	"@searchLandingCategoryVideosLabel": {
-		"description": "Search all videos"
-	},
-	"searchFilterButtonLabel": "SUODATTIMET",
-	"@searchFilterButtonLabel": {
-		"description": "Modify search filters"
-	},
-	"searchFilterDialogTitle": "Hakusuodattimet",
-	"@searchFilterDialogTitle": {
-		"description": "Dialog to modify search filters"
-	},
-	"applyButtonLabel": "KÄYTÄ",
-	"@applyButtonLabel": {
-		"description": "A confirmation button, typically in a dialog, that apply the current settings"
-	},
-	"searchFilterOptionAnyLabel": "Kaikki",
-	"@searchFilterOptionAnyLabel": {
-		"description": "This is the default option for all search filters. Filters with this value will be ignored"
-	},
-	"searchFilterOptionTrueLabel": "Tosi",
-	"@searchFilterOptionTrueLabel": {
-		"description": "Positive option for a boolean filter"
-	},
-	"searchFilterOptionFalseLabel": "Epätosi",
-	"@searchFilterOptionFalseLabel": {
-		"description": "Negative option for a boolean filter"
-	},
-	"searchFilterTypeLabel": "Tyyppi",
-	"@searchFilterTypeLabel": {
-		"description": "Filter search results by file type"
-	},
-	"searchFilterTypeOptionImageLabel": "Kuva",
-	"@searchFilterTypeOptionImageLabel": {
-		"description": "Filter search results by file type"
-	},
-	"searchFilterBubbleTypeImageText": "kuvat",
-	"@searchFilterBubbleTypeImageText": {
-		"description": "List of active search filters shown in the result page (by file type, image)"
-	},
-	"searchFilterTypeOptionVideoLabel": "Video",
-	"@searchFilterTypeOptionVideoLabel": {
-		"description": "Filter search results by file type"
-	},
-	"searchFilterBubbleTypeVideoText": "videot",
-	"@searchFilterBubbleTypeVideoText": {
-		"description": "List of active search filters shown in the result page (by file type, video)"
-	},
-	"searchFilterFavoriteLabel": "Suosikki",
-	"@searchFilterFavoriteLabel": {
-		"description": "Filter search results by whether it's in favorites"
-	},
-	"searchFilterBubbleFavoriteTrueText": "suosikit",
-	"@searchFilterBubbleFavoriteTrueText": {
-		"description": "List of active search filters shown in the result page (by favorites, true)"
-	},
-	"searchFilterBubbleFavoriteFalseText": "ei suosikeissa",
-	"@searchFilterBubbleFavoriteFalseText": {
-		"description": "List of active search filters shown in the result page (by favorites, false)"
-	},
-	"showAllButtonLabel": "NÄYTÄ KAIKKI",
-	"@showAllButtonLabel": {
-		"description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
-	},
-	"gpsPlaceText": "Seuraava {place}",
-	"@gpsPlaceText": {
-		"description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
-		"placeholders": {
-			"place": {}
-		}
-	},
-	"gpsPlaceAboutDialogTitle": "Paikasta",
-	"@gpsPlaceAboutDialogTitle": {
-		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-	},
-	"gpsPlaceAboutDialogContent": "Näytetty paikka on vain karkea arvio. Se ei välttämättä ole tarkka. Paikka ei kuvaa sovelluksen kehittäjien näkökantaa alueesta.",
-	"@gpsPlaceAboutDialogContent": {
-		"description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-	},
-	"collectionPlacesLabel": "Paikat",
-	"@collectionPlacesLabel": {
-		"description": "Browse photos grouped by place"
-	},
-	"imageSaveOptionDialogTitle": "Tallennetaan tulosta",
-	"@imageSaveOptionDialogTitle": {
-		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-	},
-	"imageSaveOptionDialogContent": "Valitse mihin prosessoidut kuvat tallennetaan. Mikäli kuvansiirto palvelimelle epäonnistuu, tallennetaan kuva laitteelle.",
-	"@imageSaveOptionDialogContent": {
-		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-	},
-	"imageSaveOptionDialogDeviceButtonLabel": "LAITE",
-	"@imageSaveOptionDialogDeviceButtonLabel": {
-		"description": "Save the image on the current device"
-	},
-	"imageSaveOptionDialogServerButtonLabel": "PALVELIN",
-	"@imageSaveOptionDialogServerButtonLabel": {
-		"description": "Save the image on your Nextcloud server"
-	},
-	"initialSyncMessage": "Synkronoidaan palvelimen kanssa ensimmäistä kertaa",
-	"@initialSyncMessage": {
-		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
-	},
-	"loopTooltip": "Uudelleentoista",
-	"@loopTooltip": {
-		"description": "Enable or disable loop in the video player"
-	},
-	"createCollectionFailureNotification": "Kokoelman luonti epäonnistui",
-	"@createCollectionFailureNotification": {
-		"description": "Inform user that a collection cannot be created"
-	},
-	"addItemToCollectionTooltip": "Lisää kokoelmaan",
-	"@addItemToCollectionTooltip": {
-		"description": "Add one or more items to a collection"
-	},
-	"addItemToCollectionFailureNotification": "Kokoelmaan lisääminen epäonnistui",
-	"@addItemToCollectionFailureNotification": {
-		"description": "Inform user that the item cannot be added to a collection"
-	},
-	"setCollectionCoverFailureNotification": "Kokoelman kansikuvan asetus epäonnistui",
-	"@setCollectionCoverFailureNotification": {
-		"description": "Cannot set the opened item as the collection cover"
-	},
-	"exportCollectionTooltip": "Vie",
-	"@exportCollectionTooltip": {
-		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
-	},
-	"exportCollectionDialogTitle": "Vie kokoelma",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud albumi",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Palvelimella sijoitettavat albumit vaativat vähintään Nextcloud-version 25",
-	"removeCollectionsFailedNotification": "Joidenkin kokoelmien poisto epäonnistui",
-	
-	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
-	"@errorUnauthenticated": {
-		"description": "Error message when server responds with HTTP401"
-	},
-	"errorDisconnected": "Yhdistäminen epäonnistui. Palvelin saattaa olla offline-tilassa tai mobiililaitettasi ei ole kytketty verkkoon",
-	"@errorDisconnected": {
-		"description": "Error message when the app can't connect to the server"
-	},
-	"errorLocked": "Tiedosto lukittu palvelimella. Yritä myöhemmin uudelleen",
-	"@errorLocked": {
-		"description": "Error message when server responds with HTTP423"
-	},
-	"errorInvalidBaseUrl": "Yhteyttä ei voitu muodostaa. Varmista, että Nextcloud-palvelimesi URL-osoite on oikein",
-	"@errorInvalidBaseUrl": {
-		"description": "Error message when the base URL is invalid"
-	},
-	"errorWrongPassword": "Kirjautuminen epäonnistui. Varmista, että käyttäjätunnuksesi ja salasanasi on oikein",
-	"@errorWrongPassword": {
-		"description": "Error message when the username or password is wrong"
-	},
-	"errorServerError": "Palvelin-virhe. Varmista, että palvelin on konfiguroitu oikein",
-	"@errorServerError": {
-		"description": "HTTP 500"
-	},
-	"errorAlbumDowngrade": "Albumia ei voitu muokata, koska albumi on luotu sovelluksen uudemmalla versiolla. Päivitä sovellus viimeisimpään versioon ja yritä uudelleen",
-	"@errorAlbumDowngrade": {
-		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
-	},
-	"errorNoStoragePermission": "Tallennustilan käyttölupa vaaditaan",
-	"@errorNoStoragePermission": {
-		"description": "Missing permission on Android"
-	}
+    "appTitle": "Photos",
+    "translator": "pHamala",
+    "@translator": {
+        "description": "Name of the translator(s) for this language"
+    },
+    "photosTabLabel": "Kuvat",
+    "@photosTabLabel": {
+        "description": "Label of the tab that lists user photos"
+    },
+    "collectionsTooltip": "Kokoelmat",
+    "@collectionsTooltip": {
+        "description": "Groups of photos, e.g., albums, trash bin, etc"
+    },
+    "zoomTooltip": "Tarkenna",
+    "@zoomTooltip": {
+        "description": "Tooltip of the zoom button"
+    },
+    "refreshMenuLabel": "Päivitä",
+    "@refreshMenuLabel": {
+        "description": "Label of the refresh entry in menu"
+    },
+    "settingsMenuLabel": "Asetukset",
+    "@settingsMenuLabel": {
+        "description": "Label of the settings entry in menu"
+    },
+    "selectionAppBarTitle": "{count, plural, other{{count} valittu}}",
+    "@selectionAppBarTitle": {
+        "description": "Title of the contextual app bar that shows number of selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedProcessingNotification": "{count, plural, =1{Poistetaan 1 kohde} other{Poistetaan {count} kohdetta}}",
+    "@deleteSelectedProcessingNotification": {
+        "description": "Inform user that the selected items are being deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedSuccessNotification": "Kaikki valitut kohteet poistettu onnistuneesti",
+    "@deleteSelectedSuccessNotification": {
+        "description": "Inform user that the selected items are deleted successfully"
+    },
+    "deleteSelectedFailureNotification": "{count, plural, =1{ 1 kohteen poistaminen epäonnistui} other{{count} kohteen poistaminen epäonnistui}}",
+    "@deleteSelectedFailureNotification": {
+        "description": "Inform user that some/all the selected items cannot be deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveTooltip": "Arkistoi",
+    "@archiveTooltip": {
+        "description": "Archive selected items"
+    },
+    "archiveSelectedProcessingNotification": "{count, plural, =1{Arkistoi 1 kohdetta} other{Arkistoi {count} kohdetta}}",
+    "@archiveSelectedProcessingNotification": {
+        "description": "Archiving the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveSelectedSuccessNotification": "Kaikki valitut kohteet arkistoitu",
+    "@archiveSelectedSuccessNotification": {
+        "description": "Archived all selected items successfully"
+    },
+    "archiveSelectedFailureNotification": "{count, plural, =1{1 kohteen arkistointi epäonnistui} other{{count} kohteen arkistointi epäonnistui}}",
+    "@archiveSelectedFailureNotification": {
+        "description": "Cannot archive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveTooltip": "Peru arkistointi",
+    "@unarchiveTooltip": {
+        "description": "Unarchive selected items"
+    },
+    "unarchiveSelectedProcessingNotification": "{count, plural, =1{ 1 kohteen arkistointia perutaan} other{{count} kohteen arkistointia perutaan}}",
+    "@unarchiveSelectedProcessingNotification": {
+        "description": "Unarchiving selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveSelectedSuccessNotification": "Kaikkien kohteiden arkistointi peruttu",
+    "@unarchiveSelectedSuccessNotification": {
+        "description": "Unarchived all selected items successfully"
+    },
+    "unarchiveSelectedFailureNotification": "{count, plural, =1{1 kohteen arkistoinnin peruminen epäonnistui} other{{count} kohteen arkistoinnin peruminen epäonnistui}}",
+    "@unarchiveSelectedFailureNotification": {
+        "description": "Cannot unarchive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteTooltip": "Poista",
+    "@deleteTooltip": {
+        "description": "Delete selected items"
+    },
+    "deleteProcessingNotification": "Poistetaan kohdetta",
+    "@deleteProcessingNotification": {
+        "description": "Inform user that the item is being deleted"
+    },
+    "deleteSuccessNotification": "Kohde poistettu",
+    "@deleteSuccessNotification": {
+        "description": "Inform user that the item is deleted successfully"
+    },
+    "deleteFailureNotification": "Kohteen poistaminen epäonnistui",
+    "@deleteFailureNotification": {
+        "description": "Inform user that the item cannot be deleted"
+    },
+    "removeSelectedFromAlbumFailureNotification": "Kohteiden poistaminen albumista epäonnistui",
+    "@removeSelectedFromAlbumFailureNotification": {
+        "description": "Inform user that the selected items cannot be removed from an album"
+    },
+    "addServerTooltip": "Lisää palvelin",
+    "@addServerTooltip": {
+        "description": "Tooltip of the button that adds a new server"
+    },
+    "removeServerSuccessNotification": "Palvelin:{server} poistettu",
+    "@removeServerSuccessNotification": {
+        "description": "Inform user that a server is removed successfully",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "createAlbumTooltip": "Uusi albumi",
+    "@createAlbumTooltip": {
+        "description": "Tooltip of the button that creates a new album"
+    },
+    "albumSize": "{count, plural, =0{Empty} =1{1 kohde} other{{count} kohdetta}}",
+    "@albumSize": {
+        "description": "Number of items inside an album",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "albumArchiveLabel": "Arkistoi",
+    "@albumArchiveLabel": {
+        "description": "A collection containing all archived photos"
+    },
+    "connectingToServer": "Yhdistetään \n{server}",
+    "@connectingToServer": {
+        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "connectingToServer2": "Odotetaan palvelimen tunnistautumista",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Kirjaudu auenneen selaimen kautta",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "nameInputHint": "Nimi",
+    "@nameInputHint": {
+        "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "Nimi vaaditaan",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
+    "skipButtonLabel": "OHITA",
+    "@skipButtonLabel": {
+        "description": "Label of the skip button"
+    },
+    "confirmButtonLabel": "VAHVISTA",
+    "@confirmButtonLabel": {
+        "description": "Label of the confirm button"
+    },
+    "signInHeaderText": "Kirjaudu Nextcloud-palvelimeen",
+    "@signInHeaderText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signIn2faHintText": "Käytä sovellussalasanaa, jos käytössäsi on kaksivaiheinen tunnistautuminen",
+    "@signIn2faHintText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\nKirjaudu sisään",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
+    },
+    "serverAddressInputHint": "Palvelimen osoite",
+    "@serverAddressInputHint": {
+        "description": "Hint of the text field expecting server address data"
+    },
+    "serverAddressInputInvalidEmpty": "Syötä palvelimen osoite",
+    "@serverAddressInputInvalidEmpty": {
+        "description": "Inform user that the server address input field cannot be empty"
+    },
+    "usernameInputHint": "Käyttäjätunnus",
+    "@usernameInputHint": {
+        "description": "Hint of the text field expecting username data"
+    },
+    "usernameInputInvalidEmpty": "Syötä käyttäjätunnus",
+    "@usernameInputInvalidEmpty": {
+        "description": "Inform user that the username input field cannot be empty"
+    },
+    "passwordInputHint": "Salasana",
+    "@passwordInputHint": {
+        "description": "Hint of the text field expecting password data"
+    },
+    "passwordInputInvalidEmpty": "Syötä salasana",
+    "@passwordInputInvalidEmpty": {
+        "description": "Inform user that the password input field cannot be empty"
+    },
+    "rootPickerHeaderText": "Valitse sisällytetyt kansiot",
+    "@rootPickerHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerSubHeaderText": "Ainoastaan kansion sisäisest kuvat näytetään. Paina Ohita sisällyttääksesi kaikki kuvat",
+    "@rootPickerSubHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerNavigateUpItemText": "(takaisin)",
+    "@rootPickerNavigateUpItemText": {
+        "description": "Text of the list item to navigate up the directory tree"
+    },
+    "rootPickerUnpickFailureNotification": "Kohteen valinta epäonnistui",
+    "@rootPickerUnpickFailureNotification": {
+        "description": "Failed while unpicking an item in the root picker list"
+    },
+    "rootPickerListEmptyNotification": "Valitse vähintään yksi kansio tai paina ohita sisällyttääksesi kaikki",
+    "@rootPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "setupWidgetTitle": "Aloitetaan",
+    "@setupWidgetTitle": {
+        "description": "Title of the introductory widget"
+    },
+    "setupSettingsModifyLaterHint": "Voit muuttaa tämän myöhemmin asetuksista",
+    "@setupSettingsModifyLaterHint": {
+        "description": "Inform user that they can modify this setting after the setup process"
+    },
+    "setupHiddenPrefDirNoticeDetail": "Tämä sovellus luo Nextcloud-palvelimeen kansion asetustiedostoja. Älä muokkaa tai poista kansiota ellet ole aikeissa poistaa sovellusta",
+    "@setupHiddenPrefDirNoticeDetail": {
+        "description": "Inform user about the preference folder created by this app"
+    },
+    "settingsWidgetTitle": "Asetukset",
+    "@settingsWidgetTitle": {
+        "description": "Title of the Settings widget"
+    },
+    "settingsLanguageTitle": "Kieli",
+    "@settingsLanguageTitle": {
+        "description": "Set display language"
+    },
+    "settingsLanguageOptionSystemDefaultLabel": "Järjestelmän oletus",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
+    "settingsExifSupportTitle": "EXIF-tuki",
+    "@settingsExifSupportTitle": {
+        "description": "Title of the EXIF support setting"
+    },
+    "settingsExifSupportTrueSubtitle": "Vaatii ylimääräistä verkon käyttöä",
+    "@settingsExifSupportTrueSubtitle": {
+        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsExifWifiOnlyTitle": "Prosessoi tiedostoja vain kun WIFI-yhteys on käytettävissä",
+    "@settingsExifWifiOnlyTitle": {
+        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+    },
+    "settingsExifWifiOnlyFalseSubtitle": "Toimenpiteestä voi aiheutua data-maksuja",
+    "@settingsExifWifiOnlyFalseSubtitle": {
+        "description": "Shown when users allow processing exif data over any network"
+    },
+    "settingsMemoriesTitle": "Muistot",
+    "@settingsMemoriesTitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsMemoriesSubtitle": "Näytä aiemmin otettuja kuvia",
+    "@settingsMemoriesSubtitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsAccountTitle": "Tili",
+    "settingsAccountLabelTitle": "Otsikko",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Aseta tunniste, joka näytetään palvelimen URL:n sijasta",
+    "settingsIncludedFoldersTitle": "Sisällytetyt kansiot",
+    "@settingsIncludedFoldersTitle": {
+        "description": "Change the included folders of an account"
+    },
+    "settingsShareFolderTitle": "Jaa kansio",
+    "@settingsShareFolderTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogTitle": "Paikanna jaettu kansio",
+    "@settingsShareFolderDialogTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogDescription": "Tämä asetus vaikuttaa share_folder parametreihini config.php -tiedostossa. Asetusten arvojen TÄYTYY olla identtisiä. \n\nPaikanna sama kansio, joka on määritetty config-php -tiedostossa.",
+    "@settingsShareFolderDialogDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderPickerDescription": "Paikanna sama kansio, joka on määritetty config.php -tiedostossa. Paina oletusta, jos et ole määrittänyt parametrejä käsin.",
+    "@settingsShareFolderPickerDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsServerAppSectionTitle": "Palvelimen sovellustuki",
+    "@settingsServerAppSectionTitle": {
+        "description": "Enable/disable various server apps"
+    },
+    "settingsPhotosDescription": "Muokkaa Kuvat-välilehdellä näytettävää sisältöä",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "Muistojen väli",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be inclded in memories for a particular year"
+    },
+    "settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} päivä} other{+-{range} päivää}}",
+    "@settingsMemoriesRangeValueText": {
+        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+        "placeholders": {
+            "range": {
+                "example": "1"
+            }
+        }
+    },
+    "settingsViewerTitle": "Katselin",
+    "settingsViewerDescription": "Muokkaa kuva/video -katselinta",
+    "settingsScreenBrightnessTitle": "Näytön kirkkaus",
+    "settingsScreenBrightnessDescription": "Ohita järjestelmän määrittämä kirkkaus",
+    "settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
+    "settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty",
+    "settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
+    "settingsAlbumTitle": "Albumi",
+    "settingsAlbumDescription": "Muokkaa albumeita",
+    "settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
+    "settingsShowDateInAlbumDescription": "Käytä vain kun albumi on lajiteltu ajan mukaan",
+    "settingsImageEditTitle": "Editori",
+    "@settingsImageEditTitle": {
+        "description": "Include settings for image enhancements and the image editor"
+    },
+    "settingsImageEditDescription": "Muokkaa kuvien parannusta ja kuvaeditoria",
+    "settingsEnhanceMaxResolutionTitle2": "Kuvaresoluutio muokkausta varten",
+    "settingsEnhanceMaxResolutionDescription": "Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.",
+    "settingsImageEditSaveResultsToServerTitle": "Tallenna muokkaus palvelimelle",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "Muokkaukset tallennetaan palvelimelle. Virheen sattuessa muokkaukset tallennetaan paikallisesti laitteelle.",
+    "settingsImageEditSaveResultsToServerFalseDescription": "Muokkaukset tallennetaan paikallisesti tälle laitteelle.",
+    "settingsThemeTitle": "Teema",
+    "settingsThemeDescription": "Muokkaa sovelluksen ulkoasua",
+    "settingsFollowSystemThemeTitle": "Käytä järjestelmän teemaa",
+    "@settingsFollowSystemThemeTitle": {
+        "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "Teeman väri",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorDescription": "Käytetään määrittämään sovelluksen kaikkia värejä",
+    "@settingsSeedColorDescription": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorPickerTitle": "Valitse väri",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
+    },
+    "settingsUseBlackInDarkThemeTitle": "Tumma teema",
+    "@settingsUseBlackInDarkThemeTitle": {
+        "description": "Make the dark theme darker"
+    },
+    "settingsUseBlackInDarkThemeTrueDescription": "Käytä mustaa tummassa teemassa",
+    "@settingsUseBlackInDarkThemeTrueDescription": {
+        "description": "When black in dark theme is set to true"
+    },
+    "settingsUseBlackInDarkThemeFalseDescription": "Käytä tumman harmaata tummassa teemassa",
+    "@settingsUseBlackInDarkThemeFalseDescription": {
+        "description": "When black in dark theme is set to false"
+    },
+    "settingsMiscellaneousTitle": "Sekalaiset",
+    "settingsDoubleTapExitTitle": "Napauta kahdesti poistuaksesi",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "Järjestä tiedostonimen mukaan",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
+    "settingsExperimentalTitle": "Kokeellinen",
+    "settingsExperimentalDescription": "Kokeellisia ominaisuuksia, jotka eivät ole vielä täysin vakaita",
+    "settingsExpertTitle": "Edistyneet",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "Varmista, että olet ymmärtänyt jokaisen vaihtoehdon ennen kuin teet mitään",
+    "settingsClearCacheDatabaseTitle": "Puhdista tietokanta",
+    "settingsClearCacheDatabaseDescription": "Puhdista välitiedostot ja aloita uudelleen synkronointi palvelimen kanssa",
+    "settingsClearCacheDatabaseSuccessNotification": "Tietokannan puhdistus onnistui. Käynnistä sovellus uudelleen",
+    "settingsAboutSectionTitle": "Tietoa",
+    "@settingsAboutSectionTitle": {
+        "description": "Title of the about section in settings widget"
+    },
+    "settingsVersionTitle": "Versio",
+    "@settingsVersionTitle": {
+        "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Palvelin",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
+    },
+    "settingsSourceCodeTitle": "Lähdekoodi",
+    "@settingsSourceCodeTitle": {
+        "description": "Title of the source code item"
+    },
+    "settingsBugReportTitle": "Ilmoita ongelmasta",
+    "@settingsBugReportTitle": {
+        "description": "Report issue"
+    },
+    "settingsCaptureLogsTitle": "Kaappaa lokitiedot",
+    "@settingsCaptureLogsTitle": {
+        "description": "Capture app logs for bug report"
+    },
+    "settingsCaptureLogsDescription": "Auta kehittäjää korjaamaan bugeja",
+    "settingsTranslatorTitle": "Kääntäjä",
+    "@settingsTranslatorTitle": {
+        "description": "Title of the translator item"
+    },
+    "writePreferenceFailureNotification": "Asetusten tallennus epäonnistui",
+    "@writePreferenceFailureNotification": {
+        "description": "Inform user that the preference file cannot be modified"
+    },
+    "enableButtonLabel": "OTA KÄYTTÖÖN",
+    "@enableButtonLabel": {
+        "description": "Label of the enable button"
+    },
+    "exifSupportDetails": "EXIF-tuen käyttöönotto tuo metadatasta lisätietoa kuten, kuvauspäivämäärä, kameramalli jne. Jotta sovellus voi lukea metadataa, käyttää se enemmän verkkoa täysikokoisten kuvien lataamista varten. Sovellus lataa ainoastaan Wi-Fi verkossa.",
+    "@exifSupportDetails": {
+        "description": "Detailed description of the exif support feature"
+    },
+    "exifSupportConfirmationDialogTitle": "Ota EXIF-tuki käyttöön",
+    "@exifSupportConfirmationDialogTitle": {
+        "description": "Title of the dialog to confirm enabling exif support"
+    },
+    "captureLogDetails": "Lokitietojen tallenusta varten:\n\n1. Ota tämä asetus käyttöön\n2. Toista ongelma\n3. Poista tämä asetus käytöstä\n4. Etsi nc-photos.log -tiedosto latauskansiosta\n\n*Mikäli ongelma kaataa sovelluksen, lokitiedostoja ei pystytä tallentamaan. Tässä tapauksessa ota yhteyttä kehittäjään lisätietoja varten.",
+    "@captureLogDetails": {
+        "description": "Detailed description on capturing logs"
+    },
+    "captureLogSuccessNotification": "Lokitiedot tallennettu onnistuneesti",
+    "@captureLogSuccessNotification": {
+        "description": "Captured logs are successfully saved to the download directory"
+    },
+    "doneButtonLabel": "VALMIS",
+    "@doneButtonLabel": {
+        "description": "Label of the done button"
+    },
+    "nextButtonLabel": "SEURAAVA",
+    "@nextButtonLabel": {
+        "description": "Label of the next button"
+    },
+    "connectButtonLabel": "YHDISTÄ",
+    "@connectButtonLabel": {
+        "description": "Label of the connect button"
+    },
+    "rootPickerSkipConfirmationDialogContent2": "Kaikki tiedostosi sisällytetään. Tämä voi lisä muistinkäyttöä ja hidastaa suorituskykyä.",
+    "@rootPickerSkipConfirmationDialogContent2": {
+        "description": "Warn user not to include all files in their server"
+    },
+    "megapixelCount": "{count}MP",
+    "@megapixelCount": {
+        "description": "Resolution of an image in megapixel",
+        "placeholders": {
+            "count": {
+                "example": "1.3"
+            }
+        }
+    },
+    "secondCountSymbol": "{count}s",
+    "@secondCountSymbol": {
+        "description": "Number of seconds",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "millimeterCountSymbol": "{count}mm",
+    "@millimeterCountSymbol": {
+        "description": "Number of millimeters",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "detailsTooltip": "Tiedot",
+    "@detailsTooltip": {
+        "description": "Tooltip of the details button"
+    },
+    "downloadTooltip": "Lataus",
+    "@downloadTooltip": {
+        "description": "Tooltip of the download button"
+    },
+    "downloadProcessingNotification": "Ladataan tiedostoa",
+    "@downloadProcessingNotification": {
+        "description": "Inform user that the file is being downloaded"
+    },
+    "downloadSuccessNotification": "Tiedoston lataus onnistui",
+    "@downloadSuccessNotification": {
+        "description": "Inform user that the file is downloaded successfully"
+    },
+    "downloadFailureNotification": "Tiedoston lataus epäonnistui",
+    "@downloadFailureNotification": {
+        "description": "Inform user that the file cannot be downloaded"
+    },
+    "nextTooltip": "Seuraava",
+    "@nextTooltip": {
+        "description": "Tooltip of the next button"
+    },
+    "previousTooltip": "Edellinen",
+    "@previousTooltip": {
+        "description": "Tooltip of the previous button"
+    },
+    "webSelectRangeNotification": "Paina shift + napauta viimeistä kuvaa valitaksesi kuvat niiden välistä",
+    "@webSelectRangeNotification": {
+        "description": "Inform web user how to select items in range"
+    },
+    "mobileSelectRangeNotification": "Paina kohdetta pitkään valitaksesi kaikki niiden väliltä",
+    "@mobileSelectRangeNotification": {
+        "description": "Inform mobile user how to select items in range"
+    },
+    "updateDateTimeDialogTitle": "Muokkaa aikaa ja päiväystä",
+    "@updateDateTimeDialogTitle": {
+        "description": "Dialog to modify the date & time of a file"
+    },
+    "dateSubtitle": "Päivämäärä",
+    "timeSubtitle": "Aika",
+    "dateYearInputHint": "Vuosi",
+    "dateMonthInputHint": "Kuukausi",
+    "dateDayInputHint": "Päivä",
+    "timeHourInputHint": "Tunti",
+    "timeMinuteInputHint": "Minuutti",
+    "timeSecondInputHint": "Sekuntti",
+    "dateTimeInputInvalid": "Epäkelpo arvo",
+    "@dateTimeInputInvalid": {
+        "description": "Invalid date/time input (e.g., non-numeric characters)"
+    },
+    "updateDateTimeFailureNotification": "Ajan ja päiväyksen muuttaminen epäonnistui",
+    "@updateDateTimeFailureNotification": {
+        "description": "Failed to set the date & time of a file"
+    },
+    "albumDirPickerHeaderText": "Valitse mukana olevat albumit",
+    "@albumDirPickerHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerSubHeaderText": "Ainoastaan valituissa kansioissa olevat kuvat näkyvät tässä albumissa",
+    "@albumDirPickerSubHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerListEmptyNotification": "Valitse vähintään yksi albumi",
+    "@albumDirPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "importFoldersTooltip": "Tuo kansioita",
+    "@importFoldersTooltip": {
+        "description": "Menu entry in the album page to import folders as albums"
+    },
+    "albumImporterHeaderText": "Tuo kansiot albumeiksi",
+    "@albumImporterHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "albumImporterSubHeaderText": "Suositellut albumit on listattu alapuolelle. Tiedostojen tuontinopeus riippuu tiedostojen määrästä palvelimella.",
+    "@albumImporterSubHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "importButtonLabel": "TUO",
+    "albumImporterProgressText": "Importing folders",
+    "@albumImporterProgressText": {
+        "description": "Message shown while importing"
+    },
+    "doneButtonTooltip": "Valmis",
+    "editTooltip": "Edit",
+    "editAccountConflictFailureNotification": "Käyttäjätunnus samoilla asetuksilla on jo olemassa",
+    "@editAccountConflictFailureNotification": {
+        "description": "Error when user modified an account such that it's identical to another one"
+    },
+    "genericProcessingDialogContent": "Ole hyvä ja odota",
+    "@genericProcessingDialogContent": {
+        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+    },
+    "sortTooltip": "Lajittele",
+    "sortOptionDialogTitle": "Sort by",
+    "@sortOptionDialogTitle": {
+        "description": "Select how the photos should be sorted"
+    },
+    "sortOptionTimeAscendingLabel": "Vanhin ensin",
+    "@sortOptionTimeAscendingLabel": {
+        "description": "Sort by time, in ascending order"
+    },
+    "sortOptionTimeDescendingLabel": "Uusin ensin",
+    "@sortOptionTimeDescendingLabel": {
+        "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "Tiedostonimi",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "Tiedostonimi (laskeutuva)",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
+    },
+    "sortOptionAlbumNameLabel": "Albumin nimi",
+    "@sortOptionAlbumNameLabel": {
+        "description": "Sort by album name, in ascending order"
+    },
+    "sortOptionAlbumNameDescendingLabel": "Albumin nimi (laskeva)",
+    "@sortOptionAlbumNameDescendingLabel": {
+        "description": "Sort by album name, in descending order"
+    },
+    "sortOptionManualLabel": "Käsin",
+    "@sortOptionManualLabel": {
+        "description": "Sort manually"
+    },
+    "albumEditDragRearrangeNotification": "Paina kohdetta pitkään järjestääksesi sen uudelleen käsin",
+    "@albumEditDragRearrangeNotification": {
+        "description": "Instructions on how to rearrange photos"
+    },
+    "albumAddTextTooltip": "Lisää teksti",
+    "@albumAddTextTooltip": {
+        "description": "Add some text that display between photos to an album"
+    },
+    "shareTooltip": "Jaa",
+    "@shareTooltip": {
+        "description": "Share selected items to other apps"
+    },
+    "shareSelectedEmptyNotification": "Valitse kuvia jaettavaksi",
+    "@shareSelectedEmptyNotification": {
+        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+    },
+    "shareDownloadingDialogContent": "Ladataan",
+    "@shareDownloadingDialogContent": {
+        "description": "Downloading photos to be shared"
+    },
+    "searchTooltip": "Etsi",
+    "clearTooltip": "Clear",
+    "@clearTooltip": {
+        "description": "Clear some sort of user input, typically a text field"
+    },
+    "listNoResultsText": "Ei tuloksia",
+    "@listNoResultsText": {
+        "description": "When there's nothing in a list"
+    },
+    "listEmptyText": "Tyhjä",
+    "@listEmptyText": {
+        "description": "When there's nothing in a list"
+    },
+    "albumTrashLabel": "Roskakori",
+    "@albumTrashLabel": {
+        "description": "Deleted photos"
+    },
+    "restoreTooltip": "Palauta",
+    "@restoreTooltip": {
+        "description": "Restore selected items from trashbin"
+    },
+    "restoreSelectedProcessingNotification": "{count, plural, =1{Palautetaan 1 kohde} other{Palautetaan {count} kohdetta}}",
+    "@restoreSelectedProcessingNotification": {
+        "description": "Restoring selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreSelectedSuccessNotification": "Kaikki kohteet palautettu onnistuneesti",
+    "@restoreSelectedSuccessNotification": {
+        "description": "Restored all selected items from trashbin successfully"
+    },
+    "restoreSelectedFailureNotification": "{count, plural, =1{1 kohteen palautus epäonnistui} other{{count} kohteen palautus epäonnistui}}",
+    "@restoreSelectedFailureNotification": {
+        "description": "Cannot restore some of the selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreProcessingNotification": "Palautetaan kohdetta",
+    "@restoreProcessingNotification": {
+        "description": "Restoring the opened item from trashbin"
+    },
+    "restoreSuccessNotification": "Kohde palautettu onnistuneesti",
+    "@restoreSuccessNotification": {
+        "description": "Restored the opened item from trashbin successfully"
+    },
+    "restoreFailureNotification": "Kohteen palautus epäonnistui",
+    "@restoreFailureNotification": {
+        "description": "Cannot restore the opened item from trashbin"
+    },
+    "deletePermanentlyTooltip": "Poista lopullisesti",
+    "@deletePermanentlyTooltip": {
+        "description": "Permanently delete selected items from trashbin"
+    },
+    "deletePermanentlyConfirmationDialogTitle": "Poista lopullisesti",
+    "@deletePermanentlyConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "deletePermanentlyConfirmationDialogContent": " Valitut kohteet poistetaan palvelimelta lopullisesti.\n\nTätä toimintoa ei voi perua",
+    "@deletePermanentlyConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "albumSharedLabel": "Jaetut",
+    "@albumSharedLabel": {
+        "description": "A small label placed next to a shared album"
+    },
+    "metadataTaskProcessingNotification": "Prosessoidaan kuvien metadataa taustalla",
+    "@metadataTaskProcessingNotification": {
+        "description": "Shown when the app is reading image metadata"
+    },
+    "metadataTaskPauseNoWiFiNotification": "Odotetaan WiFi:ä",
+    "@metadataTaskPauseNoWiFiNotification": {
+        "description": "Shown when the app has paused reading image metadata"
+    },
+    "configButtonLabel": "ASETUS",
+    "useAsAlbumCoverTooltip": "Use as album cover",
+    "helpTooltip": "Tuki",
+    "helpButtonLabel": "TUKI",
+    "removeFromAlbumTooltip": "Poista albumista",
+    "@removeFromAlbumTooltip": {
+        "description": "Remove the opened photo from an album"
+    },
+    "changelogTitle": "Muutosloki",
+    "@changelogTitle": {
+        "description": "Title of the changelog page"
+    },
+    "serverCertErrorDialogTitle": "Palvelisertifikaattiin ei voida luottaa",
+    "@serverCertErrorDialogTitle": {
+        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
+    },
+    "serverCertErrorDialogContent": "Palvelimeen on mahdollisesti murtauduttu tai joku yrittää mahdollisesti varastaa tietojasi",
+    "@serverCertErrorDialogContent": {
+        "description": "Warn user about an untrusted SSL certificate"
+    },
+    "advancedButtonLabel": "EDISTYNEET",
+    "@advancedButtonLabel": {
+        "description": "Label of the advanced button"
+    },
+    "whitelistCertDialogTitle": "Salli tuntematon sertifikaatti?",
+    "@whitelistCertDialogTitle": {
+        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+    },
+    "whitelistCertDialogContent": "Voit sallia sertifikaatin ja saada sovelluksen hyväksymään sen. VAROITUS: Tämä on tietoturvariski! Varmista, että sertifikaatin on luonut sinä itse tai luotettava taho\n\nHost: {host}\nSormenjälki: {fingerprint}",
+    "@whitelistCertDialogContent": {
+        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
+        "placeholders": {
+            "host": {
+                "example": "www.example.com"
+            },
+            "fingerprint": {
+                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+            }
+        }
+    },
+    "whitelistCertButtonLabel": "HYVÄKSY RISKIT JA SALLI",
+    "@whitelistCertButtonLabel": {
+        "description": "Label of the whitelist certificate button"
+    },
+    "fileSharedByDescription": "Jaettu sinulle tältä käyttäjältä",
+    "@fileSharedByDescription": {
+        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+    },
+    "emptyTrashbinTooltip": "Tyhjä roskakori",
+    "@emptyTrashbinTooltip": {
+        "description": "Permanently delete all items from trashbin"
+    },
+    "emptyTrashbinConfirmationDialogTitle": "Tyhjä roskakori",
+    "@emptyTrashbinConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "emptyTrashbinConfirmationDialogContent": "Kaikki kohteet poistetaan lopullisesti palvelimelta\n\nTätä ei voi peruuttaa",
+    "@emptyTrashbinConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "unsetAlbumCoverTooltip": "Poista albumin kansi",
+    "@unsetAlbumCoverTooltip": {
+        "description": "Unset the cover of the opened album"
+    },
+    "muteTooltip": "Mykistä",
+    "@muteTooltip": {
+        "description": "Mute the video player"
+    },
+    "unmuteTooltip": "Poista mykistys",
+    "@unmuteTooltip": {
+        "description": "Unmute the video player"
+    },
+    "collectionPeopleLabel": "Ihmiset",
+    "@collectionPeopleLabel": {
+        "description": "Browse photos grouped by person"
+    },
+    "slideshowTooltip": "Kuvasarja",
+    "@slideshowTooltip": {
+        "description": "A button to start a slideshow from the current collection"
+    },
+    "slideshowSetupDialogTitle": "Aseta kuvasarja",
+    "@slideshowSetupDialogTitle": {
+        "description": "Setup slideshow before starting"
+    },
+    "slideshowSetupDialogDurationTitle": "Kuvan kesto (MM:SS)",
+    "@slideshowSetupDialogDurationTitle": {
+        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+    },
+    "slideshowSetupDialogShuffleTitle": "Sekoita",
+    "@slideshowSetupDialogShuffleTitle": {
+        "description": "Whether to shuffle the collection"
+    },
+    "slideshowSetupDialogRepeatTitle": "Toista",
+    "@slideshowSetupDialogRepeatTitle": {
+        "description": "Whether to restart the slideshow from the beginning after the last slide"
+    },
+    "slideshowSetupDialogReverseTitle": "Käänteinen",
+    "@slideshowSetupDialogReverseTitle": {
+        "description": "Whether to play the slideshow in reverse order"
+    },
+    "linkCopiedNotification": "Linkki kopioitu",
+    "@linkCopiedNotification": {
+        "description": "Copied the share link to clipboard"
+    },
+    "shareMethodDialogTitle": "Jaa",
+    "@shareMethodDialogTitle": {
+        "description": "Let the user pick how they want to share"
+    },
+    "shareMethodPreviewTitle": "Esikatselu",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "Jaa heikkolaatuisempi esikatselu muihin sovelluksiin (vain kuvat tuettu)",
+    "shareMethodOriginalFileTitle": "Alkuperäinen tiedosto",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "Lataa alkuperäinen tiedosto ja jaa se muiden sovellusten kanssa",
+    "shareMethodPublicLinkTitle": "Julkinen linkki",
+    "@shareMethodPublicLinkTitle": {
+        "description": "Create a share link on server and share it"
+    },
+    "shareMethodPublicLinkDescription": "Luo julkinen linkki palvelimelle. Kaikki linkinhaltijat voivat käyttää tiedostoa",
+    "shareMethodPasswordLinkTitle": "Password protected link",
+    "@shareMethodPasswordLinkTitle": {
+        "description": "Create a password protected share link on server and share it"
+    },
+    "shareMethodPasswordLinkDescription": "Luo uusi salasanasuojattu linkki palvelimelle",
+    "collectionSharingLabel": "Jaettu",
+    "@collectionSharingLabel": {
+        "description": "List items being shared by the current account"
+    },
+    "fileLastSharedDescription": "Jaettu viimeksi {date}",
+    "@fileLastSharedDescription": {
+        "description": "The date when this file was last shared by you",
+        "placeholders": {
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "fileLastSharedByOthersDescription": "{user} jakoi kanssasi {date}",
+    "@fileLastSharedByOthersDescription": {
+        "description": "The date when this file was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "albumLastSharedByOthersDescription": "{user} jakoi albumin kanssasi {date}",
+    "@albumLastSharedByOthersDescription": {
+        "description": "The date when this album was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "sharedWithLabel": "Jaettu",
+    "@sharedWithLabel": {
+        "description": "A list of users or links where this file is sharing with"
+    },
+    "unshareTooltip": "Poista jako",
+    "@unshareTooltip": {
+        "description": "Remove a share"
+    },
+    "unshareSuccessNotification": "Poistetut jaot",
+    "@unshareSuccessNotification": {
+        "description": "Removed a share"
+    },
+    "locationLabel": "Sijainti",
+    "@locationLabel": {
+        "description": "Show where the file is located"
+    },
+    "multipleFilesLinkShareDialogContent": "Nextcloud ei tue linkin jakoa usealle tiedostolle. Sovellus KOPIO sen sijaan tiedostot kansioon ja jakaa luodun kansion.",
+    "@multipleFilesLinkShareDialogContent": {
+        "description": "Dialog shown when sharing multiple files as link"
+    },
+    "folderNameInputHint": "Kansion nimi",
+    "@folderNameInputHint": {
+        "description": "Input field for folder name"
+    },
+    "folderNameInputInvalidEmpty": "Syötä kansion nimi",
+    "@folderNameInputInvalidEmpty": {
+        "description": "Folder name cannot be left empty"
+    },
+    "folderNameInputInvalidCharacters": "Sisältää sopimattomia merkkejä",
+    "@folderNameInputInvalidCharacters": {
+        "description": "Folder name contains characters that are not allowed"
+    },
+    "createShareProgressText": "Luodaan jakoa",
+    "@createShareProgressText": {
+        "description": "Message shown when sharing files"
+    },
+    "copyItemsFailureNotification": "{count, plural, =1{ 1 kohteen kopiointi epäonnistui} other{{count} kohteen kopiointi epäonnistui}}",
+    "@copyItemsFailureNotification": {
+        "description": "Error message shown when some files cannot be copied",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unshareLinkShareDirDialogTitle": "Poista kansio?",
+    "@unshareLinkShareDirDialogTitle": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "unshareLinkShareDirDialogContent": "Sovellus loi tämän kansion jakaakseen useamman tiedoston samalla linkillä. Sitä ei enää jaeta kenenkään kanssa. Haluatko poistaa tämän kansion?",
+    "@unshareLinkShareDirDialogContent": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "addToCollectionsViewTooltip": "Lisää kokoelmaan",
+    "@addToCollectionsViewTooltip": {
+        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+    },
+    "shareAlbumDialogTitle": "Jaa toisen käyttäjän kanssa",
+    "@shareAlbumDialogTitle": {
+        "description": "Dialog to share an album with another user"
+    },
+    "shareAlbumSuccessWithErrorNotification": "Albumi jaettu käyttäjän {user} kanssa. Joidenkin tiedostojen jako kuitenkin epäonnistui",
+    "@shareAlbumSuccessWithErrorNotification": {
+        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "unshareAlbumSuccessWithErrorNotification": "Albumin jakaminen käyttäjän {user} kanssa lopetettu. Joidenkin tiedostojen jakaminen kuitenkin epäonnistui",
+    "@unshareAlbumSuccessWithErrorNotification": {
+        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "fixSharesTooltip": "Korjaa jaot",
+    "@fixSharesTooltip": {
+        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+    },
+    "fixTooltip": "Korjaa",
+    "@fixTooltip": {
+        "description": "Fix an issue"
+    },
+    "fixAllTooltip": "Korjaa kaikki",
+    "@fixAllTooltip": {
+        "description": "Fix all listed issues"
+    },
+    "missingShareDescription": "Ei jaettu käyttäjäm {user} kanssa",
+    "@missingShareDescription": {
+        "description": "The album is shared with user but a file is NOT",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "extraShareDescription": "Jaettu käyttäjän {user} kanssa",
+    "@extraShareDescription": {
+        "description": "The album is NOT shared with user but a file is",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "defaultButtonLabel": "OLETUS",
+    "addUserInputHint": "Lisää käyttäjä",
+    "@addUserInputHint": {
+        "description": "Input a user name to share this album with"
+    },
+    "sharedAlbumInfoDialogTitle": "Uutena ominaisuutena jaetut albumit",
+    "@sharedAlbumInfoDialogTitle": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "sharedAlbumInfoDialogContent": "Jaetut albumit sallii useiden käyttäjien yhtäaikaisen pääsyn albumiin. Lue huolellisesti jaettujen albumien rajoitukset ennen käyttöä",
+    "@sharedAlbumInfoDialogContent": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "learnMoreButtonLabel": "LUE LISÄÄ",
+    "migrateDatabaseProcessingNotification": "Päivitetään tietokantaa",
+    "@migrateDatabaseProcessingNotification": {
+        "description": "Migrate database to work with the updated app"
+    },
+    "migrateDatabaseFailureNotification": "Tietokantojen yhdistäminen epäonnistui",
+    "memoryAlbumName": "{count, plural, =1{1 vuosi sitten} other{{count} vuotta sitten}}",
+    "@memoryAlbumName": {
+        "description": "Memory albums are generated by the app and include photos in the past years",
+        "placeholders": {
+            "count": {
+                "example": "2"
+            }
+        }
+    },
+    "homeFolderNotFoundDialogTitle": "Kotikansiota ei löytynyt",
+    "@homeFolderNotFoundDialogTitle": {
+        "description": "The app failed to scan the user's home folder on signing in"
+    },
+    "homeFolderNotFoundDialogContent": "Korjaa WebDAV URL-osoite. Löydät URL-osoitteen Nextloud-verkkokäyttöliittymästä.",
+    "@homeFolderNotFoundDialogContent": {
+        "description": "Ask the user to provide us the correct WebDAV URL"
+    },
+    "homeFolderInputInvalidEmpty": "Nimeä kotikansiosi",
+    "@homeFolderInputInvalidEmpty": {
+        "description": "Home folder can't be left empty"
+    },
+    "createCollectionTooltip": "Uusi kokoelma",
+    "@createCollectionTooltip": {
+        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+    },
+    "createCollectionDialogAlbumLabel": "Albumi",
+    "@createCollectionDialogAlbumLabel": {
+        "description": "Create an album as collection"
+    },
+    "createCollectionDialogAlbumDescription": "Näytä kaikki palvelimelle lisäämäsi kuvat",
+    "@createCollectionDialogAlbumDescription": {
+        "description": "Describe how an album collection works"
+    },
+    "createCollectionDialogFolderLabel": "Kansio",
+    "@createCollectionDialogFolderLabel": {
+        "description": "Create a folder as collection"
+    },
+    "createCollectionDialogFolderDescription": "Näytä kaikki kansion kuvat",
+    "@createCollectionDialogFolderDescription": {
+        "description": "Describe how a folder collection works"
+    },
+    "collectionFavoritesLabel": "Suosikit",
+    "@collectionFavoritesLabel": {
+        "description": "Browse photos added to favorites"
+    },
+    "favoriteTooltip": "Suosikki",
+    "@favoriteTooltip": {
+        "description": "Add photo to favorites"
+    },
+    "favoriteSuccessNotification": "Lisää suosikkeihin",
+    "@favoriteSuccessNotification": {
+        "description": "Successfully added photos to favorites"
+    },
+    "favoriteFailureNotification": "Kuvien lisäys suosikkeihin epäonnistui",
+    "@favoriteFailureNotification": {
+        "description": "Failed adding photos to favorites"
+    },
+    "unfavoriteTooltip": "Poista suosikeista",
+    "@unfavoriteTooltip": {
+        "description": "Remove photo to favorites"
+    },
+    "unfavoriteSuccessNotification": "Poistettu suosikeista",
+    "@unfavoriteSuccessNotification": {
+        "description": "Successfully removed photos from favorites"
+    },
+    "unfavoriteFailureNotification": "Suosikeista poisto epäonnistui",
+    "@unfavoriteFailureNotification": {
+        "description": "Failed removing photos from favorites"
+    },
+    "createCollectionDialogTagLabel": "Tunniste",
+    "@createCollectionDialogTagLabel": {
+        "description": "Create a collection containing files with tags"
+    },
+    "createCollectionDialogTagDescription": "Näytä kuvat tietyillä tunnisteilla",
+    "@createCollectionDialogTagDescription": {
+        "description": "Describe how a tag collection works"
+    },
+    "addTagInputHint": "Lisää tunniste",
+    "@addTagInputHint": {
+        "description": "Input a tag"
+    },
+    "tagPickerNoTagSelectedNotification": "Lisää ainakin yksi tunniste",
+    "@tagPickerNoTagSelectedNotification": {
+        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+    },
+    "backgroundServiceStopping": "Pysäytetään palvelua",
+    "@backgroundServiceStopping": {
+        "description": "The background service is stopping itself"
+    },
+    "metadataTaskPauseLowBatteryNotification": "Akku on vähissä",
+    "@metadataTaskPauseLowBatteryNotification": {
+        "description": "Shown when the app has paused reading image metadata due to low battery"
+    },
+    "enhanceTooltip": "Paranna",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "PARANNA",
+    "enhanceIntroDialogTitle": "Paranna kuviasi",
+    "enhanceIntroDialogDescription": "Kuviasi käsitellään paikallisesti laitteellasi. Oletuksena kuvat skaalataan resoluutioon 2048x1536. Voit muuttaa tämän resoluution asetuksista.",
+    "enhanceLowLightTitle": "Hämärässä otettujen kuvien parannus",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "Kirkasta hämärässä ympäristössä otettuja kuvia",
+    "enhanceLowLightParamBrightnessLabel": "Kirkkaus",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "Muokatut (paikallinen)",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "Valitut kuvat poistetaan lopullisesti laitteeltasi.\n\nTätä toimintoa ei voi perua.",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "Muotokuvan sumennus",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "Sumenna kuviesi taustaa, toimii parhaiten muotokuvien kanssa",
+    "enhancePortraitBlurParamBlurLabel": "Blurriness",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Super-resoluutio (4x)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "Skaalaa kuviesi resoluutiota jopa 4x normaalista resoluutiosta. (Lue kohta Apua saadaksesi lisätietoa, kuinka toiminto toimii.)",
+    "enhanceStyleTransferTitle": "Tyylin siirto",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "Valitse tyyli",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "Siirrä kuvan tyyli vertailukuvasta omiin kuviisi.",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Valitse tyyli",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopTitle": "Värihyppy",
+    "@enhanceColorPopTitle": {
+        "description": "Desaturate the background of a photo"
+    },
+    "enhanceColorPopDescription": "Vähennä kuvien taustan saturaatiota, toimii parhaiten muotokuvien kanssa.",
+    "enhanceGenericParamWeightLabel": "Paino",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchTitle": "Automaattinen parannus",
+    "@enhanceRetouchTitle": {
+        "description": "Automatically improve your photo"
+    },
+    "enhanceRetouchDescription": "Paranna kuvia automaattisesti. Parantaa kuvien värisävyjä.",
+    "doubleTapExitNotification": "Napauta uudelleen poistuaksesi",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "Hylkää muutokset?",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "Muutoksia ei tallennettu",
+    "discardButtonLabel": "HYLKÄÄ",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "Save",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditColorBrightness": "Kirkkaus",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "imageEditColorContrast": "Kontrasti",
+    "@imageEditColorContrast": {
+        "description": "Adjust the contrast of an image"
+    },
+    "imageEditColorWhitePoint": "Valkoinen piste",
+    "@imageEditColorWhitePoint": {
+        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+    },
+    "imageEditColorBlackPoint": "Musta piste",
+    "@imageEditColorBlackPoint": {
+        "description": "Adjust the black point of an image"
+    },
+    "imageEditColorSaturation": "Saturaatio",
+    "@imageEditColorSaturation": {
+        "description": "Adjust the color saturation of an image"
+    },
+    "imageEditColorWarmth": "Lämpö",
+    "@imageEditColorWarmth": {
+        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+    },
+    "imageEditColorTint": "Värisävy",
+    "@imageEditColorTint": {
+        "description": "Shift colors from a green to a magenta tint"
+    },
+    "imageEditTitle": "Esikatsele muutoksia",
+    "@imageEditTitle": {
+        "description": "Title of the image editor"
+    },
+    "imageEditToolbarColorLabel": "Väri",
+    "@imageEditToolbarColorLabel": {
+        "description": "Label of the color tools. These can be used to adjust the color of an image"
+    },
+    "imageEditToolbarTransformLabel": "Muuta",
+    "@imageEditToolbarTransformLabel": {
+        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+    },
+    "imageEditTransformOrientation": "Kierto",
+    "@imageEditTransformOrientation": {
+        "description": "Change the orientation of the image, 90 degree per step"
+    },
+    "imageEditTransformOrientationClockwise": "myötäpäivään",
+    "@imageEditTransformOrientationClockwise": {
+        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformOrientationCounterclockwise": "vastapäivään",
+    "@imageEditTransformOrientationCounterclockwise": {
+        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformCrop": "Rajaa",
+    "@imageEditTransformCrop": {
+        "description": "Crop the image"
+    },
+    "categoriesLabel": "Luokat",
+    "searchLandingPeopleListEmptyText": "Paina kysymys-painiketta saadaksesi tietoa ominaisuuden asentamisesta",
+    "@searchLandingPeopleListEmptyText": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "searchLandingCategoryVideosLabel": "Videot",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "SUODATTIMET",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "Hakusuodattimet",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "KÄYTÄ",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "Kaikki",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "Tosi",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "Epätosi",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "Tyyppi",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "Kuva",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "kuvat",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "Video",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "videot",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "Suosikki",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "searchFilterBubbleFavoriteTrueText": "suosikit",
+    "@searchFilterBubbleFavoriteTrueText": {
+        "description": "List of active search filters shown in the result page (by favorites, true)"
+    },
+    "searchFilterBubbleFavoriteFalseText": "ei suosikeissa",
+    "@searchFilterBubbleFavoriteFalseText": {
+        "description": "List of active search filters shown in the result page (by favorites, false)"
+    },
+    "showAllButtonLabel": "NÄYTÄ KAIKKI",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceText": "Seuraava {place}",
+    "@gpsPlaceText": {
+        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+        "placeholders": {
+            "place": {}
+        }
+    },
+    "gpsPlaceAboutDialogTitle": "Paikasta",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "Näytetty paikka on vain karkea arvio. Se ei välttämättä ole tarkka. Paikka ei kuvaa sovelluksen kehittäjien näkökantaa alueesta.",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "Paikat",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "Tallennetaan tulosta",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogContent": "Valitse mihin prosessoidut kuvat tallennetaan. Mikäli kuvansiirto palvelimelle epäonnistuu, tallennetaan kuva laitteelle.",
+    "@imageSaveOptionDialogContent": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "LAITE",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "PALVELIN",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "Synkronoidaan palvelimen kanssa ensimmäistä kertaa",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "loopTooltip": "Uudelleentoista",
+    "@loopTooltip": {
+        "description": "Enable or disable loop in the video player"
+    },
+    "createCollectionFailureNotification": "Kokoelman luonti epäonnistui",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Lisää kokoelmaan",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Kokoelmaan lisääminen epäonnistui",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Kokoelman kansikuvan asetus epäonnistui",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Vie",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Vie kokoelma",
+    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud albumi",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "Palvelimella sijoitettavat albumit vaativat vähintään Nextcloud-version 25",
+    "removeCollectionsFailedNotification": "Joidenkin kokoelmien poisto epäonnistui",
+    "errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
+    "@errorUnauthenticated": {
+        "description": "Error message when server responds with HTTP401"
+    },
+    "errorDisconnected": "Yhdistäminen epäonnistui. Palvelin saattaa olla offline-tilassa tai mobiililaitettasi ei ole kytketty verkkoon",
+    "@errorDisconnected": {
+        "description": "Error message when the app can't connect to the server"
+    },
+    "errorLocked": "Tiedosto lukittu palvelimella. Yritä myöhemmin uudelleen",
+    "@errorLocked": {
+        "description": "Error message when server responds with HTTP423"
+    },
+    "errorInvalidBaseUrl": "Yhteyttä ei voitu muodostaa. Varmista, että Nextcloud-palvelimesi URL-osoite on oikein",
+    "@errorInvalidBaseUrl": {
+        "description": "Error message when the base URL is invalid"
+    },
+    "errorWrongPassword": "Kirjautuminen epäonnistui. Varmista, että käyttäjätunnuksesi ja salasanasi on oikein",
+    "@errorWrongPassword": {
+        "description": "Error message when the username or password is wrong"
+    },
+    "errorServerError": "Palvelin-virhe. Varmista, että palvelin on konfiguroitu oikein",
+    "@errorServerError": {
+        "description": "HTTP 500"
+    },
+    "errorAlbumDowngrade": "Albumia ei voitu muokata, koska albumi on luotu sovelluksen uudemmalla versiolla. Päivitä sovellus viimeisimpään versioon ja yritä uudelleen",
+    "@errorAlbumDowngrade": {
+        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+    },
+    "errorNoStoragePermission": "Tallennustilan käyttölupa vaaditaan",
+    "@errorNoStoragePermission": {
+        "description": "Missing permission on Android"
+    }
 }
