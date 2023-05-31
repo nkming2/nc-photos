@@ -1,1438 +1,1043 @@
 {
-    "appTitle": "相簿",
-    "translator": "zerolin",
-    "@translator": {
-        "description": "Name of the translator(s) for this language"
-    },
-    "photosTabLabel": "相片",
-    "@photosTabLabel": {
-        "description": "Label of the tab that lists user photos"
-    },
-    "collectionsTooltip": "收藏庫",
-    "@collectionsTooltip": {
-        "description": "Groups of photos, e.g., albums, trash bin, etc"
-    },
-    "zoomTooltip": "放大",
-    "@zoomTooltip": {
-        "description": "Tooltip of the zoom button"
-    },
-    "refreshMenuLabel": "重新整理",
-    "@refreshMenuLabel": {
-        "description": "Label of the refresh entry in menu"
-    },
-    "settingsMenuLabel": "設定",
-    "@settingsMenuLabel": {
-        "description": "Label of the settings entry in menu"
-    },
-    "selectionAppBarTitle": "{count, plural, other{已選 {count} 項}}",
-    "@selectionAppBarTitle": {
-        "description": "Title of the contextual app bar that shows number of selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedProcessingNotification": "{count, plural, other{正在刪除 {count} 個項目}}",
-    "@deleteSelectedProcessingNotification": {
-        "description": "Inform user that the selected items are being deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedSuccessNotification": "成功刪除所有項目",
-    "@deleteSelectedSuccessNotification": {
-        "description": "Inform user that the selected items are deleted successfully"
-    },
-    "deleteSelectedFailureNotification": "{count, plural, other{未能刪除 {count} 個項目}}",
-    "@deleteSelectedFailureNotification": {
-        "description": "Inform user that some/all the selected items cannot be deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveTooltip": "封存",
-    "@archiveTooltip": {
-        "description": "Archive selected items"
-    },
-    "archiveSelectedProcessingNotification": "{count, plural, other{正在封存 {count} 個項目}}",
-    "@archiveSelectedProcessingNotification": {
-        "description": "Archiving the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveSelectedSuccessNotification": "成功封存所有項目",
-    "@archiveSelectedSuccessNotification": {
-        "description": "Archived all selected items successfully"
-    },
-    "archiveSelectedFailureNotification": "{count, plural, other{未能封存 {count} 個項目}}",
-    "@archiveSelectedFailureNotification": {
-        "description": "Cannot archive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveTooltip": "取消封存",
-    "@unarchiveTooltip": {
-        "description": "Unarchive selected items"
-    },
-    "unarchiveSelectedProcessingNotification": "{count, plural, other{正在取消封存 {count} 個項目}}",
-    "@unarchiveSelectedProcessingNotification": {
-        "description": "Unarchiving selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveSelectedSuccessNotification": "成功取消封存所有項目",
-    "@unarchiveSelectedSuccessNotification": {
-        "description": "Unarchived all selected items successfully"
-    },
-    "unarchiveSelectedFailureNotification": "{count, plural, other{未能取消封存 {count} 個項目}}",
-    "@unarchiveSelectedFailureNotification": {
-        "description": "Cannot unarchive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteTooltip": "刪除",
-    "@deleteTooltip": {
-        "description": "Delete selected items"
-    },
-    "deleteProcessingNotification": "正在刪除",
-    "@deleteProcessingNotification": {
-        "description": "Inform user that the item is being deleted"
-    },
-    "deleteSuccessNotification": "成功刪除",
-    "@deleteSuccessNotification": {
-        "description": "Inform user that the item is deleted successfully"
-    },
-    "deleteFailureNotification": "未能刪除",
-    "@deleteFailureNotification": {
-        "description": "Inform user that the item cannot be deleted"
-    },
-    "removeSelectedFromAlbumFailureNotification": "未能從相簿中移除項目",
-    "@removeSelectedFromAlbumFailureNotification": {
-        "description": "Inform user that the selected items cannot be removed from an album"
-    },
-    "addServerTooltip": "新增伺服器",
-    "@addServerTooltip": {
-        "description": "Tooltip of the button that adds a new server"
-    },
-    "removeServerSuccessNotification": "成功移除 {server}",
-    "@removeServerSuccessNotification": {
-        "description": "Inform user that a server is removed successfully",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "createAlbumTooltip": "新增相簿",
-    "@createAlbumTooltip": {
-        "description": "Tooltip of the button that creates a new album"
-    },
-    "albumSize": "{count, plural, other{{count} 個項目}}",
-    "@albumSize": {
-        "description": "Number of items inside an album",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "albumArchiveLabel": "封存庫",
-    "@albumArchiveLabel": {
-        "description": "A collection containing all archived photos"
-    },
-    "connectingToServer": "正在連接\n{server}",
-    "@connectingToServer": {
-        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "connectingToServer2": "Waiting for the server to authorize us",
-    "@connectingToServer2": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "connectingToServerInstruction": "Please sign in via the opened browser",
-    "@connectingToServerInstruction": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "nameInputHint": "名稱",
-    "@nameInputHint": {
-        "description": "Hint of the text field expecting name data"
-    },
-    "nameInputInvalidEmpty": "Name is required",
-    "@nameInputInvalidEmpty": {
-        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
-    },
-    "skipButtonLabel": "跳過",
-    "@skipButtonLabel": {
-        "description": "Label of the skip button"
-    },
-    "confirmButtonLabel": "確認",
-    "@confirmButtonLabel": {
-        "description": "Label of the confirm button"
-    },
-    "signInHeaderText": "登入 Nextcloud 伺服器",
-    "@signInHeaderText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signIn2faHintText": "若你的伺服器使用雙重認證，請以應用程式密碼登入",
-    "@signIn2faHintText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signInHeaderText2": "Nextcloud\nSign in",
-    "@signInHeaderText2": {
-        "description": "Sign in to Nextcloud server"
-    },
-    "serverAddressInputHint": "伺服器地址",
-    "@serverAddressInputHint": {
-        "description": "Hint of the text field expecting server address data"
-    },
-    "serverAddressInputInvalidEmpty": "請輸入伺服器地址",
-    "@serverAddressInputInvalidEmpty": {
-        "description": "Inform user that the server address input field cannot be empty"
-    },
-    "usernameInputHint": "用戶名稱",
-    "@usernameInputHint": {
-        "description": "Hint of the text field expecting username data"
-    },
-    "usernameInputInvalidEmpty": "請輸入用戶名稱",
-    "@usernameInputInvalidEmpty": {
-        "description": "Inform user that the username input field cannot be empty"
-    },
-    "passwordInputHint": "密碼",
-    "@passwordInputHint": {
-        "description": "Hint of the text field expecting password data"
-    },
-    "passwordInputInvalidEmpty": "請輸入密碼",
-    "@passwordInputInvalidEmpty": {
-        "description": "Inform user that the password input field cannot be empty"
-    },
-    "rootPickerHeaderText": "請選擇相片資料夾",
-    "@rootPickerHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerSubHeaderText": "App 只會顯示已選取資料夾內的相片，如需包含所有資料夾，請按跳過",
-    "@rootPickerSubHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerNavigateUpItemText": "(返回上一層)",
-    "@rootPickerNavigateUpItemText": {
-        "description": "Text of the list item to navigate up the directory tree"
-    },
-    "rootPickerUnpickFailureNotification": "未能取消選取資料夾",
-    "@rootPickerUnpickFailureNotification": {
-        "description": "Failed while unpicking an item in the root picker list"
-    },
-    "rootPickerListEmptyNotification": "請選取至少一個資料夾或按跳過",
-    "@rootPickerListEmptyNotification": {
-        "description": "Error when user pressing confirm without picking any folders"
-    },
-    "setupWidgetTitle": "開始使用",
-    "@setupWidgetTitle": {
-        "description": "Title of the introductory widget"
-    },
-    "setupSettingsModifyLaterHint": "你亦可稍後於設定頁面中修改",
-    "@setupSettingsModifyLaterHint": {
-        "description": "Inform user that they can modify this setting after the setup process"
-    },
-    "setupHiddenPrefDirNoticeDetail": "本 App 將於你的 Nextcloud 伺服器中新增一個資料夾以儲存設定文件，除非你計劃刪除本 App，否則請不要更改或刪除資料夾的內容",
-    "@setupHiddenPrefDirNoticeDetail": {
-        "description": "Inform user about the preference folder created by this app"
-    },
-    "settingsWidgetTitle": "設定",
-    "@settingsWidgetTitle": {
-        "description": "Title of the Settings widget"
-    },
-    "settingsLanguageTitle": "語言",
-    "@settingsLanguageTitle": {
-        "description": "Set display language"
-    },
-    "settingsLanguageOptionSystemDefaultLabel": "System default",
-    "@settingsLanguageOptionSystemDefaultLabel": {
-        "description": "Follow the Android system language"
-    },
-    "settingsExifSupportTitle": "EXIF 支援",
-    "@settingsExifSupportTitle": {
-        "description": "Title of the EXIF support setting"
-    },
-    "settingsExifSupportTrueSubtitle": "需要額外的網絡用量",
-    "@settingsExifSupportTrueSubtitle": {
-        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-    },
-    "settingsExifWifiOnlyTitle": "Process EXIF over Wi-Fi only",
-    "@settingsExifWifiOnlyTitle": {
-        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-    },
-    "settingsExifWifiOnlyFalseSubtitle": "Data charges may apply",
-    "@settingsExifWifiOnlyFalseSubtitle": {
-        "description": "Shown when users allow processing exif data over any network"
-    },
-    "settingsMemoriesTitle": "回憶",
-    "@settingsMemoriesTitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsMemoriesSubtitle": "顯示你過去的相片",
-    "@settingsMemoriesSubtitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsAccountTitle": "帳戶",
-    "settingsAccountLabelTitle": "Label",
-    "@settingsAccountLabelTitle": {
-        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
-    },
-    "settingsAccountLabelDescription": "Set a label to be shown in place of the server URL",
-    "settingsIncludedFoldersTitle": "已選取的資料夾",
-    "@settingsIncludedFoldersTitle": {
-        "description": "Change the included folders of an account"
-    },
-    "settingsShareFolderTitle": "共享資料夾",
-    "@settingsShareFolderTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogTitle": "設置共享資料夾",
-    "@settingsShareFolderDialogTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogDescription": "此設定必需與你伺服器上的設置一致，請參考伺服器上 config.php 內的 share_folder 項目",
-    "@settingsShareFolderDialogDescription": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderPickerDescription": "請選擇與 config.php 中 share_folder 路徑一致的資料夾，若你從未更改伺服器設置，請按默認",
-    "@settingsShareFolderPickerDescription": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsServerAppSectionTitle": "伺服器 App 支援",
-    "@settingsServerAppSectionTitle": {
-        "description": "Enable/disable various server apps"
-    },
-    "settingsPhotosDescription": "Customize contents shown in the Photos tab",
-    "@settingsPhotosDescription": {
-        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
-    },
-    "settingsMemoriesRangeTitle": "Memories range",
-    "@settingsMemoriesRangeTitle": {
-        "description": "How many adjacent days to be inclded in memories for a particular year"
-    },
-    "settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} day} other{+-{range} days}}",
-    "@settingsMemoriesRangeValueText": {
-        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
-        "placeholders": {
-            "range": {
-                "example": "1"
-            }
-        }
-    },
-    "settingsViewerTitle": "檢視器",
-    "settingsViewerDescription": "設置相片和影片檢視器",
-    "settingsScreenBrightnessTitle": "螢幕亮度",
-    "settingsScreenBrightnessDescription": "覆蓋系統亮度設定",
-    "settingsForceRotationTitle": "無視螢幕旋轉鎖定",
-    "settingsForceRotationDescription": "在系統鎖定螢幕旋轉時保持自動旋轉",
-    "settingsMapProviderTitle": "地圖供應商",
-    "settingsAlbumTitle": "相簿",
-    "settingsAlbumDescription": "設置相簿",
-    "settingsShowDateInAlbumTitle": "顯示日期分類",
-    "settingsShowDateInAlbumDescription": "只應用於以日期排序的相簿",
-    "settingsImageEditTitle": "Editor",
-    "@settingsImageEditTitle": {
-        "description": "Include settings for image enhancements and the image editor"
-    },
-    "settingsImageEditDescription": "Customize image enhancements and the image editor",
-    "settingsEnhanceMaxResolutionTitle2": "Image resolution for enhancements",
-    "settingsEnhanceMaxResolutionDescription": "Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.",
-    "settingsImageEditSaveResultsToServerTitle": "Save results to server",
-    "@settingsImageEditSaveResultsToServerTitle": {
-        "description": "Whether to save the edit/enhance results to server instead of the current device"
-    },
-    "settingsImageEditSaveResultsToServerTrueDescription": "Results are saved to server, fallback to device storage if failed",
-    "settingsImageEditSaveResultsToServerFalseDescription": "Results are saved to this device",
-    "settingsThemeTitle": "主題",
-    "settingsThemeDescription": "設置 App 的外觀",
-    "settingsFollowSystemThemeTitle": "跟隨系統主題",
-    "@settingsFollowSystemThemeTitle": {
-        "description": "Respect the system dark mode settings introduced on Android 10"
-    },
-    "settingsSeedColorTitle": "Theme color",
-    "@settingsSeedColorTitle": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorDescription": "Used to derive all colors used in the app",
-    "@settingsSeedColorDescription": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorPickerTitle": "Pick a color",
-    "@settingsSeedColorPickerTitle": {
-        "description": "Dialog to customize the colors used in app"
-    },
-    "settingsUseBlackInDarkThemeTitle": "黑色主題",
-    "@settingsUseBlackInDarkThemeTitle": {
-        "description": "Make the dark theme darker"
-    },
-    "settingsUseBlackInDarkThemeTrueDescription": "深色主題中使用黑色背景",
-    "@settingsUseBlackInDarkThemeTrueDescription": {
-        "description": "When black in dark theme is set to true"
-    },
-    "settingsUseBlackInDarkThemeFalseDescription": "深色主題中使用深色背景",
-    "@settingsUseBlackInDarkThemeFalseDescription": {
-        "description": "When black in dark theme is set to false"
-    },
-    "settingsMiscellaneousTitle": "Miscellaneous",
-    "settingsDoubleTapExitTitle": "Double tap to exit",
-    "@settingsDoubleTapExitTitle": {
-        "description": "If enabled, users need to tap the back button twice to exit app"
-    },
-    "settingsPhotosTabSortByNameTitle": "Sort by filename in Photos",
-    "@settingsPhotosTabSortByNameTitle": {
-        "description": "Sort photos listed in the Photos tab by filename (descending)"
-    },
-    "settingsExperimentalTitle": "實驗",
-    "settingsExperimentalDescription": "可能不穩定的實驗性功能",
-    "settingsExpertTitle": "Advanced",
-    "@settingsExpertTitle": {
-        "description": "Settings that must be tweaked with caution"
-    },
-    "settingsExpertWarningText": "Please make sure you fully understand what each option does before proceeding",
-    "settingsClearCacheDatabaseTitle": "Clear file database",
-    "settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
-    "settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
-    "settingsAboutSectionTitle": "關於",
-    "@settingsAboutSectionTitle": {
-        "description": "Title of the about section in settings widget"
-    },
-    "settingsVersionTitle": "版本",
-    "@settingsVersionTitle": {
-        "description": "Title of the version data item"
-    },
-    "settingsServerVersionTitle": "Server",
-    "@settingsServerVersionTitle": {
-        "description": "This item will show the server software version, e.g., Nextcloud 25"
-    },
-    "settingsSourceCodeTitle": "源代碼",
-    "@settingsSourceCodeTitle": {
-        "description": "Title of the source code item"
-    },
-    "settingsBugReportTitle": "問題匯報",
-    "@settingsBugReportTitle": {
-        "description": "Report issue"
-    },
-    "settingsCaptureLogsTitle": "收集 App 事件日誌",
-    "@settingsCaptureLogsTitle": {
-        "description": "Capture app logs for bug report"
-    },
-    "settingsCaptureLogsDescription": "幫助開發者分析 bug",
-    "settingsTranslatorTitle": "翻譯",
-    "@settingsTranslatorTitle": {
-        "description": "Title of the translator item"
-    },
-    "writePreferenceFailureNotification": "未能儲存設定",
-    "@writePreferenceFailureNotification": {
-        "description": "Inform user that the preference file cannot be modified"
-    },
-    "enableButtonLabel": "啟用",
-    "@enableButtonLabel": {
-        "description": "Label of the enable button"
-    },
-    "exifSupportDetails": "啟用 EXIF 支援功能將使 App 可以讀取相片中的中繼資料 (metadata)，例如拍照日期、相機型號等等，而為了讀取這些資料，App 需要額外的網絡用量從伺服器下載完整的檔案。App 只會在裝置連接 WiFi 網絡的時候才會下載。",
-    "@exifSupportDetails": {
-        "description": "Detailed description of the exif support feature"
-    },
-    "exifSupportConfirmationDialogTitle": "啟用 EXIF 支援?",
-    "@exifSupportConfirmationDialogTitle": {
-        "description": "Title of the dialog to confirm enabling exif support"
-    },
-    "captureLogDetails": "如需記錄事件日誌以匯報問題:\n\n1. 啟用本設定\n2. 重現一次你遇到的問題\n3. 禁用本設定\n4. 在裝置的下載資料夾尋找 nc-photos.log 檔案\n\n*此功能不支援使 App 強制關閉的問題，如遇此種情況，請直接聯絡開發者",
-    "@captureLogDetails": {
-        "description": "Detailed description on capturing logs"
-    },
-    "captureLogSuccessNotification": "成功儲存事件日誌",
-    "@captureLogSuccessNotification": {
-        "description": "Captured logs are successfully saved to the download directory"
-    },
-    "doneButtonLabel": "完成",
-    "@doneButtonLabel": {
-        "description": "Label of the done button"
-    },
-    "nextButtonLabel": "下一項",
-    "@nextButtonLabel": {
-        "description": "Label of the next button"
-    },
-    "connectButtonLabel": "連接",
-    "@connectButtonLabel": {
-        "description": "Label of the connect button"
-    },
-    "rootPickerSkipConfirmationDialogContent2": "你伺服器上的所有檔案將會被加入到 App，這將提高記憶體用量並有機會影響 App 的性能",
-    "@rootPickerSkipConfirmationDialogContent2": {
-        "description": "Warn user not to include all files in their server"
-    },
-    "megapixelCount": "{count}百萬像素",
-    "@megapixelCount": {
-        "description": "Resolution of an image in megapixel",
-        "placeholders": {
-            "count": {
-                "example": "1.3"
-            }
-        }
-    },
-    "secondCountSymbol": "{count}秒",
-    "@secondCountSymbol": {
-        "description": "Number of seconds",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "millimeterCountSymbol": "{count}毫米",
-    "@millimeterCountSymbol": {
-        "description": "Number of millimeters",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "detailsTooltip": "詳情",
-    "@detailsTooltip": {
-        "description": "Tooltip of the details button"
-    },
-    "downloadTooltip": "下載",
-    "@downloadTooltip": {
-        "description": "Tooltip of the download button"
-    },
-    "downloadProcessingNotification": "正在下載檔案",
-    "@downloadProcessingNotification": {
-        "description": "Inform user that the file is being downloaded"
-    },
-    "downloadSuccessNotification": "成功下載檔案",
-    "@downloadSuccessNotification": {
-        "description": "Inform user that the file is downloaded successfully"
-    },
-    "downloadFailureNotification": "未能下載檔案",
-    "@downloadFailureNotification": {
-        "description": "Inform user that the file cannot be downloaded"
-    },
-    "nextTooltip": "下一項",
-    "@nextTooltip": {
-        "description": "Tooltip of the next button"
-    },
-    "previousTooltip": "上一項",
-    "@previousTooltip": {
-        "description": "Tooltip of the previous button"
-    },
-    "webSelectRangeNotification": "按下 shit 鍵點擊以選取兩項目之間的所有項目",
-    "@webSelectRangeNotification": {
-        "description": "Inform web user how to select items in range"
-    },
-    "mobileSelectRangeNotification": "長按以選取兩項目之間的所有項目",
-    "@mobileSelectRangeNotification": {
-        "description": "Inform mobile user how to select items in range"
-    },
-    "updateDateTimeDialogTitle": "修改日期和時間",
-    "@updateDateTimeDialogTitle": {
-        "description": "Dialog to modify the date & time of a file"
-    },
-    "dateSubtitle": "日期",
-    "timeSubtitle": "時間",
-    "dateYearInputHint": "年",
-    "dateMonthInputHint": "月",
-    "dateDayInputHint": "日",
-    "timeHourInputHint": "時",
-    "timeMinuteInputHint": "分",
-    "timeSecondInputHint": "秒",
-    "dateTimeInputInvalid": "輸入錯誤",
-    "@dateTimeInputInvalid": {
-        "description": "Invalid date/time input (e.g., non-numeric characters)"
-    },
-    "updateDateTimeFailureNotification": "未能修改日期和時間",
-    "@updateDateTimeFailureNotification": {
-        "description": "Failed to set the date & time of a file"
-    },
-    "albumDirPickerHeaderText": "選取綁定的資料夾",
-    "@albumDirPickerHeaderText": {
-        "description": "Pick the folders for a folder based album"
-    },
-    "albumDirPickerSubHeaderText": "相簿只會包含已綁定資料夾內的相片",
-    "@albumDirPickerSubHeaderText": {
-        "description": "Pick the folders for a folder based album"
-    },
-    "albumDirPickerListEmptyNotification": "請選取至少一個資料夾",
-    "@albumDirPickerListEmptyNotification": {
-        "description": "Error when user pressing confirm without picking any folders"
-    },
-    "importFoldersTooltip": "導入資料夾",
-    "@importFoldersTooltip": {
-        "description": "Menu entry in the album page to import folders as albums"
-    },
-    "albumImporterHeaderText": "導入資料夾為相簿",
-    "@albumImporterHeaderText": {
-        "description": "Import folders as albums"
-    },
-    "albumImporterSubHeaderText": "於下表列出推薦的資料夾。若你的伺服器包含大量資料夾，將可能增加所需的時間",
-    "@albumImporterSubHeaderText": {
-        "description": "Import folders as albums"
-    },
-    "importButtonLabel": "導入",
-    "albumImporterProgressText": "正在導入資料夾",
-    "@albumImporterProgressText": {
-        "description": "Message shown while importing"
-    },
-    "doneButtonTooltip": "完成",
-    "editTooltip": "修改",
-    "editAccountConflictFailureNotification": "已存在相同設置的帳戶",
-    "@editAccountConflictFailureNotification": {
-        "description": "Error when user modified an account such that it's identical to another one"
-    },
-    "genericProcessingDialogContent": "請等候",
-    "@genericProcessingDialogContent": {
-        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
-    },
-    "sortTooltip": "排序",
-    "sortOptionDialogTitle": "排序方式",
-    "@sortOptionDialogTitle": {
-        "description": "Select how the photos should be sorted"
-    },
-    "sortOptionTimeAscendingLabel": "由舊到新",
-    "@sortOptionTimeAscendingLabel": {
-        "description": "Sort by time, in ascending order"
-    },
-    "sortOptionTimeDescendingLabel": "由新到舊",
-    "@sortOptionTimeDescendingLabel": {
-        "description": "Sort by time, in descending order"
-    },
-    "sortOptionFilenameAscendingLabel": "Filename",
-    "@sortOptionFilenameAscendingLabel": {
-        "description": "Sort by filename, in ascending order"
-    },
-    "sortOptionFilenameDescendingLabel": "Filename (descending)",
-    "@sortOptionFilenameDescendingLabel": {
-        "description": "Sort by filename, in descending order"
-    },
-    "sortOptionAlbumNameLabel": "相簿名稱",
-    "@sortOptionAlbumNameLabel": {
-        "description": "Sort by album name, in ascending order"
-    },
-    "sortOptionAlbumNameDescendingLabel": "相簿名稱(降序)",
-    "@sortOptionAlbumNameDescendingLabel": {
-        "description": "Sort by album name, in descending order"
-    },
-    "sortOptionManualLabel": "手動",
-    "@sortOptionManualLabel": {
-        "description": "Sort manually"
-    },
-    "albumEditDragRearrangeNotification": "長按拖曳項目以改變排序",
-    "@albumEditDragRearrangeNotification": {
-        "description": "Instructions on how to rearrange photos"
-    },
-    "albumAddTextTooltip": "新增文字",
-    "@albumAddTextTooltip": {
-        "description": "Add some text that display between photos to an album"
-    },
-    "shareTooltip": "分享",
-    "@shareTooltip": {
-        "description": "Share selected items to other apps"
-    },
-    "shareSelectedEmptyNotification": "請選取要分享的相片",
-    "@shareSelectedEmptyNotification": {
-        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
-    },
-    "shareDownloadingDialogContent": "正在下載",
-    "@shareDownloadingDialogContent": {
-        "description": "Downloading photos to be shared"
-    },
-    "searchTooltip": "搜尋",
-    "clearTooltip": "清除",
-    "@clearTooltip": {
-        "description": "Clear some sort of user input, typically a text field"
-    },
-    "listNoResultsText": "0 個項目",
-    "@listNoResultsText": {
-        "description": "When there's nothing in a list"
-    },
-    "listEmptyText": "0 個項目",
-    "@listEmptyText": {
-        "description": "When there's nothing in a list"
-    },
-    "albumTrashLabel": "垃圾桶",
-    "@albumTrashLabel": {
-        "description": "Deleted photos"
-    },
-    "restoreTooltip": "還原",
-    "@restoreTooltip": {
-        "description": "Restore selected items from trashbin"
-    },
-    "restoreSelectedProcessingNotification": "{count, plural, other{正在還原 {count} 個項目}}",
-    "@restoreSelectedProcessingNotification": {
-        "description": "Restoring selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreSelectedSuccessNotification": "成功還原所有項目",
-    "@restoreSelectedSuccessNotification": {
-        "description": "Restored all selected items from trashbin successfully"
-    },
-    "restoreSelectedFailureNotification": "{count, plural, other{未能還原 {count} 個項目}}",
-    "@restoreSelectedFailureNotification": {
-        "description": "Cannot restore some of the selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreProcessingNotification": "正在還原",
-    "@restoreProcessingNotification": {
-        "description": "Restoring the opened item from trashbin"
-    },
-    "restoreSuccessNotification": "成功還原",
-    "@restoreSuccessNotification": {
-        "description": "Restored the opened item from trashbin successfully"
-    },
-    "restoreFailureNotification": "未能還原",
-    "@restoreFailureNotification": {
-        "description": "Cannot restore the opened item from trashbin"
-    },
-    "deletePermanentlyTooltip": "永久刪除",
-    "@deletePermanentlyTooltip": {
-        "description": "Permanently delete selected items from trashbin"
-    },
-    "deletePermanentlyConfirmationDialogTitle": "永久刪除",
-    "@deletePermanentlyConfirmationDialogTitle": {
-        "description": "Make sure the user wants to delete the items"
-    },
-    "deletePermanentlyConfirmationDialogContent": "將於你的伺服器上永久刪除所選的檔案。\n\n此為不可逆操作",
-    "@deletePermanentlyConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete the items"
-    },
-    "albumSharedLabel": "已分享",
-    "@albumSharedLabel": {
-        "description": "A small label placed next to a shared album"
-    },
-    "metadataTaskProcessingNotification": "正在背景讀取相片的中繼資料",
-    "@metadataTaskProcessingNotification": {
-        "description": "Shown when the app is reading image metadata"
-    },
-    "metadataTaskPauseNoWiFiNotification": "正在等候 WiFi 網絡",
-    "@metadataTaskPauseNoWiFiNotification": {
-        "description": "Shown when the app has paused reading image metadata"
-    },
-    "configButtonLabel": "設定",
-    "useAsAlbumCoverTooltip": "設為相簿封面",
-    "helpTooltip": "幫助",
-    "helpButtonLabel": "幫助",
-    "removeFromAlbumTooltip": "從相簿中移除",
-    "@removeFromAlbumTooltip": {
-        "description": "Remove the opened photo from an album"
-    },
-    "changelogTitle": "更新日誌",
-    "@changelogTitle": {
-        "description": "Title of the changelog page"
-    },
-    "serverCertErrorDialogTitle": "不安全的伺服器憑證",
-    "@serverCertErrorDialogTitle": {
-        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
-    },
-    "serverCertErrorDialogContent": "此伺服器可能遭到入侵或你的網絡正被竊聽",
-    "@serverCertErrorDialogContent": {
-        "description": "Warn user about an untrusted SSL certificate"
-    },
-    "advancedButtonLabel": "進階設定",
-    "@advancedButtonLabel": {
-        "description": "Label of the advanced button"
-    },
-    "whitelistCertDialogTitle": "把伺服器憑證加入白名單?",
-    "@whitelistCertDialogTitle": {
-        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
-    },
-    "whitelistCertDialogContent": "你可以把此伺服器憑證加入 App 的白名單。警告：此行為有可能構成安全風險，請確保此憑證的來源可信\n\n主機: {host}\n指紋: {fingerprint}",
-    "@whitelistCertDialogContent": {
-        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
-        "placeholders": {
-            "host": {
-                "example": "www.example.com"
-            },
-            "fingerprint": {
-                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-            }
-        }
-    },
-    "whitelistCertButtonLabel": "明白風險並加入白名單",
-    "@whitelistCertButtonLabel": {
-        "description": "Label of the whitelist certificate button"
-    },
-    "fileSharedByDescription": "為此用戶分享給你",
-    "@fileSharedByDescription": {
-        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
-    },
-    "emptyTrashbinTooltip": "清空垃圾桶",
-    "@emptyTrashbinTooltip": {
-        "description": "Permanently delete all items from trashbin"
-    },
-    "emptyTrashbinConfirmationDialogTitle": "清空垃圾桶",
-    "@emptyTrashbinConfirmationDialogTitle": {
-        "description": "Make sure the user wants to delete all items"
-    },
-    "emptyTrashbinConfirmationDialogContent": "將於你的伺服器上永久刪除所有檔案。\n\n此為不可逆操作",
-    "@emptyTrashbinConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete all items"
-    },
-    "unsetAlbumCoverTooltip": "取消設為相簿封面",
-    "@unsetAlbumCoverTooltip": {
-        "description": "Unset the cover of the opened album"
-    },
-    "muteTooltip": "靜音",
-    "@muteTooltip": {
-        "description": "Mute the video player"
-    },
-    "unmuteTooltip": "解除靜音",
-    "@unmuteTooltip": {
-        "description": "Unmute the video player"
-    },
-    "collectionPeopleLabel": "人物",
-    "@collectionPeopleLabel": {
-        "description": "Browse photos grouped by person"
-    },
-    "slideshowTooltip": "幻燈片",
-    "@slideshowTooltip": {
-        "description": "A button to start a slideshow from the current collection"
-    },
-    "slideshowSetupDialogTitle": "設置幻燈片",
-    "@slideshowSetupDialogTitle": {
-        "description": "Setup slideshow before starting"
-    },
-    "slideshowSetupDialogDurationTitle": "相片時長 (MM:SS)",
-    "@slideshowSetupDialogDurationTitle": {
-        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
-    },
-    "slideshowSetupDialogShuffleTitle": "隨機",
-    "@slideshowSetupDialogShuffleTitle": {
-        "description": "Whether to shuffle the collection"
-    },
-    "slideshowSetupDialogRepeatTitle": "重複",
-    "@slideshowSetupDialogRepeatTitle": {
-        "description": "Whether to restart the slideshow from the beginning after the last slide"
-    },
-    "slideshowSetupDialogReverseTitle": "Reverse",
-    "@slideshowSetupDialogReverseTitle": {
-        "description": "Whether to play the slideshow in reverse order"
-    },
-    "linkCopiedNotification": "已複製連結",
-    "@linkCopiedNotification": {
-        "description": "Copied the share link to clipboard"
-    },
-    "shareMethodDialogTitle": "分享方式",
-    "@shareMethodDialogTitle": {
-        "description": "Let the user pick how they want to share"
-    },
-    "shareMethodPreviewTitle": "Preview",
-    "@shareMethodPreviewTitle": {
-        "description": "Share the preview of a file"
-    },
-    "shareMethodPreviewDescription": "Share a reduced quality preview to other apps (only support images)",
-    "shareMethodOriginalFileTitle": "Original file",
-    "@shareMethodOriginalFileTitle": {
-        "description": "Share the original file"
-    },
-    "shareMethodOriginalFileDescription": "Download the original file and share it to other apps",
-    "shareMethodPublicLinkTitle": "公開連結",
-    "@shareMethodPublicLinkTitle": {
-        "description": "Create a share link on server and share it"
-    },
-    "shareMethodPublicLinkDescription": "於伺服器上建立新的公開連結，所有開啟連結的人都能存取檔案",
-    "shareMethodPasswordLinkTitle": "密碼保護連結",
-    "@shareMethodPasswordLinkTitle": {
-        "description": "Create a password protected share link on server and share it"
-    },
-    "shareMethodPasswordLinkDescription": "於伺服器上建立新的密碼保護連結",
-    "collectionSharingLabel": "分享",
-    "@collectionSharingLabel": {
-        "description": "List items being shared by the current account"
-    },
-    "fileLastSharedDescription": "於 {date} 分享",
-    "@fileLastSharedDescription": {
-        "description": "The date when this file was last shared by you",
-        "placeholders": {
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "fileLastSharedByOthersDescription": "{user} 於 {date} 分享給你",
-    "@fileLastSharedByOthersDescription": {
-        "description": "The date when this file was shared with you",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            },
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "albumLastSharedByOthersDescription": "{user} 於 {date} 分享相簿給你",
-    "@albumLastSharedByOthersDescription": {
-        "description": "The date when this album was shared with you",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            },
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "sharedWithLabel": "分享詳情",
-    "@sharedWithLabel": {
-        "description": "A list of users or links where this file is sharing with"
-    },
-    "unshareTooltip": "取消分享",
-    "@unshareTooltip": {
-        "description": "Remove a share"
-    },
-    "unshareSuccessNotification": "已移除分享",
-    "@unshareSuccessNotification": {
-        "description": "Removed a share"
-    },
-    "locationLabel": "地點",
-    "@locationLabel": {
-        "description": "Show where the file is located"
-    },
-    "multipleFilesLinkShareDialogContent": "Nextcloud 並不支援建立多檔案的分享連結，App 將會複製選取的檔案至一新的資料夾，並分享該資料夾",
-    "@multipleFilesLinkShareDialogContent": {
-        "description": "Dialog shown when sharing multiple files as link"
-    },
-    "folderNameInputHint": "資料夾名稱",
-    "@folderNameInputHint": {
-        "description": "Input field for folder name"
-    },
-    "folderNameInputInvalidEmpty": "請輸入資料夾名稱",
-    "@folderNameInputInvalidEmpty": {
-        "description": "Folder name cannot be left empty"
-    },
-    "folderNameInputInvalidCharacters": "包含不支援的字母",
-    "@folderNameInputInvalidCharacters": {
-        "description": "Folder name contains characters that are not allowed"
-    },
-    "createShareProgressText": "正在建立分享",
-    "@createShareProgressText": {
-        "description": "Message shown when sharing files"
-    },
-    "copyItemsFailureNotification": "{count, plural, other{未能複製 {count} 個項目}}",
-    "@copyItemsFailureNotification": {
-        "description": "Error message shown when some files cannot be copied",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unshareLinkShareDirDialogTitle": "刪除資料夾?",
-    "@unshareLinkShareDirDialogTitle": {
-        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-    },
-    "unshareLinkShareDirDialogContent": "此資料夾本是 App 為了分享多檔案而建立的，而此資料夾現在已沒有任何分享，你希望刪除此資料夾嗎?",
-    "@unshareLinkShareDirDialogContent": {
-        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-    },
-    "addToCollectionsViewTooltip": "新增至收藏庫",
-    "@addToCollectionsViewTooltip": {
-        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
-    },
-    "shareAlbumDialogTitle": "分享給用戶",
-    "@shareAlbumDialogTitle": {
-        "description": "Dialog to share an album with another user"
-    },
-    "shareAlbumSuccessWithErrorNotification": "成功分享相簿給 {user}，但部分相片未能分享",
-    "@shareAlbumSuccessWithErrorNotification": {
-        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "unshareAlbumSuccessWithErrorNotification": "成功取消分享相簿給 {user}，但部分相片未能取消分享",
-    "@unshareAlbumSuccessWithErrorNotification": {
-        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "fixSharesTooltip": "修正分享",
-    "@fixSharesTooltip": {
-        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
-    },
-    "fixTooltip": "修正",
-    "@fixTooltip": {
-        "description": "Fix an issue"
-    },
-    "fixAllTooltip": "修正全部",
-    "@fixAllTooltip": {
-        "description": "Fix all listed issues"
-    },
-    "missingShareDescription": "未有分享至 {user}",
-    "@missingShareDescription": {
-        "description": "The album is shared with user but a file is NOT",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "extraShareDescription": "已分享至 {user}",
-    "@extraShareDescription": {
-        "description": "The album is NOT shared with user but a file is",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "defaultButtonLabel": "默認",
-    "addUserInputHint": "新增用戶",
-    "@addUserInputHint": {
-        "description": "Input a user name to share this album with"
-    },
-    "sharedAlbumInfoDialogTitle": "關於共享相簿",
-    "@sharedAlbumInfoDialogTitle": {
-        "description": "This dialog is shown when user first open a shared album"
-    },
-    "sharedAlbumInfoDialogContent": "共享相簿容許同一伺服器上的多名用戶存取相同的相簿，請於使用本功能前細閱說明和限制",
-    "@sharedAlbumInfoDialogContent": {
-        "description": "This dialog is shown when user first open a shared album"
-    },
-    "learnMoreButtonLabel": "更多說明",
-    "migrateDatabaseProcessingNotification": "正在更新數據庫",
-    "@migrateDatabaseProcessingNotification": {
-        "description": "Migrate database to work with the updated app"
-    },
-    "migrateDatabaseFailureNotification": "未能更新數據庫",
-    "memoryAlbumName": "{count, plural, other{{count} 年前}}",
-    "@memoryAlbumName": {
-        "description": "Memory albums are generated by the app and include photos in the past years",
-        "placeholders": {
-            "count": {
-                "example": "2"
-            }
-        }
-    },
-    "homeFolderNotFoundDialogTitle": "未找到用戶資料夾",
-    "@homeFolderNotFoundDialogTitle": {
-        "description": "The app failed to scan the user's home folder on signing in"
-    },
-    "homeFolderNotFoundDialogContent": "請修正下面的 WebDAV 地址，你可以於 Nextcloud 網頁介面中找到正確的地址",
-    "@homeFolderNotFoundDialogContent": {
-        "description": "Ask the user to provide us the correct WebDAV URL"
-    },
-    "homeFolderInputInvalidEmpty": "請輸入用戶資料夾的名稱",
-    "@homeFolderInputInvalidEmpty": {
-        "description": "Home folder can't be left empty"
-    },
-    "createCollectionTooltip": "新增相片集",
-    "@createCollectionTooltip": {
-        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-    },
-    "createCollectionDialogAlbumLabel": "相簿",
-    "@createCollectionDialogAlbumLabel": {
-        "description": "Create an album as collection"
-    },
-    "createCollectionDialogAlbumDescription": "顯示你任意加入的相片",
-    "@createCollectionDialogAlbumDescription": {
-        "description": "Describe how an album collection works"
-    },
-    "createCollectionDialogFolderLabel": "資料夾",
-    "@createCollectionDialogFolderLabel": {
-        "description": "Create a folder as collection"
-    },
-    "createCollectionDialogFolderDescription": "顯示資料夾內的相片",
-    "@createCollectionDialogFolderDescription": {
-        "description": "Describe how a folder collection works"
-    },
-    "collectionFavoritesLabel": "我的最愛",
-    "@collectionFavoritesLabel": {
-        "description": "Browse photos added to favorites"
-    },
-    "favoriteTooltip": "新增至我的最愛",
-    "@favoriteTooltip": {
-        "description": "Add photo to favorites"
-    },
-    "favoriteSuccessNotification": "成功新增至我的最愛",
-    "@favoriteSuccessNotification": {
-        "description": "Successfully added photos to favorites"
-    },
-    "favoriteFailureNotification": "未能新增至我的最愛",
-    "@favoriteFailureNotification": {
-        "description": "Failed adding photos to favorites"
-    },
-    "unfavoriteTooltip": "從我的最愛移除",
-    "@unfavoriteTooltip": {
-        "description": "Remove photo to favorites"
-    },
-    "unfavoriteSuccessNotification": "成功從我的最愛移除",
-    "@unfavoriteSuccessNotification": {
-        "description": "Successfully removed photos from favorites"
-    },
-    "unfavoriteFailureNotification": "未能從我的最愛移除",
-    "@unfavoriteFailureNotification": {
-        "description": "Failed removing photos from favorites"
-    },
-    "createCollectionDialogTagLabel": "標籤",
-    "@createCollectionDialogTagLabel": {
-        "description": "Create a collection containing files with tags"
-    },
-    "createCollectionDialogTagDescription": "顯示特定標籤的檔案",
-    "@createCollectionDialogTagDescription": {
-        "description": "Describe how a tag collection works"
-    },
-    "addTagInputHint": "新增標籤",
-    "@addTagInputHint": {
-        "description": "Input a tag"
-    },
-    "tagPickerNoTagSelectedNotification": "請新增至少一個標籤",
-    "@tagPickerNoTagSelectedNotification": {
-        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
-    },
-    "backgroundServiceStopping": "正在停止背景服務",
-    "@backgroundServiceStopping": {
-        "description": "The background service is stopping itself"
-    },
-    "metadataTaskPauseLowBatteryNotification": "電量不足",
-    "@metadataTaskPauseLowBatteryNotification": {
-        "description": "Shown when the app has paused reading image metadata due to low battery"
-    },
-    "enhanceTooltip": "Enhance",
-    "@enhanceTooltip": {
-        "description": "Enhance a photo"
-    },
-    "enhanceButtonLabel": "ENHANCE",
-    "enhanceIntroDialogTitle": "Enhance your photos",
-    "enhanceIntroDialogDescription": "Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings",
-    "enhanceLowLightTitle": "Low-light enhancement",
-    "@enhanceLowLightTitle": {
-        "description": "Enhance a photo taken in low-light environment"
-    },
-    "enhanceLowLightDescription": "Brighten your photos taken in low-light environments",
-    "enhanceLowLightParamBrightnessLabel": "Brightness",
-    "@enhanceLowLightParamBrightnessLabel": {
-        "description": "This parameter sets how much brighter the output will be"
-    },
-    "collectionEditedPhotosLabel": "Edited (local)",
-    "@collectionEditedPhotosLabel": {
-        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
-    },
-    "deletePermanentlyLocalConfirmationDialogContent": "Selected items will be deleted permanently from this device.\n\nThis action is nonreversible",
-    "@deletePermanentlyLocalConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete the items from the current device"
-    },
-    "enhancePortraitBlurTitle": "Portrait blur",
-    "@enhancePortraitBlurTitle": {
-        "description": "Blur the background of a photo"
-    },
-    "enhancePortraitBlurDescription": "Blur the background of your photos, work best with portraits",
-    "enhancePortraitBlurParamBlurLabel": "Blurriness",
-    "@enhancePortraitBlurParamBlurLabel": {
-        "description": "This parameter sets the radius of the blur filter"
-    },
-    "enhanceSuperResolution4xTitle": "Super-resolution (4x)",
-    "@enhanceSuperResolution4xTitle": {
-        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
-    },
-    "enhanceSuperResolution4xDescription": "Enlarge your photos to 4x of its original resolution (see Help for details on how max resolution applies here)",
-    "enhanceStyleTransferTitle": "Style transfer",
-    "@enhanceStyleTransferTitle": {
-        "description": "Transfer the image style from a reference image to a photo"
-    },
-    "enhanceStyleTransferStyleDialogTitle": "Pick a style",
-    "@enhanceStyleTransferStyleDialogTitle": {
-        "description": "Pick a reference image for the style transfer algorithm"
-    },
-    "enhanceStyleTransferStyleDialogDescription": "Transfer image style from a reference image to your photos",
-    "enhanceStyleTransferNoStyleSelectedNotification": "Please pick a style",
-    "@enhanceStyleTransferNoStyleSelectedNotification": {
-        "description": "Show this error if users did not pick a reference image"
-    },
-    "enhanceColorPopTitle": "Color pop",
-    "@enhanceColorPopTitle": {
-        "description": "Desaturate the background of a photo"
-    },
-    "enhanceColorPopDescription": "Desaturate the background of your photos, work best with portraits",
-    "enhanceGenericParamWeightLabel": "Weight",
-    "@enhanceGenericParamWeightLabel": {
-        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
-    },
-    "enhanceRetouchTitle": "Auto retouch",
-    "@enhanceRetouchTitle": {
-        "description": "Automatically improve your photo"
-    },
-    "enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
-    "doubleTapExitNotification": "Tap again to exit",
-    "@doubleTapExitNotification": {
-        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
-    },
-    "imageEditDiscardDialogTitle": "Discard changes?",
-    "@imageEditDiscardDialogTitle": {
-        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
-    },
-    "imageEditDiscardDialogContent": "Your changes are not saved",
-    "discardButtonLabel": "DISCARD",
-    "@discardButtonLabel": {
-        "description": "Discard the current unsaved content"
-    },
-    "saveTooltip": "Save",
-    "@saveTooltip": {
-        "description": "Save the current content"
-    },
-    "imageEditColorBrightness": "Brightness",
-    "@imageEditColorBrightness": {
-        "description": "Adjust the brightness of an image"
-    },
-    "imageEditColorContrast": "Contrast",
-    "@imageEditColorContrast": {
-        "description": "Adjust the contrast of an image"
-    },
-    "imageEditColorWhitePoint": "White point",
-    "@imageEditColorWhitePoint": {
-        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
-    },
-    "imageEditColorBlackPoint": "Black point",
-    "@imageEditColorBlackPoint": {
-        "description": "Adjust the black point of an image"
-    },
-    "imageEditColorSaturation": "Saturation",
-    "@imageEditColorSaturation": {
-        "description": "Adjust the color saturation of an image"
-    },
-    "imageEditColorWarmth": "Warmth",
-    "@imageEditColorWarmth": {
-        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
-    },
-    "imageEditColorTint": "Tint",
-    "@imageEditColorTint": {
-        "description": "Shift colors from a green to a magenta tint"
-    },
-    "imageEditTitle": "Preview edits",
-    "@imageEditTitle": {
-        "description": "Title of the image editor"
-    },
-    "imageEditToolbarColorLabel": "Color",
-    "@imageEditToolbarColorLabel": {
-        "description": "Label of the color tools. These can be used to adjust the color of an image"
-    },
-    "imageEditToolbarTransformLabel": "Transform",
-    "@imageEditToolbarTransformLabel": {
-        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
-    },
-    "imageEditTransformOrientation": "Orientation",
-    "@imageEditTransformOrientation": {
-        "description": "Change the orientation of the image, 90 degree per step"
-    },
-    "imageEditTransformOrientationClockwise": "cw",
-    "@imageEditTransformOrientationClockwise": {
-        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
-    },
-    "imageEditTransformOrientationCounterclockwise": "ccw",
-    "@imageEditTransformOrientationCounterclockwise": {
-        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
-    },
-    "imageEditTransformCrop": "Crop",
-    "@imageEditTransformCrop": {
-        "description": "Crop the image"
-    },
-    "categoriesLabel": "Categories",
-    "searchLandingPeopleListEmptyText": "Press help to learn how to setup",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
-    "searchLandingCategoryVideosLabel": "Videos",
-    "@searchLandingCategoryVideosLabel": {
-        "description": "Search all videos"
-    },
-    "searchFilterButtonLabel": "FILTERS",
-    "@searchFilterButtonLabel": {
-        "description": "Modify search filters"
-    },
-    "searchFilterDialogTitle": "Search filters",
-    "@searchFilterDialogTitle": {
-        "description": "Dialog to modify search filters"
-    },
-    "applyButtonLabel": "APPLY",
-    "@applyButtonLabel": {
-        "description": "A confirmation button, typically in a dialog, that apply the current settings"
-    },
-    "searchFilterOptionAnyLabel": "Any",
-    "@searchFilterOptionAnyLabel": {
-        "description": "This is the default option for all search filters. Filters with this value will be ignored"
-    },
-    "searchFilterOptionTrueLabel": "True",
-    "@searchFilterOptionTrueLabel": {
-        "description": "Positive option for a boolean filter"
-    },
-    "searchFilterOptionFalseLabel": "False",
-    "@searchFilterOptionFalseLabel": {
-        "description": "Negative option for a boolean filter"
-    },
-    "searchFilterTypeLabel": "Type",
-    "@searchFilterTypeLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterTypeOptionImageLabel": "Image",
-    "@searchFilterTypeOptionImageLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterBubbleTypeImageText": "images",
-    "@searchFilterBubbleTypeImageText": {
-        "description": "List of active search filters shown in the result page (by file type, image)"
-    },
-    "searchFilterTypeOptionVideoLabel": "Video",
-    "@searchFilterTypeOptionVideoLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterBubbleTypeVideoText": "videos",
-    "@searchFilterBubbleTypeVideoText": {
-        "description": "List of active search filters shown in the result page (by file type, video)"
-    },
-    "searchFilterFavoriteLabel": "Favorite",
-    "@searchFilterFavoriteLabel": {
-        "description": "Filter search results by whether it's in favorites"
-    },
-    "searchFilterBubbleFavoriteTrueText": "favorites",
-    "@searchFilterBubbleFavoriteTrueText": {
-        "description": "List of active search filters shown in the result page (by favorites, true)"
-    },
-    "searchFilterBubbleFavoriteFalseText": "not favorites",
-    "@searchFilterBubbleFavoriteFalseText": {
-        "description": "List of active search filters shown in the result page (by favorites, false)"
-    },
-    "showAllButtonLabel": "SHOW ALL",
-    "@showAllButtonLabel": {
-        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
-    },
-    "gpsPlaceText": "Near {place}",
-    "@gpsPlaceText": {
-        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
-        "placeholders": {
-            "place": {}
-        }
-    },
-    "gpsPlaceAboutDialogTitle": "About place",
-    "@gpsPlaceAboutDialogTitle": {
-        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-    },
-    "gpsPlaceAboutDialogContent": "The place shown here is only a rough estimation and not guaranteed to be accurate. It does not represent our views on any disputed areas.",
-    "@gpsPlaceAboutDialogContent": {
-        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-    },
-    "collectionPlacesLabel": "Places",
-    "@collectionPlacesLabel": {
-        "description": "Browse photos grouped by place"
-    },
-    "imageSaveOptionDialogTitle": "Saving the result",
-    "@imageSaveOptionDialogTitle": {
-        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-    },
-    "imageSaveOptionDialogContent": "Select where to save this and future processed images. If you picked server but the app failed to upload it, it will be saved on your device.",
-    "@imageSaveOptionDialogContent": {
-        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-    },
-    "imageSaveOptionDialogDeviceButtonLabel": "DEVICE",
-    "@imageSaveOptionDialogDeviceButtonLabel": {
-        "description": "Save the image on the current device"
-    },
-    "imageSaveOptionDialogServerButtonLabel": "SERVER",
-    "@imageSaveOptionDialogServerButtonLabel": {
-        "description": "Save the image on your Nextcloud server"
-    },
-    "initialSyncMessage": "Syncing with your server for the first time",
-    "@initialSyncMessage": {
-        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
-    },
-    "loopTooltip": "Loop",
-    "@loopTooltip": {
-        "description": "Enable or disable loop in the video player"
-    },
-    "createCollectionFailureNotification": "Failed creating collection",
-    "@createCollectionFailureNotification": {
-        "description": "Inform user that a collection cannot be created"
-    },
-    "addItemToCollectionTooltip": "Add to collection",
-    "@addItemToCollectionTooltip": {
-        "description": "Add one or more items to a collection"
-    },
-    "addItemToCollectionFailureNotification": "Failed adding to collection",
-    "@addItemToCollectionFailureNotification": {
-        "description": "Inform user that the item cannot be added to a collection"
-    },
-    "setCollectionCoverFailureNotification": "Failed setting collection cover",
-    "@setCollectionCoverFailureNotification": {
-        "description": "Cannot set the opened item as the collection cover"
-    },
-    "exportCollectionTooltip": "Export",
-    "@exportCollectionTooltip": {
-        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
-    },
-    "exportCollectionDialogTitle": "Export collection",
-    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
-    "@createCollectionDialogNextcloudAlbumLabel": {
-        "description": "Server-side albums that are available in Nextcloud 25+"
-    },
-    "createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
-    "removeCollectionsFailedNotification": "Failed to remove some collections",
-    "errorUnauthenticated": "未授權的存取，若問題持續請重新登入",
-    "@errorUnauthenticated": {
-        "description": "Error message when server responds with HTTP401"
-    },
-    "errorDisconnected": "無法建立連線，服務器可能正在維護或你的裝置已離線",
-    "@errorDisconnected": {
-        "description": "Error message when the app can't connect to the server"
-    },
-    "errorLocked": "檔案於伺服器上被鎖定，請稍候重試",
-    "@errorLocked": {
-        "description": "Error message when server responds with HTTP423"
-    },
-    "errorInvalidBaseUrl": "無法建立連線，請確認網絡地址為你 Nextcloud 伺服器的基底地址",
-    "@errorInvalidBaseUrl": {
-        "description": "Error message when the base URL is invalid"
-    },
-    "errorWrongPassword": "無法建立授權，請確認你的用戶名稱和密碼為正確",
-    "@errorWrongPassword": {
-        "description": "Error message when the username or password is wrong"
-    },
-    "errorServerError": "伺服器錯誤，請確認伺服器設置無誤",
-    "@errorServerError": {
-        "description": "HTTP 500"
-    },
-    "errorAlbumDowngrade": "無法修改新版本 App 所儲存的相簿，請更新 App 後重試",
-    "@errorAlbumDowngrade": {
-        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
-    },
-    "errorNoStoragePermission": "需要存取裝置檔案的權限",
-    "@errorNoStoragePermission": {
-        "description": "Missing permission on Android"
-    }
+	"appTitle": "相簿",
+	"translator": "zerolin",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "相片",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"collectionsTooltip": "收藏庫",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
+	},
+	"zoomTooltip": "放大",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "重新整理",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "設定",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "{count, plural, other{已選 {count} 項}}",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, other{正在刪除 {count} 個項目}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "成功刪除所有項目",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotification": "{count, plural, other{未能刪除 {count} 個項目}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveTooltip": "封存",
+	"@archiveTooltip": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, other{正在封存 {count} 個項目}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "成功封存所有項目",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, other{未能封存 {count} 個項目}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveTooltip": "取消封存",
+	"@unarchiveTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, other{正在取消封存 {count} 個項目}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "成功取消封存所有項目",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, other{未能取消封存 {count} 個項目}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "刪除",
+	"@deleteTooltip": {
+		"description": "Delete selected items"
+	},
+	"deleteProcessingNotification": "正在刪除",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "成功刪除",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "未能刪除",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumFailureNotification": "未能從相簿中移除項目",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "新增伺服器",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "成功移除 {server}",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "新增相簿",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"albumSize": "{count, plural, other{{count} 個項目}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "封存庫",
+	"@albumArchiveLabel": {
+		"description": "Archive"
+	},
+	"connectingToServer": "正在連接\n{server}",
+	"@connectingToServer": {
+		"description": "Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"nameInputHint": "名稱",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"skipButtonLabel": "跳過",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "確認",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "登入 Nextcloud 伺服器",
+	"@signInHeaderText": {
+		"description": "Inform user what to do in sign in widget"
+	},
+	"signIn2faHintText": "若你的伺服器使用雙重認證，請以應用程式密碼登入",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
+	"serverAddressInputHint": "伺服器地址",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "請輸入伺服器地址",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "用戶名稱",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "請輸入用戶名稱",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "密碼",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "請輸入密碼",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "請選擇相片資料夾",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "App 只會顯示已選取資料夾內的相片，如需包含所有資料夾，請按跳過",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(返回上一層)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "未能取消選取資料夾",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "請選取至少一個資料夾或按跳過",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "開始使用",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "你亦可稍後於設定頁面中修改",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "本 App 將於你的 Nextcloud 伺服器中新增一個資料夾以儲存設定文件，除非你計劃刪除本 App，否則請不要更改或刪除資料夾的內容",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "設定",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "語言",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
+	"settingsExifSupportTitle": "EXIF 支援",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsExifSupportTrueSubtitle": "需要額外的網絡用量",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsMemoriesTitle": "回憶",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "顯示你過去的相片",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsAccountTitle": "帳戶",
+	"settingsIncludedFoldersTitle": "已選取的資料夾",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
+	"settingsShareFolderTitle": "共享資料夾",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "設置共享資料夾",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "此設定必需與你伺服器上的設置一致，請參考伺服器上 config.php 內的 share_folder 項目",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "請選擇與 config.php 中 share_folder 路徑一致的資料夾，若你從未更改伺服器設置，請按默認",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsServerAppSectionTitle": "伺服器 App 支援",
+	"@settingsServerAppSectionTitle": {
+		"description": "Enable/disable various server apps"
+	},
+	"settingsViewerTitle": "檢視器",
+	"settingsViewerDescription": "設置相片和影片檢視器",
+	"settingsScreenBrightnessTitle": "螢幕亮度",
+	"settingsScreenBrightnessDescription": "覆蓋系統亮度設定",
+	"settingsForceRotationTitle": "無視螢幕旋轉鎖定",
+	"settingsForceRotationDescription": "在系統鎖定螢幕旋轉時保持自動旋轉",
+	"settingsMapProviderTitle": "地圖供應商",
+	"settingsAlbumTitle": "相簿",
+	"settingsAlbumDescription": "設置相簿",
+	"settingsShowDateInAlbumTitle": "顯示日期分類",
+	"settingsShowDateInAlbumDescription": "只應用於以日期排序的相簿",
+	"settingsThemeTitle": "主題",
+	"settingsThemeDescription": "設置 App 的外觀",
+	"settingsFollowSystemThemeTitle": "跟隨系統主題",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsUseBlackInDarkThemeTitle": "黑色主題",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "深色主題中使用黑色背景",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "深色主題中使用深色背景",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
+	"settingsExperimentalTitle": "實驗",
+	"settingsExperimentalDescription": "可能不穩定的實驗性功能",
+	"settingsAboutSectionTitle": "關於",
+	"@settingsAboutSectionTitle": {
+		"description": "Title of the about section in settings widget"
+	},
+	"settingsVersionTitle": "版本",
+	"@settingsVersionTitle": {
+		"description": "Title of the version data item"
+	},
+	"settingsSourceCodeTitle": "源代碼",
+	"@settingsSourceCodeTitle": {
+		"description": "Title of the source code item"
+	},
+	"settingsBugReportTitle": "問題匯報",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
+	"settingsCaptureLogsTitle": "收集 App 事件日誌",
+	"@settingsCaptureLogsTitle": {
+		"description": "Capture app logs for bug report"
+	},
+	"settingsCaptureLogsDescription": "幫助開發者分析 bug",
+	"settingsTranslatorTitle": "翻譯",
+	"@settingsTranslatorTitle": {
+		"description": "Title of the translator item"
+	},
+	"writePreferenceFailureNotification": "未能儲存設定",
+	"@writePreferenceFailureNotification": {
+		"description": "Inform user that the preference file cannot be modified"
+	},
+	"enableButtonLabel": "啟用",
+	"@enableButtonLabel": {
+		"description": "Label of the enable button"
+	},
+	"exifSupportDetails": "啟用 EXIF 支援功能將使 App 可以讀取相片中的中繼資料 (metadata)，例如拍照日期、相機型號等等，而為了讀取這些資料，App 需要額外的網絡用量從伺服器下載完整的檔案。App 只會在裝置連接 WiFi 網絡的時候才會下載。",
+	"@exifSupportDetails": {
+		"description": "Detailed description of the exif support feature"
+	},
+	"exifSupportConfirmationDialogTitle": "啟用 EXIF 支援?",
+	"@exifSupportConfirmationDialogTitle": {
+		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"captureLogDetails": "如需記錄事件日誌以匯報問題:\n\n1. 啟用本設定\n2. 重現一次你遇到的問題\n3. 禁用本設定\n4. 在裝置的下載資料夾尋找 nc-photos.log 檔案\n\n*此功能不支援使 App 強制關閉的問題，如遇此種情況，請直接聯絡開發者",
+	"@captureLogDetails": {
+		"description": "Detailed description on capturing logs"
+	},
+	"captureLogSuccessNotification": "成功儲存事件日誌",
+	"@captureLogSuccessNotification": {
+		"description": "Captured logs are successfully saved to the download directory"
+	},
+	"doneButtonLabel": "完成",
+	"@doneButtonLabel": {
+		"description": "Label of the done button"
+	},
+	"nextButtonLabel": "下一項",
+	"@nextButtonLabel": {
+		"description": "Label of the next button"
+	},
+	"connectButtonLabel": "連接",
+	"@connectButtonLabel": {
+		"description": "Label of the connect button"
+	},
+	"rootPickerSkipConfirmationDialogContent2": "你伺服器上的所有檔案將會被加入到 App，這將提高記憶體用量並有機會影響 App 的性能",
+	"@rootPickerSkipConfirmationDialogContent2": {
+		"description": "Warn user not to include all files in their server"
+	},
+	"megapixelCount": "{count}百萬像素",
+	"@megapixelCount": {
+		"description": "Resolution of an image in megapixel",
+		"placeholders": {
+			"count": {
+				"example": "1.3"
+			}
+		}
+	},
+	"secondCountSymbol": "{count}秒",
+	"@secondCountSymbol": {
+		"description": "Number of seconds",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"millimeterCountSymbol": "{count}毫米",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "詳情",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "下載",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "正在下載檔案",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "成功下載檔案",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "未能下載檔案",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"nextTooltip": "下一項",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "上一項",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "按下 shit 鍵點擊以選取兩項目之間的所有項目",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "長按以選取兩項目之間的所有項目",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "修改日期和時間",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "日期",
+	"timeSubtitle": "時間",
+	"dateYearInputHint": "年",
+	"dateMonthInputHint": "月",
+	"dateDayInputHint": "日",
+	"timeHourInputHint": "時",
+	"timeMinuteInputHint": "分",
+	"timeSecondInputHint": "秒",
+	"dateTimeInputInvalid": "輸入錯誤",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "未能修改日期和時間",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
+	},
+	"albumDirPickerHeaderText": "選取綁定的資料夾",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "相簿只會包含已綁定資料夾內的相片",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "請選取至少一個資料夾",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"importFoldersTooltip": "導入資料夾",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "導入資料夾為相簿",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "於下表列出推薦的資料夾。若你的伺服器包含大量資料夾，將可能增加所需的時間",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "導入",
+	"albumImporterProgressText": "正在導入資料夾",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
+	"doneButtonTooltip": "完成",
+	"editTooltip": "修改",
+	"editAccountConflictFailureNotification": "已存在相同設置的帳戶",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"genericProcessingDialogContent": "請等候",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
+	"sortTooltip": "排序",
+	"sortOptionDialogTitle": "排序方式",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "由舊到新",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "由新到舊",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
+	"sortOptionAlbumNameLabel": "相簿名稱",
+	"@sortOptionAlbumNameLabel": {
+		"description": "Sort by album name, in ascending order"
+	},
+	"sortOptionAlbumNameDescendingLabel": "相簿名稱(降序)",
+	"@sortOptionAlbumNameDescendingLabel": {
+		"description": "Sort by album name, in descending order"
+	},
+	"sortOptionManualLabel": "手動",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
+	},
+	"albumEditDragRearrangeNotification": "長按拖曳項目以改變排序",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "新增文字",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "分享",
+	"@shareTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "請選取要分享的相片",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "正在下載",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
+	"searchTooltip": "搜尋",
+	"clearTooltip": "清除",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "0 個項目",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"listEmptyText": "0 個項目",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "垃圾桶",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "還原",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, other{正在還原 {count} 個項目}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "成功還原所有項目",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, other{未能還原 {count} 個項目}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "正在還原",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "成功還原",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "未能還原",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "永久刪除",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "永久刪除",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "將於你的伺服器上永久刪除所選的檔案。\n\n此為不可逆操作",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"albumSharedLabel": "已分享",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
+	"metadataTaskProcessingNotification": "正在背景讀取相片的中繼資料",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "正在等候 WiFi 網絡",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "設定",
+	"useAsAlbumCoverTooltip": "設為相簿封面",
+	"helpTooltip": "幫助",
+	"helpButtonLabel": "幫助",
+	"removeFromAlbumTooltip": "從相簿中移除",
+	"@removeFromAlbumTooltip": {
+		"description": "Remove the opened photo from an album"
+	},
+	"changelogTitle": "更新日誌",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
+	"serverCertErrorDialogTitle": "不安全的伺服器憑證",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "此伺服器可能遭到入侵或你的網絡正被竊聽",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"advancedButtonLabel": "進階設定",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "把伺服器憑證加入白名單?",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "你可以把此伺服器憑證加入 App 的白名單。警告：此行為有可能構成安全風險，請確保此憑證的來源可信\n\n主機: {host}\n指紋: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "明白風險並加入白名單",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
+	"fileSharedByDescription": "為此用戶分享給你",
+	"@fileSharedByDescription": {
+		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+	},
+	"emptyTrashbinTooltip": "清空垃圾桶",
+	"@emptyTrashbinTooltip": {
+		"description": "Permanently delete all items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogTitle": "清空垃圾桶",
+	"@emptyTrashbinConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"emptyTrashbinConfirmationDialogContent": "將於你的伺服器上永久刪除所有檔案。\n\n此為不可逆操作",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"unsetAlbumCoverTooltip": "取消設為相簿封面",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"muteTooltip": "靜音",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
+	"unmuteTooltip": "解除靜音",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
+	"collectionPeopleLabel": "人物",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"slideshowTooltip": "幻燈片",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "設置幻燈片",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "相片時長 (MM:SS)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "隨機",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "重複",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
+	},
+	"linkCopiedNotification": "已複製連結",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "分享方式",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodPublicLinkTitle": "公開連結",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	},
+	"shareMethodPublicLinkDescription": "於伺服器上建立新的公開連結，所有開啟連結的人都能存取檔案",
+	"shareMethodPasswordLinkTitle": "密碼保護連結",
+	"@shareMethodPasswordLinkTitle": {
+		"description": "Create a password protected share link on server and share it"
+	},
+	"shareMethodPasswordLinkDescription": "於伺服器上建立新的密碼保護連結",
+	"collectionSharingLabel": "分享",
+	"@collectionSharingLabel": {
+		"description": "List items being shared by the current account"
+	},
+	"fileLastSharedDescription": "於 {date} 分享",
+	"@fileLastSharedDescription": {
+		"description": "The date when this file was last shared by you",
+		"placeholders": {
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"fileLastSharedByOthersDescription": "{user} 於 {date} 分享給你",
+	"@fileLastSharedByOthersDescription": {
+		"description": "The date when this file was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"albumLastSharedByOthersDescription": "{user} 於 {date} 分享相簿給你",
+	"@albumLastSharedByOthersDescription": {
+		"description": "The date when this album was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"sharedWithLabel": "分享詳情",
+	"@sharedWithLabel": {
+		"description": "A list of users or links where this file is sharing with"
+	},
+	"unshareTooltip": "取消分享",
+	"@unshareTooltip": {
+		"description": "Remove a share"
+	},
+	"unshareSuccessNotification": "已移除分享",
+	"@unshareSuccessNotification": {
+		"description": "Removed a share"
+	},
+	"locationLabel": "地點",
+	"@locationLabel": {
+		"description": "Show where the file is located"
+	},
+	"multipleFilesLinkShareDialogContent": "Nextcloud 並不支援建立多檔案的分享連結，App 將會複製選取的檔案至一新的資料夾，並分享該資料夾",
+	"@multipleFilesLinkShareDialogContent": {
+		"description": "Dialog shown when sharing multiple files as link"
+	},
+	"folderNameInputHint": "資料夾名稱",
+	"@folderNameInputHint": {
+		"description": "Input field for folder name"
+	},
+	"folderNameInputInvalidEmpty": "請輸入資料夾名稱",
+	"@folderNameInputInvalidEmpty": {
+		"description": "Folder name cannot be left empty"
+	},
+	"folderNameInputInvalidCharacters": "包含不支援的字母",
+	"@folderNameInputInvalidCharacters": {
+		"description": "Folder name contains characters that are not allowed"
+	},
+	"createShareProgressText": "正在建立分享",
+	"@createShareProgressText": {
+		"description": "Message shown when sharing files"
+	},
+	"copyItemsFailureNotification": "{count, plural, other{未能複製 {count} 個項目}}",
+	"@copyItemsFailureNotification": {
+		"description": "Error message shown when some files cannot be copied",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unshareLinkShareDirDialogTitle": "刪除資料夾?",
+	"@unshareLinkShareDirDialogTitle": {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"unshareLinkShareDirDialogContent": "此資料夾本是 App 為了分享多檔案而建立的，而此資料夾現在已沒有任何分享，你希望刪除此資料夾嗎?",
+	"@unshareLinkShareDirDialogContent": {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"addToCollectionsViewTooltip": "新增至收藏庫",
+	"@addToCollectionsViewTooltip": {
+		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+	},
+	"shareAlbumDialogTitle": "分享給用戶",
+	"@shareAlbumDialogTitle": {
+		"description": "Dialog to share an album with another user"
+	},
+	"shareAlbumSuccessWithErrorNotification": "成功分享相簿給 {user}，但部分相片未能分享",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "成功取消分享相簿給 {user}，但部分相片未能取消分享",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"fixSharesTooltip": "修正分享",
+	"@fixSharesTooltip": {
+		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+	},
+	"fixTooltip": "修正",
+	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixAllTooltip": "修正全部",
+	"@fixAllTooltip": {
+		"description": "Fix all listed issues"
+	},
+	"missingShareDescription": "未有分享至 {user}",
+	"@missingShareDescription": {
+		"description": "The album is shared with user but a file is NOT",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"extraShareDescription": "已分享至 {user}",
+	"@extraShareDescription": {
+		"description": "The album is NOT shared with user but a file is",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"defaultButtonLabel": "默認",
+	"addUserInputHint": "新增用戶",
+	"@addUserInputHint": {
+		"description": "Input a user name to share this album with"
+	},
+	"sharedAlbumInfoDialogTitle": "關於共享相簿",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"sharedAlbumInfoDialogContent": "共享相簿容許同一伺服器上的多名用戶存取相同的相簿，請於使用本功能前細閱說明和限制",
+	"@sharedAlbumInfoDialogContent": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"learnMoreButtonLabel": "更多說明",
+	"migrateDatabaseProcessingNotification": "正在更新數據庫",
+	"@migrateDatabaseProcessingNotification": {
+		"description": "Migrate database to work with the updated app"
+	},
+	"migrateDatabaseFailureNotification": "未能更新數據庫",
+	"memoryAlbumName": "{count, plural, other{{count} 年前}}",
+	"@memoryAlbumName": {
+		"description": "Memory albums are generated by the app and include photos in the past years",
+		"placeholders": {
+			"count": {
+				"example": "2"
+			}
+		}
+	},
+	"homeFolderNotFoundDialogTitle": "未找到用戶資料夾",
+	"@homeFolderNotFoundDialogTitle": {
+		"description": "The app failed to scan the user's home folder on signing in"
+	},
+	"homeFolderNotFoundDialogContent": "請修正下面的 WebDAV 地址，你可以於 Nextcloud 網頁介面中找到正確的地址",
+	"@homeFolderNotFoundDialogContent": {
+		"description": "Ask the user to provide us the correct WebDAV URL"
+	},
+	"homeFolderInputInvalidEmpty": "請輸入用戶資料夾的名稱",
+	"@homeFolderInputInvalidEmpty": {
+		"description": "Home folder can't be left empty"
+	},
+	"createCollectionTooltip": "新增相片集",
+	"@createCollectionTooltip": {
+		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+	},
+	"createCollectionDialogAlbumLabel": "相簿",
+	"@createCollectionDialogAlbumLabel": {
+		"description": "Create an album as collection"
+	},
+	"createCollectionDialogAlbumDescription": "顯示你任意加入的相片",
+	"@createCollectionDialogAlbumDescription": {
+		"description": "Describe how an album collection works"
+	},
+	"createCollectionDialogFolderLabel": "資料夾",
+	"@createCollectionDialogFolderLabel": {
+		"description": "Create a folder as collection"
+	},
+	"createCollectionDialogFolderDescription": "顯示資料夾內的相片",
+	"@createCollectionDialogFolderDescription": {
+		"description": "Describe how a folder collection works"
+	},
+	"collectionFavoritesLabel": "我的最愛",
+	"@collectionFavoritesLabel": {
+		"description": "Browse photos added to favorites"
+	},
+	"favoriteTooltip": "新增至我的最愛",
+	"@favoriteTooltip": {
+		"description": "Add photo to favorites"
+	},
+	"favoriteSuccessNotification": "成功新增至我的最愛",
+	"@favoriteSuccessNotification": {
+		"description": "Successfully added photos to favorites"
+	},
+	"favoriteFailureNotification": "未能新增至我的最愛",
+	"@favoriteFailureNotification": {
+		"description": "Failed adding photos to favorites"
+	},
+	"unfavoriteTooltip": "從我的最愛移除",
+	"@unfavoriteTooltip": {
+		"description": "Remove photo to favorites"
+	},
+	"unfavoriteSuccessNotification": "成功從我的最愛移除",
+	"@unfavoriteSuccessNotification": {
+		"description": "Successfully removed photos from favorites"
+	},
+	"unfavoriteFailureNotification": "未能從我的最愛移除",
+	"@unfavoriteFailureNotification": {
+		"description": "Failed removing photos from favorites"
+	},
+	"createCollectionDialogTagLabel": "標籤",
+	"@createCollectionDialogTagLabel": {
+		"description": "Create a collection containing files with tags"
+	},
+	"createCollectionDialogTagDescription": "顯示特定標籤的檔案",
+	"@createCollectionDialogTagDescription": {
+		"description": "Describe how a tag collection works"
+	},
+	"addTagInputHint": "新增標籤",
+	"@addTagInputHint": {
+		"description": "Input a tag"
+	},
+	"tagPickerNoTagSelectedNotification": "請新增至少一個標籤",
+	"@tagPickerNoTagSelectedNotification": {
+		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+	},
+	"backgroundServiceStopping": "正在停止背景服務",
+	"@backgroundServiceStopping": {
+		"description": "The background service is stopping itself"
+	},
+	"metadataTaskPauseLowBatteryNotification": "電量不足",
+	"@metadataTaskPauseLowBatteryNotification": {
+		"description": "Shown when the app has paused reading image metadata due to low battery"
+	},
+	"errorUnauthenticated": "未授權的存取，若問題持續請重新登入",
+	"@errorUnauthenticated": {
+		"description": "Error message when server responds with HTTP401"
+	},
+	"errorDisconnected": "無法建立連線，服務器可能正在維護或你的裝置已離線",
+	"@errorDisconnected": {
+		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "檔案於伺服器上被鎖定，請稍候重試",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "無法建立連線，請確認網絡地址為你 Nextcloud 伺服器的基底地址",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "無法建立授權，請確認你的用戶名稱和密碼為正確",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "伺服器錯誤，請確認伺服器設置無誤",
+	"@errorServerError": {
+		"description": "HTTP 500"
+	},
+	"errorAlbumDowngrade": "無法修改新版本 App 所儲存的相簿，請更新 App 後重試",
+	"@errorAlbumDowngrade": {
+		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	},
+	"errorNoStoragePermission": "需要存取裝置檔案的權限",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
+	}
 }

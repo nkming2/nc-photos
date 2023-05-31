@@ -1,1438 +1,1092 @@
 {
-    "appTitle": "Φωτογραφίες",
-    "translator": "Chris Karasoulis",
-    "@translator": {
-        "description": "Name of the translator(s) for this language"
-    },
-    "photosTabLabel": "Φωτογραφίες",
-    "@photosTabLabel": {
-        "description": "Label of the tab that lists user photos"
-    },
-    "collectionsTooltip": "Συλλογές",
-    "@collectionsTooltip": {
-        "description": "Groups of photos, e.g., albums, trash bin, etc"
-    },
-    "zoomTooltip": "Εστίαση",
-    "@zoomTooltip": {
-        "description": "Tooltip of the zoom button"
-    },
-    "refreshMenuLabel": "Ανανέωση",
-    "@refreshMenuLabel": {
-        "description": "Label of the refresh entry in menu"
-    },
-    "settingsMenuLabel": "Ρυθμίσεις",
-    "@settingsMenuLabel": {
-        "description": "Label of the settings entry in menu"
-    },
-    "selectionAppBarTitle": "{count, plural, other{{count} επιλεγμένα}}",
-    "@selectionAppBarTitle": {
-        "description": "Title of the contextual app bar that shows number of selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedProcessingNotification": "{count, plural, =1{Διαγραφή 1 αντικειμένου} other{Διαγραφή {count} αντικειμένων}}",
-    "@deleteSelectedProcessingNotification": {
-        "description": "Inform user that the selected items are being deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedSuccessNotification": "Επιτυχής διαγραφή όλων των αντικειμένων",
-    "@deleteSelectedSuccessNotification": {
-        "description": "Inform user that the selected items are deleted successfully"
-    },
-    "deleteSelectedFailureNotification": "{count, plural, =1{Αποτυχία διαγραφής 1 αντικειμένου} other{Αποτυχία διαγραφής {count} αντικειμένων}}",
-    "@deleteSelectedFailureNotification": {
-        "description": "Inform user that some/all the selected items cannot be deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveTooltip": "Αρχειοθέτηση επιλεγμένων",
-    "@archiveTooltip": {
-        "description": "Archive selected items"
-    },
-    "archiveSelectedProcessingNotification": "{count, plural, =1{Αρχειοθέτηση 1 αντικειμένου} other{Αρχειοθέτηση {count} αντικειμένων}}",
-    "@archiveSelectedProcessingNotification": {
-        "description": "Archiving the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveSelectedSuccessNotification": "Επιτυχής αρχειοθέτηση όλων των αντικειμένων",
-    "@archiveSelectedSuccessNotification": {
-        "description": "Archived all selected items successfully"
-    },
-    "archiveSelectedFailureNotification": "{count, plural, =1{Αποτυχία αρχειοθέτησης 1 αντικειμένου} other{Αποτυχία αρχειοθέτησης {count} αντικειμένων}}",
-    "@archiveSelectedFailureNotification": {
-        "description": "Cannot archive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveTooltip": "Αποαρχειοθέτηση επιλεγμένων",
-    "@unarchiveTooltip": {
-        "description": "Unarchive selected items"
-    },
-    "unarchiveSelectedProcessingNotification": "{count, plural, =1{Αποαρχειοθέτηση 1 αντικειμένου} other{Αποαρχειοθέτηση {count} αντικειμένων}}",
-    "@unarchiveSelectedProcessingNotification": {
-        "description": "Unarchiving selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveSelectedSuccessNotification": "Επιτυχής αποαρχειοθέτηση όλων των αντικειμένων",
-    "@unarchiveSelectedSuccessNotification": {
-        "description": "Unarchived all selected items successfully"
-    },
-    "unarchiveSelectedFailureNotification": "{count, plural, =1{Αποτυχία αποαρχειοθέτησης 1 αντικειμένου} other{Αποτυχία αποαρχειοθέτησης {count} αντικειμένων}}",
-    "@unarchiveSelectedFailureNotification": {
-        "description": "Cannot unarchive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteTooltip": "Διαγραφή",
-    "@deleteTooltip": {
-        "description": "Delete selected items"
-    },
-    "deleteProcessingNotification": "Διαγραφή αντικειμένου",
-    "@deleteProcessingNotification": {
-        "description": "Inform user that the item is being deleted"
-    },
-    "deleteSuccessNotification": "Επιτυχής διαγραφή αντικειμένου",
-    "@deleteSuccessNotification": {
-        "description": "Inform user that the item is deleted successfully"
-    },
-    "deleteFailureNotification": "Αποτυχία διαγραφής αντικειμένου",
-    "@deleteFailureNotification": {
-        "description": "Inform user that the item cannot be deleted"
-    },
-    "removeSelectedFromAlbumFailureNotification": "Αποτυχία αφαίρεσης αντικειμένων από τη συλλογή",
-    "@removeSelectedFromAlbumFailureNotification": {
-        "description": "Inform user that the selected items cannot be removed from an album"
-    },
-    "addServerTooltip": "Προσθήκη διακομιστή",
-    "@addServerTooltip": {
-        "description": "Tooltip of the button that adds a new server"
-    },
-    "removeServerSuccessNotification": "Επιτυχής αφαίρεση {server}",
-    "@removeServerSuccessNotification": {
-        "description": "Inform user that a server is removed successfully",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "createAlbumTooltip": "Δημιουργία νέας συλλογής",
-    "@createAlbumTooltip": {
-        "description": "Tooltip of the button that creates a new album"
-    },
-    "albumSize": "{count, plural, =0{Empty} =1{1 αντικείμενο} other{{count} αντικείμενα}}",
-    "@albumSize": {
-        "description": "Number of items inside an album",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "albumArchiveLabel": "Αρχείο",
-    "@albumArchiveLabel": {
-        "description": "A collection containing all archived photos"
-    },
-    "connectingToServer": "Σύνδεση σε\n{server}",
-    "@connectingToServer": {
-        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "connectingToServer2": "Waiting for the server to authorize us",
-    "@connectingToServer2": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "connectingToServerInstruction": "Please sign in via the opened browser",
-    "@connectingToServerInstruction": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "nameInputHint": "Όνομα",
-    "@nameInputHint": {
-        "description": "Hint of the text field expecting name data"
-    },
-    "nameInputInvalidEmpty": "Name is required",
-    "@nameInputInvalidEmpty": {
-        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
-    },
-    "skipButtonLabel": "ΠΑΡΑΒΛΕΨΗ",
-    "@skipButtonLabel": {
-        "description": "Label of the skip button"
-    },
-    "confirmButtonLabel": "ΕΠΙΒΕΒΑΙΩΣΗ",
-    "@confirmButtonLabel": {
-        "description": "Label of the confirm button"
-    },
-    "signInHeaderText": "Είσοδος σε διακομιστή Nextcloud",
-    "@signInHeaderText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signIn2faHintText": "Χρησιμοποιήστε ένα συνθηματικό εφαρμογής αν χρησιμοποιείτε πιστοποίηση δύο παραγόντων στο διακομιστή",
-    "@signIn2faHintText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signInHeaderText2": "Nextcloud\nSign in",
-    "@signInHeaderText2": {
-        "description": "Sign in to Nextcloud server"
-    },
-    "serverAddressInputHint": "Διεύθυνση διακομιστή",
-    "@serverAddressInputHint": {
-        "description": "Hint of the text field expecting server address data"
-    },
-    "serverAddressInputInvalidEmpty": "Προσθέστε τη διεύθυνση του διακομιστή",
-    "@serverAddressInputInvalidEmpty": {
-        "description": "Inform user that the server address input field cannot be empty"
-    },
-    "usernameInputHint": "Όνομα χρήστη",
-    "@usernameInputHint": {
-        "description": "Hint of the text field expecting username data"
-    },
-    "usernameInputInvalidEmpty": "Προσθέστε το όνομα χρήστη σας",
-    "@usernameInputInvalidEmpty": {
-        "description": "Inform user that the username input field cannot be empty"
-    },
-    "passwordInputHint": "Κωδικός πρόσβασης",
-    "@passwordInputHint": {
-        "description": "Hint of the text field expecting password data"
-    },
-    "passwordInputInvalidEmpty": "Προσθέστε τον κωδικό πρόσβασής σας",
-    "@passwordInputInvalidEmpty": {
-        "description": "Inform user that the password input field cannot be empty"
-    },
-    "rootPickerHeaderText": "Επιλέξτε τους φακέλους που θα συμπεριληφθούν",
-    "@rootPickerHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerSubHeaderText": "Μόνο οι φωτογραφίες εντός των φακέλων θα εμφανίζονται. Πατήστε Παράβλεψη για να συμπεριληφθούν όλες",
-    "@rootPickerSubHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerNavigateUpItemText": "(go back)",
-    "@rootPickerNavigateUpItemText": {
-        "description": "Text of the list item to navigate up the directory tree"
-    },
-    "rootPickerUnpickFailureNotification": "Αποτυχία αποεπιλογής αντικειμένου",
-    "@rootPickerUnpickFailureNotification": {
-        "description": "Failed while unpicking an item in the root picker list"
-    },
-    "rootPickerListEmptyNotification": "Επιλέξτε τουλάχιστον έναν φάκελο ή πατήστε παράβλεψη για να τους συμπεριλάβετε όλους",
-    "@rootPickerListEmptyNotification": {
-        "description": "Error when user pressing confirm without picking any folders"
-    },
-    "setupWidgetTitle": "Ξεκινάμε",
-    "@setupWidgetTitle": {
-        "description": "Title of the introductory widget"
-    },
-    "setupSettingsModifyLaterHint": "Μπορείτε να το αλλάξετε αργότερα στις Ρυθμίσεις",
-    "@setupSettingsModifyLaterHint": {
-        "description": "Inform user that they can modify this setting after the setup process"
-    },
-    "setupHiddenPrefDirNoticeDetail": "Η εφαρμογή θα δημιουργήσει ένα φάκελο στο διακομιστή Nextcloud για την αποθήκευση αρχείων προτιμήσεων. Μην τον τροποποιήσετε και μην τον καταργήσετε εκτός εάν σκοπεύετε να καταργήσετε αυτήν την εφαρμογή",
-    "@setupHiddenPrefDirNoticeDetail": {
-        "description": "Inform user about the preference folder created by this app"
-    },
-    "settingsWidgetTitle": "Ρυθμίσεις",
-    "@settingsWidgetTitle": {
-        "description": "Title of the Settings widget"
-    },
-    "settingsLanguageTitle": "Γλώσσα",
-    "@settingsLanguageTitle": {
-        "description": "Set display language"
-    },
-    "settingsLanguageOptionSystemDefaultLabel": "System default",
-    "@settingsLanguageOptionSystemDefaultLabel": {
-        "description": "Follow the Android system language"
-    },
-    "settingsExifSupportTitle": "Υποστήριξη EXIF",
-    "@settingsExifSupportTitle": {
-        "description": "Title of the EXIF support setting"
-    },
-    "settingsExifSupportTrueSubtitle": "Απαιτείται επιπλέον χρήση δικτύου",
-    "@settingsExifSupportTrueSubtitle": {
-        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-    },
-    "settingsExifWifiOnlyTitle": "Process EXIF over Wi-Fi only",
-    "@settingsExifWifiOnlyTitle": {
-        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-    },
-    "settingsExifWifiOnlyFalseSubtitle": "Data charges may apply",
-    "@settingsExifWifiOnlyFalseSubtitle": {
-        "description": "Shown when users allow processing exif data over any network"
-    },
-    "settingsMemoriesTitle": "Αναμνήσεις",
-    "@settingsMemoriesTitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsMemoriesSubtitle": "Προβολή φωτογραφιών που ελήφθησαν στο παρελθόν",
-    "@settingsMemoriesSubtitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsAccountTitle": "Λογαριασμός",
-    "settingsAccountLabelTitle": "Label",
-    "@settingsAccountLabelTitle": {
-        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
-    },
-    "settingsAccountLabelDescription": "Set a label to be shown in place of the server URL",
-    "settingsIncludedFoldersTitle": "Περιλαμβανόμενοι φάκελοι",
-    "@settingsIncludedFoldersTitle": {
-        "description": "Change the included folders of an account"
-    },
-    "settingsShareFolderTitle": "Κοινοποίηση φακέλου",
-    "@settingsShareFolderTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogTitle": "Εντοπισμός κοινόχρηστου φακέλου",
-    "@settingsShareFolderDialogTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogDescription": "Αυτή η ρύθμιση αντιστοιχεί στην παράμετρο share_folder στο config.php. Οι δύο τιμές ΠΡΕΠΕΙ να είναι πανομοιότυπες.\n\nΕντοπίστε τον ίδιο φάκελο με αυτόν που έχει οριστεί στο config.php.",
-    "@settingsShareFolderDialogDescription": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderPickerDescription": "Εντοπίστε τον ίδιο φάκελο με αυτόν που έχει οριστεί στο config.php. Πατήστε προεπιλογή εάν δεν έχετε ορίσει την παράμετρο.",
-    "@settingsShareFolderPickerDescription": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsServerAppSectionTitle": "Υποστήριξη εφαρμογών διακομιστή",
-    "@settingsServerAppSectionTitle": {
-        "description": "Enable/disable various server apps"
-    },
-    "settingsPhotosDescription": "Customize contents shown in the Photos tab",
-    "@settingsPhotosDescription": {
-        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
-    },
-    "settingsMemoriesRangeTitle": "Memories range",
-    "@settingsMemoriesRangeTitle": {
-        "description": "How many adjacent days to be inclded in memories for a particular year"
-    },
-    "settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} day} other{+-{range} days}}",
-    "@settingsMemoriesRangeValueText": {
-        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
-        "placeholders": {
-            "range": {
-                "example": "1"
-            }
-        }
-    },
-    "settingsViewerTitle": "Προβολέας",
-    "settingsViewerDescription": "Customize the image/video viewer",
-    "settingsScreenBrightnessTitle": "Φωτεινότητα οθόνης",
-    "settingsScreenBrightnessDescription": "Παράκαμψη του επιπέδου φωτεινότητας του συστήματος",
-    "settingsForceRotationTitle": "Αγνόηση κλειδώματος περιστροφής οθόνης",
-    "settingsForceRotationDescription": "Περιστροφή οθόνης ακόμα και όταν η αυτόματη περιστροφή είναι απενεργοποιημένη",
-    "settingsMapProviderTitle": "Πάροχος χάρτη",
-    "settingsAlbumTitle": "Άλμπουμ",
-    "settingsAlbumDescription": "Επεξεργασία άλμπουμ",
-    "settingsShowDateInAlbumTitle": "Ομαδοποίηση φωτογραφιών κατά ημερομηνία",
-    "settingsShowDateInAlbumDescription": "Εφαρμογή μόνο όταν το άλμπουμ είναι ταξινομημένο κατά χρόνο",
-    "settingsImageEditTitle": "Editor",
-    "@settingsImageEditTitle": {
-        "description": "Include settings for image enhancements and the image editor"
-    },
-    "settingsImageEditDescription": "Customize image enhancements and the image editor",
-    "settingsEnhanceMaxResolutionTitle2": "Image resolution for enhancements",
-    "settingsEnhanceMaxResolutionDescription": "Οι φωτογραφίες μεγαλύτερες από την επιλεγμένη ανάλυση θα μειωθούν.\n\nΟι φωτογραφίες υψηλής ανάλυσης απαιτούν πολύ περισσότερη μνήμη και χρόνο για επεξεργασία. Μειώστε αυτή τη ρύθμιση εάν η εφαρμογή διακοπεί κατά τη βελτίωση των φωτογραφιών.",
-    "settingsImageEditSaveResultsToServerTitle": "Save results to server",
-    "@settingsImageEditSaveResultsToServerTitle": {
-        "description": "Whether to save the edit/enhance results to server instead of the current device"
-    },
-    "settingsImageEditSaveResultsToServerTrueDescription": "Results are saved to server, fallback to device storage if failed",
-    "settingsImageEditSaveResultsToServerFalseDescription": "Results are saved to this device",
-    "settingsThemeTitle": "Εμφάνιση",
-    "settingsThemeDescription": "Προσαρμογή της εμφάνισης της εφαρμογής",
-    "settingsFollowSystemThemeTitle": "Χρήση εμφάνισης συστήματος",
-    "@settingsFollowSystemThemeTitle": {
-        "description": "Respect the system dark mode settings introduced on Android 10"
-    },
-    "settingsSeedColorTitle": "Theme color",
-    "@settingsSeedColorTitle": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorDescription": "Used to derive all colors used in the app",
-    "@settingsSeedColorDescription": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorPickerTitle": "Pick a color",
-    "@settingsSeedColorPickerTitle": {
-        "description": "Dialog to customize the colors used in app"
-    },
-    "settingsUseBlackInDarkThemeTitle": "Πιο σκοτεινή εμφάνιση",
-    "@settingsUseBlackInDarkThemeTitle": {
-        "description": "Make the dark theme darker"
-    },
-    "settingsUseBlackInDarkThemeTrueDescription": "Χρήση μαύρου στη σκοτεινή εμφάνιση",
-    "@settingsUseBlackInDarkThemeTrueDescription": {
-        "description": "When black in dark theme is set to true"
-    },
-    "settingsUseBlackInDarkThemeFalseDescription": "Χρήση σκούρου γκρι στη σκοτεινή εμφάνιση",
-    "@settingsUseBlackInDarkThemeFalseDescription": {
-        "description": "When black in dark theme is set to false"
-    },
-    "settingsMiscellaneousTitle": "Διάφορα",
-    "settingsDoubleTapExitTitle": "Double tap to exit",
-    "@settingsDoubleTapExitTitle": {
-        "description": "If enabled, users need to tap the back button twice to exit app"
-    },
-    "settingsPhotosTabSortByNameTitle": "Ταξινόμηση κατά όνομα αρχείου στις Φωτογραφίες",
-    "@settingsPhotosTabSortByNameTitle": {
-        "description": "Sort photos listed in the Photos tab by filename (descending)"
-    },
-    "settingsExperimentalTitle": "Πειραματικά",
-    "settingsExperimentalDescription": "Χαρακτηριστικά που δεν είναι έτοιμα για καθημερινή χρήση",
-    "settingsExpertTitle": "Advanced",
-    "@settingsExpertTitle": {
-        "description": "Settings that must be tweaked with caution"
-    },
-    "settingsExpertWarningText": "Please make sure you fully understand what each option does before proceeding",
-    "settingsClearCacheDatabaseTitle": "Clear file database",
-    "settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
-    "settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
-    "settingsAboutSectionTitle": "Σχετικά",
-    "@settingsAboutSectionTitle": {
-        "description": "Title of the about section in settings widget"
-    },
-    "settingsVersionTitle": "Έκδοση",
-    "@settingsVersionTitle": {
-        "description": "Title of the version data item"
-    },
-    "settingsServerVersionTitle": "Server",
-    "@settingsServerVersionTitle": {
-        "description": "This item will show the server software version, e.g., Nextcloud 25"
-    },
-    "settingsSourceCodeTitle": "Πηγαίος κώδικας",
-    "@settingsSourceCodeTitle": {
-        "description": "Title of the source code item"
-    },
-    "settingsBugReportTitle": "Αναφορά προβλήματος",
-    "@settingsBugReportTitle": {
-        "description": "Report issue"
-    },
-    "settingsCaptureLogsTitle": "Αρχείο καταγραφής",
-    "@settingsCaptureLogsTitle": {
-        "description": "Capture app logs for bug report"
-    },
-    "settingsCaptureLogsDescription": "Βοηθήστε τον προγραμματιστή να διαγνώσει σφάλματα",
-    "settingsTranslatorTitle": "Μεταφραστής",
-    "@settingsTranslatorTitle": {
-        "description": "Title of the translator item"
-    },
-    "writePreferenceFailureNotification": "Αποτυχία ρύθμισης προτίμησης",
-    "@writePreferenceFailureNotification": {
-        "description": "Inform user that the preference file cannot be modified"
-    },
-    "enableButtonLabel": "ΕΝΕΡΓΟΠΟΙΗΣΗ",
-    "@enableButtonLabel": {
-        "description": "Label of the enable button"
-    },
-    "exifSupportDetails": "Ενεργοποιώντας την υποστήριξη EXIF διάφορα μεταδεδομένα όπως ημερομηνία λήψης, μοντέλο κάμερας θα γίνουν διαθέσιμα. Για την ανάγνωση αυτών των μεταδεδομένων, απαιτείται επιπλέον χρήση δικτύου για τη λήψη της αρχικής εικόνας πλήρους μεγέθους. Η εφαρμογή θα ξεκινήσει τη λήψη μόνο όταν είναι συνδεδεμένη σε δίκτυο Wi-Fi",
-    "@exifSupportDetails": {
-        "description": "Detailed description of the exif support feature"
-    },
-    "exifSupportConfirmationDialogTitle": "Ενεργοποίηση υποστήριξης EXIF;",
-    "@exifSupportConfirmationDialogTitle": {
-        "description": "Title of the dialog to confirm enabling exif support"
-    },
-    "captureLogDetails": "Για τη λήψη αρχείων καταγραφής για μια αναφορά σφαλμάτων:\n\n1. Ενεργοποιήστε αυτήν τη ρύθμιση\n2. Αναπαράγετε το πρόβλημα\n3. Απενεργοποιήστε αυτήν τη ρύθμιση\n4. Αναζητήστε το nc-photos.log στο φάκελο λήψης\n\n*Εάν το πρόβλημα προκαλεί τη διακοπή λειτουργίας της εφαρμογής, δεν είναι δυνατή η λήψη αρχείων καταγραφής. Σε αυτήν την περίπτωση, επικοινωνήστε με τον προγραμματιστή για περαιτέρω οδηγίες",
-    "@captureLogDetails": {
-        "description": "Detailed description on capturing logs"
-    },
-    "captureLogSuccessNotification": "Τα αρχεία καταγραφής αποθηκεύτηκαν με επιτυχία",
-    "@captureLogSuccessNotification": {
-        "description": "Captured logs are successfully saved to the download directory"
-    },
-    "doneButtonLabel": "ΕΓΙΝΕ",
-    "@doneButtonLabel": {
-        "description": "Label of the done button"
-    },
-    "nextButtonLabel": "ΕΠΟΜΕΝΟ",
-    "@nextButtonLabel": {
-        "description": "Label of the next button"
-    },
-    "connectButtonLabel": "ΣΥΝΔΕΣΗ",
-    "@connectButtonLabel": {
-        "description": "Label of the connect button"
-    },
-    "rootPickerSkipConfirmationDialogContent2": "Όλα τα αρχεία  θα συμπεριληφθούν. Αυτό μπορεί να αυξήσει τη χρήση της μνήμης και να μειώσει την απόδοση",
-    "@rootPickerSkipConfirmationDialogContent2": {
-        "description": "Warn user not to include all files in their server"
-    },
-    "megapixelCount": "{count}MP",
-    "@megapixelCount": {
-        "description": "Resolution of an image in megapixel",
-        "placeholders": {
-            "count": {
-                "example": "1.3"
-            }
-        }
-    },
-    "secondCountSymbol": "{count}δευτ.",
-    "@secondCountSymbol": {
-        "description": "Number of seconds",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "millimeterCountSymbol": "{count}χιλ.",
-    "@millimeterCountSymbol": {
-        "description": "Number of millimeters",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "detailsTooltip": "Λεπτομέρειες",
-    "@detailsTooltip": {
-        "description": "Tooltip of the details button"
-    },
-    "downloadTooltip": "Λήψη",
-    "@downloadTooltip": {
-        "description": "Tooltip of the download button"
-    },
-    "downloadProcessingNotification": "Λήψη αρχείου",
-    "@downloadProcessingNotification": {
-        "description": "Inform user that the file is being downloaded"
-    },
-    "downloadSuccessNotification": "Επιτυχής λήψη αρχείου",
-    "@downloadSuccessNotification": {
-        "description": "Inform user that the file is downloaded successfully"
-    },
-    "downloadFailureNotification": "Αποτυχία λήψης αρχείου",
-    "@downloadFailureNotification": {
-        "description": "Inform user that the file cannot be downloaded"
-    },
-    "nextTooltip": "Επόμενο",
-    "@nextTooltip": {
-        "description": "Tooltip of the next button"
-    },
-    "previousTooltip": "Προηγούμενο",
-    "@previousTooltip": {
-        "description": "Tooltip of the previous button"
-    },
-    "webSelectRangeNotification": "Κρατήστε πατημένο το shift και κάντε κλικ για να επιλέξετε όλα τα ενδιάμεσα",
-    "@webSelectRangeNotification": {
-        "description": "Inform web user how to select items in range"
-    },
-    "mobileSelectRangeNotification": "Πατήστε παρατεταμένα ένα άλλο αντικείμενο για να επιλέξετε όλα ενδιάμεσα",
-    "@mobileSelectRangeNotification": {
-        "description": "Inform mobile user how to select items in range"
-    },
-    "updateDateTimeDialogTitle": "Τροποποίηση ημερομηνίας και ώρας",
-    "@updateDateTimeDialogTitle": {
-        "description": "Dialog to modify the date & time of a file"
-    },
-    "dateSubtitle": "Ημερομηνία",
-    "timeSubtitle": "Ώρα",
-    "dateYearInputHint": "Έτος",
-    "dateMonthInputHint": "Μήνας",
-    "dateDayInputHint": "Ημέρα",
-    "timeHourInputHint": "Ώρα",
-    "timeMinuteInputHint": "Λεπτό",
-    "timeSecondInputHint": "Δευτερόλεπτο",
-    "dateTimeInputInvalid": "Μη έγκυρη τιμή",
-    "@dateTimeInputInvalid": {
-        "description": "Invalid date/time input (e.g., non-numeric characters)"
-    },
-    "updateDateTimeFailureNotification": "Αποτυχία τροποποίησης ημερομηνίας και ώρας",
-    "@updateDateTimeFailureNotification": {
-        "description": "Failed to set the date & time of a file"
-    },
-    "albumDirPickerHeaderText": "Επιλέξτε τους φακέλους που θα συσχετιστούν",
-    "@albumDirPickerHeaderText": {
-        "description": "Pick the folders for a folder based album"
-    },
-    "albumDirPickerSubHeaderText": "Μόνο φωτογραφίες στους σχετικούς φακέλους θα συμπεριληφθούν σε αυτή τη συλλογή",
-    "@albumDirPickerSubHeaderText": {
-        "description": "Pick the folders for a folder based album"
-    },
-    "albumDirPickerListEmptyNotification": "Επιλέξτε τουλάχιστον έναν φάκελο",
-    "@albumDirPickerListEmptyNotification": {
-        "description": "Error when user pressing confirm without picking any folders"
-    },
-    "importFoldersTooltip": "Εισαγωγή φακέλων",
-    "@importFoldersTooltip": {
-        "description": "Menu entry in the album page to import folders as albums"
-    },
-    "albumImporterHeaderText": "Εισαγωγή φακέλων ως συλλογές",
-    "@albumImporterHeaderText": {
-        "description": "Import folders as albums"
-    },
-    "albumImporterSubHeaderText": "Οι προτεινόμενοι φάκελοι παρατίθενται παρακάτω. Ανάλογα με τον αριθμό των αρχείων στον διακομιστή σας, ενδέχεται να χρειαστεί λίγος χρόνος για να ολοκληρωθεί",
-    "@albumImporterSubHeaderText": {
-        "description": "Import folders as albums"
-    },
-    "importButtonLabel": "ΕΙΣΑΓΩΓΗ",
-    "albumImporterProgressText": "Importing folders",
-    "@albumImporterProgressText": {
-        "description": "Message shown while importing"
-    },
-    "doneButtonTooltip": "Έγινε",
-    "editTooltip": "Edit",
-    "editAccountConflictFailureNotification": "An account already exists with the same settings",
-    "@editAccountConflictFailureNotification": {
-        "description": "Error when user modified an account such that it's identical to another one"
-    },
-    "genericProcessingDialogContent": "Παρακαλώ περιμένετε",
-    "@genericProcessingDialogContent": {
-        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
-    },
-    "sortTooltip": "Ταξινόμηση",
-    "sortOptionDialogTitle": "Sort by",
-    "@sortOptionDialogTitle": {
-        "description": "Select how the photos should be sorted"
-    },
-    "sortOptionTimeAscendingLabel": "Παλιότερα πρώτα",
-    "@sortOptionTimeAscendingLabel": {
-        "description": "Sort by time, in ascending order"
-    },
-    "sortOptionTimeDescendingLabel": "Νεότερα πρώτα",
-    "@sortOptionTimeDescendingLabel": {
-        "description": "Sort by time, in descending order"
-    },
-    "sortOptionFilenameAscendingLabel": "Όνομα αρχείου",
-    "@sortOptionFilenameAscendingLabel": {
-        "description": "Sort by filename, in ascending order"
-    },
-    "sortOptionFilenameDescendingLabel": "Όνομα αρχείου (φθίνουσα)",
-    "@sortOptionFilenameDescendingLabel": {
-        "description": "Sort by filename, in descending order"
-    },
-    "sortOptionAlbumNameLabel": "Όνομα άλμπουμ",
-    "@sortOptionAlbumNameLabel": {
-        "description": "Sort by album name, in ascending order"
-    },
-    "sortOptionAlbumNameDescendingLabel": "Όνομα άλμπουμ (φθίνουσα)",
-    "@sortOptionAlbumNameDescendingLabel": {
-        "description": "Sort by album name, in descending order"
-    },
-    "sortOptionManualLabel": "Χειροκίνητα",
-    "@sortOptionManualLabel": {
-        "description": "Sort manually"
-    },
-    "albumEditDragRearrangeNotification": "Πατήστε παρατεταμένα και σύρετε ένα αντικείμενο για να το αναδιατάξετε χειροκίνητα",
-    "@albumEditDragRearrangeNotification": {
-        "description": "Instructions on how to rearrange photos"
-    },
-    "albumAddTextTooltip": "Προσθήκη κειμένου",
-    "@albumAddTextTooltip": {
-        "description": "Add some text that display between photos to an album"
-    },
-    "shareTooltip": "Κοινοποίηση",
-    "@shareTooltip": {
-        "description": "Share selected items to other apps"
-    },
-    "shareSelectedEmptyNotification": "Επιλέξτε μερικές φωτογραφίες για κοινοποίηση",
-    "@shareSelectedEmptyNotification": {
-        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
-    },
-    "shareDownloadingDialogContent": "Λήψη...",
-    "@shareDownloadingDialogContent": {
-        "description": "Downloading photos to be shared"
-    },
-    "searchTooltip": "Αναζήτηση",
-    "clearTooltip": "Εκκαθάριση",
-    "@clearTooltip": {
-        "description": "Clear some sort of user input, typically a text field"
-    },
-    "listNoResultsText": "Κανένα αποτέλεσμα",
-    "@listNoResultsText": {
-        "description": "When there's nothing in a list"
-    },
-    "listEmptyText": "Κενή",
-    "@listEmptyText": {
-        "description": "When there's nothing in a list"
-    },
-    "albumTrashLabel": "Κάδος",
-    "@albumTrashLabel": {
-        "description": "Deleted photos"
-    },
-    "restoreTooltip": "Επαναφορά",
-    "@restoreTooltip": {
-        "description": "Restore selected items from trashbin"
-    },
-    "restoreSelectedProcessingNotification": "{count, plural, =1{Επαναφορά 1 στοιχείου} other{Επαναφορά {count} στοιχείων}}",
-    "@restoreSelectedProcessingNotification": {
-        "description": "Restoring selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreSelectedSuccessNotification": "Επιτυχής επαναφορά όλων των στοιχείων",
-    "@restoreSelectedSuccessNotification": {
-        "description": "Restored all selected items from trashbin successfully"
-    },
-    "restoreSelectedFailureNotification": "{count, plural, =1{Αποτυχία επαναφοράς 1 στοιχείου} other{Αποτυχία επαναφοράς {count} στοιχείων}}",
-    "@restoreSelectedFailureNotification": {
-        "description": "Cannot restore some of the selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreProcessingNotification": "Επαναφορά στοιχείου",
-    "@restoreProcessingNotification": {
-        "description": "Restoring the opened item from trashbin"
-    },
-    "restoreSuccessNotification": "Επιτυχής επαναφορά στοιχείου",
-    "@restoreSuccessNotification": {
-        "description": "Restored the opened item from trashbin successfully"
-    },
-    "restoreFailureNotification": "Αποτυχία επαναφοράς στοιχείου",
-    "@restoreFailureNotification": {
-        "description": "Cannot restore the opened item from trashbin"
-    },
-    "deletePermanentlyTooltip": "Οριστική διαγραφή",
-    "@deletePermanentlyTooltip": {
-        "description": "Permanently delete selected items from trashbin"
-    },
-    "deletePermanentlyConfirmationDialogTitle": "Οριστική διαγραφή",
-    "@deletePermanentlyConfirmationDialogTitle": {
-        "description": "Make sure the user wants to delete the items"
-    },
-    "deletePermanentlyConfirmationDialogContent": "Τα επιλεγμένα στοιχεία θα διαγραφούν οριστικά από τον διακομιστή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
-    "@deletePermanentlyConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete the items"
-    },
-    "albumSharedLabel": "Κοινόχρηστα",
-    "@albumSharedLabel": {
-        "description": "A small label placed next to a shared album"
-    },
-    "metadataTaskProcessingNotification": "Επεξεργασία μεταδεδομένων εικόνας στο παρασκήνιο",
-    "@metadataTaskProcessingNotification": {
-        "description": "Shown when the app is reading image metadata"
-    },
-    "metadataTaskPauseNoWiFiNotification": "Αναμονή για WiFi",
-    "@metadataTaskPauseNoWiFiNotification": {
-        "description": "Shown when the app has paused reading image metadata"
-    },
-    "configButtonLabel": "ΔΙΑΜΟΡΦΩΣΗ",
-    "useAsAlbumCoverTooltip": "Χρήση ως εξώφυλλο άλμπουμ",
-    "helpTooltip": "Βοήθεια",
-    "helpButtonLabel": "ΒΟΗΘΕΙΑ",
-    "removeFromAlbumTooltip": "Αφαίρεση από το άλμπουμ",
-    "@removeFromAlbumTooltip": {
-        "description": "Remove the opened photo from an album"
-    },
-    "changelogTitle": "Αρχείο αλλαγών",
-    "@changelogTitle": {
-        "description": "Title of the changelog page"
-    },
-    "serverCertErrorDialogTitle": "Το πιστοποιητικό διακομιστή δεν είναι αξιόπιστο",
-    "@serverCertErrorDialogTitle": {
-        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
-    },
-    "serverCertErrorDialogContent": "Ο διακομιστής ενδέχεται να έχει παραβιαστεί ή κάποιος προσπαθεί να κλέψει τα δεδομένα σας",
-    "@serverCertErrorDialogContent": {
-        "description": "Warn user about an untrusted SSL certificate"
-    },
-    "advancedButtonLabel": "ΠΡΟΧΩΡΗΜΕΝΟ",
-    "@advancedButtonLabel": {
-        "description": "Label of the advanced button"
-    },
-    "whitelistCertDialogTitle": "Προσθήκη αγνώστου πιστοποιητικού στη λίστα επιτρεπόμενων;",
-    "@whitelistCertDialogTitle": {
-        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
-    },
-    "whitelistCertDialogContent": "Μπορείτε να προσθέσετε το πιστοποιητικό στη λίστα επιτρεπόμενων για να το αποδεχτεί η εφαρμογή. ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτό ενέχει μεγάλο κίνδυνο ασφάλειας. Βεβαιωθείτε ότι το πιστοποιητικό είναι υπογεγραμμένο από εσάς ή από κάποια αξιόπιστη πηγή\n\nHost: {host}\nFingerprint: {fingerprint}",
-    "@whitelistCertDialogContent": {
-        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
-        "placeholders": {
-            "host": {
-                "example": "www.example.com"
-            },
-            "fingerprint": {
-                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
-            }
-        }
-    },
-    "whitelistCertButtonLabel": "ΑΠΟΔΟΧΗ ΚΙΝΔΥΝΟΥ ΚΑΙ ΠΡΟΣΘΗΚΗ ΣΤΗ ΛΙΣΤΑ ΕΠΙΤΡΕΠΟΜΕΝΩΝ",
-    "@whitelistCertButtonLabel": {
-        "description": "Label of the whitelist certificate button"
-    },
-    "fileSharedByDescription": "Κοινοποιήθηκε από αυτόν τον χρήστη",
-    "@fileSharedByDescription": {
-        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
-    },
-    "emptyTrashbinTooltip": "Άδειασμα κάδου",
-    "@emptyTrashbinTooltip": {
-        "description": "Permanently delete all items from trashbin"
-    },
-    "emptyTrashbinConfirmationDialogTitle": "Άδειασμα κάδου",
-    "@emptyTrashbinConfirmationDialogTitle": {
-        "description": "Make sure the user wants to delete all items"
-    },
-    "emptyTrashbinConfirmationDialogContent": "Όλα τα στοιχεία θα διαγραφούν οριστικά από τον διακομιστή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
-    "@emptyTrashbinConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete all items"
-    },
-    "unsetAlbumCoverTooltip": "Αφαίρεση εξώφυλλου",
-    "@unsetAlbumCoverTooltip": {
-        "description": "Unset the cover of the opened album"
-    },
-    "muteTooltip": "Σίγαση",
-    "@muteTooltip": {
-        "description": "Mute the video player"
-    },
-    "unmuteTooltip": "Κατάργηση σίγασης",
-    "@unmuteTooltip": {
-        "description": "Unmute the video player"
-    },
-    "collectionPeopleLabel": "Πρόσωπα",
-    "@collectionPeopleLabel": {
-        "description": "Browse photos grouped by person"
-    },
-    "slideshowTooltip": "Παρουσίαση",
-    "@slideshowTooltip": {
-        "description": "A button to start a slideshow from the current collection"
-    },
-    "slideshowSetupDialogTitle": "Ρύθμιση παρουσίασης",
-    "@slideshowSetupDialogTitle": {
-        "description": "Setup slideshow before starting"
-    },
-    "slideshowSetupDialogDurationTitle": "Διάρκεια εικόνας (ΛΛ:ΔΔ)",
-    "@slideshowSetupDialogDurationTitle": {
-        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
-    },
-    "slideshowSetupDialogShuffleTitle": "Μίξη",
-    "@slideshowSetupDialogShuffleTitle": {
-        "description": "Whether to shuffle the collection"
-    },
-    "slideshowSetupDialogRepeatTitle": "Επανάληψη",
-    "@slideshowSetupDialogRepeatTitle": {
-        "description": "Whether to restart the slideshow from the beginning after the last slide"
-    },
-    "slideshowSetupDialogReverseTitle": "Reverse",
-    "@slideshowSetupDialogReverseTitle": {
-        "description": "Whether to play the slideshow in reverse order"
-    },
-    "linkCopiedNotification": "Ο σύνδεσμος αντιγράφηκε",
-    "@linkCopiedNotification": {
-        "description": "Copied the share link to clipboard"
-    },
-    "shareMethodDialogTitle": "Κοινοποίηση ως",
-    "@shareMethodDialogTitle": {
-        "description": "Let the user pick how they want to share"
-    },
-    "shareMethodPreviewTitle": "Preview",
-    "@shareMethodPreviewTitle": {
-        "description": "Share the preview of a file"
-    },
-    "shareMethodPreviewDescription": "Share a reduced quality preview to other apps (only support images)",
-    "shareMethodOriginalFileTitle": "Original file",
-    "@shareMethodOriginalFileTitle": {
-        "description": "Share the original file"
-    },
-    "shareMethodOriginalFileDescription": "Download the original file and share it to other apps",
-    "shareMethodPublicLinkTitle": "Δημόσιος σύνδεσμος",
-    "@shareMethodPublicLinkTitle": {
-        "description": "Create a share link on server and share it"
-    },
-    "shareMethodPublicLinkDescription": "Δημιουργία ενός νέου δημόσιου σύνδεσμου στον διακομιστή. Οποιοσδήποτε διαθέτει τον σύνδεσμο μπορεί να έχει πρόσβαση στο αρχείο",
-    "shareMethodPasswordLinkTitle": "Σύνδεσμος με κωδικό πρόσβασης",
-    "@shareMethodPasswordLinkTitle": {
-        "description": "Create a password protected share link on server and share it"
-    },
-    "shareMethodPasswordLinkDescription": "Δημιουργία ενός νέου σύνδεσμου με κωδικό πρόσβασης στον διακομιστή",
-    "collectionSharingLabel": "Κοινοποίηση",
-    "@collectionSharingLabel": {
-        "description": "List items being shared by the current account"
-    },
-    "fileLastSharedDescription": "Τελευταία κοινοποίηση στις {date}",
-    "@fileLastSharedDescription": {
-        "description": "The date when this file was last shared by you",
-        "placeholders": {
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "fileLastSharedByOthersDescription": "Ο χρήστης {user} κοινοποίησε στις {date}",
-    "@fileLastSharedByOthersDescription": {
-        "description": "The date when this file was shared with you",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            },
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "albumLastSharedByOthersDescription": "Ο χρήστης {user} κοινοποίησε ένα άλμπουμs στις {date}",
-    "@albumLastSharedByOthersDescription": {
-        "description": "The date when this album was shared with you",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            },
-            "date": {
-                "example": "Jan 1, 2021",
-                "description": "The date string is formatted according to the current locale"
-            }
-        }
-    },
-    "sharedWithLabel": "Κοινοποίηση με",
-    "@sharedWithLabel": {
-        "description": "A list of users or links where this file is sharing with"
-    },
-    "unshareTooltip": "Κατάργηση κοινοποίησης",
-    "@unshareTooltip": {
-        "description": "Remove a share"
-    },
-    "unshareSuccessNotification": "Αφαιρέθηκε κοινοποίηση",
-    "@unshareSuccessNotification": {
-        "description": "Removed a share"
-    },
-    "locationLabel": "Τοποθεσία",
-    "@locationLabel": {
-        "description": "Show where the file is located"
-    },
-    "multipleFilesLinkShareDialogContent": "Το Nextcloud δεν υποστηρίζει σύνδεσμο κοινής χρήσης για πολλά αρχεία. Αντίθετα, η εφαρμογή θα ΑΝΤΙΓΡΑΨΕΙ τα αρχεία σε έναν νέο φάκελο και θα τον μοιραστεί.",
-    "@multipleFilesLinkShareDialogContent": {
-        "description": "Dialog shown when sharing multiple files as link"
-    },
-    "folderNameInputHint": "Όνομα φακέλου",
-    "@folderNameInputHint": {
-        "description": "Input field for folder name"
-    },
-    "folderNameInputInvalidEmpty": "Εισαγάγετε το όνομα του φακέλου",
-    "@folderNameInputInvalidEmpty": {
-        "description": "Folder name cannot be left empty"
-    },
-    "folderNameInputInvalidCharacters": "Περιέχει άκυρους χαρακτήρες",
-    "@folderNameInputInvalidCharacters": {
-        "description": "Folder name contains characters that are not allowed"
-    },
-    "createShareProgressText": "Δημιουργία κοινοποίησης",
-    "@createShareProgressText": {
-        "description": "Message shown when sharing files"
-    },
-    "copyItemsFailureNotification": "{count, plural, =1{Αποτυχία αντιγραφής 1 στοιχείου} other{Αποτυχία αντιγραφής {count} στοιχείων}}",
-    "@copyItemsFailureNotification": {
-        "description": "Error message shown when some files cannot be copied",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unshareLinkShareDirDialogTitle": "Διαγραφή φακέλου;",
-    "@unshareLinkShareDirDialogTitle": {
-        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-    },
-    "unshareLinkShareDirDialogContent": "Αυτός ο φάκελος δημιουργήθηκε από την εφαρμογή για κοινή χρήση πολλών αρχείων ως σύνδεσμος. Δεν είναι πλέον κοινόχρηστο με κανένα μέρος, θέλετε να διαγράψετε αυτόν τον φάκελο;",
-    "@unshareLinkShareDirDialogContent": {
-        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
-    },
-    "addToCollectionsViewTooltip": "Προσθήκη στη συλλογή",
-    "@addToCollectionsViewTooltip": {
-        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
-    },
-    "shareAlbumDialogTitle": "Κοινοποίηση με χρήστη",
-    "@shareAlbumDialogTitle": {
-        "description": "Dialog to share an album with another user"
-    },
-    "shareAlbumSuccessWithErrorNotification": "Το άλμπουμ κοινοποιήθηκε στο χρήστη {user}, αλλά απέτυχε να μοιραστεί ορισμένα αρχεία",
-    "@shareAlbumSuccessWithErrorNotification": {
-        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "unshareAlbumSuccessWithErrorNotification": "Καταργήθηκε η κοινή χρήση του άλμπουμ με τον χρήστη {user}, αλλά απέτυχε η κατάργηση κοινής χρήσης ορισμένων αρχείων",
-    "@unshareAlbumSuccessWithErrorNotification": {
-        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "fixSharesTooltip": "Επιδιόρθωση κοινοποιήσεων",
-    "@fixSharesTooltip": {
-        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
-    },
-    "fixTooltip": "Επιδιόρθωση",
-    "@fixTooltip": {
-        "description": "Fix an issue"
-    },
-    "fixAllTooltip": "Επιδιόρθωση όλων",
-    "@fixAllTooltip": {
-        "description": "Fix all listed issues"
-    },
-    "missingShareDescription": "Δεν είναι κοινόχρηστο με το χρήστη {user}",
-    "@missingShareDescription": {
-        "description": "The album is shared with user but a file is NOT",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "extraShareDescription": "Κοινόχρηστο με το χρήστη {user}",
-    "@extraShareDescription": {
-        "description": "The album is NOT shared with user but a file is",
-        "placeholders": {
-            "user": {
-                "example": "Alice"
-            }
-        }
-    },
-    "defaultButtonLabel": "ΠΡΟΕΠΙΛΟΓΗ",
-    "addUserInputHint": "Προσθήκη χρήστη",
-    "@addUserInputHint": {
-        "description": "Input a user name to share this album with"
-    },
-    "sharedAlbumInfoDialogTitle": "Παρουσιάζουμε το κοινόχρηστο άλμπουμ",
-    "@sharedAlbumInfoDialogTitle": {
-        "description": "This dialog is shown when user first open a shared album"
-    },
-    "sharedAlbumInfoDialogContent": "Το κοινόχρηστο άλμπουμ επιτρέπει σε πολλούς χρήστες στον ίδιο διακομιστή να έχουν πρόσβαση στο ίδιο άλμπουμ. Διαβάστε προσεκτικά τους περιορισμούς πριν συνεχίσετε",
-    "@sharedAlbumInfoDialogContent": {
-        "description": "This dialog is shown when user first open a shared album"
-    },
-    "learnMoreButtonLabel": "ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ",
-    "migrateDatabaseProcessingNotification": "Ανανέωση βάσης δεδομένων",
-    "@migrateDatabaseProcessingNotification": {
-        "description": "Migrate database to work with the updated app"
-    },
-    "migrateDatabaseFailureNotification": "Αποτυχία μετεγκατάστασης βάσης δεδομένων",
-    "memoryAlbumName": "{count, plural, =1{1 χρόνο πριν} other{{count} χρόνια πριν}}",
-    "@memoryAlbumName": {
-        "description": "Memory albums are generated by the app and include photos in the past years",
-        "placeholders": {
-            "count": {
-                "example": "2"
-            }
-        }
-    },
-    "homeFolderNotFoundDialogTitle": "Ο αρχικός φάκελος δεν βρέθηκε",
-    "@homeFolderNotFoundDialogTitle": {
-        "description": "The app failed to scan the user's home folder on signing in"
-    },
-    "homeFolderNotFoundDialogContent": "Διορθώστε τη διεύθυνση WebDAV που εμφανίζεται παρακάτω. Μπορείτε να βρείτε τη διεύθυνση στη σελίδα του Nextcloud server.",
-    "@homeFolderNotFoundDialogContent": {
-        "description": "Ask the user to provide us the correct WebDAV URL"
-    },
-    "homeFolderInputInvalidEmpty": "Εισαγάγετε το όνομα του αρχικού φακέλου",
-    "@homeFolderInputInvalidEmpty": {
-        "description": "Home folder can't be left empty"
-    },
-    "createCollectionTooltip": "Νέα συλλογή",
-    "@createCollectionTooltip": {
-        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-    },
-    "createCollectionDialogAlbumLabel": "Άλμπουμ",
-    "@createCollectionDialogAlbumLabel": {
-        "description": "Create an album as collection"
-    },
-    "createCollectionDialogAlbumDescription": "Εμφάνιση φωτογραφιών από όλους τους τους φακέλους του διακομιστή",
-    "@createCollectionDialogAlbumDescription": {
-        "description": "Describe how an album collection works"
-    },
-    "createCollectionDialogFolderLabel": "Φάκελος",
-    "@createCollectionDialogFolderLabel": {
-        "description": "Create a folder as collection"
-    },
-    "createCollectionDialogFolderDescription": "Εμφάνιση φωτογραφιών μέσα σε ένα φάκελο",
-    "@createCollectionDialogFolderDescription": {
-        "description": "Describe how a folder collection works"
-    },
-    "collectionFavoritesLabel": "Αγαπημένα",
-    "@collectionFavoritesLabel": {
-        "description": "Browse photos added to favorites"
-    },
-    "favoriteTooltip": "Αγαπημένο",
-    "@favoriteTooltip": {
-        "description": "Add photo to favorites"
-    },
-    "favoriteSuccessNotification": "Προστέθηκε στα αγαπημένα",
-    "@favoriteSuccessNotification": {
-        "description": "Successfully added photos to favorites"
-    },
-    "favoriteFailureNotification": "Αποτυχία προσθήκης στα αγαπημένα",
-    "@favoriteFailureNotification": {
-        "description": "Failed adding photos to favorites"
-    },
-    "unfavoriteTooltip": "Μη αγαπημένο",
-    "@unfavoriteTooltip": {
-        "description": "Remove photo to favorites"
-    },
-    "unfavoriteSuccessNotification": "Αφαιρέθηκε από τα αγαπημένα",
-    "@unfavoriteSuccessNotification": {
-        "description": "Successfully removed photos from favorites"
-    },
-    "unfavoriteFailureNotification": "Αποτυχία αφαίρεσης από τα αγαπημένα",
-    "@unfavoriteFailureNotification": {
-        "description": "Failed removing photos from favorites"
-    },
-    "createCollectionDialogTagLabel": "Ετικέτα",
-    "@createCollectionDialogTagLabel": {
-        "description": "Create a collection containing files with tags"
-    },
-    "createCollectionDialogTagDescription": "Εμφάνιση φωτογραφιών με συγκεκριμένες ετικέτες",
-    "@createCollectionDialogTagDescription": {
-        "description": "Describe how a tag collection works"
-    },
-    "addTagInputHint": "Προσθήκη ετικέτας",
-    "@addTagInputHint": {
-        "description": "Input a tag"
-    },
-    "tagPickerNoTagSelectedNotification": "Προσθέστε τουλάχιστον 1 ετικέτα",
-    "@tagPickerNoTagSelectedNotification": {
-        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
-    },
-    "backgroundServiceStopping": "Διακοπή υπηρεσίας",
-    "@backgroundServiceStopping": {
-        "description": "The background service is stopping itself"
-    },
-    "metadataTaskPauseLowBatteryNotification": "Χαμηλή μπαταρία",
-    "@metadataTaskPauseLowBatteryNotification": {
-        "description": "Shown when the app has paused reading image metadata due to low battery"
-    },
-    "enhanceTooltip": "Βελτίωση",
-    "@enhanceTooltip": {
-        "description": "Enhance a photo"
-    },
-    "enhanceButtonLabel": "ΒΕΛΤΙΩΣΗ",
-    "enhanceIntroDialogTitle": "Βελτίωση φωτογραφιών",
-    "enhanceIntroDialogDescription": "Οι φωτογραφίες επεξεργάζονται τοπικά στη συσκευή. Από προεπιλογή μειώνονται σε 2048x1536. Μπορείτε να προσαρμόσετε την ανάλυση εξόδου στις Ρυθμίσεις",
-    "enhanceLowLightTitle": "Βελτίωση χαμηλού φωτισμού",
-    "@enhanceLowLightTitle": {
-        "description": "Enhance a photo taken in low-light environment"
-    },
-    "enhanceLowLightDescription": "Brighten your photos taken in low-light environments",
-    "enhanceLowLightParamBrightnessLabel": "Φωτεινότητα",
-    "@enhanceLowLightParamBrightnessLabel": {
-        "description": "This parameter sets how much brighter the output will be"
-    },
-    "collectionEditedPhotosLabel": "Edited (local)",
-    "@collectionEditedPhotosLabel": {
-        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
-    },
-    "deletePermanentlyLocalConfirmationDialogContent": "Τα επιλεγμένα στοιχεία θα διαγραφούν οριστικά από αυτήν τη συσκευή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
-    "@deletePermanentlyLocalConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete the items from the current device"
-    },
-    "enhancePortraitBlurTitle": "Θάμπωμα πορτρέτου",
-    "@enhancePortraitBlurTitle": {
-        "description": "Blur the background of a photo"
-    },
-    "enhancePortraitBlurDescription": "Blur the background of your photos, work best with portraits",
-    "enhancePortraitBlurParamBlurLabel": "Θόλωση",
-    "@enhancePortraitBlurParamBlurLabel": {
-        "description": "This parameter sets the radius of the blur filter"
-    },
-    "enhanceSuperResolution4xTitle": "Υπερ-ανάλυση (4x)",
-    "@enhanceSuperResolution4xTitle": {
-        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
-    },
-    "enhanceSuperResolution4xDescription": "Enlarge your photos to 4x of its original resolution (see Help for details on how max resolution applies here)",
-    "enhanceStyleTransferTitle": "Μεταφορά στυλ",
-    "@enhanceStyleTransferTitle": {
-        "description": "Transfer the image style from a reference image to a photo"
-    },
-    "enhanceStyleTransferStyleDialogTitle": "Pick a style",
-    "@enhanceStyleTransferStyleDialogTitle": {
-        "description": "Pick a reference image for the style transfer algorithm"
-    },
-    "enhanceStyleTransferStyleDialogDescription": "Transfer image style from a reference image to your photos",
-    "enhanceStyleTransferNoStyleSelectedNotification": "Please pick a style",
-    "@enhanceStyleTransferNoStyleSelectedNotification": {
-        "description": "Show this error if users did not pick a reference image"
-    },
-    "enhanceColorPopTitle": "Color pop",
-    "@enhanceColorPopTitle": {
-        "description": "Desaturate the background of a photo"
-    },
-    "enhanceColorPopDescription": "Desaturate the background of your photos, work best with portraits",
-    "enhanceGenericParamWeightLabel": "Weight",
-    "@enhanceGenericParamWeightLabel": {
-        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
-    },
-    "enhanceRetouchTitle": "Auto retouch",
-    "@enhanceRetouchTitle": {
-        "description": "Automatically improve your photo"
-    },
-    "enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
-    "doubleTapExitNotification": "Tap again to exit",
-    "@doubleTapExitNotification": {
-        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
-    },
-    "imageEditDiscardDialogTitle": "Discard changes?",
-    "@imageEditDiscardDialogTitle": {
-        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
-    },
-    "imageEditDiscardDialogContent": "Your changes are not saved",
-    "discardButtonLabel": "DISCARD",
-    "@discardButtonLabel": {
-        "description": "Discard the current unsaved content"
-    },
-    "saveTooltip": "Save",
-    "@saveTooltip": {
-        "description": "Save the current content"
-    },
-    "imageEditColorBrightness": "Brightness",
-    "@imageEditColorBrightness": {
-        "description": "Adjust the brightness of an image"
-    },
-    "imageEditColorContrast": "Contrast",
-    "@imageEditColorContrast": {
-        "description": "Adjust the contrast of an image"
-    },
-    "imageEditColorWhitePoint": "White point",
-    "@imageEditColorWhitePoint": {
-        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
-    },
-    "imageEditColorBlackPoint": "Black point",
-    "@imageEditColorBlackPoint": {
-        "description": "Adjust the black point of an image"
-    },
-    "imageEditColorSaturation": "Saturation",
-    "@imageEditColorSaturation": {
-        "description": "Adjust the color saturation of an image"
-    },
-    "imageEditColorWarmth": "Warmth",
-    "@imageEditColorWarmth": {
-        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
-    },
-    "imageEditColorTint": "Tint",
-    "@imageEditColorTint": {
-        "description": "Shift colors from a green to a magenta tint"
-    },
-    "imageEditTitle": "Preview edits",
-    "@imageEditTitle": {
-        "description": "Title of the image editor"
-    },
-    "imageEditToolbarColorLabel": "Color",
-    "@imageEditToolbarColorLabel": {
-        "description": "Label of the color tools. These can be used to adjust the color of an image"
-    },
-    "imageEditToolbarTransformLabel": "Transform",
-    "@imageEditToolbarTransformLabel": {
-        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
-    },
-    "imageEditTransformOrientation": "Orientation",
-    "@imageEditTransformOrientation": {
-        "description": "Change the orientation of the image, 90 degree per step"
-    },
-    "imageEditTransformOrientationClockwise": "cw",
-    "@imageEditTransformOrientationClockwise": {
-        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
-    },
-    "imageEditTransformOrientationCounterclockwise": "ccw",
-    "@imageEditTransformOrientationCounterclockwise": {
-        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
-    },
-    "imageEditTransformCrop": "Crop",
-    "@imageEditTransformCrop": {
-        "description": "Crop the image"
-    },
-    "categoriesLabel": "Categories",
-    "searchLandingPeopleListEmptyText": "Press help to learn how to setup",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
-    "searchLandingCategoryVideosLabel": "Videos",
-    "@searchLandingCategoryVideosLabel": {
-        "description": "Search all videos"
-    },
-    "searchFilterButtonLabel": "FILTERS",
-    "@searchFilterButtonLabel": {
-        "description": "Modify search filters"
-    },
-    "searchFilterDialogTitle": "Search filters",
-    "@searchFilterDialogTitle": {
-        "description": "Dialog to modify search filters"
-    },
-    "applyButtonLabel": "APPLY",
-    "@applyButtonLabel": {
-        "description": "A confirmation button, typically in a dialog, that apply the current settings"
-    },
-    "searchFilterOptionAnyLabel": "Any",
-    "@searchFilterOptionAnyLabel": {
-        "description": "This is the default option for all search filters. Filters with this value will be ignored"
-    },
-    "searchFilterOptionTrueLabel": "True",
-    "@searchFilterOptionTrueLabel": {
-        "description": "Positive option for a boolean filter"
-    },
-    "searchFilterOptionFalseLabel": "False",
-    "@searchFilterOptionFalseLabel": {
-        "description": "Negative option for a boolean filter"
-    },
-    "searchFilterTypeLabel": "Type",
-    "@searchFilterTypeLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterTypeOptionImageLabel": "Image",
-    "@searchFilterTypeOptionImageLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterBubbleTypeImageText": "images",
-    "@searchFilterBubbleTypeImageText": {
-        "description": "List of active search filters shown in the result page (by file type, image)"
-    },
-    "searchFilterTypeOptionVideoLabel": "Video",
-    "@searchFilterTypeOptionVideoLabel": {
-        "description": "Filter search results by file type"
-    },
-    "searchFilterBubbleTypeVideoText": "videos",
-    "@searchFilterBubbleTypeVideoText": {
-        "description": "List of active search filters shown in the result page (by file type, video)"
-    },
-    "searchFilterFavoriteLabel": "Favorite",
-    "@searchFilterFavoriteLabel": {
-        "description": "Filter search results by whether it's in favorites"
-    },
-    "searchFilterBubbleFavoriteTrueText": "favorites",
-    "@searchFilterBubbleFavoriteTrueText": {
-        "description": "List of active search filters shown in the result page (by favorites, true)"
-    },
-    "searchFilterBubbleFavoriteFalseText": "not favorites",
-    "@searchFilterBubbleFavoriteFalseText": {
-        "description": "List of active search filters shown in the result page (by favorites, false)"
-    },
-    "showAllButtonLabel": "SHOW ALL",
-    "@showAllButtonLabel": {
-        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
-    },
-    "gpsPlaceText": "Near {place}",
-    "@gpsPlaceText": {
-        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
-        "placeholders": {
-            "place": {}
-        }
-    },
-    "gpsPlaceAboutDialogTitle": "About place",
-    "@gpsPlaceAboutDialogTitle": {
-        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-    },
-    "gpsPlaceAboutDialogContent": "The place shown here is only a rough estimation and not guaranteed to be accurate. It does not represent our views on any disputed areas.",
-    "@gpsPlaceAboutDialogContent": {
-        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
-    },
-    "collectionPlacesLabel": "Places",
-    "@collectionPlacesLabel": {
-        "description": "Browse photos grouped by place"
-    },
-    "imageSaveOptionDialogTitle": "Saving the result",
-    "@imageSaveOptionDialogTitle": {
-        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-    },
-    "imageSaveOptionDialogContent": "Select where to save this and future processed images. If you picked server but the app failed to upload it, it will be saved on your device.",
-    "@imageSaveOptionDialogContent": {
-        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
-    },
-    "imageSaveOptionDialogDeviceButtonLabel": "DEVICE",
-    "@imageSaveOptionDialogDeviceButtonLabel": {
-        "description": "Save the image on the current device"
-    },
-    "imageSaveOptionDialogServerButtonLabel": "SERVER",
-    "@imageSaveOptionDialogServerButtonLabel": {
-        "description": "Save the image on your Nextcloud server"
-    },
-    "initialSyncMessage": "Syncing with your server for the first time",
-    "@initialSyncMessage": {
-        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
-    },
-    "loopTooltip": "Loop",
-    "@loopTooltip": {
-        "description": "Enable or disable loop in the video player"
-    },
-    "createCollectionFailureNotification": "Failed creating collection",
-    "@createCollectionFailureNotification": {
-        "description": "Inform user that a collection cannot be created"
-    },
-    "addItemToCollectionTooltip": "Add to collection",
-    "@addItemToCollectionTooltip": {
-        "description": "Add one or more items to a collection"
-    },
-    "addItemToCollectionFailureNotification": "Failed adding to collection",
-    "@addItemToCollectionFailureNotification": {
-        "description": "Inform user that the item cannot be added to a collection"
-    },
-    "setCollectionCoverFailureNotification": "Failed setting collection cover",
-    "@setCollectionCoverFailureNotification": {
-        "description": "Cannot set the opened item as the collection cover"
-    },
-    "exportCollectionTooltip": "Export",
-    "@exportCollectionTooltip": {
-        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
-    },
-    "exportCollectionDialogTitle": "Export collection",
-    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
-    "@createCollectionDialogNextcloudAlbumLabel": {
-        "description": "Server-side albums that are available in Nextcloud 25+"
-    },
-    "createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
-    "removeCollectionsFailedNotification": "Failed to remove some collections",
-    "errorUnauthenticated": "Μη εξουσιοδοτημένη πρόσβαση. Συνδεθείτε ξανά εάν το πρόβλημα συνεχίζεται",
-    "@errorUnauthenticated": {
-        "description": "Error message when server responds with HTTP401"
-    },
-    "errorDisconnected": "Αδυναμία σύνδεσης. Ο διακομιστής ενδέχεται να είναι εκτός σύνδεσης ή η συσκευή σας δεν είναι συνδεδεμένη",
-    "@errorDisconnected": {
-        "description": "Error message when the app can't connect to the server"
-    },
-    "errorLocked": "Το αρχείο είναι κλειδωμένο στο διακομιστή. Δοκιμάστε ξανά αργότερα",
-    "@errorLocked": {
-        "description": "Error message when server responds with HTTP423"
-    },
-    "errorInvalidBaseUrl": "Αδυναμία επικοινωνίας. Βεβαιωθείτε ότι η διεύθυνση είναι η βασική διεύθυνση URL του διακομιστή Nextcloud",
-    "@errorInvalidBaseUrl": {
-        "description": "Error message when the base URL is invalid"
-    },
-    "errorWrongPassword": "Αδυναμία επαλήθευσης ταυτότητας. Ελέγξτε ξανά το όνομα χρήστη και τον κωδικό πρόσβασης",
-    "@errorWrongPassword": {
-        "description": "Error message when the username or password is wrong"
-    },
-    "errorServerError": "Σφάλμα διακομιστή. Βεβαιωθείτε ότι ο διακομιστής έχει ρυθμιστεί σωστά",
-    "@errorServerError": {
-        "description": "HTTP 500"
-    },
-    "errorAlbumDowngrade": "Δεν είναι δυνατή η τροποποίηση αυτού του άλμπουμ, καθώς δημιουργήθηκε από μεταγενέστερη έκδοση αυτής της εφαρμογής. Ενημερώστε την εφαρμογή και δοκιμάστε ξανά",
-    "@errorAlbumDowngrade": {
-        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
-    },
-    "errorNoStoragePermission": "Απαιτείται άδεια πρόσβασης στο χώρο αποθήκευσης",
-    "@errorNoStoragePermission": {
-        "description": "Missing permission on Android"
-    }
+	"appTitle": "Φωτογραφίες",
+	"translator": "Chris Karasoulis",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "Φωτογραφίες",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"collectionsTooltip": "Συλλογές",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
+	},
+	"zoomTooltip": "Εστίαση",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "Ανανέωση",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "Ρυθμίσεις",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "{count, plural, other{{count} επιλεγμένα}}",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, =1{Διαγραφή 1 αντικειμένου} other{Διαγραφή {count} αντικειμένων}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "Επιτυχής διαγραφή όλων των αντικειμένων",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotification": "{count, plural, =1{Αποτυχία διαγραφής 1 αντικειμένου} other{Αποτυχία διαγραφής {count} αντικειμένων}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveTooltip": "Αρχειοθέτηση επιλεγμένων",
+	"@archiveTooltip": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, =1{Αρχειοθέτηση 1 αντικειμένου} other{Αρχειοθέτηση {count} αντικειμένων}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "Επιτυχής αρχειοθέτηση όλων των αντικειμένων",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, =1{Αποτυχία αρχειοθέτησης 1 αντικειμένου} other{Αποτυχία αρχειοθέτησης {count} αντικειμένων}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveTooltip": "Αποαρχειοθέτηση επιλεγμένων",
+	"@unarchiveTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Αποαρχειοθέτηση 1 αντικειμένου} other{Αποαρχειοθέτηση {count} αντικειμένων}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "Επιτυχής αποαρχειοθέτηση όλων των αντικειμένων",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, =1{Αποτυχία αποαρχειοθέτησης 1 αντικειμένου} other{Αποτυχία αποαρχειοθέτησης {count} αντικειμένων}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "Διαγραφή",
+	"@deleteTooltip": {
+		"description": "Delete selected items"
+	},
+	"deleteProcessingNotification": "Διαγραφή αντικειμένου",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "Επιτυχής διαγραφή αντικειμένου",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "Αποτυχία διαγραφής αντικειμένου",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumFailureNotification": "Αποτυχία αφαίρεσης αντικειμένων από τη συλλογή",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "Προσθήκη διακομιστή",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "Επιτυχής αφαίρεση {server}",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "Δημιουργία νέας συλλογής",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"albumSize": "{count, plural, =0{Empty} =1{1 αντικείμενο} other{{count} αντικείμενα}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "Αρχείο",
+	"@albumArchiveLabel": {
+		"description": "Archive"
+	},
+	"connectingToServer": "Σύνδεση σε\n{server}",
+	"@connectingToServer": {
+		"description": "Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"nameInputHint": "Όνομα",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"skipButtonLabel": "ΠΑΡΑΒΛΕΨΗ",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "ΕΠΙΒΕΒΑΙΩΣΗ",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "Είσοδος σε διακομιστή Nextcloud",
+	"@signInHeaderText": {
+		"description": "Inform user what to do in sign in widget"
+	},
+	"signIn2faHintText": "Χρησιμοποιήστε ένα συνθηματικό εφαρμογής αν χρησιμοποιείτε πιστοποίηση δύο παραγόντων στο διακομιστή",
+	"@signIn2faHintText": {
+		"description": "Notify users with 2FA enabled what should be done in order to sign in correctly"
+	},
+	"serverAddressInputHint": "Διεύθυνση διακομιστή",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "Προσθέστε τη διεύθυνση του διακομιστή",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "Όνομα χρήστη",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "Προσθέστε το όνομα χρήστη σας",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "Κωδικός πρόσβασης",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "Προσθέστε τον κωδικό πρόσβασής σας",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "Επιλέξτε τους φακέλους που θα συμπεριληφθούν",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "Μόνο οι φωτογραφίες εντός των φακέλων θα εμφανίζονται. Πατήστε Παράβλεψη για να συμπεριληφθούν όλες",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(go back)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "Αποτυχία αποεπιλογής αντικειμένου",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "Επιλέξτε τουλάχιστον έναν φάκελο ή πατήστε παράβλεψη για να τους συμπεριλάβετε όλους",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "Ξεκινάμε",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "Μπορείτε να το αλλάξετε αργότερα στις Ρυθμίσεις",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "Η εφαρμογή θα δημιουργήσει ένα φάκελο στο διακομιστή Nextcloud για την αποθήκευση αρχείων προτιμήσεων. Μην τον τροποποιήσετε και μην τον καταργήσετε εκτός εάν σκοπεύετε να καταργήσετε αυτήν την εφαρμογή",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "Ρυθμίσεις",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "Γλώσσα",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
+	"settingsExifSupportTitle": "Υποστήριξη EXIF",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsMemoriesTitle": "Αναμνήσεις",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "Προβολή φωτογραφιών που ελήφθησαν στο παρελθόν",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsAccountTitle": "Λογαριασμός",
+	"settingsIncludedFoldersTitle": "Περιλαμβανόμενοι φάκελοι",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
+	"settingsShareFolderTitle": "Κοινοποίηση φακέλου",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Εντοπισμός κοινόχρηστου φακέλου",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "Αυτή η ρύθμιση αντιστοιχεί στην παράμετρο share_folder στο config.php. Οι δύο τιμές ΠΡΕΠΕΙ να είναι πανομοιότυπες.\n\nΕντοπίστε τον ίδιο φάκελο με αυτόν που έχει οριστεί στο config.php.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "Εντοπίστε τον ίδιο φάκελο με αυτόν που έχει οριστεί στο config.php. Πατήστε προεπιλογή εάν δεν έχετε ορίσει την παράμετρο.",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsServerAppSectionTitle": "Υποστήριξη εφαρμογών διακομιστή",
+	"@settingsServerAppSectionTitle": {
+		"description": "Enable/disable various server apps"
+	},
+	"settingsViewerTitle": "Προβολέας",
+	"settingsViewerDescription": "Customize the image/video viewer",
+	"settingsScreenBrightnessTitle": "Φωτεινότητα οθόνης",
+	"settingsScreenBrightnessDescription": "Παράκαμψη του επιπέδου φωτεινότητας του συστήματος",
+	"settingsForceRotationTitle": "Αγνόηση κλειδώματος περιστροφής οθόνης",
+	"settingsForceRotationDescription": "Περιστροφή οθόνης ακόμα και όταν η αυτόματη περιστροφή είναι απενεργοποιημένη",
+	"settingsMapProviderTitle": "Πάροχος χάρτη",
+	"settingsAlbumTitle": "Άλμπουμ",
+	"settingsAlbumDescription": "Επεξεργασία άλμπουμ",
+	"settingsShowDateInAlbumTitle": "Ομαδοποίηση φωτογραφιών κατά ημερομηνία",
+	"settingsShowDateInAlbumDescription": "Εφαρμογή μόνο όταν το άλμπουμ είναι ταξινομημένο κατά χρόνο",
+	"settingsEnhanceMaxResolutionDescription": "Οι φωτογραφίες μεγαλύτερες από την επιλεγμένη ανάλυση θα μειωθούν.\n\nΟι φωτογραφίες υψηλής ανάλυσης απαιτούν πολύ περισσότερη μνήμη και χρόνο για επεξεργασία. Μειώστε αυτή τη ρύθμιση εάν η εφαρμογή διακοπεί κατά τη βελτίωση των φωτογραφιών.",
+	"settingsThemeTitle": "Εμφάνιση",
+	"settingsThemeDescription": "Προσαρμογή της εμφάνισης της εφαρμογής",
+	"settingsFollowSystemThemeTitle": "Χρήση εμφάνισης συστήματος",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Πιο σκοτεινή εμφάνιση",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Χρήση μαύρου στη σκοτεινή εμφάνιση",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Χρήση σκούρου γκρι στη σκοτεινή εμφάνιση",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
+	"settingsMiscellaneousTitle": "Διάφορα",
+	"settingsPhotosTabSortByNameTitle": "Ταξινόμηση κατά όνομα αρχείου στις Φωτογραφίες",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
+	},
+	"settingsExperimentalTitle": "Πειραματικά",
+	"settingsExperimentalDescription": "Χαρακτηριστικά που δεν είναι έτοιμα για καθημερινή χρήση",
+	"settingsAboutSectionTitle": "Σχετικά",
+	"@settingsAboutSectionTitle": {
+		"description": "Title of the about section in settings widget"
+	},
+	"settingsExifSupportTrueSubtitle": "Απαιτείται επιπλέον χρήση δικτύου",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsVersionTitle": "Έκδοση",
+	"@settingsVersionTitle": {
+		"description": "Title of the version data item"
+	},
+	"settingsCaptureLogsTitle": "Αρχείο καταγραφής",
+	"@settingsCaptureLogsTitle": {
+		"description": "Capture app logs for bug report"
+	},
+	"settingsCaptureLogsDescription": "Βοηθήστε τον προγραμματιστή να διαγνώσει σφάλματα",
+	"settingsTranslatorTitle": "Μεταφραστής",
+	"@settingsTranslatorTitle": {
+		"description": "Title of the translator item"
+	},
+	"settingsSourceCodeTitle": "Πηγαίος κώδικας",
+	"@settingsSourceCodeTitle": {
+		"description": "Title of the source code item"
+	},
+	"settingsBugReportTitle": "Αναφορά προβλήματος",
+	"@settingsBugReportTitle": {
+		"description": "Report issue"
+	},
+	"writePreferenceFailureNotification": "Αποτυχία ρύθμισης προτίμησης",
+	"@writePreferenceFailureNotification": {
+		"description": "Inform user that the preference file cannot be modified"
+	},
+	"captureLogDetails": "Για τη λήψη αρχείων καταγραφής για μια αναφορά σφαλμάτων:\n\n1. Ενεργοποιήστε αυτήν τη ρύθμιση\n2. Αναπαράγετε το πρόβλημα\n3. Απενεργοποιήστε αυτήν τη ρύθμιση\n4. Αναζητήστε το nc-photos.log στο φάκελο λήψης\n\n*Εάν το πρόβλημα προκαλεί τη διακοπή λειτουργίας της εφαρμογής, δεν είναι δυνατή η λήψη αρχείων καταγραφής. Σε αυτήν την περίπτωση, επικοινωνήστε με τον προγραμματιστή για περαιτέρω οδηγίες",
+	"@captureLogDetails": {
+		"description": "Detailed description on capturing logs"
+	},
+	"captureLogSuccessNotification": "Τα αρχεία καταγραφής αποθηκεύτηκαν με επιτυχία",
+	"@captureLogSuccessNotification": {
+		"description": "Captured logs are successfully saved to the download directory"
+	},
+	"enableButtonLabel": "ΕΝΕΡΓΟΠΟΙΗΣΗ",
+	"@enableButtonLabel": {
+		"description": "Label of the enable button"
+	},
+	"exifSupportDetails": "Ενεργοποιώντας την υποστήριξη EXIF διάφορα μεταδεδομένα όπως ημερομηνία λήψης, μοντέλο κάμερας θα γίνουν διαθέσιμα. Για την ανάγνωση αυτών των μεταδεδομένων, απαιτείται επιπλέον χρήση δικτύου για τη λήψη της αρχικής εικόνας πλήρους μεγέθους. Η εφαρμογή θα ξεκινήσει τη λήψη μόνο όταν είναι συνδεδεμένη σε δίκτυο Wi-Fi",
+	"@exifSupportDetails": {
+		"description": "Detailed description of the exif support feature"
+	},
+	"exifSupportConfirmationDialogTitle": "Ενεργοποίηση υποστήριξης EXIF;",
+	"@exifSupportConfirmationDialogTitle": {
+		"description": "Title of the dialog to confirm enabling exif support"
+	},
+	"rootPickerSkipConfirmationDialogContent2": "Όλα τα αρχεία  θα συμπεριληφθούν. Αυτό μπορεί να αυξήσει τη χρήση της μνήμης και να μειώσει την απόδοση",
+	"@rootPickerSkipConfirmationDialogContent2": {
+		"description": "Warn user not to include all files in their server"
+	},
+	"doneButtonLabel": "ΕΓΙΝΕ",
+	"@doneButtonLabel": {
+		"description": "Label of the done button"
+	},
+	"nextButtonLabel": "ΕΠΟΜΕΝΟ",
+	"@nextButtonLabel": {
+		"description": "Label of the next button"
+	},
+	"connectButtonLabel": "ΣΥΝΔΕΣΗ",
+	"@connectButtonLabel": {
+		"description": "Label of the connect button"
+	},
+	"megapixelCount": "{count}MP",
+	"@megapixelCount": {
+		"description": "Resolution of an image in megapixel",
+		"placeholders": {
+			"count": {
+				"example": "1.3"
+			}
+		}
+	},
+	"secondCountSymbol": "{count}δευτ.",
+	"@secondCountSymbol": {
+		"description": "Number of seconds",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"millimeterCountSymbol": "{count}χιλ.",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "Λεπτομέρειες",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "Λήψη",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "Λήψη αρχείου",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "Επιτυχής λήψη αρχείου",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "Αποτυχία λήψης αρχείου",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"nextTooltip": "Επόμενο",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "Προηγούμενο",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "Κρατήστε πατημένο το shift και κάντε κλικ για να επιλέξετε όλα τα ενδιάμεσα",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "Πατήστε παρατεταμένα ένα άλλο αντικείμενο για να επιλέξετε όλα ενδιάμεσα",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "Τροποποίηση ημερομηνίας και ώρας",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Ημερομηνία",
+	"timeSubtitle": "Ώρα",
+	"dateYearInputHint": "Έτος",
+	"dateMonthInputHint": "Μήνας",
+	"dateDayInputHint": "Ημέρα",
+	"timeHourInputHint": "Ώρα",
+	"timeMinuteInputHint": "Λεπτό",
+	"timeSecondInputHint": "Δευτερόλεπτο",
+	"dateTimeInputInvalid": "Μη έγκυρη τιμή",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"updateDateTimeFailureNotification": "Αποτυχία τροποποίησης ημερομηνίας και ώρας",
+	"@updateDateTimeFailureNotification": {
+		"description": "Failed to set the date & time of a file"
+	},
+	"albumDirPickerHeaderText": "Επιλέξτε τους φακέλους που θα συσχετιστούν",
+	"@albumDirPickerHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerSubHeaderText": "Μόνο φωτογραφίες στους σχετικούς φακέλους θα συμπεριληφθούν σε αυτή τη συλλογή",
+	"@albumDirPickerSubHeaderText": {
+		"description": "Pick the folders for a folder based album"
+	},
+	"albumDirPickerListEmptyNotification": "Επιλέξτε τουλάχιστον έναν φάκελο",
+	"@albumDirPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"sortOptionFilenameAscendingLabel": "Όνομα αρχείου",
+	"@sortOptionFilenameAscendingLabel": {
+		"description": "Sort by filename, in ascending order"
+	},
+	"sortOptionFilenameDescendingLabel": "Όνομα αρχείου (φθίνουσα)",
+	"@sortOptionFilenameDescendingLabel": {
+		"description": "Sort by filename, in descending order"
+	},
+	"sortOptionAlbumNameLabel": "Όνομα άλμπουμ",
+	"@sortOptionAlbumNameLabel": {
+		"description": "Sort by album name, in ascending order"
+	},
+	"sortOptionAlbumNameDescendingLabel": "Όνομα άλμπουμ (φθίνουσα)",
+	"@sortOptionAlbumNameDescendingLabel": {
+		"description": "Sort by album name, in descending order"
+	},
+	"sortOptionManualLabel": "Χειροκίνητα",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
+	},
+	"importFoldersTooltip": "Εισαγωγή φακέλων",
+	"@importFoldersTooltip": {
+		"description": "Menu entry in the album page to import folders as albums"
+	},
+	"albumImporterHeaderText": "Εισαγωγή φακέλων ως συλλογές",
+	"@albumImporterHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"albumImporterSubHeaderText": "Οι προτεινόμενοι φάκελοι παρατίθενται παρακάτω. Ανάλογα με τον αριθμό των αρχείων στον διακομιστή σας, ενδέχεται να χρειαστεί λίγος χρόνος για να ολοκληρωθεί",
+	"@albumImporterSubHeaderText": {
+		"description": "Import folders as albums"
+	},
+	"importButtonLabel": "ΕΙΣΑΓΩΓΗ",
+	"albumImporterProgressText": "Importing folders",
+	"@albumImporterProgressText": {
+		"description": "Message shown while importing"
+	},
+	"doneButtonTooltip": "Έγινε",
+	"editTooltip": "Edit",
+	"editAccountConflictFailureNotification": "An account already exists with the same settings",
+	"@editAccountConflictFailureNotification": {
+		"description": "Error when user modified an account such that it's identical to another one"
+	},
+	"listEmptyText": "Κενή",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Κάδος",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Επαναφορά",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, =1{Επαναφορά 1 στοιχείου} other{Επαναφορά {count} στοιχείων}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Επιτυχής επαναφορά όλων των στοιχείων",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, =1{Αποτυχία επαναφοράς 1 στοιχείου} other{Αποτυχία επαναφοράς {count} στοιχείων}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Επαναφορά στοιχείου",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "Επιτυχής επαναφορά στοιχείου",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "Αποτυχία επαναφοράς στοιχείου",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Οριστική διαγραφή",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"deletePermanentlyConfirmationDialogTitle": "Οριστική διαγραφή",
+	"@deletePermanentlyConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"deletePermanentlyConfirmationDialogContent": "Τα επιλεγμένα στοιχεία θα διαγραφούν οριστικά από τον διακομιστή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
+	"@deletePermanentlyConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items"
+	},
+	"albumSharedLabel": "Κοινόχρηστα",
+	"@albumSharedLabel": {
+		"description": "A small label placed next to a shared album"
+	},
+	"metadataTaskProcessingNotification": "Επεξεργασία μεταδεδομένων εικόνας στο παρασκήνιο",
+	"@metadataTaskProcessingNotification": {
+		"description": "Shown when the app is reading image metadata"
+	},
+	"metadataTaskPauseNoWiFiNotification": "Αναμονή για WiFi",
+	"@metadataTaskPauseNoWiFiNotification": {
+		"description": "Shown when the app has paused reading image metadata"
+	},
+	"configButtonLabel": "ΔΙΑΜΟΡΦΩΣΗ",
+	"useAsAlbumCoverTooltip": "Χρήση ως εξώφυλλο άλμπουμ",
+	"helpTooltip": "Βοήθεια",
+	"helpButtonLabel": "ΒΟΗΘΕΙΑ",
+	"removeFromAlbumTooltip": "Αφαίρεση από το άλμπουμ",
+	"@removeFromAlbumTooltip": {
+		"description": "Remove the opened photo from an album"
+	},
+	"genericProcessingDialogContent": "Παρακαλώ περιμένετε",
+	"@genericProcessingDialogContent": {
+		"description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+	},
+	"sortTooltip": "Ταξινόμηση",
+	"sortOptionDialogTitle": "Sort by",
+	"@sortOptionDialogTitle": {
+		"description": "Select how the photos should be sorted"
+	},
+	"sortOptionTimeAscendingLabel": "Παλιότερα πρώτα",
+	"@sortOptionTimeAscendingLabel": {
+		"description": "Sort by time, in ascending order"
+	},
+	"sortOptionTimeDescendingLabel": "Νεότερα πρώτα",
+	"@sortOptionTimeDescendingLabel": {
+		"description": "Sort by time, in descending order"
+	},
+	"albumEditDragRearrangeNotification": "Πατήστε παρατεταμένα και σύρετε ένα αντικείμενο για να το αναδιατάξετε χειροκίνητα",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "Προσθήκη κειμένου",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "Κοινοποίηση",
+	"@shareTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "Επιλέξτε μερικές φωτογραφίες για κοινοποίηση",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Λήψη...",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
+	"fileSharedByDescription": "Κοινοποιήθηκε από αυτόν τον χρήστη",
+	"@fileSharedByDescription": {
+		"description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+	},
+	"emptyTrashbinTooltip": "Άδειασμα κάδου",
+	"@emptyTrashbinTooltip": {
+		"description": "Permanently delete all items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogTitle": "Άδειασμα κάδου",
+	"@emptyTrashbinConfirmationDialogTitle": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"emptyTrashbinConfirmationDialogContent": "Όλα τα στοιχεία θα διαγραφούν οριστικά από τον διακομιστή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"unsetAlbumCoverTooltip": "Αφαίρεση εξώφυλλου",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"muteTooltip": "Σίγαση",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
+	"unmuteTooltip": "Κατάργηση σίγασης",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
+	"collectionPeopleLabel": "Πρόσωπα",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"slideshowTooltip": "Παρουσίαση",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "Ρύθμιση παρουσίασης",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "Διάρκεια εικόνας (ΛΛ:ΔΔ)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "Μίξη",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "Επανάληψη",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
+	},
+	"linkCopiedNotification": "Ο σύνδεσμος αντιγράφηκε",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "Κοινοποίηση ως",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodPublicLinkTitle": "Δημόσιος σύνδεσμος",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	},
+	"shareMethodPublicLinkDescription": "Δημιουργία ενός νέου δημόσιου σύνδεσμου στον διακομιστή. Οποιοσδήποτε διαθέτει τον σύνδεσμο μπορεί να έχει πρόσβαση στο αρχείο",
+	"shareMethodPasswordLinkTitle": "Σύνδεσμος με κωδικό πρόσβασης",
+	"@shareMethodPasswordLinkTitle": {
+		"description": "Create a password protected share link on server and share it"
+	},
+	"shareMethodPasswordLinkDescription": "Δημιουργία ενός νέου σύνδεσμου με κωδικό πρόσβασης στον διακομιστή",
+	"collectionSharingLabel": "Κοινοποίηση",
+	"@collectionSharingLabel": {
+		"description": "List items being shared by the current account"
+	},
+	"fileLastSharedDescription": "Τελευταία κοινοποίηση στις {date}",
+	"@fileLastSharedDescription": {
+		"description": "The date when this file was last shared by you",
+		"placeholders": {
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"fileLastSharedByOthersDescription": "Ο χρήστης {user} κοινοποίησε στις {date}",
+	"@fileLastSharedByOthersDescription": {
+		"description": "The date when this file was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"albumLastSharedByOthersDescription": "Ο χρήστης {user} κοινοποίησε ένα άλμπουμs στις {date}",
+	"@albumLastSharedByOthersDescription": {
+		"description": "The date when this album was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
+	"sharedWithLabel": "Κοινοποίηση με",
+	"@sharedWithLabel": {
+		"description": "A list of users or links where this file is sharing with"
+	},
+	"unshareTooltip": "Κατάργηση κοινοποίησης",
+	"@unshareTooltip": {
+		"description": "Remove a share"
+	},
+	"unshareSuccessNotification": "Αφαιρέθηκε κοινοποίηση",
+	"@unshareSuccessNotification": {
+		"description": "Removed a share"
+	},
+	"locationLabel": "Τοποθεσία",
+	"@locationLabel": {
+		"description": "Show where the file is located"
+	},
+	"multipleFilesLinkShareDialogContent": "Το Nextcloud δεν υποστηρίζει σύνδεσμο κοινής χρήσης για πολλά αρχεία. Αντίθετα, η εφαρμογή θα ΑΝΤΙΓΡΑΨΕΙ τα αρχεία σε έναν νέο φάκελο και θα τον μοιραστεί.",
+	"@multipleFilesLinkShareDialogContent": {
+		"description": "Dialog shown when sharing multiple files as link"
+	},
+	"folderNameInputHint": "Όνομα φακέλου",
+	"@folderNameInputHint": {
+		"description": "Input field for folder name"
+	},
+	"folderNameInputInvalidEmpty": "Εισαγάγετε το όνομα του φακέλου",
+	"@folderNameInputInvalidEmpty": {
+		"description": "Folder name cannot be left empty"
+	},
+	"folderNameInputInvalidCharacters": "Περιέχει άκυρους χαρακτήρες",
+	"@folderNameInputInvalidCharacters": {
+		"description": "Folder name contains characters that are not allowed"
+	},
+	"createShareProgressText": "Δημιουργία κοινοποίησης",
+	"@createShareProgressText": {
+		"description": "Message shown when sharing files"
+	},
+	"copyItemsFailureNotification": "{count, plural, =1{Αποτυχία αντιγραφής 1 στοιχείου} other{Αποτυχία αντιγραφής {count} στοιχείων}}",
+	"@copyItemsFailureNotification": {
+		"description": "Error message shown when some files cannot be copied",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unshareLinkShareDirDialogTitle": "Διαγραφή φακέλου;",
+	"@unshareLinkShareDirDialogTitle": {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"unshareLinkShareDirDialogContent": "Αυτός ο φάκελος δημιουργήθηκε από την εφαρμογή για κοινή χρήση πολλών αρχείων ως σύνδεσμος. Δεν είναι πλέον κοινόχρηστο με κανένα μέρος, θέλετε να διαγράψετε αυτόν τον φάκελο;",
+	"@unshareLinkShareDirDialogContent": {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
+	"addToCollectionsViewTooltip": "Προσθήκη στη συλλογή",
+	"@addToCollectionsViewTooltip": {
+		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+	},
+	"shareAlbumDialogTitle": "Κοινοποίηση με χρήστη",
+	"@shareAlbumDialogTitle": {
+		"description": "Dialog to share an album with another user"
+	},
+	"shareAlbumSuccessWithErrorNotification": "Το άλμπουμ κοινοποιήθηκε στο χρήστη {user}, αλλά απέτυχε να μοιραστεί ορισμένα αρχεία",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "Καταργήθηκε η κοινή χρήση του άλμπουμ με τον χρήστη {user}, αλλά απέτυχε η κατάργηση κοινής χρήσης ορισμένων αρχείων",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"fixSharesTooltip": "Επιδιόρθωση κοινοποιήσεων",
+	"@fixSharesTooltip": {
+		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+	},
+	"fixTooltip": "Επιδιόρθωση",
+	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixAllTooltip": "Επιδιόρθωση όλων",
+	"@fixAllTooltip": {
+		"description": "Fix all listed issues"
+	},
+	"missingShareDescription": "Δεν είναι κοινόχρηστο με το χρήστη {user}",
+	"@missingShareDescription": {
+		"description": "The album is shared with user but a file is NOT",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"extraShareDescription": "Κοινόχρηστο με το χρήστη {user}",
+	"@extraShareDescription": {
+		"description": "The album is NOT shared with user but a file is",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"defaultButtonLabel": "ΠΡΟΕΠΙΛΟΓΗ",
+	"addUserInputHint": "Προσθήκη χρήστη",
+	"@addUserInputHint": {
+		"description": "Input a user name to share this album with"
+	},
+	"sharedAlbumInfoDialogTitle": "Παρουσιάζουμε το κοινόχρηστο άλμπουμ",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"sharedAlbumInfoDialogContent": "Το κοινόχρηστο άλμπουμ επιτρέπει σε πολλούς χρήστες στον ίδιο διακομιστή να έχουν πρόσβαση στο ίδιο άλμπουμ. Διαβάστε προσεκτικά τους περιορισμούς πριν συνεχίσετε",
+	"@sharedAlbumInfoDialogContent": {
+		"description": "This dialog is shown when user first open a shared album"
+	},
+	"learnMoreButtonLabel": "ΜΑΘΕΤΕ ΠΕΡΙΣΣΟΤΕΡΑ",
+	"migrateDatabaseProcessingNotification": "Ανανέωση βάσης δεδομένων",
+	"@migrateDatabaseProcessingNotification": {
+		"description": "Migrate database to work with the updated app"
+	},
+	"migrateDatabaseFailureNotification": "Αποτυχία μετεγκατάστασης βάσης δεδομένων",
+	"memoryAlbumName": "{count, plural, =1{1 χρόνο πριν} other{{count} χρόνια πριν}}",
+	"@memoryAlbumName": {
+		"description": "Memory albums are generated by the app and include photos in the past years",
+		"placeholders": {
+			"count": {
+				"example": "2"
+			}
+		}
+	},
+	"homeFolderNotFoundDialogTitle": "Ο αρχικός φάκελος δεν βρέθηκε",
+	"@homeFolderNotFoundDialogTitle": {
+		"description": "The app failed to scan the user's home folder on signing in"
+	},
+	"homeFolderNotFoundDialogContent": "Διορθώστε τη διεύθυνση WebDAV που εμφανίζεται παρακάτω. Μπορείτε να βρείτε τη διεύθυνση στη σελίδα του Nextcloud server.",
+	"@homeFolderNotFoundDialogContent": {
+		"description": "Ask the user to provide us the correct WebDAV URL"
+	},
+	"homeFolderInputInvalidEmpty": "Εισαγάγετε το όνομα του αρχικού φακέλου",
+	"@homeFolderInputInvalidEmpty": {
+		"description": "Home folder can't be left empty"
+	},
+	"createCollectionTooltip": "Νέα συλλογή",
+	"@createCollectionTooltip": {
+		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+	},
+	"createCollectionDialogAlbumLabel": "Άλμπουμ",
+	"@createCollectionDialogAlbumLabel": {
+		"description": "Create an album as collection"
+	},
+	"createCollectionDialogAlbumDescription": "Εμφάνιση φωτογραφιών από όλους τους τους φακέλους του διακομιστή",
+	"@createCollectionDialogAlbumDescription": {
+		"description": "Describe how an album collection works"
+	},
+	"createCollectionDialogFolderLabel": "Φάκελος",
+	"@createCollectionDialogFolderLabel": {
+		"description": "Create a folder as collection"
+	},
+	"createCollectionDialogFolderDescription": "Εμφάνιση φωτογραφιών μέσα σε ένα φάκελο",
+	"@createCollectionDialogFolderDescription": {
+		"description": "Describe how a folder collection works"
+	},
+	"collectionFavoritesLabel": "Αγαπημένα",
+	"@collectionFavoritesLabel": {
+		"description": "Browse photos added to favorites"
+	},
+	"favoriteTooltip": "Αγαπημένο",
+	"@favoriteTooltip": {
+		"description": "Add photo to favorites"
+	},
+	"favoriteSuccessNotification": "Προστέθηκε στα αγαπημένα",
+	"@favoriteSuccessNotification": {
+		"description": "Successfully added photos to favorites"
+	},
+	"favoriteFailureNotification": "Αποτυχία προσθήκης στα αγαπημένα",
+	"@favoriteFailureNotification": {
+		"description": "Failed adding photos to favorites"
+	},
+	"unfavoriteTooltip": "Μη αγαπημένο",
+	"@unfavoriteTooltip": {
+		"description": "Remove photo to favorites"
+	},
+	"unfavoriteSuccessNotification": "Αφαιρέθηκε από τα αγαπημένα",
+	"@unfavoriteSuccessNotification": {
+		"description": "Successfully removed photos from favorites"
+	},
+	"unfavoriteFailureNotification": "Αποτυχία αφαίρεσης από τα αγαπημένα",
+	"@unfavoriteFailureNotification": {
+		"description": "Failed removing photos from favorites"
+	},
+	"createCollectionDialogTagLabel": "Ετικέτα",
+	"@createCollectionDialogTagLabel": {
+		"description": "Create a collection containing files with tags"
+	},
+	"createCollectionDialogTagDescription": "Εμφάνιση φωτογραφιών με συγκεκριμένες ετικέτες",
+	"@createCollectionDialogTagDescription": {
+		"description": "Describe how a tag collection works"
+	},
+	"addTagInputHint": "Προσθήκη ετικέτας",
+	"@addTagInputHint": {
+		"description": "Input a tag"
+	},
+	"tagPickerNoTagSelectedNotification": "Προσθέστε τουλάχιστον 1 ετικέτα",
+	"@tagPickerNoTagSelectedNotification": {
+		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+	},
+	"backgroundServiceStopping": "Διακοπή υπηρεσίας",
+	"@backgroundServiceStopping": {
+		"description": "The background service is stopping itself"
+	},
+	"metadataTaskPauseLowBatteryNotification": "Χαμηλή μπαταρία",
+	"@metadataTaskPauseLowBatteryNotification": {
+		"description": "Shown when the app has paused reading image metadata due to low battery"
+	},
+	"enhanceTooltip": "Βελτίωση",
+	"@enhanceTooltip": {
+		"description": "Enhance a photo"
+	},
+	"enhanceButtonLabel": "ΒΕΛΤΙΩΣΗ",
+	"enhanceIntroDialogTitle": "Βελτίωση φωτογραφιών",
+	"enhanceIntroDialogDescription": "Οι φωτογραφίες επεξεργάζονται τοπικά στη συσκευή. Από προεπιλογή μειώνονται σε 2048x1536. Μπορείτε να προσαρμόσετε την ανάλυση εξόδου στις Ρυθμίσεις",
+	"enhanceLowLightTitle": "Βελτίωση χαμηλού φωτισμού",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
+	"enhanceLowLightParamBrightnessLabel": "Φωτεινότητα",
+	"@enhanceLowLightParamBrightnessLabel": {
+		"description": "This parameter sets how much brighter the output will be"
+	},
+	"deletePermanentlyLocalConfirmationDialogContent": "Τα επιλεγμένα στοιχεία θα διαγραφούν οριστικά από αυτήν τη συσκευή.\n\nΑυτή η ενέργεια δεν είναι αναστρέψιμη",
+	"@deletePermanentlyLocalConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete the items from the current device"
+	},
+	"enhancePortraitBlurTitle": "Θάμπωμα πορτρέτου",
+	"@enhancePortraitBlurTitle": {
+		"description": "Blur the background of a photo"
+	},
+	"enhancePortraitBlurParamBlurLabel": "Θόλωση",
+	"@enhancePortraitBlurParamBlurLabel": {
+		"description": "This parameter sets the radius of the blur filter"
+	},
+	"enhanceSuperResolution4xTitle": "Υπερ-ανάλυση (4x)",
+	"@enhanceSuperResolution4xTitle": {
+		"description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+	},
+	"enhanceStyleTransferTitle": "Μεταφορά στυλ",
+	"@enhanceStyleTransferTitle": {
+		"description": "Transfer the image style from a reference image to a photo"
+	},
+	"searchTooltip": "Αναζήτηση",
+	"clearTooltip": "Εκκαθάριση",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "Κανένα αποτέλεσμα",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"changelogTitle": "Αρχείο αλλαγών",
+	"@changelogTitle": {
+		"description": "Title of the changelog dialog"
+	},
+	"serverCertErrorDialogTitle": "Το πιστοποιητικό διακομιστή δεν είναι αξιόπιστο",
+	"@serverCertErrorDialogTitle": {
+		"description": "Title of the dialog to warn user about an untrusted SSL certificate"
+	},
+	"serverCertErrorDialogContent": "Ο διακομιστής ενδέχεται να έχει παραβιαστεί ή κάποιος προσπαθεί να κλέψει τα δεδομένα σας",
+	"@serverCertErrorDialogContent": {
+		"description": "Warn user about an untrusted SSL certificate"
+	},
+	"errorAlbumDowngrade": "Δεν είναι δυνατή η τροποποίηση αυτού του άλμπουμ, καθώς δημιουργήθηκε από μεταγενέστερη έκδοση αυτής της εφαρμογής. Ενημερώστε την εφαρμογή και δοκιμάστε ξανά",
+	"@errorAlbumDowngrade": {
+		"description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+	},
+	"advancedButtonLabel": "ΠΡΟΧΩΡΗΜΕΝΟ",
+	"@advancedButtonLabel": {
+		"description": "Label of the advanced button"
+	},
+	"whitelistCertDialogTitle": "Προσθήκη αγνώστου πιστοποιητικού στη λίστα επιτρεπόμενων;",
+	"@whitelistCertDialogTitle": {
+		"description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+	},
+	"whitelistCertDialogContent": "Μπορείτε να προσθέσετε το πιστοποιητικό στη λίστα επιτρεπόμενων για να το αποδεχτεί η εφαρμογή. ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αυτό ενέχει μεγάλο κίνδυνο ασφάλειας. Βεβαιωθείτε ότι το πιστοποιητικό είναι υπογεγραμμένο από εσάς ή από κάποια αξιόπιστη πηγή\n\nHost: {host}\nFingerprint: {fingerprint}",
+	"@whitelistCertDialogContent": {
+		"description": "Let user decide whether to whitelist an untrusted SSL certificate",
+		"placeholders": {
+			"host": {
+				"example": "www.example.com"
+			},
+			"fingerprint": {
+				"example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+			}
+		}
+	},
+	"whitelistCertButtonLabel": "ΑΠΟΔΟΧΗ ΚΙΝΔΥΝΟΥ ΚΑΙ ΠΡΟΣΘΗΚΗ ΣΤΗ ΛΙΣΤΑ ΕΠΙΤΡΕΠΟΜΕΝΩΝ",
+	"@whitelistCertButtonLabel": {
+		"description": "Label of the whitelist certificate button"
+	},
+	"errorUnauthenticated": "Μη εξουσιοδοτημένη πρόσβαση. Συνδεθείτε ξανά εάν το πρόβλημα συνεχίζεται",
+	"@errorUnauthenticated": {
+		"description": "Error message when server responds with HTTP401"
+	},
+	"errorDisconnected": "Αδυναμία σύνδεσης. Ο διακομιστής ενδέχεται να είναι εκτός σύνδεσης ή η συσκευή σας δεν είναι συνδεδεμένη",
+	"@errorDisconnected": {
+		"description": "Error message when the app can't connect to the server"
+	},
+	"errorLocked": "Το αρχείο είναι κλειδωμένο στο διακομιστή. Δοκιμάστε ξανά αργότερα",
+	"@errorLocked": {
+		"description": "Error message when server responds with HTTP423"
+	},
+	"errorInvalidBaseUrl": "Αδυναμία επικοινωνίας. Βεβαιωθείτε ότι η διεύθυνση είναι η βασική διεύθυνση URL του διακομιστή Nextcloud",
+	"@errorInvalidBaseUrl": {
+		"description": "Error message when the base URL is invalid"
+	},
+	"errorWrongPassword": "Αδυναμία επαλήθευσης ταυτότητας. Ελέγξτε ξανά το όνομα χρήστη και τον κωδικό πρόσβασης",
+	"@errorWrongPassword": {
+		"description": "Error message when the username or password is wrong"
+	},
+	"errorServerError": "Σφάλμα διακομιστή. Βεβαιωθείτε ότι ο διακομιστής έχει ρυθμιστεί σωστά",
+	"@errorServerError": {
+		"description": "HTTP 500"
+	},
+	"errorNoStoragePermission": "Απαιτείται άδεια πρόσβασης στο χώρο αποθήκευσης",
+	"@errorNoStoragePermission": {
+		"description": "Missing permission on Android"
+	}
 }
