@@ -166,11 +166,11 @@
             }
         }
     },
-    "connectingToServer2": "",
+    "connectingToServer2": "Waiting for the server to authorize us",
     "@connectingToServer2": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
-    "connectingToServerInstruction": "",
+    "connectingToServerInstruction": "Please sign in via the opened browser",
     "@connectingToServerInstruction": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
@@ -178,7 +178,7 @@
     "@nameInputHint": {
         "description": "Hint of the text field expecting name data"
     },
-    "nameInputInvalidEmpty": "",
+    "nameInputInvalidEmpty": "Name is required",
     "@nameInputInvalidEmpty": {
         "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
     },
@@ -198,7 +198,7 @@
     "@signIn2faHintText": {
         "description": "(deprecated, may be removed in the future)"
     },
-    "signInHeaderText2": "",
+    "signInHeaderText2": "Nextcloud\nSign in",
     "@signInHeaderText2": {
         "description": "Sign in to Nextcloud server"
     },
@@ -266,7 +266,7 @@
     "@settingsLanguageTitle": {
         "description": "Set display language"
     },
-    "settingsLanguageOptionSystemDefaultLabel": "",
+    "settingsLanguageOptionSystemDefaultLabel": "System default",
     "@settingsLanguageOptionSystemDefaultLabel": {
         "description": "Follow the Android system language"
     },
@@ -278,11 +278,11 @@
     "@settingsExifSupportTrueSubtitle": {
         "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
     },
-    "settingsExifWifiOnlyTitle": "",
+    "settingsExifWifiOnlyTitle": "Process EXIF over Wi-Fi only",
     "@settingsExifWifiOnlyTitle": {
         "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
     },
-    "settingsExifWifiOnlyFalseSubtitle": "",
+    "settingsExifWifiOnlyFalseSubtitle": "Data charges may apply",
     "@settingsExifWifiOnlyFalseSubtitle": {
         "description": "Shown when users allow processing exif data over any network"
     },
@@ -295,11 +295,11 @@
         "description": "Memory albums contain photos taken in a specific time range in the past"
     },
     "settingsAccountTitle": "Konto",
-    "settingsAccountLabelTitle": "",
+    "settingsAccountLabelTitle": "Label",
     "@settingsAccountLabelTitle": {
         "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
     },
-    "settingsAccountLabelDescription": "",
+    "settingsAccountLabelDescription": "Set a label to be shown in place of the server URL",
     "settingsIncludedFoldersTitle": "Uwzględniane foldery",
     "@settingsIncludedFoldersTitle": {
         "description": "Change the included folders of an account"
@@ -324,15 +324,15 @@
     "@settingsServerAppSectionTitle": {
         "description": "Enable/disable various server apps"
     },
-    "settingsPhotosDescription": "",
+    "settingsPhotosDescription": "Customize contents shown in the Photos tab",
     "@settingsPhotosDescription": {
         "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
     },
-    "settingsMemoriesRangeTitle": "",
+    "settingsMemoriesRangeTitle": "Memories range",
     "@settingsMemoriesRangeTitle": {
         "description": "How many adjacent days to be inclded in memories for a particular year"
     },
-    "settingsMemoriesRangeValueText": "",
+    "settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} day} other{+-{range} days}}",
     "@settingsMemoriesRangeValueText": {
         "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
         "placeholders": {
@@ -352,34 +352,34 @@
     "settingsAlbumDescription": "Dostosuj albumy",
     "settingsShowDateInAlbumTitle": "Grupuj zdjęcia według daty",
     "settingsShowDateInAlbumDescription": "Zastosuj tylko wtedy, gdy album jest posortowany według czasu",
-    "settingsImageEditTitle": "",
+    "settingsImageEditTitle": "Editor",
     "@settingsImageEditTitle": {
         "description": "Include settings for image enhancements and the image editor"
     },
-    "settingsImageEditDescription": "",
-    "settingsEnhanceMaxResolutionTitle2": "",
-    "settingsEnhanceMaxResolutionDescription": "",
-    "settingsImageEditSaveResultsToServerTitle": "",
+    "settingsImageEditDescription": "Customize image enhancements and the image editor",
+    "settingsEnhanceMaxResolutionTitle2": "Image resolution for enhancements",
+    "settingsEnhanceMaxResolutionDescription": "Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.",
+    "settingsImageEditSaveResultsToServerTitle": "Save results to server",
     "@settingsImageEditSaveResultsToServerTitle": {
         "description": "Whether to save the edit/enhance results to server instead of the current device"
     },
-    "settingsImageEditSaveResultsToServerTrueDescription": "",
-    "settingsImageEditSaveResultsToServerFalseDescription": "",
+    "settingsImageEditSaveResultsToServerTrueDescription": "Results are saved to server, fallback to device storage if failed",
+    "settingsImageEditSaveResultsToServerFalseDescription": "Results are saved to this device",
     "settingsThemeTitle": "Motyw",
     "settingsThemeDescription": "Dostosuj wygląd aplikacji",
     "settingsFollowSystemThemeTitle": "Zostosuj motyw systemu",
     "@settingsFollowSystemThemeTitle": {
         "description": "Respect the system dark mode settings introduced on Android 10"
     },
-    "settingsSeedColorTitle": "",
+    "settingsSeedColorTitle": "Theme color",
     "@settingsSeedColorTitle": {
         "description": "Customize the colors used in app"
     },
-    "settingsSeedColorDescription": "",
+    "settingsSeedColorDescription": "Used to derive all colors used in the app",
     "@settingsSeedColorDescription": {
         "description": "Customize the colors used in app"
     },
-    "settingsSeedColorPickerTitle": "",
+    "settingsSeedColorPickerTitle": "Pick a color",
     "@settingsSeedColorPickerTitle": {
         "description": "Dialog to customize the colors used in app"
     },
@@ -395,25 +395,25 @@
     "@settingsUseBlackInDarkThemeFalseDescription": {
         "description": "When black in dark theme is set to false"
     },
-    "settingsMiscellaneousTitle": "",
-    "settingsDoubleTapExitTitle": "",
+    "settingsMiscellaneousTitle": "Miscellaneous",
+    "settingsDoubleTapExitTitle": "Double tap to exit",
     "@settingsDoubleTapExitTitle": {
         "description": "If enabled, users need to tap the back button twice to exit app"
     },
-    "settingsPhotosTabSortByNameTitle": "",
+    "settingsPhotosTabSortByNameTitle": "Sort by filename in Photos",
     "@settingsPhotosTabSortByNameTitle": {
         "description": "Sort photos listed in the Photos tab by filename (descending)"
     },
     "settingsExperimentalTitle": "Eksperymentalne",
     "settingsExperimentalDescription": "Funkcje, które nie są gotowe do codziennego użytku",
-    "settingsExpertTitle": "",
+    "settingsExpertTitle": "Advanced",
     "@settingsExpertTitle": {
         "description": "Settings that must be tweaked with caution"
     },
-    "settingsExpertWarningText": "",
-    "settingsClearCacheDatabaseTitle": "",
-    "settingsClearCacheDatabaseDescription": "",
-    "settingsClearCacheDatabaseSuccessNotification": "",
+    "settingsExpertWarningText": "Please make sure you fully understand what each option does before proceeding",
+    "settingsClearCacheDatabaseTitle": "Clear file database",
+    "settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
+    "settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
     "settingsAboutSectionTitle": "O aplikacji",
     "@settingsAboutSectionTitle": {
         "description": "Title of the about section in settings widget"
@@ -422,7 +422,7 @@
     "@settingsVersionTitle": {
         "description": "Title of the version data item"
     },
-    "settingsServerVersionTitle": "",
+    "settingsServerVersionTitle": "Server",
     "@settingsServerVersionTitle": {
         "description": "This item will show the server software version, e.g., Nextcloud 25"
     },
@@ -618,11 +618,11 @@
     "@sortOptionTimeDescendingLabel": {
         "description": "Sort by time, in descending order"
     },
-    "sortOptionFilenameAscendingLabel": "",
+    "sortOptionFilenameAscendingLabel": "Filename",
     "@sortOptionFilenameAscendingLabel": {
         "description": "Sort by filename, in ascending order"
     },
-    "sortOptionFilenameDescendingLabel": "",
+    "sortOptionFilenameDescendingLabel": "Filename (descending)",
     "@sortOptionFilenameDescendingLabel": {
         "description": "Sort by filename, in descending order"
     },
@@ -833,7 +833,7 @@
     "@slideshowSetupDialogRepeatTitle": {
         "description": "Whether to restart the slideshow from the beginning after the last slide"
     },
-    "slideshowSetupDialogReverseTitle": "",
+    "slideshowSetupDialogReverseTitle": "Reverse",
     "@slideshowSetupDialogReverseTitle": {
         "description": "Whether to play the slideshow in reverse order"
     },
@@ -845,16 +845,16 @@
     "@shareMethodDialogTitle": {
         "description": "Let the user pick how they want to share"
     },
-    "shareMethodPreviewTitle": "",
+    "shareMethodPreviewTitle": "Preview",
     "@shareMethodPreviewTitle": {
         "description": "Share the preview of a file"
     },
-    "shareMethodPreviewDescription": "",
-    "shareMethodOriginalFileTitle": "",
+    "shareMethodPreviewDescription": "Share a reduced quality preview to other apps (only support images)",
+    "shareMethodOriginalFileTitle": "Original file",
     "@shareMethodOriginalFileTitle": {
         "description": "Share the original file"
     },
-    "shareMethodOriginalFileDescription": "",
+    "shareMethodOriginalFileDescription": "Download the original file and share it to other apps",
     "shareMethodPublicLinkTitle": "Publiczny link",
     "@shareMethodPublicLinkTitle": {
         "description": "Create a share link on server and share it"
@@ -1054,355 +1054,355 @@
     "@homeFolderInputInvalidEmpty": {
         "description": "Home folder can't be left empty"
     },
-    "createCollectionTooltip": "",
+    "createCollectionTooltip": "New collection",
     "@createCollectionTooltip": {
         "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
     },
-    "createCollectionDialogAlbumLabel": "",
+    "createCollectionDialogAlbumLabel": "Album",
     "@createCollectionDialogAlbumLabel": {
         "description": "Create an album as collection"
     },
-    "createCollectionDialogAlbumDescription": "",
+    "createCollectionDialogAlbumDescription": "Show photos added by you from anywhere on the server",
     "@createCollectionDialogAlbumDescription": {
         "description": "Describe how an album collection works"
     },
-    "createCollectionDialogFolderLabel": "",
+    "createCollectionDialogFolderLabel": "Folder",
     "@createCollectionDialogFolderLabel": {
         "description": "Create a folder as collection"
     },
-    "createCollectionDialogFolderDescription": "",
+    "createCollectionDialogFolderDescription": "Show photos inside a folder",
     "@createCollectionDialogFolderDescription": {
         "description": "Describe how a folder collection works"
     },
-    "collectionFavoritesLabel": "",
+    "collectionFavoritesLabel": "Favorites",
     "@collectionFavoritesLabel": {
         "description": "Browse photos added to favorites"
     },
-    "favoriteTooltip": "",
+    "favoriteTooltip": "Favorite",
     "@favoriteTooltip": {
         "description": "Add photo to favorites"
     },
-    "favoriteSuccessNotification": "",
+    "favoriteSuccessNotification": "Added to favorites",
     "@favoriteSuccessNotification": {
         "description": "Successfully added photos to favorites"
     },
-    "favoriteFailureNotification": "",
+    "favoriteFailureNotification": "Failed adding to favorites",
     "@favoriteFailureNotification": {
         "description": "Failed adding photos to favorites"
     },
-    "unfavoriteTooltip": "",
+    "unfavoriteTooltip": "Unfavorite",
     "@unfavoriteTooltip": {
         "description": "Remove photo to favorites"
     },
-    "unfavoriteSuccessNotification": "",
+    "unfavoriteSuccessNotification": "Removed from favorites",
     "@unfavoriteSuccessNotification": {
         "description": "Successfully removed photos from favorites"
     },
-    "unfavoriteFailureNotification": "",
+    "unfavoriteFailureNotification": "Failed removing from favorites",
     "@unfavoriteFailureNotification": {
         "description": "Failed removing photos from favorites"
     },
-    "createCollectionDialogTagLabel": "",
+    "createCollectionDialogTagLabel": "Tag",
     "@createCollectionDialogTagLabel": {
         "description": "Create a collection containing files with tags"
     },
-    "createCollectionDialogTagDescription": "",
+    "createCollectionDialogTagDescription": "Show photos with specific tags",
     "@createCollectionDialogTagDescription": {
         "description": "Describe how a tag collection works"
     },
-    "addTagInputHint": "",
+    "addTagInputHint": "Add tag",
     "@addTagInputHint": {
         "description": "Input a tag"
     },
-    "tagPickerNoTagSelectedNotification": "",
+    "tagPickerNoTagSelectedNotification": "Please add at least 1 tag",
     "@tagPickerNoTagSelectedNotification": {
         "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
     },
-    "backgroundServiceStopping": "",
+    "backgroundServiceStopping": "Stopping service",
     "@backgroundServiceStopping": {
         "description": "The background service is stopping itself"
     },
-    "metadataTaskPauseLowBatteryNotification": "",
+    "metadataTaskPauseLowBatteryNotification": "Battery is low",
     "@metadataTaskPauseLowBatteryNotification": {
         "description": "Shown when the app has paused reading image metadata due to low battery"
     },
-    "enhanceTooltip": "",
+    "enhanceTooltip": "Enhance",
     "@enhanceTooltip": {
         "description": "Enhance a photo"
     },
-    "enhanceButtonLabel": "",
-    "enhanceIntroDialogTitle": "",
-    "enhanceIntroDialogDescription": "",
-    "enhanceLowLightTitle": "",
+    "enhanceButtonLabel": "ENHANCE",
+    "enhanceIntroDialogTitle": "Enhance your photos",
+    "enhanceIntroDialogDescription": "Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings",
+    "enhanceLowLightTitle": "Low-light enhancement",
     "@enhanceLowLightTitle": {
         "description": "Enhance a photo taken in low-light environment"
     },
-    "enhanceLowLightDescription": "",
-    "enhanceLowLightParamBrightnessLabel": "",
+    "enhanceLowLightDescription": "Brighten your photos taken in low-light environments",
+    "enhanceLowLightParamBrightnessLabel": "Brightness",
     "@enhanceLowLightParamBrightnessLabel": {
         "description": "This parameter sets how much brighter the output will be"
     },
-    "collectionEditedPhotosLabel": "",
+    "collectionEditedPhotosLabel": "Edited (local)",
     "@collectionEditedPhotosLabel": {
         "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
     },
-    "deletePermanentlyLocalConfirmationDialogContent": "",
+    "deletePermanentlyLocalConfirmationDialogContent": "Selected items will be deleted permanently from this device.\n\nThis action is nonreversible",
     "@deletePermanentlyLocalConfirmationDialogContent": {
         "description": "Make sure the user wants to delete the items from the current device"
     },
-    "enhancePortraitBlurTitle": "",
+    "enhancePortraitBlurTitle": "Portrait blur",
     "@enhancePortraitBlurTitle": {
         "description": "Blur the background of a photo"
     },
-    "enhancePortraitBlurDescription": "",
-    "enhancePortraitBlurParamBlurLabel": "",
+    "enhancePortraitBlurDescription": "Blur the background of your photos, work best with portraits",
+    "enhancePortraitBlurParamBlurLabel": "Blurriness",
     "@enhancePortraitBlurParamBlurLabel": {
         "description": "This parameter sets the radius of the blur filter"
     },
-    "enhanceSuperResolution4xTitle": "",
+    "enhanceSuperResolution4xTitle": "Super-resolution (4x)",
     "@enhanceSuperResolution4xTitle": {
         "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
     },
-    "enhanceSuperResolution4xDescription": "",
-    "enhanceStyleTransferTitle": "",
+    "enhanceSuperResolution4xDescription": "Enlarge your photos to 4x of its original resolution (see Help for details on how max resolution applies here)",
+    "enhanceStyleTransferTitle": "Style transfer",
     "@enhanceStyleTransferTitle": {
         "description": "Transfer the image style from a reference image to a photo"
     },
-    "enhanceStyleTransferStyleDialogTitle": "",
+    "enhanceStyleTransferStyleDialogTitle": "Pick a style",
     "@enhanceStyleTransferStyleDialogTitle": {
         "description": "Pick a reference image for the style transfer algorithm"
     },
-    "enhanceStyleTransferStyleDialogDescription": "",
-    "enhanceStyleTransferNoStyleSelectedNotification": "",
+    "enhanceStyleTransferStyleDialogDescription": "Transfer image style from a reference image to your photos",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Please pick a style",
     "@enhanceStyleTransferNoStyleSelectedNotification": {
         "description": "Show this error if users did not pick a reference image"
     },
-    "enhanceColorPopTitle": "",
+    "enhanceColorPopTitle": "Color pop",
     "@enhanceColorPopTitle": {
         "description": "Desaturate the background of a photo"
     },
-    "enhanceColorPopDescription": "",
-    "enhanceGenericParamWeightLabel": "",
+    "enhanceColorPopDescription": "Desaturate the background of your photos, work best with portraits",
+    "enhanceGenericParamWeightLabel": "Weight",
     "@enhanceGenericParamWeightLabel": {
         "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
     },
-    "enhanceRetouchTitle": "",
+    "enhanceRetouchTitle": "Auto retouch",
     "@enhanceRetouchTitle": {
         "description": "Automatically improve your photo"
     },
-    "enhanceRetouchDescription": "",
-    "doubleTapExitNotification": "",
+    "enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
+    "doubleTapExitNotification": "Tap again to exit",
     "@doubleTapExitNotification": {
         "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
     },
-    "imageEditDiscardDialogTitle": "",
+    "imageEditDiscardDialogTitle": "Discard changes?",
     "@imageEditDiscardDialogTitle": {
         "description": "Warn before dismissing image editor (e.g., user pressing back button)"
     },
-    "imageEditDiscardDialogContent": "",
-    "discardButtonLabel": "",
+    "imageEditDiscardDialogContent": "Your changes are not saved",
+    "discardButtonLabel": "DISCARD",
     "@discardButtonLabel": {
         "description": "Discard the current unsaved content"
     },
-    "saveTooltip": "",
+    "saveTooltip": "Save",
     "@saveTooltip": {
         "description": "Save the current content"
     },
-    "imageEditColorBrightness": "",
+    "imageEditColorBrightness": "Brightness",
     "@imageEditColorBrightness": {
         "description": "Adjust the brightness of an image"
     },
-    "imageEditColorContrast": "",
+    "imageEditColorContrast": "Contrast",
     "@imageEditColorContrast": {
         "description": "Adjust the contrast of an image"
     },
-    "imageEditColorWhitePoint": "",
+    "imageEditColorWhitePoint": "White point",
     "@imageEditColorWhitePoint": {
         "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
     },
-    "imageEditColorBlackPoint": "",
+    "imageEditColorBlackPoint": "Black point",
     "@imageEditColorBlackPoint": {
         "description": "Adjust the black point of an image"
     },
-    "imageEditColorSaturation": "",
+    "imageEditColorSaturation": "Saturation",
     "@imageEditColorSaturation": {
         "description": "Adjust the color saturation of an image"
     },
-    "imageEditColorWarmth": "",
+    "imageEditColorWarmth": "Warmth",
     "@imageEditColorWarmth": {
         "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
     },
-    "imageEditColorTint": "",
+    "imageEditColorTint": "Tint",
     "@imageEditColorTint": {
         "description": "Shift colors from a green to a magenta tint"
     },
-    "imageEditTitle": "",
+    "imageEditTitle": "Preview edits",
     "@imageEditTitle": {
         "description": "Title of the image editor"
     },
-    "imageEditToolbarColorLabel": "",
+    "imageEditToolbarColorLabel": "Color",
     "@imageEditToolbarColorLabel": {
         "description": "Label of the color tools. These can be used to adjust the color of an image"
     },
-    "imageEditToolbarTransformLabel": "",
+    "imageEditToolbarTransformLabel": "Transform",
     "@imageEditToolbarTransformLabel": {
         "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
     },
-    "imageEditTransformOrientation": "",
+    "imageEditTransformOrientation": "Orientation",
     "@imageEditTransformOrientation": {
         "description": "Change the orientation of the image, 90 degree per step"
     },
-    "imageEditTransformOrientationClockwise": "",
+    "imageEditTransformOrientationClockwise": "cw",
     "@imageEditTransformOrientationClockwise": {
         "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
     },
-    "imageEditTransformOrientationCounterclockwise": "",
+    "imageEditTransformOrientationCounterclockwise": "ccw",
     "@imageEditTransformOrientationCounterclockwise": {
         "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
     },
-    "imageEditTransformCrop": "",
+    "imageEditTransformCrop": "Crop",
     "@imageEditTransformCrop": {
         "description": "Crop the image"
     },
-    "categoriesLabel": "",
-    "searchLandingPeopleListEmptyText": "",
+    "categoriesLabel": "Categories",
+    "searchLandingPeopleListEmptyText": "Press help to learn how to setup",
     "@searchLandingPeopleListEmptyText": {
         "description": "Shown in the search landing page under the People section when there are no people"
     },
-    "searchLandingCategoryVideosLabel": "",
+    "searchLandingCategoryVideosLabel": "Videos",
     "@searchLandingCategoryVideosLabel": {
         "description": "Search all videos"
     },
-    "searchFilterButtonLabel": "",
+    "searchFilterButtonLabel": "FILTERS",
     "@searchFilterButtonLabel": {
         "description": "Modify search filters"
     },
-    "searchFilterDialogTitle": "",
+    "searchFilterDialogTitle": "Search filters",
     "@searchFilterDialogTitle": {
         "description": "Dialog to modify search filters"
     },
-    "applyButtonLabel": "",
+    "applyButtonLabel": "APPLY",
     "@applyButtonLabel": {
         "description": "A confirmation button, typically in a dialog, that apply the current settings"
     },
-    "searchFilterOptionAnyLabel": "",
+    "searchFilterOptionAnyLabel": "Any",
     "@searchFilterOptionAnyLabel": {
         "description": "This is the default option for all search filters. Filters with this value will be ignored"
     },
-    "searchFilterOptionTrueLabel": "",
+    "searchFilterOptionTrueLabel": "True",
     "@searchFilterOptionTrueLabel": {
         "description": "Positive option for a boolean filter"
     },
-    "searchFilterOptionFalseLabel": "",
+    "searchFilterOptionFalseLabel": "False",
     "@searchFilterOptionFalseLabel": {
         "description": "Negative option for a boolean filter"
     },
-    "searchFilterTypeLabel": "",
+    "searchFilterTypeLabel": "Type",
     "@searchFilterTypeLabel": {
         "description": "Filter search results by file type"
     },
-    "searchFilterTypeOptionImageLabel": "",
+    "searchFilterTypeOptionImageLabel": "Image",
     "@searchFilterTypeOptionImageLabel": {
         "description": "Filter search results by file type"
     },
-    "searchFilterBubbleTypeImageText": "",
+    "searchFilterBubbleTypeImageText": "images",
     "@searchFilterBubbleTypeImageText": {
         "description": "List of active search filters shown in the result page (by file type, image)"
     },
-    "searchFilterTypeOptionVideoLabel": "",
+    "searchFilterTypeOptionVideoLabel": "Video",
     "@searchFilterTypeOptionVideoLabel": {
         "description": "Filter search results by file type"
     },
-    "searchFilterBubbleTypeVideoText": "",
+    "searchFilterBubbleTypeVideoText": "videos",
     "@searchFilterBubbleTypeVideoText": {
         "description": "List of active search filters shown in the result page (by file type, video)"
     },
-    "searchFilterFavoriteLabel": "",
+    "searchFilterFavoriteLabel": "Favorite",
     "@searchFilterFavoriteLabel": {
         "description": "Filter search results by whether it's in favorites"
     },
-    "searchFilterBubbleFavoriteTrueText": "",
+    "searchFilterBubbleFavoriteTrueText": "favorites",
     "@searchFilterBubbleFavoriteTrueText": {
         "description": "List of active search filters shown in the result page (by favorites, true)"
     },
-    "searchFilterBubbleFavoriteFalseText": "",
+    "searchFilterBubbleFavoriteFalseText": "not favorites",
     "@searchFilterBubbleFavoriteFalseText": {
         "description": "List of active search filters shown in the result page (by favorites, false)"
     },
-    "showAllButtonLabel": "",
+    "showAllButtonLabel": "SHOW ALL",
     "@showAllButtonLabel": {
         "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
     },
-    "gpsPlaceText": "",
+    "gpsPlaceText": "Near {place}",
     "@gpsPlaceText": {
         "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
         "placeholders": {
             "place": {}
         }
     },
-    "gpsPlaceAboutDialogTitle": "",
+    "gpsPlaceAboutDialogTitle": "About place",
     "@gpsPlaceAboutDialogTitle": {
         "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
     },
-    "gpsPlaceAboutDialogContent": "",
+    "gpsPlaceAboutDialogContent": "The place shown here is only a rough estimation and not guaranteed to be accurate. It does not represent our views on any disputed areas.",
     "@gpsPlaceAboutDialogContent": {
         "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
     },
-    "collectionPlacesLabel": "",
+    "collectionPlacesLabel": "Places",
     "@collectionPlacesLabel": {
         "description": "Browse photos grouped by place"
     },
-    "imageSaveOptionDialogTitle": "",
+    "imageSaveOptionDialogTitle": "Saving the result",
     "@imageSaveOptionDialogTitle": {
         "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
     },
-    "imageSaveOptionDialogContent": "",
+    "imageSaveOptionDialogContent": "Select where to save this and future processed images. If you picked server but the app failed to upload it, it will be saved on your device.",
     "@imageSaveOptionDialogContent": {
         "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
     },
-    "imageSaveOptionDialogDeviceButtonLabel": "",
+    "imageSaveOptionDialogDeviceButtonLabel": "DEVICE",
     "@imageSaveOptionDialogDeviceButtonLabel": {
         "description": "Save the image on the current device"
     },
-    "imageSaveOptionDialogServerButtonLabel": "",
+    "imageSaveOptionDialogServerButtonLabel": "SERVER",
     "@imageSaveOptionDialogServerButtonLabel": {
         "description": "Save the image on your Nextcloud server"
     },
-    "initialSyncMessage": "",
+    "initialSyncMessage": "Syncing with your server for the first time",
     "@initialSyncMessage": {
         "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
     },
-    "loopTooltip": "",
+    "loopTooltip": "Loop",
     "@loopTooltip": {
         "description": "Enable or disable loop in the video player"
     },
-    "createCollectionFailureNotification": "",
+    "createCollectionFailureNotification": "Failed creating collection",
     "@createCollectionFailureNotification": {
         "description": "Inform user that a collection cannot be created"
     },
-    "addItemToCollectionTooltip": "",
+    "addItemToCollectionTooltip": "Add to collection",
     "@addItemToCollectionTooltip": {
         "description": "Add one or more items to a collection"
     },
-    "addItemToCollectionFailureNotification": "",
+    "addItemToCollectionFailureNotification": "Failed adding to collection",
     "@addItemToCollectionFailureNotification": {
         "description": "Inform user that the item cannot be added to a collection"
     },
-    "setCollectionCoverFailureNotification": "",
+    "setCollectionCoverFailureNotification": "Failed setting collection cover",
     "@setCollectionCoverFailureNotification": {
         "description": "Cannot set the opened item as the collection cover"
     },
-    "exportCollectionTooltip": "",
+    "exportCollectionTooltip": "Export",
     "@exportCollectionTooltip": {
         "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
     },
-    "exportCollectionDialogTitle": "",
-    "createCollectionDialogNextcloudAlbumLabel": "",
+    "exportCollectionDialogTitle": "Export collection",
+    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
     "@createCollectionDialogNextcloudAlbumLabel": {
         "description": "Server-side albums that are available in Nextcloud 25+"
     },
-    "createCollectionDialogNextcloudAlbumDescription": "",
-    "removeCollectionsFailedNotification": "",
+    "createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
+    "removeCollectionsFailedNotification": "Failed to remove some collections",
     "errorUnauthenticated": "Nieautoryzowany dostęp. Jeśli problem będzie się powstarzał zaloguj się ponownie",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
