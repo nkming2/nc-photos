@@ -1,0 +1,315 @@
+{
+    "appTitle": "Photos",
+    "translator": "traduttore",
+    "@translator": {
+        "description": "Name of the translator(s) for this language"
+    },
+    "photosTabLabel": "Photos",
+    "@photosTabLabel": {
+        "description": "Label of the tab that lists user photos"
+    },
+    "collectionsTooltip": "Collezioni",
+    "@collectionsTooltip": {
+        "description": "Groups of photos, e.g., albums, trash bin, etc"
+    },
+    "zoomTooltip": "Zoom",
+    "@zoomTooltip": {
+        "description": "Tooltip of the zoom button"
+    },
+    "refreshMenuLabel": "Aggiorna",
+    "@refreshMenuLabel": {
+        "description": "Label of the refresh entry in menu"
+    },
+    "settingsMenuLabel": "Impostazioni",
+    "@settingsMenuLabel": {
+        "description": "Label of the settings entry in menu"
+    },
+    "selectionAppBarTitle": "{count, plural, one {1 selezionato} other {{count} selezionati}}",
+    "@selectionAppBarTitle": {
+        "description": "Title of the contextual app bar that shows number of selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedProcessingNotification": "{count, plural, =1 {Eliminando 1 elemento} one {Eliminando un elemento} other {Eliminando {country} elementi}}",
+    "@deleteSelectedProcessingNotification": {
+        "description": "Inform user that the selected items are being deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedSuccessNotification": "Tutti gli elementi sono stati eliminati correttamente",
+    "@deleteSelectedSuccessNotification": {
+        "description": "Inform user that the selected items are deleted successfully"
+    },
+    "deleteSelectedFailureNotification": "{count, plural, =1 {Fallita l'eliminazione di un elemento} one {} other {Fallita l'eliminazione di {count} elementi}}",
+    "@deleteSelectedFailureNotification": {
+        "description": "Inform user that some/all the selected items cannot be deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveTooltip": "Archivio",
+    "@archiveTooltip": {
+        "description": "Archive selected items"
+    },
+    "archiveSelectedProcessingNotification": "{count, plural, =1 {Archiviando 1 elemento} one {} other {Archiviando {country} elementi}}",
+    "@archiveSelectedProcessingNotification": {
+        "description": "Archiving the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveSelectedSuccessNotification": "Tutti gli elementi sono stati archiviati con successo",
+    "@archiveSelectedSuccessNotification": {
+        "description": "Archived all selected items successfully"
+    },
+    "archiveSelectedFailureNotification": "{count, plural, =1 {Fallita archiviazione di 1 elemento} one {} other {Fallita archiviazione di {count} elementi}}",
+    "@archiveSelectedFailureNotification": {
+        "description": "Cannot archive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveTooltip": "Rimuovi dall'archivio",
+    "@unarchiveTooltip": {
+        "description": "Unarchive selected items"
+    },
+    "unarchiveSelectedProcessingNotification": "{count, plural, =1 {1 elemento ripristinato} one {} other {{count} elementi ripristinati}}",
+    "@unarchiveSelectedProcessingNotification": {
+        "description": "Unarchiving selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveSelectedSuccessNotification": "Tutti gli elementi sono stati rimossi dall'archivio con successo",
+    "@unarchiveSelectedSuccessNotification": {
+        "description": "Unarchived all selected items successfully"
+    },
+    "unarchiveSelectedFailureNotification": "{count, plural, =1 {Non è stato possibile rimuovere 1 elemento dall'archivio} one {Non è stato possibile rimuovere un elemento dall'archivio} other {Non è stato possibile rimuovere {country} elementi dall'archivio}}",
+    "@unarchiveSelectedFailureNotification": {
+        "description": "Cannot unarchive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteTooltip": "Cancella",
+    "@deleteTooltip": {
+        "description": "Delete selected items"
+    },
+    "deleteProcessingNotification": "Cancellazione elemento",
+    "@deleteProcessingNotification": {
+        "description": "Inform user that the item is being deleted"
+    },
+    "deleteSuccessNotification": "Elemento cancellato correttamente",
+    "@deleteSuccessNotification": {
+        "description": "Inform user that the item is deleted successfully"
+    },
+    "deleteFailureNotification": "Fallita cancellazione elemento",
+    "@deleteFailureNotification": {
+        "description": "Inform user that the item cannot be deleted"
+    },
+    "removeSelectedFromAlbumFailureNotification": "Fallita rimozione di elementi dall'album",
+    "@removeSelectedFromAlbumFailureNotification": {
+        "description": "Inform user that the selected items cannot be removed from an album"
+    },
+    "addServerTooltip": "Aggiungi server",
+    "@addServerTooltip": {
+        "description": "Tooltip of the button that adds a new server"
+    },
+    "removeServerSuccessNotification": "{server} rimosso con successo",
+    "@removeServerSuccessNotification": {
+        "description": "Inform user that a server is removed successfully",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "createAlbumTooltip": "Crea album",
+    "@createAlbumTooltip": {
+        "description": "Tooltip of the button that creates a new album"
+    },
+    "albumSize": "{count, plural, =0 {Vuoto} =1 {1 elemento} one {} other {{country} elementi}}",
+    "@albumSize": {
+        "description": "Number of items inside an album",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "albumArchiveLabel": "Archivio",
+    "@albumArchiveLabel": {
+        "description": "A collection containing all archived photos"
+    },
+    "connectingToServer": "Connessione a\n{server}",
+    "@connectingToServer": {
+        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "connectingToServer2": "In attesa di autorizzazione dal server",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Per favore accedi attraverso il browser aperto",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "nameInputHint": "Nome",
+    "@nameInputHint": {
+        "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "Il nome è necessario",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
+    "skipButtonLabel": "SALTA",
+    "@skipButtonLabel": {
+        "description": "Label of the skip button"
+    },
+    "confirmButtonLabel": "CONFERMA",
+    "@confirmButtonLabel": {
+        "description": "Label of the confirm button"
+    },
+    "signInHeaderText": "Accedi al server Nextcloud",
+    "@signInHeaderText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signIn2faHintText": "Usa la password per app se hai attivato l'autenticazione a due fattori nel server",
+    "@signIn2faHintText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\nAccedi",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
+    },
+    "serverAddressInputHint": "Indirizzo del server",
+    "@serverAddressInputHint": {
+        "description": "Hint of the text field expecting server address data"
+    },
+    "serverAddressInputInvalidEmpty": "Per favore inserisci l'indirizzo del server",
+    "@serverAddressInputInvalidEmpty": {
+        "description": "Inform user that the server address input field cannot be empty"
+    },
+    "usernameInputHint": "Nome utente",
+    "@usernameInputHint": {
+        "description": "Hint of the text field expecting username data"
+    },
+    "usernameInputInvalidEmpty": "Per favore scrivi il tuo nome utente",
+    "@usernameInputInvalidEmpty": {
+        "description": "Inform user that the username input field cannot be empty"
+    },
+    "passwordInputHint": "Password",
+    "@passwordInputHint": {
+        "description": "Hint of the text field expecting password data"
+    },
+    "passwordInputInvalidEmpty": "Per favore inserisci la tua password",
+    "@passwordInputInvalidEmpty": {
+        "description": "Inform user that the password input field cannot be empty"
+    },
+    "rootPickerHeaderText": "Scegli le cartelle da includere",
+    "@rootPickerHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerSubHeaderText": "Verranno mostrate solo le foto all'interno delle cartelle. Premi Salta per includerle tutte",
+    "@rootPickerSubHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerNavigateUpItemText": "(indietro)",
+    "@rootPickerNavigateUpItemText": {
+        "description": "Text of the list item to navigate up the directory tree"
+    },
+    "rootPickerUnpickFailureNotification": "Fallita deselezione elemento",
+    "@rootPickerUnpickFailureNotification": {
+        "description": "Failed while unpicking an item in the root picker list"
+    },
+    "rootPickerListEmptyNotification": "Per favore seleziona almeno una cartella o premi salta per includerle tutte",
+    "@rootPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "setupWidgetTitle": "Cominciamo",
+    "@setupWidgetTitle": {
+        "description": "Title of the introductory widget"
+    },
+    "setupSettingsModifyLaterHint": "Puoi cambiare scelta più tardi nelle Impostazioni",
+    "@setupSettingsModifyLaterHint": {
+        "description": "Inform user that they can modify this setting after the setup process"
+    },
+    "setupHiddenPrefDirNoticeDetail": "Questa app crea una cartella nel server Nextcloud per salvare i file relativo alle tue preferenze. Per favore non modificarla o rimuoverla a meno che tu non stia pianificando di rimuovere questa app",
+    "@setupHiddenPrefDirNoticeDetail": {
+        "description": "Inform user about the preference folder created by this app"
+    },
+    "settingsWidgetTitle": "Impostazioni",
+    "@settingsWidgetTitle": {
+        "description": "Title of the Settings widget"
+    },
+    "settingsLanguageTitle": "Lingua",
+    "@settingsLanguageTitle": {
+        "description": "Set display language"
+    },
+    "settingsLanguageOptionSystemDefaultLabel": "Impostazione di sistema",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
+    "settingsExifSupportTitle": "Supporto EXIF",
+    "@settingsExifSupportTitle": {
+        "description": "Title of the EXIF support setting"
+    },
+    "settingsExifSupportTrueSubtitle": "Richiede un uso extra di dati",
+    "@settingsExifSupportTrueSubtitle": {
+        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsExifWifiOnlyTitle": "Processa EXIF solo attraverso Wi-Fi",
+    "@settingsExifWifiOnlyTitle": {
+        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+    },
+    "settingsExifWifiOnlyFalseSubtitle": "Potrebbero essere applicati costi relativi al traffico dati",
+    "@settingsExifWifiOnlyFalseSubtitle": {
+        "description": "Shown when users allow processing exif data over any network"
+    },
+    "settingsMemoriesTitle": "Memories",
+    "@settingsMemoriesTitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsMemoriesSubtitle": "Mostra foto scattate in passato",
+    "@settingsMemoriesSubtitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsAccountTitle": "Account",
+    "settingsAccountLabelTitle": "Etichetta",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Imposta una etichetta da mostrare al posto del URL del server",
+    "settingsIncludedFoldersTitle": "Cartelle incluse",
+    "@settingsIncludedFoldersTitle": {
+        "description": "Change the included folders of an account"
+    },
+    "settingsShareFolderTitle": "Cartella condivisa",
+    "@settingsShareFolderTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogTitle": "Localizza la cartella condivisa",
+    "@settingsShareFolderDialogTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    }
+}
