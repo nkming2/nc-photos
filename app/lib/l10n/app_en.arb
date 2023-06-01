@@ -34,7 +34,7 @@
 			}
 		}
 	},
-	"deleteSelectedProcessingNotification": "{count, plural, =1{Deleting 1 item} other{Deleting {count} items}}",
+	"deleteSelectedProcessingNotification": "{count, plural, one{Deleting 1 item} other{Deleting {count} items}}",
 	"@deleteSelectedProcessingNotification": {
 		"description": "Inform user that the selected items are being deleted",
 		"placeholders": {
@@ -47,7 +47,7 @@
 	"@deleteSelectedSuccessNotification": {
 		"description": "Inform user that the selected items are deleted successfully"
 	},
-	"deleteSelectedFailureNotification": "{count, plural, =1{Failed deleting 1 item} other{Failed deleting {count} items}}",
+	"deleteSelectedFailureNotification": "{count, plural, one{Failed deleting 1 item} other{Failed deleting {count} items}}",
 	"@deleteSelectedFailureNotification": {
 		"description": "Inform user that some/all the selected items cannot be deleted",
 		"placeholders": {
@@ -60,7 +60,7 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archiving 1 item} other{Archiving {count} items}}",
+	"archiveSelectedProcessingNotification": "{count, plural, one{Archiving 1 item} other{Archiving {count} items}}",
 	"@archiveSelectedProcessingNotification": {
 		"description": "Archiving the selected items",
 		"placeholders": {
@@ -73,7 +73,7 @@
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
 	},
-	"archiveSelectedFailureNotification": "{count, plural, =1{Failed archiving 1 item} other{Failed archiving {count} items}}",
+	"archiveSelectedFailureNotification": "{count, plural, one{Failed archiving 1 item} other{Failed archiving {count} items}}",
 	"@archiveSelectedFailureNotification": {
 		"description": "Cannot archive some of the selected items",
 		"placeholders": {
@@ -86,7 +86,7 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Unarchiving 1 item} other{Unarchiving {count} items}}",
+	"unarchiveSelectedProcessingNotification": "{count, plural, one{Unarchiving 1 item} other{Unarchiving {count} items}}",
 	"@unarchiveSelectedProcessingNotification": {
 		"description": "Unarchiving selected items",
 		"placeholders": {
@@ -99,7 +99,7 @@
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
 	},
-	"unarchiveSelectedFailureNotification": "{count, plural, =1{Failed unarchiving 1 item} other{Failed unarchiving {count} items}}",
+	"unarchiveSelectedFailureNotification": "{count, plural, one{Failed unarchiving 1 item} other{Failed unarchiving {count} items}}",
 	"@unarchiveSelectedFailureNotification": {
 		"description": "Cannot unarchive some of the selected items",
 		"placeholders": {
@@ -145,7 +145,7 @@
 	"@createAlbumTooltip": {
 		"description": "Tooltip of the button that creates a new album"
 	},
-	"albumSize": "{count, plural, =0{Empty} =1{1 item} other{{count} items}}",
+	"albumSize": "{count, plural, =0{Empty} one{1 item} other{{count} items}}",
 	"@albumSize": {
 		"description": "Number of items inside an album",
 		"placeholders": {
@@ -333,7 +333,7 @@
 	"@settingsMemoriesRangeTitle": {
 		"description": "How many adjacent days to be inclded in memories for a particular year"
 	},
-	"settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} day} other{+-{range} days}}",
+	"settingsMemoriesRangeValueText": "{range, plural, one{+-{range} day} other{+-{range} days}}",
 	"@settingsMemoriesRangeValueText": {
 		"description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
 		"placeholders": {
@@ -680,7 +680,7 @@
 	"@restoreTooltip": {
 		"description": "Restore selected items from trashbin"
 	},
-	"restoreSelectedProcessingNotification": "{count, plural, =1{Restoring 1 item} other{Restoring {count} items}}",
+	"restoreSelectedProcessingNotification": "{count, plural, one{Restoring 1 item} other{Restoring {count} items}}",
 	"@restoreSelectedProcessingNotification": {
 		"description": "Restoring selected items from trashbin",
 		"placeholders": {
@@ -693,7 +693,7 @@
 	"@restoreSelectedSuccessNotification": {
 		"description": "Restored all selected items from trashbin successfully"
 	},
-	"restoreSelectedFailureNotification": "{count, plural, =1{Failed restoring 1 item} other{Failed restoring {count} items}}",
+	"restoreSelectedFailureNotification": "{count, plural, one{Failed restoring 1 item} other{Failed restoring {count} items}}",
 	"@restoreSelectedFailureNotification": {
 		"description": "Cannot restore some of the selected items from trashbin",
 		"placeholders": {
@@ -942,7 +942,7 @@
 	"@createShareProgressText": {
 		"description": "Message shown when sharing files"
 	},
-	"copyItemsFailureNotification": "{count, plural, =1{Failed copying 1 item} other{Failed copying {count} items}}",
+	"copyItemsFailureNotification": "{count, plural, one{Failed copying 1 item} other{Failed copying {count} items}}",
 	"@copyItemsFailureNotification": {
 		"description": "Error message shown when some files cannot be copied",
 		"placeholders": {
@@ -1034,7 +1034,7 @@
 		"description": "Migrate database to work with the updated app"
 	},
 	"migrateDatabaseFailureNotification": "Failed migrating database",
-	"memoryAlbumName": "{count, plural, =1{1 year ago} other{{count} years ago}}",
+	"memoryAlbumName": "{count, plural, one{1 year ago} other{{count} years ago}}",
 	"@memoryAlbumName": {
 		"description": "Memory albums are generated by the app and include photos in the past years",
 		"placeholders": {
