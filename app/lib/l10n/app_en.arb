@@ -1,5 +1,6 @@
 {
 	"appTitle": "Photos",
+	"messageToTranslators": "(not for translation) Please read the syntax guide at https://gitlab.com/nkming2/nc-photos/-/wikis/development/Localization first, thanks",
 	"translator": "",
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
