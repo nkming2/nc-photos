@@ -1,6 +1,6 @@
 {
     "appTitle": "Photos",
-    "translator": "traduttore",
+    "translator": "Albe",
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
@@ -33,7 +33,7 @@
             }
         }
     },
-    "deleteSelectedProcessingNotification": "{count, plural, =1 {Eliminando 1 elemento} one {Eliminando un elemento} other {Eliminando {country} elementi}}",
+    "deleteSelectedProcessingNotification": "{count, plural, one{Eliminando 1 elemento} other {Eliminando {count} elementi}}",
     "@deleteSelectedProcessingNotification": {
         "description": "Inform user that the selected items are being deleted",
         "placeholders": {
@@ -46,7 +46,7 @@
     "@deleteSelectedSuccessNotification": {
         "description": "Inform user that the selected items are deleted successfully"
     },
-    "deleteSelectedFailureNotification": "{count, plural, =1 {Fallita l'eliminazione di un elemento} one {} other {Fallita l'eliminazione di {count} elementi}}",
+    "deleteSelectedFailureNotification": "{count, plural, one {Fallita l'eliminazione di un elemento} other {Fallita l'eliminazione di {count} elementi}}",
     "@deleteSelectedFailureNotification": {
         "description": "Inform user that some/all the selected items cannot be deleted",
         "placeholders": {
@@ -59,7 +59,7 @@
     "@archiveTooltip": {
         "description": "Archive selected items"
     },
-    "archiveSelectedProcessingNotification": "{count, plural, =1 {Archiviando 1 elemento} one {} other {Archiviando {country} elementi}}",
+    "archiveSelectedProcessingNotification": "{count, plural, one{Archiviando 1 elemento} other {Archiviando {count} elementi}}",
     "@archiveSelectedProcessingNotification": {
         "description": "Archiving the selected items",
         "placeholders": {
@@ -72,7 +72,7 @@
     "@archiveSelectedSuccessNotification": {
         "description": "Archived all selected items successfully"
     },
-    "archiveSelectedFailureNotification": "{count, plural, =1 {Fallita archiviazione di 1 elemento} one {} other {Fallita archiviazione di {count} elementi}}",
+    "archiveSelectedFailureNotification": "{count, plural, one{Fallita archiviazione di 1 elemento} other {Fallita archiviazione di {count} elementi}}",
     "@archiveSelectedFailureNotification": {
         "description": "Cannot archive some of the selected items",
         "placeholders": {
@@ -85,7 +85,7 @@
     "@unarchiveTooltip": {
         "description": "Unarchive selected items"
     },
-    "unarchiveSelectedProcessingNotification": "{count, plural, =1 {1 elemento ripristinato} one {} other {{count} elementi ripristinati}}",
+    "unarchiveSelectedProcessingNotification": "{count, plural, one {1 elemento ripristinato} other {{count} elementi ripristinati}}",
     "@unarchiveSelectedProcessingNotification": {
         "description": "Unarchiving selected items",
         "placeholders": {
@@ -98,7 +98,7 @@
     "@unarchiveSelectedSuccessNotification": {
         "description": "Unarchived all selected items successfully"
     },
-    "unarchiveSelectedFailureNotification": "{count, plural, =1 {Non è stato possibile rimuovere 1 elemento dall'archivio} one {Non è stato possibile rimuovere un elemento dall'archivio} other {Non è stato possibile rimuovere {country} elementi dall'archivio}}",
+    "unarchiveSelectedFailureNotification": "{count, plural, one {Non è stato possibile rimuovere 1 elemento dall'archivio} other {Non è stato possibile rimuovere {count} elementi dall'archivio}}",
     "@unarchiveSelectedFailureNotification": {
         "description": "Cannot unarchive some of the selected items",
         "placeholders": {
@@ -144,7 +144,7 @@
     "@createAlbumTooltip": {
         "description": "Tooltip of the button that creates a new album"
     },
-    "albumSize": "{count, plural, =0 {Vuoto} =1 {1 elemento} one {} other {{country} elementi}}",
+    "albumSize": "{count, plural, =0 {Vuoto} one {1 elemento} other {{count} elementi}}",
     "@albumSize": {
         "description": "Number of items inside an album",
         "placeholders": {
