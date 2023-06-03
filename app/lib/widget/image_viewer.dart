@@ -134,7 +134,7 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
       onZoomStarted: widget.onZoomStarted,
       onZoomEnded: widget.onZoomEnded,
       child: Stack(
-        fit: StackFit.passthrough,
+        fit: StackFit.expand,
         children: [
           Hero(
             tag: flutter_util.getImageHeroTag(widget.file),
@@ -166,13 +166,13 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
           ),
           if (_isHeroDone)
             mod.CachedNetworkImage(
+              fit: BoxFit.contain,
               cacheManager: LargeImageCacheManager.inst,
               imageUrl: _getImageUrl(widget.account, widget.file),
               httpHeaders: {
                 "Authorization":
                     AuthUtil.fromAccount(widget.account).toHeaderValue(),
               },
-              fit: BoxFit.contain,
               fadeInDuration: const Duration(),
               filterQuality: FilterQuality.high,
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
