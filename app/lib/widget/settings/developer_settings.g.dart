@@ -73,6 +73,13 @@ extension _$_StateToString on _State {
   }
 }
 
+extension _$_ClearImageCacheToString on _ClearImageCache {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ClearImageCache {}";
+  }
+}
+
 extension _$_VacuumDbToString on _VacuumDb {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

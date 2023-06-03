@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/bloc_util.dart';
+import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/exception_event.dart';
@@ -84,6 +85,12 @@ class _WrappedDeveloperSettingsState extends State<_WrappedDeveloperSettings>
             SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  ListTile(
+                    title: const Text("Clear image cache"),
+                    onTap: () async {
+                      context.read<_Bloc>().add(const _ClearImageCache());
+                    },
+                  ),
                   ListTile(
                     title: const Text("SQL:VACUUM"),
                     onTap: () {

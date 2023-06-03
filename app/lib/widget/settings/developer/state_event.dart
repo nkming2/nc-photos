@@ -21,6 +21,14 @@ class _State {
 abstract class _Event {}
 
 @toString
+class _ClearImageCache implements _Event {
+  const _ClearImageCache();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
 class _VacuumDb implements _Event {
   const _VacuumDb();
 
