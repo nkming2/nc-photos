@@ -1,176 +1,386 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clock/clock.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/bloc_util.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/toast.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:to_string/to_string.dart';
 
 part 'account_picker_dialog.g.dart';
+part 'account_picker_dialog/bloc.dart';
+part 'account_picker_dialog/state_event.dart';
 
-/// A dialog that allows the user to switch between accounts
-class AccountPickerDialog extends StatefulWidget {
-  const AccountPickerDialog({
-    Key? key,
-    required this.account,
-  }) : super(key: key);
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+
+class AccountPickerDialog extends StatelessWidget {
+  const AccountPickerDialog({super.key});
 
   @override
-  createState() => _AccountPickerDialogState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        container: KiwiContainer().resolve(),
+        accountController: context.read(),
+      ),
+      child: const _WrappedAccountPickerDialog(),
+    );
+  }
+}
+
+class _WrappedAccountPickerDialog extends StatelessWidget {
+  const _WrappedAccountPickerDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListener(
+          listenWhen: (previous, current) =>
+              previous.newSelectAccount != current.newSelectAccount,
+          listener: (context, state) {
+            if (state.newSelectAccount != null) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Home.routeName,
+                (_) => false,
+                arguments: HomeArguments(state.newSelectAccount!),
+              );
+            }
+          },
+        ),
+        _BlocListener(
+          listenWhen: (previous, current) => previous.error != current.error,
+          listener: (context, state) {
+            if (state.error != null) {
+              AppToast.showToast(
+                context,
+                msg: exception_util.toUserString(state.error!.error),
+                duration: k.snackBarDurationNormal,
+              );
+            }
+          },
+        ),
+      ],
+      child: Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    color: Theme.of(context).colorScheme.background,
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: _BlocBuilder(
+                        buildWhen: (previous, current) =>
+                            previous.isOpenDropdown != current.isOpenDropdown ||
+                            previous.accounts != current.accounts,
+                        builder: (context, state) {
+                          final bloc = context.read<_Bloc>();
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const _AccountDropdown(),
+                              if (state.isOpenDropdown) ...[
+                                ...state.accounts
+                                    .where((a) => a.id != bloc.activeAccount.id)
+                                    .map((a) => _AccountView(account: a)),
+                                const _NewAccountView(),
+                              ] else
+                                const _AccountSettingsView(),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                _IconTile(
+                  icon: const Icon(Icons.settings_outlined),
+                  title: Text(L10n.global().settingsMenuLabel),
+                  onTap: () {
+                    Navigator.of(context)
+                      ..pop()
+                      ..pushNamed(
+                        Settings.routeName,
+                        arguments: SettingsArguments(
+                            context.read<_Bloc>().activeAccount),
+                      );
+                  },
+                ),
+                _IconTile(
+                  icon: const Icon(Icons.help_outline),
+                  title: Text(L10n.global().helpTooltip),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    launch(help_util.mainUrl);
+                  },
+                ),
+                const _AboutChin(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountDropdown extends StatelessWidget {
+  const _AccountDropdown();
+
+  @override
+  Widget build(BuildContext context) {
+    return _AccountTile(
+      account: context.read<_Bloc>().activeAccount,
+      trailing: _BlocBuilder(
+        builder: (_, state) {
+          return AnimatedRotation(
+            turns: state.isOpenDropdown ? .5 : 0,
+            duration: k.animationDurationShort,
+            child: const Icon(Icons.arrow_drop_down_outlined),
+          );
+        },
+      ),
+      onTap: () {
+        context.read<_Bloc>().add(const _ToggleDropdown());
+      },
+    );
+  }
+}
+
+class _AccountTile extends StatelessWidget {
+  const _AccountTile({
+    required this.account,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final accountLabel = AccountPref.of(account).getAccountLabel();
+    return ListTile(
+      leading: SizedBox.square(
+        dimension: 48,
+        child: Center(child: _AccountIcon(account)),
+      ),
+      title: accountLabel != null
+          ? SizedBox(
+              height: 64,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  accountLabel,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            )
+          : Text(
+              account.address,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+            ),
+      subtitle: accountLabel == null ? Text(account.username2) : null,
+      trailing: trailing,
+      onTap: onTap,
+    );
+  }
+
+  final Account account;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+}
+
+class _AccountIcon extends StatelessWidget {
+  const _AccountIcon(this.account);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: CachedNetworkImage(
+        imageUrl: api_util.getAccountAvatarUrl(account, 64),
+        fadeInDuration: const Duration(),
+        filterQuality: FilterQuality.high,
+      ),
+    );
+  }
 
   final Account account;
 }
 
-@npLog
-class _AccountPickerDialogState extends State<AccountPickerDialog> {
-  @override
-  initState() {
-    super.initState();
-    _accounts = Pref().getAccounts3Or([]);
-  }
+class _IconTile extends StatelessWidget {
+  const _IconTile({
+    required this.icon,
+    required this.title,
+    this.onTap,
+  });
 
   @override
-  build(BuildContext context) {
-    final otherAccountOptions =
-        _accounts.where((a) => a != widget.account).map((a) {
-      final label = AccountPref.of(a).getAccountLabel();
-      return SimpleDialogOption(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        onPressed: () => _onItemPressed(a),
-        child: ListTile(
-          dense: true,
-          title: Text(label ?? a.url),
-          subtitle: label == null ? Text(a.username2) : null,
-          trailing: IconButton(
-            icon: const Icon(Icons.close),
-            tooltip: L10n.global().deleteTooltip,
-            onPressed: () => _onRemoveItemPressed(a),
-          ),
-        ),
-      );
-    }).toList();
-    final addAccountOptions = [
-      SimpleDialogOption(
-        padding: const EdgeInsets.all(8),
-        onPressed: () {
-          Navigator.of(context)
-            ..pop()
-            ..pushNamed(SignIn.routeName);
-        },
-        child: Tooltip(
-          message: L10n.global().addServerTooltip,
-          child: const Center(
-            child: Icon(Icons.add),
-          ),
-        ),
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: SizedBox.square(
+        dimension: 48,
+        child: Center(child: icon),
       ),
-    ];
-    final accountLabel = AccountPref.of(widget.account).getAccountLabel();
-    return SimpleDialog(
-      title: ListTile(
-        dense: true,
-        title: Text(
-          accountLabel ?? widget.account.url,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: accountLabel == null
-            ? Text(
-                widget.account.username2,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              )
-            : null,
-        trailing: IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          tooltip: L10n.global().settingsMenuLabel,
-          onPressed: _onEditPressed,
-        ),
-      ),
-      titlePadding: const EdgeInsetsDirectional.fromSTEB(8, 16, 8, 0),
-      contentPadding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 8),
-      children: otherAccountOptions + addAccountOptions,
+      title: title,
+      onTap: onTap,
     );
   }
 
-  void _onItemPressed(Account account) {
-    Pref().setCurrentAccountIndex(_accounts.indexOf(account));
-    Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (_) => false,
-        arguments: HomeArguments(account));
+  final Widget icon;
+  final Widget title;
+  final VoidCallback? onTap;
+}
+
+class _AccountView extends StatelessWidget {
+  const _AccountView({
+    required this.account,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _AccountTile(
+      account: account,
+      trailing: IconButton(
+        icon: const Icon(Icons.close),
+        tooltip: L10n.global().deleteTooltip,
+        onPressed: () {
+          context.read<_Bloc>().add(_DeleteAccount(account));
+        },
+      ),
+      onTap: () {
+        context.read<_Bloc>().add(_SwitchAccount(account));
+      },
+    );
   }
 
-  Future<void> _onRemoveItemPressed(Account account) async {
-    try {
-      await _removeAccount(account);
-      setState(() {
-        _accounts = Pref().getAccounts3()!;
-      });
-      SnackBarManager().showSnackBar(SnackBar(
-        content:
-            Text(L10n.global().removeServerSuccessNotification(account.url)),
-        duration: k.snackBarDurationNormal,
-      ));
-    } catch (e) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+  final Account account;
+}
+
+class _AccountSettingsView extends StatelessWidget {
+  const _AccountSettingsView();
+
+  @override
+  Widget build(BuildContext context) {
+    return _IconTile(
+      icon: const Icon(Icons.manage_accounts_outlined),
+      title: Text(L10n.global().accountSettingsTooltip),
+      onTap: () {
+        Navigator.of(context)
+          ..pop()
+          ..pushNamed(
+            AccountSettingsWidget.routeName,
+            arguments: AccountSettingsWidgetArguments(
+                context.read<_Bloc>().activeAccount),
+          );
+      },
+    );
+  }
+}
+
+class _NewAccountView extends StatelessWidget {
+  const _NewAccountView();
+
+  @override
+  Widget build(BuildContext context) {
+    return _IconTile(
+      icon: const Icon(Icons.add),
+      title: Text(L10n.global().addServerTooltip),
+      onTap: () {
+        Navigator.of(context)
+          ..pop()
+          ..pushNamed(SignIn.routeName);
+      },
+    );
+  }
+}
+
+class _AboutChin extends StatelessWidget {
+  const _AboutChin();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<ServerStatus?>(
+      stream: context.read<_Bloc>().accountController.serverController.status,
+      initialData: context
+          .read<_Bloc>()
+          .accountController
+          .serverController
+          .status
+          .valueOrNull,
+      builder: (context, snapshot) {
+        var text = "${L10n.global().appTitle} ${k.versionStr}";
+        if (snapshot.hasData) {
+          final status = snapshot.requireData!;
+          text +=
+              "  ${_getSymbol()}  ${status.productName} ${status.versionName}";
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        );
+      },
+    );
+  }
+
+  String _getSymbol() {
+    final today = clock.now();
+    if (today.month == 1 && today.day == 1) {
+      // firework
+      return "\u{1f386}";
+    } else if (today.month == 4 && today.day == 10) {
+      // initial commit!
+      return "\u{1f382}";
+    } else {
+      const symbols = [
+        // cloud
+        "\u2601",
+        // heart
+        "\u2665",
+        // star
+        "\u2b50",
+        // rainbow
+        "\u{1f308}",
+        // globe
+        "\u{1f310}",
+        // clover
+        "\u{1f340}",
+      ];
+      return symbols[Random(_seed).nextInt(symbols.length)];
     }
   }
 
-  void _onEditPressed() {
-    Navigator.of(context)
-      ..pop()
-      ..pushNamed(AccountSettingsWidget.routeName,
-          arguments: AccountSettingsWidgetArguments(widget.account));
-  }
-
-  Future<void> _removeAccount(Account account) async {
-    _log.info("[_removeAccount] Remove account: $account");
-    final accounts = Pref().getAccounts3()!;
-    final currentAccount = accounts[Pref().getCurrentAccountIndex()!];
-    accounts.remove(account);
-    final newAccountIndex = accounts.indexOf(currentAccount);
-    if (newAccountIndex == -1) {
-      throw StateError("Active account not found in resulting account list");
-    }
-    try {
-      await AccountPref.of(account).provider.clear();
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_removeAccount] Failed while removing account pref", e, stackTrace);
-    }
-    unawaited(Pref().setAccounts3(accounts));
-    unawaited(Pref().setCurrentAccountIndex(newAccountIndex));
-
-    // check if the same account (server + userId) still exists in known
-    // accounts
-    if (!accounts
-        .any((a) => a.url == account.url && a.userId == account.userId)) {
-      // account removed, clear cache db
-      await _removeAccountFromDb(account);
-    }
-  }
-
-  Future<void> _removeAccountFromDb(Account account) async {
-    try {
-      final c = KiwiContainer().resolve<DiContainer>();
-      await c.sqliteDb.use((db) async {
-        await db.deleteAccountOf(account);
-      });
-    } catch (e, stackTrace) {
-      _log.shout("[_removeAccountFromDb] Failed while removing account from db",
-          e, stackTrace);
-    }
-  }
-
-  late List<Account> _accounts;
+  static final _seed = Random().nextInt(65536);
 }

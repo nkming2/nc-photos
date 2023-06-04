@@ -2,14 +2,11 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
-import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -134,12 +131,6 @@ class _SettingsState extends State<Settings> {
                 ),
               _buildSubSettings(
                 context,
-                leading: const Icon(Icons.manage_accounts_outlined),
-                label: L10n.global().settingsAccountTitle,
-                builder: () => AccountSettingsWidget(account: widget.account),
-              ),
-              _buildSubSettings(
-                context,
                 leading: const Icon(Icons.image_outlined),
                 label: L10n.global().photosTabLabel,
                 description: L10n.global().settingsPhotosDescription,
@@ -210,29 +201,6 @@ class _SettingsState extends State<Settings> {
                     setState(() {
                       _isShowDevSettings = true;
                     });
-                  }
-                },
-              ),
-              StreamBuilder<ServerStatus?>(
-                stream:
-                    context.read<AccountController>().serverController.status,
-                initialData: context
-                    .read<AccountController>()
-                    .serverController
-                    .status
-                    .valueOrNull,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return ListTile(
-                      title: Text(L10n.global().settingsServerVersionTitle),
-                    );
-                  } else {
-                    final status = snapshot.requireData!;
-                    return ListTile(
-                      title: Text(L10n.global().settingsServerVersionTitle),
-                      subtitle: Text(
-                          "${status.productName} ${status.majorVersion} (${status.versionName})"),
-                    );
                   }
                 },
               ),

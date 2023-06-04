@@ -4,16 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/app_bar_title_container.dart';
-import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
 
 /// AppBar for home screens
@@ -35,9 +31,7 @@ class HomeSliverAppBar extends StatelessWidget {
         onTap: () {
           showDialog(
             context: context,
-            builder: (_) => AccountPickerDialog(
-              account: account,
-            ),
+            builder: (_) => const AccountPickerDialog(),
           );
         },
         child: AppBarTitleContainer(
@@ -79,33 +73,16 @@ class HomeSliverAppBar extends StatelessWidget {
               _DarkModeSwitch(
                 onChanged: _onDarkModeChanged,
               ),
-            PopupMenuButton<int>(
-              tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-              itemBuilder: (context) =>
-                  (menuActions ?? []) +
-                  [
-                    PopupMenuItem(
-                      value: _menuValueAbout,
-                      child: Text(L10n.global().settingsMenuLabel),
-                    ),
-                    PopupMenuItem(
-                      value: _menuValueHelp,
-                      child: Text(L10n.global().helpTooltip),
-                    ),
-                  ],
-              onSelected: (option) {
-                if (option >= 0) {
-                  onSelectedMenuActions?.call(option);
-                } else {
-                  if (option == _menuValueAbout) {
-                    Navigator.of(context).pushNamed(Settings.routeName,
-                        arguments: SettingsArguments(account));
-                  } else if (option == _menuValueHelp) {
-                    launch(help_utils.mainUrl);
+            if (menuActions?.isNotEmpty == true)
+              PopupMenuButton<int>(
+                tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+                itemBuilder: (_) => menuActions!,
+                onSelected: (option) {
+                  if (option >= 0) {
+                    onSelectedMenuActions?.call(option);
                   }
-                }
-              },
-            ),
+                },
+              ),
           ],
     );
   }
@@ -126,9 +103,6 @@ class HomeSliverAppBar extends StatelessWidget {
   final List<PopupMenuEntry<int>>? menuActions;
   final void Function(int)? onSelectedMenuActions;
   final bool isShowProgressIcon;
-
-  static const _menuValueAbout = -1;
-  static const _menuValueHelp = -2;
 }
 
 class _DarkModeSwitch extends StatelessWidget {

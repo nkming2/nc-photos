@@ -1403,6 +1403,7 @@
 	},
 	"createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
 	"removeCollectionsFailedNotification": "Failed to remove some collections",
+	"accountSettingsTooltip": "Account settings",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

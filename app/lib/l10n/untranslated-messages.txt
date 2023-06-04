@@ -10,7 +10,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "de": [
@@ -212,6 +213,7 @@
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
     "removeCollectionsFailedNotification",
+    "accountSettingsTooltip",
     "errorAlbumDowngrade"
   ],
 
@@ -316,7 +318,16 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
+  ],
+
+  "es": [
+    "accountSettingsTooltip"
+  ],
+
+  "fi": [
+    "accountSettingsTooltip"
   ],
 
   "fr": [
@@ -440,7 +451,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "it": [
@@ -741,6 +753,7 @@
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
     "removeCollectionsFailedNotification",
+    "accountSettingsTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1087,6 +1100,7 @@
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
     "removeCollectionsFailedNotification",
+    "accountSettingsTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1232,7 +1246,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "pt": [
@@ -1246,7 +1261,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "ru": [
@@ -1366,7 +1382,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "zh": [
@@ -1486,7 +1503,8 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ],
 
   "zh_Hant": [
@@ -1606,6 +1624,7 @@
     "exportCollectionDialogTitle",
     "createCollectionDialogNextcloudAlbumLabel",
     "createCollectionDialogNextcloudAlbumDescription",
-    "removeCollectionsFailedNotification"
+    "removeCollectionsFailedNotification",
+    "accountSettingsTooltip"
   ]
 }
