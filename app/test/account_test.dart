@@ -36,13 +36,13 @@ void _fromJson() {
       upgraderV1: null,
     ),
     Account(
-      "123456",
-      "https",
-      "example.com",
-      "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
-      "admin",
-      "123456",
-      ["test1", "test2"],
+      id: "123456",
+      scheme: "https",
+      address: "example.com",
+      userId: "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
+      username2: "admin",
+      password: "123456",
+      roots: ["test1", "test2"],
     ),
   );
 }
@@ -113,22 +113,22 @@ void _upgraderV1Ldap() {
 void _constructTrimAddress() {
   expect(
     Account(
-      "123456",
-      "https",
-      "example.com/",
-      "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
-      "admin",
-      "123456",
-      ["test1", "test2"],
+      id: "123456",
+      scheme: "https",
+      address: "example.com/",
+      userId: "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
+      username2: "admin",
+      password: "123456",
+      roots: ["test1", "test2"],
     ),
     Account(
-      "123456",
-      "https",
-      "example.com",
-      "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
-      "admin",
-      "123456",
-      ["test1", "test2"],
+      id: "123456",
+      scheme: "https",
+      address: "example.com",
+      userId: "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
+      username2: "admin",
+      password: "123456",
+      roots: ["test1", "test2"],
     ),
   );
 }
@@ -139,13 +139,13 @@ void _constructTrimAddress() {
 void _constructInvalidScheme() {
   expect(
     () => Account(
-      "123456",
-      "ssh",
-      "example.com/",
-      "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
-      "admin",
-      "123456",
-      ["test1", "test2"],
+      id: "123456",
+      scheme: "ssh",
+      address: "example.com/",
+      userId: "00000000-1111-aaaa-bbbb-223344ccddee".toCi(),
+      username2: "admin",
+      password: "123456",
+      roots: ["test1", "test2"],
     ),
     throwsFormatException,
   );

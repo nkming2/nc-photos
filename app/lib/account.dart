@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:clock/clock.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -14,42 +15,23 @@ import 'package:to_string/to_string.dart';
 part 'account.g.dart';
 
 /// Details of a remote Nextcloud server account
+@genCopyWith
 @npLog
 @toString
 class Account with EquatableMixin {
-  Account(
-    this.id,
-    this.scheme,
-    String address,
-    this.userId,
-    this.username2,
-    this.password,
-    List<String> roots,
-  )   : address = address.trimRightAny("/"),
-        _roots = roots.map((e) => e.trimRightAny("/")).toList() {
+  Account({
+    required this.id,
+    required this.scheme,
+    required String address,
+    required this.userId,
+    required this.username2,
+    required this.password,
+    required List<String> roots,
+  })  : address = address.trimRightAny("/"),
+        roots = roots.map((e) => e.trimRightAny("/")).toList() {
     if (scheme != "http" && scheme != "https") {
       throw const FormatException("scheme is neither http or https");
     }
-  }
-
-  Account copyWith({
-    String? id,
-    String? scheme,
-    String? address,
-    CiString? userId,
-    String? username2,
-    String? password,
-    List<String>? roots,
-  }) {
-    return Account(
-      id ?? this.id,
-      scheme ?? this.scheme,
-      address ?? this.address,
-      userId ?? this.userId,
-      username2 ?? this.username2,
-      password ?? this.password,
-      roots ?? List.of(_roots),
-    );
   }
 
   static String newId() {
@@ -75,13 +57,13 @@ class Account with EquatableMixin {
       }
     }
     return Account(
-      result["id"],
-      result["scheme"],
-      result["address"],
-      CiString(result["userId"]),
-      result["username2"],
-      result["password"],
-      result["roots"].cast<String>(),
+      id: result["id"],
+      scheme: result["scheme"],
+      address: result["address"],
+      userId: CiString(result["userId"]),
+      username2: result["username2"],
+      password: result["password"],
+      roots: result["roots"].cast<String>(),
     );
   }
 
@@ -93,13 +75,11 @@ class Account with EquatableMixin {
         "userId": userId.toString(),
         "username2": username2,
         "password": password,
-        "roots": _roots,
+        "roots": roots,
       };
 
   @override
-  get props => [id, scheme, address, userId, username2, password, _roots];
-
-  List<String> get roots => _roots;
+  get props => [id, scheme, address, userId, username2, password, roots];
 
   final String id;
   final String scheme;
@@ -114,8 +94,9 @@ class Account with EquatableMixin {
   @Format(r"${$?.isNotEmpty ? (kDebugMode ? $? : '***') : null}")
   final String password;
 
+  @deepCopy
   @Format(r"${$?.toReadableString()}")
-  final List<String> _roots;
+  final List<String> roots;
 
   /// versioning of this class, use to upgrade old persisted accounts
   static const version = 2;

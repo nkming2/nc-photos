@@ -314,7 +314,15 @@ Account buildAccount({
   String password = "pass",
   List<String> roots = const [""],
 }) =>
-    Account(id, scheme, address, userId.toCi(), username2, password, roots);
+    Account(
+      id: id,
+      scheme: scheme,
+      address: address,
+      userId: userId.toCi(),
+      username2: username2,
+      password: password,
+      roots: roots,
+    );
 
 /// Build a mock [File] pointing to a album JSON file
 ///

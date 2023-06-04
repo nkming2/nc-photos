@@ -265,13 +265,13 @@ class _SignInState extends State<SignIn> {
   Future<void> _connect() async {
     _formKey.currentState!.save();
     Account? account = Account(
-      Account.newId(),
-      _formValue.scheme,
-      _formValue.address,
-      _formValue.username.toCi(),
-      _formValue.username,
-      _formValue.password,
-      [""],
+      id: Account.newId(),
+      scheme: _formValue.scheme,
+      address: _formValue.address,
+      userId: _formValue.username.toCi(),
+      username2: _formValue.username,
+      password: _formValue.password,
+      roots: [""],
     );
     _log.info("[_connect] Try connecting with account: $account");
     account = await Navigator.pushNamed<Account>(context, Connect.routeName,

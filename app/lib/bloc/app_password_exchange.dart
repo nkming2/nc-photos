@@ -225,14 +225,14 @@ class AppPasswordExchangeBloc
     try {
       final response = ev.appPasswordResponse;
       final account = Account(
-        Account.newId(),
-        response.server.scheme,
-        response.server.authority +
+        id: Account.newId(),
+        scheme: response.server.scheme,
+        address: response.server.authority +
             (response.server.path.isEmpty ? "" : response.server.path),
-        response.loginName.toCi(),
-        response.loginName,
-        response.appPassword,
-        [""],
+        userId: response.loginName.toCi(),
+        username2: response.loginName,
+        password: response.appPassword,
+        roots: [""],
       );
       emit(AppPasswordExchangeBlocResult(account));
     } catch (e, stacktrace) {
