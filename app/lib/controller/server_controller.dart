@@ -21,6 +21,8 @@ class ServerController {
     required this.account,
   });
 
+  void dispose() {}
+
   ValueStream<ServerStatus> get status {
     if (!_statusStreamContorller.hasValue) {
       unawaited(_load());

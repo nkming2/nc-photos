@@ -9,6 +9,7 @@ class AccountController {
     _account = account;
     _collectionsController?.dispose();
     _collectionsController = null;
+    _serverController?.dispose();
     _serverController = null;
   }
 
