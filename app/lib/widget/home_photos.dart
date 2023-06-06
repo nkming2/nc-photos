@@ -331,19 +331,6 @@ class _HomePhotosState extends State<HomePhotos>
               },
             ),
           ],
-          menuActions: [
-            PopupMenuItem(
-              value: _menuValueRefresh,
-              child: Text(L10n.global().refreshMenuLabel),
-            ),
-          ],
-          onSelectedMenuActions: (option) {
-            switch (option) {
-              case _menuValueRefresh:
-                _onRefreshSelected();
-                break;
-            }
-          },
         );
       },
     );
@@ -779,8 +766,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   var _isScrollbarVisible = false;
   var _isRefreshIndicatorActive = false;
-
-  static const _menuValueRefresh = 0;
 }
 
 class _Web {
