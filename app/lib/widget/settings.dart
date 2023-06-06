@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
@@ -19,6 +19,7 @@ import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
@@ -27,6 +28,7 @@ import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
+import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
@@ -104,13 +106,18 @@ class _SettingsState extends State<Settings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              ListTile(
-                leading: const ListTileCenterLeading(
-                  child: Icon(Icons.translate_outlined),
+              ValueStreamBuilder<language_util.AppLanguage>(
+                stream: context.read<PrefController>().language,
+                builder: (context, snapshot) => ListTile(
+                  leading: const ListTileCenterLeading(
+                    child: Icon(Icons.translate_outlined),
+                  ),
+                  title: Text(L10n.global().settingsLanguageTitle),
+                  subtitle: Text(snapshot.requireData.nativeName),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(LanguageSettings.routeName);
+                  },
                 ),
-                title: Text(L10n.global().settingsLanguageTitle),
-                subtitle: Text(language_util.getSelectedLanguage().nativeName),
-                onTap: () => _onLanguageTap(context),
               ),
               SwitchListTile(
                 title: Text(L10n.global().settingsExifSupportTitle),
@@ -268,35 +275,6 @@ class _SettingsState extends State<Settings> {
         );
       },
     );
-  }
-
-  void _onLanguageTap(BuildContext context) {
-    final selected =
-        Pref().getLanguageOr(language_util.supportedLanguages[0]!.langId);
-    showDialog(
-      context: context,
-      builder: (context) => FancyOptionPicker(
-        items: language_util.supportedLanguages.values
-            .map((lang) => FancyOptionPickerItem(
-                  label: lang.nativeName,
-                  description: lang.isoName,
-                  isSelected: lang.langId == selected,
-                  onSelect: () {
-                    _log.info(
-                        "[_onLanguageTap] Set language: ${lang.nativeName}");
-                    Navigator.of(context).pop(lang.langId);
-                  },
-                  dense: true,
-                ))
-            .toList(),
-      ),
-    ).then((value) {
-      if (value != null) {
-        Pref().setLanguage(value).then((_) {
-          KiwiContainer().resolve<EventBus>().fire(LanguageChangedEvent());
-        });
-      }
-    });
   }
 
   void _onExifSupportChanged(BuildContext context, bool value) {

@@ -14,6 +14,7 @@ import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
@@ -33,6 +34,7 @@ import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
@@ -91,8 +93,6 @@ class _WrappedAppState extends State<_WrappedApp>
     NavigationManager().setHandler(this);
     _themeChangedListener =
         AppEventListener<ThemeChangedEvent>(_onThemeChangedEvent)..begin();
-    _langChangedListener =
-        AppEventListener<LanguageChangedEvent>(_onLangChangedEvent)..begin();
   }
 
   @override
@@ -104,40 +104,44 @@ class _WrappedAppState extends State<_WrappedApp>
       themeMode =
           Pref().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light;
     }
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      theme: buildLightTheme(),
-      darkTheme: buildDarkTheme(),
-      themeMode: themeMode,
-      initialRoute: Splash.routeName,
-      onGenerateRoute: _onGenerateRoute,
-      navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
-      navigatorKey: _navigatorKey,
-      scaffoldMessengerKey: _scaffoldMessengerKey,
-      locale: language_util.getSelectedLocale(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: const <Locale>[
-        // the order here doesn't matter, except for the first one, which must
-        // be en
-        Locale("en"),
-        Locale("el"),
-        Locale("es"),
-        Locale("fr"),
-        Locale("ru"),
-        Locale("de"),
-        Locale("cs"),
-        Locale("fi"),
-        Locale("pl"),
-        Locale("pt"),
-        Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
-        Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
-      ],
-      builder: (context, child) {
-        MyApp._globalContext = context;
-        return child!;
-      },
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: const _MyScrollBehavior(),
+    final prefController = context.read<PrefController>();
+    return ValueStreamBuilder<language_util.AppLanguage>(
+      stream: prefController.language,
+      builder: (context, snapshot) => MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        theme: buildLightTheme(),
+        darkTheme: buildDarkTheme(),
+        themeMode: themeMode,
+        initialRoute: Splash.routeName,
+        onGenerateRoute: _onGenerateRoute,
+        navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
+        navigatorKey: _navigatorKey,
+        scaffoldMessengerKey: _scaffoldMessengerKey,
+        locale: snapshot.requireData.locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: const <Locale>[
+          // the order here doesn't matter, except for the first one, which must
+          // be en
+          Locale("en"),
+          Locale("el"),
+          Locale("es"),
+          Locale("fr"),
+          Locale("ru"),
+          Locale("de"),
+          Locale("cs"),
+          Locale("fi"),
+          Locale("pl"),
+          Locale("pt"),
+          Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
+          Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
+        ],
+        builder: (context, child) {
+          MyApp._globalContext = context;
+          return child!;
+        },
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: const _MyScrollBehavior(),
+      ),
     );
   }
 
@@ -147,7 +151,6 @@ class _WrappedAppState extends State<_WrappedApp>
     SnackBarManager().unregisterHandler(this);
     NavigationManager().unsetHandler(this);
     _themeChangedListener.end();
-    _langChangedListener.end();
   }
 
   @override
@@ -171,6 +174,7 @@ class _WrappedAppState extends State<_WrappedApp>
               builder: (context) => const legacy.SignIn(),
             ),
         CollectionPicker.routeName: CollectionPicker.buildRoute,
+        LanguageSettings.routeName: LanguageSettings.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -208,10 +212,6 @@ class _WrappedAppState extends State<_WrappedApp>
   }
 
   void _onThemeChangedEvent(ThemeChangedEvent ev) {
-    setState(() {});
-  }
-
-  void _onLangChangedEvent(LanguageChangedEvent ev) {
     setState(() {});
   }
 
@@ -604,7 +604,6 @@ class _WrappedAppState extends State<_WrappedApp>
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   late AppEventListener<ThemeChangedEvent> _themeChangedListener;
-  late AppEventListener<LanguageChangedEvent> _langChangedListener;
 }
 
 class _MyScrollBehavior extends MaterialScrollBehavior {

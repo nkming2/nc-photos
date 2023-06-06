@@ -119,8 +119,6 @@ class FavoriteResyncedEvent {
 
 class ThemeChangedEvent {}
 
-class LanguageChangedEvent {}
-
 enum MetadataTaskState {
   /// No work is being done
   idle,

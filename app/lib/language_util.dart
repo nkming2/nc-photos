@@ -23,16 +23,7 @@ class AppLanguage {
   final Locale? locale;
 }
 
-AppLanguage getSelectedLanguage() {
-  try {
-    final lang = Pref().getLanguageOr(0);
-    return supportedLanguages[lang]!;
-  } catch (_) {
-    return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;
-  }
-}
-
-Locale? getSelectedLocale() => getSelectedLanguage().locale;
+Locale? getSelectedLocale() => _getSelectedLanguage().locale;
 
 final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index: AppLanguage(
@@ -88,4 +79,13 @@ enum _AppLanguageEnum {
   portuguese,
   chineseHans,
   chineseHant,
+}
+
+AppLanguage _getSelectedLanguage() {
+  try {
+    final lang = Pref().getLanguageOr(0);
+    return supportedLanguages[lang]!;
+  } catch (_) {
+    return supportedLanguages[_AppLanguageEnum.systemDefault.index]!;
+  }
 }
