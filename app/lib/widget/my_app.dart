@@ -134,6 +134,8 @@ class _WrappedAppState extends State<_WrappedApp>
           Locale("pt"),
           Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
           Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
+          Locale("it"),
+          Locale("nl"),
         ],
         builder: (context, child) {
           MyApp._globalContext = context;

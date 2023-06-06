@@ -41,6 +41,8 @@ final supportedLanguages = {
       const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant")),
   _AppLanguageEnum.czech.index: AppLanguage(
       _AppLanguageEnum.czech.index, "Čeština", "Czech", const Locale("cs")),
+  _AppLanguageEnum.dutch.index: AppLanguage(
+      _AppLanguageEnum.dutch.index, "Nederlands", "Dutch", const Locale("nl")),
   _AppLanguageEnum.english.index: AppLanguage(
       _AppLanguageEnum.english.index, "English", "English", const Locale("en")),
   _AppLanguageEnum.finnish.index: AppLanguage(
@@ -51,6 +53,8 @@ final supportedLanguages = {
       _AppLanguageEnum.german.index, "Deutsch", "German", const Locale("de")),
   _AppLanguageEnum.greek.index: AppLanguage(
       _AppLanguageEnum.greek.index, "Ελληνικά", "Greek", const Locale("el")),
+  _AppLanguageEnum.italian.index: AppLanguage(_AppLanguageEnum.italian.index,
+      "Italiano", "Italian", const Locale("it")),
   _AppLanguageEnum.polish.index: AppLanguage(
       _AppLanguageEnum.polish.index, "Polski", "Polish", const Locale("pl")),
   _AppLanguageEnum.portuguese.index: AppLanguage(
@@ -79,6 +83,8 @@ enum _AppLanguageEnum {
   portuguese,
   chineseHans,
   chineseHant,
+  italian,
+  dutch,
 }
 
 AppLanguage _getSelectedLanguage() {
