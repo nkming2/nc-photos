@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
@@ -58,39 +55,37 @@ class HomeSliverAppBar extends StatelessWidget {
             ],
           ),
           subtitle: accountLabel == null ? Text(account.username2) : null,
-          icon: isShowProgressIcon
-              ? const AppBarCircularProgressIndicator()
-              : _LeadingView(account: account),
         ),
       ),
       scrolledUnderBackgroundColor:
           Theme.of(context).homeNavigationBarBackgroundColor,
       floating: true,
       automaticallyImplyLeading: false,
-      actions: (actions ?? []) +
-          [
-            if (!Pref().isFollowSystemThemeOr(false))
-              _DarkModeSwitch(
-                onChanged: _onDarkModeChanged,
-              ),
-            if (menuActions?.isNotEmpty == true)
-              PopupMenuButton<int>(
-                tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-                itemBuilder: (_) => menuActions!,
-                onSelected: (option) {
-                  if (option >= 0) {
-                    onSelectedMenuActions?.call(option);
-                  }
-                },
-              ),
-          ],
+      actions: [
+        ...actions ?? [],
+        if (menuActions?.isNotEmpty == true)
+          PopupMenuButton<int>(
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            itemBuilder: (_) => menuActions!,
+            onSelected: (option) {
+              if (option >= 0) {
+                onSelectedMenuActions?.call(option);
+              }
+            },
+          ),
+        _ProfileIconView(
+          account: account,
+          isProcessing: isShowProgressIcon,
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (_) => const AccountPickerDialog(),
+            );
+          },
+        ),
+        const SizedBox(width: 8),
+      ],
     );
-  }
-
-  void _onDarkModeChanged(bool value) {
-    Pref().setDarkTheme(value).then((_) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    });
   }
 
   final Account account;
@@ -105,45 +100,46 @@ class HomeSliverAppBar extends StatelessWidget {
   final bool isShowProgressIcon;
 }
 
-class _DarkModeSwitch extends StatelessWidget {
-  const _DarkModeSwitch({
-    this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: buildDarkModeSwitchTheme(context),
-      child: Switch(
-        value: Theme.of(context).brightness == Brightness.dark,
-        onChanged: onChanged,
-        activeThumbImage:
-            const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
-        inactiveThumbImage:
-            const AssetImage("assets/ic_dark_mode_switch_24dp.png"),
-      ),
-    );
-  }
-
-  final ValueChanged<bool>? onChanged;
-}
-
-class _LeadingView extends StatelessWidget {
-  const _LeadingView({
+class _ProfileIconView extends StatelessWidget {
+  const _ProfileIconView({
     required this.account,
+    required this.isProcessing,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: CachedNetworkImage(
-        imageUrl: api_util.getAccountAvatarUrl(account, 64),
-        fadeInDuration: const Duration(),
-        filterQuality: FilterQuality.high,
+    return SizedBox.square(
+      dimension: _size,
+      child: Stack(
+        children: [
+          isProcessing
+              ? const AppBarCircularProgressIndicator()
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(_size / 2),
+                  child: CachedNetworkImage(
+                    imageUrl: api_util.getAccountAvatarUrl(account, 64),
+                    fadeInDuration: const Duration(),
+                    filterQuality: FilterQuality.high,
+                  ),
+                ),
+          Positioned.fill(
+            child: Material(
+              type: MaterialType.transparency,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(_size / 2),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   final Account account;
+  final bool isProcessing;
+  final VoidCallback onTap;
+
+  static const _size = 40.0;
 }

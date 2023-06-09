@@ -58,6 +58,32 @@ extension ThemeExtension on ThemeData {
   }
 }
 
+class DarkModeSwitchTheme extends StatelessWidget {
+  const DarkModeSwitchTheme({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Theme(
+      data: theme.copyWith(
+        switchTheme: SwitchThemeData(
+          trackColor: MaterialStateProperty.all(theme.colorScheme.surface),
+          thumbColor: MaterialStateProperty.all(Colors.black87),
+        ),
+        colorScheme: theme.colorScheme.copyWith(
+          outline: Colors.transparent,
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  final Widget child;
+}
+
 ThemeData buildTheme(Brightness brightness) {
   return (brightness == Brightness.light)
       ? buildLightTheme()
@@ -89,19 +115,6 @@ ThemeData buildDarkTheme() {
   } else {
     return _applyColorScheme(colorScheme, seedColor);
   }
-}
-
-ThemeData buildDarkModeSwitchTheme(BuildContext context) {
-  final theme = Theme.of(context);
-  return theme.copyWith(
-    switchTheme: SwitchThemeData(
-      trackColor: MaterialStateProperty.all(theme.colorScheme.surfaceVariant),
-      thumbColor: MaterialStateProperty.all(Colors.black87),
-    ),
-    colorScheme: theme.colorScheme.copyWith(
-      outline: Colors.transparent,
-    ),
-  );
 }
 
 Color getSeedColor() {
