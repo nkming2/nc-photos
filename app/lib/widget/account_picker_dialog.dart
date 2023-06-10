@@ -29,6 +29,7 @@ import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/settings.dart';
+import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
@@ -354,11 +355,7 @@ class _AccountSettingsView extends StatelessWidget {
       onTap: () {
         Navigator.of(context)
           ..pop()
-          ..pushNamed(
-            AccountSettingsWidget.routeName,
-            arguments: AccountSettingsWidgetArguments(
-                context.read<_Bloc>().activeAccount),
-          );
+          ..pushNamed(AccountSettings.routeName);
       },
     );
   }

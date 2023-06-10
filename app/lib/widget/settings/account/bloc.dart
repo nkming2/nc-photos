@@ -1,0 +1,158 @@
+part of '../account_settings.dart';
+
+@npLog
+class _Bloc extends Bloc<_Event, _State> {
+  _Bloc({
+    required DiContainer container,
+    required Account account,
+    required this.accountPrefController,
+  })  : _c = container,
+        super(_State.init(
+          account: account,
+          label: accountPrefController.accountLabel.value,
+          shareFolder: accountPrefController.shareFolder.value,
+          isEnableFaceRecognitionApp:
+              accountPrefController.isEnableFaceRecognitionApp.value,
+        )) {
+    on<_SetLabel>(_onSetLabel);
+    on<_OnUpdateLabel>(_onOnUpdateLabel);
+    _subscriptions.add(accountPrefController.accountLabel.listen(
+      (event) {
+        add(_OnUpdateLabel(event));
+      },
+      onError: (e, stackTrace) {
+        add(_SetError(_WritePrefError(e, stackTrace)));
+      },
+    ));
+
+    on<_SetAccount>(_onSetAccount);
+    on<_OnUpdateAccount>(_onOnUpdateAccount);
+
+    on<_SetShareFolder>(_onSetShareFolder);
+    on<_OnUpdateShareFolder>(_onOnUpdateShareFolder);
+    _subscriptions.add(accountPrefController.shareFolder.listen(
+      (event) {
+        add(_OnUpdateShareFolder(event));
+      },
+      onError: (e, stackTrace) {
+        add(_SetError(_WritePrefError(e, stackTrace)));
+      },
+    ));
+
+    on<_SetEnableFaceRecognitionApp>(_onSetEnableFaceRecognitionApp);
+    on<_OnUpdateEnableFaceRecognitionApp>(_onOnUpdateEnableFaceRecognitionApp);
+    _subscriptions.add(accountPrefController.isEnableFaceRecognitionApp.listen(
+      (event) {
+        add(_OnUpdateEnableFaceRecognitionApp(event));
+      },
+      onError: (e, stackTrace) {
+        add(_SetError(_WritePrefError(e, stackTrace)));
+      },
+    ));
+
+    on<_SetError>(_onSetError);
+  }
+
+  @override
+  Future<void> close() {
+    for (final s in _subscriptions) {
+      unawaited(s.cancel());
+    }
+    return super.close();
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // we need this to prevent onError being triggered recursively
+    if (!isClosed && !_isHandlingError) {
+      _isHandlingError = true;
+      try {
+        add(_SetError(error, stackTrace));
+      } catch (_) {}
+      _isHandlingError = false;
+    }
+    super.onError(error, stackTrace);
+  }
+
+  void _onSetLabel(_SetLabel ev, Emitter<_State> emit) {
+    _log.info(ev);
+    accountPrefController.setAccountLabel(ev.label);
+  }
+
+  void _onOnUpdateLabel(_OnUpdateLabel ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(label: ev.label));
+  }
+
+  Future<void> _onSetAccount(_SetAccount ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    emit(state.copyWith(
+      account: ev.account,
+      shouldReload: true,
+    ));
+    final revert = state.account;
+    try {
+      final accounts = _c.pref.getAccounts3()!;
+      if (accounts.contains(ev.account)) {
+        // conflict with another account. This normally won't happen because
+        // the app passwords are unique to each entry, but just in case
+        throw const _AccountConflictError();
+      }
+
+      final index = accounts.indexWhere((a) => a.id == ev.account.id);
+      if (index < 0) {
+        _log.shout("[_onSetAccount] Account not found: ${ev.account}");
+        throw const _WritePrefError();
+      }
+
+      accounts[index] = ev.account;
+      if (!await _c.pref.setAccounts3(accounts)) {
+        _log.severe("[_onSetAccount] Failed while setAccounts3: ${ev.account}");
+        throw const _WritePrefError();
+      }
+    } catch (_) {
+      emit(state.copyWith(account: revert));
+      rethrow;
+    }
+  }
+
+  void _onOnUpdateAccount(_OnUpdateAccount ev, Emitter<_State> emit) {
+    _log.info(ev);
+  }
+
+  void _onSetShareFolder(_SetShareFolder ev, Emitter<_State> emit) {
+    _log.info(ev);
+    accountPrefController.setShareFolder(ev.shareFolder);
+    emit(state.copyWith(shouldReload: true));
+  }
+
+  void _onOnUpdateShareFolder(_OnUpdateShareFolder ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(shareFolder: ev.shareFolder));
+  }
+
+  void _onSetEnableFaceRecognitionApp(
+      _SetEnableFaceRecognitionApp ev, Emitter<_State> emit) {
+    _log.info(ev);
+    accountPrefController
+        .setEnableFaceRecognitionApp(ev.isEnableFaceRecognitionApp);
+  }
+
+  void _onOnUpdateEnableFaceRecognitionApp(
+      _OnUpdateEnableFaceRecognitionApp ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(
+        isEnableFaceRecognitionApp: ev.isEnableFaceRecognitionApp));
+  }
+
+  void _onSetError(_SetError ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
+  }
+
+  final DiContainer _c;
+  final AccountPrefController accountPrefController;
+
+  final _subscriptions = <StreamSubscription>[];
+  var _isHandlingError = false;
+}

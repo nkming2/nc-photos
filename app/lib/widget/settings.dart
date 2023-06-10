@@ -8,7 +8,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/platform.dart'
@@ -23,15 +22,12 @@ import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/gps_map.dart';
-import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
-import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
+import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
-import 'package:nc_photos/widget/share_folder_picker.dart';
-import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:screen_brightness/screen_brightness.dart';
@@ -199,7 +195,9 @@ class _SettingsState extends State<Settings> {
                   label: "Developer options",
                   builder: () => const DeveloperSettings(),
                 ),
-              _buildCaption(context, L10n.global().settingsAboutSectionTitle),
+              SettingsListCaption(
+                label: L10n.global().settingsAboutSectionTitle,
+              ),
               ListTile(
                 title: Text(L10n.global().settingsVersionTitle),
                 subtitle: const Text(k.versionStr),
@@ -408,334 +406,6 @@ class _SettingsState extends State<Settings> {
   static const String _sourceRepo = "https://bit.ly/3LQerBv";
   static const String _bugReportUrl = "https://bit.ly/3NANrr7";
   static const String _translationUrl = "https://bit.ly/3NwmdSw";
-}
-
-class AccountSettingsWidgetArguments {
-  const AccountSettingsWidgetArguments(this.account);
-
-  final Account account;
-}
-
-class AccountSettingsWidget extends StatefulWidget {
-  static const routeName = "/account-settings";
-
-  static Route buildRoute(AccountSettingsWidgetArguments args) =>
-      MaterialPageRoute(
-        builder: (context) => AccountSettingsWidget.fromArgs(args),
-      );
-
-  const AccountSettingsWidget({
-    Key? key,
-    required this.account,
-  }) : super(key: key);
-
-  AccountSettingsWidget.fromArgs(AccountSettingsWidgetArguments args,
-      {Key? key})
-      : this(
-          key: key,
-          account: args.account,
-        );
-
-  @override
-  createState() => _AccountSettingsState();
-
-  final Account account;
-}
-
-@npLog
-class _AccountSettingsState extends State<AccountSettingsWidget> {
-  @override
-  initState() {
-    super.initState();
-    _account = widget.account;
-
-    final settings = AccountPref.of(_account);
-    _isEnableFaceRecognitionApp = settings.isEnableFaceRecognitionAppOr();
-    _shareFolder = settings.getShareFolderOr();
-    _label = settings.getAccountLabel();
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => !_shouldReload,
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            title: Text(L10n.global().settingsAccountTitle),
-            leading: _shouldReload
-                ? IconButton(
-                    icon: const Icon(Icons.check),
-                    tooltip: L10n.global().doneButtonTooltip,
-                    onPressed: () => _onDonePressed(context),
-                  )
-                : null,
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                ListTile(
-                  title: Text(L10n.global().settingsAccountLabelTitle),
-                  subtitle: Text(
-                      _label ?? L10n.global().settingsAccountLabelDescription),
-                  onTap: () => _onLabelPressed(context),
-                ),
-                ListTile(
-                  title: Text(L10n.global().settingsIncludedFoldersTitle),
-                  subtitle: Text(_account.roots.map((e) => "/$e").join("; ")),
-                  onTap: _onIncludedFoldersPressed,
-                ),
-                ListTile(
-                  title: Text(L10n.global().settingsShareFolderTitle),
-                  subtitle: Text("/$_shareFolder"),
-                  onTap: () => _onShareFolderPressed(context),
-                ),
-                _buildCaption(
-                    context, L10n.global().settingsServerAppSectionTitle),
-                SwitchListTile(
-                  title: const Text("Face Recognition"),
-                  value: _isEnableFaceRecognitionApp,
-                  onChanged: _onEnableFaceRecognitionAppChanged,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onDonePressed(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      Home.routeName,
-      (route) => false,
-      arguments: HomeArguments(_account),
-    );
-  }
-
-  Future<void> _onLabelPressed(BuildContext context) async {
-    final result = await showDialog<String>(
-        context: context,
-        builder: (context) => SimpleInputDialog(
-              titleText: L10n.global().settingsAccountLabelTitle,
-              buttonText: MaterialLocalizations.of(context).okButtonLabel,
-              initialText: _label ?? "",
-            ));
-    if (result == null) {
-      return;
-    }
-    if (result.isEmpty) {
-      return _setLabel(null);
-    } else {
-      return _setLabel(result);
-    }
-  }
-
-  Future<void> _onIncludedFoldersPressed() async {
-    try {
-      final result = await Navigator.of(context).pushNamed<Account>(
-          RootPicker.routeName,
-          arguments: RootPickerArguments(_account));
-      if (result == null) {
-        // user canceled
-        return;
-      }
-      // we've got a good account
-      if (result == _account) {
-        // no changes, do nothing
-        _log.fine("[_onIncludedFoldersPressed] No changes");
-        return;
-      }
-      final accounts = Pref().getAccounts3()!;
-      if (accounts.contains(result)) {
-        // conflict with another account. This normally won't happen because
-        // the app passwords are unique to each entry, but just in case
-        Navigator.of(context).pop();
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().editAccountConflictFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        return;
-      }
-
-      final index = accounts.indexOf(_account);
-      if (index < 0) {
-        _log.shout("[_onIncludedFoldersPressed] Account not found: $_account");
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().writePreferenceFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        return;
-      }
-
-      accounts[index] = result;
-      if (!await Pref().setAccounts3(accounts)) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(L10n.global().writePreferenceFailureNotification),
-          duration: k.snackBarDurationNormal,
-        ));
-        return;
-      }
-      setState(() {
-        _account = result;
-        _shouldReload = true;
-      });
-    } catch (e, stackTrace) {
-      _log.shout("[_onIncludedFoldersPressed] Exception", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  Future<void> _onShareFolderPressed(BuildContext context) async {
-    final path = await showDialog<String>(
-      context: context,
-      builder: (_) => _ShareFolderDialog(
-        account: widget.account,
-        initialValue: _shareFolder,
-      ),
-    );
-    if (path == null || path == _shareFolder) {
-      return;
-    }
-    return _setShareFolder(path);
-  }
-
-  Future<void> _onEnableFaceRecognitionAppChanged(bool value) async {
-    _log.info("[_onEnableFaceRecognitionAppChanged] New value: $value");
-    final oldValue = _isEnableFaceRecognitionApp;
-    setState(() {
-      _isEnableFaceRecognitionApp = value;
-    });
-    if (!await AccountPref.of(_account).setEnableFaceRecognitionApp(value)) {
-      _log.severe("[_onEnableFaceRecognitionAppChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isEnableFaceRecognitionApp = oldValue;
-      });
-    }
-  }
-
-  Future<void> _setLabel(String? value) async {
-    _log.info("[_setLabel] New value: $value");
-    final oldValue = _label;
-    setState(() {
-      _label = value;
-    });
-    if (!await AccountPref.of(_account).setAccountLabel(value)) {
-      _log.severe("[_setLabel] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _label = oldValue;
-      });
-    }
-  }
-
-  Future<void> _setShareFolder(String value) async {
-    _log.info("[_setShareFolder] New value: $value");
-    final oldValue = _shareFolder;
-    setState(() {
-      _shareFolder = value;
-    });
-    if (!await AccountPref.of(_account).setShareFolder(value)) {
-      _log.severe("[_setShareFolder] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _shareFolder = oldValue;
-      });
-    }
-  }
-
-  bool _shouldReload = false;
-  late Account _account;
-  late bool _isEnableFaceRecognitionApp;
-  late String _shareFolder;
-  late String? _label;
-}
-
-class _ShareFolderDialog extends StatefulWidget {
-  const _ShareFolderDialog({
-    Key? key,
-    required this.account,
-    required this.initialValue,
-  }) : super(key: key);
-
-  @override
-  createState() => _ShareFolderDialogState();
-
-  final Account account;
-  final String initialValue;
-}
-
-class _ShareFolderDialogState extends State<_ShareFolderDialog> {
-  @override
-  build(BuildContext context) {
-    return AlertDialog(
-      title: Text(L10n.global().settingsShareFolderDialogTitle),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(L10n.global().settingsShareFolderDialogDescription),
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: _onTextFieldPressed,
-              child: TextFormField(
-                enabled: false,
-                controller: _controller,
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _onOkPressed,
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onTextFieldPressed() async {
-    final pick = await Navigator.of(context).pushNamed<String>(
-        ShareFolderPicker.routeName,
-        arguments: ShareFolderPickerArguments(widget.account, _path));
-    if (pick != null) {
-      _path = pick;
-      _controller.text = "/$pick";
-    }
-  }
-
-  void _onOkPressed() {
-    Navigator.of(context).pop(_path);
-  }
-
-  final _formKey = GlobalKey<FormState>();
-  late final _controller =
-      TextEditingController(text: "/${widget.initialValue}");
-  late String _path = widget.initialValue;
 }
 
 class _PhotosSettings extends StatefulWidget {
@@ -1525,18 +1195,6 @@ class _MiscSettingsState extends State<_MiscSettings> {
 
   late bool _isPhotosTabSortByName;
   late bool _isDoubleTapExit;
-}
-
-Widget _buildCaption(BuildContext context, String label) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-    child: Text(
-      label,
-      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-    ),
-  );
 }
 
 // final _enabledExperiments = [

@@ -1,5 +1,6 @@
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
@@ -11,6 +12,8 @@ class AccountController {
     _collectionsController = null;
     _serverController?.dispose();
     _serverController = null;
+    _accountPrefController?.dispose();
+    _accountPrefController = null;
   }
 
   Account get account => _account!;
@@ -27,7 +30,13 @@ class AccountController {
         account: _account!,
       );
 
+  AccountPrefController get accountPrefController =>
+      _accountPrefController ??= AccountPrefController(
+        account: _account!,
+      );
+
   Account? _account;
   CollectionsController? _collectionsController;
   ServerController? _serverController;
+  AccountPrefController? _accountPrefController;
 }

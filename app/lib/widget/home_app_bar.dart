@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
-import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
 import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
@@ -21,8 +23,7 @@ class HomeSliverAppBar extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  build(BuildContext context) {
-    final accountLabel = AccountPref.of(account).getAccountLabel();
+  Widget build(BuildContext context) {
     return TranslucentSliverAppBar(
       title: InkWell(
         onTap: () {
@@ -31,31 +32,7 @@ class HomeSliverAppBar extends StatelessWidget {
             builder: (_) => const AccountPickerDialog(),
           );
         },
-        child: AppBarTitleContainer(
-          title: Row(
-            children: [
-              account.scheme == "http"
-                  ? Icon(
-                      Icons.no_encryption_outlined,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 16,
-                    )
-                  : Icon(
-                      Icons.https,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-              Expanded(
-                child: Text(
-                  accountLabel ?? account.address,
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-            ],
-          ),
-          subtitle: accountLabel == null ? Text(account.username2) : null,
-        ),
+        child: _TitleView(account: account),
       ),
       scrolledUnderBackgroundColor:
           Theme.of(context).homeNavigationBarBackgroundColor,
@@ -98,6 +75,47 @@ class HomeSliverAppBar extends StatelessWidget {
   final List<PopupMenuEntry<int>>? menuActions;
   final void Function(int)? onSelectedMenuActions;
   final bool isShowProgressIcon;
+}
+
+class _TitleView extends StatelessWidget {
+  const _TitleView({
+    required this.account,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueStreamBuilder<String?>(
+      stream:
+          context.read<AccountController>().accountPrefController.accountLabel,
+      builder: (context, snapshot) => AppBarTitleContainer(
+        title: Row(
+          children: [
+            account.scheme == "http"
+                ? Icon(
+                    Icons.no_encryption_outlined,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 16,
+                  )
+                : Icon(
+                    Icons.https,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 16,
+                  ),
+            Expanded(
+              child: Text(
+                snapshot.data ?? account.address,
+                maxLines: 1,
+                overflow: TextOverflow.clip,
+              ),
+            ),
+          ],
+        ),
+        subtitle: snapshot.data == null ? Text(account.username2) : null,
+      ),
+    );
+  }
+
+  final Account account;
 }
 
 class _ProfileIconView extends StatelessWidget {

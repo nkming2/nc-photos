@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search_landing.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
@@ -14,7 +15,6 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
@@ -82,7 +82,11 @@ class _SearchLandingState extends State<SearchLanding> {
   Widget _buildContent(BuildContext context, SearchLandingBlocState state) {
     return Column(
       children: [
-        if (AccountPref.of(widget.account).isEnableFaceRecognitionAppOr())
+        if (context
+            .read<AccountController>()
+            .accountPrefController
+            .isEnableFaceRecognitionApp
+            .value)
           ..._buildPeopleSection(context, state),
         ..._buildLocationSection(context, state),
         ListTile(
