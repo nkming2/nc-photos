@@ -55,6 +55,20 @@ extension _$PersonToString on Person {
   }
 }
 
+extension _$RecognizeFaceToString on RecognizeFace {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "RecognizeFace {href: $href}";
+  }
+}
+
+extension _$RecognizeFaceItemToString on RecognizeFaceItem {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "RecognizeFaceItem {href: $href, ${contentLength == null ? "" : "contentLength: $contentLength, "}${contentType == null ? "" : "contentType: $contentType, "}${etag == null ? "" : "etag: $etag, "}${lastModified == null ? "" : "lastModified: $lastModified, "}${faceDetections == null ? "" : "faceDetections: $faceDetections, "}fileMetadataSize: $fileMetadataSize, ${hasPreview == null ? "" : "hasPreview: $hasPreview, "}${realPath == null ? "" : "realPath: $realPath, "}${favorite == null ? "" : "favorite: $favorite, "}${fileId == null ? "" : "fileId: $fileId"}}";
+  }
+}
+
 extension _$ShareToString on Share {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

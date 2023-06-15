@@ -213,6 +213,71 @@ class Person with EquatableMixin {
 }
 
 @toString
+class RecognizeFace with EquatableMixin {
+  const RecognizeFace({
+    required this.href,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        href,
+      ];
+
+  final String href;
+}
+
+@ToString(ignoreNull: true)
+class RecognizeFaceItem with EquatableMixin {
+  const RecognizeFaceItem({
+    required this.href,
+    this.contentLength,
+    this.contentType,
+    this.etag,
+    this.lastModified,
+    this.faceDetections,
+    this.fileMetadataSize,
+    this.hasPreview,
+    this.realPath,
+    this.favorite,
+    this.fileId,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        href,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        faceDetections,
+        fileMetadataSize,
+        hasPreview,
+        realPath,
+        favorite,
+        fileId,
+      ];
+
+  final String href;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final List<JsonObj>? faceDetections;
+  // format currently unknown
+  final dynamic fileMetadataSize;
+  final bool? hasPreview;
+  final String? realPath;
+  final bool? favorite;
+  final int? fileId;
+}
+
+@toString
 class Share with EquatableMixin {
   const Share({
     required this.id,

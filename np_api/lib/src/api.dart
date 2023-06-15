@@ -12,6 +12,7 @@ part 'face_recognition_api.dart';
 part 'files_api.dart';
 part 'files_sharing_api.dart';
 part 'photos_api.dart';
+part 'recognize_api.dart';
 part 'status_api.dart';
 part 'systemtag_api.dart';
 
