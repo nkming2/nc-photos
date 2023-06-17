@@ -1,7 +1,7 @@
 part of '../file_sharer_dialog.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> implements BlocTag {
+class _Bloc extends Bloc<_Event, _State> implements BlocLogger {
   _Bloc({
     required DiContainer container,
     required this.account,
@@ -18,6 +18,9 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   @override
   String get tag => _log.fullName;
+
+  @override
+  bool Function(dynamic, dynamic)? get shouldLog => null;
 
   @override
   void onError(Object error, StackTrace stackTrace) {

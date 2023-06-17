@@ -1,10 +1,11 @@
 part of '../collection_browser.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> implements BlocTag {
+class _Bloc extends Bloc<_Event, _State> implements BlocLogger {
   _Bloc({
     required DiContainer container,
     required this.account,
+    required this.prefController,
     required this.collectionsController,
     required Collection collection,
   })  : _c = container,
@@ -13,6 +14,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
         super(_State.init(
           collection: collection,
           coverUrl: _getCoverUrl(collection),
+          zoom: prefController.albumBrowserZoomLevel.value,
         )) {
     _initItemController(collection);
 
@@ -45,6 +47,10 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
     on<_SetDragging>(_onSetDragging);
 
+    on<_StartScaling>(_onStartScaling);
+    on<_EndScaling>(_onEndScaling);
+    on<_SetScale>(_onSetScale);
+
     on<_SetError>(_onSetError);
     on<_SetMessage>(_onSetMessage);
 
@@ -76,6 +82,14 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
   }
 
   @override
+  String get tag => _log.fullName;
+
+  @override
+  bool Function(dynamic, dynamic)? get shouldLog => (currentState, nextState) {
+        return currentState.scale == nextState.scale;
+      };
+
+  @override
   void onError(Object error, StackTrace stackTrace) {
     // we need this to prevent onError being triggered recursively
     if (!isClosed && !_isHandlingError) {
@@ -92,9 +106,6 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     return CollectionAdapter.of(_c, account, state.collection)
         .isPermitted(capability);
   }
-
-  @override
-  String get tag => _log.fullName;
 
   void _onUpdateCollection(_UpdateCollection ev, Emitter<_State> emit) {
     _log.info("$ev");
@@ -345,6 +356,35 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
     emit(state.copyWith(isDragging: ev.flag));
   }
 
+  void _onStartScaling(_StartScaling ev, Emitter<_State> emit) {
+    _log.info(ev);
+  }
+
+  void _onEndScaling(_EndScaling ev, Emitter<_State> emit) {
+    _log.info(ev);
+    if (state.scale == null) {
+      return;
+    }
+    final int newZoom;
+    if (state.scale! >= 1.25) {
+      // scale up
+      newZoom = (state.zoom + 1).clamp(-1, 2);
+    } else if (state.scale! <= 0.75) {
+      newZoom = (state.zoom - 1).clamp(-1, 2);
+    } else {
+      newZoom = state.zoom;
+    }
+    emit(state.copyWith(
+      zoom: newZoom,
+      scale: null,
+    ));
+    unawaited(prefController.setAlbumBrowserZoomLevel(newZoom));
+  }
+
+  void _onSetScale(_SetScale ev, Emitter<_State> emit) {
+    emit(state.copyWith(scale: ev.scale));
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info("$ev");
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -475,6 +515,7 @@ class _Bloc extends Bloc<_Event, _State> implements BlocTag {
 
   final DiContainer _c;
   final Account account;
+  final PrefController prefController;
   final CollectionsController collectionsController;
   late final CollectionItemsController itemsController;
 

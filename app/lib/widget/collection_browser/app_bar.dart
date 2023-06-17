@@ -18,64 +18,6 @@ class _AppBar extends StatelessWidget {
             adapter.isPermitted(CollectionCapability.manualCover);
         final canShare = adapter.isPermitted(CollectionCapability.share);
 
-        final actions = <Widget>[
-          ZoomMenuButton(
-            initialZoom: 0,
-            minZoom: 0,
-            maxZoom: 2,
-            onZoomChanged: (value) {
-              context.read<PrefController>().setAlbumBrowserZoomLevel(value);
-            },
-          ),
-          if (canShare)
-            IconButton(
-              onPressed: () => _onSharePressed(context),
-              icon: const Icon(Icons.share),
-              tooltip: L10n.global().shareTooltip,
-            ),
-          if (state.collection.isPendingSharedAlbum)
-            IconButton(
-              onPressed: () => _onAddToCollectionsViewPressed(context),
-              icon: const AssetIcon(asset.icAddCollectionsOutlined24),
-              tooltip: L10n.global().addToCollectionsViewTooltip,
-            ),
-        ];
-        if (state.items.isNotEmpty || canRename) {
-          actions.add(PopupMenuButton<_MenuOption>(
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-            itemBuilder: (_) => [
-              if (canRename)
-                PopupMenuItem(
-                  value: _MenuOption.edit,
-                  child: Text(L10n.global().editTooltip),
-                ),
-              if (canManualCover && adapter.isManualCover())
-                PopupMenuItem(
-                  value: _MenuOption.unsetCover,
-                  child: Text(L10n.global().unsetAlbumCoverTooltip),
-                ),
-              if (state.items.isNotEmpty) ...[
-                PopupMenuItem(
-                  value: _MenuOption.download,
-                  child: Text(L10n.global().downloadTooltip),
-                ),
-                PopupMenuItem(
-                  value: _MenuOption.export,
-                  child: Text(L10n.global().exportCollectionTooltip),
-                ),
-              ],
-              if (state.collection.contentProvider is CollectionAlbumProvider)
-                PopupMenuItem(
-                  value: _MenuOption.albumFixShare,
-                  child: Text(L10n.global().fixSharesTooltip),
-                ),
-            ],
-            onSelected: (option) {
-              _onMenuSelected(context, option);
-            },
-          ));
-        }
-
         return SliverAppBar(
           floating: true,
           expandedHeight: 160,
@@ -88,7 +30,55 @@ class _AppBar extends StatelessWidget {
               ),
             ),
           ),
-          actions: actions,
+          actions: [
+            if (canShare)
+              IconButton(
+                onPressed: () => _onSharePressed(context),
+                icon: const Icon(Icons.share),
+                tooltip: L10n.global().shareTooltip,
+              ),
+            if (state.collection.isPendingSharedAlbum)
+              IconButton(
+                onPressed: () => _onAddToCollectionsViewPressed(context),
+                icon: const AssetIcon(asset.icAddCollectionsOutlined24),
+                tooltip: L10n.global().addToCollectionsViewTooltip,
+              ),
+            if (state.items.isNotEmpty || canRename)
+              PopupMenuButton<_MenuOption>(
+                tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+                itemBuilder: (_) => [
+                  if (canRename)
+                    PopupMenuItem(
+                      value: _MenuOption.edit,
+                      child: Text(L10n.global().editTooltip),
+                    ),
+                  if (canManualCover && adapter.isManualCover())
+                    PopupMenuItem(
+                      value: _MenuOption.unsetCover,
+                      child: Text(L10n.global().unsetAlbumCoverTooltip),
+                    ),
+                  if (state.items.isNotEmpty) ...[
+                    PopupMenuItem(
+                      value: _MenuOption.download,
+                      child: Text(L10n.global().downloadTooltip),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuOption.export,
+                      child: Text(L10n.global().exportCollectionTooltip),
+                    ),
+                  ],
+                  if (state.collection.contentProvider
+                      is CollectionAlbumProvider)
+                    PopupMenuItem(
+                      value: _MenuOption.albumFixShare,
+                      child: Text(L10n.global().fixSharesTooltip),
+                    ),
+                ],
+                onSelected: (option) {
+                  _onMenuSelected(context, option);
+                },
+              ),
+          ],
         );
       },
     );

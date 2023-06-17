@@ -29,6 +29,8 @@ abstract class $_StateCopyWithWorker {
       List<_Item>? editTransformedItems,
       CollectionItemSort? editSort,
       bool? isDragging,
+      int? zoom,
+      double? scale,
       Collection? importResult,
       ExceptionEvent? error,
       String? message});
@@ -54,6 +56,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic editTransformedItems = copyWithNull,
       dynamic editSort = copyWithNull,
       dynamic isDragging,
+      dynamic zoom,
+      dynamic scale = copyWithNull,
       dynamic importResult = copyWithNull,
       dynamic error = copyWithNull,
       dynamic message = copyWithNull}) {
@@ -84,6 +88,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             ? that.editSort
             : editSort as CollectionItemSort?,
         isDragging: isDragging as bool? ?? that.isDragging,
+        zoom: zoom as int? ?? that.zoom,
+        scale: scale == copyWithNull ? that.scale : scale as double?,
         importResult: importResult == copyWithNull
             ? that.importResult
             : importResult as Collection?,
@@ -133,7 +139,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, importResult: $importResult, error: $error, message: $message}";
+    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, importResult: $importResult, error: $error, message: $message}";
   }
 }
 
@@ -291,6 +297,27 @@ extension _$_SetDraggingToString on _SetDragging {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetDragging {flag: $flag}";
+  }
+}
+
+extension _$_StartScalingToString on _StartScaling {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_StartScaling {}";
+  }
+}
+
+extension _$_EndScalingToString on _EndScaling {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_EndScaling {}";
+  }
+}
+
+extension _$_SetScaleToString on _SetScale {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetScale {scale: ${scale.toStringAsFixed(3)}}";
   }
 }
 

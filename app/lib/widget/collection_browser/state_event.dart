@@ -19,6 +19,8 @@ class _State {
     this.editTransformedItems,
     this.editSort,
     required this.isDragging,
+    required this.zoom,
+    this.scale,
     this.importResult,
     this.error,
     this.message,
@@ -27,6 +29,7 @@ class _State {
   factory _State.init({
     required Collection collection,
     required String? coverUrl,
+    required int zoom,
   }) {
     return _State(
       collection: collection,
@@ -40,6 +43,7 @@ class _State {
       isEditMode: false,
       isEditBusy: false,
       isDragging: false,
+      zoom: zoom,
     );
   }
 
@@ -66,6 +70,9 @@ class _State {
   final CollectionItemSort? editSort;
 
   final bool isDragging;
+
+  final int zoom;
+  final double? scale;
 
   final Collection? importResult;
 
@@ -282,6 +289,32 @@ class _SetDragging implements _Event {
   String toString() => _$toString();
 
   final bool flag;
+}
+
+@toString
+class _StartScaling implements _Event {
+  const _StartScaling();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _EndScaling implements _Event {
+  const _EndScaling();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _SetScale implements _Event {
+  const _SetScale(this.scale);
+
+  @override
+  String toString() => _$toString();
+
+  final double scale;
 }
 
 @toString

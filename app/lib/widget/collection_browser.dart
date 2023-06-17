@@ -61,7 +61,6 @@ import 'package:nc_photos/widget/share_collection_dialog.dart';
 import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
-import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -106,6 +105,7 @@ class CollectionBrowser extends StatelessWidget {
       create: (_) => _Bloc(
         container: KiwiContainer().resolve(),
         account: context.read<AccountController>().account,
+        prefController: context.read(),
         collectionsController:
             context.read<AccountController>().collectionsController,
         collection: collection,
@@ -238,52 +238,63 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
             children: [
               Listener(
                 onPointerMove: (event) => _onPointerMove(context, event),
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    _BlocBuilder(
-                      buildWhen: (previous, current) =>
-                          previous.selectedItems.isEmpty !=
-                              current.selectedItems.isEmpty ||
-                          previous.isEditMode != current.isEditMode,
-                      builder: (context, state) {
-                        if (state.isEditMode) {
-                          return const _EditAppBar();
-                        } else if (state.selectedItems.isNotEmpty) {
-                          return const _SelectionAppBar();
-                        } else {
-                          return const _AppBar();
-                        }
-                      },
-                    ),
-                    SliverToBoxAdapter(
-                      child: _BlocBuilder(
+                child: GestureDetector(
+                  onScaleStart: (_) {
+                    _bloc.add(const _StartScaling());
+                  },
+                  onScaleUpdate: (details) {
+                    _bloc.add(_SetScale(details.scale));
+                  },
+                  onScaleEnd: (_) {
+                    _bloc.add(const _EndScaling());
+                  },
+                  child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      _BlocBuilder(
                         buildWhen: (previous, current) =>
-                            previous.isLoading != current.isLoading,
-                        builder: (context, state) => state.isLoading
-                            ? const LinearProgressIndicator()
-                            : const SizedBox(height: 4),
-                      ),
-                    ),
-                    _BlocBuilder(
-                      buildWhen: (previous, current) =>
-                          previous.isEditMode != current.isEditMode,
-                      builder: (context, state) {
-                        if (!state.isEditMode) {
-                          return const _ContentList();
-                        } else {
-                          if (context
-                              .read<_Bloc>()
-                              .isCollectionCapabilityPermitted(
-                                  CollectionCapability.manualSort)) {
-                            return const _EditContentList();
+                            previous.selectedItems.isEmpty !=
+                                current.selectedItems.isEmpty ||
+                            previous.isEditMode != current.isEditMode,
+                        builder: (context, state) {
+                          if (state.isEditMode) {
+                            return const _EditAppBar();
+                          } else if (state.selectedItems.isNotEmpty) {
+                            return const _SelectionAppBar();
                           } else {
-                            return const _UnmodifiableEditContentList();
+                            return const _AppBar();
                           }
-                        }
-                      },
-                    ),
-                  ],
+                        },
+                      ),
+                      SliverToBoxAdapter(
+                        child: _BlocBuilder(
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading,
+                          builder: (context, state) => state.isLoading
+                              ? const LinearProgressIndicator()
+                              : const SizedBox(height: 4),
+                        ),
+                      ),
+                      _BlocBuilder(
+                        buildWhen: (previous, current) =>
+                            previous.isEditMode != current.isEditMode,
+                        builder: (context, state) {
+                          if (!state.isEditMode) {
+                            return const _ContentList();
+                          } else {
+                            if (context
+                                .read<_Bloc>()
+                                .isCollectionCapabilityPermitted(
+                                    CollectionCapability.manualSort)) {
+                              return const _EditContentList();
+                            } else {
+                              return const _UnmodifiableEditContentList();
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
               _BlocBuilder(
@@ -372,63 +383,67 @@ class _ContentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<_Bloc>();
-    return StreamBuilder<int>(
-      stream: context.read<PrefController>().albumBrowserZoomLevel,
-      initialData: context.read<PrefController>().albumBrowserZoomLevel.value,
-      builder: (_, zoomLevel) {
-        if (zoomLevel.hasError) {
-          bloc.add(
-              _SetMessage(L10n.global().writePreferenceFailureNotification));
-        }
-        return _BlocBuilder(
-          buildWhen: (previous, current) =>
-              previous.collection != current.collection ||
-              previous.transformedItems != current.transformedItems ||
-              previous.selectedItems != current.selectedItems,
-          builder: (context, state) {
-            return SelectableItemList<_Item>(
-              maxCrossAxisExtent: photo_list_util
-                  .getThumbSize(zoomLevel.requireData)
-                  .toDouble(),
-              items: state.transformedItems,
-              itemBuilder: (context, _, item) => item.buildWidget(context),
-              staggeredTileBuilder: (_, item) => item.staggeredTile,
-              selectedItems: state.selectedItems,
-              onSelectionChange: (_, selected) {
-                bloc.add(_SetSelectedItems(items: selected.cast()));
-              },
-              onItemTap: (context, index, _) {
-                final actualIndex = index -
-                    state.transformedItems
-                        .sublist(0, index)
-                        .where((e) => e is! _ActualItem)
-                        .length;
-                Navigator.of(context).pushNamed(
-                  Viewer.routeName,
-                  arguments: ViewerArguments(
-                    bloc.account,
-                    state.transformedItems
-                        .whereType<_FileItem>()
-                        .map((e) => e.file)
-                        .toList(),
-                    actualIndex,
-                    fromCollection: ViewerCollectionData(
-                      state.collection,
-                      state.transformedItems
-                          .whereType<_ActualItem>()
-                          .map((e) => e.original)
-                          .toList(),
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
+    return _BlocBuilder(
+      buildWhen: (previous, current) => previous.zoom != current.zoom,
+      builder: (context, state) => _ContentListBody(
+        maxCrossAxisExtent: photo_list_util.getThumbSize(state.zoom).toDouble(),
+      ),
     );
   }
+}
+
+class _ContentListBody extends StatelessWidget {
+  const _ContentListBody({
+    required this.maxCrossAxisExtent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = context.read<_Bloc>();
+    return _BlocBuilder(
+      buildWhen: (previous, current) =>
+          previous.collection != current.collection ||
+          previous.transformedItems != current.transformedItems ||
+          previous.selectedItems != current.selectedItems,
+      builder: (context, state) => SelectableItemList<_Item>(
+        maxCrossAxisExtent: maxCrossAxisExtent,
+        items: state.transformedItems,
+        itemBuilder: (context, _, item) => item.buildWidget(context),
+        staggeredTileBuilder: (_, item) => item.staggeredTile,
+        selectedItems: state.selectedItems,
+        onSelectionChange: (_, selected) {
+          bloc.add(_SetSelectedItems(items: selected.cast()));
+        },
+        onItemTap: (context, index, _) {
+          final actualIndex = index -
+              state.transformedItems
+                  .sublist(0, index)
+                  .where((e) => e is! _ActualItem)
+                  .length;
+          Navigator.of(context).pushNamed(
+            Viewer.routeName,
+            arguments: ViewerArguments(
+              bloc.account,
+              state.transformedItems
+                  .whereType<_FileItem>()
+                  .map((e) => e.file)
+                  .toList(),
+              actualIndex,
+              fromCollection: ViewerCollectionData(
+                state.collection,
+                state.transformedItems
+                    .whereType<_ActualItem>()
+                    .map((e) => e.original)
+                    .toList(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  final double maxCrossAxisExtent;
 }
 
 class _EditContentList extends StatelessWidget {
