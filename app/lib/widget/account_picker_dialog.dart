@@ -223,7 +223,12 @@ class _AccountDropdown extends StatelessWidget {
           return AnimatedRotation(
             turns: state.isOpenDropdown ? .5 : 0,
             duration: k.animationDurationShort,
-            child: const Icon(Icons.arrow_drop_down_outlined),
+            child: Icon(
+              Icons.keyboard_arrow_down_outlined,
+              color: state.isOpenDropdown
+                  ? Theme.of(context).colorScheme.primary
+                  : null,
+            ),
           );
         },
       ),
@@ -246,7 +251,7 @@ class _AccountTile extends StatelessWidget {
     final accountLabel = AccountPref.of(account).getAccountLabel();
     return ListTile(
       leading: SizedBox.square(
-        dimension: 48,
+        dimension: 40,
         child: Center(child: _AccountIcon(account)),
       ),
       title: accountLabel != null
@@ -306,7 +311,7 @@ class _IconTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: SizedBox.square(
-        dimension: 48,
+        dimension: 40,
         child: Center(child: icon),
       ),
       title: title,
