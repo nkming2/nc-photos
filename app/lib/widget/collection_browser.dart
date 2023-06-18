@@ -62,6 +62,7 @@ import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:to_string/to_string.dart';
 
 part 'collection_browser.g.dart';
@@ -277,10 +278,26 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                       ),
                       _BlocBuilder(
                         buildWhen: (previous, current) =>
-                            previous.isEditMode != current.isEditMode,
+                            previous.isEditMode != current.isEditMode ||
+                            previous.scale != current.scale,
                         builder: (context, state) {
                           if (!state.isEditMode) {
-                            return const _ContentList();
+                            return SliverStack(
+                              children: [
+                                SliverOpacity(
+                                  opacity: state.scale == null
+                                      ? 1
+                                      : _scaleToCurrentOpacity(state.scale!),
+                                  sliver: const _ContentList(),
+                                ),
+                                if (state.scale != null)
+                                  SliverOpacity(
+                                    opacity: 1 -
+                                        _scaleToCurrentOpacity(state.scale!),
+                                    sliver: const _ScalingList(),
+                                  ),
+                              ],
+                            );
                           } else {
                             if (context
                                 .read<_Bloc>()
@@ -373,6 +390,22 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
     }
   }
 
+  static double _scaleToCurrentOpacity(double scale) {
+    if (scale < 1) {
+      if (scale <= .3) {
+        return 0;
+      } else {
+        return ((scale - .3) / .7).clamp(0, 1);
+      }
+    } else {
+      if (scale >= 1.9) {
+        return 0;
+      } else {
+        return (1 - (scale - 1) / .9).clamp(0, 1);
+      }
+    }
+  }
+
   late final _bloc = context.read<_Bloc>();
   final _scrollController = ScrollController();
   bool? _isDragScrollingDown;
@@ -388,6 +421,32 @@ class _ContentList extends StatelessWidget {
       builder: (context, state) => _ContentListBody(
         maxCrossAxisExtent: photo_list_util.getThumbSize(state.zoom).toDouble(),
       ),
+    );
+  }
+}
+
+class _ScalingList extends StatelessWidget {
+  const _ScalingList();
+
+  @override
+  Widget build(BuildContext context) {
+    return _BlocBuilder(
+      buildWhen: (previous, current) => previous.scale != current.scale,
+      builder: (context, state) {
+        if (state.scale == null) {
+          return const SizedBox.shrink();
+        }
+        int nextZoom;
+        if (state.scale! > 1) {
+          nextZoom = state.zoom + 1;
+        } else {
+          nextZoom = state.zoom - 1;
+        }
+        nextZoom = nextZoom.clamp(-1, 2);
+        return _ContentListBody(
+          maxCrossAxisExtent: photo_list_util.getThumbSize(nextZoom).toDouble(),
+        );
+      },
     );
   }
 }

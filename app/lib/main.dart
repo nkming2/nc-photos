@@ -36,7 +36,14 @@ class _BlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    final tag = bloc is BlocTag ? (bloc as BlocTag).tag : bloc.runtimeType;
-    _log.finer("$tag $change");
+    if (bloc is BlocLogger) {
+      final bl = bloc as BlocLogger;
+      final tag = bl.tag ?? bloc.runtimeType;
+      if (bl.shouldLog?.call(change.currentState, change.nextState) ?? true) {
+        _log.finer("$tag newState: ${change.nextState}");
+      }
+    } else {
+      _log.finer("${bloc.runtimeType} newState: ${change.nextState}");
+    }
   }
 }

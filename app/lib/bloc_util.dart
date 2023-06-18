@@ -1,5 +1,7 @@
-abstract class BlocTag {
-  String get tag;
+abstract class BlocLogger {
+  String? get tag => null;
+
+  bool Function(dynamic currentState, dynamic nextState)? get shouldLog => null;
 }
 
 /// Wrap around a string such that two strings with the same value will fail
