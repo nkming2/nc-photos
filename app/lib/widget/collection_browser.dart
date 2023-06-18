@@ -474,10 +474,13 @@ class _ContentListBody extends StatelessWidget {
           bloc.add(_SetSelectedItems(items: selected.cast()));
         },
         onItemTap: (context, index, _) {
+          if (state.transformedItems[index] is! _FileItem) {
+            return;
+          }
           final actualIndex = index -
               state.transformedItems
                   .sublist(0, index)
-                  .where((e) => e is! _ActualItem)
+                  .where((e) => e is! _FileItem)
                   .length;
           Navigator.of(context).pushNamed(
             Viewer.routeName,
