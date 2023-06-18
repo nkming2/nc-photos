@@ -28,6 +28,8 @@ class Api {
 
   ApiPhotos photos(String userId) => ApiPhotos(this, userId);
 
+  ApiRecognize recognize(String userId) => ApiRecognize(this, userId);
+
   ApiStatus status() => ApiStatus(this);
 
   ApiSystemtags systemtags() => ApiSystemtags(this);

@@ -6,6 +6,7 @@ export 'src/entity/file_parser.dart';
 export 'src/entity/nc_album_item_parser.dart';
 export 'src/entity/nc_album_parser.dart';
 export 'src/entity/person_parser.dart';
+export 'src/entity/recognize_face_parser.dart';
 export 'src/entity/share_parser.dart';
 export 'src/entity/sharee_parser.dart';
 export 'src/entity/status_parser.dart';
