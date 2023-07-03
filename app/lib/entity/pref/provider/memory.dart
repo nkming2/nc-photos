@@ -1,10 +1,13 @@
 import 'package:nc_photos/entity/pref.dart';
+import 'package:np_common/type.dart';
 
 /// [Pref] stored in memory, useful in unit tests
 class PrefMemoryProvider extends PrefProvider {
   PrefMemoryProvider([
     Map<String, dynamic> initialData = const <String, dynamic>{},
   ]) : _data = Map.of(initialData);
+
+  factory PrefMemoryProvider.fromJson(JsonObj json) => PrefMemoryProvider(json);
 
   @override
   bool? getBool(PrefKeyInterface key) => _get<bool>(key);
@@ -39,6 +42,8 @@ class PrefMemoryProvider extends PrefProvider {
     _data.clear();
     return true;
   }
+  @override
+  Future<JsonObj> toJson() async => Map.of(_data);
 
   T? _get<T>(PrefKeyInterface key) => _data[key.toStringKey()];
 

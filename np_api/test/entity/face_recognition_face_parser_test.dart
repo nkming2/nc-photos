@@ -2,7 +2,7 @@ import 'package:np_api/np_api.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group("FaceParser", () {
+  group("FaceRecognitionFaceParser", () {
     test("parse", _faces);
   });
 }
@@ -33,17 +33,17 @@ Future<void> _faces() async {
     }
 }
 """;
-  final results = await FaceParser().parse(json);
+  final results = await FaceRecognitionFaceParser().parse(json);
   expect(results, const [
-    Face(
+    FaceRecognitionFace(
       id: 1,
       fileId: 111,
     ),
-    Face(
+    FaceRecognitionFace(
       id: 2,
       fileId: 222,
     ),
-    Face(
+    FaceRecognitionFace(
       id: 10,
       fileId: 333,
     ),

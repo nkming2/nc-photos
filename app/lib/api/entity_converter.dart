@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
-import 'package:nc_photos/entity/face.dart';
+import 'package:nc_photos/entity/face_recognition_face.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
-import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -20,11 +20,21 @@ import 'package:np_common/string_extension.dart';
 
 part 'entity_converter.g.dart';
 
-class ApiFaceConverter {
-  static Face fromApi(api.Face face) {
-    return Face(
+class ApiFaceRecognitionFaceConverter {
+  static FaceRecognitionFace fromApi(api.FaceRecognitionFace face) {
+    return FaceRecognitionFace(
       id: face.id,
       fileId: face.fileId,
+    );
+  }
+}
+
+class ApiFaceRecognitionPersonConverter {
+  static FaceRecognitionPerson fromApi(api.FaceRecognitionPerson person) {
+    return FaceRecognitionPerson(
+      name: person.name,
+      thumbFaceId: person.thumbFaceId,
+      count: person.count,
     );
   }
 }
@@ -121,16 +131,6 @@ class ApiNcAlbumItemConverter {
   }
 }
 
-class ApiPersonConverter {
-  static Person fromApi(api.Person person) {
-    return Person(
-      name: person.name,
-      thumbFaceId: person.thumbFaceId,
-      count: person.count,
-    );
-  }
-}
-
 class ApiShareConverter {
   static Share fromApi(api.Share share) {
     final shareType = ShareTypeExtension.fromValue(share.shareType);
@@ -210,7 +210,7 @@ class ApiTaggedFileConverter {
 }
 
 String _hrefToPath(String href) {
-  final rawPath = href.trimLeftAny("/");
+  final rawPath = href.trimAny("/");
   final pos = rawPath.indexOf("remote.php");
   if (pos == -1) {
     // what?

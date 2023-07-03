@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
@@ -13,8 +14,8 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/collection/list_collection.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
-import 'package:nc_photos/use_case/list_person.dart';
 import 'package:nc_photos/use_case/list_tag.dart';
+import 'package:nc_photos/use_case/person/list_person.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
 import 'package:to_string/to_string.dart';
@@ -128,8 +129,11 @@ class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
 class HomeSearchSuggestionBloc
     extends Bloc<HomeSearchSuggestionBlocEvent, HomeSearchSuggestionBlocState> {
   HomeSearchSuggestionBloc(
-      this.account, this.collectionsController, this.serverController)
-      : super(const HomeSearchSuggestionBlocInit()) {
+    this.account,
+    this.collectionsController,
+    this.serverController,
+    this.accountPrefController,
+  ) : super(const HomeSearchSuggestionBlocInit()) {
     final c = KiwiContainer().resolve<DiContainer>();
     assert(require(c));
     assert(ListTag.require(c));
@@ -214,7 +218,8 @@ class HomeSearchSuggestionBloc
       _log.warning("[_onEventPreloadData] Failed while ListTag", e);
     }
     try {
-      final persons = await ListPerson(_c)(account);
+      final persons =
+          await ListPerson(_c)(account, accountPrefController.raw).last;
       product.addAll(persons.map((t) => _PersonSearcheable(t)));
       _log.info("[_onEventPreloadData] Loaded ${persons.length} people");
     } catch (e) {
@@ -252,6 +257,7 @@ class HomeSearchSuggestionBloc
   final Account account;
   final CollectionsController collectionsController;
   final ServerController serverController;
+  final AccountPrefController accountPrefController;
   late final DiContainer _c;
 
   final _search = Woozy<_Searcheable>(limit: 10);

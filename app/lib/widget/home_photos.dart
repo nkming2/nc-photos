@@ -16,6 +16,7 @@ import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/bloc/progress.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -559,7 +560,14 @@ class _HomePhotosState extends State<HomePhotos>
   Future<void> _startupSync() async {
     if (!_hasResyncedFavorites.value) {
       _hasResyncedFavorites.value = true;
-      unawaited(StartupSync.runInIsolate(widget.account));
+      final result = await StartupSync.runInIsolate(
+          widget.account, _accountPrefController.raw);
+      if (mounted) {
+        if (result.isSyncPersonUpdated) {
+          unawaited(
+              context.read<AccountController>().personsController.reload());
+        }
+      }
     }
   }
 
@@ -729,6 +737,8 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
   late final _queryProgressBloc = ProgressBloc();
+  late final _accountPrefController =
+      context.read<AccountController>().accountPrefController;
 
   var _backingFiles = <FileDescriptor>[];
   var _smartCollections = <Collection>[];

@@ -2,10 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
-import 'package:nc_photos/use_case/list_person.dart';
+import 'package:nc_photos/use_case/person/list_person.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -17,12 +18,13 @@ abstract class SearchLandingBlocEvent {
 
 @toString
 class SearchLandingBlocQuery extends SearchLandingBlocEvent {
-  const SearchLandingBlocQuery(this.account);
+  const SearchLandingBlocQuery(this.account, this.accountPrefController);
 
   @override
   String toString() => _$toString();
 
   final Account account;
+  final AccountPrefController accountPrefController;
 }
 
 @toString
@@ -69,14 +71,9 @@ class SearchLandingBlocFailure extends SearchLandingBlocState {
 @npLog
 class SearchLandingBloc
     extends Bloc<SearchLandingBlocEvent, SearchLandingBlocState> {
-  SearchLandingBloc(this._c)
-      : assert(require(_c)),
-        assert(ListPerson.require(_c)),
-        super(SearchLandingBlocInit()) {
+  SearchLandingBloc(this._c) : super(SearchLandingBlocInit()) {
     on<SearchLandingBlocEvent>(_onEvent);
   }
-
-  static bool require(DiContainer c) => true;
 
   Future<void> _onEvent(SearchLandingBlocEvent event,
       Emitter<SearchLandingBlocState> emit) async {
@@ -117,7 +114,8 @@ class SearchLandingBloc
   }
 
   Future<List<Person>> _queryPeople(SearchLandingBlocQuery ev) =>
-      ListPerson(_c.withLocalRepo())(ev.account);
+      ListPerson(_c.withLocalRepo())(ev.account, ev.accountPrefController.raw)
+          .last;
 
   Future<LocationGroupResult> _queryLocations(SearchLandingBlocQuery ev) =>
       ListLocationGroup(_c.withLocalRepo())(ev.account);

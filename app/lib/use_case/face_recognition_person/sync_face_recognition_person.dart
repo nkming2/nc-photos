@@ -3,41 +3,43 @@ import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/list_util.dart' as list_util;
+import 'package:nc_photos/use_case/face_recognition_person/list_face_recognition_person.dart';
 import 'package:np_codegen/np_codegen.dart';
 
-part 'sync_person.g.dart';
+part 'sync_face_recognition_person.g.dart';
 
 @npLog
-class SyncPerson {
-  SyncPerson(this._c) : assert(require(_c));
-
-  static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.personRepoRemote) &&
-      DiContainer.has(c, DiType.personRepoLocal);
+class SyncFaceRecognitionPerson {
+  const SyncFaceRecognitionPerson(this._c);
 
   /// Sync people in cache db with remote server
-  Future<void> call(Account account) async {
+  ///
+  /// Return if any people were updated
+  Future<bool> call(Account account) async {
     _log.info("[call] Sync people with remote");
-    late final List<Person> remote;
+    late final List<FaceRecognitionPerson> remote;
     try {
-      remote = await _c.personRepoRemote.list(account);
+      remote =
+          await ListFaceRecognitionPerson(_c.withRemoteRepo())(account).last;
     } catch (e) {
       if (e is ApiException && e.response.statusCode == 404) {
         // face recognition app probably not installed, ignore
         _log.info("[call] Face Recognition app not installed");
-        return;
+        return false;
       }
       rethrow;
     }
-    final cache = await _c.personRepoLocal.list(account);
-    int personSorter(Person a, Person b) => a.name.compareTo(b.name);
-    final diff = list_util.diffWith<Person>(cache, remote, personSorter);
+    final cache =
+        await ListFaceRecognitionPerson(_c.withLocalRepo())(account).last;
+    int personSorter(FaceRecognitionPerson a, FaceRecognitionPerson b) =>
+        a.name.compareTo(b.name);
+    final diff = list_util.diffWith(cache, remote, personSorter);
     final inserts = diff.onlyInB;
     _log.info("[call] New people: ${inserts.toReadableString()}");
     final deletes = diff.onlyInA;
@@ -72,11 +74,17 @@ class SyncPerson {
             );
           }
           for (final i in inserts) {
-            batch.insert(db.persons, SqlitePersonConverter.toSql(dbAccount, i),
-                mode: sql.InsertMode.insertOrIgnore);
+            batch.insert(
+              db.persons,
+              SqliteFaceRecognitionPersonConverter.toSql(dbAccount, i),
+              mode: sql.InsertMode.insertOrIgnore,
+            );
           }
         });
       });
+      return true;
+    } else {
+      return false;
     }
   }
 

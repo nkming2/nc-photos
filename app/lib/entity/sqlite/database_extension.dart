@@ -527,13 +527,12 @@ extension SqliteDbExtension on SqliteDb {
   }
 
   Future<List<Person>> allPersons({
-    Account? sqlAccount,
-    app.Account? appAccount,
+    required ByAccount account,
   }) {
-    assert((sqlAccount != null) != (appAccount != null));
-    if (sqlAccount != null) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
       final query = select(persons)
-        ..where((t) => t.account.equals(sqlAccount.rowId));
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId));
       return query.get();
     } else {
       final query = select(persons).join([
@@ -542,9 +541,9 @@ extension SqliteDbExtension on SqliteDb {
         innerJoin(servers, servers.rowId.equalsExp(accounts.server),
             useColumns: false),
       ])
-        ..where(servers.address.equals(appAccount!.url))
+        ..where(servers.address.equals(account.appAccount!.url))
         ..where(accounts.userId
-            .equals(appAccount.userId.toCaseInsensitiveString()));
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()));
       return query.map((r) => r.readTable(persons)).get();
     }
   }

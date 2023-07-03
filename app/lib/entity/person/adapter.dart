@@ -1,0 +1,23 @@
+import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/person/adapter/face_recognition.dart';
+import 'package:nc_photos/entity/person/content_provider/face_recognition.dart';
+import 'package:nc_photos/entity/person_face.dart';
+
+abstract class PersonAdapter {
+  const PersonAdapter();
+
+  static PersonAdapter of(DiContainer c, Account account, Person person) {
+    switch (person.contentProvider.runtimeType) {
+      case PersonFaceRecognitionProvider:
+        return PersonFaceRecognitionAdapter(c, account, person);
+      default:
+        throw UnsupportedError(
+            "Unknown type: ${person.contentProvider.runtimeType}");
+    }
+  }
+
+  /// List faces of this person
+  Stream<List<PersonFace>> listFace();
+}

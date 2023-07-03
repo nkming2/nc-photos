@@ -1,14 +1,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'face.dart';
+part of 'face_recognition.dart';
 
 // **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 
-extension _$FaceToString on Face {
+extension _$PersonFaceRecognitionProviderToString
+    on PersonFaceRecognitionProvider {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "Face {id: $id, fileId: $fileId}";
+    return "PersonFaceRecognitionProvider {account: $account, person: $person}";
   }
 }

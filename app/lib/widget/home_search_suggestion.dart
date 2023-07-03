@@ -80,6 +80,7 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
       widget.account,
       context.read<AccountController>().collectionsController,
       context.read<AccountController>().serverController,
+      context.read<AccountController>().accountPrefController,
     ));
     if (_bloc.state is! HomeSearchSuggestionBlocInit) {
       // process the current state

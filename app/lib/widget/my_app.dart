@@ -179,6 +179,7 @@ class _WrappedAppState extends State<_WrappedApp>
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
         AccountSettings.routeName: AccountSettings.buildRoute,
+        PeopleBrowser.routeName: PeopleBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -206,7 +207,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
-    route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePlacesBrowserRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
@@ -513,19 +513,6 @@ class _WrappedAppState extends State<_WrappedApp>
       }
     } catch (e) {
       _log.severe("[_handleChangelogRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handlePeopleBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PeopleBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PeopleBrowserArguments;
-        return PeopleBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

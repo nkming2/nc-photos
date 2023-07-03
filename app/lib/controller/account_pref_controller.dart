@@ -70,6 +70,8 @@ class AccountPrefController {
     }
   }
 
+  AccountPref get raw => _accountPref;
+
   final Account account;
 
   final AccountPref _accountPref;

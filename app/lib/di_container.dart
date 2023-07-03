@@ -1,11 +1,10 @@
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/repo2.dart';
-import 'package:nc_photos/entity/face.dart';
+import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
-import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -23,13 +22,9 @@ enum DiType {
   albumRepo2,
   albumRepo2Remote,
   albumRepo2Local,
-  faceRepo,
   fileRepo,
   fileRepoRemote,
   fileRepoLocal,
-  personRepo,
-  personRepoRemote,
-  personRepoLocal,
   shareRepo,
   shareeRepo,
   favoriteRepo,
@@ -42,6 +37,9 @@ enum DiType {
   ncAlbumRepo,
   ncAlbumRepoRemote,
   ncAlbumRepoLocal,
+  faceRecognitionPersonRepo,
+  faceRecognitionPersonRepoRemote,
+  faceRecognitionPersonRepoLocal,
   pref,
   sqliteDb,
   touchManager,
@@ -55,13 +53,9 @@ class DiContainer {
     AlbumRepo2? albumRepo2,
     AlbumRepo2? albumRepo2Remote,
     AlbumRepo2? albumRepo2Local,
-    FaceRepo? faceRepo,
     FileRepo? fileRepo,
     FileRepo? fileRepoRemote,
     FileRepo? fileRepoLocal,
-    PersonRepo? personRepo,
-    PersonRepo? personRepoRemote,
-    PersonRepo? personRepoLocal,
     ShareRepo? shareRepo,
     ShareeRepo? shareeRepo,
     FavoriteRepo? favoriteRepo,
@@ -74,6 +68,9 @@ class DiContainer {
     NcAlbumRepo? ncAlbumRepo,
     NcAlbumRepo? ncAlbumRepoRemote,
     NcAlbumRepo? ncAlbumRepoLocal,
+    FaceRecognitionPersonRepo? faceRecognitionPersonRepo,
+    FaceRecognitionPersonRepo? faceRecognitionPersonRepoRemote,
+    FaceRecognitionPersonRepo? faceRecognitionPersonRepoLocal,
     Pref? pref,
     sql.SqliteDb? sqliteDb,
     TouchManager? touchManager,
@@ -83,13 +80,9 @@ class DiContainer {
         _albumRepo2 = albumRepo2,
         _albumRepo2Remote = albumRepo2Remote,
         _albumRepo2Local = albumRepo2Local,
-        _faceRepo = faceRepo,
         _fileRepo = fileRepo,
         _fileRepoRemote = fileRepoRemote,
         _fileRepoLocal = fileRepoLocal,
-        _personRepo = personRepo,
-        _personRepoRemote = personRepoRemote,
-        _personRepoLocal = personRepoLocal,
         _shareRepo = shareRepo,
         _shareeRepo = shareeRepo,
         _favoriteRepo = favoriteRepo,
@@ -102,6 +95,9 @@ class DiContainer {
         _ncAlbumRepo = ncAlbumRepo,
         _ncAlbumRepoRemote = ncAlbumRepoRemote,
         _ncAlbumRepoLocal = ncAlbumRepoLocal,
+        _faceRecognitionPersonRepo = faceRecognitionPersonRepo,
+        _faceRecognitionPersonRepoRemote = faceRecognitionPersonRepoRemote,
+        _faceRecognitionPersonRepoLocal = faceRecognitionPersonRepoLocal,
         _pref = pref,
         _sqliteDb = sqliteDb,
         _touchManager = touchManager;
@@ -122,20 +118,12 @@ class DiContainer {
         return contianer._albumRepo2Remote != null;
       case DiType.albumRepo2Local:
         return contianer._albumRepo2Local != null;
-      case DiType.faceRepo:
-        return contianer._faceRepo != null;
       case DiType.fileRepo:
         return contianer._fileRepo != null;
       case DiType.fileRepoRemote:
         return contianer._fileRepoRemote != null;
       case DiType.fileRepoLocal:
         return contianer._fileRepoLocal != null;
-      case DiType.personRepo:
-        return contianer._personRepo != null;
-      case DiType.personRepoRemote:
-        return contianer._personRepoRemote != null;
-      case DiType.personRepoLocal:
-        return contianer._personRepoLocal != null;
       case DiType.shareRepo:
         return contianer._shareRepo != null;
       case DiType.shareeRepo:
@@ -160,6 +148,12 @@ class DiContainer {
         return contianer._ncAlbumRepoRemote != null;
       case DiType.ncAlbumRepoLocal:
         return contianer._ncAlbumRepoLocal != null;
+      case DiType.faceRecognitionPersonRepo:
+        return contianer._faceRecognitionPersonRepo != null;
+      case DiType.faceRecognitionPersonRepoRemote:
+        return contianer._faceRecognitionPersonRepoRemote != null;
+      case DiType.faceRecognitionPersonRepoLocal:
+        return contianer._faceRecognitionPersonRepoLocal != null;
       case DiType.pref:
         return contianer._pref != null;
       case DiType.sqliteDb:
@@ -172,9 +166,7 @@ class DiContainer {
   DiContainer copyWith({
     OrNull<AlbumRepo>? albumRepo,
     OrNull<AlbumRepo2>? albumRepo2,
-    OrNull<FaceRepo>? faceRepo,
     OrNull<FileRepo>? fileRepo,
-    OrNull<PersonRepo>? personRepo,
     OrNull<ShareRepo>? shareRepo,
     OrNull<ShareeRepo>? shareeRepo,
     OrNull<FavoriteRepo>? favoriteRepo,
@@ -183,6 +175,7 @@ class DiContainer {
     OrNull<LocalFileRepo>? localFileRepo,
     OrNull<SearchRepo>? searchRepo,
     OrNull<NcAlbumRepo>? ncAlbumRepo,
+    OrNull<FaceRecognitionPersonRepo>? faceRecognitionPersonRepo,
     OrNull<Pref>? pref,
     OrNull<sql.SqliteDb>? sqliteDb,
     OrNull<TouchManager>? touchManager,
@@ -190,9 +183,7 @@ class DiContainer {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
       albumRepo2: albumRepo2 == null ? _albumRepo2 : albumRepo2.obj,
-      faceRepo: faceRepo == null ? _faceRepo : faceRepo.obj,
       fileRepo: fileRepo == null ? _fileRepo : fileRepo.obj,
-      personRepo: personRepo == null ? _personRepo : personRepo.obj,
       shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
       shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
       favoriteRepo: favoriteRepo == null ? _favoriteRepo : favoriteRepo.obj,
@@ -202,6 +193,9 @@ class DiContainer {
       localFileRepo: localFileRepo == null ? _localFileRepo : localFileRepo.obj,
       searchRepo: searchRepo == null ? _searchRepo : searchRepo.obj,
       ncAlbumRepo: ncAlbumRepo == null ? _ncAlbumRepo : ncAlbumRepo.obj,
+      faceRecognitionPersonRepo: faceRecognitionPersonRepo == null
+          ? _faceRecognitionPersonRepo
+          : faceRecognitionPersonRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
@@ -214,13 +208,9 @@ class DiContainer {
   AlbumRepo2 get albumRepo2 => _albumRepo2!;
   AlbumRepo2 get albumRepo2Remote => _albumRepo2Remote!;
   AlbumRepo2 get albumRepo2Local => _albumRepo2Local!;
-  FaceRepo get faceRepo => _faceRepo!;
   FileRepo get fileRepo => _fileRepo!;
   FileRepo get fileRepoRemote => _fileRepoRemote!;
   FileRepo get fileRepoLocal => _fileRepoLocal!;
-  PersonRepo get personRepo => _personRepo!;
-  PersonRepo get personRepoRemote => _personRepoRemote!;
-  PersonRepo get personRepoLocal => _personRepoLocal!;
   ShareRepo get shareRepo => _shareRepo!;
   ShareeRepo get shareeRepo => _shareeRepo!;
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
@@ -233,10 +223,16 @@ class DiContainer {
   NcAlbumRepo get ncAlbumRepo => _ncAlbumRepo!;
   NcAlbumRepo get ncAlbumRepoRemote => _ncAlbumRepoRemote!;
   NcAlbumRepo get ncAlbumRepoLocal => _ncAlbumRepoLocal!;
-  TouchManager get touchManager => _touchManager!;
+  FaceRecognitionPersonRepo get faceRecognitionPersonRepo =>
+      _faceRecognitionPersonRepo!;
+  FaceRecognitionPersonRepo get faceRecognitionPersonRepoRemote =>
+      _faceRecognitionPersonRepoRemote!;
+  FaceRecognitionPersonRepo get faceRecognitionPersonRepoLocal =>
+      _faceRecognitionPersonRepoLocal!;
 
   sql.SqliteDb get sqliteDb => _sqliteDb!;
   Pref get pref => _pref!;
+  TouchManager get touchManager => _touchManager!;
 
   set albumRepo(AlbumRepo v) {
     assert(_albumRepo == null);
@@ -268,11 +264,6 @@ class DiContainer {
     _albumRepo2Local = v;
   }
 
-  set faceRepo(FaceRepo v) {
-    assert(_faceRepo == null);
-    _faceRepo = v;
-  }
-
   set fileRepo(FileRepo v) {
     assert(_fileRepo == null);
     _fileRepo = v;
@@ -286,21 +277,6 @@ class DiContainer {
   set fileRepoLocal(FileRepo v) {
     assert(_fileRepoLocal == null);
     _fileRepoLocal = v;
-  }
-
-  set personRepo(PersonRepo v) {
-    assert(_personRepo == null);
-    _personRepo = v;
-  }
-
-  set personRepoRemote(PersonRepo v) {
-    assert(_personRepoRemote == null);
-    _personRepoRemote = v;
-  }
-
-  set personRepoLocal(PersonRepo v) {
-    assert(_personRepoLocal == null);
-    _personRepoLocal = v;
   }
 
   set shareRepo(ShareRepo v) {
@@ -363,9 +339,19 @@ class DiContainer {
     _ncAlbumRepoLocal = v;
   }
 
-  set touchManager(TouchManager v) {
-    assert(_touchManager == null);
-    _touchManager = v;
+  set faceRecognitionPersonRepo(FaceRecognitionPersonRepo v) {
+    assert(_faceRecognitionPersonRepo == null);
+    _faceRecognitionPersonRepo = v;
+  }
+
+  set faceRecognitionPersonRepoRemote(FaceRecognitionPersonRepo v) {
+    assert(_faceRecognitionPersonRepoRemote == null);
+    _faceRecognitionPersonRepoRemote = v;
+  }
+
+  set faceRecognitionPersonRepoLocal(FaceRecognitionPersonRepo v) {
+    assert(_faceRecognitionPersonRepoLocal == null);
+    _faceRecognitionPersonRepoLocal = v;
   }
 
   set sqliteDb(sql.SqliteDb v) {
@@ -378,11 +364,15 @@ class DiContainer {
     _pref = v;
   }
 
+  set touchManager(TouchManager v) {
+    assert(_touchManager == null);
+    _touchManager = v;
+  }
+
   AlbumRepo? _albumRepo;
   AlbumRepo? _albumRepoRemote;
   // Explicitly request a AlbumRepo backed by local source
   AlbumRepo? _albumRepoLocal;
-  FaceRepo? _faceRepo;
   AlbumRepo2? _albumRepo2;
   AlbumRepo2? _albumRepo2Remote;
   AlbumRepo2? _albumRepo2Local;
@@ -391,9 +381,6 @@ class DiContainer {
   FileRepo? _fileRepoRemote;
   // Explicitly request a FileRepo backed by local source
   FileRepo? _fileRepoLocal;
-  PersonRepo? _personRepo;
-  PersonRepo? _personRepoRemote;
-  PersonRepo? _personRepoLocal;
   ShareRepo? _shareRepo;
   ShareeRepo? _shareeRepo;
   FavoriteRepo? _favoriteRepo;
@@ -406,10 +393,13 @@ class DiContainer {
   NcAlbumRepo? _ncAlbumRepo;
   NcAlbumRepo? _ncAlbumRepoRemote;
   NcAlbumRepo? _ncAlbumRepoLocal;
-  TouchManager? _touchManager;
+  FaceRecognitionPersonRepo? _faceRecognitionPersonRepo;
+  FaceRecognitionPersonRepo? _faceRecognitionPersonRepoRemote;
+  FaceRecognitionPersonRepo? _faceRecognitionPersonRepoLocal;
 
   sql.SqliteDb? _sqliteDb;
   Pref? _pref;
+  TouchManager? _touchManager;
 }
 
 extension DiContainerExtension on DiContainer {
@@ -417,24 +407,24 @@ extension DiContainerExtension on DiContainer {
   ///
   /// Notice that not all repo support this
   DiContainer withRemoteRepo() => copyWith(
-        albumRepo: OrNull(albumRepoRemote),
-        albumRepo2: OrNull(albumRepo2Remote),
-        fileRepo: OrNull(fileRepoRemote),
-        personRepo: OrNull(personRepoRemote),
-        tagRepo: OrNull(tagRepoRemote),
-        ncAlbumRepo: OrNull(ncAlbumRepoRemote),
+        albumRepo: OrNull(_albumRepoRemote),
+        albumRepo2: OrNull(_albumRepo2Remote),
+        fileRepo: OrNull(_fileRepoRemote),
+        tagRepo: OrNull(_tagRepoRemote),
+        ncAlbumRepo: OrNull(_ncAlbumRepoRemote),
+        faceRecognitionPersonRepo: OrNull(_faceRecognitionPersonRepoRemote),
       );
 
   /// Uses local repo if available
   ///
   /// Notice that not all repo support this
   DiContainer withLocalRepo() => copyWith(
-        albumRepo: OrNull(albumRepoLocal),
-        albumRepo2: OrNull(albumRepo2Local),
-        fileRepo: OrNull(fileRepoLocal),
-        personRepo: OrNull(personRepoLocal),
-        tagRepo: OrNull(tagRepoLocal),
-        ncAlbumRepo: OrNull(ncAlbumRepoLocal),
+        albumRepo: OrNull(_albumRepoLocal),
+        albumRepo2: OrNull(_albumRepo2Local),
+        fileRepo: OrNull(_fileRepoLocal),
+        tagRepo: OrNull(_tagRepoLocal),
+        ncAlbumRepo: OrNull(_ncAlbumRepoLocal),
+        faceRecognitionPersonRepo: OrNull(_faceRecognitionPersonRepoLocal),
       );
 
   DiContainer withLocalAlbumRepo() =>
@@ -442,10 +432,10 @@ extension DiContainerExtension on DiContainer {
   DiContainer withRemoteFileRepo() =>
       copyWith(fileRepo: OrNull(fileRepoRemote));
   DiContainer withLocalFileRepo() => copyWith(fileRepo: OrNull(fileRepoLocal));
-  DiContainer withRemotePersonRepo() =>
-      copyWith(personRepo: OrNull(personRepoRemote));
-  DiContainer withLocalPersonRepo() =>
-      copyWith(personRepo: OrNull(personRepoLocal));
   DiContainer withRemoteTagRepo() => copyWith(tagRepo: OrNull(tagRepoRemote));
   DiContainer withLocalTagRepo() => copyWith(tagRepo: OrNull(tagRepoLocal));
+  DiContainer withRemoteFaceRecognitionPersonRepo() => copyWith(
+      faceRecognitionPersonRepo: OrNull(faceRecognitionPersonRepoRemote));
+  DiContainer withLocalFaceRecognitionPersonRepo() => copyWith(
+      faceRecognitionPersonRepo: OrNull(faceRecognitionPersonRepoLocal));
 }

@@ -9,6 +9,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/type.dart';
 
 part 'pref.g.dart';
 part 'pref/extension.dart';
@@ -64,6 +65,8 @@ class AccountPref {
       _insts.remove(account.id);
     }
   }
+
+  Future<JsonObj> toJson() => provider.toJson();
 
   Future<bool> _set<T>(AccountPrefKey key, T value,
       Future<bool> Function(AccountPrefKey key, T value) setFn) async {
@@ -248,4 +251,6 @@ abstract class PrefProvider {
 
   Future<bool> remove(PrefKeyInterface key);
   Future<bool> clear();
+
+  Future<JsonObj> toJson();
 }

@@ -7,16 +7,16 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/log.dart';
 import 'package:np_common/type.dart';
 
-part 'person_parser.g.dart';
+part 'face_recognition_face_parser.g.dart';
 
 @npLog
-class PersonParser {
-  Future<List<Person>> parse(String response) =>
-      compute(_parsePersonsIsolate, response);
+class FaceRecognitionFaceParser {
+  Future<List<FaceRecognitionFace>> parse(String response) =>
+      compute(_parseFacesIsolate, response);
 
-  List<Person> _parse(JsonObj json) {
+  List<FaceRecognitionFace> _parse(JsonObj json) {
     final jsons = json["ocs"]["data"].cast<JsonObj>();
-    final products = <Person>[];
+    final products = <FaceRecognitionFace>[];
     for (final j in jsons) {
       try {
         products.add(_parseSingle(j));
@@ -27,17 +27,16 @@ class PersonParser {
     return products;
   }
 
-  Person _parseSingle(JsonObj json) {
-    return Person(
-      name: json["name"],
-      thumbFaceId: json["thumbFaceId"],
-      count: json["count"],
+  FaceRecognitionFace _parseSingle(JsonObj json) {
+    return FaceRecognitionFace(
+      id: json["id"],
+      fileId: json["fileId"],
     );
   }
 }
 
-List<Person> _parsePersonsIsolate(String response) {
+List<FaceRecognitionFace> _parseFacesIsolate(String response) {
   initLog();
   final json = (jsonDecode(response) as Map).cast<String, dynamic>();
-  return PersonParser()._parse(json);
+  return FaceRecognitionFaceParser()._parse(json);
 }

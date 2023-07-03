@@ -90,7 +90,7 @@ class CollectionListSmall extends StatelessWidget {
     try {
       return NetworkRectThumbnail(
         account: account,
-        imageUrl: coverUrl,
+        imageUrl: coverUrl!,
         errorBuilder: (_) => buildPlaceholder(),
       );
     } catch (_) {
@@ -102,7 +102,7 @@ class CollectionListSmall extends StatelessWidget {
 
   final Account account;
   final String label;
-  final String coverUrl;
+  final String? coverUrl;
   final Widget Function(BuildContext context) fallbackBuilder;
   final VoidCallback? onTap;
 }

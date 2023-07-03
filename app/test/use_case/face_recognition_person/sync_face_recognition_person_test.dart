@@ -1,18 +1,19 @@
 import 'package:drift/drift.dart' as sql;
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/person/data_source.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
+import 'package:nc_photos/entity/face_recognition_person/data_source.dart';
+import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/use_case/sync_person.dart';
+import 'package:nc_photos/use_case/face_recognition_person/sync_face_recognition_person.dart';
 import 'package:test/test.dart';
 import 'package:tuple/tuple.dart';
 
-import '../mock_type.dart';
-import '../test_util.dart' as util;
+import '../../mock_type.dart';
+import '../../test_util.dart' as util;
 
 void main() {
-  group("SyncPerson", () {
+  group("SyncFaceRecognitionPerson", () {
     test("new", _new);
     test("remove", _remove);
     test("update", _update);
@@ -29,14 +30,15 @@ Future<void> _new() async {
   final c = DiContainer.late();
   c.sqliteDb = util.buildTestDb();
   addTearDown(() => c.sqliteDb.close());
-  c.personRepoRemote = MockPersonMemoryRepo({
+  c.faceRecognitionPersonRepoRemote = MockFaceRecognitionPersonMemoryRepo({
     account.id: [
-      const Person(name: "test1", thumbFaceId: 1, count: 1),
-      const Person(name: "test2", thumbFaceId: 2, count: 10),
-      const Person(name: "test3", thumbFaceId: 3, count: 100),
+      const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
+      const FaceRecognitionPerson(name: "test2", thumbFaceId: 2, count: 10),
+      const FaceRecognitionPerson(name: "test3", thumbFaceId: 3, count: 100),
     ],
   });
-  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
+  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
   await c.sqliteDb.transaction(() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
@@ -48,14 +50,14 @@ Future<void> _new() async {
     });
   });
 
-  await SyncPerson(c)(account);
+  await SyncFaceRecognitionPerson(c)(account);
   expect(
     await _listSqliteDbPersons(c.sqliteDb),
     {
       account.userId.toCaseInsensitiveString(): {
-        const Person(name: "test1", thumbFaceId: 1, count: 1),
-        const Person(name: "test2", thumbFaceId: 2, count: 10),
-        const Person(name: "test3", thumbFaceId: 3, count: 100),
+        const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
+        const FaceRecognitionPerson(name: "test2", thumbFaceId: 2, count: 10),
+        const FaceRecognitionPerson(name: "test3", thumbFaceId: 3, count: 100),
       },
     },
   );
@@ -71,12 +73,13 @@ Future<void> _remove() async {
   final c = DiContainer.late();
   c.sqliteDb = util.buildTestDb();
   addTearDown(() => c.sqliteDb.close());
-  c.personRepoRemote = MockPersonMemoryRepo({
+  c.faceRecognitionPersonRepoRemote = MockFaceRecognitionPersonMemoryRepo({
     account.id: [
-      const Person(name: "test1", thumbFaceId: 1, count: 1),
+      const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
     ],
   });
-  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
+  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
   await c.sqliteDb.transaction(() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
@@ -91,12 +94,12 @@ Future<void> _remove() async {
     });
   });
 
-  await SyncPerson(c)(account);
+  await SyncFaceRecognitionPerson(c)(account);
   expect(
     await _listSqliteDbPersons(c.sqliteDb),
     {
       account.userId.toCaseInsensitiveString(): {
-        const Person(name: "test1", thumbFaceId: 1, count: 1),
+        const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
       },
     },
   );
@@ -113,13 +116,14 @@ Future<void> _update() async {
   final c = DiContainer.late();
   c.sqliteDb = util.buildTestDb();
   addTearDown(() => c.sqliteDb.close());
-  c.personRepoRemote = MockPersonMemoryRepo({
+  c.faceRecognitionPersonRepoRemote = MockFaceRecognitionPersonMemoryRepo({
     account.id: [
-      const Person(name: "test1", thumbFaceId: 1, count: 1),
-      const Person(name: "test2", thumbFaceId: 3, count: 10),
+      const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
+      const FaceRecognitionPerson(name: "test2", thumbFaceId: 3, count: 10),
     ],
   });
-  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
+  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
   await c.sqliteDb.transaction(() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
@@ -132,29 +136,30 @@ Future<void> _update() async {
     });
   });
 
-  await SyncPerson(c)(account);
+  await SyncFaceRecognitionPerson(c)(account);
   expect(
     await _listSqliteDbPersons(c.sqliteDb),
     {
       account.userId.toCaseInsensitiveString(): {
-        const Person(name: "test1", thumbFaceId: 1, count: 1),
-        const Person(name: "test2", thumbFaceId: 3, count: 10),
+        const FaceRecognitionPerson(name: "test1", thumbFaceId: 1, count: 1),
+        const FaceRecognitionPerson(name: "test2", thumbFaceId: 3, count: 10),
       },
     },
   );
 }
 
-Future<Map<String, Set<Person>>> _listSqliteDbPersons(sql.SqliteDb db) async {
+Future<Map<String, Set<FaceRecognitionPerson>>> _listSqliteDbPersons(
+    sql.SqliteDb db) async {
   final query = db.select(db.persons).join([
     sql.innerJoin(db.accounts, db.accounts.rowId.equalsExp(db.persons.account)),
   ]);
   final result = await query
       .map((r) => Tuple2(r.readTable(db.accounts), r.readTable(db.persons)))
       .get();
-  final product = <String, Set<Person>>{};
+  final product = <String, Set<FaceRecognitionPerson>>{};
   for (final r in result) {
     (product[r.item1.userId] ??= {})
-        .add(SqlitePersonConverter.fromSql(r.item2));
+        .add(SqliteFaceRecognitionPersonConverter.fromSql(r.item2));
   }
   return product;
 }

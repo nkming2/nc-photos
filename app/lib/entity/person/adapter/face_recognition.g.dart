@@ -1,14 +1,15 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'populate_person.dart';
+part of 'face_recognition.dart';
 
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
-extension _$PopulatePersonNpLog on PopulatePerson {
+extension _$PersonFaceRecognitionAdapterNpLog on PersonFaceRecognitionAdapter {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("use_case.populate_person.PopulatePerson");
+  static final log = Logger(
+      "entity.person.adapter.face_recognition.PersonFaceRecognitionAdapter");
 }

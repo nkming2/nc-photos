@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search_landing.dart';
 import 'package:nc_photos/controller/account_controller.dart';
@@ -132,8 +131,7 @@ class _SearchLandingState extends State<SearchLanding> {
               )
             : TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PeopleBrowser.routeName,
-                      arguments: PeopleBrowserArguments(widget.account));
+                  Navigator.of(context).pushNamed(PeopleBrowser.routeName);
                 },
                 child: Text(L10n.global().showAllButtonLabel),
               ),
@@ -255,7 +253,7 @@ class _SearchLandingState extends State<SearchLanding> {
   void _transformPersons(List<Person> persons) {
     _personItems = persons
         .sorted((a, b) {
-          final countCompare = b.count.compareTo(a.count);
+          final countCompare = (b.count ?? 0).compareTo(a.count ?? 0);
           if (countCompare == 0) {
             return a.name.compareTo(b.name);
           } else {
@@ -266,8 +264,7 @@ class _SearchLandingState extends State<SearchLanding> {
         .map((e) => _LandingPersonItem(
               account: widget.account,
               name: e.name,
-              faceUrl: api_util.getFacePreviewUrl(widget.account, e.thumbFaceId,
-                  size: k.faceThumbSize),
+              faceUrl: e.getCoverUrl(k.faceThumbSize, k.faceThumbSize),
               onTap: () => _onPersonItemTap(e),
             ))
         .toList();
@@ -295,10 +292,12 @@ class _SearchLandingState extends State<SearchLanding> {
   }
 
   void _reqQuery() {
-    _bloc.add(SearchLandingBlocQuery(widget.account));
+    _bloc.add(SearchLandingBlocQuery(widget.account, _accountPrefController));
   }
 
   late final _bloc = SearchLandingBloc(KiwiContainer().resolve<DiContainer>());
+  late final _accountPrefController =
+      context.read<AccountController>().accountPrefController;
 
   var _personItems = <_LandingPersonItem>[];
   var _locationItems = <_LandingLocationItem>[];
@@ -325,7 +324,7 @@ class _LandingPersonItem {
 
   final Account account;
   final String name;
-  final String faceUrl;
+  final String? faceUrl;
   final VoidCallback? onTap;
 }
 
@@ -412,7 +411,7 @@ class _LandingItemWidget extends StatelessWidget {
     try {
       cover = NetworkRectThumbnail(
         account: account,
-        imageUrl: coverUrl,
+        imageUrl: coverUrl!,
         errorBuilder: (_) => buildPlaceholder(),
       );
     } catch (_) {
@@ -433,7 +432,7 @@ class _LandingItemWidget extends StatelessWidget {
 
   final Account account;
   final String label;
-  final String coverUrl;
+  final String? coverUrl;
   final Widget Function(BuildContext context) fallbackBuilder;
   final VoidCallback? onTap;
 }

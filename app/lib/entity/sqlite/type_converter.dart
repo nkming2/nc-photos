@@ -6,11 +6,11 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
-import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
@@ -36,12 +36,12 @@ extension AppTagListExtension on List<Tag> {
 }
 
 extension SqlPersonListExtension on List<sql.Person> {
-  Future<List<Person>> convertToAppPerson() {
-    return computeAll(SqlitePersonConverter.fromSql);
+  Future<List<FaceRecognitionPerson>> convertToAppPerson() {
+    return computeAll(SqliteFaceRecognitionPersonConverter.fromSql);
   }
 }
 
-extension AppPersonListExtension on List<Person> {
+extension AppPersonListExtension on List<FaceRecognitionPerson> {
   Future<List<sql.PersonsCompanion>> convertToPersonCompanion(
       sql.Account? dbAccount) {
     return map((p) => {
@@ -238,14 +238,16 @@ class SqliteTagConverter {
       );
 }
 
-class SqlitePersonConverter {
-  static Person fromSql(sql.Person person) => Person(
+class SqliteFaceRecognitionPersonConverter {
+  static FaceRecognitionPerson fromSql(sql.Person person) =>
+      FaceRecognitionPerson(
         name: person.name,
         thumbFaceId: person.thumbFaceId,
         count: person.count,
       );
 
-  static sql.PersonsCompanion toSql(sql.Account? dbAccount, Person person) =>
+  static sql.PersonsCompanion toSql(
+          sql.Account? dbAccount, FaceRecognitionPerson person) =>
       sql.PersonsCompanion(
         account:
             dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
@@ -331,6 +333,6 @@ sql.TagsCompanion _convertAppTag(Map map) {
 
 sql.PersonsCompanion _convertAppPerson(Map map) {
   final account = map["account"] as sql.Account?;
-  final person = map["person"] as Person;
-  return SqlitePersonConverter.toSql(account, person);
+  final person = map["person"] as FaceRecognitionPerson;
+  return SqliteFaceRecognitionPersonConverter.toSql(account, person);
 }
