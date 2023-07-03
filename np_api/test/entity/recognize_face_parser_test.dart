@@ -1,5 +1,4 @@
 import 'package:np_api/np_api.dart';
-import 'package:np_api/src/entity/recognize_face_parser.dart';
 import 'package:test/test.dart';
 
 void main() {
