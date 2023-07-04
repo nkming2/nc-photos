@@ -3905,11 +3905,12 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   }
 }
 
-class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
+class $FaceRecognitionPersonsTable extends FaceRecognitionPersons
+    with TableInfo<$FaceRecognitionPersonsTable, FaceRecognitionPerson> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PersonsTable(this.attachedDatabase, [this._alias]);
+  $FaceRecognitionPersonsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
   late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
@@ -3948,11 +3949,12 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   List<GeneratedColumn> get $columns =>
       [rowId, account, name, thumbFaceId, count];
   @override
-  String get aliasedName => _alias ?? 'persons';
+  String get aliasedName => _alias ?? 'face_recognition_persons';
   @override
-  String get actualTableName => 'persons';
+  String get actualTableName => 'face_recognition_persons';
   @override
-  VerificationContext validateIntegrity(Insertable<Person> instance,
+  VerificationContext validateIntegrity(
+      Insertable<FaceRecognitionPerson> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3996,9 +3998,9 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
         {account, name},
       ];
   @override
-  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
+  FaceRecognitionPerson map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Person(
+    return FaceRecognitionPerson(
       rowId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
       account: attachedDatabase.typeMapping
@@ -4013,18 +4015,19 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   }
 
   @override
-  $PersonsTable createAlias(String alias) {
-    return $PersonsTable(attachedDatabase, alias);
+  $FaceRecognitionPersonsTable createAlias(String alias) {
+    return $FaceRecognitionPersonsTable(attachedDatabase, alias);
   }
 }
 
-class Person extends DataClass implements Insertable<Person> {
+class FaceRecognitionPerson extends DataClass
+    implements Insertable<FaceRecognitionPerson> {
   final int rowId;
   final int account;
   final String name;
   final int thumbFaceId;
   final int count;
-  const Person(
+  const FaceRecognitionPerson(
       {required this.rowId,
       required this.account,
       required this.name,
@@ -4041,8 +4044,8 @@ class Person extends DataClass implements Insertable<Person> {
     return map;
   }
 
-  PersonsCompanion toCompanion(bool nullToAbsent) {
-    return PersonsCompanion(
+  FaceRecognitionPersonsCompanion toCompanion(bool nullToAbsent) {
+    return FaceRecognitionPersonsCompanion(
       rowId: Value(rowId),
       account: Value(account),
       name: Value(name),
@@ -4051,10 +4054,10 @@ class Person extends DataClass implements Insertable<Person> {
     );
   }
 
-  factory Person.fromJson(Map<String, dynamic> json,
+  factory FaceRecognitionPerson.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Person(
+    return FaceRecognitionPerson(
       rowId: serializer.fromJson<int>(json['rowId']),
       account: serializer.fromJson<int>(json['account']),
       name: serializer.fromJson<String>(json['name']),
@@ -4074,13 +4077,13 @@ class Person extends DataClass implements Insertable<Person> {
     };
   }
 
-  Person copyWith(
+  FaceRecognitionPerson copyWith(
           {int? rowId,
           int? account,
           String? name,
           int? thumbFaceId,
           int? count}) =>
-      Person(
+      FaceRecognitionPerson(
         rowId: rowId ?? this.rowId,
         account: account ?? this.account,
         name: name ?? this.name,
@@ -4089,7 +4092,7 @@ class Person extends DataClass implements Insertable<Person> {
       );
   @override
   String toString() {
-    return (StringBuffer('Person(')
+    return (StringBuffer('FaceRecognitionPerson(')
           ..write('rowId: $rowId, ')
           ..write('account: $account, ')
           ..write('name: $name, ')
@@ -4104,7 +4107,7 @@ class Person extends DataClass implements Insertable<Person> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Person &&
+      (other is FaceRecognitionPerson &&
           other.rowId == this.rowId &&
           other.account == this.account &&
           other.name == this.name &&
@@ -4112,20 +4115,21 @@ class Person extends DataClass implements Insertable<Person> {
           other.count == this.count);
 }
 
-class PersonsCompanion extends UpdateCompanion<Person> {
+class FaceRecognitionPersonsCompanion
+    extends UpdateCompanion<FaceRecognitionPerson> {
   final Value<int> rowId;
   final Value<int> account;
   final Value<String> name;
   final Value<int> thumbFaceId;
   final Value<int> count;
-  const PersonsCompanion({
+  const FaceRecognitionPersonsCompanion({
     this.rowId = const Value.absent(),
     this.account = const Value.absent(),
     this.name = const Value.absent(),
     this.thumbFaceId = const Value.absent(),
     this.count = const Value.absent(),
   });
-  PersonsCompanion.insert({
+  FaceRecognitionPersonsCompanion.insert({
     this.rowId = const Value.absent(),
     required int account,
     required String name,
@@ -4135,7 +4139,7 @@ class PersonsCompanion extends UpdateCompanion<Person> {
         name = Value(name),
         thumbFaceId = Value(thumbFaceId),
         count = Value(count);
-  static Insertable<Person> custom({
+  static Insertable<FaceRecognitionPerson> custom({
     Expression<int>? rowId,
     Expression<int>? account,
     Expression<String>? name,
@@ -4151,13 +4155,13 @@ class PersonsCompanion extends UpdateCompanion<Person> {
     });
   }
 
-  PersonsCompanion copyWith(
+  FaceRecognitionPersonsCompanion copyWith(
       {Value<int>? rowId,
       Value<int>? account,
       Value<String>? name,
       Value<int>? thumbFaceId,
       Value<int>? count}) {
-    return PersonsCompanion(
+    return FaceRecognitionPersonsCompanion(
       rowId: rowId ?? this.rowId,
       account: account ?? this.account,
       name: name ?? this.name,
@@ -4189,7 +4193,7 @@ class PersonsCompanion extends UpdateCompanion<Person> {
 
   @override
   String toString() {
-    return (StringBuffer('PersonsCompanion(')
+    return (StringBuffer('FaceRecognitionPersonsCompanion(')
           ..write('rowId: $rowId, ')
           ..write('account: $account, ')
           ..write('name: $name, ')
@@ -5297,7 +5301,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
   late final $TagsTable tags = $TagsTable(this);
-  late final $PersonsTable persons = $PersonsTable(this);
+  late final $FaceRecognitionPersonsTable faceRecognitionPersons =
+      $FaceRecognitionPersonsTable(this);
   late final $NcAlbumsTable ncAlbums = $NcAlbumsTable(this);
   late final $NcAlbumItemsTable ncAlbumItems = $NcAlbumItemsTable(this);
   @override
@@ -5316,7 +5321,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         albums,
         albumShares,
         tags,
-        persons,
+        faceRecognitionPersons,
         ncAlbums,
         ncAlbumItems
       ];
@@ -5411,7 +5416,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
             on: TableUpdateQuery.onTableName('accounts',
                 limitUpdateKind: UpdateKind.delete),
             result: [
-              TableUpdate('persons', kind: UpdateKind.delete),
+              TableUpdate('face_recognition_persons', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(

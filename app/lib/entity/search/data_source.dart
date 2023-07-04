@@ -164,7 +164,7 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     // "Ada" will return results from "Ada Crook" but NOT "Adabelle"
     try {
       final dbPersons = await _c.sqliteDb.use((db) async {
-        return await db.personsByName(
+        return await db.faceRecognitionPersonsByName(
           appAccount: account,
           name: criteria.input,
         );
@@ -172,7 +172,7 @@ class SearchSqliteDbDataSource implements SearchDataSource {
       if (dbPersons.isEmpty) {
         return [];
       }
-      final persons = (await dbPersons.convertToAppPerson())
+      final persons = (await dbPersons.convertToAppFaceRecognitionPerson())
           .map((p) => PersonBuilder.byFaceRecognitionPerson(account, p))
           .toList();
       _log.info(

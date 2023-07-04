@@ -434,8 +434,4 @@ extension DiContainerExtension on DiContainer {
   DiContainer withLocalFileRepo() => copyWith(fileRepo: OrNull(fileRepoLocal));
   DiContainer withRemoteTagRepo() => copyWith(tagRepo: OrNull(tagRepoRemote));
   DiContainer withLocalTagRepo() => copyWith(tagRepo: OrNull(tagRepoLocal));
-  DiContainer withRemoteFaceRecognitionPersonRepo() => copyWith(
-      faceRecognitionPersonRepo: OrNull(faceRecognitionPersonRepoRemote));
-  DiContainer withLocalFaceRecognitionPersonRepo() => copyWith(
-      faceRecognitionPersonRepo: OrNull(faceRecognitionPersonRepoLocal));
 }

@@ -43,8 +43,8 @@ Future<void> _new() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
       batch.insert(
-        c.sqliteDb.persons,
-        sql.PersonsCompanion.insert(
+        c.sqliteDb.faceRecognitionPersons,
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test1", thumbFaceId: 1, count: 1),
       );
     });
@@ -83,12 +83,12 @@ Future<void> _remove() async {
   await c.sqliteDb.transaction(() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
-      batch.insertAll(c.sqliteDb.persons, [
-        sql.PersonsCompanion.insert(
+      batch.insertAll(c.sqliteDb.faceRecognitionPersons, [
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test1", thumbFaceId: 1, count: 1),
-        sql.PersonsCompanion.insert(
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test2", thumbFaceId: 2, count: 10),
-        sql.PersonsCompanion.insert(
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test3", thumbFaceId: 3, count: 100),
       ]);
     });
@@ -127,10 +127,10 @@ Future<void> _update() async {
   await c.sqliteDb.transaction(() async {
     await c.sqliteDb.insertAccountOf(account);
     await c.sqliteDb.batch((batch) {
-      batch.insertAll(c.sqliteDb.persons, [
-        sql.PersonsCompanion.insert(
+      batch.insertAll(c.sqliteDb.faceRecognitionPersons, [
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test1", thumbFaceId: 1, count: 1),
-        sql.PersonsCompanion.insert(
+        sql.FaceRecognitionPersonsCompanion.insert(
             account: 1, name: "test2", thumbFaceId: 2, count: 10),
       ]);
     });
@@ -150,11 +150,13 @@ Future<void> _update() async {
 
 Future<Map<String, Set<FaceRecognitionPerson>>> _listSqliteDbPersons(
     sql.SqliteDb db) async {
-  final query = db.select(db.persons).join([
-    sql.innerJoin(db.accounts, db.accounts.rowId.equalsExp(db.persons.account)),
+  final query = db.select(db.faceRecognitionPersons).join([
+    sql.innerJoin(db.accounts,
+        db.accounts.rowId.equalsExp(db.faceRecognitionPersons.account)),
   ]);
   final result = await query
-      .map((r) => Tuple2(r.readTable(db.accounts), r.readTable(db.persons)))
+      .map((r) => Tuple2(
+          r.readTable(db.accounts), r.readTable(db.faceRecognitionPersons)))
       .get();
   final product = <String, Set<FaceRecognitionPerson>>{};
   for (final r in result) {

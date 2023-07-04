@@ -18,8 +18,8 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:np_codegen/np_codegen.dart';
 
 part 'database.g.dart';
-part 'database_extension.dart';
 part 'database/nc_album_extension.dart';
+part 'database_extension.dart';
 
 // remember to also update the truncate method after adding a new table
 @npLog
@@ -36,7 +36,7 @@ part 'database/nc_album_extension.dart';
     Albums,
     AlbumShares,
     Tags,
-    Persons,
+    FaceRecognitionPersons,
     NcAlbums,
     NcAlbumItems,
   ],
@@ -47,7 +47,7 @@ class SqliteDb extends _$SqliteDb {
   }) : super(executor ?? platform.openSqliteConnection());
 
   @override
-  get schemaVersion => 5;
+  get schemaVersion => 6;
 
   @override
   get migration => MigrationStrategy(
@@ -86,7 +86,7 @@ class SqliteDb extends _$SqliteDb {
             await transaction(() async {
               if (from < 2) {
                 await m.createTable(tags);
-                await m.createTable(persons);
+                await m.createTable(faceRecognitionPersons);
                 await _createIndexV2(m);
               }
               if (from < 3) {
@@ -99,6 +99,11 @@ class SqliteDb extends _$SqliteDb {
               if (from < 5) {
                 await m.createTable(ncAlbums);
                 await m.createTable(ncAlbumItems);
+              }
+              if (from < 6) {
+                if (from >= 2) {
+                  await m.renameTable(faceRecognitionPersons, "persons");
+                }
               }
             });
           } catch (e, stackTrace) {
@@ -119,8 +124,8 @@ class SqliteDb extends _$SqliteDb {
   Future<void> _createIndexV2(Migrator m) async {
     await m.createIndex(Index("tags_server_index",
         "CREATE INDEX tags_server_index ON tags(server);"));
-    await m.createIndex(Index("persons_account_index",
-        "CREATE INDEX persons_account_index ON persons(account);"));
+    await m.createIndex(Index("face_recognition_persons_account_index",
+        "CREATE INDEX face_recognition_persons_account_index ON face_recognition_persons(account);"));
   }
 
   Future<void> _createIndexV3(Migrator m) async {

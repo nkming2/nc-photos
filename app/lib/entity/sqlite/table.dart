@@ -219,7 +219,7 @@ class Tags extends Table {
       ];
 }
 
-class Persons extends Table {
+class FaceRecognitionPersons extends Table {
   IntColumn get rowId => integer().autoIncrement()();
   IntColumn get account =>
       integer().references(Accounts, #rowId, onDelete: KeyAction.cascade)();

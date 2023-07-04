@@ -207,12 +207,6 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const AlbumRemoteDataSource2(), AlbumSqliteDbDataSource2(c.sqliteDb));
   c.albumRepo2Remote = const BasicAlbumRepo2(AlbumRemoteDataSource2());
   c.albumRepo2Local = BasicAlbumRepo2(AlbumSqliteDbDataSource2(c.sqliteDb));
-  c.faceRecognitionPersonRepo = const BasicFaceRecognitionPersonRepo(
-      FaceRecognitionPersonRemoteDataSource());
-  c.faceRecognitionPersonRepoRemote = const BasicFaceRecognitionPersonRepo(
-      FaceRecognitionPersonRemoteDataSource());
-  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
-      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
   c.fileRepo = FileRepo(FileCachedDataSource(c));
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
@@ -228,6 +222,12 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const NcAlbumRemoteDataSource(), NcAlbumSqliteDbDataSource(c.sqliteDb));
   c.ncAlbumRepoRemote = const BasicNcAlbumRepo(NcAlbumRemoteDataSource());
   c.ncAlbumRepoLocal = BasicNcAlbumRepo(NcAlbumSqliteDbDataSource(c.sqliteDb));
+  c.faceRecognitionPersonRepo = const BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonRemoteDataSource());
+  c.faceRecognitionPersonRepoRemote = const BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonRemoteDataSource());
+  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
 
   c.touchManager = TouchManager(c);
 

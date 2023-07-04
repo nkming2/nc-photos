@@ -35,19 +35,20 @@ extension AppTagListExtension on List<Tag> {
   }
 }
 
-extension SqlPersonListExtension on List<sql.Person> {
-  Future<List<FaceRecognitionPerson>> convertToAppPerson() {
+extension SqlFaceRecognitionPersonListExtension
+    on List<sql.FaceRecognitionPerson> {
+  Future<List<FaceRecognitionPerson>> convertToAppFaceRecognitionPerson() {
     return computeAll(SqliteFaceRecognitionPersonConverter.fromSql);
   }
 }
 
-extension AppPersonListExtension on List<FaceRecognitionPerson> {
-  Future<List<sql.PersonsCompanion>> convertToPersonCompanion(
-      sql.Account? dbAccount) {
+extension AppFaceRecognitionPersonListExtension on List<FaceRecognitionPerson> {
+  Future<List<sql.FaceRecognitionPersonsCompanion>>
+      convertToFaceRecognitionPersonCompanion(sql.Account? dbAccount) {
     return map((p) => {
           "account": dbAccount,
           "person": p,
-        }).computeAll(_convertAppPerson);
+        }).computeAll(_convertAppFaceRecognitionPerson);
   }
 }
 
@@ -239,16 +240,16 @@ class SqliteTagConverter {
 }
 
 class SqliteFaceRecognitionPersonConverter {
-  static FaceRecognitionPerson fromSql(sql.Person person) =>
+  static FaceRecognitionPerson fromSql(sql.FaceRecognitionPerson person) =>
       FaceRecognitionPerson(
         name: person.name,
         thumbFaceId: person.thumbFaceId,
         count: person.count,
       );
 
-  static sql.PersonsCompanion toSql(
+  static sql.FaceRecognitionPersonsCompanion toSql(
           sql.Account? dbAccount, FaceRecognitionPerson person) =>
-      sql.PersonsCompanion(
+      sql.FaceRecognitionPersonsCompanion(
         account:
             dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
         name: Value(person.name),
@@ -331,7 +332,7 @@ sql.TagsCompanion _convertAppTag(Map map) {
   return SqliteTagConverter.toSql(account, tag);
 }
 
-sql.PersonsCompanion _convertAppPerson(Map map) {
+sql.FaceRecognitionPersonsCompanion _convertAppFaceRecognitionPerson(Map map) {
   final account = map["account"] as sql.Account?;
   final person = map["person"] as FaceRecognitionPerson;
   return SqliteFaceRecognitionPersonConverter.toSql(account, person);

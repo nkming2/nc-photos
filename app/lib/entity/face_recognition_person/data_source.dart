@@ -72,7 +72,7 @@ class FaceRecognitionPersonSqliteDbDataSource
   Future<List<FaceRecognitionPerson>> getPersons(Account account) async {
     _log.info("[getPersons] $account");
     final dbPersons = await sqliteDb.use((db) async {
-      return await db.allPersons(account: sql.ByAccount.app(account));
+      return await db.allFaceRecognitionPersons(account: sql.ByAccount.app(account));
     });
     return dbPersons
         .map((p) {

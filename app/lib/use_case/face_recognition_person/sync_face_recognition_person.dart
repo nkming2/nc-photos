@@ -56,26 +56,26 @@ class SyncFaceRecognitionPerson {
         await db.batch((batch) {
           for (final d in deletes) {
             batch.deleteWhere(
-              db.persons,
-              (sql.$PersonsTable p) =>
+              db.faceRecognitionPersons,
+              (sql.$FaceRecognitionPersonsTable p) =>
                   p.account.equals(dbAccount.rowId) & p.name.equals(d.name),
             );
           }
           for (final u in updates) {
             batch.update(
-              db.persons,
-              sql.PersonsCompanion(
+              db.faceRecognitionPersons,
+              sql.FaceRecognitionPersonsCompanion(
                 name: sql.Value(u.name),
                 thumbFaceId: sql.Value(u.thumbFaceId),
                 count: sql.Value(u.count),
               ),
-              where: (sql.$PersonsTable p) =>
+              where: (sql.$FaceRecognitionPersonsTable p) =>
                   p.account.equals(dbAccount.rowId) & p.name.equals(u.name),
             );
           }
           for (final i in inserts) {
             batch.insert(
-              db.persons,
+              db.faceRecognitionPersons,
               SqliteFaceRecognitionPersonConverter.toSql(dbAccount, i),
               mode: sql.InsertMode.insertOrIgnore,
             );
