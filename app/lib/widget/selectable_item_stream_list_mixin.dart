@@ -28,7 +28,6 @@ abstract class SelectableItem {
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
 
-@npLog
 mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @override
   initState() {
@@ -148,7 +147,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     } catch (_) {}
     _lastSelectPosition = newLastSelectPosition;
 
-    _log.info("[itemStreamListItems] updateListHeight: list item changed");
+    _$__NpLog.log
+        .info("[itemStreamListItems] updateListHeight: list item changed");
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         (_listKey.currentState as MeasurableItemListState?)
             ?.updateListHeight());
@@ -201,7 +201,8 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   void _onItemTap(SelectableItem item, int index) {
     if (isSelectionMode) {
       if (!_items.containsIdentical(item)) {
-        _log.warning("[_onItemTap] Item not found in backing list, ignoring");
+        _$__NpLog.log
+            .warning("[_onItemTap] Item not found in backing list, ignoring");
         return;
       }
       if (_selectedItems.contains(item)) {
@@ -236,7 +237,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
 
   void _onItemLongPress(SelectableItem item, int index) {
     if (!_items.containsIdentical(item)) {
-      _log.warning(
+      _$__NpLog.log.warning(
           "[_onItemLongPress] Item not found in backing list, ignoring");
       return;
     }
@@ -306,3 +307,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   /// used to gain focus on web for keyboard support
   final _keyboardFocus = FocusNode();
 }
+
+@npLog
+// ignore: camel_case_types
+class __ {}

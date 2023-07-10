@@ -13,7 +13,6 @@ import 'package:screen_brightness/screen_brightness.dart';
 
 part 'viewer_mixin.g.dart';
 
-@npLog
 mixin ViewerControllersMixin<T extends StatefulWidget>
     on DisposableManagerMixin<T> {
   @override
@@ -30,7 +29,7 @@ mixin ViewerControllersMixin<T extends StatefulWidget>
   }
 
   void _onOrientationChanged(NativeDeviceOrientation orientation) {
-    _log.info("[_onOrientationChanged] $orientation");
+    _$__NpLog.log.info("[_onOrientationChanged] $orientation");
     if (!mounted) {
       return;
     }
@@ -119,3 +118,7 @@ class _ViewerOrientationController implements Disposable {
     logTag: "_ViewerOrientationController.trigger",
   );
 }
+
+@npLog
+// ignore: camel_case_types
+class __ {}

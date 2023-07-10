@@ -6,9 +6,9 @@ part of 'viewer_mixin.dart';
 // NpLogGenerator
 // **************************************************************************
 
-extension _$ViewerControllersMixinNpLog on ViewerControllersMixin {
+extension _$__NpLog on __ {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("widget.viewer_mixin.ViewerControllersMixin");
+  static final log = Logger("widget.viewer_mixin.__");
 }

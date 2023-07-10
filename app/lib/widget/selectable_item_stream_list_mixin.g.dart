@@ -6,11 +6,9 @@ part of 'selectable_item_stream_list_mixin.dart';
 // NpLogGenerator
 // **************************************************************************
 
-extension _$SelectableItemStreamListMixinNpLog
-    on SelectableItemStreamListMixin {
+extension _$__NpLog on __ {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger(
-      "widget.selectable_item_stream_list_mixin.SelectableItemStreamListMixin");
+  static final log = Logger("widget.selectable_item_stream_list_mixin.__");
 }

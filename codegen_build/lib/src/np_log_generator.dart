@@ -37,7 +37,7 @@ extension _\$${extension.name}NpLog on ${extension.extendedType.element2!.name} 
 }
 """;
     } else {
-      print("Only class/extension is supported");
+      print("Only class/extension is supported: ${element.runtimeType}");
       return null;
     }
   }
