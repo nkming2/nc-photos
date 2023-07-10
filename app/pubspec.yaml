@@ -125,7 +125,7 @@ dependencies:
   uuid: ^3.0.7
   video_player: 2.4.5
   visibility_detector: ^0.4.0+2
-  wakelock: ^0.6.2
+  wakelock_plus: ^1.1.1
   woozy_search: ^2.0.3
 
 dependency_overrides:
@@ -134,12 +134,6 @@ dependency_overrides:
       url: https://gitlab.com/nc-photos/flutter-plugins
       ref: video_player-v2.4.5-nc-photos-1
       path: packages/video_player/video_player_android
-  # https://github.com/creativecreatorormaybenot/wakelock/pull/203
-  wakelock_windows:
-    git:
-      url: https://github.com/timsneath/wakelock
-      ref: 2a9bca63a540771f241d688562351482b2cf234c
-      path: wakelock_windows
 
 dev_dependencies:
   test: any
