@@ -10,8 +10,8 @@ enum FilesQueryMode {
   expression,
 }
 
-typedef FilesQueryRelativePathBuilder = Expression<bool?> Function(
-    GeneratedColumn<String?> relativePath);
+typedef FilesQueryRelativePathBuilder = Expression<bool> Function(
+    GeneratedColumn<String> relativePath);
 
 /// Build a Files table query
 ///
@@ -136,28 +136,28 @@ class FilesQueryBuilder {
     }
 
     if (_byRowId != null) {
-      query.where(db.files.rowId.equals(_byRowId));
+      query.where(db.files.rowId.equals(_byRowId!));
     }
     if (_byFileId != null) {
-      query.where(db.files.fileId.equals(_byFileId));
+      query.where(db.files.fileId.equals(_byFileId!));
     }
     if (_byFileIds != null) {
       query.where(db.files.fileId.isIn(_byFileIds!));
     }
     if (_byRelativePath != null) {
-      query.where(db.accountFiles.relativePath.equals(_byRelativePath));
+      query.where(db.accountFiles.relativePath.equals(_byRelativePath!));
     }
     if (_byOrRelativePathBuilders?.isNotEmpty == true) {
       final expression = _byOrRelativePathBuilders!
           .sublist(1)
-          .fold<Expression<bool?>>(
+          .fold<Expression<bool>>(
               _byOrRelativePathBuilders![0](db.accountFiles.relativePath),
               (previousValue, builder) =>
                   previousValue | builder(db.accountFiles.relativePath));
       query.where(expression);
     }
     if (_byMimePatterns?.isNotEmpty == true) {
-      final expression = _byMimePatterns!.sublist(1).fold<Expression<bool?>>(
+      final expression = _byMimePatterns!.sublist(1).fold<Expression<bool>>(
           db.files.contentType.like(_byMimePatterns![0]),
           (previousValue, element) =>
               previousValue | db.files.contentType.like(element));
@@ -172,10 +172,10 @@ class FilesQueryBuilder {
       }
     }
     if (_byDirRowId != null) {
-      query.where(db.dirFiles.dir.equals(_byDirRowId));
+      query.where(db.dirFiles.dir.equals(_byDirRowId!));
     }
     if (_byServerRowId != null) {
-      query.where(db.files.server.equals(_byServerRowId));
+      query.where(db.files.server.equals(_byServerRowId!));
     }
     if (_byLocation != null) {
       var clause = db.imageLocations.name.like(_byLocation!) |

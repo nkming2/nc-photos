@@ -62,7 +62,7 @@ class CacheFavorite {
       }
       if (removedFildIds.isNotEmpty) {
         final counts =
-            await removedFildIds.map((id) => cacheMap[id]).withPartition(
+            await removedFildIds.map((id) => cacheMap[id]!).withPartition(
           (sublist) async {
             return [
               await (db.update(db.accountFiles)

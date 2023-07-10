@@ -133,7 +133,7 @@ class FileSqliteCacheUpdater {
       }
 
       final dirFileQuery = db.select(db.dirFiles)
-        ..where((t) => t.dir.equals(_dirRowId))
+        ..where((t) => t.dir.equals(_dirRowId!))
         ..orderBy([(t) => sql.OrderingTerm.asc(t.rowId)]);
       final dirFiles = await dirFileQuery.get();
       final diff = list_util.diff(dirFiles.map((e) => e.child),
@@ -151,7 +151,7 @@ class FileSqliteCacheUpdater {
           final deleteQuery = db.delete(db.dirFiles)
             ..where((t) => t.child.isIn(sublist))
             ..where((t) =>
-                t.dir.equals(_dirRowId) | t.dir.equalsExp(db.dirFiles.child));
+                t.dir.equals(_dirRowId!) | t.dir.equalsExp(db.dirFiles.child));
           await deleteQuery.go();
         }, sql.maxByFileIdsSize);
 

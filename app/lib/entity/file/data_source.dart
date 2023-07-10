@@ -416,7 +416,7 @@ class FileSqliteDbDataSource implements FileDataSource {
         }
         return q.build();
       });
-      final dateTime = db.accountFiles.bestDateTime.secondsSinceEpoch;
+      final dateTime = db.accountFiles.bestDateTime.unixepoch;
       query
         ..where(dateTime.isBetweenValues(
             fromEpochMs ~/ 1000, (toEpochMs ~/ 1000) - 1))

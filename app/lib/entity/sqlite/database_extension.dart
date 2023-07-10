@@ -618,7 +618,7 @@ extension SqliteDbExtension on SqliteDb {
       query
         ..where(files.fileId.isIn(sublist))
         ..where(whereFileIsSupportedImageMime());
-      return [await query.map((r) => r.read(count)).getSingle()];
+      return [await query.map((r) => r.read(count)!).getSingle()];
     }, maxByFileIdsSize);
     return counts.reduce((value, element) => value + element);
   }
@@ -645,15 +645,15 @@ extension SqliteDbExtension on SqliteDb {
     await customStatement("UPDATE sqlite_sequence SET seq=0;");
   }
 
-  Expression<bool?> whereFileIsSupportedMime() {
+  Expression<bool> whereFileIsSupportedMime() {
     return file_util.supportedFormatMimes
-        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .map<Expression<bool>>((m) => files.contentType.equals(m))
         .reduce((value, element) => value | element);
   }
 
-  Expression<bool?> whereFileIsSupportedImageMime() {
+  Expression<bool> whereFileIsSupportedImageMime() {
     return file_util.supportedImageFormatMimes
-        .map<Expression<bool?>>((m) => files.contentType.equals(m))
+        .map<Expression<bool>>((m) => files.contentType.equals(m))
         .reduce((value, element) => value | element);
   }
 }

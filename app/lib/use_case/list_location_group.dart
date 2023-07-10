@@ -85,9 +85,9 @@ class ListLocationGroup {
                 return LocationGroup(
                   r.read(db.imageLocations.name)!,
                   r.read(db.imageLocations.countryCode)!,
-                  r.read(count),
+                  r.read(count)!,
                   r.read(db.files.fileId)!,
-                  r.read(latest).toUtc(),
+                  r.read(latest)!.toUtc(),
                 );
               }).get(),
             );
@@ -104,9 +104,9 @@ class ListLocationGroup {
                   .map((r) => LocationGroup(
                         r.read(db.imageLocations.admin1)!,
                         r.read(db.imageLocations.countryCode)!,
-                        r.read(count),
+                        r.read(count)!,
                         r.read(db.files.fileId)!,
-                        r.read(latest).toUtc(),
+                        r.read(latest)!.toUtc(),
                       ))
                   .get(),
             );
@@ -123,9 +123,9 @@ class ListLocationGroup {
                   .map((r) => LocationGroup(
                         r.read(db.imageLocations.admin2)!,
                         r.read(db.imageLocations.countryCode)!,
-                        r.read(count),
+                        r.read(count)!,
                         r.read(db.files.fileId)!,
-                        r.read(latest).toUtc(),
+                        r.read(latest)!.toUtc(),
                       ))
                   .get(),
             );
@@ -143,9 +143,9 @@ class ListLocationGroup {
                 return LocationGroup(
                   location_util.alpha2CodeToName(cc) ?? cc,
                   cc,
-                  r.read(count),
+                  r.read(count)!,
                   r.read(db.files.fileId)!,
-                  r.read(latest).toUtc(),
+                  r.read(latest)!.toUtc(),
                 );
               }).get(),
             );
@@ -168,7 +168,7 @@ class ListLocationGroup {
     String dir,
     sql.Expression<DateTime> latest,
     sql.Expression<int> count,
-    sql.GeneratedColumn<String?> groupColumn,
+    sql.GeneratedColumn<String> groupColumn,
   ) {
     final query = db.selectOnly(db.imageLocations).join([
       sql.innerJoin(db.accountFiles,

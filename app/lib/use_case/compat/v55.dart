@@ -18,7 +18,7 @@ class CompatV55 {
     return db.use((db) async {
       final countExp = db.accountFiles.rowId.count();
       final countQ = db.selectOnly(db.accountFiles)..addColumns([countExp]);
-      final count = await countQ.map((r) => r.read<int>(countExp)).getSingle();
+      final count = await countQ.map((r) => r.read(countExp)!).getSingle();
       onProgress?.call(0, count);
 
       final dateTimeUpdates = <Tuple2<int, DateTime>>[];

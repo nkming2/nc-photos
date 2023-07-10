@@ -21,7 +21,7 @@ Future<SqliteDb> createDb() async {
   // see: https://drift.simonbinder.eu/docs/advanced-features/isolates/
   final driftIsolate = await _createDriftIsolate();
   final connection = await driftIsolate.connect();
-  return SqliteDb.connect(connection);
+  return SqliteDb(executor: connection);
 }
 
 Future<U> computeWithDb<T, U>(
@@ -65,6 +65,7 @@ Future<DriftIsolate> _createDriftIsolate() async {
   return await receivePort.first as DriftIsolate;
 }
 
+@pragma("vm:entry-point")
 void _startBackground(_IsolateStartRequest request) {
   app_init.initDrift();
 
@@ -75,7 +76,7 @@ void _startBackground(_IsolateStartRequest request) {
   // background isolate. If we used DriftIsolate.spawn, a third isolate would be
   // started which is not what we want!
   final driftIsolate = DriftIsolate.inCurrent(
-    () => DatabaseConnection.fromExecutor(executor),
+    () => DatabaseConnection(executor),
     // this breaks background service!
     serialize: false,
   );

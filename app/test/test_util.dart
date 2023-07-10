@@ -601,7 +601,7 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
       ),
     );
     return Tuple2(
-      r.read(db.albums.rowId),
+      r.read(db.albums.rowId)!,
       SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
     );
   }).get();

@@ -39,7 +39,7 @@ Future<void> _insertAccountFirst() async {
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 1, server: 1, userId: "admin"),
       ),
@@ -67,11 +67,11 @@ Future<void> _insertAccountSameServer() async {
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 1, server: 1, userId: "admin"),
       ),
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 2, server: 1, userId: "user1"),
       ),
@@ -99,7 +99,7 @@ Future<void> _insertAccountSameAccount() async {
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 1, server: 1, userId: "admin"),
       ),
@@ -177,7 +177,7 @@ Future<void> _deleteAccountSameServer() async {
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 2, server: 1, userId: "user1"),
       ),
@@ -228,7 +228,7 @@ Future<void> _deleteAccountSameServerSharedFile() async {
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
-      util.SqlAccountWithServer(
+      const util.SqlAccountWithServer(
         sql.Server(rowId: 1, address: "http://example.com"),
         sql.Account(rowId: 2, server: 1, userId: "user1"),
       ),

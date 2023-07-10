@@ -46,8 +46,6 @@ class SqliteDb extends _$SqliteDb {
     QueryExecutor? executor,
   }) : super(executor ?? platform.openSqliteConnection());
 
-  SqliteDb.connect(DatabaseConnection connection) : super.connect(connection);
-
   @override
   get schemaVersion => 5;
 

@@ -216,7 +216,7 @@ class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
             await db.into(db.albums).insertReturning(insert.album);
         rowId = insertedAlbum.rowId;
       } else {
-        await (db.delete(db.albumShares)..where((t) => t.album.equals(rowId)))
+        await (db.delete(db.albumShares)..where((t) => t.album.equals(rowId!)))
             .go();
       }
       if (insert.albumShares.isNotEmpty) {

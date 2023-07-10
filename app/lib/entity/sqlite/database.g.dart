@@ -2,24 +2,76 @@
 
 part of 'database.dart';
 
-// **************************************************************************
-// MoorGenerator
-// **************************************************************************
-
 // ignore_for_file: type=lint
+class $ServersTable extends Servers with TableInfo<$ServersTable, Server> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ServersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
+      'row_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _addressMeta =
+      const VerificationMeta('address');
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+      'address', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  @override
+  List<GeneratedColumn> get $columns => [rowId, address];
+  @override
+  String get aliasedName => _alias ?? 'servers';
+  @override
+  String get actualTableName => 'servers';
+  @override
+  VerificationContext validateIntegrity(Insertable<Server> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('address')) {
+      context.handle(_addressMeta,
+          address.isAcceptableOrUnknown(data['address']!, _addressMeta));
+    } else if (isInserting) {
+      context.missing(_addressMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  Server map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Server(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      address: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}address'])!,
+    );
+  }
+
+  @override
+  $ServersTable createAlias(String alias) {
+    return $ServersTable(attachedDatabase, alias);
+  }
+}
+
 class Server extends DataClass implements Insertable<Server> {
   final int rowId;
   final String address;
-  Server({required this.rowId, required this.address});
-  factory Server.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Server(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      address: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}address'])!,
-    );
-  }
+  const Server({required this.rowId, required this.address});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -125,33 +177,41 @@ class ServersCompanion extends UpdateCompanion<Server> {
   }
 }
 
-class $ServersTable extends Servers with TableInfo<$ServersTable, Server> {
+class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ServersTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $AccountsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _addressMeta = const VerificationMeta('address');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _serverMeta = const VerificationMeta('server');
   @override
-  late final GeneratedColumn<String?> address = GeneratedColumn<String?>(
-      'address', aliasedName, false,
-      type: const StringType(),
+  late final GeneratedColumn<int> server = GeneratedColumn<int>(
+      'server', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'UNIQUE');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES servers (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
-  List<GeneratedColumn> get $columns => [rowId, address];
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  String get aliasedName => _alias ?? 'servers';
+  List<GeneratedColumn> get $columns => [rowId, server, userId];
   @override
-  String get actualTableName => 'servers';
+  String get aliasedName => _alias ?? 'accounts';
   @override
-  VerificationContext validateIntegrity(Insertable<Server> instance,
+  String get actualTableName => 'accounts';
+  @override
+  VerificationContext validateIntegrity(Insertable<Account> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -159,11 +219,17 @@ class $ServersTable extends Servers with TableInfo<$ServersTable, Server> {
       context.handle(
           _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('address')) {
-      context.handle(_addressMeta,
-          address.isAcceptableOrUnknown(data['address']!, _addressMeta));
+    if (data.containsKey('server')) {
+      context.handle(_serverMeta,
+          server.isAcceptableOrUnknown(data['server']!, _serverMeta));
     } else if (isInserting) {
-      context.missing(_addressMeta);
+      context.missing(_serverMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
     }
     return context;
   }
@@ -171,14 +237,25 @@ class $ServersTable extends Servers with TableInfo<$ServersTable, Server> {
   @override
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
-  Server map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Server.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {server, userId},
+      ];
+  @override
+  Account map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Account(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      server: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}server'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+    );
   }
 
   @override
-  $ServersTable createAlias(String alias) {
-    return $ServersTable(attachedDatabase, alias);
+  $AccountsTable createAlias(String alias) {
+    return $AccountsTable(attachedDatabase, alias);
   }
 }
 
@@ -186,18 +263,8 @@ class Account extends DataClass implements Insertable<Account> {
   final int rowId;
   final int server;
   final String userId;
-  Account({required this.rowId, required this.server, required this.userId});
-  factory Account.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Account(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      server: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server'])!,
-      userId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_id'])!,
-    );
-  }
+  const Account(
+      {required this.rowId, required this.server, required this.userId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -322,38 +389,121 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   }
 }
 
-class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AccountsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $FilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _serverMeta = const VerificationMeta('server');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _serverMeta = const VerificationMeta('server');
   @override
-  late final GeneratedColumn<int?> server = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> server = GeneratedColumn<int>(
       'server', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES servers (row_id) ON DELETE CASCADE');
-  final VerificationMeta _userIdMeta = const VerificationMeta('userId');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES servers (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
   @override
-  late final GeneratedColumn<String?> userId = GeneratedColumn<String?>(
-      'user_id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int> fileId = GeneratedColumn<int>(
+      'file_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _contentLengthMeta =
+      const VerificationMeta('contentLength');
   @override
-  List<GeneratedColumn> get $columns => [rowId, server, userId];
+  late final GeneratedColumn<int> contentLength = GeneratedColumn<int>(
+      'content_length', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _contentTypeMeta =
+      const VerificationMeta('contentType');
   @override
-  String get aliasedName => _alias ?? 'accounts';
+  late final GeneratedColumn<String> contentType = GeneratedColumn<String>(
+      'content_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
   @override
-  String get actualTableName => 'accounts';
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+      'etag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
   @override
-  VerificationContext validateIntegrity(Insertable<Account> instance,
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime>
+      lastModified = GeneratedColumn<DateTime>(
+              'last_modified', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>($FilesTable.$converterlastModifiedn);
+  static const VerificationMeta _isCollectionMeta =
+      const VerificationMeta('isCollection');
+  @override
+  late final GeneratedColumn<bool> isCollection =
+      GeneratedColumn<bool>('is_collection', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_collection" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _usedBytesMeta =
+      const VerificationMeta('usedBytes');
+  @override
+  late final GeneratedColumn<int> usedBytes = GeneratedColumn<int>(
+      'used_bytes', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _hasPreviewMeta =
+      const VerificationMeta('hasPreview');
+  @override
+  late final GeneratedColumn<bool> hasPreview =
+      GeneratedColumn<bool>('has_preview', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _ownerIdMeta =
+      const VerificationMeta('ownerId');
+  @override
+  late final GeneratedColumn<String> ownerId = GeneratedColumn<String>(
+      'owner_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _ownerDisplayNameMeta =
+      const VerificationMeta('ownerDisplayName');
+  @override
+  late final GeneratedColumn<String> ownerDisplayName = GeneratedColumn<String>(
+      'owner_display_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        server,
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        isCollection,
+        usedBytes,
+        hasPreview,
+        ownerId,
+        ownerDisplayName
+      ];
+  @override
+  String get aliasedName => _alias ?? 'files';
+  @override
+  String get actualTableName => 'files';
+  @override
+  VerificationContext validateIntegrity(Insertable<File> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -367,11 +517,54 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     } else if (isInserting) {
       context.missing(_serverMeta);
     }
-    if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    if (data.containsKey('file_id')) {
+      context.handle(_fileIdMeta,
+          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
     } else if (isInserting) {
-      context.missing(_userIdMeta);
+      context.missing(_fileIdMeta);
+    }
+    if (data.containsKey('content_length')) {
+      context.handle(
+          _contentLengthMeta,
+          contentLength.isAcceptableOrUnknown(
+              data['content_length']!, _contentLengthMeta));
+    }
+    if (data.containsKey('content_type')) {
+      context.handle(
+          _contentTypeMeta,
+          contentType.isAcceptableOrUnknown(
+              data['content_type']!, _contentTypeMeta));
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
+    }
+    context.handle(_lastModifiedMeta, const VerificationResult.success());
+    if (data.containsKey('is_collection')) {
+      context.handle(
+          _isCollectionMeta,
+          isCollection.isAcceptableOrUnknown(
+              data['is_collection']!, _isCollectionMeta));
+    }
+    if (data.containsKey('used_bytes')) {
+      context.handle(_usedBytesMeta,
+          usedBytes.isAcceptableOrUnknown(data['used_bytes']!, _usedBytesMeta));
+    }
+    if (data.containsKey('has_preview')) {
+      context.handle(
+          _hasPreviewMeta,
+          hasPreview.isAcceptableOrUnknown(
+              data['has_preview']!, _hasPreviewMeta));
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(_ownerIdMeta,
+          ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta));
+    }
+    if (data.containsKey('owner_display_name')) {
+      context.handle(
+          _ownerDisplayNameMeta,
+          ownerDisplayName.isAcceptableOrUnknown(
+              data['owner_display_name']!, _ownerDisplayNameMeta));
     }
     return context;
   }
@@ -380,18 +573,49 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {server, userId},
+        {server, fileId},
       ];
   @override
-  Account map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Account.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  File map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return File(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      server: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}server'])!,
+      fileId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file_id'])!,
+      contentLength: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}content_length']),
+      contentType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content_type']),
+      etag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}etag']),
+      lastModified: $FilesTable.$converterlastModifiedn.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}last_modified'])),
+      isCollection: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_collection']),
+      usedBytes: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}used_bytes']),
+      hasPreview: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}has_preview']),
+      ownerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}owner_id']),
+      ownerDisplayName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}owner_display_name']),
+    );
   }
 
   @override
-  $AccountsTable createAlias(String alias) {
-    return $AccountsTable(attachedDatabase, alias);
+  $FilesTable createAlias(String alias) {
+    return $FilesTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<DateTime, DateTime> $converterlastModified =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterlastModifiedn =
+      NullAwareTypeConverter.wrap($converterlastModified);
 }
 
 class File extends DataClass implements Insertable<File> {
@@ -407,7 +631,7 @@ class File extends DataClass implements Insertable<File> {
   final bool? hasPreview;
   final String? ownerId;
   final String? ownerDisplayName;
-  File(
+  const File(
       {required this.rowId,
       required this.server,
       required this.fileId,
@@ -420,35 +644,6 @@ class File extends DataClass implements Insertable<File> {
       this.hasPreview,
       this.ownerId,
       this.ownerDisplayName});
-  factory File.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return File(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      server: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server'])!,
-      fileId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file_id'])!,
-      contentLength: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content_length']),
-      contentType: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content_type']),
-      etag: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}etag']),
-      lastModified: $FilesTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified'])),
-      isCollection: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_collection']),
-      usedBytes: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}used_bytes']),
-      hasPreview: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}has_preview']),
-      ownerId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}owner_id']),
-      ownerDisplayName: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}owner_display_name']),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -456,33 +651,32 @@ class File extends DataClass implements Insertable<File> {
     map['server'] = Variable<int>(server);
     map['file_id'] = Variable<int>(fileId);
     if (!nullToAbsent || contentLength != null) {
-      map['content_length'] = Variable<int?>(contentLength);
+      map['content_length'] = Variable<int>(contentLength);
     }
     if (!nullToAbsent || contentType != null) {
-      map['content_type'] = Variable<String?>(contentType);
+      map['content_type'] = Variable<String>(contentType);
     }
     if (!nullToAbsent || etag != null) {
-      map['etag'] = Variable<String?>(etag);
+      map['etag'] = Variable<String>(etag);
     }
     if (!nullToAbsent || lastModified != null) {
-      final converter = $FilesTable.$converter0;
-      map['last_modified'] =
-          Variable<DateTime?>(converter.mapToSql(lastModified));
+      final converter = $FilesTable.$converterlastModifiedn;
+      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
     }
     if (!nullToAbsent || isCollection != null) {
-      map['is_collection'] = Variable<bool?>(isCollection);
+      map['is_collection'] = Variable<bool>(isCollection);
     }
     if (!nullToAbsent || usedBytes != null) {
-      map['used_bytes'] = Variable<int?>(usedBytes);
+      map['used_bytes'] = Variable<int>(usedBytes);
     }
     if (!nullToAbsent || hasPreview != null) {
-      map['has_preview'] = Variable<bool?>(hasPreview);
+      map['has_preview'] = Variable<bool>(hasPreview);
     }
     if (!nullToAbsent || ownerId != null) {
-      map['owner_id'] = Variable<String?>(ownerId);
+      map['owner_id'] = Variable<String>(ownerId);
     }
     if (!nullToAbsent || ownerDisplayName != null) {
-      map['owner_display_name'] = Variable<String?>(ownerDisplayName);
+      map['owner_display_name'] = Variable<String>(ownerDisplayName);
     }
     return map;
   }
@@ -686,15 +880,15 @@ class FilesCompanion extends UpdateCompanion<File> {
     Expression<int>? rowId,
     Expression<int>? server,
     Expression<int>? fileId,
-    Expression<int?>? contentLength,
-    Expression<String?>? contentType,
-    Expression<String?>? etag,
-    Expression<DateTime?>? lastModified,
-    Expression<bool?>? isCollection,
-    Expression<int?>? usedBytes,
-    Expression<bool?>? hasPreview,
-    Expression<String?>? ownerId,
-    Expression<String?>? ownerDisplayName,
+    Expression<int>? contentLength,
+    Expression<String>? contentType,
+    Expression<String>? etag,
+    Expression<DateTime>? lastModified,
+    Expression<bool>? isCollection,
+    Expression<int>? usedBytes,
+    Expression<bool>? hasPreview,
+    Expression<String>? ownerId,
+    Expression<String>? ownerDisplayName,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -754,33 +948,33 @@ class FilesCompanion extends UpdateCompanion<File> {
       map['file_id'] = Variable<int>(fileId.value);
     }
     if (contentLength.present) {
-      map['content_length'] = Variable<int?>(contentLength.value);
+      map['content_length'] = Variable<int>(contentLength.value);
     }
     if (contentType.present) {
-      map['content_type'] = Variable<String?>(contentType.value);
+      map['content_type'] = Variable<String>(contentType.value);
     }
     if (etag.present) {
-      map['etag'] = Variable<String?>(etag.value);
+      map['etag'] = Variable<String>(etag.value);
     }
     if (lastModified.present) {
-      final converter = $FilesTable.$converter0;
+      final converter = $FilesTable.$converterlastModifiedn;
       map['last_modified'] =
-          Variable<DateTime?>(converter.mapToSql(lastModified.value));
+          Variable<DateTime>(converter.toSql(lastModified.value));
     }
     if (isCollection.present) {
-      map['is_collection'] = Variable<bool?>(isCollection.value);
+      map['is_collection'] = Variable<bool>(isCollection.value);
     }
     if (usedBytes.present) {
-      map['used_bytes'] = Variable<int?>(usedBytes.value);
+      map['used_bytes'] = Variable<int>(usedBytes.value);
     }
     if (hasPreview.present) {
-      map['has_preview'] = Variable<bool?>(hasPreview.value);
+      map['has_preview'] = Variable<bool>(hasPreview.value);
     }
     if (ownerId.present) {
-      map['owner_id'] = Variable<String?>(ownerId.value);
+      map['owner_id'] = Variable<String>(ownerId.value);
     }
     if (ownerDisplayName.present) {
-      map['owner_display_name'] = Variable<String?>(ownerDisplayName.value);
+      map['owner_display_name'] = Variable<String>(ownerDisplayName.value);
     }
     return map;
   }
@@ -805,107 +999,101 @@ class FilesCompanion extends UpdateCompanion<File> {
   }
 }
 
-class $FilesTable extends Files with TableInfo<$FilesTable, File> {
+class $AccountFilesTable extends AccountFiles
+    with TableInfo<$AccountFilesTable, AccountFile> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $FilesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $AccountFilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _serverMeta = const VerificationMeta('server');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _accountMeta =
+      const VerificationMeta('account');
   @override
-  late final GeneratedColumn<int?> server = GeneratedColumn<int?>(
-      'server', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> account = GeneratedColumn<int>(
+      'account', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES servers (row_id) ON DELETE CASCADE');
-  final VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES accounts (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
   @override
-  late final GeneratedColumn<int?> fileId = GeneratedColumn<int?>(
-      'file_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _contentLengthMeta =
-      const VerificationMeta('contentLength');
+  late final GeneratedColumn<int> file = GeneratedColumn<int>(
+      'file', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
   @override
-  late final GeneratedColumn<int?> contentLength = GeneratedColumn<int?>(
-      'content_length', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _contentTypeMeta =
-      const VerificationMeta('contentType');
+  late final GeneratedColumn<String> relativePath = GeneratedColumn<String>(
+      'relative_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isFavoriteMeta =
+      const VerificationMeta('isFavorite');
   @override
-  late final GeneratedColumn<String?> contentType = GeneratedColumn<String?>(
-      'content_type', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _etagMeta = const VerificationMeta('etag');
+  late final GeneratedColumn<bool> isFavorite =
+      GeneratedColumn<bool>('is_favorite', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _isArchivedMeta =
+      const VerificationMeta('isArchived');
   @override
-  late final GeneratedColumn<String?> etag = GeneratedColumn<String?>(
-      'etag', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _lastModifiedMeta =
-      const VerificationMeta('lastModified');
+  late final GeneratedColumn<bool> isArchived =
+      GeneratedColumn<bool>('is_archived', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_archived" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _overrideDateTimeMeta =
+      const VerificationMeta('overrideDateTime');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      lastModified = GeneratedColumn<DateTime?>(
-              'last_modified', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($FilesTable.$converter0);
-  final VerificationMeta _isCollectionMeta =
-      const VerificationMeta('isCollection');
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime>
+      overrideDateTime = GeneratedColumn<DateTime>(
+              'override_date_time', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>(
+              $AccountFilesTable.$converteroverrideDateTimen);
+  static const VerificationMeta _bestDateTimeMeta =
+      const VerificationMeta('bestDateTime');
   @override
-  late final GeneratedColumn<bool?> isCollection = GeneratedColumn<bool?>(
-      'is_collection', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_collection IN (0, 1))');
-  final VerificationMeta _usedBytesMeta = const VerificationMeta('usedBytes');
-  @override
-  late final GeneratedColumn<int?> usedBytes = GeneratedColumn<int?>(
-      'used_bytes', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _hasPreviewMeta = const VerificationMeta('hasPreview');
-  @override
-  late final GeneratedColumn<bool?> hasPreview = GeneratedColumn<bool?>(
-      'has_preview', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (has_preview IN (0, 1))');
-  final VerificationMeta _ownerIdMeta = const VerificationMeta('ownerId');
-  @override
-  late final GeneratedColumn<String?> ownerId = GeneratedColumn<String?>(
-      'owner_id', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _ownerDisplayNameMeta =
-      const VerificationMeta('ownerDisplayName');
-  @override
-  late final GeneratedColumn<String?> ownerDisplayName =
-      GeneratedColumn<String?>('owner_display_name', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> bestDateTime =
+      GeneratedColumn<DateTime>('best_date_time', aliasedName, false,
+              type: DriftSqlType.dateTime, requiredDuringInsert: true)
+          .withConverter<DateTime>($AccountFilesTable.$converterbestDateTime);
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
-        server,
-        fileId,
-        contentLength,
-        contentType,
-        etag,
-        lastModified,
-        isCollection,
-        usedBytes,
-        hasPreview,
-        ownerId,
-        ownerDisplayName
+        account,
+        file,
+        relativePath,
+        isFavorite,
+        isArchived,
+        overrideDateTime,
+        bestDateTime
       ];
   @override
-  String get aliasedName => _alias ?? 'files';
+  String get aliasedName => _alias ?? 'account_files';
   @override
-  String get actualTableName => 'files';
+  String get actualTableName => 'account_files';
   @override
-  VerificationContext validateIntegrity(Insertable<File> instance,
+  VerificationContext validateIntegrity(Insertable<AccountFile> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -913,61 +1101,40 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
       context.handle(
           _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('server')) {
-      context.handle(_serverMeta,
-          server.isAcceptableOrUnknown(data['server']!, _serverMeta));
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
     } else if (isInserting) {
-      context.missing(_serverMeta);
+      context.missing(_accountMeta);
     }
-    if (data.containsKey('file_id')) {
-      context.handle(_fileIdMeta,
-          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
+    if (data.containsKey('file')) {
+      context.handle(
+          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
     } else if (isInserting) {
-      context.missing(_fileIdMeta);
+      context.missing(_fileMeta);
     }
-    if (data.containsKey('content_length')) {
+    if (data.containsKey('relative_path')) {
       context.handle(
-          _contentLengthMeta,
-          contentLength.isAcceptableOrUnknown(
-              data['content_length']!, _contentLengthMeta));
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
+    } else if (isInserting) {
+      context.missing(_relativePathMeta);
     }
-    if (data.containsKey('content_type')) {
+    if (data.containsKey('is_favorite')) {
       context.handle(
-          _contentTypeMeta,
-          contentType.isAcceptableOrUnknown(
-              data['content_type']!, _contentTypeMeta));
+          _isFavoriteMeta,
+          isFavorite.isAcceptableOrUnknown(
+              data['is_favorite']!, _isFavoriteMeta));
     }
-    if (data.containsKey('etag')) {
+    if (data.containsKey('is_archived')) {
       context.handle(
-          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
+          _isArchivedMeta,
+          isArchived.isAcceptableOrUnknown(
+              data['is_archived']!, _isArchivedMeta));
     }
-    context.handle(_lastModifiedMeta, const VerificationResult.success());
-    if (data.containsKey('is_collection')) {
-      context.handle(
-          _isCollectionMeta,
-          isCollection.isAcceptableOrUnknown(
-              data['is_collection']!, _isCollectionMeta));
-    }
-    if (data.containsKey('used_bytes')) {
-      context.handle(_usedBytesMeta,
-          usedBytes.isAcceptableOrUnknown(data['used_bytes']!, _usedBytesMeta));
-    }
-    if (data.containsKey('has_preview')) {
-      context.handle(
-          _hasPreviewMeta,
-          hasPreview.isAcceptableOrUnknown(
-              data['has_preview']!, _hasPreviewMeta));
-    }
-    if (data.containsKey('owner_id')) {
-      context.handle(_ownerIdMeta,
-          ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta));
-    }
-    if (data.containsKey('owner_display_name')) {
-      context.handle(
-          _ownerDisplayNameMeta,
-          ownerDisplayName.isAcceptableOrUnknown(
-              data['owner_display_name']!, _ownerDisplayNameMeta));
-    }
+    context.handle(_overrideDateTimeMeta, const VerificationResult.success());
+    context.handle(_bestDateTimeMeta, const VerificationResult.success());
     return context;
   }
 
@@ -975,20 +1142,43 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {server, fileId},
+        {account, file},
       ];
   @override
-  File map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return File.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  AccountFile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AccountFile(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      account: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account'])!,
+      file: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file'])!,
+      relativePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_path'])!,
+      isFavorite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favorite']),
+      isArchived: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_archived']),
+      overrideDateTime: $AccountFilesTable.$converteroverrideDateTimen.fromSql(
+          attachedDatabase.typeMapping.read(DriftSqlType.dateTime,
+              data['${effectivePrefix}override_date_time'])),
+      bestDateTime: $AccountFilesTable.$converterbestDateTime.fromSql(
+          attachedDatabase.typeMapping.read(DriftSqlType.dateTime,
+              data['${effectivePrefix}best_date_time'])!),
+    );
   }
 
   @override
-  $FilesTable createAlias(String alias) {
-    return $FilesTable(attachedDatabase, alias);
+  $AccountFilesTable createAlias(String alias) {
+    return $AccountFilesTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<DateTime, DateTime> $converter0 =
+  static TypeConverter<DateTime, DateTime> $converteroverrideDateTime =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converteroverrideDateTimen =
+      NullAwareTypeConverter.wrap($converteroverrideDateTime);
+  static TypeConverter<DateTime, DateTime> $converterbestDateTime =
       const SqliteDateTimeConverter();
 }
 
@@ -1001,7 +1191,7 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
   final bool? isArchived;
   final DateTime? overrideDateTime;
   final DateTime bestDateTime;
-  AccountFile(
+  const AccountFile(
       {required this.rowId,
       required this.account,
       required this.file,
@@ -1010,29 +1200,6 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       this.isArchived,
       this.overrideDateTime,
       required this.bestDateTime});
-  factory AccountFile.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return AccountFile(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      account: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
-      file: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file'])!,
-      relativePath: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
-      isFavorite: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_favorite']),
-      isArchived: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_archived']),
-      overrideDateTime: $AccountFilesTable.$converter0.mapToDart(
-          const DateTimeType().mapFromDatabaseResponse(
-              data['${effectivePrefix}override_date_time'])),
-      bestDateTime: $AccountFilesTable.$converter1.mapToDart(
-          const DateTimeType().mapFromDatabaseResponse(
-              data['${effectivePrefix}best_date_time']))!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1041,20 +1208,19 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
     map['file'] = Variable<int>(file);
     map['relative_path'] = Variable<String>(relativePath);
     if (!nullToAbsent || isFavorite != null) {
-      map['is_favorite'] = Variable<bool?>(isFavorite);
+      map['is_favorite'] = Variable<bool>(isFavorite);
     }
     if (!nullToAbsent || isArchived != null) {
-      map['is_archived'] = Variable<bool?>(isArchived);
+      map['is_archived'] = Variable<bool>(isArchived);
     }
     if (!nullToAbsent || overrideDateTime != null) {
-      final converter = $AccountFilesTable.$converter0;
+      final converter = $AccountFilesTable.$converteroverrideDateTimen;
       map['override_date_time'] =
-          Variable<DateTime?>(converter.mapToSql(overrideDateTime));
+          Variable<DateTime>(converter.toSql(overrideDateTime));
     }
     {
-      final converter = $AccountFilesTable.$converter1;
-      map['best_date_time'] =
-          Variable<DateTime>(converter.mapToSql(bestDateTime)!);
+      final converter = $AccountFilesTable.$converterbestDateTime;
+      map['best_date_time'] = Variable<DateTime>(converter.toSql(bestDateTime));
     }
     return map;
   }
@@ -1198,9 +1364,9 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
     Expression<int>? account,
     Expression<int>? file,
     Expression<String>? relativePath,
-    Expression<bool?>? isFavorite,
-    Expression<bool?>? isArchived,
-    Expression<DateTime?>? overrideDateTime,
+    Expression<bool>? isFavorite,
+    Expression<bool>? isArchived,
+    Expression<DateTime>? overrideDateTime,
     Expression<DateTime>? bestDateTime,
   }) {
     return RawValuesInsertable({
@@ -1252,20 +1418,20 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       map['relative_path'] = Variable<String>(relativePath.value);
     }
     if (isFavorite.present) {
-      map['is_favorite'] = Variable<bool?>(isFavorite.value);
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
     if (isArchived.present) {
-      map['is_archived'] = Variable<bool?>(isArchived.value);
+      map['is_archived'] = Variable<bool>(isArchived.value);
     }
     if (overrideDateTime.present) {
-      final converter = $AccountFilesTable.$converter0;
+      final converter = $AccountFilesTable.$converteroverrideDateTimen;
       map['override_date_time'] =
-          Variable<DateTime?>(converter.mapToSql(overrideDateTime.value));
+          Variable<DateTime>(converter.toSql(overrideDateTime.value));
     }
     if (bestDateTime.present) {
-      final converter = $AccountFilesTable.$converter1;
+      final converter = $AccountFilesTable.$converterbestDateTime;
       map['best_date_time'] =
-          Variable<DateTime>(converter.mapToSql(bestDateTime.value)!);
+          Variable<DateTime>(converter.toSql(bestDateTime.value));
     }
     return map;
   }
@@ -1286,151 +1452,139 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
   }
 }
 
-class $AccountFilesTable extends AccountFiles
-    with TableInfo<$AccountFilesTable, AccountFile> {
+class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AccountFilesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $ImagesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _accountFileMeta =
+      const VerificationMeta('accountFile');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
-      'row_id', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> accountFile = GeneratedColumn<int>(
+      'account_file', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _accountMeta = const VerificationMeta('account');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES account_files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _lastUpdatedMeta =
+      const VerificationMeta('lastUpdated');
   @override
-  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
-      'account', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
-  final VerificationMeta _fileMeta = const VerificationMeta('file');
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> lastUpdated =
+      GeneratedColumn<DateTime>('last_updated', aliasedName, false,
+              type: DriftSqlType.dateTime, requiredDuringInsert: true)
+          .withConverter<DateTime>($ImagesTable.$converterlastUpdated);
+  static const VerificationMeta _fileEtagMeta =
+      const VerificationMeta('fileEtag');
   @override
-  late final GeneratedColumn<int?> file = GeneratedColumn<int?>(
-      'file', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _relativePathMeta =
-      const VerificationMeta('relativePath');
+  late final GeneratedColumn<String> fileEtag = GeneratedColumn<String>(
+      'file_etag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _widthMeta = const VerificationMeta('width');
   @override
-  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
-      'relative_path', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _isFavoriteMeta = const VerificationMeta('isFavorite');
+  late final GeneratedColumn<int> width = GeneratedColumn<int>(
+      'width', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
   @override
-  late final GeneratedColumn<bool?> isFavorite = GeneratedColumn<bool?>(
-      'is_favorite', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_favorite IN (0, 1))');
-  final VerificationMeta _isArchivedMeta = const VerificationMeta('isArchived');
+  late final GeneratedColumn<int> height = GeneratedColumn<int>(
+      'height', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _exifRawMeta =
+      const VerificationMeta('exifRaw');
   @override
-  late final GeneratedColumn<bool?> isArchived = GeneratedColumn<bool?>(
-      'is_archived', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_archived IN (0, 1))');
-  final VerificationMeta _overrideDateTimeMeta =
-      const VerificationMeta('overrideDateTime');
+  late final GeneratedColumn<String> exifRaw = GeneratedColumn<String>(
+      'exif_raw', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _dateTimeOriginalMeta =
+      const VerificationMeta('dateTimeOriginal');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      overrideDateTime = GeneratedColumn<DateTime?>(
-              'override_date_time', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($AccountFilesTable.$converter0);
-  final VerificationMeta _bestDateTimeMeta =
-      const VerificationMeta('bestDateTime');
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      bestDateTime = GeneratedColumn<DateTime?>(
-              'best_date_time', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DateTime>($AccountFilesTable.$converter1);
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime>
+      dateTimeOriginal = GeneratedColumn<DateTime>(
+              'date_time_original', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>($ImagesTable.$converterdateTimeOriginaln);
   @override
   List<GeneratedColumn> get $columns => [
-        rowId,
-        account,
-        file,
-        relativePath,
-        isFavorite,
-        isArchived,
-        overrideDateTime,
-        bestDateTime
+        accountFile,
+        lastUpdated,
+        fileEtag,
+        width,
+        height,
+        exifRaw,
+        dateTimeOriginal
       ];
   @override
-  String get aliasedName => _alias ?? 'account_files';
+  String get aliasedName => _alias ?? 'images';
   @override
-  String get actualTableName => 'account_files';
+  String get actualTableName => 'images';
   @override
-  VerificationContext validateIntegrity(Insertable<AccountFile> instance,
+  VerificationContext validateIntegrity(Insertable<Image> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('row_id')) {
+    if (data.containsKey('account_file')) {
       context.handle(
-          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+          _accountFileMeta,
+          accountFile.isAcceptableOrUnknown(
+              data['account_file']!, _accountFileMeta));
     }
-    if (data.containsKey('account')) {
-      context.handle(_accountMeta,
-          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
-    } else if (isInserting) {
-      context.missing(_accountMeta);
+    context.handle(_lastUpdatedMeta, const VerificationResult.success());
+    if (data.containsKey('file_etag')) {
+      context.handle(_fileEtagMeta,
+          fileEtag.isAcceptableOrUnknown(data['file_etag']!, _fileEtagMeta));
     }
-    if (data.containsKey('file')) {
+    if (data.containsKey('width')) {
       context.handle(
-          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
-    } else if (isInserting) {
-      context.missing(_fileMeta);
+          _widthMeta, width.isAcceptableOrUnknown(data['width']!, _widthMeta));
     }
-    if (data.containsKey('relative_path')) {
-      context.handle(
-          _relativePathMeta,
-          relativePath.isAcceptableOrUnknown(
-              data['relative_path']!, _relativePathMeta));
-    } else if (isInserting) {
-      context.missing(_relativePathMeta);
+    if (data.containsKey('height')) {
+      context.handle(_heightMeta,
+          height.isAcceptableOrUnknown(data['height']!, _heightMeta));
     }
-    if (data.containsKey('is_favorite')) {
-      context.handle(
-          _isFavoriteMeta,
-          isFavorite.isAcceptableOrUnknown(
-              data['is_favorite']!, _isFavoriteMeta));
+    if (data.containsKey('exif_raw')) {
+      context.handle(_exifRawMeta,
+          exifRaw.isAcceptableOrUnknown(data['exif_raw']!, _exifRawMeta));
     }
-    if (data.containsKey('is_archived')) {
-      context.handle(
-          _isArchivedMeta,
-          isArchived.isAcceptableOrUnknown(
-              data['is_archived']!, _isArchivedMeta));
-    }
-    context.handle(_overrideDateTimeMeta, const VerificationResult.success());
-    context.handle(_bestDateTimeMeta, const VerificationResult.success());
+    context.handle(_dateTimeOriginalMeta, const VerificationResult.success());
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {rowId};
+  Set<GeneratedColumn> get $primaryKey => {accountFile};
   @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {account, file},
-      ];
-  @override
-  AccountFile map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return AccountFile.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Image(
+      accountFile: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account_file'])!,
+      lastUpdated: $ImagesTable.$converterlastUpdated.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!),
+      fileEtag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}file_etag']),
+      width: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}width']),
+      height: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}height']),
+      exifRaw: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}exif_raw']),
+      dateTimeOriginal: $ImagesTable.$converterdateTimeOriginaln.fromSql(
+          attachedDatabase.typeMapping.read(DriftSqlType.dateTime,
+              data['${effectivePrefix}date_time_original'])),
+    );
   }
 
   @override
-  $AccountFilesTable createAlias(String alias) {
-    return $AccountFilesTable(attachedDatabase, alias);
+  $ImagesTable createAlias(String alias) {
+    return $ImagesTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<DateTime, DateTime> $converter0 =
+  static TypeConverter<DateTime, DateTime> $converterlastUpdated =
       const SqliteDateTimeConverter();
-  static TypeConverter<DateTime, DateTime> $converter1 =
+  static TypeConverter<DateTime, DateTime> $converterdateTimeOriginal =
       const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdateTimeOriginaln =
+      NullAwareTypeConverter.wrap($converterdateTimeOriginal);
 }
 
 class Image extends DataClass implements Insertable<Image> {
@@ -1441,7 +1595,7 @@ class Image extends DataClass implements Insertable<Image> {
   final int? height;
   final String? exifRaw;
   final DateTime? dateTimeOriginal;
-  Image(
+  const Image(
       {required this.accountFile,
       required this.lastUpdated,
       this.fileEtag,
@@ -1449,51 +1603,30 @@ class Image extends DataClass implements Insertable<Image> {
       this.height,
       this.exifRaw,
       this.dateTimeOriginal});
-  factory Image.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Image(
-      accountFile: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account_file'])!,
-      lastUpdated: $ImagesTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_updated']))!,
-      fileEtag: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file_etag']),
-      width: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}width']),
-      height: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}height']),
-      exifRaw: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}exif_raw']),
-      dateTimeOriginal: $ImagesTable.$converter1.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(
-              data['${effectivePrefix}date_time_original'])),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['account_file'] = Variable<int>(accountFile);
     {
-      final converter = $ImagesTable.$converter0;
-      map['last_updated'] =
-          Variable<DateTime>(converter.mapToSql(lastUpdated)!);
+      final converter = $ImagesTable.$converterlastUpdated;
+      map['last_updated'] = Variable<DateTime>(converter.toSql(lastUpdated));
     }
     if (!nullToAbsent || fileEtag != null) {
-      map['file_etag'] = Variable<String?>(fileEtag);
+      map['file_etag'] = Variable<String>(fileEtag);
     }
     if (!nullToAbsent || width != null) {
-      map['width'] = Variable<int?>(width);
+      map['width'] = Variable<int>(width);
     }
     if (!nullToAbsent || height != null) {
-      map['height'] = Variable<int?>(height);
+      map['height'] = Variable<int>(height);
     }
     if (!nullToAbsent || exifRaw != null) {
-      map['exif_raw'] = Variable<String?>(exifRaw);
+      map['exif_raw'] = Variable<String>(exifRaw);
     }
     if (!nullToAbsent || dateTimeOriginal != null) {
-      final converter = $ImagesTable.$converter1;
+      final converter = $ImagesTable.$converterdateTimeOriginaln;
       map['date_time_original'] =
-          Variable<DateTime?>(converter.mapToSql(dateTimeOriginal));
+          Variable<DateTime>(converter.toSql(dateTimeOriginal));
     }
     return map;
   }
@@ -1624,11 +1757,11 @@ class ImagesCompanion extends UpdateCompanion<Image> {
   static Insertable<Image> custom({
     Expression<int>? accountFile,
     Expression<DateTime>? lastUpdated,
-    Expression<String?>? fileEtag,
-    Expression<int?>? width,
-    Expression<int?>? height,
-    Expression<String?>? exifRaw,
-    Expression<DateTime?>? dateTimeOriginal,
+    Expression<String>? fileEtag,
+    Expression<int>? width,
+    Expression<int>? height,
+    Expression<String>? exifRaw,
+    Expression<DateTime>? dateTimeOriginal,
   }) {
     return RawValuesInsertable({
       if (accountFile != null) 'account_file': accountFile,
@@ -1667,26 +1800,26 @@ class ImagesCompanion extends UpdateCompanion<Image> {
       map['account_file'] = Variable<int>(accountFile.value);
     }
     if (lastUpdated.present) {
-      final converter = $ImagesTable.$converter0;
+      final converter = $ImagesTable.$converterlastUpdated;
       map['last_updated'] =
-          Variable<DateTime>(converter.mapToSql(lastUpdated.value)!);
+          Variable<DateTime>(converter.toSql(lastUpdated.value));
     }
     if (fileEtag.present) {
-      map['file_etag'] = Variable<String?>(fileEtag.value);
+      map['file_etag'] = Variable<String>(fileEtag.value);
     }
     if (width.present) {
-      map['width'] = Variable<int?>(width.value);
+      map['width'] = Variable<int>(width.value);
     }
     if (height.present) {
-      map['height'] = Variable<int?>(height.value);
+      map['height'] = Variable<int>(height.value);
     }
     if (exifRaw.present) {
-      map['exif_raw'] = Variable<String?>(exifRaw.value);
+      map['exif_raw'] = Variable<String>(exifRaw.value);
     }
     if (dateTimeOriginal.present) {
-      final converter = $ImagesTable.$converter1;
+      final converter = $ImagesTable.$converterdateTimeOriginaln;
       map['date_time_original'] =
-          Variable<DateTime?>(converter.mapToSql(dateTimeOriginal.value));
+          Variable<DateTime>(converter.toSql(dateTimeOriginal.value));
     }
     return map;
   }
@@ -1706,71 +1839,77 @@ class ImagesCompanion extends UpdateCompanion<Image> {
   }
 }
 
-class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
+class $ImageLocationsTable extends ImageLocations
+    with TableInfo<$ImageLocationsTable, ImageLocation> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ImagesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _accountFileMeta =
+  $ImageLocationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _accountFileMeta =
       const VerificationMeta('accountFile');
   @override
-  late final GeneratedColumn<int?> accountFile = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> accountFile = GeneratedColumn<int>(
       'account_file', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          'REFERENCES account_files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _lastUpdatedMeta =
-      const VerificationMeta('lastUpdated');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES account_files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _versionMeta =
+      const VerificationMeta('version');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> lastUpdated =
-      GeneratedColumn<DateTime?>('last_updated', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DateTime>($ImagesTable.$converter0);
-  final VerificationMeta _fileEtagMeta = const VerificationMeta('fileEtag');
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+      'version', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<String?> fileEtag = GeneratedColumn<String?>(
-      'file_etag', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _widthMeta = const VerificationMeta('width');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
   @override
-  late final GeneratedColumn<int?> width = GeneratedColumn<int?>(
-      'width', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _heightMeta = const VerificationMeta('height');
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
   @override
-  late final GeneratedColumn<int?> height = GeneratedColumn<int?>(
-      'height', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _exifRawMeta = const VerificationMeta('exifRaw');
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _countryCodeMeta =
+      const VerificationMeta('countryCode');
   @override
-  late final GeneratedColumn<String?> exifRaw = GeneratedColumn<String?>(
-      'exif_raw', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _dateTimeOriginalMeta =
-      const VerificationMeta('dateTimeOriginal');
+  late final GeneratedColumn<String> countryCode = GeneratedColumn<String>(
+      'country_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _admin1Meta = const VerificationMeta('admin1');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      dateTimeOriginal = GeneratedColumn<DateTime?>(
-              'date_time_original', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($ImagesTable.$converter1);
+  late final GeneratedColumn<String> admin1 = GeneratedColumn<String>(
+      'admin1', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _admin2Meta = const VerificationMeta('admin2');
+  @override
+  late final GeneratedColumn<String> admin2 = GeneratedColumn<String>(
+      'admin2', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         accountFile,
-        lastUpdated,
-        fileEtag,
-        width,
-        height,
-        exifRaw,
-        dateTimeOriginal
+        version,
+        name,
+        latitude,
+        longitude,
+        countryCode,
+        admin1,
+        admin2
       ];
   @override
-  String get aliasedName => _alias ?? 'images';
+  String get aliasedName => _alias ?? 'image_locations';
   @override
-  String get actualTableName => 'images';
+  String get actualTableName => 'image_locations';
   @override
-  VerificationContext validateIntegrity(Insertable<Image> instance,
+  VerificationContext validateIntegrity(Insertable<ImageLocation> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1780,44 +1919,70 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
           accountFile.isAcceptableOrUnknown(
               data['account_file']!, _accountFileMeta));
     }
-    context.handle(_lastUpdatedMeta, const VerificationResult.success());
-    if (data.containsKey('file_etag')) {
-      context.handle(_fileEtagMeta,
-          fileEtag.isAcceptableOrUnknown(data['file_etag']!, _fileEtagMeta));
+    if (data.containsKey('version')) {
+      context.handle(_versionMeta,
+          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    } else if (isInserting) {
+      context.missing(_versionMeta);
     }
-    if (data.containsKey('width')) {
+    if (data.containsKey('name')) {
       context.handle(
-          _widthMeta, width.isAcceptableOrUnknown(data['width']!, _widthMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     }
-    if (data.containsKey('height')) {
-      context.handle(_heightMeta,
-          height.isAcceptableOrUnknown(data['height']!, _heightMeta));
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
     }
-    if (data.containsKey('exif_raw')) {
-      context.handle(_exifRawMeta,
-          exifRaw.isAcceptableOrUnknown(data['exif_raw']!, _exifRawMeta));
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
     }
-    context.handle(_dateTimeOriginalMeta, const VerificationResult.success());
+    if (data.containsKey('country_code')) {
+      context.handle(
+          _countryCodeMeta,
+          countryCode.isAcceptableOrUnknown(
+              data['country_code']!, _countryCodeMeta));
+    }
+    if (data.containsKey('admin1')) {
+      context.handle(_admin1Meta,
+          admin1.isAcceptableOrUnknown(data['admin1']!, _admin1Meta));
+    }
+    if (data.containsKey('admin2')) {
+      context.handle(_admin2Meta,
+          admin2.isAcceptableOrUnknown(data['admin2']!, _admin2Meta));
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {accountFile};
   @override
-  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Image.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  ImageLocation map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ImageLocation(
+      accountFile: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account_file'])!,
+      version: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude']),
+      countryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}country_code']),
+      admin1: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}admin1']),
+      admin2: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}admin2']),
+    );
   }
 
   @override
-  $ImagesTable createAlias(String alias) {
-    return $ImagesTable(attachedDatabase, alias);
+  $ImageLocationsTable createAlias(String alias) {
+    return $ImageLocationsTable(attachedDatabase, alias);
   }
-
-  static TypeConverter<DateTime, DateTime> $converter0 =
-      const SqliteDateTimeConverter();
-  static TypeConverter<DateTime, DateTime> $converter1 =
-      const SqliteDateTimeConverter();
 }
 
 class ImageLocation extends DataClass implements Insertable<ImageLocation> {
@@ -1829,7 +1994,7 @@ class ImageLocation extends DataClass implements Insertable<ImageLocation> {
   final String? countryCode;
   final String? admin1;
   final String? admin2;
-  ImageLocation(
+  const ImageLocation(
       {required this.accountFile,
       required this.version,
       this.name,
@@ -1838,49 +2003,28 @@ class ImageLocation extends DataClass implements Insertable<ImageLocation> {
       this.countryCode,
       this.admin1,
       this.admin2});
-  factory ImageLocation.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return ImageLocation(
-      accountFile: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account_file'])!,
-      version: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      latitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
-      longitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
-      countryCode: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}country_code']),
-      admin1: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}admin1']),
-      admin2: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}admin2']),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['account_file'] = Variable<int>(accountFile);
     map['version'] = Variable<int>(version);
     if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String?>(name);
+      map['name'] = Variable<String>(name);
     }
     if (!nullToAbsent || latitude != null) {
-      map['latitude'] = Variable<double?>(latitude);
+      map['latitude'] = Variable<double>(latitude);
     }
     if (!nullToAbsent || longitude != null) {
-      map['longitude'] = Variable<double?>(longitude);
+      map['longitude'] = Variable<double>(longitude);
     }
     if (!nullToAbsent || countryCode != null) {
-      map['country_code'] = Variable<String?>(countryCode);
+      map['country_code'] = Variable<String>(countryCode);
     }
     if (!nullToAbsent || admin1 != null) {
-      map['admin1'] = Variable<String?>(admin1);
+      map['admin1'] = Variable<String>(admin1);
     }
     if (!nullToAbsent || admin2 != null) {
-      map['admin2'] = Variable<String?>(admin2);
+      map['admin2'] = Variable<String>(admin2);
     }
     return map;
   }
@@ -2018,12 +2162,12 @@ class ImageLocationsCompanion extends UpdateCompanion<ImageLocation> {
   static Insertable<ImageLocation> custom({
     Expression<int>? accountFile,
     Expression<int>? version,
-    Expression<String?>? name,
-    Expression<double?>? latitude,
-    Expression<double?>? longitude,
-    Expression<String?>? countryCode,
-    Expression<String?>? admin1,
-    Expression<String?>? admin2,
+    Expression<String>? name,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<String>? countryCode,
+    Expression<String>? admin1,
+    Expression<String>? admin2,
   }) {
     return RawValuesInsertable({
       if (accountFile != null) 'account_file': accountFile,
@@ -2068,22 +2212,22 @@ class ImageLocationsCompanion extends UpdateCompanion<ImageLocation> {
       map['version'] = Variable<int>(version.value);
     }
     if (name.present) {
-      map['name'] = Variable<String?>(name.value);
+      map['name'] = Variable<String>(name.value);
     }
     if (latitude.present) {
-      map['latitude'] = Variable<double?>(latitude.value);
+      map['latitude'] = Variable<double>(latitude.value);
     }
     if (longitude.present) {
-      map['longitude'] = Variable<double?>(longitude.value);
+      map['longitude'] = Variable<double>(longitude.value);
     }
     if (countryCode.present) {
-      map['country_code'] = Variable<String?>(countryCode.value);
+      map['country_code'] = Variable<String>(countryCode.value);
     }
     if (admin1.present) {
-      map['admin1'] = Variable<String?>(admin1.value);
+      map['admin1'] = Variable<String>(admin1.value);
     }
     if (admin2.present) {
-      map['admin2'] = Variable<String?>(admin2.value);
+      map['admin2'] = Variable<String>(admin2.value);
     }
     return map;
   }
@@ -2104,130 +2248,97 @@ class ImageLocationsCompanion extends UpdateCompanion<ImageLocation> {
   }
 }
 
-class $ImageLocationsTable extends ImageLocations
-    with TableInfo<$ImageLocationsTable, ImageLocation> {
+class $TrashesTable extends Trashes with TableInfo<$TrashesTable, Trash> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ImageLocationsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _accountFileMeta =
-      const VerificationMeta('accountFile');
+  $TrashesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
   @override
-  late final GeneratedColumn<int?> accountFile = GeneratedColumn<int?>(
-      'account_file', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> file = GeneratedColumn<int>(
+      'file', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints:
-          'REFERENCES account_files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _versionMeta = const VerificationMeta('version');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _filenameMeta =
+      const VerificationMeta('filename');
   @override
-  late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
-      'version', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> filename = GeneratedColumn<String>(
+      'filename', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _originalLocationMeta =
+      const VerificationMeta('originalLocation');
   @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
+  late final GeneratedColumn<String> originalLocation = GeneratedColumn<String>(
+      'original_location', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _deletionTimeMeta =
+      const VerificationMeta('deletionTime');
   @override
-  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
-      'latitude', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> deletionTime =
+      GeneratedColumn<DateTime>('deletion_time', aliasedName, false,
+              type: DriftSqlType.dateTime, requiredDuringInsert: true)
+          .withConverter<DateTime>($TrashesTable.$converterdeletionTime);
   @override
-  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
-      'longitude', aliasedName, true,
-      type: const RealType(), requiredDuringInsert: false);
-  final VerificationMeta _countryCodeMeta =
-      const VerificationMeta('countryCode');
+  List<GeneratedColumn> get $columns =>
+      [file, filename, originalLocation, deletionTime];
   @override
-  late final GeneratedColumn<String?> countryCode = GeneratedColumn<String?>(
-      'country_code', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _admin1Meta = const VerificationMeta('admin1');
+  String get aliasedName => _alias ?? 'trashes';
   @override
-  late final GeneratedColumn<String?> admin1 = GeneratedColumn<String?>(
-      'admin1', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _admin2Meta = const VerificationMeta('admin2');
+  String get actualTableName => 'trashes';
   @override
-  late final GeneratedColumn<String?> admin2 = GeneratedColumn<String?>(
-      'admin2', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  @override
-  List<GeneratedColumn> get $columns => [
-        accountFile,
-        version,
-        name,
-        latitude,
-        longitude,
-        countryCode,
-        admin1,
-        admin2
-      ];
-  @override
-  String get aliasedName => _alias ?? 'image_locations';
-  @override
-  String get actualTableName => 'image_locations';
-  @override
-  VerificationContext validateIntegrity(Insertable<ImageLocation> instance,
+  VerificationContext validateIntegrity(Insertable<Trash> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('account_file')) {
+    if (data.containsKey('file')) {
       context.handle(
-          _accountFileMeta,
-          accountFile.isAcceptableOrUnknown(
-              data['account_file']!, _accountFileMeta));
+          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
     }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    if (data.containsKey('filename')) {
+      context.handle(_filenameMeta,
+          filename.isAcceptableOrUnknown(data['filename']!, _filenameMeta));
     } else if (isInserting) {
-      context.missing(_versionMeta);
+      context.missing(_filenameMeta);
     }
-    if (data.containsKey('name')) {
+    if (data.containsKey('original_location')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+          _originalLocationMeta,
+          originalLocation.isAcceptableOrUnknown(
+              data['original_location']!, _originalLocationMeta));
+    } else if (isInserting) {
+      context.missing(_originalLocationMeta);
     }
-    if (data.containsKey('latitude')) {
-      context.handle(_latitudeMeta,
-          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
-    }
-    if (data.containsKey('longitude')) {
-      context.handle(_longitudeMeta,
-          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
-    }
-    if (data.containsKey('country_code')) {
-      context.handle(
-          _countryCodeMeta,
-          countryCode.isAcceptableOrUnknown(
-              data['country_code']!, _countryCodeMeta));
-    }
-    if (data.containsKey('admin1')) {
-      context.handle(_admin1Meta,
-          admin1.isAcceptableOrUnknown(data['admin1']!, _admin1Meta));
-    }
-    if (data.containsKey('admin2')) {
-      context.handle(_admin2Meta,
-          admin2.isAcceptableOrUnknown(data['admin2']!, _admin2Meta));
-    }
+    context.handle(_deletionTimeMeta, const VerificationResult.success());
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {accountFile};
+  Set<GeneratedColumn> get $primaryKey => {file};
   @override
-  ImageLocation map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return ImageLocation.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Trash map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Trash(
+      file: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file'])!,
+      filename: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}filename'])!,
+      originalLocation: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}original_location'])!,
+      deletionTime: $TrashesTable.$converterdeletionTime.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}deletion_time'])!),
+    );
   }
 
   @override
-  $ImageLocationsTable createAlias(String alias) {
-    return $ImageLocationsTable(attachedDatabase, alias);
+  $TrashesTable createAlias(String alias) {
+    return $TrashesTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<DateTime, DateTime> $converterdeletionTime =
+      const SqliteDateTimeConverter();
 }
 
 class Trash extends DataClass implements Insertable<Trash> {
@@ -2235,24 +2346,11 @@ class Trash extends DataClass implements Insertable<Trash> {
   final String filename;
   final String originalLocation;
   final DateTime deletionTime;
-  Trash(
+  const Trash(
       {required this.file,
       required this.filename,
       required this.originalLocation,
       required this.deletionTime});
-  factory Trash.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Trash(
-      file: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file'])!,
-      filename: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}filename'])!,
-      originalLocation: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}original_location'])!,
-      deletionTime: $TrashesTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}deletion_time']))!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2260,9 +2358,8 @@ class Trash extends DataClass implements Insertable<Trash> {
     map['filename'] = Variable<String>(filename);
     map['original_location'] = Variable<String>(originalLocation);
     {
-      final converter = $TrashesTable.$converter0;
-      map['deletion_time'] =
-          Variable<DateTime>(converter.mapToSql(deletionTime)!);
+      final converter = $TrashesTable.$converterdeletionTime;
+      map['deletion_time'] = Variable<DateTime>(converter.toSql(deletionTime));
     }
     return map;
   }
@@ -2391,9 +2488,9 @@ class TrashesCompanion extends UpdateCompanion<Trash> {
       map['original_location'] = Variable<String>(originalLocation.value);
     }
     if (deletionTime.present) {
-      final converter = $TrashesTable.$converter0;
+      final converter = $TrashesTable.$converterdeletionTime;
       map['deletion_time'] =
-          Variable<DateTime>(converter.mapToSql(deletionTime.value)!);
+          Variable<DateTime>(converter.toSql(deletionTime.value));
     }
     return map;
   }
@@ -2410,101 +2507,76 @@ class TrashesCompanion extends UpdateCompanion<Trash> {
   }
 }
 
-class $TrashesTable extends Trashes with TableInfo<$TrashesTable, Trash> {
+class $DirFilesTable extends DirFiles with TableInfo<$DirFilesTable, DirFile> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TrashesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _fileMeta = const VerificationMeta('file');
+  $DirFilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _dirMeta = const VerificationMeta('dir');
   @override
-  late final GeneratedColumn<int?> file = GeneratedColumn<int?>(
-      'file', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'REFERENCES files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _filenameMeta = const VerificationMeta('filename');
+  late final GeneratedColumn<int> dir = GeneratedColumn<int>(
+      'dir', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _childMeta = const VerificationMeta('child');
   @override
-  late final GeneratedColumn<String?> filename = GeneratedColumn<String?>(
-      'filename', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _originalLocationMeta =
-      const VerificationMeta('originalLocation');
+  late final GeneratedColumn<int> child = GeneratedColumn<int>(
+      'child', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES files (row_id) ON DELETE CASCADE'));
   @override
-  late final GeneratedColumn<String?> originalLocation =
-      GeneratedColumn<String?>('original_location', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _deletionTimeMeta =
-      const VerificationMeta('deletionTime');
+  List<GeneratedColumn> get $columns => [dir, child];
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      deletionTime = GeneratedColumn<DateTime?>(
-              'deletion_time', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DateTime>($TrashesTable.$converter0);
+  String get aliasedName => _alias ?? 'dir_files';
   @override
-  List<GeneratedColumn> get $columns =>
-      [file, filename, originalLocation, deletionTime];
+  String get actualTableName => 'dir_files';
   @override
-  String get aliasedName => _alias ?? 'trashes';
-  @override
-  String get actualTableName => 'trashes';
-  @override
-  VerificationContext validateIntegrity(Insertable<Trash> instance,
+  VerificationContext validateIntegrity(Insertable<DirFile> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('file')) {
+    if (data.containsKey('dir')) {
       context.handle(
-          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
-    }
-    if (data.containsKey('filename')) {
-      context.handle(_filenameMeta,
-          filename.isAcceptableOrUnknown(data['filename']!, _filenameMeta));
+          _dirMeta, dir.isAcceptableOrUnknown(data['dir']!, _dirMeta));
     } else if (isInserting) {
-      context.missing(_filenameMeta);
+      context.missing(_dirMeta);
     }
-    if (data.containsKey('original_location')) {
+    if (data.containsKey('child')) {
       context.handle(
-          _originalLocationMeta,
-          originalLocation.isAcceptableOrUnknown(
-              data['original_location']!, _originalLocationMeta));
+          _childMeta, child.isAcceptableOrUnknown(data['child']!, _childMeta));
     } else if (isInserting) {
-      context.missing(_originalLocationMeta);
+      context.missing(_childMeta);
     }
-    context.handle(_deletionTimeMeta, const VerificationResult.success());
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {file};
+  Set<GeneratedColumn> get $primaryKey => {dir, child};
   @override
-  Trash map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Trash.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  DirFile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DirFile(
+      dir: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}dir'])!,
+      child: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}child'])!,
+    );
   }
 
   @override
-  $TrashesTable createAlias(String alias) {
-    return $TrashesTable(attachedDatabase, alias);
+  $DirFilesTable createAlias(String alias) {
+    return $DirFilesTable(attachedDatabase, alias);
   }
-
-  static TypeConverter<DateTime, DateTime> $converter0 =
-      const SqliteDateTimeConverter();
 }
 
 class DirFile extends DataClass implements Insertable<DirFile> {
   final int dir;
   final int child;
-  DirFile({required this.dir, required this.child});
-  factory DirFile.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return DirFile(
-      dir: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}dir'])!,
-      child: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}child'])!,
-    );
-  }
+  const DirFile({required this.dir, required this.child});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2561,29 +2633,36 @@ class DirFile extends DataClass implements Insertable<DirFile> {
 class DirFilesCompanion extends UpdateCompanion<DirFile> {
   final Value<int> dir;
   final Value<int> child;
+  final Value<int> rowid;
   const DirFilesCompanion({
     this.dir = const Value.absent(),
     this.child = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   DirFilesCompanion.insert({
     required int dir,
     required int child,
+    this.rowid = const Value.absent(),
   })  : dir = Value(dir),
         child = Value(child);
   static Insertable<DirFile> custom({
     Expression<int>? dir,
     Expression<int>? child,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (dir != null) 'dir': dir,
       if (child != null) 'child': child,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  DirFilesCompanion copyWith({Value<int>? dir, Value<int>? child}) {
+  DirFilesCompanion copyWith(
+      {Value<int>? dir, Value<int>? child, Value<int>? rowid}) {
     return DirFilesCompanion(
       dir: dir ?? this.dir,
       child: child ?? this.child,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -2596,6 +2675,9 @@ class DirFilesCompanion extends UpdateCompanion<DirFile> {
     if (child.present) {
       map['child'] = Variable<int>(child.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -2603,69 +2685,240 @@ class DirFilesCompanion extends UpdateCompanion<DirFile> {
   String toString() {
     return (StringBuffer('DirFilesCompanion(')
           ..write('dir: $dir, ')
-          ..write('child: $child')
+          ..write('child: $child, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $DirFilesTable extends DirFiles with TableInfo<$DirFilesTable, DirFile> {
+class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $DirFilesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _dirMeta = const VerificationMeta('dir');
+  $AlbumsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> dir = GeneratedColumn<int?>(
-      'dir', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
+      'row_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _fileMeta = const VerificationMeta('file');
+  @override
+  late final GeneratedColumn<int> file = GeneratedColumn<int>(
+      'file', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _childMeta = const VerificationMeta('child');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'UNIQUE REFERENCES files (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _fileEtagMeta =
+      const VerificationMeta('fileEtag');
   @override
-  late final GeneratedColumn<int?> child = GeneratedColumn<int?>(
-      'child', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES files (row_id) ON DELETE CASCADE');
+  late final GeneratedColumn<String> fileEtag = GeneratedColumn<String>(
+      'file_etag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _versionMeta =
+      const VerificationMeta('version');
   @override
-  List<GeneratedColumn> get $columns => [dir, child];
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
+      'version', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _lastUpdatedMeta =
+      const VerificationMeta('lastUpdated');
   @override
-  String get aliasedName => _alias ?? 'dir_files';
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> lastUpdated =
+      GeneratedColumn<DateTime>('last_updated', aliasedName, false,
+              type: DriftSqlType.dateTime, requiredDuringInsert: true)
+          .withConverter<DateTime>($AlbumsTable.$converterlastUpdated);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  String get actualTableName => 'dir_files';
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _providerTypeMeta =
+      const VerificationMeta('providerType');
   @override
-  VerificationContext validateIntegrity(Insertable<DirFile> instance,
+  late final GeneratedColumn<String> providerType = GeneratedColumn<String>(
+      'provider_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _providerContentMeta =
+      const VerificationMeta('providerContent');
+  @override
+  late final GeneratedColumn<String> providerContent = GeneratedColumn<String>(
+      'provider_content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _coverProviderTypeMeta =
+      const VerificationMeta('coverProviderType');
+  @override
+  late final GeneratedColumn<String> coverProviderType =
+      GeneratedColumn<String>('cover_provider_type', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _coverProviderContentMeta =
+      const VerificationMeta('coverProviderContent');
+  @override
+  late final GeneratedColumn<String> coverProviderContent =
+      GeneratedColumn<String>('cover_provider_content', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _sortProviderTypeMeta =
+      const VerificationMeta('sortProviderType');
+  @override
+  late final GeneratedColumn<String> sortProviderType = GeneratedColumn<String>(
+      'sort_provider_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _sortProviderContentMeta =
+      const VerificationMeta('sortProviderContent');
+  @override
+  late final GeneratedColumn<String> sortProviderContent =
+      GeneratedColumn<String>('sort_provider_content', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        file,
+        fileEtag,
+        version,
+        lastUpdated,
+        name,
+        providerType,
+        providerContent,
+        coverProviderType,
+        coverProviderContent,
+        sortProviderType,
+        sortProviderContent
+      ];
+  @override
+  String get aliasedName => _alias ?? 'albums';
+  @override
+  String get actualTableName => 'albums';
+  @override
+  VerificationContext validateIntegrity(Insertable<Album> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('dir')) {
+    if (data.containsKey('row_id')) {
       context.handle(
-          _dirMeta, dir.isAcceptableOrUnknown(data['dir']!, _dirMeta));
-    } else if (isInserting) {
-      context.missing(_dirMeta);
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('child')) {
+    if (data.containsKey('file')) {
       context.handle(
-          _childMeta, child.isAcceptableOrUnknown(data['child']!, _childMeta));
+          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
     } else if (isInserting) {
-      context.missing(_childMeta);
+      context.missing(_fileMeta);
+    }
+    if (data.containsKey('file_etag')) {
+      context.handle(_fileEtagMeta,
+          fileEtag.isAcceptableOrUnknown(data['file_etag']!, _fileEtagMeta));
+    }
+    if (data.containsKey('version')) {
+      context.handle(_versionMeta,
+          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+    } else if (isInserting) {
+      context.missing(_versionMeta);
+    }
+    context.handle(_lastUpdatedMeta, const VerificationResult.success());
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('provider_type')) {
+      context.handle(
+          _providerTypeMeta,
+          providerType.isAcceptableOrUnknown(
+              data['provider_type']!, _providerTypeMeta));
+    } else if (isInserting) {
+      context.missing(_providerTypeMeta);
+    }
+    if (data.containsKey('provider_content')) {
+      context.handle(
+          _providerContentMeta,
+          providerContent.isAcceptableOrUnknown(
+              data['provider_content']!, _providerContentMeta));
+    } else if (isInserting) {
+      context.missing(_providerContentMeta);
+    }
+    if (data.containsKey('cover_provider_type')) {
+      context.handle(
+          _coverProviderTypeMeta,
+          coverProviderType.isAcceptableOrUnknown(
+              data['cover_provider_type']!, _coverProviderTypeMeta));
+    } else if (isInserting) {
+      context.missing(_coverProviderTypeMeta);
+    }
+    if (data.containsKey('cover_provider_content')) {
+      context.handle(
+          _coverProviderContentMeta,
+          coverProviderContent.isAcceptableOrUnknown(
+              data['cover_provider_content']!, _coverProviderContentMeta));
+    } else if (isInserting) {
+      context.missing(_coverProviderContentMeta);
+    }
+    if (data.containsKey('sort_provider_type')) {
+      context.handle(
+          _sortProviderTypeMeta,
+          sortProviderType.isAcceptableOrUnknown(
+              data['sort_provider_type']!, _sortProviderTypeMeta));
+    } else if (isInserting) {
+      context.missing(_sortProviderTypeMeta);
+    }
+    if (data.containsKey('sort_provider_content')) {
+      context.handle(
+          _sortProviderContentMeta,
+          sortProviderContent.isAcceptableOrUnknown(
+              data['sort_provider_content']!, _sortProviderContentMeta));
+    } else if (isInserting) {
+      context.missing(_sortProviderContentMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {dir, child};
+  Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
-  DirFile map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return DirFile.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Album map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Album(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      file: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file'])!,
+      fileEtag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}file_etag']),
+      version: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
+      lastUpdated: $AlbumsTable.$converterlastUpdated.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      providerType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}provider_type'])!,
+      providerContent: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}provider_content'])!,
+      coverProviderType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}cover_provider_type'])!,
+      coverProviderContent: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}cover_provider_content'])!,
+      sortProviderType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}sort_provider_type'])!,
+      sortProviderContent: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sort_provider_content'])!,
+    );
   }
 
   @override
-  $DirFilesTable createAlias(String alias) {
-    return $DirFilesTable(attachedDatabase, alias);
+  $AlbumsTable createAlias(String alias) {
+    return $AlbumsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<DateTime, DateTime> $converterlastUpdated =
+      const SqliteDateTimeConverter();
 }
 
 class Album extends DataClass implements Insertable<Album> {
@@ -2681,7 +2934,7 @@ class Album extends DataClass implements Insertable<Album> {
   final String coverProviderContent;
   final String sortProviderType;
   final String sortProviderContent;
-  Album(
+  const Album(
       {required this.rowId,
       required this.file,
       this.fileEtag,
@@ -2694,48 +2947,18 @@ class Album extends DataClass implements Insertable<Album> {
       required this.coverProviderContent,
       required this.sortProviderType,
       required this.sortProviderContent});
-  factory Album.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Album(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      file: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file'])!,
-      fileEtag: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file_etag']),
-      version: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
-      lastUpdated: $AlbumsTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_updated']))!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      providerType: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}provider_type'])!,
-      providerContent: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}provider_content'])!,
-      coverProviderType: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}cover_provider_type'])!,
-      coverProviderContent: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}cover_provider_content'])!,
-      sortProviderType: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}sort_provider_type'])!,
-      sortProviderContent: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}sort_provider_content'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['row_id'] = Variable<int>(rowId);
     map['file'] = Variable<int>(file);
     if (!nullToAbsent || fileEtag != null) {
-      map['file_etag'] = Variable<String?>(fileEtag);
+      map['file_etag'] = Variable<String>(fileEtag);
     }
     map['version'] = Variable<int>(version);
     {
-      final converter = $AlbumsTable.$converter0;
-      map['last_updated'] =
-          Variable<DateTime>(converter.mapToSql(lastUpdated)!);
+      final converter = $AlbumsTable.$converterlastUpdated;
+      map['last_updated'] = Variable<DateTime>(converter.toSql(lastUpdated));
     }
     map['name'] = Variable<String>(name);
     map['provider_type'] = Variable<String>(providerType);
@@ -2936,7 +3159,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   static Insertable<Album> custom({
     Expression<int>? rowId,
     Expression<int>? file,
-    Expression<String?>? fileEtag,
+    Expression<String>? fileEtag,
     Expression<int>? version,
     Expression<DateTime>? lastUpdated,
     Expression<String>? name,
@@ -3004,15 +3227,15 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
       map['file'] = Variable<int>(file.value);
     }
     if (fileEtag.present) {
-      map['file_etag'] = Variable<String?>(fileEtag.value);
+      map['file_etag'] = Variable<String>(fileEtag.value);
     }
     if (version.present) {
       map['version'] = Variable<int>(version.value);
     }
     if (lastUpdated.present) {
-      final converter = $AlbumsTable.$converter0;
+      final converter = $AlbumsTable.$converterlastUpdated;
       map['last_updated'] =
-          Variable<DateTime>(converter.mapToSql(lastUpdated.value)!);
+          Variable<DateTime>(converter.toSql(lastUpdated.value));
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -3060,199 +3283,95 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   }
 }
 
-class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
+class $AlbumSharesTable extends AlbumShares
+    with TableInfo<$AlbumSharesTable, AlbumShare> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AlbumsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $AlbumSharesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _albumMeta = const VerificationMeta('album');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
-      'row_id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _fileMeta = const VerificationMeta('file');
-  @override
-  late final GeneratedColumn<int?> file = GeneratedColumn<int?>(
-      'file', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> album = GeneratedColumn<int>(
+      'album', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'UNIQUE REFERENCES files (row_id) ON DELETE CASCADE');
-  final VerificationMeta _fileEtagMeta = const VerificationMeta('fileEtag');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES albums (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
-  late final GeneratedColumn<String?> fileEtag = GeneratedColumn<String?>(
-      'file_etag', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _versionMeta = const VerificationMeta('version');
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _displayNameMeta =
+      const VerificationMeta('displayName');
   @override
-  late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
-      'version', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _lastUpdatedMeta =
-      const VerificationMeta('lastUpdated');
+  late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
+      'display_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _sharedAtMeta =
+      const VerificationMeta('sharedAt');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> lastUpdated =
-      GeneratedColumn<DateTime?>('last_updated', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DateTime>($AlbumsTable.$converter0);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> sharedAt =
+      GeneratedColumn<DateTime>('shared_at', aliasedName, false,
+              type: DriftSqlType.dateTime, requiredDuringInsert: true)
+          .withConverter<DateTime>($AlbumSharesTable.$convertersharedAt);
   @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _providerTypeMeta =
-      const VerificationMeta('providerType');
+  List<GeneratedColumn> get $columns => [album, userId, displayName, sharedAt];
   @override
-  late final GeneratedColumn<String?> providerType = GeneratedColumn<String?>(
-      'provider_type', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _providerContentMeta =
-      const VerificationMeta('providerContent');
+  String get aliasedName => _alias ?? 'album_shares';
   @override
-  late final GeneratedColumn<String?> providerContent =
-      GeneratedColumn<String?>('provider_content', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _coverProviderTypeMeta =
-      const VerificationMeta('coverProviderType');
+  String get actualTableName => 'album_shares';
   @override
-  late final GeneratedColumn<String?> coverProviderType =
-      GeneratedColumn<String?>('cover_provider_type', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _coverProviderContentMeta =
-      const VerificationMeta('coverProviderContent');
-  @override
-  late final GeneratedColumn<String?> coverProviderContent =
-      GeneratedColumn<String?>('cover_provider_content', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _sortProviderTypeMeta =
-      const VerificationMeta('sortProviderType');
-  @override
-  late final GeneratedColumn<String?> sortProviderType =
-      GeneratedColumn<String?>('sort_provider_type', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _sortProviderContentMeta =
-      const VerificationMeta('sortProviderContent');
-  @override
-  late final GeneratedColumn<String?> sortProviderContent =
-      GeneratedColumn<String?>('sort_provider_content', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [
-        rowId,
-        file,
-        fileEtag,
-        version,
-        lastUpdated,
-        name,
-        providerType,
-        providerContent,
-        coverProviderType,
-        coverProviderContent,
-        sortProviderType,
-        sortProviderContent
-      ];
-  @override
-  String get aliasedName => _alias ?? 'albums';
-  @override
-  String get actualTableName => 'albums';
-  @override
-  VerificationContext validateIntegrity(Insertable<Album> instance,
+  VerificationContext validateIntegrity(Insertable<AlbumShare> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('row_id')) {
+    if (data.containsKey('album')) {
       context.handle(
-          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+          _albumMeta, album.isAcceptableOrUnknown(data['album']!, _albumMeta));
+    } else if (isInserting) {
+      context.missing(_albumMeta);
     }
-    if (data.containsKey('file')) {
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('display_name')) {
       context.handle(
-          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
-    } else if (isInserting) {
-      context.missing(_fileMeta);
+          _displayNameMeta,
+          displayName.isAcceptableOrUnknown(
+              data['display_name']!, _displayNameMeta));
     }
-    if (data.containsKey('file_etag')) {
-      context.handle(_fileEtagMeta,
-          fileEtag.isAcceptableOrUnknown(data['file_etag']!, _fileEtagMeta));
-    }
-    if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
-    } else if (isInserting) {
-      context.missing(_versionMeta);
-    }
-    context.handle(_lastUpdatedMeta, const VerificationResult.success());
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('provider_type')) {
-      context.handle(
-          _providerTypeMeta,
-          providerType.isAcceptableOrUnknown(
-              data['provider_type']!, _providerTypeMeta));
-    } else if (isInserting) {
-      context.missing(_providerTypeMeta);
-    }
-    if (data.containsKey('provider_content')) {
-      context.handle(
-          _providerContentMeta,
-          providerContent.isAcceptableOrUnknown(
-              data['provider_content']!, _providerContentMeta));
-    } else if (isInserting) {
-      context.missing(_providerContentMeta);
-    }
-    if (data.containsKey('cover_provider_type')) {
-      context.handle(
-          _coverProviderTypeMeta,
-          coverProviderType.isAcceptableOrUnknown(
-              data['cover_provider_type']!, _coverProviderTypeMeta));
-    } else if (isInserting) {
-      context.missing(_coverProviderTypeMeta);
-    }
-    if (data.containsKey('cover_provider_content')) {
-      context.handle(
-          _coverProviderContentMeta,
-          coverProviderContent.isAcceptableOrUnknown(
-              data['cover_provider_content']!, _coverProviderContentMeta));
-    } else if (isInserting) {
-      context.missing(_coverProviderContentMeta);
-    }
-    if (data.containsKey('sort_provider_type')) {
-      context.handle(
-          _sortProviderTypeMeta,
-          sortProviderType.isAcceptableOrUnknown(
-              data['sort_provider_type']!, _sortProviderTypeMeta));
-    } else if (isInserting) {
-      context.missing(_sortProviderTypeMeta);
-    }
-    if (data.containsKey('sort_provider_content')) {
-      context.handle(
-          _sortProviderContentMeta,
-          sortProviderContent.isAcceptableOrUnknown(
-              data['sort_provider_content']!, _sortProviderContentMeta));
-    } else if (isInserting) {
-      context.missing(_sortProviderContentMeta);
-    }
+    context.handle(_sharedAtMeta, const VerificationResult.success());
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {rowId};
+  Set<GeneratedColumn> get $primaryKey => {album, userId};
   @override
-  Album map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Album.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  AlbumShare map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AlbumShare(
+      album: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}album'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+      displayName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}display_name']),
+      sharedAt: $AlbumSharesTable.$convertersharedAt.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}shared_at'])!),
+    );
   }
 
   @override
-  $AlbumsTable createAlias(String alias) {
-    return $AlbumsTable(attachedDatabase, alias);
+  $AlbumSharesTable createAlias(String alias) {
+    return $AlbumSharesTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<DateTime, DateTime> $converter0 =
+  static TypeConverter<DateTime, DateTime> $convertersharedAt =
       const SqliteDateTimeConverter();
 }
 
@@ -3261,35 +3380,22 @@ class AlbumShare extends DataClass implements Insertable<AlbumShare> {
   final String userId;
   final String? displayName;
   final DateTime sharedAt;
-  AlbumShare(
+  const AlbumShare(
       {required this.album,
       required this.userId,
       this.displayName,
       required this.sharedAt});
-  factory AlbumShare.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return AlbumShare(
-      album: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}album'])!,
-      userId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_id'])!,
-      displayName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}display_name']),
-      sharedAt: $AlbumSharesTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}shared_at']))!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['album'] = Variable<int>(album);
     map['user_id'] = Variable<String>(userId);
     if (!nullToAbsent || displayName != null) {
-      map['display_name'] = Variable<String?>(displayName);
+      map['display_name'] = Variable<String>(displayName);
     }
     {
-      final converter = $AlbumSharesTable.$converter0;
-      map['shared_at'] = Variable<DateTime>(converter.mapToSql(sharedAt)!);
+      final converter = $AlbumSharesTable.$convertersharedAt;
+      map['shared_at'] = Variable<DateTime>(converter.toSql(sharedAt));
     }
     return map;
   }
@@ -3365,31 +3471,36 @@ class AlbumSharesCompanion extends UpdateCompanion<AlbumShare> {
   final Value<String> userId;
   final Value<String?> displayName;
   final Value<DateTime> sharedAt;
+  final Value<int> rowid;
   const AlbumSharesCompanion({
     this.album = const Value.absent(),
     this.userId = const Value.absent(),
     this.displayName = const Value.absent(),
     this.sharedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   AlbumSharesCompanion.insert({
     required int album,
     required String userId,
     this.displayName = const Value.absent(),
     required DateTime sharedAt,
+    this.rowid = const Value.absent(),
   })  : album = Value(album),
         userId = Value(userId),
         sharedAt = Value(sharedAt);
   static Insertable<AlbumShare> custom({
     Expression<int>? album,
     Expression<String>? userId,
-    Expression<String?>? displayName,
+    Expression<String>? displayName,
     Expression<DateTime>? sharedAt,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (album != null) 'album': album,
       if (userId != null) 'user_id': userId,
       if (displayName != null) 'display_name': displayName,
       if (sharedAt != null) 'shared_at': sharedAt,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -3397,12 +3508,14 @@ class AlbumSharesCompanion extends UpdateCompanion<AlbumShare> {
       {Value<int>? album,
       Value<String>? userId,
       Value<String?>? displayName,
-      Value<DateTime>? sharedAt}) {
+      Value<DateTime>? sharedAt,
+      Value<int>? rowid}) {
     return AlbumSharesCompanion(
       album: album ?? this.album,
       userId: userId ?? this.userId,
       displayName: displayName ?? this.displayName,
       sharedAt: sharedAt ?? this.sharedAt,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -3416,12 +3529,14 @@ class AlbumSharesCompanion extends UpdateCompanion<AlbumShare> {
       map['user_id'] = Variable<String>(userId.value);
     }
     if (displayName.present) {
-      map['display_name'] = Variable<String?>(displayName.value);
+      map['display_name'] = Variable<String>(displayName.value);
     }
     if (sharedAt.present) {
-      final converter = $AlbumSharesTable.$converter0;
-      map['shared_at'] =
-          Variable<DateTime>(converter.mapToSql(sharedAt.value)!);
+      final converter = $AlbumSharesTable.$convertersharedAt;
+      map['shared_at'] = Variable<DateTime>(converter.toSql(sharedAt.value));
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -3432,90 +3547,150 @@ class AlbumSharesCompanion extends UpdateCompanion<AlbumShare> {
           ..write('album: $album, ')
           ..write('userId: $userId, ')
           ..write('displayName: $displayName, ')
-          ..write('sharedAt: $sharedAt')
+          ..write('sharedAt: $sharedAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $AlbumSharesTable extends AlbumShares
-    with TableInfo<$AlbumSharesTable, AlbumShare> {
+class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AlbumSharesTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _albumMeta = const VerificationMeta('album');
+  $TagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> album = GeneratedColumn<int?>(
-      'album', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
+      'row_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _serverMeta = const VerificationMeta('server');
+  @override
+  late final GeneratedColumn<int> server = GeneratedColumn<int>(
+      'server', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES albums (row_id) ON DELETE CASCADE');
-  final VerificationMeta _userIdMeta = const VerificationMeta('userId');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES servers (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
   @override
-  late final GeneratedColumn<String?> userId = GeneratedColumn<String?>(
-      'user_id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _displayNameMeta =
+  late final GeneratedColumn<int> tagId = GeneratedColumn<int>(
+      'tag_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _displayNameMeta =
       const VerificationMeta('displayName');
   @override
-  late final GeneratedColumn<String?> displayName = GeneratedColumn<String?>(
-      'display_name', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _sharedAtMeta = const VerificationMeta('sharedAt');
+  late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
+      'display_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _userVisibleMeta =
+      const VerificationMeta('userVisible');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> sharedAt =
-      GeneratedColumn<DateTime?>('shared_at', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<DateTime>($AlbumSharesTable.$converter0);
+  late final GeneratedColumn<bool> userVisible =
+      GeneratedColumn<bool>('user_visible', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("user_visible" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _userAssignableMeta =
+      const VerificationMeta('userAssignable');
   @override
-  List<GeneratedColumn> get $columns => [album, userId, displayName, sharedAt];
+  late final GeneratedColumn<bool> userAssignable =
+      GeneratedColumn<bool>('user_assignable', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("user_assignable" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   @override
-  String get aliasedName => _alias ?? 'album_shares';
+  List<GeneratedColumn> get $columns =>
+      [rowId, server, tagId, displayName, userVisible, userAssignable];
   @override
-  String get actualTableName => 'album_shares';
+  String get aliasedName => _alias ?? 'tags';
   @override
-  VerificationContext validateIntegrity(Insertable<AlbumShare> instance,
+  String get actualTableName => 'tags';
+  @override
+  VerificationContext validateIntegrity(Insertable<Tag> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('album')) {
+    if (data.containsKey('row_id')) {
       context.handle(
-          _albumMeta, album.isAcceptableOrUnknown(data['album']!, _albumMeta));
-    } else if (isInserting) {
-      context.missing(_albumMeta);
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    if (data.containsKey('server')) {
+      context.handle(_serverMeta,
+          server.isAcceptableOrUnknown(data['server']!, _serverMeta));
     } else if (isInserting) {
-      context.missing(_userIdMeta);
+      context.missing(_serverMeta);
+    }
+    if (data.containsKey('tag_id')) {
+      context.handle(
+          _tagIdMeta, tagId.isAcceptableOrUnknown(data['tag_id']!, _tagIdMeta));
+    } else if (isInserting) {
+      context.missing(_tagIdMeta);
     }
     if (data.containsKey('display_name')) {
       context.handle(
           _displayNameMeta,
           displayName.isAcceptableOrUnknown(
               data['display_name']!, _displayNameMeta));
+    } else if (isInserting) {
+      context.missing(_displayNameMeta);
     }
-    context.handle(_sharedAtMeta, const VerificationResult.success());
+    if (data.containsKey('user_visible')) {
+      context.handle(
+          _userVisibleMeta,
+          userVisible.isAcceptableOrUnknown(
+              data['user_visible']!, _userVisibleMeta));
+    }
+    if (data.containsKey('user_assignable')) {
+      context.handle(
+          _userAssignableMeta,
+          userAssignable.isAcceptableOrUnknown(
+              data['user_assignable']!, _userAssignableMeta));
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {album, userId};
+  Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
-  AlbumShare map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return AlbumShare.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {server, tagId},
+      ];
+  @override
+  Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Tag(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      server: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}server'])!,
+      tagId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}tag_id'])!,
+      displayName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}display_name'])!,
+      userVisible: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}user_visible']),
+      userAssignable: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}user_assignable']),
+    );
   }
 
   @override
-  $AlbumSharesTable createAlias(String alias) {
-    return $AlbumSharesTable(attachedDatabase, alias);
+  $TagsTable createAlias(String alias) {
+    return $TagsTable(attachedDatabase, alias);
   }
-
-  static TypeConverter<DateTime, DateTime> $converter0 =
-      const SqliteDateTimeConverter();
 }
 
 class Tag extends DataClass implements Insertable<Tag> {
@@ -3525,30 +3700,13 @@ class Tag extends DataClass implements Insertable<Tag> {
   final String displayName;
   final bool? userVisible;
   final bool? userAssignable;
-  Tag(
+  const Tag(
       {required this.rowId,
       required this.server,
       required this.tagId,
       required this.displayName,
       this.userVisible,
       this.userAssignable});
-  factory Tag.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Tag(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      server: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server'])!,
-      tagId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}tag_id'])!,
-      displayName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}display_name'])!,
-      userVisible: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_visible']),
-      userAssignable: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_assignable']),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3557,10 +3715,10 @@ class Tag extends DataClass implements Insertable<Tag> {
     map['tag_id'] = Variable<int>(tagId);
     map['display_name'] = Variable<String>(displayName);
     if (!nullToAbsent || userVisible != null) {
-      map['user_visible'] = Variable<bool?>(userVisible);
+      map['user_visible'] = Variable<bool>(userVisible);
     }
     if (!nullToAbsent || userAssignable != null) {
-      map['user_assignable'] = Variable<bool?>(userAssignable);
+      map['user_assignable'] = Variable<bool>(userAssignable);
     }
     return map;
   }
@@ -3679,8 +3837,8 @@ class TagsCompanion extends UpdateCompanion<Tag> {
     Expression<int>? server,
     Expression<int>? tagId,
     Expression<String>? displayName,
-    Expression<bool?>? userVisible,
-    Expression<bool?>? userAssignable,
+    Expression<bool>? userVisible,
+    Expression<bool>? userAssignable,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -3725,10 +3883,10 @@ class TagsCompanion extends UpdateCompanion<Tag> {
       map['display_name'] = Variable<String>(displayName.value);
     }
     if (userVisible.present) {
-      map['user_visible'] = Variable<bool?>(userVisible.value);
+      map['user_visible'] = Variable<bool>(userVisible.value);
     }
     if (userAssignable.present) {
-      map['user_assignable'] = Variable<bool?>(userAssignable.value);
+      map['user_assignable'] = Variable<bool>(userAssignable.value);
     }
     return map;
   }
@@ -3747,61 +3905,54 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   }
 }
 
-class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
+class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TagsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $PersonsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _serverMeta = const VerificationMeta('server');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _accountMeta =
+      const VerificationMeta('account');
   @override
-  late final GeneratedColumn<int?> server = GeneratedColumn<int?>(
-      'server', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> account = GeneratedColumn<int>(
+      'account', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES servers (row_id) ON DELETE CASCADE');
-  final VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES accounts (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<int?> tagId = GeneratedColumn<int?>(
-      'tag_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _displayNameMeta =
-      const VerificationMeta('displayName');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _thumbFaceIdMeta =
+      const VerificationMeta('thumbFaceId');
   @override
-  late final GeneratedColumn<String?> displayName = GeneratedColumn<String?>(
-      'display_name', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _userVisibleMeta =
-      const VerificationMeta('userVisible');
+  late final GeneratedColumn<int> thumbFaceId = GeneratedColumn<int>(
+      'thumb_face_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _countMeta = const VerificationMeta('count');
   @override
-  late final GeneratedColumn<bool?> userVisible = GeneratedColumn<bool?>(
-      'user_visible', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (user_visible IN (0, 1))');
-  final VerificationMeta _userAssignableMeta =
-      const VerificationMeta('userAssignable');
-  @override
-  late final GeneratedColumn<bool?> userAssignable = GeneratedColumn<bool?>(
-      'user_assignable', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (user_assignable IN (0, 1))');
+  late final GeneratedColumn<int> count = GeneratedColumn<int>(
+      'count', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [rowId, server, tagId, displayName, userVisible, userAssignable];
+      [rowId, account, name, thumbFaceId, count];
   @override
-  String get aliasedName => _alias ?? 'tags';
+  String get aliasedName => _alias ?? 'persons';
   @override
-  String get actualTableName => 'tags';
+  String get actualTableName => 'persons';
   @override
-  VerificationContext validateIntegrity(Insertable<Tag> instance,
+  VerificationContext validateIntegrity(Insertable<Person> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3809,37 +3960,31 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
       context.handle(
           _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('server')) {
-      context.handle(_serverMeta,
-          server.isAcceptableOrUnknown(data['server']!, _serverMeta));
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
     } else if (isInserting) {
-      context.missing(_serverMeta);
+      context.missing(_accountMeta);
     }
-    if (data.containsKey('tag_id')) {
+    if (data.containsKey('name')) {
       context.handle(
-          _tagIdMeta, tagId.isAcceptableOrUnknown(data['tag_id']!, _tagIdMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
-      context.missing(_tagIdMeta);
+      context.missing(_nameMeta);
     }
-    if (data.containsKey('display_name')) {
+    if (data.containsKey('thumb_face_id')) {
       context.handle(
-          _displayNameMeta,
-          displayName.isAcceptableOrUnknown(
-              data['display_name']!, _displayNameMeta));
+          _thumbFaceIdMeta,
+          thumbFaceId.isAcceptableOrUnknown(
+              data['thumb_face_id']!, _thumbFaceIdMeta));
     } else if (isInserting) {
-      context.missing(_displayNameMeta);
+      context.missing(_thumbFaceIdMeta);
     }
-    if (data.containsKey('user_visible')) {
+    if (data.containsKey('count')) {
       context.handle(
-          _userVisibleMeta,
-          userVisible.isAcceptableOrUnknown(
-              data['user_visible']!, _userVisibleMeta));
-    }
-    if (data.containsKey('user_assignable')) {
-      context.handle(
-          _userAssignableMeta,
-          userAssignable.isAcceptableOrUnknown(
-              data['user_assignable']!, _userAssignableMeta));
+          _countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
+    } else if (isInserting) {
+      context.missing(_countMeta);
     }
     return context;
   }
@@ -3848,17 +3993,28 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {server, tagId},
+        {account, name},
       ];
   @override
-  Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Tag.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Person(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      account: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      thumbFaceId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}thumb_face_id'])!,
+      count: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}count'])!,
+    );
   }
 
   @override
-  $TagsTable createAlias(String alias) {
-    return $TagsTable(attachedDatabase, alias);
+  $PersonsTable createAlias(String alias) {
+    return $PersonsTable(attachedDatabase, alias);
   }
 }
 
@@ -3868,27 +4024,12 @@ class Person extends DataClass implements Insertable<Person> {
   final String name;
   final int thumbFaceId;
   final int count;
-  Person(
+  const Person(
       {required this.rowId,
       required this.account,
       required this.name,
       required this.thumbFaceId,
       required this.count});
-  factory Person.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Person(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      account: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      thumbFaceId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}thumb_face_id'])!,
-      count: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}count'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4059,50 +4200,91 @@ class PersonsCompanion extends UpdateCompanion<Person> {
   }
 }
 
-class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
+class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PersonsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $NcAlbumsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _accountMeta = const VerificationMeta('account');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _accountMeta =
+      const VerificationMeta('account');
   @override
-  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> account = GeneratedColumn<int>(
       'account', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES accounts (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
   @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _thumbFaceIdMeta =
-      const VerificationMeta('thumbFaceId');
+  late final GeneratedColumn<String> relativePath = GeneratedColumn<String>(
+      'relative_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _lastPhotoMeta =
+      const VerificationMeta('lastPhoto');
   @override
-  late final GeneratedColumn<int?> thumbFaceId = GeneratedColumn<int?>(
-      'thumb_face_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _countMeta = const VerificationMeta('count');
+  late final GeneratedColumn<int> lastPhoto = GeneratedColumn<int>(
+      'last_photo', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nbItemsMeta =
+      const VerificationMeta('nbItems');
   @override
-  late final GeneratedColumn<int?> count = GeneratedColumn<int?>(
-      'count', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int> nbItems = GeneratedColumn<int>(
+      'nb_items', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _locationMeta =
+      const VerificationMeta('location');
   @override
-  List<GeneratedColumn> get $columns =>
-      [rowId, account, name, thumbFaceId, count];
+  late final GeneratedColumn<String> location = GeneratedColumn<String>(
+      'location', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _dateStartMeta =
+      const VerificationMeta('dateStart');
   @override
-  String get aliasedName => _alias ?? 'persons';
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> dateStart =
+      GeneratedColumn<DateTime>('date_start', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>($NcAlbumsTable.$converterdateStartn);
+  static const VerificationMeta _dateEndMeta =
+      const VerificationMeta('dateEnd');
   @override
-  String get actualTableName => 'persons';
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> dateEnd =
+      GeneratedColumn<DateTime>('date_end', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>($NcAlbumsTable.$converterdateEndn);
+  static const VerificationMeta _collaboratorsMeta =
+      const VerificationMeta('collaborators');
   @override
-  VerificationContext validateIntegrity(Insertable<Person> instance,
+  late final GeneratedColumn<String> collaborators = GeneratedColumn<String>(
+      'collaborators', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        account,
+        relativePath,
+        lastPhoto,
+        nbItems,
+        location,
+        dateStart,
+        dateEnd,
+        collaborators
+      ];
+  @override
+  String get aliasedName => _alias ?? 'nc_albums';
+  @override
+  String get actualTableName => 'nc_albums';
+  @override
+  VerificationContext validateIntegrity(Insertable<NcAlbum> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -4116,25 +4298,37 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
     } else if (isInserting) {
       context.missing(_accountMeta);
     }
-    if (data.containsKey('name')) {
+    if (data.containsKey('relative_path')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
     } else if (isInserting) {
-      context.missing(_nameMeta);
+      context.missing(_relativePathMeta);
     }
-    if (data.containsKey('thumb_face_id')) {
-      context.handle(
-          _thumbFaceIdMeta,
-          thumbFaceId.isAcceptableOrUnknown(
-              data['thumb_face_id']!, _thumbFaceIdMeta));
-    } else if (isInserting) {
-      context.missing(_thumbFaceIdMeta);
+    if (data.containsKey('last_photo')) {
+      context.handle(_lastPhotoMeta,
+          lastPhoto.isAcceptableOrUnknown(data['last_photo']!, _lastPhotoMeta));
     }
-    if (data.containsKey('count')) {
-      context.handle(
-          _countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
+    if (data.containsKey('nb_items')) {
+      context.handle(_nbItemsMeta,
+          nbItems.isAcceptableOrUnknown(data['nb_items']!, _nbItemsMeta));
     } else if (isInserting) {
-      context.missing(_countMeta);
+      context.missing(_nbItemsMeta);
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    }
+    context.handle(_dateStartMeta, const VerificationResult.success());
+    context.handle(_dateEndMeta, const VerificationResult.success());
+    if (data.containsKey('collaborators')) {
+      context.handle(
+          _collaboratorsMeta,
+          collaborators.isAcceptableOrUnknown(
+              data['collaborators']!, _collaboratorsMeta));
+    } else if (isInserting) {
+      context.missing(_collaboratorsMeta);
     }
     return context;
   }
@@ -4143,18 +4337,48 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {account, name},
+        {account, relativePath},
       ];
   @override
-  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Person.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  NcAlbum map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NcAlbum(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      account: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account'])!,
+      relativePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_path'])!,
+      lastPhoto: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}last_photo']),
+      nbItems: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}nb_items'])!,
+      location: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location']),
+      dateStart: $NcAlbumsTable.$converterdateStartn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_start'])),
+      dateEnd: $NcAlbumsTable.$converterdateEndn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_end'])),
+      collaborators: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collaborators'])!,
+    );
   }
 
   @override
-  $PersonsTable createAlias(String alias) {
-    return $PersonsTable(attachedDatabase, alias);
+  $NcAlbumsTable createAlias(String alias) {
+    return $NcAlbumsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<DateTime, DateTime> $converterdateStart =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdateStartn =
+      NullAwareTypeConverter.wrap($converterdateStart);
+  static TypeConverter<DateTime, DateTime> $converterdateEnd =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdateEndn =
+      NullAwareTypeConverter.wrap($converterdateEnd);
 }
 
 class NcAlbum extends DataClass implements Insertable<NcAlbum> {
@@ -4167,7 +4391,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
   final DateTime? dateStart;
   final DateTime? dateEnd;
   final String collaborators;
-  NcAlbum(
+  const NcAlbum(
       {required this.rowId,
       required this.account,
       required this.relativePath,
@@ -4177,29 +4401,6 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       this.dateStart,
       this.dateEnd,
       required this.collaborators});
-  factory NcAlbum.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NcAlbum(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      account: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account'])!,
-      relativePath: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
-      lastPhoto: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_photo']),
-      nbItems: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}nb_items'])!,
-      location: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}location']),
-      dateStart: $NcAlbumsTable.$converter0.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}date_start'])),
-      dateEnd: $NcAlbumsTable.$converter1.mapToDart(const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}date_end'])),
-      collaborators: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}collaborators'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4207,19 +4408,19 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
     map['account'] = Variable<int>(account);
     map['relative_path'] = Variable<String>(relativePath);
     if (!nullToAbsent || lastPhoto != null) {
-      map['last_photo'] = Variable<int?>(lastPhoto);
+      map['last_photo'] = Variable<int>(lastPhoto);
     }
     map['nb_items'] = Variable<int>(nbItems);
     if (!nullToAbsent || location != null) {
-      map['location'] = Variable<String?>(location);
+      map['location'] = Variable<String>(location);
     }
     if (!nullToAbsent || dateStart != null) {
-      final converter = $NcAlbumsTable.$converter0;
-      map['date_start'] = Variable<DateTime?>(converter.mapToSql(dateStart));
+      final converter = $NcAlbumsTable.$converterdateStartn;
+      map['date_start'] = Variable<DateTime>(converter.toSql(dateStart));
     }
     if (!nullToAbsent || dateEnd != null) {
-      final converter = $NcAlbumsTable.$converter1;
-      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd));
+      final converter = $NcAlbumsTable.$converterdateEndn;
+      map['date_end'] = Variable<DateTime>(converter.toSql(dateEnd));
     }
     map['collaborators'] = Variable<String>(collaborators);
     return map;
@@ -4372,11 +4573,11 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
     Expression<int>? rowId,
     Expression<int>? account,
     Expression<String>? relativePath,
-    Expression<int?>? lastPhoto,
+    Expression<int>? lastPhoto,
     Expression<int>? nbItems,
-    Expression<String?>? location,
-    Expression<DateTime?>? dateStart,
-    Expression<DateTime?>? dateEnd,
+    Expression<String>? location,
+    Expression<DateTime>? dateStart,
+    Expression<DateTime>? dateEnd,
     Expression<String>? collaborators,
   }) {
     return RawValuesInsertable({
@@ -4428,22 +4629,21 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
       map['relative_path'] = Variable<String>(relativePath.value);
     }
     if (lastPhoto.present) {
-      map['last_photo'] = Variable<int?>(lastPhoto.value);
+      map['last_photo'] = Variable<int>(lastPhoto.value);
     }
     if (nbItems.present) {
       map['nb_items'] = Variable<int>(nbItems.value);
     }
     if (location.present) {
-      map['location'] = Variable<String?>(location.value);
+      map['location'] = Variable<String>(location.value);
     }
     if (dateStart.present) {
-      final converter = $NcAlbumsTable.$converter0;
-      map['date_start'] =
-          Variable<DateTime?>(converter.mapToSql(dateStart.value));
+      final converter = $NcAlbumsTable.$converterdateStartn;
+      map['date_start'] = Variable<DateTime>(converter.toSql(dateStart.value));
     }
     if (dateEnd.present) {
-      final converter = $NcAlbumsTable.$converter1;
-      map['date_end'] = Variable<DateTime?>(converter.mapToSql(dateEnd.value));
+      final converter = $NcAlbumsTable.$converterdateEndn;
+      map['date_end'] = Variable<DateTime>(converter.toSql(dateEnd.value));
     }
     if (collaborators.present) {
       map['collaborators'] = Variable<String>(collaborators.value);
@@ -4468,82 +4668,122 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
   }
 }
 
-class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
+class $NcAlbumItemsTable extends NcAlbumItems
+    with TableInfo<$NcAlbumItemsTable, NcAlbumItem> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $NcAlbumsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  $NcAlbumItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
       'row_id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _accountMeta = const VerificationMeta('account');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _parentMeta = const VerificationMeta('parent');
   @override
-  late final GeneratedColumn<int?> account = GeneratedColumn<int?>(
-      'account', aliasedName, false,
-      type: const IntType(),
+  late final GeneratedColumn<int> parent = GeneratedColumn<int>(
+      'parent', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES accounts (row_id) ON DELETE CASCADE');
-  final VerificationMeta _relativePathMeta =
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES nc_albums (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _relativePathMeta =
       const VerificationMeta('relativePath');
   @override
-  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> relativePath = GeneratedColumn<String>(
       'relative_path', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _lastPhotoMeta = const VerificationMeta('lastPhoto');
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
   @override
-  late final GeneratedColumn<int?> lastPhoto = GeneratedColumn<int?>(
-      'last_photo', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _nbItemsMeta = const VerificationMeta('nbItems');
+  late final GeneratedColumn<int> fileId = GeneratedColumn<int>(
+      'file_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _contentLengthMeta =
+      const VerificationMeta('contentLength');
   @override
-  late final GeneratedColumn<int?> nbItems = GeneratedColumn<int?>(
-      'nb_items', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _locationMeta = const VerificationMeta('location');
+  late final GeneratedColumn<int> contentLength = GeneratedColumn<int>(
+      'content_length', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _contentTypeMeta =
+      const VerificationMeta('contentType');
   @override
-  late final GeneratedColumn<String?> location = GeneratedColumn<String?>(
-      'location', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _dateStartMeta = const VerificationMeta('dateStart');
+  late final GeneratedColumn<String> contentType = GeneratedColumn<String>(
+      'content_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateStart =
-      GeneratedColumn<DateTime?>('date_start', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($NcAlbumsTable.$converter0);
-  final VerificationMeta _dateEndMeta = const VerificationMeta('dateEnd');
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+      'etag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
   @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?> dateEnd =
-      GeneratedColumn<DateTime?>('date_end', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($NcAlbumsTable.$converter1);
-  final VerificationMeta _collaboratorsMeta =
-      const VerificationMeta('collaborators');
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime>
+      lastModified = GeneratedColumn<DateTime>(
+              'last_modified', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>($NcAlbumItemsTable.$converterlastModifiedn);
+  static const VerificationMeta _hasPreviewMeta =
+      const VerificationMeta('hasPreview');
   @override
-  late final GeneratedColumn<String?> collaborators = GeneratedColumn<String?>(
-      'collaborators', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<bool> hasPreview =
+      GeneratedColumn<bool>('has_preview', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _isFavoriteMeta =
+      const VerificationMeta('isFavorite');
+  @override
+  late final GeneratedColumn<bool> isFavorite =
+      GeneratedColumn<bool>('is_favorite', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _fileMetadataWidthMeta =
+      const VerificationMeta('fileMetadataWidth');
+  @override
+  late final GeneratedColumn<int> fileMetadataWidth = GeneratedColumn<int>(
+      'file_metadata_width', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _fileMetadataHeightMeta =
+      const VerificationMeta('fileMetadataHeight');
+  @override
+  late final GeneratedColumn<int> fileMetadataHeight = GeneratedColumn<int>(
+      'file_metadata_height', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
-        account,
+        parent,
         relativePath,
-        lastPhoto,
-        nbItems,
-        location,
-        dateStart,
-        dateEnd,
-        collaborators
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        hasPreview,
+        isFavorite,
+        fileMetadataWidth,
+        fileMetadataHeight
       ];
   @override
-  String get aliasedName => _alias ?? 'nc_albums';
+  String get aliasedName => _alias ?? 'nc_album_items';
   @override
-  String get actualTableName => 'nc_albums';
+  String get actualTableName => 'nc_album_items';
   @override
-  VerificationContext validateIntegrity(Insertable<NcAlbum> instance,
+  VerificationContext validateIntegrity(Insertable<NcAlbumItem> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -4551,11 +4791,11 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
       context.handle(
           _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
     }
-    if (data.containsKey('account')) {
-      context.handle(_accountMeta,
-          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    if (data.containsKey('parent')) {
+      context.handle(_parentMeta,
+          parent.isAcceptableOrUnknown(data['parent']!, _parentMeta));
     } else if (isInserting) {
-      context.missing(_accountMeta);
+      context.missing(_parentMeta);
     }
     if (data.containsKey('relative_path')) {
       context.handle(
@@ -4565,29 +4805,52 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
     } else if (isInserting) {
       context.missing(_relativePathMeta);
     }
-    if (data.containsKey('last_photo')) {
-      context.handle(_lastPhotoMeta,
-          lastPhoto.isAcceptableOrUnknown(data['last_photo']!, _lastPhotoMeta));
-    }
-    if (data.containsKey('nb_items')) {
-      context.handle(_nbItemsMeta,
-          nbItems.isAcceptableOrUnknown(data['nb_items']!, _nbItemsMeta));
+    if (data.containsKey('file_id')) {
+      context.handle(_fileIdMeta,
+          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
     } else if (isInserting) {
-      context.missing(_nbItemsMeta);
+      context.missing(_fileIdMeta);
     }
-    if (data.containsKey('location')) {
-      context.handle(_locationMeta,
-          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
-    }
-    context.handle(_dateStartMeta, const VerificationResult.success());
-    context.handle(_dateEndMeta, const VerificationResult.success());
-    if (data.containsKey('collaborators')) {
+    if (data.containsKey('content_length')) {
       context.handle(
-          _collaboratorsMeta,
-          collaborators.isAcceptableOrUnknown(
-              data['collaborators']!, _collaboratorsMeta));
-    } else if (isInserting) {
-      context.missing(_collaboratorsMeta);
+          _contentLengthMeta,
+          contentLength.isAcceptableOrUnknown(
+              data['content_length']!, _contentLengthMeta));
+    }
+    if (data.containsKey('content_type')) {
+      context.handle(
+          _contentTypeMeta,
+          contentType.isAcceptableOrUnknown(
+              data['content_type']!, _contentTypeMeta));
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
+    }
+    context.handle(_lastModifiedMeta, const VerificationResult.success());
+    if (data.containsKey('has_preview')) {
+      context.handle(
+          _hasPreviewMeta,
+          hasPreview.isAcceptableOrUnknown(
+              data['has_preview']!, _hasPreviewMeta));
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+          _isFavoriteMeta,
+          isFavorite.isAcceptableOrUnknown(
+              data['is_favorite']!, _isFavoriteMeta));
+    }
+    if (data.containsKey('file_metadata_width')) {
+      context.handle(
+          _fileMetadataWidthMeta,
+          fileMetadataWidth.isAcceptableOrUnknown(
+              data['file_metadata_width']!, _fileMetadataWidthMeta));
+    }
+    if (data.containsKey('file_metadata_height')) {
+      context.handle(
+          _fileMetadataHeightMeta,
+          fileMetadataHeight.isAcceptableOrUnknown(
+              data['file_metadata_height']!, _fileMetadataHeightMeta));
     }
     return context;
   }
@@ -4596,23 +4859,49 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
   Set<GeneratedColumn> get $primaryKey => {rowId};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {account, relativePath},
+        {parent, fileId},
       ];
   @override
-  NcAlbum map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NcAlbum.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  NcAlbumItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NcAlbumItem(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      parent: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}parent'])!,
+      relativePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_path'])!,
+      fileId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file_id'])!,
+      contentLength: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}content_length']),
+      contentType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content_type']),
+      etag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}etag']),
+      lastModified: $NcAlbumItemsTable.$converterlastModifiedn.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}last_modified'])),
+      hasPreview: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}has_preview']),
+      isFavorite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favorite']),
+      fileMetadataWidth: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}file_metadata_width']),
+      fileMetadataHeight: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}file_metadata_height']),
+    );
   }
 
   @override
-  $NcAlbumsTable createAlias(String alias) {
-    return $NcAlbumsTable(attachedDatabase, alias);
+  $NcAlbumItemsTable createAlias(String alias) {
+    return $NcAlbumItemsTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<DateTime, DateTime> $converter0 =
+  static TypeConverter<DateTime, DateTime> $converterlastModified =
       const SqliteDateTimeConverter();
-  static TypeConverter<DateTime, DateTime> $converter1 =
-      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterlastModifiedn =
+      NullAwareTypeConverter.wrap($converterlastModified);
 }
 
 class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
@@ -4628,7 +4917,7 @@ class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
   final bool? isFavorite;
   final int? fileMetadataWidth;
   final int? fileMetadataHeight;
-  NcAlbumItem(
+  const NcAlbumItem(
       {required this.rowId,
       required this.parent,
       required this.relativePath,
@@ -4641,36 +4930,6 @@ class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
       this.isFavorite,
       this.fileMetadataWidth,
       this.fileMetadataHeight});
-  factory NcAlbumItem.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NcAlbumItem(
-      rowId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}row_id'])!,
-      parent: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent'])!,
-      relativePath: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}relative_path'])!,
-      fileId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file_id'])!,
-      contentLength: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content_length']),
-      contentType: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content_type']),
-      etag: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}etag']),
-      lastModified: $NcAlbumItemsTable.$converter0.mapToDart(
-          const DateTimeType().mapFromDatabaseResponse(
-              data['${effectivePrefix}last_modified'])),
-      hasPreview: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}has_preview']),
-      isFavorite: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_favorite']),
-      fileMetadataWidth: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}file_metadata_width']),
-      fileMetadataHeight: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}file_metadata_height']),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4679,30 +4938,29 @@ class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
     map['relative_path'] = Variable<String>(relativePath);
     map['file_id'] = Variable<int>(fileId);
     if (!nullToAbsent || contentLength != null) {
-      map['content_length'] = Variable<int?>(contentLength);
+      map['content_length'] = Variable<int>(contentLength);
     }
     if (!nullToAbsent || contentType != null) {
-      map['content_type'] = Variable<String?>(contentType);
+      map['content_type'] = Variable<String>(contentType);
     }
     if (!nullToAbsent || etag != null) {
-      map['etag'] = Variable<String?>(etag);
+      map['etag'] = Variable<String>(etag);
     }
     if (!nullToAbsent || lastModified != null) {
-      final converter = $NcAlbumItemsTable.$converter0;
-      map['last_modified'] =
-          Variable<DateTime?>(converter.mapToSql(lastModified));
+      final converter = $NcAlbumItemsTable.$converterlastModifiedn;
+      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
     }
     if (!nullToAbsent || hasPreview != null) {
-      map['has_preview'] = Variable<bool?>(hasPreview);
+      map['has_preview'] = Variable<bool>(hasPreview);
     }
     if (!nullToAbsent || isFavorite != null) {
-      map['is_favorite'] = Variable<bool?>(isFavorite);
+      map['is_favorite'] = Variable<bool>(isFavorite);
     }
     if (!nullToAbsent || fileMetadataWidth != null) {
-      map['file_metadata_width'] = Variable<int?>(fileMetadataWidth);
+      map['file_metadata_width'] = Variable<int>(fileMetadataWidth);
     }
     if (!nullToAbsent || fileMetadataHeight != null) {
-      map['file_metadata_height'] = Variable<int?>(fileMetadataHeight);
+      map['file_metadata_height'] = Variable<int>(fileMetadataHeight);
     }
     return map;
   }
@@ -4907,14 +5165,14 @@ class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
     Expression<int>? parent,
     Expression<String>? relativePath,
     Expression<int>? fileId,
-    Expression<int?>? contentLength,
-    Expression<String?>? contentType,
-    Expression<String?>? etag,
-    Expression<DateTime?>? lastModified,
-    Expression<bool?>? hasPreview,
-    Expression<bool?>? isFavorite,
-    Expression<int?>? fileMetadataWidth,
-    Expression<int?>? fileMetadataHeight,
+    Expression<int>? contentLength,
+    Expression<String>? contentType,
+    Expression<String>? etag,
+    Expression<DateTime>? lastModified,
+    Expression<bool>? hasPreview,
+    Expression<bool>? isFavorite,
+    Expression<int>? fileMetadataWidth,
+    Expression<int>? fileMetadataHeight,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -4978,30 +5236,30 @@ class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
       map['file_id'] = Variable<int>(fileId.value);
     }
     if (contentLength.present) {
-      map['content_length'] = Variable<int?>(contentLength.value);
+      map['content_length'] = Variable<int>(contentLength.value);
     }
     if (contentType.present) {
-      map['content_type'] = Variable<String?>(contentType.value);
+      map['content_type'] = Variable<String>(contentType.value);
     }
     if (etag.present) {
-      map['etag'] = Variable<String?>(etag.value);
+      map['etag'] = Variable<String>(etag.value);
     }
     if (lastModified.present) {
-      final converter = $NcAlbumItemsTable.$converter0;
+      final converter = $NcAlbumItemsTable.$converterlastModifiedn;
       map['last_modified'] =
-          Variable<DateTime?>(converter.mapToSql(lastModified.value));
+          Variable<DateTime>(converter.toSql(lastModified.value));
     }
     if (hasPreview.present) {
-      map['has_preview'] = Variable<bool?>(hasPreview.value);
+      map['has_preview'] = Variable<bool>(hasPreview.value);
     }
     if (isFavorite.present) {
-      map['is_favorite'] = Variable<bool?>(isFavorite.value);
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
     if (fileMetadataWidth.present) {
-      map['file_metadata_width'] = Variable<int?>(fileMetadataWidth.value);
+      map['file_metadata_width'] = Variable<int>(fileMetadataWidth.value);
     }
     if (fileMetadataHeight.present) {
-      map['file_metadata_height'] = Variable<int?>(fileMetadataHeight.value);
+      map['file_metadata_height'] = Variable<int>(fileMetadataHeight.value);
     }
     return map;
   }
@@ -5026,204 +5284,8 @@ class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
   }
 }
 
-class $NcAlbumItemsTable extends NcAlbumItems
-    with TableInfo<$NcAlbumItemsTable, NcAlbumItem> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $NcAlbumItemsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
-  @override
-  late final GeneratedColumn<int?> rowId = GeneratedColumn<int?>(
-      'row_id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _parentMeta = const VerificationMeta('parent');
-  @override
-  late final GeneratedColumn<int?> parent = GeneratedColumn<int?>(
-      'parent', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES nc_albums (row_id) ON DELETE CASCADE');
-  final VerificationMeta _relativePathMeta =
-      const VerificationMeta('relativePath');
-  @override
-  late final GeneratedColumn<String?> relativePath = GeneratedColumn<String?>(
-      'relative_path', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
-  @override
-  late final GeneratedColumn<int?> fileId = GeneratedColumn<int?>(
-      'file_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _contentLengthMeta =
-      const VerificationMeta('contentLength');
-  @override
-  late final GeneratedColumn<int?> contentLength = GeneratedColumn<int?>(
-      'content_length', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _contentTypeMeta =
-      const VerificationMeta('contentType');
-  @override
-  late final GeneratedColumn<String?> contentType = GeneratedColumn<String?>(
-      'content_type', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _etagMeta = const VerificationMeta('etag');
-  @override
-  late final GeneratedColumn<String?> etag = GeneratedColumn<String?>(
-      'etag', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _lastModifiedMeta =
-      const VerificationMeta('lastModified');
-  @override
-  late final GeneratedColumnWithTypeConverter<DateTime, DateTime?>
-      lastModified = GeneratedColumn<DateTime?>(
-              'last_modified', aliasedName, true,
-              type: const IntType(), requiredDuringInsert: false)
-          .withConverter<DateTime>($NcAlbumItemsTable.$converter0);
-  final VerificationMeta _hasPreviewMeta = const VerificationMeta('hasPreview');
-  @override
-  late final GeneratedColumn<bool?> hasPreview = GeneratedColumn<bool?>(
-      'has_preview', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (has_preview IN (0, 1))');
-  final VerificationMeta _isFavoriteMeta = const VerificationMeta('isFavorite');
-  @override
-  late final GeneratedColumn<bool?> isFavorite = GeneratedColumn<bool?>(
-      'is_favorite', aliasedName, true,
-      type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_favorite IN (0, 1))');
-  final VerificationMeta _fileMetadataWidthMeta =
-      const VerificationMeta('fileMetadataWidth');
-  @override
-  late final GeneratedColumn<int?> fileMetadataWidth = GeneratedColumn<int?>(
-      'file_metadata_width', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _fileMetadataHeightMeta =
-      const VerificationMeta('fileMetadataHeight');
-  @override
-  late final GeneratedColumn<int?> fileMetadataHeight = GeneratedColumn<int?>(
-      'file_metadata_height', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
-  @override
-  List<GeneratedColumn> get $columns => [
-        rowId,
-        parent,
-        relativePath,
-        fileId,
-        contentLength,
-        contentType,
-        etag,
-        lastModified,
-        hasPreview,
-        isFavorite,
-        fileMetadataWidth,
-        fileMetadataHeight
-      ];
-  @override
-  String get aliasedName => _alias ?? 'nc_album_items';
-  @override
-  String get actualTableName => 'nc_album_items';
-  @override
-  VerificationContext validateIntegrity(Insertable<NcAlbumItem> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('row_id')) {
-      context.handle(
-          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
-    }
-    if (data.containsKey('parent')) {
-      context.handle(_parentMeta,
-          parent.isAcceptableOrUnknown(data['parent']!, _parentMeta));
-    } else if (isInserting) {
-      context.missing(_parentMeta);
-    }
-    if (data.containsKey('relative_path')) {
-      context.handle(
-          _relativePathMeta,
-          relativePath.isAcceptableOrUnknown(
-              data['relative_path']!, _relativePathMeta));
-    } else if (isInserting) {
-      context.missing(_relativePathMeta);
-    }
-    if (data.containsKey('file_id')) {
-      context.handle(_fileIdMeta,
-          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
-    } else if (isInserting) {
-      context.missing(_fileIdMeta);
-    }
-    if (data.containsKey('content_length')) {
-      context.handle(
-          _contentLengthMeta,
-          contentLength.isAcceptableOrUnknown(
-              data['content_length']!, _contentLengthMeta));
-    }
-    if (data.containsKey('content_type')) {
-      context.handle(
-          _contentTypeMeta,
-          contentType.isAcceptableOrUnknown(
-              data['content_type']!, _contentTypeMeta));
-    }
-    if (data.containsKey('etag')) {
-      context.handle(
-          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
-    }
-    context.handle(_lastModifiedMeta, const VerificationResult.success());
-    if (data.containsKey('has_preview')) {
-      context.handle(
-          _hasPreviewMeta,
-          hasPreview.isAcceptableOrUnknown(
-              data['has_preview']!, _hasPreviewMeta));
-    }
-    if (data.containsKey('is_favorite')) {
-      context.handle(
-          _isFavoriteMeta,
-          isFavorite.isAcceptableOrUnknown(
-              data['is_favorite']!, _isFavoriteMeta));
-    }
-    if (data.containsKey('file_metadata_width')) {
-      context.handle(
-          _fileMetadataWidthMeta,
-          fileMetadataWidth.isAcceptableOrUnknown(
-              data['file_metadata_width']!, _fileMetadataWidthMeta));
-    }
-    if (data.containsKey('file_metadata_height')) {
-      context.handle(
-          _fileMetadataHeightMeta,
-          fileMetadataHeight.isAcceptableOrUnknown(
-              data['file_metadata_height']!, _fileMetadataHeightMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {rowId};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {parent, fileId},
-      ];
-  @override
-  NcAlbumItem map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NcAlbumItem.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $NcAlbumItemsTable createAlias(String alias) {
-    return $NcAlbumItemsTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<DateTime, DateTime> $converter0 =
-      const SqliteDateTimeConverter();
-}
-
 abstract class _$SqliteDb extends GeneratedDatabase {
-  _$SqliteDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  _$SqliteDb.connect(DatabaseConnection c) : super.connect(c);
+  _$SqliteDb(QueryExecutor e) : super(e);
   late final $ServersTable servers = $ServersTable(this);
   late final $AccountsTable accounts = $AccountsTable(this);
   late final $FilesTable files = $FilesTable(this);
@@ -5239,7 +5301,8 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $NcAlbumsTable ncAlbums = $NcAlbumsTable(this);
   late final $NcAlbumItemsTable ncAlbumItems = $NcAlbumItemsTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         servers,
@@ -5257,6 +5320,116 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         ncAlbums,
         ncAlbumItems
       ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
+        [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('servers',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('accounts', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('servers',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('accounts',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('account_files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('account_files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('account_files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('images', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('account_files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('image_locations', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('trashes', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('dir_files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('dir_files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('files',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('albums', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('albums',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('album_shares', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('servers',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('tags', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('accounts',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('persons', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('accounts',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('nc_albums', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('nc_albums',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('nc_album_items', kind: UpdateKind.delete),
+            ],
+          ),
+        ],
+      );
 }
 
 // **************************************************************************

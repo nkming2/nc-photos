@@ -237,8 +237,8 @@ class SqliteDateTimeConverter extends TypeConverter<DateTime, DateTime> {
   const SqliteDateTimeConverter();
 
   @override
-  DateTime? mapToDart(DateTime? fromDb) => fromDb?.toUtc();
+  DateTime fromSql(DateTime fromDb) => fromDb.toUtc();
 
   @override
-  DateTime? mapToSql(DateTime? value) => value?.toUtc();
+  DateTime toSql(DateTime value) => value.toUtc();
 }
