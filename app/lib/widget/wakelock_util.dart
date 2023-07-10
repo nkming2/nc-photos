@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
 import 'package:nc_photos/widget/disposable.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class WakelockControllerDisposable implements Disposable {
   @override
-  init(State state) {
-    Wakelock.enable();
+  void init(State state) {
+    WakelockPlus.enable();
   }
 
   @override
-  dispose(State state) {
-    Wakelock.disable();
+  void dispose(State state) {
+    WakelockPlus.disable();
   }
 }
