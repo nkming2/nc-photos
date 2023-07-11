@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:np_api/src/entity/entity.dart';
 import 'package:np_api/src/entity/parser.dart';
 import 'package:np_common/log.dart';
-import 'package:np_common/type.dart';
 import 'package:xml/xml.dart';
 
 class NcAlbumItemParser extends XmlResponseParser {
@@ -25,7 +24,7 @@ class NcAlbumItemParser extends XmlResponseParser {
     DateTime? lastModified;
     bool? hasPreview;
     bool? favorite;
-    JsonObj? fileMetadataSize;
+    Object? fileMetadataSize;
     // unclear what the value types are
     // "nc:face-detections"
     // "nc:realpath"
@@ -70,7 +69,9 @@ class NcAlbumItemParser extends XmlResponseParser {
       lastModified: lastModified,
       hasPreview: hasPreview,
       favorite: favorite,
-      fileMetadataSize: fileMetadataSize,
+      fileMetadataSize: fileMetadataSize is Map
+          ? fileMetadataSize.cast<String, dynamic>()
+          : null,
     );
   }
 }
@@ -119,7 +120,7 @@ class _PropParser {
   int? get fileId => _fileId;
   bool? get favorite => _favorite;
   bool? get hasPreview => _hasPreview;
-  JsonObj? get fileMetadataSize => _fileMetadataSize;
+  Object? get fileMetadataSize => _fileMetadataSize;
 
   final Map<String, String> namespaces;
 
@@ -130,7 +131,7 @@ class _PropParser {
   int? _fileId;
   bool? _favorite;
   bool? _hasPreview;
-  JsonObj? _fileMetadataSize;
+  Object? _fileMetadataSize;
 }
 
 List<NcAlbumItem> _parseNcAlbumItemsIsolate(String response) {
