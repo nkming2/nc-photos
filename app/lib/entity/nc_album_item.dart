@@ -42,28 +42,24 @@ extension NcAlbumItemExtension on NcAlbumItem {
   /// If this path points to the user's root album path, return "."
   String get strippedPath {
     if (!path.startsWith("${api.ApiPhotos.path}/")) {
-      return path;
+      throw ArgumentError("Unsupported path: $path");
     }
     var begin = "${api.ApiPhotos.path}/".length;
     begin = path.indexOf("/", begin);
     if (begin == -1) {
-      return path;
+      throw ArgumentError("Unsupported path: $path");
     }
+    // /albums/{album}/{strippedPath}
     if (path.slice(begin, begin + 7) != "/albums") {
-      return path;
+      throw ArgumentError("Unsupported path: $path");
     }
-    // /albums/
     begin += 8;
+    // {album}/{strippedPath}
     begin = path.indexOf("/", begin);
     if (begin == -1) {
-      return path;
-    }
-    final stripped = path.slice(begin + 1);
-    if (stripped.isEmpty) {
       return ".";
-    } else {
-      return stripped;
     }
+    return path.slice(begin + 1);
   }
 
   bool compareIdentity(NcAlbumItem other) => fileId == other.fileId;

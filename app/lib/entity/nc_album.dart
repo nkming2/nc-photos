@@ -74,18 +74,18 @@ extension NcAlbumExtension on NcAlbum {
   /// WebDAV file path: remote.php/dav/photos/{userId}/albums/{strippedPath}.
   /// If this path points to the user's root album path, return "."
   String get strippedPath {
-    if (!path.startsWith("remote.php/dav/photos/")) {
-      return path;
+    if (!path.startsWith("${api.ApiPhotos.path}/")) {
+      throw ArgumentError("Unsupported path: $path");
     }
-    var begin = "remote.php/dav/photos/".length;
+    var begin = "${api.ApiPhotos.path}/".length;
     begin = path.indexOf("/", begin);
     if (begin == -1) {
-      return path;
+      throw ArgumentError("Unsupported path: $path");
     }
+    // /albums/{strippedPath}
     if (path.slice(begin, begin + 7) != "/albums") {
       return path;
     }
-    // /albums/
     begin += 8;
     final stripped = path.slice(begin);
     if (stripped.isEmpty) {
