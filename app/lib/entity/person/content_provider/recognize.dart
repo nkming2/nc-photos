@@ -19,10 +19,7 @@ class PersonRecognizeProvider
     required this.account,
     required this.face,
     List<RecognizeFaceItem>? items,
-  }) : items = items
-            ?.sorted((a, b) => b.fileId.compareTo(a.fileId))
-            .reversed
-            .toList();
+  }) : items = items?.sorted((a, b) => b.fileId.compareTo(a.fileId));
 
   @override
   String toString() => _$toString();
