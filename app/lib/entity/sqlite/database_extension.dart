@@ -571,6 +571,8 @@ extension SqliteDbExtension on SqliteDb {
             useColumns: false),
       ])
         ..where(servers.address.equals(appAccount!.url))
+        ..where(
+            accounts.userId.equals(appAccount.userId.toCaseInsensitiveString()))
         ..where(persons.name.like(name) |
             persons.name.like("% $name") |
             persons.name.like("$name %"));
