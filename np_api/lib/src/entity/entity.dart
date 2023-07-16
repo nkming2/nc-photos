@@ -269,8 +269,7 @@ class RecognizeFaceItem with EquatableMixin {
   final String? etag;
   final DateTime? lastModified;
   final List<JsonObj>? faceDetections;
-  // format currently unknown
-  final dynamic fileMetadataSize;
+  final JsonObj? fileMetadataSize;
   final bool? hasPreview;
   final String? realPath;
   final bool? favorite;

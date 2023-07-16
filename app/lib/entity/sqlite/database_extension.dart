@@ -581,6 +581,92 @@ extension SqliteDbExtension on SqliteDb {
     }
   }
 
+  Future<List<RecognizeFace>> allRecognizeFaces({
+    required ByAccount account,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
+      final query = select(recognizeFaces)
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId));
+      return query.get();
+    } else {
+      final query = select(recognizeFaces).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()));
+      return query.map((r) => r.readTable(recognizeFaces)).get();
+    }
+  }
+
+  Future<RecognizeFace> recognizeFaceByLabel({
+    required ByAccount account,
+    required String label,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
+      final query = select(recognizeFaces)
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId))
+        ..where((t) => t.label.equals(label));
+      return query.getSingle();
+    } else {
+      final query = select(recognizeFaces).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()))
+        ..where(recognizeFaces.label.equals(label));
+      return query.map((r) => r.readTable(recognizeFaces)).getSingle();
+    }
+  }
+
+  Future<List<RecognizeFaceItem>> recognizeFaceItemsByParentLabel({
+    required ByAccount account,
+    required String label,
+    List<OrderingTerm>? orderBy,
+    int? limit,
+    int? offset,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    final query = select(recognizeFaceItems).join([
+      innerJoin(recognizeFaces,
+          recognizeFaces.rowId.equalsExp(recognizeFaceItems.parent),
+          useColumns: false),
+    ]);
+    if (account.sqlAccount != null) {
+      query
+        ..where(recognizeFaces.account.equals(account.sqlAccount!.rowId))
+        ..where(recognizeFaces.label.equals(label));
+    } else {
+      query
+        ..join([
+          innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+              useColumns: false),
+          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+              useColumns: false),
+        ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()))
+        ..where(recognizeFaces.label.equals(label));
+    }
+    if (orderBy != null) {
+      query.orderBy(orderBy);
+      if (limit != null) {
+        query.limit(limit, offset: offset);
+      }
+    }
+    return query.map((r) => r.readTable(recognizeFaceItems)).get();
+  }
+
   Future<int> countMissingMetadataByFileIds({
     Account? sqlAccount,
     app.Account? appAccount,

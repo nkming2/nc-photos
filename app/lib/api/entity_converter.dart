@@ -7,6 +7,8 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
+import 'package:nc_photos/entity/recognize_face.dart';
+import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -127,6 +129,50 @@ class ApiNcAlbumItemConverter {
       isFavorite: item.favorite,
       fileMetadataWidth: item.fileMetadataSize?["width"],
       fileMetadataHeight: item.fileMetadataSize?["height"],
+    );
+  }
+}
+
+class ApiRecognizeFaceConverter {
+  static RecognizeFace fromApi(api.RecognizeFace item) {
+    // remote.php/dav/recognize/admin/faces/john
+    var path = _hrefToPath(item.href);
+    if (!path.startsWith("remote.php/dav/recognize/")) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // admin/faces/john
+    path = path.substring(25);
+    final found = path.indexOf("/");
+    if (found == -1) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // faces/john
+    path = path.substring(found + 1);
+    if (!path.startsWith("faces")) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // john
+    path = path.slice(6);
+    return RecognizeFace(label: path);
+  }
+}
+
+class ApiRecognizeFaceItemConverter {
+  static RecognizeFaceItem fromApi(api.RecognizeFaceItem item) {
+    return RecognizeFaceItem(
+      path: _hrefToPath(item.href),
+      fileId: item.fileId!,
+      contentLength: item.contentLength,
+      contentType: item.contentType,
+      etag: item.etag,
+      lastModified: item.lastModified,
+      hasPreview: item.hasPreview,
+      realPath: item.realPath,
+      isFavorite: item.favorite,
+      fileMetadataWidth: item.fileMetadataSize?["width"],
+      fileMetadataHeight: item.fileMetadataSize?["height"],
+      faceDetections:
+          item.faceDetections?.isEmpty == true ? null : item.faceDetections,
     );
   }
 }

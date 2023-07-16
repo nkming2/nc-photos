@@ -2,7 +2,9 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/adapter/face_recognition.dart';
+import 'package:nc_photos/entity/person/adapter/recognize.dart';
 import 'package:nc_photos/entity/person/content_provider/face_recognition.dart';
+import 'package:nc_photos/entity/person/content_provider/recognize.dart';
 import 'package:nc_photos/entity/person_face.dart';
 
 abstract class PersonAdapter {
@@ -12,6 +14,8 @@ abstract class PersonAdapter {
     switch (person.contentProvider.runtimeType) {
       case PersonFaceRecognitionProvider:
         return PersonFaceRecognitionAdapter(c, account, person);
+      case PersonRecognizeProvider:
+        return PersonRecognizeAdapter(c, account, person);
       default:
         throw UnsupportedError(
             "Unknown type: ${person.contentProvider.runtimeType}");

@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/recognize_face/repo.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -40,6 +41,9 @@ enum DiType {
   faceRecognitionPersonRepo,
   faceRecognitionPersonRepoRemote,
   faceRecognitionPersonRepoLocal,
+  recognizeFaceRepo,
+  recognizeFaceRepoRemote,
+  recognizeFaceRepoLocal,
   pref,
   sqliteDb,
   touchManager,
@@ -71,6 +75,9 @@ class DiContainer {
     FaceRecognitionPersonRepo? faceRecognitionPersonRepo,
     FaceRecognitionPersonRepo? faceRecognitionPersonRepoRemote,
     FaceRecognitionPersonRepo? faceRecognitionPersonRepoLocal,
+    RecognizeFaceRepo? recognizeFaceRepo,
+    RecognizeFaceRepo? recognizeFaceRepoRemote,
+    RecognizeFaceRepo? recognizeFaceRepoLocal,
     Pref? pref,
     sql.SqliteDb? sqliteDb,
     TouchManager? touchManager,
@@ -98,6 +105,9 @@ class DiContainer {
         _faceRecognitionPersonRepo = faceRecognitionPersonRepo,
         _faceRecognitionPersonRepoRemote = faceRecognitionPersonRepoRemote,
         _faceRecognitionPersonRepoLocal = faceRecognitionPersonRepoLocal,
+        _recognizeFaceRepo = recognizeFaceRepo,
+        _recognizeFaceRepoRemote = recognizeFaceRepoRemote,
+        _recognizeFaceRepoLocal = recognizeFaceRepoLocal,
         _pref = pref,
         _sqliteDb = sqliteDb,
         _touchManager = touchManager;
@@ -154,6 +164,12 @@ class DiContainer {
         return contianer._faceRecognitionPersonRepoRemote != null;
       case DiType.faceRecognitionPersonRepoLocal:
         return contianer._faceRecognitionPersonRepoLocal != null;
+      case DiType.recognizeFaceRepo:
+        return contianer._recognizeFaceRepo != null;
+      case DiType.recognizeFaceRepoRemote:
+        return contianer._recognizeFaceRepoRemote != null;
+      case DiType.recognizeFaceRepoLocal:
+        return contianer._recognizeFaceRepoLocal != null;
       case DiType.pref:
         return contianer._pref != null;
       case DiType.sqliteDb:
@@ -176,6 +192,7 @@ class DiContainer {
     OrNull<SearchRepo>? searchRepo,
     OrNull<NcAlbumRepo>? ncAlbumRepo,
     OrNull<FaceRecognitionPersonRepo>? faceRecognitionPersonRepo,
+    OrNull<RecognizeFaceRepo>? recognizeFaceRepo,
     OrNull<Pref>? pref,
     OrNull<sql.SqliteDb>? sqliteDb,
     OrNull<TouchManager>? touchManager,
@@ -196,6 +213,9 @@ class DiContainer {
       faceRecognitionPersonRepo: faceRecognitionPersonRepo == null
           ? _faceRecognitionPersonRepo
           : faceRecognitionPersonRepo.obj,
+      recognizeFaceRepo: recognizeFaceRepo == null
+          ? _recognizeFaceRepo
+          : recognizeFaceRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
@@ -229,6 +249,9 @@ class DiContainer {
       _faceRecognitionPersonRepoRemote!;
   FaceRecognitionPersonRepo get faceRecognitionPersonRepoLocal =>
       _faceRecognitionPersonRepoLocal!;
+  RecognizeFaceRepo get recognizeFaceRepo => _recognizeFaceRepo!;
+  RecognizeFaceRepo get recognizeFaceRepoRemote => _recognizeFaceRepoRemote!;
+  RecognizeFaceRepo get recognizeFaceRepoLocal => _recognizeFaceRepoLocal!;
 
   sql.SqliteDb get sqliteDb => _sqliteDb!;
   Pref get pref => _pref!;
@@ -354,6 +377,21 @@ class DiContainer {
     _faceRecognitionPersonRepoLocal = v;
   }
 
+  set recognizeFaceRepo(RecognizeFaceRepo v) {
+    assert(_recognizeFaceRepo == null);
+    _recognizeFaceRepo = v;
+  }
+
+  set recognizeFaceRepoRemote(RecognizeFaceRepo v) {
+    assert(_recognizeFaceRepoRemote == null);
+    _recognizeFaceRepoRemote = v;
+  }
+
+  set recognizeFaceRepoLocal(RecognizeFaceRepo v) {
+    assert(_recognizeFaceRepoLocal == null);
+    _recognizeFaceRepoLocal = v;
+  }
+
   set sqliteDb(sql.SqliteDb v) {
     assert(_sqliteDb == null);
     _sqliteDb = v;
@@ -396,6 +434,9 @@ class DiContainer {
   FaceRecognitionPersonRepo? _faceRecognitionPersonRepo;
   FaceRecognitionPersonRepo? _faceRecognitionPersonRepoRemote;
   FaceRecognitionPersonRepo? _faceRecognitionPersonRepoLocal;
+  RecognizeFaceRepo? _recognizeFaceRepo;
+  RecognizeFaceRepo? _recognizeFaceRepoRemote;
+  RecognizeFaceRepo? _recognizeFaceRepoLocal;
 
   sql.SqliteDb? _sqliteDb;
   Pref? _pref;
@@ -413,6 +454,7 @@ extension DiContainerExtension on DiContainer {
         tagRepo: OrNull(_tagRepoRemote),
         ncAlbumRepo: OrNull(_ncAlbumRepoRemote),
         faceRecognitionPersonRepo: OrNull(_faceRecognitionPersonRepoRemote),
+        recognizeFaceRepo: OrNull(_recognizeFaceRepoRemote),
       );
 
   /// Uses local repo if available
@@ -425,6 +467,7 @@ extension DiContainerExtension on DiContainer {
         tagRepo: OrNull(_tagRepoLocal),
         ncAlbumRepo: OrNull(_ncAlbumRepoLocal),
         faceRecognitionPersonRepo: OrNull(_faceRecognitionPersonRepoLocal),
+        recognizeFaceRepo: OrNull(_recognizeFaceRepoLocal),
       );
 
   DiContainer withLocalAlbumRepo() =>

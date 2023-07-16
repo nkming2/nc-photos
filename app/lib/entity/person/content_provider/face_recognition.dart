@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/face_recognition_person.dart';
@@ -42,6 +43,9 @@ class PersonFaceRecognitionProvider
       size: math.max(width, height),
     );
   }
+
+  @override
+  Matrix4? getCoverTransform(int viewportSize, int width, int height) => null;
 
   @override
   List<Object?> get props => [account, person];

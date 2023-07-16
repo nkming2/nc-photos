@@ -1,5 +1,4 @@
 import 'package:np_api/np_api.dart';
-import 'package:np_api/src/entity/recognize_face_item_parser.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -7,6 +6,7 @@ void main() {
     group("parse", () {
       test("empty", _empty);
       test("image", _image);
+      test("imageWithSize", _imageWithSize);
     });
   });
 }
@@ -143,11 +143,52 @@ Future<void> _image() async {
             "title": "test",
           },
         ],
-        fileMetadataSize: "[]",
+        fileMetadataSize: null,
         hasPreview: true,
         realPath: "/admin/files/test1.jpg",
         favorite: false,
         fileId: 2,
+      ),
+    ],
+  );
+}
+
+Future<void> _imageWithSize() async {
+  const xml = """
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">
+  <d:response>
+    <d:href>/remote.php/dav/recognize/admin/faces/test/</d:href>
+    <d:propstat>
+      <d:prop>
+        <nc:file-metadata-size/>
+      </d:prop>
+      <d:status>HTTP/1.1 404 Not Found</d:status>
+    </d:propstat>
+  </d:response>
+  <d:response>
+    <d:href>/remote.php/dav/recognize/admin/faces/test/test1.jpg</d:href>
+    <d:propstat>
+      <d:prop>
+        <nc:file-metadata-size>{&quot;width&quot;:1024,&quot;height&quot;:768}</nc:file-metadata-size>
+      </d:prop>
+      <d:status>HTTP/1.1 200 OK</d:status>
+    </d:propstat>
+  </d:response>
+</d:multistatus>
+""";
+  final results = await RecognizeFaceItemParser().parse(xml);
+  expect(
+    results,
+    [
+      const RecognizeFaceItem(
+          href: "/remote.php/dav/recognize/admin/faces/test/"),
+      const RecognizeFaceItem(
+        href: "/remote.php/dav/recognize/admin/faces/test/test1.jpg",
+        fileMetadataSize: {
+          "width": 1024,
+          "height": 768,
+        },
       ),
     ],
   );

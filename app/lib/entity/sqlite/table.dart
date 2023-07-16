@@ -1,4 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:nc_photos/entity/sqlite/database.dart';
+import 'package:np_codegen/np_codegen.dart';
+
+part 'table.g.dart';
 
 class Servers extends Table {
   IntColumn get rowId => integer().autoIncrement()();
@@ -230,6 +234,43 @@ class FaceRecognitionPersons extends Table {
   @override
   get uniqueKeys => [
         {account, name},
+      ];
+}
+
+class RecognizeFaces extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get account =>
+      integer().references(Accounts, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get label => text()();
+
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+        {account, label},
+      ];
+}
+
+@DriftTableSort("SqliteDb")
+class RecognizeFaceItems extends Table {
+  IntColumn get rowId => integer().autoIncrement()();
+  IntColumn get parent => integer()
+      .references(RecognizeFaces, #rowId, onDelete: KeyAction.cascade)();
+  TextColumn get relativePath => text()();
+  IntColumn get fileId => integer()();
+  IntColumn get contentLength => integer().nullable()();
+  TextColumn get contentType => text().nullable()();
+  TextColumn get etag => text().nullable()();
+  DateTimeColumn get lastModified =>
+      dateTime().map(const SqliteDateTimeConverter()).nullable()();
+  BoolColumn get hasPreview => boolean().nullable()();
+  TextColumn get realPath => text().nullable()();
+  BoolColumn get isFavorite => boolean().nullable()();
+  IntColumn get fileMetadataWidth => integer().nullable()();
+  IntColumn get fileMetadataHeight => integer().nullable()();
+  TextColumn get faceDetections => text().nullable()();
+
+  @override
+  List<Set<Column>>? get uniqueKeys => [
+        {parent, fileId},
       ];
 }
 

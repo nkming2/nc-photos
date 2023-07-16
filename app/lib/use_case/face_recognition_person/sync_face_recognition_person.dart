@@ -23,10 +23,13 @@ class SyncFaceRecognitionPerson {
   /// Return if any people were updated
   Future<bool> call(Account account) async {
     _log.info("[call] Sync people with remote");
+    int personSorter(FaceRecognitionPerson a, FaceRecognitionPerson b) =>
+        a.name.compareTo(b.name);
     late final List<FaceRecognitionPerson> remote;
     try {
-      remote =
-          await ListFaceRecognitionPerson(_c.withRemoteRepo())(account).last;
+      remote = (await ListFaceRecognitionPerson(_c.withRemoteRepo())(account)
+          .last)
+        ..sort(personSorter);
     } catch (e) {
       if (e is ApiException && e.response.statusCode == 404) {
         // face recognition app probably not installed, ignore
@@ -35,10 +38,9 @@ class SyncFaceRecognitionPerson {
       }
       rethrow;
     }
-    final cache =
-        await ListFaceRecognitionPerson(_c.withLocalRepo())(account).last;
-    int personSorter(FaceRecognitionPerson a, FaceRecognitionPerson b) =>
-        a.name.compareTo(b.name);
+    final cache = (await ListFaceRecognitionPerson(_c.withLocalRepo())(account)
+        .last)
+      ..sort(personSorter);
     final diff = list_util.diffWith(cache, remote, personSorter);
     final inserts = diff.onlyInB;
     _log.info("[call] New people: ${inserts.toReadableString()}");

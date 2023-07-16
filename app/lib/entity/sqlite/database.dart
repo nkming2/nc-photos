@@ -39,6 +39,8 @@ part 'database_extension.dart';
     FaceRecognitionPersons,
     NcAlbums,
     NcAlbumItems,
+    RecognizeFaces,
+    RecognizeFaceItems,
   ],
 )
 class SqliteDb extends _$SqliteDb {
@@ -104,6 +106,8 @@ class SqliteDb extends _$SqliteDb {
                 if (from >= 2) {
                   await m.renameTable(faceRecognitionPersons, "persons");
                 }
+                await m.createTable(recognizeFaces);
+                await m.createTable(recognizeFaceItems);
               }
             });
           } catch (e, stackTrace) {

@@ -1,5 +1,6 @@
 import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:to_string/to_string.dart';
 
 part 'person.g.dart';
@@ -40,6 +41,10 @@ class Person with EquatableMixin {
         isKeepAspectRatio: isKeepAspectRatio,
       );
 
+  /// See [PersonContentProvider.getCoverTransform]
+  Matrix4? getCoverTransform(int viewportSize, int width, int height) =>
+      contentProvider.getCoverTransform(viewportSize, width, height);
+
   @override
   List<Object?> get props => [
         name,
@@ -73,4 +78,9 @@ abstract class PersonContentProvider with EquatableMixin {
     int height, {
     bool? isKeepAspectRatio,
   });
+
+  /// Return the transformation matrix to focus the face
+  ///
+  /// Only viewport in square is supported
+  Matrix4? getCoverTransform(int viewportSize, int width, int height);
 }

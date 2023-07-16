@@ -23,6 +23,8 @@ import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/shared_preferences.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
+import 'package:nc_photos/entity/recognize_face/data_source.dart';
+import 'package:nc_photos/entity/recognize_face/repo.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -228,6 +230,12 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       FaceRecognitionPersonRemoteDataSource());
   c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
       FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
+  c.recognizeFaceRepo =
+      const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
+  c.recognizeFaceRepoRemote =
+      const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
+  c.recognizeFaceRepoLocal =
+      BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.sqliteDb));
 
   c.touchManager = TouchManager(c);
 

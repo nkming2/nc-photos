@@ -6,7 +6,9 @@ class ApiRecognize {
   ApiRecognizeFaces faces() => ApiRecognizeFaces(this);
   ApiRecognizeFace face(String name) => ApiRecognizeFace(this, name);
 
-  String get _path => "remote.php/dav/recognize/$userId";
+  String get _userPath => "$path/$userId";
+
+  static String get path => "remote.php/dav/recognize";
 
   final Api api;
   final String userId;
@@ -17,7 +19,7 @@ class ApiRecognizeFaces {
   const ApiRecognizeFaces(this.recognize);
 
   Future<Response> propfind() async {
-    final endpoint = "${recognize._path}/faces";
+    final endpoint = "${recognize._userPath}/faces";
     try {
       return await api.request("PROPFIND", endpoint);
     } catch (e) {
@@ -116,7 +118,7 @@ class ApiRecognizeFace {
     }
   }
 
-  String get _path => "${recognize._path}/faces/$name";
+  String get _path => "${recognize._userPath}/faces/$name";
 
   Api get api => recognize.api;
   final ApiRecognize recognize;
