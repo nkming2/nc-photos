@@ -1,3 +1,4 @@
 library np_codegen;
 
+export 'src/drift_table_sort_annotations.dart';
 export 'src/np_log_annotations.dart';
