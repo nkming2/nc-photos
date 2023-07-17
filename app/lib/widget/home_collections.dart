@@ -303,7 +303,7 @@ class _AppBar extends StatelessWidget {
     final result = await showDialog<collection_util.CollectionSort>(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: L10n.global().sortOptionDialogTitle,
+        title: Text(L10n.global().sortOptionDialogTitle),
         items: [
           FancyOptionPickerItem(
             label: L10n.global().sortOptionTimeDescendingLabel,

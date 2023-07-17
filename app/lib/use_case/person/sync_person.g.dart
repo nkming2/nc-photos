@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pref.dart';
+part of 'sync_person.dart';
 
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
-extension _$PrefNpLog on Pref {
+extension _$SyncPersonNpLog on SyncPerson {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("entity.pref.Pref");
+  static final log = Logger("use_case.person.sync_person.SyncPerson");
 }

@@ -5,6 +5,14 @@ import 'package:to_string/to_string.dart';
 
 part 'person.g.dart';
 
+enum PersonProvider {
+  none,
+  faceRecognition,
+  recognize;
+
+  static PersonProvider fromValue(int value) => PersonProvider.values[value];
+}
+
 @genCopyWith
 @toString
 class Person with EquatableMixin {

@@ -178,7 +178,6 @@ class _WrappedAppState extends State<_WrappedApp>
             ),
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
-        AccountSettings.routeName: AccountSettings.buildRoute,
         PeopleBrowser.routeName: PeopleBrowser.buildRoute,
       };
 
@@ -211,6 +210,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
+    route ??= _handleAccountSettingsRoute(settings);
     return route;
   }
 
@@ -572,6 +572,19 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleCollectionBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAccountSettingsRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AccountSettings.routeName) {
+        final args = settings.arguments as AccountSettingsArguments?;
+        return AccountSettings.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleAccountSettingsRoute] Failed while handling route", e);
     }
     return null;
   }

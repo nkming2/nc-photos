@@ -6,13 +6,13 @@ class _Bloc extends Bloc<_Event, _State> {
     required DiContainer container,
     required Account account,
     required this.accountPrefController,
+    this.highlight,
   })  : _c = container,
         super(_State.init(
           account: account,
           label: accountPrefController.accountLabel.value,
           shareFolder: accountPrefController.shareFolder.value,
-          isEnableFaceRecognitionApp:
-              accountPrefController.isEnableFaceRecognitionApp.value,
+          personProvider: accountPrefController.personProvider.value,
         )) {
     on<_SetLabel>(_onSetLabel);
     on<_OnUpdateLabel>(_onOnUpdateLabel);
@@ -39,11 +39,11 @@ class _Bloc extends Bloc<_Event, _State> {
       },
     ));
 
-    on<_SetEnableFaceRecognitionApp>(_onSetEnableFaceRecognitionApp);
-    on<_OnUpdateEnableFaceRecognitionApp>(_onOnUpdateEnableFaceRecognitionApp);
-    _subscriptions.add(accountPrefController.isEnableFaceRecognitionApp.listen(
+    on<_SetPersonProvider>(_onSetPersonProvider);
+    on<_OnUpdatePersonProvider>(_onOnUpdatePersonProvider);
+    _subscriptions.add(accountPrefController.personProvider.listen(
       (event) {
-        add(_OnUpdateEnableFaceRecognitionApp(event));
+        add(_OnUpdatePersonProvider(event));
       },
       onError: (e, stackTrace) {
         add(_SetError(_WritePrefError(e, stackTrace)));
@@ -131,18 +131,15 @@ class _Bloc extends Bloc<_Event, _State> {
     emit(state.copyWith(shareFolder: ev.shareFolder));
   }
 
-  void _onSetEnableFaceRecognitionApp(
-      _SetEnableFaceRecognitionApp ev, Emitter<_State> emit) {
+  void _onSetPersonProvider(_SetPersonProvider ev, Emitter<_State> emit) {
     _log.info(ev);
-    accountPrefController
-        .setEnableFaceRecognitionApp(ev.isEnableFaceRecognitionApp);
+    accountPrefController.setPersonProvider(ev.personProvider);
   }
 
-  void _onOnUpdateEnableFaceRecognitionApp(
-      _OnUpdateEnableFaceRecognitionApp ev, Emitter<_State> emit) {
+  void _onOnUpdatePersonProvider(
+      _OnUpdatePersonProvider ev, Emitter<_State> emit) {
     _log.info(ev);
-    emit(state.copyWith(
-        isEnableFaceRecognitionApp: ev.isEnableFaceRecognitionApp));
+    emit(state.copyWith(personProvider: ev.personProvider));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
@@ -152,6 +149,7 @@ class _Bloc extends Bloc<_Event, _State> {
 
   final DiContainer _c;
   final AccountPrefController accountPrefController;
+  final AccountSettingsOption? highlight;
 
   final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;

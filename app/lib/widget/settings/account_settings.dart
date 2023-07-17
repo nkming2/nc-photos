@@ -10,11 +10,15 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -32,14 +36,35 @@ part 'account_settings.g.dart';
 typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
+enum AccountSettingsOption {
+  personProvider,
+}
+
+class AccountSettingsArguments {
+  const AccountSettingsArguments({
+    this.highlight,
+  });
+
+  final AccountSettingsOption? highlight;
+}
+
 class AccountSettings extends StatelessWidget {
   static const routeName = "/account-settings";
 
-  static Route buildRoute() => MaterialPageRoute(
-        builder: (_) => const AccountSettings(),
+  static Route buildRoute(AccountSettingsArguments? args) => MaterialPageRoute(
+        builder: (_) => AccountSettings.fromArgs(args),
       );
 
-  const AccountSettings({super.key});
+  const AccountSettings({
+    super.key,
+    this.highlight,
+  });
+
+  AccountSettings.fromArgs(AccountSettingsArguments? args, {Key? key})
+      : this(
+          key: key,
+          highlight: args?.highlight,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +74,13 @@ class AccountSettings extends StatelessWidget {
         container: KiwiContainer().resolve(),
         account: accountController.account,
         accountPrefController: accountController.accountPrefController,
+        highlight: highlight,
       ),
       child: const _WrappedAccountSettings(),
     );
   }
+
+  final AccountSettingsOption? highlight;
 }
 
 class _WrappedAccountSettings extends StatefulWidget {
@@ -92,7 +120,7 @@ class _WrappedDeveloperSettingsState extends State<_WrappedAccountSettings>
           ),
         ],
         child: WillPopScope(
-          onWillPop: () async => !context.read<_Bloc>().state.shouldReload,
+          onWillPop: () async => !_bloc.state.shouldReload,
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -136,13 +164,16 @@ class _WrappedDeveloperSettingsState extends State<_WrappedAccountSettings>
                     SettingsListCaption(
                       label: L10n.global().settingsServerAppSectionTitle,
                     ),
-                    _BlocSelector<bool>(
-                      selector: (state) => state.isEnableFaceRecognitionApp,
-                      builder: (context, state) => SwitchListTile(
-                        title: const Text("Face Recognition"),
-                        value: state,
-                        onChanged: (value) =>
-                            _onEnableFaceRecognitionAppChanged(context, value),
+                    _BlocSelector<PersonProvider>(
+                      selector: (state) => state.personProvider,
+                      builder: (context, state) => ListTile(
+                        title: Text(L10n.global().settingsPersonProviderTitle),
+                        subtitle: Text(state.toUserString()),
+                        onTap: () => _onPersonProviderPressed(context),
+                        tileColor: _bloc.highlight ==
+                                AccountSettingsOption.personProvider
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : null,
                       ),
                     ),
                   ],
@@ -156,56 +187,64 @@ class _WrappedDeveloperSettingsState extends State<_WrappedAccountSettings>
   }
 
   Future<void> _onLabelPressed(BuildContext context) async {
-    final bloc = context.read<_Bloc>();
     final result = await showDialog<String>(
       context: context,
       builder: (context) => SimpleInputDialog(
         titleText: L10n.global().settingsAccountLabelTitle,
         buttonText: MaterialLocalizations.of(context).okButtonLabel,
-        initialText: bloc.state.label ?? "",
+        initialText: _bloc.state.label ?? "",
       ),
     );
     if (!context.mounted || result == null) {
       return;
     }
-    context.read<_Bloc>().add(_SetLabel(result.isEmpty ? null : result));
+    _bloc.add(_SetLabel(result.isEmpty ? null : result));
   }
 
   Future<void> _onIncludedFoldersPressed(BuildContext context) async {
-    final bloc = context.read<_Bloc>();
     final result = await Navigator.of(context).pushNamed<Account>(
       RootPicker.routeName,
-      arguments: RootPickerArguments(bloc.state.account),
+      arguments: RootPickerArguments(_bloc.state.account),
     );
     if (result == null) {
       return;
     }
-    if (result == bloc.state.account) {
+    if (result == _bloc.state.account) {
       // no changes, do nothing
       _log.fine("[_onIncludedFoldersPressed] No changes");
       return;
     }
-    context.read<_Bloc>().add(_SetAccount(result));
+    _bloc.add(_SetAccount(result));
   }
 
   Future<void> _onShareFolderPressed(BuildContext context) async {
-    final bloc = context.read<_Bloc>();
     final result = await showDialog<String>(
       context: context,
       builder: (_) => _ShareFolderDialog(
-        account: bloc.state.account,
-        initialValue: bloc.state.shareFolder,
+        account: _bloc.state.account,
+        initialValue: _bloc.state.shareFolder,
       ),
     );
     if (!context.mounted || result == null) {
       return;
     }
-    context.read<_Bloc>().add(_SetShareFolder(result));
+    _bloc.add(_SetShareFolder(result));
   }
 
-  void _onEnableFaceRecognitionAppChanged(BuildContext context, bool value) {
-    context.read<_Bloc>().add(_SetEnableFaceRecognitionApp(value));
+  Future<void> _onPersonProviderPressed(BuildContext context) async {
+    final result = await showDialog<PersonProvider>(
+      context: context,
+      builder: (_) => _PersonProviderDialog(
+        initialValue: _bloc.state.personProvider,
+      ),
+    );
+    if (!context.mounted || result == null) {
+      return;
+    }
+    _bloc.add(_SetPersonProvider(result));
   }
+
+  late final _bloc = context.read<_Bloc>();
 }
 
 class _DoneButton extends StatelessWidget {
@@ -292,4 +331,56 @@ class _ShareFolderDialogState extends State<_ShareFolderDialog> {
   late final _controller =
       TextEditingController(text: "/${widget.initialValue}");
   late String _path = widget.initialValue;
+}
+
+@npLog
+class _PersonProviderDialog extends StatelessWidget {
+  const _PersonProviderDialog({
+    required this.initialValue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FancyOptionPicker(
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(L10n.global().settingsPersonProviderTitle),
+          ),
+          IconButton(
+            onPressed: () {
+              launch(help_util.peopleUrl);
+            },
+            tooltip: L10n.global().helpTooltip,
+            icon: const Icon(Icons.help_outline),
+          ),
+        ],
+      ),
+      items: PersonProvider.values
+          .map((provider) => FancyOptionPickerItem(
+                label: provider.toUserString(),
+                isSelected: provider == initialValue,
+                onSelect: () {
+                  _log.info("[build] Set provider: ${provider.toUserString()}");
+                  Navigator.of(context).pop(provider);
+                },
+              ))
+          .toList(),
+    );
+  }
+
+  final PersonProvider initialValue;
+}
+
+extension on PersonProvider {
+  String toUserString() {
+    switch (this) {
+      case PersonProvider.none:
+        return "n/a";
+      case PersonProvider.faceRecognition:
+        return "Face Recognition";
+      case PersonProvider.recognize:
+        return "Recognize";
+    }
+  }
 }

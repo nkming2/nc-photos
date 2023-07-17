@@ -24,6 +24,7 @@ import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
+import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'search_landing.g.dart';
@@ -86,10 +87,11 @@ class _SearchLandingState extends State<SearchLanding> {
     return Column(
       children: [
         if (context
-            .read<AccountController>()
-            .accountPrefController
-            .isEnableFaceRecognitionApp
-            .value)
+                .read<AccountController>()
+                .accountPrefController
+                .personProvider
+                .value !=
+            PersonProvider.none)
           ..._buildPeopleSection(context, state),
         ..._buildLocationSection(context, state),
         ListTile(
@@ -126,12 +128,29 @@ class _SearchLandingState extends State<SearchLanding> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         title: Text(L10n.global().collectionPeopleLabel),
         trailing: isNoResult
-            ? IconButton(
-                onPressed: () {
-                  launch(help_util.peopleUrl);
-                },
-                tooltip: L10n.global().helpTooltip,
-                icon: const Icon(Icons.help_outline),
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        AccountSettings.routeName,
+                        arguments: const AccountSettingsArguments(
+                          highlight: AccountSettingsOption.personProvider,
+                        ),
+                      );
+                    },
+                    tooltip: L10n.global().accountSettingsTooltip,
+                    icon: const Icon(Icons.settings_outlined),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      launch(help_util.peopleUrl);
+                    },
+                    tooltip: L10n.global().helpTooltip,
+                    icon: const Icon(Icons.help_outline),
+                  ),
+                ],
               )
             : TextButton(
                 onPressed: () {
@@ -144,7 +163,7 @@ class _SearchLandingState extends State<SearchLanding> {
         SizedBox(
           height: 48,
           child: Center(
-            child: Text(L10n.global().searchLandingPeopleListEmptyText),
+            child: Text(L10n.global().searchLandingPeopleListEmptyText2),
           ),
         )
       else

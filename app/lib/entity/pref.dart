@@ -206,19 +206,18 @@ enum PrefKey implements PrefKeyInterface {
 }
 
 enum AccountPrefKey implements PrefKeyInterface {
-  isEnableFaceRecognitionApp,
   shareFolder,
   hasNewSharedAlbum,
   isEnableMemoryAlbum,
   touchRootEtag,
   accountLabel,
-  lastNewCollectionType;
+  lastNewCollectionType,
+  personProvider,
+  ;
 
   @override
   String toStringKey() {
     switch (this) {
-      case AccountPrefKey.isEnableFaceRecognitionApp:
-        return "isEnableFaceRecognitionApp";
       case AccountPrefKey.shareFolder:
         return "shareFolder";
       case AccountPrefKey.hasNewSharedAlbum:
@@ -231,6 +230,8 @@ enum AccountPrefKey implements PrefKeyInterface {
         return "accountLabel";
       case AccountPrefKey.lastNewCollectionType:
         return "lastNewCollectionType";
+      case AccountPrefKey.personProvider:
+        return "personProvider";
     }
   }
 }
