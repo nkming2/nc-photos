@@ -65,68 +65,8 @@ class AccountPref {
     }
   }
 
-  bool? isEnableFaceRecognitionApp() =>
-      provider.getBool(PrefKey.isEnableFaceRecognitionApp);
-  bool isEnableFaceRecognitionAppOr([bool def = true]) =>
-      isEnableFaceRecognitionApp() ?? def;
-  Future<bool> setEnableFaceRecognitionApp(bool value) => _set<bool>(
-      PrefKey.isEnableFaceRecognitionApp,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  String? getShareFolder() => provider.getString(PrefKey.shareFolder);
-  String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
-  Future<bool> setShareFolder(String value) => _set<String>(PrefKey.shareFolder,
-      value, (key, value) => provider.setString(key, value));
-
-  bool? hasNewSharedAlbum() => provider.getBool(PrefKey.hasNewSharedAlbum);
-  bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
-  Future<bool> setNewSharedAlbum(bool value) => _set<bool>(
-      PrefKey.hasNewSharedAlbum,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  bool? isEnableMemoryAlbum() => provider.getBool(PrefKey.isEnableMemoryAlbum);
-  bool isEnableMemoryAlbumOr([bool def = false]) =>
-      isEnableMemoryAlbum() ?? def;
-  Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
-      PrefKey.isEnableMemoryAlbum,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  String? getTouchRootEtag() => provider.getString(PrefKey.touchRootEtag);
-  String getTouchRootEtagOr([String def = ""]) => getTouchRootEtag() ?? def;
-  Future<bool> setTouchRootEtag(String value) => _set<String>(
-      PrefKey.touchRootEtag,
-      value,
-      (key, value) => provider.setString(key, value));
-  Future<bool> removeTouchRootEtag() => _remove(PrefKey.touchRootEtag);
-
-  String? getAccountLabel() => provider.getString(PrefKey.accountLabel);
-  String getAccountLabelOr([String def = ""]) => getAccountLabel() ?? def;
-  Future<bool> setAccountLabel(String? value) {
-    if (value == null) {
-      return _remove(PrefKey.accountLabel);
-    } else {
-      return _set<String>(PrefKey.accountLabel, value,
-          (key, value) => provider.setString(key, value));
-    }
-  }
-
-  int? getLastNewCollectionType() =>
-      provider.getInt(PrefKey.lastNewCollectionType);
-  int getLastNewCollectionTypeOr(int def) => getLastNewCollectionType() ?? def;
-  Future<bool> setLastNewCollectionType(int? value) {
-    if (value == null) {
-      return _remove(PrefKey.lastNewCollectionType);
-    } else {
-      return _set<int>(PrefKey.lastNewCollectionType, value,
-          (key, value) => provider.setInt(key, value));
-    }
-  }
-
-  Future<bool> _set<T>(PrefKey key, T value,
-      Future<bool> Function(PrefKey key, T value) setFn) async {
+  Future<bool> _set<T>(AccountPrefKey key, T value,
+      Future<bool> Function(AccountPrefKey key, T value) setFn) async {
     if (await setFn(key, value)) {
       KiwiContainer()
           .resolve<EventBus>()
@@ -137,14 +77,18 @@ class AccountPref {
     }
   }
 
-  Future<bool> _remove(PrefKey key) => provider.remove(key);
+  Future<bool> _remove(AccountPrefKey key) => provider.remove(key);
 
   final PrefProvider provider;
 
   static final _insts = <String, AccountPref>{};
 }
 
-enum PrefKey {
+abstract class PrefKeyInterface {
+  String toStringKey();
+}
+
+enum PrefKey implements PrefKeyInterface {
   accounts3,
   currentAccountIndex,
   homePhotosZoomLevel,
@@ -179,17 +123,9 @@ enum PrefKey {
   isSlideshowReverse,
   seedColor,
   isVideoPlayerMute,
-  isVideoPlayerLoop,
+  isVideoPlayerLoop;
 
-  // account pref
-  isEnableFaceRecognitionApp,
-  shareFolder,
-  hasNewSharedAlbum,
-  isEnableMemoryAlbum,
-  touchRootEtag,
-  accountLabel,
-  lastNewCollectionType;
-
+  @override
   String toStringKey() {
     switch (this) {
       case PrefKey.accounts3:
@@ -262,21 +198,35 @@ enum PrefKey {
         return "isVideoPlayerMute";
       case PrefKey.isVideoPlayerLoop:
         return "isVideoPlayerLoop";
+    }
+  }
+}
 
-      // account pref
-      case PrefKey.isEnableFaceRecognitionApp:
+enum AccountPrefKey implements PrefKeyInterface {
+  isEnableFaceRecognitionApp,
+  shareFolder,
+  hasNewSharedAlbum,
+  isEnableMemoryAlbum,
+  touchRootEtag,
+  accountLabel,
+  lastNewCollectionType;
+
+  @override
+  String toStringKey() {
+    switch (this) {
+      case AccountPrefKey.isEnableFaceRecognitionApp:
         return "isEnableFaceRecognitionApp";
-      case PrefKey.shareFolder:
+      case AccountPrefKey.shareFolder:
         return "shareFolder";
-      case PrefKey.hasNewSharedAlbum:
+      case AccountPrefKey.hasNewSharedAlbum:
         return "hasNewSharedAlbum";
-      case PrefKey.isEnableMemoryAlbum:
+      case AccountPrefKey.isEnableMemoryAlbum:
         return "isEnableMemoryAlbum";
-      case PrefKey.touchRootEtag:
+      case AccountPrefKey.touchRootEtag:
         return "touchRootEtag";
-      case PrefKey.accountLabel:
+      case AccountPrefKey.accountLabel:
         return "accountLabel";
-      case PrefKey.lastNewCollectionType:
+      case AccountPrefKey.lastNewCollectionType:
         return "lastNewCollectionType";
     }
   }
@@ -284,18 +234,18 @@ enum PrefKey {
 
 /// Provide the data for [Pref]
 abstract class PrefProvider {
-  bool? getBool(PrefKey key);
-  Future<bool> setBool(PrefKey key, bool value);
+  bool? getBool(PrefKeyInterface key);
+  Future<bool> setBool(PrefKeyInterface key, bool value);
 
-  int? getInt(PrefKey key);
-  Future<bool> setInt(PrefKey key, int value);
+  int? getInt(PrefKeyInterface key);
+  Future<bool> setInt(PrefKeyInterface key, int value);
 
-  String? getString(PrefKey key);
-  Future<bool> setString(PrefKey key, String value);
+  String? getString(PrefKeyInterface key);
+  Future<bool> setString(PrefKeyInterface key, String value);
 
-  List<String>? getStringList(PrefKey key);
-  Future<bool> setStringList(PrefKey key, List<String> value);
+  List<String>? getStringList(PrefKeyInterface key);
+  Future<bool> setStringList(PrefKeyInterface key, List<String> value);
 
-  Future<bool> remove(PrefKey key);
+  Future<bool> remove(PrefKeyInterface key);
   Future<bool> clear();
 }

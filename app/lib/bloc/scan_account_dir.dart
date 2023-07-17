@@ -405,7 +405,7 @@ class ScanAccountDirBloc
       // no data in this bloc, ignore
       return;
     }
-    if (ev.key == PrefKey.shareFolder &&
+    if (ev.key == AccountPrefKey.shareFolder &&
         identical(ev.pref, AccountPref.of(account))) {
       _log.info("[_onAccountPrefUpdatedEvent] Request refresh");
       _refreshThrottler.trigger(

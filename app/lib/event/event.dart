@@ -42,7 +42,7 @@ class AccountPrefUpdatedEvent {
   const AccountPrefUpdatedEvent(this.pref, this.key, this.value);
 
   final AccountPref pref;
-  final PrefKey key;
+  final AccountPrefKey key;
   final dynamic value;
 }
 

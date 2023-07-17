@@ -268,3 +268,70 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setBool(key, value));
 }
+
+extension AccountPrefExtension on AccountPref {
+  bool? isEnableFaceRecognitionApp() =>
+      provider.getBool(AccountPrefKey.isEnableFaceRecognitionApp);
+  bool isEnableFaceRecognitionAppOr([bool def = true]) =>
+      isEnableFaceRecognitionApp() ?? def;
+  Future<bool> setEnableFaceRecognitionApp(bool value) => _set<bool>(
+      AccountPrefKey.isEnableFaceRecognitionApp,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  String? getShareFolder() => provider.getString(AccountPrefKey.shareFolder);
+  String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
+  Future<bool> setShareFolder(String value) => _set<String>(
+      AccountPrefKey.shareFolder,
+      value,
+      (key, value) => provider.setString(key, value));
+
+  bool? hasNewSharedAlbum() =>
+      provider.getBool(AccountPrefKey.hasNewSharedAlbum);
+  bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
+  Future<bool> setNewSharedAlbum(bool value) => _set<bool>(
+      AccountPrefKey.hasNewSharedAlbum,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  bool? isEnableMemoryAlbum() =>
+      provider.getBool(AccountPrefKey.isEnableMemoryAlbum);
+  bool isEnableMemoryAlbumOr([bool def = false]) =>
+      isEnableMemoryAlbum() ?? def;
+  Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
+      AccountPrefKey.isEnableMemoryAlbum,
+      value,
+      (key, value) => provider.setBool(key, value));
+
+  String? getTouchRootEtag() =>
+      provider.getString(AccountPrefKey.touchRootEtag);
+  String getTouchRootEtagOr([String def = ""]) => getTouchRootEtag() ?? def;
+  Future<bool> setTouchRootEtag(String value) => _set<String>(
+      AccountPrefKey.touchRootEtag,
+      value,
+      (key, value) => provider.setString(key, value));
+  Future<bool> removeTouchRootEtag() => _remove(AccountPrefKey.touchRootEtag);
+
+  String? getAccountLabel() => provider.getString(AccountPrefKey.accountLabel);
+  String getAccountLabelOr([String def = ""]) => getAccountLabel() ?? def;
+  Future<bool> setAccountLabel(String? value) {
+    if (value == null) {
+      return _remove(AccountPrefKey.accountLabel);
+    } else {
+      return _set<String>(AccountPrefKey.accountLabel, value,
+          (key, value) => provider.setString(key, value));
+    }
+  }
+
+  int? getLastNewCollectionType() =>
+      provider.getInt(AccountPrefKey.lastNewCollectionType);
+  int getLastNewCollectionTypeOr(int def) => getLastNewCollectionType() ?? def;
+  Future<bool> setLastNewCollectionType(int? value) {
+    if (value == null) {
+      return _remove(AccountPrefKey.lastNewCollectionType);
+    } else {
+      return _set<int>(AccountPrefKey.lastNewCollectionType, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
+}

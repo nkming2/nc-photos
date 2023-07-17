@@ -20,36 +20,36 @@ class PrefSharedPreferencesProvider extends PrefProvider {
   }
 
   @override
-  bool? getBool(PrefKey key) => _pref.getBool(key.toStringKey());
+  bool? getBool(PrefKeyInterface key) => _pref.getBool(key.toStringKey());
 
   @override
-  Future<bool> setBool(PrefKey key, bool value) =>
+  Future<bool> setBool(PrefKeyInterface key, bool value) =>
       _pref.setBool(key.toStringKey(), value);
 
   @override
-  int? getInt(PrefKey key) => _pref.getInt(key.toStringKey());
+  int? getInt(PrefKeyInterface key) => _pref.getInt(key.toStringKey());
 
   @override
-  Future<bool> setInt(PrefKey key, int value) =>
+  Future<bool> setInt(PrefKeyInterface key, int value) =>
       _pref.setInt(key.toStringKey(), value);
 
   @override
-  String? getString(PrefKey key) => _pref.getString(key.toStringKey());
+  String? getString(PrefKeyInterface key) => _pref.getString(key.toStringKey());
 
   @override
-  Future<bool> setString(PrefKey key, String value) =>
+  Future<bool> setString(PrefKeyInterface key, String value) =>
       _pref.setString(key.toStringKey(), value);
 
   @override
-  List<String>? getStringList(PrefKey key) =>
+  List<String>? getStringList(PrefKeyInterface key) =>
       _pref.getStringList(key.toStringKey());
 
   @override
-  Future<bool> setStringList(PrefKey key, List<String> value) =>
+  Future<bool> setStringList(PrefKeyInterface key, List<String> value) =>
       _pref.setStringList(key.toStringKey(), value);
 
   @override
-  Future<bool> remove(PrefKey key) => _pref.remove(key.toStringKey());
+  Future<bool> remove(PrefKeyInterface key) => _pref.remove(key.toStringKey());
 
   @override
   Future<bool> clear() => _pref.clear();

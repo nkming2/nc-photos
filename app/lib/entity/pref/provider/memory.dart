@@ -7,28 +7,29 @@ class PrefMemoryProvider extends PrefProvider {
   ]) : _data = Map.of(initialData);
 
   @override
-  bool? getBool(PrefKey key) => _get<bool>(key);
+  bool? getBool(PrefKeyInterface key) => _get<bool>(key);
   @override
-  Future<bool> setBool(PrefKey key, bool value) => _set(key, value);
+  Future<bool> setBool(PrefKeyInterface key, bool value) => _set(key, value);
 
   @override
-  int? getInt(PrefKey key) => _get<int>(key);
+  int? getInt(PrefKeyInterface key) => _get<int>(key);
   @override
-  Future<bool> setInt(PrefKey key, int value) => _set(key, value);
+  Future<bool> setInt(PrefKeyInterface key, int value) => _set(key, value);
 
   @override
-  String? getString(PrefKey key) => _get<String>(key);
+  String? getString(PrefKeyInterface key) => _get<String>(key);
   @override
-  Future<bool> setString(PrefKey key, String value) => _set(key, value);
-
-  @override
-  List<String>? getStringList(PrefKey key) => _get<List<String>>(key);
-  @override
-  Future<bool> setStringList(PrefKey key, List<String> value) =>
+  Future<bool> setString(PrefKeyInterface key, String value) =>
       _set(key, value);
 
   @override
-  Future<bool> remove(PrefKey key) async {
+  List<String>? getStringList(PrefKeyInterface key) => _get<List<String>>(key);
+  @override
+  Future<bool> setStringList(PrefKeyInterface key, List<String> value) =>
+      _set(key, value);
+
+  @override
+  Future<bool> remove(PrefKeyInterface key) async {
     _data.remove(key);
     return true;
   }
@@ -39,9 +40,9 @@ class PrefMemoryProvider extends PrefProvider {
     return true;
   }
 
-  T? _get<T>(PrefKey key) => _data[key.toStringKey()];
+  T? _get<T>(PrefKeyInterface key) => _data[key.toStringKey()];
 
-  Future<bool> _set<T>(PrefKey key, T value) async {
+  Future<bool> _set<T>(PrefKeyInterface key, T value) async {
     _data[key.toStringKey()] = value;
     return true;
   }
