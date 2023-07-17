@@ -1,8 +1,9 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
 import 'package:test/test.dart';
 

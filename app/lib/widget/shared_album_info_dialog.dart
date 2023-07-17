@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/help_utils.dart' as help_utils;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 
 class SharedAlbumInfoDialog extends StatefulWidget {

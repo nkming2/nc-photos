@@ -7,6 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -15,7 +16,6 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';

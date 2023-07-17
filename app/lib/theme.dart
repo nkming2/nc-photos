@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/material3.dart';
-import 'package:nc_photos/pref.dart';
 
 extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;

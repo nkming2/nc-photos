@@ -22,6 +22,9 @@ import 'package:nc_photos/entity/nc_album/data_source.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/data_source.dart';
+import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/pref/provider/shared_preferences.dart';
+import 'package:nc_photos/entity/pref_util.dart' as pref_util;
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -42,8 +45,6 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
-import 'package:nc_photos/pref.dart';
-import 'package:nc_photos/pref_util.dart' as pref_util;
 import 'package:nc_photos/touch_manager.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 

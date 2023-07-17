@@ -12,6 +12,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/help_utils.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';

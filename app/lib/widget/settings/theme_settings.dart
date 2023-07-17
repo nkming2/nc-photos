@@ -9,6 +9,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';

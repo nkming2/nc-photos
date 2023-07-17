@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/basic_item.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/list_location_file.dart';
 
 class CollectionMemoryAdapter

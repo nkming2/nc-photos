@@ -1,8 +1,8 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 
 class DoubleTapExitHandler {

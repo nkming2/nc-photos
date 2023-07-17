@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/lazy.dart';
 import 'package:np_codegen/np_codegen.dart';

@@ -3,7 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/cache_favorite.dart';
 import 'package:np_codegen/np_codegen.dart';
 

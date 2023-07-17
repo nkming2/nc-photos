@@ -8,8 +8,8 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/share.dart';
-import 'package:nc_photos/pref.dart';
 
 class AppEventListener<T> {
   AppEventListener(this._listener);

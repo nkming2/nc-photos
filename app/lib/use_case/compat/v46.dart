@@ -1,6 +1,6 @@
 import 'package:logging/logging.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/pref.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'v46.g.dart';

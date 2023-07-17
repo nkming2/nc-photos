@@ -5,9 +5,10 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/or_null.dart';
-import 'package:nc_photos/pref.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:test/test.dart';
 

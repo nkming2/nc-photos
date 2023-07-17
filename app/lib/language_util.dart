@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/pref.dart';
+import 'package:nc_photos/entity/pref.dart';
 
 class AppLanguage {
   const AppLanguage(this.langId, this._nativeName, this.isoName, this.locale);

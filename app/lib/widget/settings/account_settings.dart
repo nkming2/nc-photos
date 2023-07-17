@@ -10,6 +10,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
