@@ -4,7 +4,11 @@ part of '../people_browser.dart';
 class _Item {
   _Item(this.person) {
     try {
-      _coverUrl = person.getCoverUrl(k.coverSize, k.coverSize);
+      _coverUrl = person.getCoverUrl(
+        k.photoLargeSize,
+        k.photoLargeSize,
+        isKeepAspectRatio: true,
+      );
     } catch (e, stackTrace) {
       _log.warning("[_Item] Failed while getCoverUrl", e, stackTrace);
     }

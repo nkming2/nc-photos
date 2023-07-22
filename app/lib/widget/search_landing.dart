@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +21,7 @@ import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
+import 'package:nc_photos/widget/person_thumbnail.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -342,11 +341,14 @@ class _LandingPersonWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
-            child: _PersonCoverImage(
-              dimension: 72,
-              account: account,
-              person: person,
-              coverUrl: coverUrl,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(72 / 2),
+              child: PersonThumbnail(
+                dimension: 72,
+                account: account,
+                person: person,
+                coverUrl: coverUrl,
+              ),
             ),
           ),
           const SizedBox(height: 8),

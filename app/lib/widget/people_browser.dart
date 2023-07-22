@@ -15,10 +15,10 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_list_item.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/person_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -186,14 +186,16 @@ class _ItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CollectionListSmall(
-      account: account,
       label: item.name,
-      coverUrl: item.coverUrl,
-      fallbackBuilder: (context) => Icon(
-        Icons.person,
-        color: Theme.of(context).listPlaceholderForegroundColor,
-      ),
       onTap: onTap,
+      child: LayoutBuilder(
+        builder: (context, constraints) => PersonThumbnail(
+          account: account,
+          coverUrl: item.coverUrl,
+          person: item.person,
+          dimension: constraints.maxWidth,
+        ),
+      ),
     );
   }
 

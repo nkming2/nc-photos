@@ -243,14 +243,12 @@ class _PlaceItem {
   });
 
   Widget buildWidget(BuildContext context) => CollectionListSmall(
-        account: account,
         label: place,
-        coverUrl: thumbUrl,
-        fallbackBuilder: (context) => Icon(
-          Icons.location_on,
-          color: Theme.of(context).listPlaceholderForegroundColor,
-        ),
         onTap: onTap,
+        child: _PlaceThumbnail(
+          account: account,
+          coverUrl: thumbUrl,
+        ),
       );
 
   final Account account;
@@ -336,4 +334,44 @@ class _CountryItemView extends StatelessWidget {
   final String imageUrl;
   final String text;
   final VoidCallback? onTap;
+}
+
+class _PlaceThumbnail extends StatelessWidget {
+  const _PlaceThumbnail({
+    required this.account,
+    required this.coverUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return NetworkRectThumbnail(
+        account: account,
+        imageUrl: coverUrl!,
+        errorBuilder: (_) => const _Placeholder(),
+      );
+    } catch (_) {
+      return const FittedBox(
+        child: _Placeholder(),
+      );
+    }
+  }
+
+  final Account account;
+  final String? coverUrl;
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Icon(
+        Icons.location_on,
+        color: Theme.of(context).listPlaceholderForegroundColor,
+      ),
+    );
+  }
 }
