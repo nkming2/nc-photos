@@ -37,7 +37,6 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/use_case/startup_sync.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
@@ -557,20 +556,6 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  Future<void> _startupSync() async {
-    if (!_hasResyncedFavorites.value) {
-      _hasResyncedFavorites.value = true;
-      final result = await StartupSync.runInIsolate(
-          widget.account, _accountPrefController.raw);
-      if (mounted) {
-        if (result.isSyncPersonUpdated) {
-          unawaited(
-              context.read<AccountController>().personsController.reload());
-        }
-      }
-    }
-  }
-
   /// Transform a File list to grid items
   void _transformItems(
     List<FileDescriptor> files, {
@@ -611,7 +596,8 @@ class _HomePhotosState extends State<HomePhotos>
 
             if (isPostSuccess) {
               _isScrollbarVisible = true;
-              _startupSync();
+              context.read<AccountController>().syncController.requestSync(
+                  widget.account, _accountPrefController.personProvider.value);
               _tryStartMetadataTask();
             }
           });
@@ -714,21 +700,6 @@ class _HomePhotosState extends State<HomePhotos>
     } catch (_) {
       _log.info(
           "[_hasFiredMetadataTask] New instance for account: ${widget.account}");
-      final obj = Primitive(false);
-      KiwiContainer().registerInstance<Primitive<bool>>(obj, name: name);
-      return obj;
-    }
-  }
-
-  Primitive<bool> get _hasResyncedFavorites {
-    final name = bloc_util.getInstNameForRootAwareAccount(
-        "HomePhotosState._hasResyncedFavorites", widget.account);
-    try {
-      _log.fine("[_hasResyncedFavorites] Resolving for '$name'");
-      return KiwiContainer().resolve<Primitive<bool>>(name);
-    } catch (_) {
-      _log.info(
-          "[_hasResyncedFavorites] New instance for account: ${widget.account}");
       final obj = Primitive(false);
       KiwiContainer().registerInstance<Primitive<bool>>(obj, name: name);
       return obj;

@@ -9,6 +9,7 @@ class _State {
     required this.label,
     required this.shareFolder,
     required this.personProvider,
+    required this.shouldResync,
     this.error,
   });
 
@@ -24,6 +25,7 @@ class _State {
       label: label,
       shareFolder: shareFolder,
       personProvider: personProvider,
+      shouldResync: false,
     );
   }
 
@@ -35,6 +37,7 @@ class _State {
   final String? label;
   final String shareFolder;
   final PersonProvider personProvider;
+  final bool shouldResync;
 
   final ExceptionEvent? error;
 }

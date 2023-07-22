@@ -4,7 +4,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/face_recognition_person/sync_face_recognition_person.dart';
 import 'package:nc_photos/use_case/recognize_face/sync_recognize_face.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -18,9 +17,7 @@ class SyncPerson {
   /// Sync people in cache db with remote server
   ///
   /// Return if any people were updated
-  Future<bool> call(Account account, AccountPref accountPref) async {
-    final provider =
-        PersonProvider.fromValue(accountPref.getPersonProviderOr());
+  Future<bool> call(Account account, PersonProvider provider) async {
     _log.info("[call] Current provider: $provider");
     switch (provider) {
       case PersonProvider.none:

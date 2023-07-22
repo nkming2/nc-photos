@@ -19,6 +19,7 @@ abstract class $_StateCopyWithWorker {
       String? label,
       String? shareFolder,
       PersonProvider? personProvider,
+      bool? shouldResync,
       ExceptionEvent? error});
 }
 
@@ -32,6 +33,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic label = copyWithNull,
       dynamic shareFolder,
       dynamic personProvider,
+      dynamic shouldResync,
       dynamic error = copyWithNull}) {
     return _State(
         shouldReload: shouldReload as bool? ?? that.shouldReload,
@@ -40,6 +42,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         shareFolder: shareFolder as String? ?? that.shareFolder,
         personProvider:
             personProvider as PersonProvider? ?? that.personProvider,
+        shouldResync: shouldResync as bool? ?? that.shouldResync,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -55,13 +58,13 @@ extension $_StateCopyWith on _State {
 // NpLogGenerator
 // **************************************************************************
 
-extension _$_WrappedDeveloperSettingsStateNpLog
-    on _WrappedDeveloperSettingsState {
+extension _$__WrappedAccountSettingsStateNpLog
+    on __WrappedAccountSettingsState {
   // ignore: unused_element
   Logger get _log => log;
 
   static final log =
-      Logger("widget.settings.account_settings._WrappedDeveloperSettingsState");
+      Logger("widget.settings.account_settings.__WrappedAccountSettingsState");
 }
 
 extension _$_PersonProviderDialogNpLog on _PersonProviderDialog {
@@ -86,7 +89,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {shouldReload: $shouldReload, account: $account, label: $label, shareFolder: $shareFolder, personProvider: ${personProvider.name}, error: $error}";
+    return "_State {shouldReload: $shouldReload, account: $account, label: $label, shareFolder: $shareFolder, personProvider: ${personProvider.name}, shouldResync: $shouldResync, error: $error}";
   }
 }
 

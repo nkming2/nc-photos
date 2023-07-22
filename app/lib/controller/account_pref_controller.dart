@@ -16,6 +16,7 @@ class AccountPrefController {
   void dispose() {
     _shareFolderController.close();
     _accountLabelController.close();
+    _personProviderController.close();
   }
 
   ValueStream<String> get shareFolder => _shareFolderController.stream;

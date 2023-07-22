@@ -139,7 +139,10 @@ class _Bloc extends Bloc<_Event, _State> {
   void _onOnUpdatePersonProvider(
       _OnUpdatePersonProvider ev, Emitter<_State> emit) {
     _log.info(ev);
-    emit(state.copyWith(personProvider: ev.personProvider));
+    emit(state.copyWith(
+      personProvider: ev.personProvider,
+      shouldResync: true,
+    ));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

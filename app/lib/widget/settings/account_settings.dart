@@ -87,12 +87,29 @@ class _WrappedAccountSettings extends StatefulWidget {
   const _WrappedAccountSettings();
 
   @override
-  State<StatefulWidget> createState() => _WrappedDeveloperSettingsState();
+  State<StatefulWidget> createState() => __WrappedAccountSettingsState();
 }
 
 @npLog
-class _WrappedDeveloperSettingsState extends State<_WrappedAccountSettings>
+class __WrappedAccountSettingsState extends State<_WrappedAccountSettings>
     with RouteAware, PageVisibilityMixin {
+  @override
+  void initState() {
+    super.initState();
+    _accountController = context.read<AccountController>();
+  }
+
+  @override
+  void dispose() {
+    if (_bloc.state.shouldResync &&
+        _bloc.state.personProvider != PersonProvider.none) {
+      _log.fine("[dispose] Requesting to resync account");
+      _accountController.syncController
+          .requestResync(_bloc.state.account, _bloc.state.personProvider);
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,6 +262,7 @@ class _WrappedDeveloperSettingsState extends State<_WrappedAccountSettings>
   }
 
   late final _bloc = context.read<_Bloc>();
+  late final AccountController _accountController;
 }
 
 class _DoneButton extends StatelessWidget {
