@@ -21,7 +21,9 @@ class ServerController {
     required this.account,
   });
 
-  void dispose() {}
+  void dispose() {
+    _statusStreamContorller.close();
+  }
 
   ValueStream<ServerStatus> get status {
     if (!_statusStreamContorller.hasValue) {

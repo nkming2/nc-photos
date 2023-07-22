@@ -12,7 +12,10 @@ class AccountPrefController {
     required this.account,
   }) : _accountPref = AccountPref.of(account);
 
-  void dispose() {}
+  void dispose() {
+    _shareFolderController.close();
+    _accountLabelController.close();
+  }
 
   ValueStream<bool> get isEnableFaceRecognitionApp =>
       _enableFaceRecognitionAppController.stream;
