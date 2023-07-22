@@ -319,9 +319,11 @@ Future<void> _truncate() async {
       "albums",
       "album_shares",
       "tags",
-      "persons",
+      "face_recognition_persons",
       "nc_albums",
       "nc_album_items",
+      "recognize_faces",
+      "recognize_face_items",
     });
     for (final t in tables) {
       expect(

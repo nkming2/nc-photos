@@ -526,37 +526,37 @@ extension SqliteDbExtension on SqliteDb {
     }
   }
 
-  Future<List<Person>> allPersons({
-    Account? sqlAccount,
-    app.Account? appAccount,
+  Future<List<FaceRecognitionPerson>> allFaceRecognitionPersons({
+    required ByAccount account,
   }) {
-    assert((sqlAccount != null) != (appAccount != null));
-    if (sqlAccount != null) {
-      final query = select(persons)
-        ..where((t) => t.account.equals(sqlAccount.rowId));
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
+      final query = select(faceRecognitionPersons)
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId));
       return query.get();
     } else {
-      final query = select(persons).join([
-        innerJoin(accounts, accounts.rowId.equalsExp(persons.account),
+      final query = select(faceRecognitionPersons).join([
+        innerJoin(
+            accounts, accounts.rowId.equalsExp(faceRecognitionPersons.account),
             useColumns: false),
         innerJoin(servers, servers.rowId.equalsExp(accounts.server),
             useColumns: false),
       ])
-        ..where(servers.address.equals(appAccount!.url))
+        ..where(servers.address.equals(account.appAccount!.url))
         ..where(accounts.userId
-            .equals(appAccount.userId.toCaseInsensitiveString()));
-      return query.map((r) => r.readTable(persons)).get();
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()));
+      return query.map((r) => r.readTable(faceRecognitionPersons)).get();
     }
   }
 
-  Future<List<Person>> personsByName({
+  Future<List<FaceRecognitionPerson>> faceRecognitionPersonsByName({
     Account? sqlAccount,
     app.Account? appAccount,
     required String name,
   }) {
     assert((sqlAccount != null) != (appAccount != null));
     if (sqlAccount != null) {
-      final query = select(persons)
+      final query = select(faceRecognitionPersons)
         ..where((t) => t.account.equals(sqlAccount.rowId))
         ..where((t) =>
             t.name.like(name) |
@@ -564,8 +564,9 @@ extension SqliteDbExtension on SqliteDb {
             t.name.like("$name %"));
       return query.get();
     } else {
-      final query = select(persons).join([
-        innerJoin(accounts, accounts.rowId.equalsExp(persons.account),
+      final query = select(faceRecognitionPersons).join([
+        innerJoin(
+            accounts, accounts.rowId.equalsExp(faceRecognitionPersons.account),
             useColumns: false),
         innerJoin(servers, servers.rowId.equalsExp(accounts.server),
             useColumns: false),
@@ -573,11 +574,97 @@ extension SqliteDbExtension on SqliteDb {
         ..where(servers.address.equals(appAccount!.url))
         ..where(
             accounts.userId.equals(appAccount.userId.toCaseInsensitiveString()))
-        ..where(persons.name.like(name) |
-            persons.name.like("% $name") |
-            persons.name.like("$name %"));
-      return query.map((r) => r.readTable(persons)).get();
+        ..where(faceRecognitionPersons.name.like(name) |
+            faceRecognitionPersons.name.like("% $name") |
+            faceRecognitionPersons.name.like("$name %"));
+      return query.map((r) => r.readTable(faceRecognitionPersons)).get();
     }
+  }
+
+  Future<List<RecognizeFace>> allRecognizeFaces({
+    required ByAccount account,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
+      final query = select(recognizeFaces)
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId));
+      return query.get();
+    } else {
+      final query = select(recognizeFaces).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()));
+      return query.map((r) => r.readTable(recognizeFaces)).get();
+    }
+  }
+
+  Future<RecognizeFace> recognizeFaceByLabel({
+    required ByAccount account,
+    required String label,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    if (account.sqlAccount != null) {
+      final query = select(recognizeFaces)
+        ..where((t) => t.account.equals(account.sqlAccount!.rowId))
+        ..where((t) => t.label.equals(label));
+      return query.getSingle();
+    } else {
+      final query = select(recognizeFaces).join([
+        innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()))
+        ..where(recognizeFaces.label.equals(label));
+      return query.map((r) => r.readTable(recognizeFaces)).getSingle();
+    }
+  }
+
+  Future<List<RecognizeFaceItem>> recognizeFaceItemsByParentLabel({
+    required ByAccount account,
+    required String label,
+    List<OrderingTerm>? orderBy,
+    int? limit,
+    int? offset,
+  }) {
+    assert((account.sqlAccount != null) != (account.appAccount != null));
+    final query = select(recognizeFaceItems).join([
+      innerJoin(recognizeFaces,
+          recognizeFaces.rowId.equalsExp(recognizeFaceItems.parent),
+          useColumns: false),
+    ]);
+    if (account.sqlAccount != null) {
+      query
+        ..where(recognizeFaces.account.equals(account.sqlAccount!.rowId))
+        ..where(recognizeFaces.label.equals(label));
+    } else {
+      query
+        ..join([
+          innerJoin(accounts, accounts.rowId.equalsExp(recognizeFaces.account),
+              useColumns: false),
+          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+              useColumns: false),
+        ])
+        ..where(servers.address.equals(account.appAccount!.url))
+        ..where(accounts.userId
+            .equals(account.appAccount!.userId.toCaseInsensitiveString()))
+        ..where(recognizeFaces.label.equals(label));
+    }
+    if (orderBy != null) {
+      query.orderBy(orderBy);
+      if (limit != null) {
+        query.limit(limit, offset: offset);
+      }
+    }
+    return query.map((r) => r.readTable(recognizeFaceItems)).get();
   }
 
   Future<int> countMissingMetadataByFileIds({
@@ -639,9 +726,11 @@ extension SqliteDbExtension on SqliteDb {
     await delete(albums).go();
     await delete(albumShares).go();
     await delete(tags).go();
-    await delete(persons).go();
+    await delete(faceRecognitionPersons).go();
     await delete(ncAlbums).go();
     await delete(ncAlbumItems).go();
+    await delete(recognizeFaces).go();
+    await delete(recognizeFaceItems).go();
 
     // reset the auto increment counter
     await customStatement("UPDATE sqlite_sequence SET seq=0;");

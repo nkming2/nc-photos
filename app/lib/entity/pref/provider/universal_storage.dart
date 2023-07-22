@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:np_common/type.dart';
 
 /// [Pref] backed by [UniversalStorage]
 class PrefUniversalStorageProvider extends PrefProvider {
@@ -51,6 +52,9 @@ class PrefUniversalStorageProvider extends PrefProvider {
     _data.clear();
     return true;
   }
+
+  @override
+  Future<JsonObj> toJson() async => Map.of(_data);
 
   T? _get<T>(PrefKeyInterface key) => _data[key.toStringKey()];
 

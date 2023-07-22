@@ -178,7 +178,7 @@ class _WrappedAppState extends State<_WrappedApp>
             ),
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
-        AccountSettings.routeName: AccountSettings.buildRoute,
+        PeopleBrowser.routeName: PeopleBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -206,11 +206,11 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
-    route ??= _handlePeopleBrowserRoute(settings);
     route ??= _handlePlacesBrowserRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
+    route ??= _handleAccountSettingsRoute(settings);
     return route;
   }
 
@@ -517,19 +517,6 @@ class _WrappedAppState extends State<_WrappedApp>
     return null;
   }
 
-  Route<dynamic>? _handlePeopleBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PeopleBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PeopleBrowserArguments;
-        return PeopleBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePeopleBrowserRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
   Route<dynamic>? _handlePlacesBrowserRoute(RouteSettings settings) {
     try {
       if (settings.name == PlacesBrowser.routeName &&
@@ -585,6 +572,19 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleCollectionBrowserRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAccountSettingsRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AccountSettings.routeName) {
+        final args = settings.arguments as AccountSettingsArguments?;
+        return AccountSettings.buildRoute(args);
+      }
+    } catch (e) {
+      _log.severe(
+          "[_handleAccountSettingsRoute] Failed while handling route", e);
     }
     return null;
   }

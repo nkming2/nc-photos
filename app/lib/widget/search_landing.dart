@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search_landing.dart';
 import 'package:nc_photos/controller/account_controller.dart';
@@ -22,10 +21,14 @@ import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
+import 'package:nc_photos/widget/person_thumbnail.dart';
 import 'package:nc_photos/widget/places_browser.dart';
+import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'search_landing.g.dart';
+part 'search_landing/type.dart';
+part 'search_landing/view.dart';
 
 class SearchLanding extends StatefulWidget {
   const SearchLanding({
@@ -83,10 +86,11 @@ class _SearchLandingState extends State<SearchLanding> {
     return Column(
       children: [
         if (context
-            .read<AccountController>()
-            .accountPrefController
-            .isEnableFaceRecognitionApp
-            .value)
+                .read<AccountController>()
+                .accountPrefController
+                .personProvider
+                .value !=
+            PersonProvider.none)
           ..._buildPeopleSection(context, state),
         ..._buildLocationSection(context, state),
         ListTile(
@@ -123,17 +127,33 @@ class _SearchLandingState extends State<SearchLanding> {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         title: Text(L10n.global().collectionPeopleLabel),
         trailing: isNoResult
-            ? IconButton(
-                onPressed: () {
-                  launch(help_util.peopleUrl);
-                },
-                tooltip: L10n.global().helpTooltip,
-                icon: const Icon(Icons.help_outline),
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        AccountSettings.routeName,
+                        arguments: const AccountSettingsArguments(
+                          highlight: AccountSettingsOption.personProvider,
+                        ),
+                      );
+                    },
+                    tooltip: L10n.global().accountSettingsTooltip,
+                    icon: const Icon(Icons.settings_outlined),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      launch(help_util.peopleUrl);
+                    },
+                    tooltip: L10n.global().helpTooltip,
+                    icon: const Icon(Icons.help_outline),
+                  ),
+                ],
               )
             : TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PeopleBrowser.routeName,
-                      arguments: PeopleBrowserArguments(widget.account));
+                  Navigator.of(context).pushNamed(PeopleBrowser.routeName);
                 },
                 child: Text(L10n.global().showAllButtonLabel),
               ),
@@ -142,7 +162,7 @@ class _SearchLandingState extends State<SearchLanding> {
         SizedBox(
           height: 48,
           child: Center(
-            child: Text(L10n.global().searchLandingPeopleListEmptyText),
+            child: Text(L10n.global().searchLandingPeopleListEmptyText2),
           ),
         )
       else
@@ -255,7 +275,7 @@ class _SearchLandingState extends State<SearchLanding> {
   void _transformPersons(List<Person> persons) {
     _personItems = persons
         .sorted((a, b) {
-          final countCompare = b.count.compareTo(a.count);
+          final countCompare = (b.count ?? 0).compareTo(a.count ?? 0);
           if (countCompare == 0) {
             return a.name.compareTo(b.name);
           } else {
@@ -265,9 +285,7 @@ class _SearchLandingState extends State<SearchLanding> {
         .take(10)
         .map((e) => _LandingPersonItem(
               account: widget.account,
-              name: e.name,
-              faceUrl: api_util.getFacePreviewUrl(widget.account, e.thumbFaceId,
-                  size: k.faceThumbSize),
+              person: e,
               onTap: () => _onPersonItemTap(e),
             ))
         .toList();
@@ -295,101 +313,46 @@ class _SearchLandingState extends State<SearchLanding> {
   }
 
   void _reqQuery() {
-    _bloc.add(SearchLandingBlocQuery(widget.account));
+    _bloc.add(SearchLandingBlocQuery(widget.account, _accountPrefController));
   }
 
   late final _bloc = SearchLandingBloc(KiwiContainer().resolve<DiContainer>());
+  late final _accountPrefController =
+      context.read<AccountController>().accountPrefController;
 
   var _personItems = <_LandingPersonItem>[];
   var _locationItems = <_LandingLocationItem>[];
 }
 
-class _LandingPersonItem {
-  _LandingPersonItem({
+class _LandingPersonWidget extends StatelessWidget {
+  const _LandingPersonWidget({
     required this.account,
-    required this.name,
-    required this.faceUrl,
-    this.onTap,
-  });
-
-  Widget buildWidget(BuildContext context) => _LandingItemWidget(
-        account: account,
-        label: name,
-        coverUrl: faceUrl,
-        onTap: onTap,
-        fallbackBuilder: (_) => Icon(
-          Icons.person,
-          color: Theme.of(context).listPlaceholderForegroundColor,
-        ),
-      );
-
-  final Account account;
-  final String name;
-  final String faceUrl;
-  final VoidCallback? onTap;
-}
-
-class _LandingLocationItem {
-  const _LandingLocationItem({
-    required this.account,
-    required this.name,
-    required this.thumbUrl,
-    this.onTap,
-  });
-
-  Widget buildWidget(BuildContext context) => _LandingItemWidget(
-        account: account,
-        label: name,
-        coverUrl: thumbUrl,
-        onTap: onTap,
-        fallbackBuilder: (_) => Icon(
-          Icons.location_on,
-          color: Theme.of(context).listPlaceholderForegroundColor,
-        ),
-      );
-
-  final Account account;
-  final String name;
-  final String thumbUrl;
-  final VoidCallback? onTap;
-}
-
-class _LandingItemWidget extends StatelessWidget {
-  const _LandingItemWidget({
-    Key? key,
-    required this.account,
+    required this.person,
     required this.label,
     required this.coverUrl,
-    required this.fallbackBuilder,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final content = Padding(
       padding: const EdgeInsets.all(4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: _buildCoverImage(context),
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(72 / 2),
+              child: PersonThumbnail(
+                dimension: 72,
+                account: account,
+                person: person,
+                coverUrl: coverUrl,
               ),
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            width: 88,
-            child: Text(
-              label + "\n",
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          Expanded(child: _Label(label: label)),
         ],
       ),
     );
@@ -403,37 +366,74 @@ class _LandingItemWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildCoverImage(BuildContext context) {
-    Widget cover;
-    Widget buildPlaceholder() => Padding(
-          padding: const EdgeInsets.all(8),
-          child: fallbackBuilder(context),
-        );
-    try {
-      cover = NetworkRectThumbnail(
-        account: account,
-        imageUrl: coverUrl,
-        errorBuilder: (_) => buildPlaceholder(),
-      );
-    } catch (_) {
-      cover = FittedBox(
-        child: buildPlaceholder(),
-      );
-    }
+  final Account account;
+  final Person person;
+  final String label;
+  final String? coverUrl;
+  final VoidCallback? onTap;
+}
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(128),
-      child: Container(
-        color: Theme.of(context).listPlaceholderBackgroundColor,
-        constraints: const BoxConstraints.expand(),
-        child: cover,
+class _LandingLocationWidget extends StatelessWidget {
+  const _LandingLocationWidget({
+    required this.account,
+    required this.label,
+    required this.coverUrl,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final content = Padding(
+      padding: const EdgeInsets.all(4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: _LocationCoverImage(
+              dimension: 72,
+              account: account,
+              coverUrl: coverUrl,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(child: _Label(label: label)),
+        ],
       ),
     );
+    if (onTap != null) {
+      return InkWell(
+        onTap: onTap,
+        child: content,
+      );
+    } else {
+      return content;
+    }
   }
 
   final Account account;
   final String label;
-  final String coverUrl;
-  final Widget Function(BuildContext context) fallbackBuilder;
+  final String? coverUrl;
   final VoidCallback? onTap;
+}
+
+class _Label extends StatelessWidget {
+  const _Label({
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 88,
+      child: Text(
+        label + "\n",
+        style: Theme.of(context).textTheme.bodyMedium,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  final String label;
 }

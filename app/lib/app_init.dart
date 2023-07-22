@@ -10,8 +10,8 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/album/data_source2.dart';
 import 'package:nc_photos/entity/album/repo2.dart';
-import 'package:nc_photos/entity/face.dart';
-import 'package:nc_photos/entity/face/data_source.dart';
+import 'package:nc_photos/entity/face_recognition_person/data_source.dart';
+import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/favorite/data_source.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -20,11 +20,11 @@ import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/nc_album/data_source.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
-import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/person/data_source.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/shared_preferences.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
+import 'package:nc_photos/entity/recognize_face/data_source.dart';
+import 'package:nc_photos/entity/recognize_face/repo.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search/data_source.dart';
 import 'package:nc_photos/entity/share.dart';
@@ -209,13 +209,9 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const AlbumRemoteDataSource2(), AlbumSqliteDbDataSource2(c.sqliteDb));
   c.albumRepo2Remote = const BasicAlbumRepo2(AlbumRemoteDataSource2());
   c.albumRepo2Local = BasicAlbumRepo2(AlbumSqliteDbDataSource2(c.sqliteDb));
-  c.faceRepo = const FaceRepo(FaceRemoteDataSource());
   c.fileRepo = FileRepo(FileCachedDataSource(c));
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
-  c.personRepo = const PersonRepo(PersonRemoteDataSource());
-  c.personRepoRemote = const PersonRepo(PersonRemoteDataSource());
-  c.personRepoLocal = PersonRepo(PersonSqliteDbDataSource(c.sqliteDb));
   c.shareRepo = ShareRepo(ShareRemoteDataSource());
   c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());
@@ -228,6 +224,18 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const NcAlbumRemoteDataSource(), NcAlbumSqliteDbDataSource(c.sqliteDb));
   c.ncAlbumRepoRemote = const BasicNcAlbumRepo(NcAlbumRemoteDataSource());
   c.ncAlbumRepoLocal = BasicNcAlbumRepo(NcAlbumSqliteDbDataSource(c.sqliteDb));
+  c.faceRecognitionPersonRepo = const BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonRemoteDataSource());
+  c.faceRecognitionPersonRepoRemote = const BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonRemoteDataSource());
+  c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
+      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
+  c.recognizeFaceRepo =
+      const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
+  c.recognizeFaceRepoRemote =
+      const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
+  c.recognizeFaceRepoLocal =
+      BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.sqliteDb));
 
   c.touchManager = TouchManager(c);
 

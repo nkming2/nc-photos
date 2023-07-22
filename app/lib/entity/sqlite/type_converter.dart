@@ -6,11 +6,13 @@ import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
-import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/recognize_face.dart';
+import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
@@ -18,6 +20,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/type.dart';
 
 extension SqlTagListExtension on List<sql.Tag> {
   Future<List<Tag>> convertToAppTag() {
@@ -35,19 +38,36 @@ extension AppTagListExtension on List<Tag> {
   }
 }
 
-extension SqlPersonListExtension on List<sql.Person> {
-  Future<List<Person>> convertToAppPerson() {
-    return computeAll(SqlitePersonConverter.fromSql);
+extension SqlFaceRecognitionPersonListExtension
+    on List<sql.FaceRecognitionPerson> {
+  Future<List<FaceRecognitionPerson>> convertToAppFaceRecognitionPerson() {
+    return computeAll(SqliteFaceRecognitionPersonConverter.fromSql);
   }
 }
 
-extension AppPersonListExtension on List<Person> {
-  Future<List<sql.PersonsCompanion>> convertToPersonCompanion(
-      sql.Account? dbAccount) {
+extension AppFaceRecognitionPersonListExtension on List<FaceRecognitionPerson> {
+  Future<List<sql.FaceRecognitionPersonsCompanion>>
+      convertToFaceRecognitionPersonCompanion(sql.Account? dbAccount) {
     return map((p) => {
           "account": dbAccount,
           "person": p,
-        }).computeAll(_convertAppPerson);
+        }).computeAll(_convertAppFaceRecognitionPerson);
+  }
+}
+
+extension SqlRecognizeFaceListExtension on List<sql.RecognizeFace> {
+  Future<List<RecognizeFace>> convertToAppRecognizeFace() {
+    return computeAll(SqliteRecognizeFaceConverter.fromSql);
+  }
+}
+
+extension AppRecognizeFaceListExtension on List<RecognizeFace> {
+  Future<List<sql.RecognizeFacesCompanion>> convertToRecognizeFaceCompanion(
+      sql.Account? dbAccount) {
+    return map((f) => {
+          "account": dbAccount,
+          "face": f,
+        }).computeAll(_convertAppRecognizeFace);
   }
 }
 
@@ -238,15 +258,17 @@ class SqliteTagConverter {
       );
 }
 
-class SqlitePersonConverter {
-  static Person fromSql(sql.Person person) => Person(
+class SqliteFaceRecognitionPersonConverter {
+  static FaceRecognitionPerson fromSql(sql.FaceRecognitionPerson person) =>
+      FaceRecognitionPerson(
         name: person.name,
         thumbFaceId: person.thumbFaceId,
         count: person.count,
       );
 
-  static sql.PersonsCompanion toSql(sql.Account? dbAccount, Person person) =>
-      sql.PersonsCompanion(
+  static sql.FaceRecognitionPersonsCompanion toSql(
+          sql.Account? dbAccount, FaceRecognitionPerson person) =>
+      sql.FaceRecognitionPersonsCompanion(
         account:
             dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
         name: Value(person.name),
@@ -323,14 +345,76 @@ class SqliteNcAlbumItemConverter {
       );
 }
 
+class SqliteRecognizeFaceConverter {
+  static RecognizeFace fromSql(sql.RecognizeFace face) => RecognizeFace(
+        label: face.label,
+      );
+
+  static sql.RecognizeFacesCompanion toSql(
+          sql.Account? dbAccount, RecognizeFace face) =>
+      sql.RecognizeFacesCompanion(
+        account:
+            dbAccount == null ? const Value.absent() : Value(dbAccount.rowId),
+        label: Value(face.label),
+      );
+}
+
+class SqliteRecognizeFaceItemConverter {
+  static RecognizeFaceItem fromSql(
+          String userId, String faceLabel, sql.RecognizeFaceItem item) =>
+      RecognizeFaceItem(
+        path:
+            "${api.ApiRecognize.path}/$userId/faces/$faceLabel/${item.relativePath}",
+        fileId: item.fileId,
+        contentLength: item.contentLength,
+        contentType: item.contentType,
+        etag: item.etag,
+        lastModified: item.lastModified,
+        hasPreview: item.hasPreview,
+        realPath: item.realPath,
+        isFavorite: item.isFavorite,
+        fileMetadataWidth: item.fileMetadataWidth,
+        fileMetadataHeight: item.fileMetadataHeight,
+        faceDetections: item.faceDetections
+            ?.run((obj) => (jsonDecode(obj) as List).cast<JsonObj>()),
+      );
+
+  static sql.RecognizeFaceItemsCompanion toSql(
+    sql.RecognizeFace parent,
+    RecognizeFaceItem item,
+  ) =>
+      sql.RecognizeFaceItemsCompanion(
+        parent: Value(parent.rowId),
+        relativePath: Value(item.strippedPath),
+        fileId: Value(item.fileId),
+        contentLength: Value(item.contentLength),
+        contentType: Value(item.contentType),
+        etag: Value(item.etag),
+        lastModified: Value(item.lastModified),
+        hasPreview: Value(item.hasPreview),
+        realPath: Value(item.realPath),
+        isFavorite: Value(item.isFavorite),
+        fileMetadataWidth: Value(item.fileMetadataWidth),
+        fileMetadataHeight: Value(item.fileMetadataHeight),
+        faceDetections:
+            Value(item.faceDetections?.run((obj) => jsonEncode(obj))),
+      );
+}
+
 sql.TagsCompanion _convertAppTag(Map map) {
   final account = map["account"] as sql.Account?;
   final tag = map["tag"] as Tag;
   return SqliteTagConverter.toSql(account, tag);
 }
 
-sql.PersonsCompanion _convertAppPerson(Map map) {
+sql.FaceRecognitionPersonsCompanion _convertAppFaceRecognitionPerson(Map map) {
   final account = map["account"] as sql.Account?;
-  final person = map["person"] as Person;
-  return SqlitePersonConverter.toSql(account, person);
+  final person = map["person"] as FaceRecognitionPerson;
+  return SqliteFaceRecognitionPersonConverter.toSql(account, person);
+}
+
+sql.RecognizeFacesCompanion _convertAppRecognizeFace(Map map) {
+  final account = map["account"] as sql.Account?;
+  final face = map["face"] as RecognizeFace;
+  return SqliteRecognizeFaceConverter.toSql(account, face);
 }

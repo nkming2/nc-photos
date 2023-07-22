@@ -1,5 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,25 +16,7 @@ class AccountPrefController {
   void dispose() {
     _shareFolderController.close();
     _accountLabelController.close();
-  }
-
-  ValueStream<bool> get isEnableFaceRecognitionApp =>
-      _enableFaceRecognitionAppController.stream;
-
-  Future<void> setEnableFaceRecognitionApp(bool value) async {
-    final backup = _enableFaceRecognitionAppController.value;
-    _enableFaceRecognitionAppController.add(value);
-    try {
-      if (!await _accountPref.setEnableFaceRecognitionApp(value)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[setEnableFaceRecognitionApp] Failed setting preference", e,
-          stackTrace);
-      _enableFaceRecognitionAppController
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
+    _personProviderController.close();
   }
 
   ValueStream<String> get shareFolder => _shareFolderController.stream;
@@ -70,13 +53,34 @@ class AccountPrefController {
     }
   }
 
+  ValueStream<PersonProvider> get personProvider =>
+      _personProviderController.stream;
+
+  Future<void> setPersonProvider(PersonProvider value) async {
+    final backup = _personProviderController.value;
+    _personProviderController.add(value);
+    try {
+      if (!await _accountPref.setPersonProvider(value.index)) {
+        throw StateError("Unknown error");
+      }
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[setPersonProvider] Failed setting preference", e, stackTrace);
+      _personProviderController
+        ..addError(e, stackTrace)
+        ..add(backup);
+    }
+  }
+
+  AccountPref get raw => _accountPref;
+
   final Account account;
 
   final AccountPref _accountPref;
-  late final _enableFaceRecognitionAppController =
-      BehaviorSubject.seeded(_accountPref.isEnableFaceRecognitionAppOr(true));
   late final _shareFolderController =
       BehaviorSubject.seeded(_accountPref.getShareFolderOr(""));
   late final _accountLabelController =
       BehaviorSubject.seeded(_accountPref.getAccountLabel());
+  late final _personProviderController = BehaviorSubject.seeded(
+      PersonProvider.fromValue(_accountPref.getPersonProviderOr()));
 }

@@ -320,6 +320,10 @@
 	"@settingsShareFolderPickerDescription": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
+	"settingsPersonProviderTitle": "Person provider",
+	"@settingsPersonProviderTitle": {
+		"description": "Select the server app for face recognition"
+	},
 	"settingsServerAppSectionTitle": "Server app support",
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
@@ -1265,8 +1269,8 @@
 		"description": "Crop the image"
 	},
 	"categoriesLabel": "Categories",
-	"searchLandingPeopleListEmptyText": "Press help to learn how to setup",
-	"@searchLandingPeopleListEmptyText": {
+	"searchLandingPeopleListEmptyText2": "Press settings to switch provider or press help to learn more",
+	"@searchLandingPeopleListEmptyText2": {
 		"description": "Shown in the search landing page under the People section when there are no people"
 	},
 	"searchLandingCategoryVideosLabel": "Videos",

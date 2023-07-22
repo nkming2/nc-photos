@@ -110,6 +110,7 @@ dependencies:
   rxdart: ^0.27.7
   screen_brightness:  ^0.2.2
   shared_preferences: ^2.0.8
+  shared_preferences_platform_interface: any
   sliver_tools: ^0.2.10
   smooth_corner: ^1.1.0
   sqlite3: any

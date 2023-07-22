@@ -5,8 +5,8 @@ import 'package:to_string/to_string.dart';
 part 'entity.g.dart';
 
 @toString
-class Face with EquatableMixin {
-  const Face({
+class FaceRecognitionFace with EquatableMixin {
+  const FaceRecognitionFace({
     required this.id,
     required this.fileId,
   });
@@ -22,6 +22,29 @@ class Face with EquatableMixin {
 
   final int id;
   final int fileId;
+}
+
+@toString
+class FaceRecognitionPerson with EquatableMixin {
+  const FaceRecognitionPerson({
+    required this.name,
+    required this.thumbFaceId,
+    required this.count,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        name,
+        thumbFaceId,
+        count,
+      ];
+
+  final String name;
+  final int thumbFaceId;
+  final int count;
 }
 
 @toString
@@ -190,29 +213,6 @@ class NcAlbumItem with EquatableMixin {
 }
 
 @toString
-class Person with EquatableMixin {
-  const Person({
-    required this.name,
-    required this.thumbFaceId,
-    required this.count,
-  });
-
-  @override
-  String toString() => _$toString();
-
-  @override
-  List<Object?> get props => [
-        name,
-        thumbFaceId,
-        count,
-      ];
-
-  final String name;
-  final int thumbFaceId;
-  final int count;
-}
-
-@toString
 class RecognizeFace with EquatableMixin {
   const RecognizeFace({
     required this.href,
@@ -269,8 +269,7 @@ class RecognizeFaceItem with EquatableMixin {
   final String? etag;
   final DateTime? lastModified;
   final List<JsonObj>? faceDetections;
-  // format currently unknown
-  final dynamic fileMetadataSize;
+  final JsonObj? fileMetadataSize;
   final bool? hasPreview;
   final String? realPath;
   final bool? favorite;

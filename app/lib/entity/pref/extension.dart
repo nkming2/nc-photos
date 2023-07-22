@@ -270,15 +270,6 @@ extension PrefExtension on Pref {
 }
 
 extension AccountPrefExtension on AccountPref {
-  bool? isEnableFaceRecognitionApp() =>
-      provider.getBool(AccountPrefKey.isEnableFaceRecognitionApp);
-  bool isEnableFaceRecognitionAppOr([bool def = true]) =>
-      isEnableFaceRecognitionApp() ?? def;
-  Future<bool> setEnableFaceRecognitionApp(bool value) => _set<bool>(
-      AccountPrefKey.isEnableFaceRecognitionApp,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   String? getShareFolder() => provider.getString(AccountPrefKey.shareFolder);
   String getShareFolderOr([String def = ""]) => getShareFolder() ?? def;
   Future<bool> setShareFolder(String value) => _set<String>(
@@ -334,4 +325,11 @@ extension AccountPrefExtension on AccountPref {
           (key, value) => provider.setInt(key, value));
     }
   }
+
+  int? getPersonProvider() => provider.getInt(AccountPrefKey.personProvider);
+  int getPersonProviderOr([int def = 1]) => getPersonProvider() ?? def;
+  Future<bool> setPersonProvider(int value) => _set<int>(
+      AccountPrefKey.personProvider,
+      value,
+      (key, value) => provider.setInt(key, value));
 }

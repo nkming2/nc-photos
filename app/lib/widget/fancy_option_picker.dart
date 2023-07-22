@@ -30,7 +30,7 @@ class FancyOptionPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: title != null ? Text(title!) : null,
+      title: title,
       children: items
           .map((e) => SimpleDialogOption(
                 child: FancyOptionPickerItemView(
@@ -46,7 +46,7 @@ class FancyOptionPicker extends StatelessWidget {
     );
   }
 
-  final String? title;
+  final Widget? title;
   final List<FancyOptionPickerItem> items;
 }
 

@@ -8,7 +8,8 @@ class _State {
     required this.shouldReload,
     required this.label,
     required this.shareFolder,
-    required this.isEnableFaceRecognitionApp,
+    required this.personProvider,
+    required this.shouldResync,
     this.error,
   });
 
@@ -16,14 +17,15 @@ class _State {
     required Account account,
     required String? label,
     required String shareFolder,
-    required bool isEnableFaceRecognitionApp,
+    required PersonProvider personProvider,
   }) {
     return _State(
       shouldReload: false,
       account: account,
       label: label,
       shareFolder: shareFolder,
-      isEnableFaceRecognitionApp: isEnableFaceRecognitionApp,
+      personProvider: personProvider,
+      shouldResync: false,
     );
   }
 
@@ -34,7 +36,8 @@ class _State {
   final Account account;
   final String? label;
   final String shareFolder;
-  final bool isEnableFaceRecognitionApp;
+  final PersonProvider personProvider;
+  final bool shouldResync;
 
   final ExceptionEvent? error;
 }
@@ -117,23 +120,23 @@ class _OnUpdateShareFolder implements _Event {
 }
 
 @toString
-class _SetEnableFaceRecognitionApp implements _Event {
-  const _SetEnableFaceRecognitionApp(this.isEnableFaceRecognitionApp);
+class _SetPersonProvider implements _Event {
+  const _SetPersonProvider(this.personProvider);
 
   @override
   String toString() => _$toString();
 
-  final bool isEnableFaceRecognitionApp;
+  final PersonProvider personProvider;
 }
 
 @toString
-class _OnUpdateEnableFaceRecognitionApp implements _Event {
-  const _OnUpdateEnableFaceRecognitionApp(this.isEnableFaceRecognitionApp);
+class _OnUpdatePersonProvider implements _Event {
+  const _OnUpdatePersonProvider(this.personProvider);
 
   @override
   String toString() => _$toString();
 
-  final bool isEnableFaceRecognitionApp;
+  final PersonProvider personProvider;
 }
 
 @toString

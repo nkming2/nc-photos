@@ -1,5 +1,6 @@
 import 'package:nc_photos/api/entity_converter.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:test/test.dart';
 
@@ -13,6 +14,12 @@ void main() {
       test("multiple files", _filesMultiple);
       test("directory", _filesDir);
       test("nextcloud hosted in subdir", _filesServerHostedInSubdir);
+    });
+  });
+  group("ApiRecognizeFaceItemConverter", () {
+    group("fromApi", () {
+      test("minimum", _recognizeFaceItemMinimum);
+      test("size", _recognizeFaceItemSize);
     });
   });
 }
@@ -239,6 +246,40 @@ Future<void> _filesServerHostedInSubdir() async {
       hasPreview: false,
       fileId: 123,
       isCollection: false,
+    ),
+  );
+}
+
+void _recognizeFaceItemMinimum() {
+  const apiItem = api.RecognizeFaceItem(
+    href: "/remote.php/dav/recognize/admin/faces/test/test1.jpg",
+    fileId: 123,
+  );
+  expect(
+    ApiRecognizeFaceItemConverter.fromApi(apiItem),
+    const RecognizeFaceItem(
+      path: "remote.php/dav/recognize/admin/faces/test/test1.jpg",
+      fileId: 123,
+    ),
+  );
+}
+
+void _recognizeFaceItemSize() {
+  const apiItem = api.RecognizeFaceItem(
+    href: "/remote.php/dav/recognize/admin/faces/test/test1.jpg",
+    fileId: 123,
+    fileMetadataSize: {
+      "width": 1024,
+      "height": 768,
+    },
+  );
+  expect(
+    ApiRecognizeFaceItemConverter.fromApi(apiItem),
+    const RecognizeFaceItem(
+      path: "remote.php/dav/recognize/admin/faces/test/test1.jpg",
+      fileId: 123,
+      fileMetadataWidth: 1024,
+      fileMetadataHeight: 768,
     ),
   );
 }

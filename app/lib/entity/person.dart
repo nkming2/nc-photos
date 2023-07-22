@@ -1,42 +1,94 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
-import 'package:nc_photos/account.dart';
+import 'package:flutter/material.dart';
 import 'package:to_string/to_string.dart';
 
 part 'person.g.dart';
 
+enum PersonProvider {
+  none,
+  faceRecognition,
+  recognize;
+
+  static PersonProvider fromValue(int value) => PersonProvider.values[value];
+}
+
+@genCopyWith
 @toString
 class Person with EquatableMixin {
   const Person({
     required this.name,
-    required this.thumbFaceId,
-    required this.count,
+    required this.contentProvider,
   });
 
   @override
   String toString() => _$toString();
 
+  bool compareIdentity(Person other) => other.id == id;
+
+  int get identityHashCode => id.hashCode;
+
+  /// A unique id for each collection. The value is divided into two parts in
+  /// the format XXXX-YYY...YYY, where XXXX is a four-character code
+  /// representing the content provider type, and YYY is an implementation
+  /// detail of each providers
+  String get id => "${contentProvider.fourCc}-${contentProvider.id}";
+
+  /// See [PersonContentProvider.count]
+  int? get count => contentProvider.count;
+
+  /// See [PersonContentProvider.getCoverUrl]
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  }) =>
+      contentProvider.getCoverUrl(
+        width,
+        height,
+        isKeepAspectRatio: isKeepAspectRatio,
+      );
+
+  /// See [PersonContentProvider.getCoverTransform]
+  Matrix4? getCoverTransform(int viewportSize, int width, int height) =>
+      contentProvider.getCoverTransform(viewportSize, width, height);
+
   @override
-  get props => [
+  List<Object?> get props => [
         name,
-        thumbFaceId,
-        count,
+        contentProvider,
       ];
 
   final String name;
-  final int thumbFaceId;
-  final int count;
+  final PersonContentProvider contentProvider;
 }
 
-class PersonRepo {
-  const PersonRepo(this.dataSrc);
+abstract class PersonContentProvider with EquatableMixin {
+  const PersonContentProvider();
 
-  /// See [PersonDataSource.list]
-  Future<List<Person>> list(Account account) => dataSrc.list(account);
+  /// Unique FourCC of this provider type
+  String get fourCc;
 
-  final PersonDataSource dataSrc;
-}
+  /// Return the unique id of this person
+  String get id;
 
-abstract class PersonDataSource {
-  /// List all people for this account
-  Future<List<Person>> list(Account account);
+  /// Return the number of items in this person, or null if not supported
+  int? get count;
+
+  /// Return the URL of the cover image if available
+  ///
+  /// The [width] and [height] are provided as a hint only, implementations are
+  /// free to ignore them if it's not supported
+  ///
+  /// [isKeepAspectRatio] is only a hint and implementations may ignore it
+  String? getCoverUrl(
+    int width,
+    int height, {
+    bool? isKeepAspectRatio,
+  });
+
+  /// Return the transformation matrix to focus the face
+  ///
+  /// Only viewport in square is supported
+  Matrix4? getCoverTransform(int viewportSize, int width, int height);
 }

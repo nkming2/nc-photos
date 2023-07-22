@@ -6,10 +6,17 @@ part of 'entity.dart';
 // ToStringGenerator
 // **************************************************************************
 
-extension _$FaceToString on Face {
+extension _$FaceRecognitionFaceToString on FaceRecognitionFace {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "Face {id: $id, fileId: $fileId}";
+    return "FaceRecognitionFace {id: $id, fileId: $fileId}";
+  }
+}
+
+extension _$FaceRecognitionPersonToString on FaceRecognitionPerson {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "FaceRecognitionPerson {name: $name, thumbFaceId: $thumbFaceId, count: $count}";
   }
 }
 
@@ -45,13 +52,6 @@ extension _$NcAlbumItemToString on NcAlbumItem {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "NcAlbumItem {href: $href, ${fileId == null ? "" : "fileId: $fileId, "}${contentLength == null ? "" : "contentLength: $contentLength, "}${contentType == null ? "" : "contentType: $contentType, "}${etag == null ? "" : "etag: $etag, "}${lastModified == null ? "" : "lastModified: $lastModified, "}${hasPreview == null ? "" : "hasPreview: $hasPreview, "}${favorite == null ? "" : "favorite: $favorite, "}${fileMetadataSize == null ? "" : "fileMetadataSize: $fileMetadataSize"}}";
-  }
-}
-
-extension _$PersonToString on Person {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "Person {name: $name, thumbFaceId: $thumbFaceId, count: $count}";
   }
 }
 

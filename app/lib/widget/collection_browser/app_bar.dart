@@ -388,7 +388,7 @@ class _EditAppBar extends StatelessWidget {
     final result = await showDialog<CollectionItemSort>(
       context: context,
       builder: (context) => FancyOptionPicker(
-        title: L10n.global().sortOptionDialogTitle,
+        title: Text(L10n.global().sortOptionDialogTitle),
         items: [
           _SortDialogParams(
             L10n.global().sortOptionTimeDescendingLabel,

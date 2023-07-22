@@ -23,8 +23,7 @@ class RecognizeFaceItemParser extends XmlResponseParser {
     String? etag;
     DateTime? lastModified;
     List<JsonObj>? faceDetections;
-    // format currently unknown
-    dynamic fileMetadataSize;
+    Object? fileMetadataSize;
     bool? hasPreview;
     String? realPath;
     bool? favorite;
@@ -69,7 +68,9 @@ class RecognizeFaceItemParser extends XmlResponseParser {
       etag: etag,
       lastModified: lastModified,
       faceDetections: faceDetections,
-      fileMetadataSize: fileMetadataSize,
+      fileMetadataSize: fileMetadataSize is Map
+          ? fileMetadataSize.cast<String, dynamic>()
+          : null,
       hasPreview: hasPreview,
       realPath: realPath,
       favorite: favorite,
@@ -105,7 +106,8 @@ class _PropParser {
             : (jsonDecode(child.innerText) as List).cast<JsonObj>();
       } else if (child.matchQualifiedName("file-metadata-size",
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
-        _fileMetadataSize = child.innerText;
+        _fileMetadataSize =
+            child.innerText.isEmpty ? null : jsonDecode(child.innerText);
       } else if (child.matchQualifiedName("has-preview",
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _hasPreview = child.innerText == "true";
@@ -127,7 +129,7 @@ class _PropParser {
   String? get etag => _etag;
   DateTime? get lastModified => _lastModified;
   List<JsonObj>? get faceDetections => _faceDetections;
-  dynamic get fileMetadataSize => _fileMetadataSize;
+  Object? get fileMetadataSize => _fileMetadataSize;
   bool? get hasPreview => _hasPreview;
   String? get realPath => _realPath;
   bool? get favorite => _favorite;
@@ -140,7 +142,8 @@ class _PropParser {
   String? _etag;
   DateTime? _lastModified;
   List<JsonObj>? _faceDetections;
-  dynamic _fileMetadataSize;
+  // size can be a map or a list if the size is not known (well...)
+  Object? _fileMetadataSize;
   bool? _hasPreview;
   String? _realPath;
   bool? _favorite;

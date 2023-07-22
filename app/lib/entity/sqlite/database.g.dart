@@ -3905,11 +3905,12 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   }
 }
 
-class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
+class $FaceRecognitionPersonsTable extends FaceRecognitionPersons
+    with TableInfo<$FaceRecognitionPersonsTable, FaceRecognitionPerson> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PersonsTable(this.attachedDatabase, [this._alias]);
+  $FaceRecognitionPersonsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
   @override
   late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
@@ -3948,11 +3949,12 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   List<GeneratedColumn> get $columns =>
       [rowId, account, name, thumbFaceId, count];
   @override
-  String get aliasedName => _alias ?? 'persons';
+  String get aliasedName => _alias ?? 'face_recognition_persons';
   @override
-  String get actualTableName => 'persons';
+  String get actualTableName => 'face_recognition_persons';
   @override
-  VerificationContext validateIntegrity(Insertable<Person> instance,
+  VerificationContext validateIntegrity(
+      Insertable<FaceRecognitionPerson> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3996,9 +3998,9 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
         {account, name},
       ];
   @override
-  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
+  FaceRecognitionPerson map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Person(
+    return FaceRecognitionPerson(
       rowId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
       account: attachedDatabase.typeMapping
@@ -4013,18 +4015,19 @@ class $PersonsTable extends Persons with TableInfo<$PersonsTable, Person> {
   }
 
   @override
-  $PersonsTable createAlias(String alias) {
-    return $PersonsTable(attachedDatabase, alias);
+  $FaceRecognitionPersonsTable createAlias(String alias) {
+    return $FaceRecognitionPersonsTable(attachedDatabase, alias);
   }
 }
 
-class Person extends DataClass implements Insertable<Person> {
+class FaceRecognitionPerson extends DataClass
+    implements Insertable<FaceRecognitionPerson> {
   final int rowId;
   final int account;
   final String name;
   final int thumbFaceId;
   final int count;
-  const Person(
+  const FaceRecognitionPerson(
       {required this.rowId,
       required this.account,
       required this.name,
@@ -4041,8 +4044,8 @@ class Person extends DataClass implements Insertable<Person> {
     return map;
   }
 
-  PersonsCompanion toCompanion(bool nullToAbsent) {
-    return PersonsCompanion(
+  FaceRecognitionPersonsCompanion toCompanion(bool nullToAbsent) {
+    return FaceRecognitionPersonsCompanion(
       rowId: Value(rowId),
       account: Value(account),
       name: Value(name),
@@ -4051,10 +4054,10 @@ class Person extends DataClass implements Insertable<Person> {
     );
   }
 
-  factory Person.fromJson(Map<String, dynamic> json,
+  factory FaceRecognitionPerson.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Person(
+    return FaceRecognitionPerson(
       rowId: serializer.fromJson<int>(json['rowId']),
       account: serializer.fromJson<int>(json['account']),
       name: serializer.fromJson<String>(json['name']),
@@ -4074,13 +4077,13 @@ class Person extends DataClass implements Insertable<Person> {
     };
   }
 
-  Person copyWith(
+  FaceRecognitionPerson copyWith(
           {int? rowId,
           int? account,
           String? name,
           int? thumbFaceId,
           int? count}) =>
-      Person(
+      FaceRecognitionPerson(
         rowId: rowId ?? this.rowId,
         account: account ?? this.account,
         name: name ?? this.name,
@@ -4089,7 +4092,7 @@ class Person extends DataClass implements Insertable<Person> {
       );
   @override
   String toString() {
-    return (StringBuffer('Person(')
+    return (StringBuffer('FaceRecognitionPerson(')
           ..write('rowId: $rowId, ')
           ..write('account: $account, ')
           ..write('name: $name, ')
@@ -4104,7 +4107,7 @@ class Person extends DataClass implements Insertable<Person> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Person &&
+      (other is FaceRecognitionPerson &&
           other.rowId == this.rowId &&
           other.account == this.account &&
           other.name == this.name &&
@@ -4112,20 +4115,21 @@ class Person extends DataClass implements Insertable<Person> {
           other.count == this.count);
 }
 
-class PersonsCompanion extends UpdateCompanion<Person> {
+class FaceRecognitionPersonsCompanion
+    extends UpdateCompanion<FaceRecognitionPerson> {
   final Value<int> rowId;
   final Value<int> account;
   final Value<String> name;
   final Value<int> thumbFaceId;
   final Value<int> count;
-  const PersonsCompanion({
+  const FaceRecognitionPersonsCompanion({
     this.rowId = const Value.absent(),
     this.account = const Value.absent(),
     this.name = const Value.absent(),
     this.thumbFaceId = const Value.absent(),
     this.count = const Value.absent(),
   });
-  PersonsCompanion.insert({
+  FaceRecognitionPersonsCompanion.insert({
     this.rowId = const Value.absent(),
     required int account,
     required String name,
@@ -4135,7 +4139,7 @@ class PersonsCompanion extends UpdateCompanion<Person> {
         name = Value(name),
         thumbFaceId = Value(thumbFaceId),
         count = Value(count);
-  static Insertable<Person> custom({
+  static Insertable<FaceRecognitionPerson> custom({
     Expression<int>? rowId,
     Expression<int>? account,
     Expression<String>? name,
@@ -4151,13 +4155,13 @@ class PersonsCompanion extends UpdateCompanion<Person> {
     });
   }
 
-  PersonsCompanion copyWith(
+  FaceRecognitionPersonsCompanion copyWith(
       {Value<int>? rowId,
       Value<int>? account,
       Value<String>? name,
       Value<int>? thumbFaceId,
       Value<int>? count}) {
-    return PersonsCompanion(
+    return FaceRecognitionPersonsCompanion(
       rowId: rowId ?? this.rowId,
       account: account ?? this.account,
       name: name ?? this.name,
@@ -4189,7 +4193,7 @@ class PersonsCompanion extends UpdateCompanion<Person> {
 
   @override
   String toString() {
-    return (StringBuffer('PersonsCompanion(')
+    return (StringBuffer('FaceRecognitionPersonsCompanion(')
           ..write('rowId: $rowId, ')
           ..write('account: $account, ')
           ..write('name: $name, ')
@@ -5284,6 +5288,920 @@ class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
   }
 }
 
+class $RecognizeFacesTable extends RecognizeFaces
+    with TableInfo<$RecognizeFacesTable, RecognizeFace> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RecognizeFacesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
+      'row_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _accountMeta =
+      const VerificationMeta('account');
+  @override
+  late final GeneratedColumn<int> account = GeneratedColumn<int>(
+      'account', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES accounts (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+      'label', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [rowId, account, label];
+  @override
+  String get aliasedName => _alias ?? 'recognize_faces';
+  @override
+  String get actualTableName => 'recognize_faces';
+  @override
+  VerificationContext validateIntegrity(Insertable<RecognizeFace> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('account')) {
+      context.handle(_accountMeta,
+          account.isAcceptableOrUnknown(data['account']!, _accountMeta));
+    } else if (isInserting) {
+      context.missing(_accountMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+          _labelMeta, label.isAcceptableOrUnknown(data['label']!, _labelMeta));
+    } else if (isInserting) {
+      context.missing(_labelMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {account, label},
+      ];
+  @override
+  RecognizeFace map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecognizeFace(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      account: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}account'])!,
+      label: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}label'])!,
+    );
+  }
+
+  @override
+  $RecognizeFacesTable createAlias(String alias) {
+    return $RecognizeFacesTable(attachedDatabase, alias);
+  }
+}
+
+class RecognizeFace extends DataClass implements Insertable<RecognizeFace> {
+  final int rowId;
+  final int account;
+  final String label;
+  const RecognizeFace(
+      {required this.rowId, required this.account, required this.label});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['account'] = Variable<int>(account);
+    map['label'] = Variable<String>(label);
+    return map;
+  }
+
+  RecognizeFacesCompanion toCompanion(bool nullToAbsent) {
+    return RecognizeFacesCompanion(
+      rowId: Value(rowId),
+      account: Value(account),
+      label: Value(label),
+    );
+  }
+
+  factory RecognizeFace.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecognizeFace(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      account: serializer.fromJson<int>(json['account']),
+      label: serializer.fromJson<String>(json['label']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'account': serializer.toJson<int>(account),
+      'label': serializer.toJson<String>(label),
+    };
+  }
+
+  RecognizeFace copyWith({int? rowId, int? account, String? label}) =>
+      RecognizeFace(
+        rowId: rowId ?? this.rowId,
+        account: account ?? this.account,
+        label: label ?? this.label,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RecognizeFace(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('label: $label')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(rowId, account, label);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecognizeFace &&
+          other.rowId == this.rowId &&
+          other.account == this.account &&
+          other.label == this.label);
+}
+
+class RecognizeFacesCompanion extends UpdateCompanion<RecognizeFace> {
+  final Value<int> rowId;
+  final Value<int> account;
+  final Value<String> label;
+  const RecognizeFacesCompanion({
+    this.rowId = const Value.absent(),
+    this.account = const Value.absent(),
+    this.label = const Value.absent(),
+  });
+  RecognizeFacesCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int account,
+    required String label,
+  })  : account = Value(account),
+        label = Value(label);
+  static Insertable<RecognizeFace> custom({
+    Expression<int>? rowId,
+    Expression<int>? account,
+    Expression<String>? label,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (account != null) 'account': account,
+      if (label != null) 'label': label,
+    });
+  }
+
+  RecognizeFacesCompanion copyWith(
+      {Value<int>? rowId, Value<int>? account, Value<String>? label}) {
+    return RecognizeFacesCompanion(
+      rowId: rowId ?? this.rowId,
+      account: account ?? this.account,
+      label: label ?? this.label,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (account.present) {
+      map['account'] = Variable<int>(account.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecognizeFacesCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('account: $account, ')
+          ..write('label: $label')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RecognizeFaceItemsTable extends RecognizeFaceItems
+    with TableInfo<$RecognizeFaceItemsTable, RecognizeFaceItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RecognizeFaceItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _rowIdMeta = const VerificationMeta('rowId');
+  @override
+  late final GeneratedColumn<int> rowId = GeneratedColumn<int>(
+      'row_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _parentMeta = const VerificationMeta('parent');
+  @override
+  late final GeneratedColumn<int> parent = GeneratedColumn<int>(
+      'parent', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES recognize_faces (row_id) ON DELETE CASCADE'));
+  static const VerificationMeta _relativePathMeta =
+      const VerificationMeta('relativePath');
+  @override
+  late final GeneratedColumn<String> relativePath = GeneratedColumn<String>(
+      'relative_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _fileIdMeta = const VerificationMeta('fileId');
+  @override
+  late final GeneratedColumn<int> fileId = GeneratedColumn<int>(
+      'file_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _contentLengthMeta =
+      const VerificationMeta('contentLength');
+  @override
+  late final GeneratedColumn<int> contentLength = GeneratedColumn<int>(
+      'content_length', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _contentTypeMeta =
+      const VerificationMeta('contentType');
+  @override
+  late final GeneratedColumn<String> contentType = GeneratedColumn<String>(
+      'content_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
+  @override
+  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
+      'etag', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime>
+      lastModified = GeneratedColumn<DateTime>(
+              'last_modified', aliasedName, true,
+              type: DriftSqlType.dateTime, requiredDuringInsert: false)
+          .withConverter<DateTime?>(
+              $RecognizeFaceItemsTable.$converterlastModifiedn);
+  static const VerificationMeta _hasPreviewMeta =
+      const VerificationMeta('hasPreview');
+  @override
+  late final GeneratedColumn<bool> hasPreview =
+      GeneratedColumn<bool>('has_preview', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _realPathMeta =
+      const VerificationMeta('realPath');
+  @override
+  late final GeneratedColumn<String> realPath = GeneratedColumn<String>(
+      'real_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isFavoriteMeta =
+      const VerificationMeta('isFavorite');
+  @override
+  late final GeneratedColumn<bool> isFavorite =
+      GeneratedColumn<bool>('is_favorite', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _fileMetadataWidthMeta =
+      const VerificationMeta('fileMetadataWidth');
+  @override
+  late final GeneratedColumn<int> fileMetadataWidth = GeneratedColumn<int>(
+      'file_metadata_width', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _fileMetadataHeightMeta =
+      const VerificationMeta('fileMetadataHeight');
+  @override
+  late final GeneratedColumn<int> fileMetadataHeight = GeneratedColumn<int>(
+      'file_metadata_height', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _faceDetectionsMeta =
+      const VerificationMeta('faceDetections');
+  @override
+  late final GeneratedColumn<String> faceDetections = GeneratedColumn<String>(
+      'face_detections', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        rowId,
+        parent,
+        relativePath,
+        fileId,
+        contentLength,
+        contentType,
+        etag,
+        lastModified,
+        hasPreview,
+        realPath,
+        isFavorite,
+        fileMetadataWidth,
+        fileMetadataHeight,
+        faceDetections
+      ];
+  @override
+  String get aliasedName => _alias ?? 'recognize_face_items';
+  @override
+  String get actualTableName => 'recognize_face_items';
+  @override
+  VerificationContext validateIntegrity(Insertable<RecognizeFaceItem> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('row_id')) {
+      context.handle(
+          _rowIdMeta, rowId.isAcceptableOrUnknown(data['row_id']!, _rowIdMeta));
+    }
+    if (data.containsKey('parent')) {
+      context.handle(_parentMeta,
+          parent.isAcceptableOrUnknown(data['parent']!, _parentMeta));
+    } else if (isInserting) {
+      context.missing(_parentMeta);
+    }
+    if (data.containsKey('relative_path')) {
+      context.handle(
+          _relativePathMeta,
+          relativePath.isAcceptableOrUnknown(
+              data['relative_path']!, _relativePathMeta));
+    } else if (isInserting) {
+      context.missing(_relativePathMeta);
+    }
+    if (data.containsKey('file_id')) {
+      context.handle(_fileIdMeta,
+          fileId.isAcceptableOrUnknown(data['file_id']!, _fileIdMeta));
+    } else if (isInserting) {
+      context.missing(_fileIdMeta);
+    }
+    if (data.containsKey('content_length')) {
+      context.handle(
+          _contentLengthMeta,
+          contentLength.isAcceptableOrUnknown(
+              data['content_length']!, _contentLengthMeta));
+    }
+    if (data.containsKey('content_type')) {
+      context.handle(
+          _contentTypeMeta,
+          contentType.isAcceptableOrUnknown(
+              data['content_type']!, _contentTypeMeta));
+    }
+    if (data.containsKey('etag')) {
+      context.handle(
+          _etagMeta, etag.isAcceptableOrUnknown(data['etag']!, _etagMeta));
+    }
+    context.handle(_lastModifiedMeta, const VerificationResult.success());
+    if (data.containsKey('has_preview')) {
+      context.handle(
+          _hasPreviewMeta,
+          hasPreview.isAcceptableOrUnknown(
+              data['has_preview']!, _hasPreviewMeta));
+    }
+    if (data.containsKey('real_path')) {
+      context.handle(_realPathMeta,
+          realPath.isAcceptableOrUnknown(data['real_path']!, _realPathMeta));
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+          _isFavoriteMeta,
+          isFavorite.isAcceptableOrUnknown(
+              data['is_favorite']!, _isFavoriteMeta));
+    }
+    if (data.containsKey('file_metadata_width')) {
+      context.handle(
+          _fileMetadataWidthMeta,
+          fileMetadataWidth.isAcceptableOrUnknown(
+              data['file_metadata_width']!, _fileMetadataWidthMeta));
+    }
+    if (data.containsKey('file_metadata_height')) {
+      context.handle(
+          _fileMetadataHeightMeta,
+          fileMetadataHeight.isAcceptableOrUnknown(
+              data['file_metadata_height']!, _fileMetadataHeightMeta));
+    }
+    if (data.containsKey('face_detections')) {
+      context.handle(
+          _faceDetectionsMeta,
+          faceDetections.isAcceptableOrUnknown(
+              data['face_detections']!, _faceDetectionsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {rowId};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {parent, fileId},
+      ];
+  @override
+  RecognizeFaceItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecognizeFaceItem(
+      rowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_id'])!,
+      parent: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}parent'])!,
+      relativePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}relative_path'])!,
+      fileId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}file_id'])!,
+      contentLength: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}content_length']),
+      contentType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content_type']),
+      etag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}etag']),
+      lastModified: $RecognizeFaceItemsTable.$converterlastModifiedn.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.dateTime, data['${effectivePrefix}last_modified'])),
+      hasPreview: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}has_preview']),
+      realPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}real_path']),
+      isFavorite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favorite']),
+      fileMetadataWidth: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}file_metadata_width']),
+      fileMetadataHeight: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}file_metadata_height']),
+      faceDetections: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}face_detections']),
+    );
+  }
+
+  @override
+  $RecognizeFaceItemsTable createAlias(String alias) {
+    return $RecognizeFaceItemsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converterlastModified =
+      const SqliteDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterlastModifiedn =
+      NullAwareTypeConverter.wrap($converterlastModified);
+}
+
+class RecognizeFaceItem extends DataClass
+    implements Insertable<RecognizeFaceItem> {
+  final int rowId;
+  final int parent;
+  final String relativePath;
+  final int fileId;
+  final int? contentLength;
+  final String? contentType;
+  final String? etag;
+  final DateTime? lastModified;
+  final bool? hasPreview;
+  final String? realPath;
+  final bool? isFavorite;
+  final int? fileMetadataWidth;
+  final int? fileMetadataHeight;
+  final String? faceDetections;
+  const RecognizeFaceItem(
+      {required this.rowId,
+      required this.parent,
+      required this.relativePath,
+      required this.fileId,
+      this.contentLength,
+      this.contentType,
+      this.etag,
+      this.lastModified,
+      this.hasPreview,
+      this.realPath,
+      this.isFavorite,
+      this.fileMetadataWidth,
+      this.fileMetadataHeight,
+      this.faceDetections});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['row_id'] = Variable<int>(rowId);
+    map['parent'] = Variable<int>(parent);
+    map['relative_path'] = Variable<String>(relativePath);
+    map['file_id'] = Variable<int>(fileId);
+    if (!nullToAbsent || contentLength != null) {
+      map['content_length'] = Variable<int>(contentLength);
+    }
+    if (!nullToAbsent || contentType != null) {
+      map['content_type'] = Variable<String>(contentType);
+    }
+    if (!nullToAbsent || etag != null) {
+      map['etag'] = Variable<String>(etag);
+    }
+    if (!nullToAbsent || lastModified != null) {
+      final converter = $RecognizeFaceItemsTable.$converterlastModifiedn;
+      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
+    }
+    if (!nullToAbsent || hasPreview != null) {
+      map['has_preview'] = Variable<bool>(hasPreview);
+    }
+    if (!nullToAbsent || realPath != null) {
+      map['real_path'] = Variable<String>(realPath);
+    }
+    if (!nullToAbsent || isFavorite != null) {
+      map['is_favorite'] = Variable<bool>(isFavorite);
+    }
+    if (!nullToAbsent || fileMetadataWidth != null) {
+      map['file_metadata_width'] = Variable<int>(fileMetadataWidth);
+    }
+    if (!nullToAbsent || fileMetadataHeight != null) {
+      map['file_metadata_height'] = Variable<int>(fileMetadataHeight);
+    }
+    if (!nullToAbsent || faceDetections != null) {
+      map['face_detections'] = Variable<String>(faceDetections);
+    }
+    return map;
+  }
+
+  RecognizeFaceItemsCompanion toCompanion(bool nullToAbsent) {
+    return RecognizeFaceItemsCompanion(
+      rowId: Value(rowId),
+      parent: Value(parent),
+      relativePath: Value(relativePath),
+      fileId: Value(fileId),
+      contentLength: contentLength == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentLength),
+      contentType: contentType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentType),
+      etag: etag == null && nullToAbsent ? const Value.absent() : Value(etag),
+      lastModified: lastModified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModified),
+      hasPreview: hasPreview == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasPreview),
+      realPath: realPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(realPath),
+      isFavorite: isFavorite == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isFavorite),
+      fileMetadataWidth: fileMetadataWidth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileMetadataWidth),
+      fileMetadataHeight: fileMetadataHeight == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileMetadataHeight),
+      faceDetections: faceDetections == null && nullToAbsent
+          ? const Value.absent()
+          : Value(faceDetections),
+    );
+  }
+
+  factory RecognizeFaceItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecognizeFaceItem(
+      rowId: serializer.fromJson<int>(json['rowId']),
+      parent: serializer.fromJson<int>(json['parent']),
+      relativePath: serializer.fromJson<String>(json['relativePath']),
+      fileId: serializer.fromJson<int>(json['fileId']),
+      contentLength: serializer.fromJson<int?>(json['contentLength']),
+      contentType: serializer.fromJson<String?>(json['contentType']),
+      etag: serializer.fromJson<String?>(json['etag']),
+      lastModified: serializer.fromJson<DateTime?>(json['lastModified']),
+      hasPreview: serializer.fromJson<bool?>(json['hasPreview']),
+      realPath: serializer.fromJson<String?>(json['realPath']),
+      isFavorite: serializer.fromJson<bool?>(json['isFavorite']),
+      fileMetadataWidth: serializer.fromJson<int?>(json['fileMetadataWidth']),
+      fileMetadataHeight: serializer.fromJson<int?>(json['fileMetadataHeight']),
+      faceDetections: serializer.fromJson<String?>(json['faceDetections']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'rowId': serializer.toJson<int>(rowId),
+      'parent': serializer.toJson<int>(parent),
+      'relativePath': serializer.toJson<String>(relativePath),
+      'fileId': serializer.toJson<int>(fileId),
+      'contentLength': serializer.toJson<int?>(contentLength),
+      'contentType': serializer.toJson<String?>(contentType),
+      'etag': serializer.toJson<String?>(etag),
+      'lastModified': serializer.toJson<DateTime?>(lastModified),
+      'hasPreview': serializer.toJson<bool?>(hasPreview),
+      'realPath': serializer.toJson<String?>(realPath),
+      'isFavorite': serializer.toJson<bool?>(isFavorite),
+      'fileMetadataWidth': serializer.toJson<int?>(fileMetadataWidth),
+      'fileMetadataHeight': serializer.toJson<int?>(fileMetadataHeight),
+      'faceDetections': serializer.toJson<String?>(faceDetections),
+    };
+  }
+
+  RecognizeFaceItem copyWith(
+          {int? rowId,
+          int? parent,
+          String? relativePath,
+          int? fileId,
+          Value<int?> contentLength = const Value.absent(),
+          Value<String?> contentType = const Value.absent(),
+          Value<String?> etag = const Value.absent(),
+          Value<DateTime?> lastModified = const Value.absent(),
+          Value<bool?> hasPreview = const Value.absent(),
+          Value<String?> realPath = const Value.absent(),
+          Value<bool?> isFavorite = const Value.absent(),
+          Value<int?> fileMetadataWidth = const Value.absent(),
+          Value<int?> fileMetadataHeight = const Value.absent(),
+          Value<String?> faceDetections = const Value.absent()}) =>
+      RecognizeFaceItem(
+        rowId: rowId ?? this.rowId,
+        parent: parent ?? this.parent,
+        relativePath: relativePath ?? this.relativePath,
+        fileId: fileId ?? this.fileId,
+        contentLength:
+            contentLength.present ? contentLength.value : this.contentLength,
+        contentType: contentType.present ? contentType.value : this.contentType,
+        etag: etag.present ? etag.value : this.etag,
+        lastModified:
+            lastModified.present ? lastModified.value : this.lastModified,
+        hasPreview: hasPreview.present ? hasPreview.value : this.hasPreview,
+        realPath: realPath.present ? realPath.value : this.realPath,
+        isFavorite: isFavorite.present ? isFavorite.value : this.isFavorite,
+        fileMetadataWidth: fileMetadataWidth.present
+            ? fileMetadataWidth.value
+            : this.fileMetadataWidth,
+        fileMetadataHeight: fileMetadataHeight.present
+            ? fileMetadataHeight.value
+            : this.fileMetadataHeight,
+        faceDetections:
+            faceDetections.present ? faceDetections.value : this.faceDetections,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RecognizeFaceItem(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('fileId: $fileId, ')
+          ..write('contentLength: $contentLength, ')
+          ..write('contentType: $contentType, ')
+          ..write('etag: $etag, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('hasPreview: $hasPreview, ')
+          ..write('realPath: $realPath, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('fileMetadataWidth: $fileMetadataWidth, ')
+          ..write('fileMetadataHeight: $fileMetadataHeight, ')
+          ..write('faceDetections: $faceDetections')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      rowId,
+      parent,
+      relativePath,
+      fileId,
+      contentLength,
+      contentType,
+      etag,
+      lastModified,
+      hasPreview,
+      realPath,
+      isFavorite,
+      fileMetadataWidth,
+      fileMetadataHeight,
+      faceDetections);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecognizeFaceItem &&
+          other.rowId == this.rowId &&
+          other.parent == this.parent &&
+          other.relativePath == this.relativePath &&
+          other.fileId == this.fileId &&
+          other.contentLength == this.contentLength &&
+          other.contentType == this.contentType &&
+          other.etag == this.etag &&
+          other.lastModified == this.lastModified &&
+          other.hasPreview == this.hasPreview &&
+          other.realPath == this.realPath &&
+          other.isFavorite == this.isFavorite &&
+          other.fileMetadataWidth == this.fileMetadataWidth &&
+          other.fileMetadataHeight == this.fileMetadataHeight &&
+          other.faceDetections == this.faceDetections);
+}
+
+class RecognizeFaceItemsCompanion extends UpdateCompanion<RecognizeFaceItem> {
+  final Value<int> rowId;
+  final Value<int> parent;
+  final Value<String> relativePath;
+  final Value<int> fileId;
+  final Value<int?> contentLength;
+  final Value<String?> contentType;
+  final Value<String?> etag;
+  final Value<DateTime?> lastModified;
+  final Value<bool?> hasPreview;
+  final Value<String?> realPath;
+  final Value<bool?> isFavorite;
+  final Value<int?> fileMetadataWidth;
+  final Value<int?> fileMetadataHeight;
+  final Value<String?> faceDetections;
+  const RecognizeFaceItemsCompanion({
+    this.rowId = const Value.absent(),
+    this.parent = const Value.absent(),
+    this.relativePath = const Value.absent(),
+    this.fileId = const Value.absent(),
+    this.contentLength = const Value.absent(),
+    this.contentType = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.hasPreview = const Value.absent(),
+    this.realPath = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.fileMetadataWidth = const Value.absent(),
+    this.fileMetadataHeight = const Value.absent(),
+    this.faceDetections = const Value.absent(),
+  });
+  RecognizeFaceItemsCompanion.insert({
+    this.rowId = const Value.absent(),
+    required int parent,
+    required String relativePath,
+    required int fileId,
+    this.contentLength = const Value.absent(),
+    this.contentType = const Value.absent(),
+    this.etag = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.hasPreview = const Value.absent(),
+    this.realPath = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.fileMetadataWidth = const Value.absent(),
+    this.fileMetadataHeight = const Value.absent(),
+    this.faceDetections = const Value.absent(),
+  })  : parent = Value(parent),
+        relativePath = Value(relativePath),
+        fileId = Value(fileId);
+  static Insertable<RecognizeFaceItem> custom({
+    Expression<int>? rowId,
+    Expression<int>? parent,
+    Expression<String>? relativePath,
+    Expression<int>? fileId,
+    Expression<int>? contentLength,
+    Expression<String>? contentType,
+    Expression<String>? etag,
+    Expression<DateTime>? lastModified,
+    Expression<bool>? hasPreview,
+    Expression<String>? realPath,
+    Expression<bool>? isFavorite,
+    Expression<int>? fileMetadataWidth,
+    Expression<int>? fileMetadataHeight,
+    Expression<String>? faceDetections,
+  }) {
+    return RawValuesInsertable({
+      if (rowId != null) 'row_id': rowId,
+      if (parent != null) 'parent': parent,
+      if (relativePath != null) 'relative_path': relativePath,
+      if (fileId != null) 'file_id': fileId,
+      if (contentLength != null) 'content_length': contentLength,
+      if (contentType != null) 'content_type': contentType,
+      if (etag != null) 'etag': etag,
+      if (lastModified != null) 'last_modified': lastModified,
+      if (hasPreview != null) 'has_preview': hasPreview,
+      if (realPath != null) 'real_path': realPath,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (fileMetadataWidth != null) 'file_metadata_width': fileMetadataWidth,
+      if (fileMetadataHeight != null)
+        'file_metadata_height': fileMetadataHeight,
+      if (faceDetections != null) 'face_detections': faceDetections,
+    });
+  }
+
+  RecognizeFaceItemsCompanion copyWith(
+      {Value<int>? rowId,
+      Value<int>? parent,
+      Value<String>? relativePath,
+      Value<int>? fileId,
+      Value<int?>? contentLength,
+      Value<String?>? contentType,
+      Value<String?>? etag,
+      Value<DateTime?>? lastModified,
+      Value<bool?>? hasPreview,
+      Value<String?>? realPath,
+      Value<bool?>? isFavorite,
+      Value<int?>? fileMetadataWidth,
+      Value<int?>? fileMetadataHeight,
+      Value<String?>? faceDetections}) {
+    return RecognizeFaceItemsCompanion(
+      rowId: rowId ?? this.rowId,
+      parent: parent ?? this.parent,
+      relativePath: relativePath ?? this.relativePath,
+      fileId: fileId ?? this.fileId,
+      contentLength: contentLength ?? this.contentLength,
+      contentType: contentType ?? this.contentType,
+      etag: etag ?? this.etag,
+      lastModified: lastModified ?? this.lastModified,
+      hasPreview: hasPreview ?? this.hasPreview,
+      realPath: realPath ?? this.realPath,
+      isFavorite: isFavorite ?? this.isFavorite,
+      fileMetadataWidth: fileMetadataWidth ?? this.fileMetadataWidth,
+      fileMetadataHeight: fileMetadataHeight ?? this.fileMetadataHeight,
+      faceDetections: faceDetections ?? this.faceDetections,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (rowId.present) {
+      map['row_id'] = Variable<int>(rowId.value);
+    }
+    if (parent.present) {
+      map['parent'] = Variable<int>(parent.value);
+    }
+    if (relativePath.present) {
+      map['relative_path'] = Variable<String>(relativePath.value);
+    }
+    if (fileId.present) {
+      map['file_id'] = Variable<int>(fileId.value);
+    }
+    if (contentLength.present) {
+      map['content_length'] = Variable<int>(contentLength.value);
+    }
+    if (contentType.present) {
+      map['content_type'] = Variable<String>(contentType.value);
+    }
+    if (etag.present) {
+      map['etag'] = Variable<String>(etag.value);
+    }
+    if (lastModified.present) {
+      final converter = $RecognizeFaceItemsTable.$converterlastModifiedn;
+      map['last_modified'] =
+          Variable<DateTime>(converter.toSql(lastModified.value));
+    }
+    if (hasPreview.present) {
+      map['has_preview'] = Variable<bool>(hasPreview.value);
+    }
+    if (realPath.present) {
+      map['real_path'] = Variable<String>(realPath.value);
+    }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (fileMetadataWidth.present) {
+      map['file_metadata_width'] = Variable<int>(fileMetadataWidth.value);
+    }
+    if (fileMetadataHeight.present) {
+      map['file_metadata_height'] = Variable<int>(fileMetadataHeight.value);
+    }
+    if (faceDetections.present) {
+      map['face_detections'] = Variable<String>(faceDetections.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecognizeFaceItemsCompanion(')
+          ..write('rowId: $rowId, ')
+          ..write('parent: $parent, ')
+          ..write('relativePath: $relativePath, ')
+          ..write('fileId: $fileId, ')
+          ..write('contentLength: $contentLength, ')
+          ..write('contentType: $contentType, ')
+          ..write('etag: $etag, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('hasPreview: $hasPreview, ')
+          ..write('realPath: $realPath, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('fileMetadataWidth: $fileMetadataWidth, ')
+          ..write('fileMetadataHeight: $fileMetadataHeight, ')
+          ..write('faceDetections: $faceDetections')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$SqliteDb extends GeneratedDatabase {
   _$SqliteDb(QueryExecutor e) : super(e);
   late final $ServersTable servers = $ServersTable(this);
@@ -5297,9 +6215,13 @@ abstract class _$SqliteDb extends GeneratedDatabase {
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $AlbumSharesTable albumShares = $AlbumSharesTable(this);
   late final $TagsTable tags = $TagsTable(this);
-  late final $PersonsTable persons = $PersonsTable(this);
+  late final $FaceRecognitionPersonsTable faceRecognitionPersons =
+      $FaceRecognitionPersonsTable(this);
   late final $NcAlbumsTable ncAlbums = $NcAlbumsTable(this);
   late final $NcAlbumItemsTable ncAlbumItems = $NcAlbumItemsTable(this);
+  late final $RecognizeFacesTable recognizeFaces = $RecognizeFacesTable(this);
+  late final $RecognizeFaceItemsTable recognizeFaceItems =
+      $RecognizeFaceItemsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5316,9 +6238,11 @@ abstract class _$SqliteDb extends GeneratedDatabase {
         albums,
         albumShares,
         tags,
-        persons,
+        faceRecognitionPersons,
         ncAlbums,
-        ncAlbumItems
+        ncAlbumItems,
+        recognizeFaces,
+        recognizeFaceItems
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -5411,7 +6335,7 @@ abstract class _$SqliteDb extends GeneratedDatabase {
             on: TableUpdateQuery.onTableName('accounts',
                 limitUpdateKind: UpdateKind.delete),
             result: [
-              TableUpdate('persons', kind: UpdateKind.delete),
+              TableUpdate('face_recognition_persons', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(
@@ -5426,6 +6350,20 @@ abstract class _$SqliteDb extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('nc_album_items', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('accounts',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('recognize_faces', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('recognize_faces',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('recognize_face_items', kind: UpdateKind.delete),
             ],
           ),
         ],

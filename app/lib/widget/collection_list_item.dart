@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/account.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/network_thumbnail.dart';
 
 class CollectionListSmall extends StatelessWidget {
   const CollectionListSmall({
-    Key? key,
-    required this.account,
+    super.key,
     required this.label,
-    required this.coverUrl,
-    required this.fallbackBuilder,
+    required this.child,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     Widget content = Stack(
       children: [
-        SizedBox.expand(
-          child: _buildCoverImage(context),
-        ),
+        SizedBox.expand(child: child),
         Positioned(
           bottom: 0,
           left: 0,
@@ -82,27 +76,7 @@ class CollectionListSmall extends StatelessWidget {
     );
   }
 
-  Widget _buildCoverImage(BuildContext context) {
-    Widget buildPlaceholder() => Padding(
-          padding: const EdgeInsets.all(8),
-          child: fallbackBuilder(context),
-        );
-    try {
-      return NetworkRectThumbnail(
-        account: account,
-        imageUrl: coverUrl,
-        errorBuilder: (_) => buildPlaceholder(),
-      );
-    } catch (_) {
-      return FittedBox(
-        child: buildPlaceholder(),
-      );
-    }
-  }
-
-  final Account account;
   final String label;
-  final String coverUrl;
-  final Widget Function(BuildContext context) fallbackBuilder;
+  final Widget? child;
   final VoidCallback? onTap;
 }

@@ -1,9 +1,6 @@
-import 'dart:math' as math;
-
 import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
@@ -21,7 +18,7 @@ class CollectionPersonProvider
   String get fourCc => "PERS";
 
   @override
-  String get id => person.name;
+  String get id => person.id;
 
   @override
   int? get count => person.count;
@@ -44,8 +41,8 @@ class CollectionPersonProvider
     int height, {
     bool? isKeepAspectRatio,
   }) {
-    return api_util.getFacePreviewUrl(account, person.thumbFaceId,
-        size: math.max(width, height));
+    return person.getCoverUrl(width, height,
+        isKeepAspectRatio: isKeepAspectRatio);
   }
 
   @override

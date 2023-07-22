@@ -20,7 +20,7 @@ extension _$SearchLandingBlocNpLog on SearchLandingBloc {
 extension _$SearchLandingBlocQueryToString on SearchLandingBlocQuery {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "SearchLandingBlocQuery {account: $account}";
+    return "SearchLandingBlocQuery {account: $account, accountPrefController: $accountPrefController}";
   }
 }
 

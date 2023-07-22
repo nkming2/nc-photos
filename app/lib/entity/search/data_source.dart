@@ -4,6 +4,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/person/builder.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search_util.dart' as search_util;
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
@@ -11,8 +12,9 @@ import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
-import 'package:nc_photos/use_case/populate_person.dart';
+import 'package:nc_photos/use_case/person/list_person_face.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
 
@@ -162,7 +164,7 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     // "Ada" will return results from "Ada Crook" but NOT "Adabelle"
     try {
       final dbPersons = await _c.sqliteDb.use((db) async {
-        return await db.personsByName(
+        return await db.faceRecognitionPersonsByName(
           appAccount: account,
           name: criteria.input,
         );
@@ -170,13 +172,16 @@ class SearchSqliteDbDataSource implements SearchDataSource {
       if (dbPersons.isEmpty) {
         return [];
       }
-      final persons = await dbPersons.convertToAppPerson();
+      final persons = (await dbPersons.convertToAppFaceRecognitionPerson())
+          .map((p) => PersonBuilder.byFaceRecognitionPerson(account, p))
+          .toList();
       _log.info(
           "[_listByPerson] Found people: ${persons.map((p) => p.name).toReadableString()}");
       final futures = await Future.wait(
-          persons.map((p) async => await _c.faceRepo.list(account, p)));
+          persons.map((p) async => ListPersonFace(_c)(account, p).last));
       final faces = futures.flatten().toList();
-      final files = await PopulatePerson(_c)(account, faces);
+      final files = await InflateFileDescriptor(_c)
+          .call(account, faces.map((e) => e.file).toList());
       return files
           .where((f) => criteria.filters.every((c) => c.isSatisfy(f)))
           .toList();

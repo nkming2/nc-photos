@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
-import 'package:nc_photos/entity/face.dart';
+import 'package:nc_photos/entity/face_recognition_face.dart';
+import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
-import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/entity/recognize_face.dart';
+import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
@@ -20,11 +22,21 @@ import 'package:np_common/string_extension.dart';
 
 part 'entity_converter.g.dart';
 
-class ApiFaceConverter {
-  static Face fromApi(api.Face face) {
-    return Face(
+class ApiFaceRecognitionFaceConverter {
+  static FaceRecognitionFace fromApi(api.FaceRecognitionFace face) {
+    return FaceRecognitionFace(
       id: face.id,
       fileId: face.fileId,
+    );
+  }
+}
+
+class ApiFaceRecognitionPersonConverter {
+  static FaceRecognitionPerson fromApi(api.FaceRecognitionPerson person) {
+    return FaceRecognitionPerson(
+      name: person.name,
+      thumbFaceId: person.thumbFaceId,
+      count: person.count,
     );
   }
 }
@@ -121,12 +133,46 @@ class ApiNcAlbumItemConverter {
   }
 }
 
-class ApiPersonConverter {
-  static Person fromApi(api.Person person) {
-    return Person(
-      name: person.name,
-      thumbFaceId: person.thumbFaceId,
-      count: person.count,
+class ApiRecognizeFaceConverter {
+  static RecognizeFace fromApi(api.RecognizeFace item) {
+    // remote.php/dav/recognize/admin/faces/john
+    var path = _hrefToPath(item.href);
+    if (!path.startsWith("remote.php/dav/recognize/")) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // admin/faces/john
+    path = path.substring(25);
+    final found = path.indexOf("/");
+    if (found == -1) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // faces/john
+    path = path.substring(found + 1);
+    if (!path.startsWith("faces")) {
+      throw ArgumentError("Invalid face path: ${item.href}");
+    }
+    // john
+    path = path.slice(6);
+    return RecognizeFace(label: path);
+  }
+}
+
+class ApiRecognizeFaceItemConverter {
+  static RecognizeFaceItem fromApi(api.RecognizeFaceItem item) {
+    return RecognizeFaceItem(
+      path: _hrefToPath(item.href),
+      fileId: item.fileId!,
+      contentLength: item.contentLength,
+      contentType: item.contentType,
+      etag: item.etag,
+      lastModified: item.lastModified,
+      hasPreview: item.hasPreview,
+      realPath: item.realPath,
+      isFavorite: item.favorite,
+      fileMetadataWidth: item.fileMetadataSize?["width"],
+      fileMetadataHeight: item.fileMetadataSize?["height"],
+      faceDetections:
+          item.faceDetections?.isEmpty == true ? null : item.faceDetections,
     );
   }
 }
@@ -210,7 +256,7 @@ class ApiTaggedFileConverter {
 }
 
 String _hrefToPath(String href) {
-  final rawPath = href.trimLeftAny("/");
+  final rawPath = href.trimAny("/");
   final pos = rawPath.indexOf("remote.php");
   if (pos == -1) {
     // what?
