@@ -322,6 +322,8 @@ Future<void> _truncate() async {
       "face_recognition_persons",
       "nc_albums",
       "nc_album_items",
+      "recognize_faces",
+      "recognize_face_items",
     });
     for (final t in tables) {
       expect(

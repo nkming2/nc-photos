@@ -729,6 +729,8 @@ extension SqliteDbExtension on SqliteDb {
     await delete(faceRecognitionPersons).go();
     await delete(ncAlbums).go();
     await delete(ncAlbumItems).go();
+    await delete(recognizeFaces).go();
+    await delete(recognizeFaceItems).go();
 
     // reset the auto increment counter
     await customStatement("UPDATE sqlite_sequence SET seq=0;");
