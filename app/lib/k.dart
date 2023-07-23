@@ -22,6 +22,8 @@ const animationDurationTabTransition = Duration(milliseconds: 300);
 
 const heroDurationNormal = Duration(milliseconds: 450);
 
+const settingsHighlightDuration = Duration(milliseconds: 750);
+
 /// Size of the photo/video thumbnails
 ///
 /// It's advisable to use a single size to minimize cache size

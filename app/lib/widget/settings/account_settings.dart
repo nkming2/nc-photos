@@ -87,16 +87,20 @@ class _WrappedAccountSettings extends StatefulWidget {
   const _WrappedAccountSettings();
 
   @override
-  State<StatefulWidget> createState() => __WrappedAccountSettingsState();
+  State<StatefulWidget> createState() => _WrappedAccountSettingsState();
 }
 
 @npLog
-class __WrappedAccountSettingsState extends State<_WrappedAccountSettings>
-    with RouteAware, PageVisibilityMixin {
+class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
+    with RouteAware, PageVisibilityMixin, TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
     _accountController = context.read<AccountController>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _animationController.repeat(reverse: true);
+    });
   }
 
   @override
@@ -107,6 +111,7 @@ class __WrappedAccountSettingsState extends State<_WrappedAccountSettings>
       _accountController.syncController
           .requestResync(_bloc.state.account, _bloc.state.personProvider);
     }
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -183,15 +188,28 @@ class __WrappedAccountSettingsState extends State<_WrappedAccountSettings>
                     ),
                     _BlocSelector<PersonProvider>(
                       selector: (state) => state.personProvider,
-                      builder: (context, state) => ListTile(
-                        title: Text(L10n.global().settingsPersonProviderTitle),
-                        subtitle: Text(state.toUserString()),
-                        onTap: () => _onPersonProviderPressed(context),
-                        tileColor: _bloc.highlight ==
-                                AccountSettingsOption.personProvider
-                            ? Theme.of(context).colorScheme.primaryContainer
-                            : null,
-                      ),
+                      builder: (context, state) {
+                        if (_bloc.highlight ==
+                            AccountSettingsOption.personProvider) {
+                          return AnimatedBuilder(
+                            animation: _highlightAnimation,
+                            builder: (context, child) => ListTile(
+                              title: Text(
+                                  L10n.global().settingsPersonProviderTitle),
+                              subtitle: Text(state.toUserString()),
+                              onTap: () => _onPersonProviderPressed(context),
+                              tileColor: _highlightAnimation.value,
+                            ),
+                          );
+                        } else {
+                          return ListTile(
+                            title:
+                                Text(L10n.global().settingsPersonProviderTitle),
+                            subtitle: Text(state.toUserString()),
+                            onTap: () => _onPersonProviderPressed(context),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -263,6 +281,14 @@ class __WrappedAccountSettingsState extends State<_WrappedAccountSettings>
 
   late final _bloc = context.read<_Bloc>();
   late final AccountController _accountController;
+
+  late final _animationController = AnimationController(
+    vsync: this,
+    duration: k.settingsHighlightDuration,
+  );
+  late final _highlightAnimation = ColorTween(
+    end: Theme.of(context).colorScheme.primaryContainer,
+  ).animate(_animationController);
 }
 
 class _DoneButton extends StatelessWidget {

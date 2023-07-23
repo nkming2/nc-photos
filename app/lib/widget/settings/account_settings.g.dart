@@ -58,13 +58,12 @@ extension $_StateCopyWith on _State {
 // NpLogGenerator
 // **************************************************************************
 
-extension _$__WrappedAccountSettingsStateNpLog
-    on __WrappedAccountSettingsState {
+extension _$_WrappedAccountSettingsStateNpLog on _WrappedAccountSettingsState {
   // ignore: unused_element
   Logger get _log => log;
 
   static final log =
-      Logger("widget.settings.account_settings.__WrappedAccountSettingsState");
+      Logger("widget.settings.account_settings._WrappedAccountSettingsState");
 }
 
 extension _$_PersonProviderDialogNpLog on _PersonProviderDialog {
