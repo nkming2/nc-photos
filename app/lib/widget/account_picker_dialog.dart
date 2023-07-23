@@ -100,14 +100,11 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                 children: [
                   const SizedBox(height: 8),
                   Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Positioned.fill(
-                        child: Center(
-                          child: Text(
-                            L10n.global().appTitle,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                        ),
+                      Text(
+                        L10n.global().appTitle,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       if (!Pref().isFollowSystemThemeOr(false))
                         Align(
