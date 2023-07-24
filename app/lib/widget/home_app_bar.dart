@@ -89,6 +89,7 @@ class _TitleView extends StatelessWidget {
           context.read<AccountController>().accountPrefController.accountLabel,
       builder: (context, snapshot) => AppBarTitleContainer(
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             account.scheme == "http"
                 ? Icon(
@@ -101,12 +102,10 @@ class _TitleView extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                     size: 16,
                   ),
-            Expanded(
-              child: Text(
-                snapshot.data ?? account.address,
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-              ),
+            Text(
+              snapshot.data ?? account.address,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
             ),
           ],
         ),

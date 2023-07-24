@@ -161,8 +161,11 @@ class _SearchLandingState extends State<SearchLanding> {
       if (isNoResult)
         SizedBox(
           height: 48,
-          child: Center(
-            child: Text(L10n.global().searchLandingPeopleListEmptyText2),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Center(
+              child: Text(L10n.global().searchLandingPeopleListEmptyText2),
+            ),
           ),
         )
       else
