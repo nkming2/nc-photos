@@ -295,11 +295,11 @@ packages:
     dependency: "direct dev"
     description:
       path: copy_with_build
-      ref: "copy_with_build-1.6.0"
-      resolved-ref: "5f28fe363994d429fb9e8933705cf0ba07be2622"
+      ref: "copy_with_build-1.7.0"
+      resolved-ref: "095ea845cb96b15fe43931114042b9f9bcce0998"
       url: "https://gitlab.com/nkming2/dart-copy-with"
     source: git
-    version: "1.6.0"
+    version: "1.7.0"
   coverage:
     dependency: transitive
     description:

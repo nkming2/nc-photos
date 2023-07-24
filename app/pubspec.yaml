@@ -144,7 +144,7 @@ dev_dependencies:
     git:
       url: https://gitlab.com/nkming2/dart-copy-with
       path: copy_with_build
-      ref: copy_with_build-1.6.0
+      ref: copy_with_build-1.7.0
   dart_code_metrics: any
   drift_dev: 2.8.0
   flutter_lints: any
