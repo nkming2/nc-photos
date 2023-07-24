@@ -14,9 +14,7 @@ part of 'theme_settings.dart';
 
 abstract class $_StateCopyWithWorker {
   _State call(
-      {bool? isFollowSystemTheme,
-      bool? isUseBlackInDarkTheme,
-      Color? seedColor});
+      {bool? isFollowSystemTheme, bool? isUseBlackInDarkTheme, int? seedColor});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -26,13 +24,14 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _State call(
       {dynamic isFollowSystemTheme,
       dynamic isUseBlackInDarkTheme,
-      dynamic seedColor}) {
+      dynamic seedColor = copyWithNull}) {
     return _State(
         isFollowSystemTheme:
             isFollowSystemTheme as bool? ?? that.isFollowSystemTheme,
         isUseBlackInDarkTheme:
             isUseBlackInDarkTheme as bool? ?? that.isUseBlackInDarkTheme,
-        seedColor: seedColor as Color? ?? that.seedColor);
+        seedColor:
+            seedColor == copyWithNull ? that.seedColor : seedColor as int?);
   }
 
   final _State that;

@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/material3.dart';
+import 'package:nc_photos/object_extension.dart';
+
+const defaultSeedColor = 0xFF2196F3;
 
 extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;
@@ -90,38 +93,43 @@ ThemeData buildTheme(Brightness brightness) {
       : buildDarkTheme();
 }
 
-ThemeData buildLightTheme() {
-  final seedColor = getSeedColor();
-  final colorScheme = ColorScheme.fromSeed(
-    seedColor: seedColor,
-  );
-  return _applyColorScheme(colorScheme, seedColor);
+ThemeData buildLightTheme([ColorScheme? dynamicScheme]) {
+  final colorScheme = _getColorScheme(dynamicScheme, Brightness.light);
+  return _applyColorScheme(colorScheme);
 }
 
-ThemeData buildDarkTheme() {
-  final seedColor = getSeedColor();
-  final colorScheme = ColorScheme.fromSeed(
-    seedColor: seedColor,
-    brightness: Brightness.dark,
-  );
+ThemeData buildDarkTheme([ColorScheme? dynamicScheme]) {
+  final colorScheme = _getColorScheme(dynamicScheme, Brightness.dark);
   if (Pref().isUseBlackInDarkThemeOr(false)) {
-    return _applyColorScheme(
-      colorScheme.copyWith(
-        background: Colors.black,
-        surface: Colors.grey[900],
-      ),
-      seedColor,
-    );
+    return _applyColorScheme(colorScheme.copyWith(
+      background: Colors.black,
+      surface: Colors.grey[900],
+    ));
   } else {
-    return _applyColorScheme(colorScheme, seedColor);
+    return _applyColorScheme(colorScheme);
   }
 }
 
-Color getSeedColor() {
-  return Color(Pref().getSeedColor() ?? 0xFF2196F3).withAlpha(0xFF);
+Color? getSeedColor() {
+  return Pref().getSeedColor()?.run((c) => Color(c).withAlpha(0xFF));
 }
 
-ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
+ColorScheme _getColorScheme(ColorScheme? dynamicScheme, Brightness brightness) {
+  var seedColor = Pref().getSeedColor();
+  if (seedColor == null) {
+    if (dynamicScheme != null) {
+      return dynamicScheme;
+    } else {
+      seedColor = defaultSeedColor;
+    }
+  }
+  return ColorScheme.fromSeed(
+    seedColor: Color(seedColor),
+    brightness: brightness,
+  );
+}
+
+ThemeData _applyColorScheme(ColorScheme colorScheme) {
   return ThemeData(
     useMaterial3: true,
     brightness: colorScheme.brightness,
@@ -212,7 +220,6 @@ ThemeData _applyColorScheme(ColorScheme colorScheme, Color seedColor) {
     ),
     extensions: [
       M3(
-        seed: seedColor,
         checkbox: M3Checkbox(
           disabled: M3CheckboxDisabled(
             container: colorScheme.onSurface.withOpacity(.38),

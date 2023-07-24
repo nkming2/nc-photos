@@ -14,6 +14,7 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -22,6 +23,8 @@ import 'package:to_string/to_string.dart';
 part 'theme/bloc.dart';
 part 'theme/state_event.dart';
 part 'theme_settings.g.dart';
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 
 class ThemeSettings extends StatelessWidget {
   const ThemeSettings({super.key});
@@ -47,7 +50,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
   @override
   void initState() {
     super.initState();
-    _errorSubscription = context.read<_Bloc>().errorStream().listen((_) {
+    _errorSubscription = _bloc.errorStream().listen((_) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().writePreferenceFailureNotification),
         duration: k.snackBarDurationNormal,
@@ -80,25 +83,10 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              BlocBuilder<_Bloc, _State>(
-                buildWhen: (previous, current) =>
-                    previous.seedColor != current.seedColor,
-                builder: (context, state) {
-                  return ListTile(
-                    title: Text(L10n.global().settingsSeedColorTitle),
-                    subtitle: Text(L10n.global().settingsSeedColorDescription),
-                    trailing: Icon(
-                      Icons.circle,
-                      size: 32,
-                      color: state.seedColor,
-                    ),
-                    onTap: () => _onSeedColorPressed(context),
-                  );
-                },
-              ),
+              const _SeedColorOption(),
               if (platform_k.isAndroid &&
                   AndroidInfo().sdkInt >= AndroidVersion.Q)
-                BlocBuilder<_Bloc, _State>(
+                _BlocBuilder(
                   buildWhen: (previous, current) =>
                       previous.isFollowSystemTheme !=
                       current.isFollowSystemTheme,
@@ -107,12 +95,12 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
                       title: Text(L10n.global().settingsFollowSystemThemeTitle),
                       value: state.isFollowSystemTheme,
                       onChanged: (value) {
-                        context.read<_Bloc>().add(_SetFollowSystemTheme(value));
+                        _bloc.add(_SetFollowSystemTheme(value));
                       },
                     );
                   },
                 ),
-              BlocBuilder<_Bloc, _State>(
+              _BlocBuilder(
                 buildWhen: (previous, current) =>
                     previous.isUseBlackInDarkTheme !=
                     current.isUseBlackInDarkTheme,
@@ -126,7 +114,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
                             .settingsUseBlackInDarkThemeFalseDescription),
                     value: state.isUseBlackInDarkTheme,
                     onChanged: (value) {
-                      context.read<_Bloc>().add(
+                      _bloc.add(
                           _SetUseBlackInDarkTheme(value, Theme.of(context)));
                     },
                   );
@@ -139,20 +127,63 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
     );
   }
 
+  late final _bloc = context.read<_Bloc>();
+  late final StreamSubscription _errorSubscription;
+}
+
+class _SeedColorOption extends StatelessWidget {
+  const _SeedColorOption();
+
+  @override
+  Widget build(BuildContext context) {
+    return _BlocBuilder(
+      buildWhen: (previous, current) => previous.seedColor != current.seedColor,
+      builder: (context, state) {
+        if (SessionStorage().isSupportDynamicColor) {
+          return ListTile(
+            title: Text(L10n.global().settingsSeedColorTitle),
+            subtitle: Text(state.seedColor == null
+                ? L10n.global().settingsSeedColorSystemColorDescription
+                : L10n.global().settingsSeedColorDescription),
+            trailing: state.seedColor == null
+                ? null
+                : Icon(
+                    Icons.circle,
+                    size: 32,
+                    color: Color(state.seedColor!),
+                  ),
+            onTap: () => _onSeedColorPressed(context),
+          );
+        } else {
+          return ListTile(
+            title: Text(L10n.global().settingsSeedColorTitle),
+            subtitle: Text(L10n.global().settingsSeedColorDescription),
+            trailing: Icon(
+              Icons.circle,
+              size: 32,
+              color: Color(state.seedColor ?? defaultSeedColor),
+            ),
+            onTap: () => _onSeedColorPressed(context),
+          );
+        }
+      },
+    );
+  }
+
   Future<void> _onSeedColorPressed(BuildContext context) async {
-    final result = await showDialog<Color>(
+    final result = await showDialog<int>(
       context: context,
       builder: (context) => const _SeedColorPicker(),
     );
     if (result == null) {
       return;
     }
-    if (mounted) {
-      context.read<_Bloc>().add(_SetSeedColor(result));
+    if (context.mounted) {
+      context
+          .read<_Bloc>()
+          .add(_SetSeedColor(result == -1 ? null : Color(result)));
     }
   }
-
-  late final StreamSubscription _errorSubscription;
 }
 
 class _SeedColorPicker extends StatefulWidget {
@@ -180,15 +211,24 @@ class _SeedColorPickerState extends State<_SeedColorPicker> {
           ]
               .map((c) => _SeedColorPickerItem(
                     seedColor: c,
-                    onSelected: () => _onItemSelected(context, c),
+                    onSelected: () => _onItemSelected(context, c?.value),
                   ))
               .toList(),
         ),
+        actions: SessionStorage().isSupportDynamicColor
+            ? [
+                TextButton(
+                  onPressed: () => _onItemSelected(context, -1),
+                  child: Text(L10n.global()
+                      .settingsSeedColorPickerSystemColorButtonLabel),
+                ),
+              ]
+            : null,
       ),
     );
   }
 
-  Future<void> _onItemSelected(BuildContext context, Color? seedColor) async {
+  Future<void> _onItemSelected(BuildContext context, int? seedColor) async {
     if (seedColor != null) {
       Navigator.of(context).pop(seedColor);
       return;
@@ -198,10 +238,10 @@ class _SeedColorPickerState extends State<_SeedColorPicker> {
     });
     final color = await showDialog<Color>(
       context: context,
-      builder: (context) => const _SeedColorCustomPicker(),
+      builder: (_) => const _SeedColorCustomPicker(),
       barrierColor: Colors.transparent,
     );
-    Navigator.of(context).pop(color);
+    Navigator.of(context).pop(color?.value);
   }
 
   var _isVisible = true;
@@ -240,7 +280,7 @@ class _SeedColorCustomPickerState extends State<_SeedColorCustomPicker> {
     );
   }
 
-  late Color _customColor = getSeedColor();
+  late Color _customColor = getSeedColor() ?? const Color(defaultSeedColor);
 }
 
 class _SeedColorPickerItem extends StatelessWidget {

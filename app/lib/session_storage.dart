@@ -12,5 +12,8 @@ class SessionStorage {
   /// Whether the drag to rearrange notification has been shown
   bool hasShowDragRearrangeNotification = false;
 
+  /// Whether the dynamic_color library is supported in this platform
+  bool isSupportDynamicColor = false;
+
   static final _inst = SessionStorage._();
 }

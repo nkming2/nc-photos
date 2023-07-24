@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/navigation_manager.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
@@ -97,7 +99,7 @@ class _WrappedAppState extends State<_WrappedApp>
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeMode themeMode;
     if (Pref().isFollowSystemThemeOr(false)) {
       themeMode = ThemeMode.system;
@@ -108,42 +110,50 @@ class _WrappedAppState extends State<_WrappedApp>
     final prefController = context.read<PrefController>();
     return ValueStreamBuilder<language_util.AppLanguage>(
       stream: prefController.language,
-      builder: (context, snapshot) => MaterialApp(
-        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-        theme: buildLightTheme(),
-        darkTheme: buildDarkTheme(),
-        themeMode: themeMode,
-        initialRoute: Splash.routeName,
-        onGenerateRoute: _onGenerateRoute,
-        navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
-        navigatorKey: _navigatorKey,
-        scaffoldMessengerKey: _scaffoldMessengerKey,
-        locale: snapshot.requireData.locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: const <Locale>[
-          // the order here doesn't matter, except for the first one, which must
-          // be en
-          Locale("en"),
-          Locale("el"),
-          Locale("es"),
-          Locale("fr"),
-          Locale("ru"),
-          Locale("de"),
-          Locale("cs"),
-          Locale("fi"),
-          Locale("pl"),
-          Locale("pt"),
-          Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
-          Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
-          Locale("it"),
-          Locale("nl"),
-        ],
-        builder: (context, child) {
-          MyApp._globalContext = context;
-          return child!;
+      builder: (context, snapshot) => DynamicColorBuilder(
+        builder: (lightDynamic, darkDynamic) {
+          if (lightDynamic != null) {
+            SessionStorage().isSupportDynamicColor = true;
+          }
+          return MaterialApp(
+            onGenerateTitle: (context) =>
+                AppLocalizations.of(context)!.appTitle,
+            theme: buildLightTheme(lightDynamic),
+            darkTheme: buildDarkTheme(darkDynamic),
+            themeMode: themeMode,
+            initialRoute: Splash.routeName,
+            onGenerateRoute: _onGenerateRoute,
+            navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
+            navigatorKey: _navigatorKey,
+            scaffoldMessengerKey: _scaffoldMessengerKey,
+            locale: snapshot.requireData.locale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: const <Locale>[
+              // the order here doesn't matter, except for the first one, which must
+              // be en
+              Locale("en"),
+              Locale("el"),
+              Locale("es"),
+              Locale("fr"),
+              Locale("ru"),
+              Locale("de"),
+              Locale("cs"),
+              Locale("fi"),
+              Locale("pl"),
+              Locale("pt"),
+              Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
+              Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
+              Locale("it"),
+              Locale("nl"),
+            ],
+            builder: (context, child) {
+              MyApp._globalContext = context;
+              return child!;
+            },
+            debugShowCheckedModeBanner: false,
+            scrollBehavior: const _MyScrollBehavior(),
+          );
         },
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: const _MyScrollBehavior(),
       ),
     );
   }

@@ -383,9 +383,17 @@
 	"@settingsSeedColorDescription": {
 		"description": "Customize the colors used in app"
 	},
+	"settingsSeedColorSystemColorDescription": "Use system color",
+	"@settingsSeedColorSystemColorDescription": {
+		"description": "Use color provided by the OS, i.e., Material You"
+	},
 	"settingsSeedColorPickerTitle": "Pick a color",
 	"@settingsSeedColorPickerTitle": {
 		"description": "Dialog to customize the colors used in app"
+	},
+	"settingsSeedColorPickerSystemColorButtonLabel": "USE SYSTEM COLOR",
+	"@settingsSeedColorPickerSystemColorButtonLabel": {
+		"description": "Use color provided by the OS, i.e., Material You"
 	},
 	"settingsUseBlackInDarkThemeTitle": "Darker theme",
 	"@settingsUseBlackInDarkThemeTitle": {

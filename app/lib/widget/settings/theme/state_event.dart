@@ -14,7 +14,8 @@ class _State {
 
   final bool isFollowSystemTheme;
   final bool isUseBlackInDarkTheme;
-  final Color seedColor;
+  // workaround analyzer bug where Color type can't be recognized
+  final int? seedColor;
 }
 
 abstract class _Event {
@@ -49,5 +50,5 @@ class _SetSeedColor extends _Event {
   @override
   String toString() => _$toString();
 
-  final Color value;
+  final Color? value;
 }

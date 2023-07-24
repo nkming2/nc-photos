@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class M3 extends ThemeExtension<M3> {
   const M3({
-    required this.seed,
     required this.checkbox,
     required this.filterChip,
     required this.listTile,
@@ -12,13 +11,11 @@ class M3 extends ThemeExtension<M3> {
 
   @override
   M3 copyWith({
-    Color? seed,
     M3Checkbox? checkbox,
     M3FilterChip? filterChip,
     M3ListTile? listTile,
   }) =>
       M3(
-        seed: seed ?? this.seed,
         checkbox: checkbox ?? this.checkbox,
         filterChip: filterChip ?? this.filterChip,
         listTile: listTile ?? this.listTile,
@@ -30,14 +27,12 @@ class M3 extends ThemeExtension<M3> {
       return this;
     }
     return M3(
-      seed: Color.lerp(seed, other.seed, t)!,
       checkbox: checkbox.lerp(other.checkbox, t),
       filterChip: filterChip.lerp(other.filterChip, t),
       listTile: listTile.lerp(other.listTile, t),
     );
   }
 
-  final Color seed;
   final M3Checkbox checkbox;
   final M3FilterChip filterChip;
   final M3ListTile listTile;

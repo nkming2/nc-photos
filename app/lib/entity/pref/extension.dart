@@ -251,8 +251,14 @@ extension PrefExtension on Pref {
 
   int? getSeedColor() => provider.getInt(PrefKey.seedColor);
   int getSeedColorOr(int def) => getSeedColor() ?? def;
-  Future<bool> setSeedColor(int value) => _set<int>(
-      PrefKey.seedColor, value, (key, value) => provider.setInt(key, value));
+  Future<bool> setSeedColor(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.seedColor);
+    } else {
+      return _set<int>(PrefKey.seedColor, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
 
   bool? isVideoPlayerMute() => provider.getBool(PrefKey.isVideoPlayerMute);
   bool isVideoPlayerMuteOr([bool def = false]) => isVideoPlayerMute() ?? def;

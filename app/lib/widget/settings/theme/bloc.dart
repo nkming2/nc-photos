@@ -14,7 +14,7 @@ class _Bloc extends Bloc<_Event, _State> {
         super(_State(
           isFollowSystemTheme: c.pref.isFollowSystemThemeOr(false),
           isUseBlackInDarkTheme: c.pref.isUseBlackInDarkThemeOr(false),
-          seedColor: getSeedColor(),
+          seedColor: getSeedColor()?.value,
         )) {
     on<_SetFollowSystemTheme>(_onSetFollowSystemTheme);
     on<_SetUseBlackInDarkTheme>(_onSetUseBlackInDarkTheme);
@@ -27,6 +27,7 @@ class _Bloc extends Bloc<_Event, _State> {
 
   Future<void> _onSetFollowSystemTheme(
       _SetFollowSystemTheme ev, Emitter<_State> emit) async {
+    _log.info(ev);
     final oldValue = state.isFollowSystemTheme;
     emit(state.copyWith(isFollowSystemTheme: ev.value));
     if (await _c.pref.setFollowSystemTheme(ev.value)) {
@@ -40,6 +41,7 @@ class _Bloc extends Bloc<_Event, _State> {
 
   Future<void> _onSetUseBlackInDarkTheme(
       _SetUseBlackInDarkTheme ev, Emitter<_State> emit) async {
+    _log.info(ev);
     final oldValue = state.isUseBlackInDarkTheme;
     emit(state.copyWith(isUseBlackInDarkTheme: ev.value));
     if (await _c.pref.setUseBlackInDarkTheme(ev.value)) {
@@ -54,9 +56,10 @@ class _Bloc extends Bloc<_Event, _State> {
   }
 
   Future<void> _onSetSeedColor(_SetSeedColor ev, Emitter<_State> emit) async {
+    _log.info(ev);
     final oldValue = state.seedColor;
-    emit(state.copyWith(seedColor: ev.value));
-    if (await _c.pref.setSeedColor(ev.value.withAlpha(0xFF).value)) {
+    emit(state.copyWith(seedColor: ev.value?.value));
+    if (await _c.pref.setSeedColor(ev.value?.withAlpha(0xFF).value)) {
       KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
     } else {
       _log.severe("[_onSetSeedColor] Failed writing pref");
