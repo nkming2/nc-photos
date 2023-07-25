@@ -21,6 +21,10 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 			K.ACTION_SHOW_IMAGE_PROCESSOR_RESULT
 		const val EXTRA_IMAGE_RESULT_URI = K.EXTRA_IMAGE_RESULT_URI
 
+		const val ACTION_DOWNLOAD_CANCEL =
+			K.ACTION_DOWNLOAD_CANCEL
+		const val EXTRA_NOTIFICATION_ID = K.EXTRA_NOTIFICATION_ID
+
 		private const val TAG = "NcPhotosPlugin"
 	}
 

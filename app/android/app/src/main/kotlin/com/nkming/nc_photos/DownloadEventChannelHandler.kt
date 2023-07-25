@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.nkming.nc_photos.plugin.NcPhotosPlugin
 import io.flutter.plugin.common.EventChannel
 
 class DownloadEventCancelChannelHandler(context: Context) : BroadcastReceiver(),
@@ -15,14 +16,14 @@ class DownloadEventCancelChannelHandler(context: Context) : BroadcastReceiver(),
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		if (intent?.action != K.ACTION_DOWNLOAD_CANCEL || !intent.hasExtra(
-				K.EXTRA_NOTIFICATION_ID
+		if (intent?.action != NcPhotosPlugin.ACTION_DOWNLOAD_CANCEL || !intent.hasExtra(
+				NcPhotosPlugin.EXTRA_NOTIFICATION_ID
 			)
 		) {
 			return
 		}
 
-		val id = intent.getIntExtra(K.EXTRA_NOTIFICATION_ID, 0)
+		val id = intent.getIntExtra(NcPhotosPlugin.EXTRA_NOTIFICATION_ID, 0)
 		_eventSink?.success(
 			mapOf(
 				"notificationId" to id
@@ -32,7 +33,7 @@ class DownloadEventCancelChannelHandler(context: Context) : BroadcastReceiver(),
 
 	override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
 		_context.registerReceiver(
-			this, IntentFilter(K.ACTION_DOWNLOAD_CANCEL)
+			this, IntentFilter(NcPhotosPlugin.ACTION_DOWNLOAD_CANCEL)
 		)
 		_eventSink = events
 	}

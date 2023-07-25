@@ -83,12 +83,11 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
     StreamSubscription<DownloadCancelEvent>? subscription;
     try {
       bool isCancel = false;
-      subscription = DownloadEvent.listenDownloadCancel()
-        ..onData((data) {
-          if (data.notificationId == id) {
-            isCancel = true;
-          }
-        });
+      subscription = DownloadEvent.downloadCancelStream().listen((data) {
+        if (data.notificationId == id) {
+          isCancel = true;
+        }
+      });
 
       int count = 0;
       for (final f in files) {
@@ -110,13 +109,13 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
             parentDir: parentDir,
             shouldNotify: false,
           );
-          itemSubscription = DownloadEvent.listenDownloadCancel()
-            ..onData((data) {
-              if (data.notificationId == id) {
-                _log.info("[downloadFiles] Cancel requested");
-                download.cancel();
-              }
-            });
+          itemSubscription =
+              DownloadEvent.downloadCancelStream().listen((data) {
+            if (data.notificationId == id) {
+              _log.info("[downloadFiles] Cancel requested");
+              download.cancel();
+            }
+          });
           final result = await download();
           successes.add(Tuple2(f, result));
         } on PermissionException catch (_) {
