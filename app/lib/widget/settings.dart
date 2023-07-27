@@ -114,6 +114,13 @@ class _SettingsState extends State<Settings> {
               ),
               _buildSubSettings(
                 context,
+                leading: const Icon(Icons.palette_outlined),
+                label: L10n.global().settingsThemeTitle,
+                description: L10n.global().settingsThemeDescription,
+                builder: () => const ThemeSettings(),
+              ),
+              _buildSubSettings(
+                context,
                 leading: const Icon(Icons.local_offer_outlined),
                 label: L10n.global().settingsMetadataTitle,
                 builder: () => const MetadataSettings(),
@@ -127,9 +134,8 @@ class _SettingsState extends State<Settings> {
               ),
               _buildSubSettings(
                 context,
-                leading: const Icon(Icons.photo_album_outlined),
-                label: L10n.global().settingsAlbumTitle,
-                description: L10n.global().settingsAlbumDescription,
+                leading: const Icon(Icons.grid_view_outlined),
+                label: L10n.global().collectionsTooltip,
                 builder: () => _AlbumSettings(),
               ),
               _buildSubSettings(
@@ -147,13 +153,6 @@ class _SettingsState extends State<Settings> {
                   description: L10n.global().settingsImageEditDescription,
                   builder: () => const EnhancementSettings(),
                 ),
-              _buildSubSettings(
-                context,
-                leading: const Icon(Icons.palette_outlined),
-                label: L10n.global().settingsThemeTitle,
-                description: L10n.global().settingsThemeDescription,
-                builder: () => const ThemeSettings(),
-              ),
               _buildSubSettings(
                 context,
                 leading: const Icon(Icons.emoji_symbols_outlined),
@@ -735,7 +734,7 @@ class _AlbumSettingsState extends State<_AlbumSettings> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          title: Text(L10n.global().settingsAlbumTitle),
+          title: Text(L10n.global().collectionsTooltip),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
