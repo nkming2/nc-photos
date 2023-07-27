@@ -8,7 +8,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/platform.dart'
@@ -69,19 +68,7 @@ class Settings extends StatefulWidget {
 @npLog
 class _SettingsState extends State<Settings> {
   @override
-  initState() {
-    super.initState();
-    _prefUpdatedListener.begin();
-  }
-
-  @override
-  dispose() {
-    _prefUpdatedListener.end();
-    super.dispose();
-  }
-
-  @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
         builder: (context) => _buildContent(context),
@@ -268,17 +255,8 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _onPrefUpdated(PrefUpdatedEvent ev) {
-    if (ev.key == PrefKey.isPhotosTabSortByName) {
-      setState(() {});
-    }
-  }
-
   var _devSettingsUnlockCount = 3;
   var _isShowDevSettings = false;
-
-  late final _prefUpdatedListener =
-      AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
 
   static const String _sourceRepo = "https://bit.ly/3LQerBv";
   static const String _bugReportUrl = "https://bit.ly/3NANrr7";
