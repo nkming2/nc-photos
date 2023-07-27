@@ -26,6 +26,7 @@ import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/settings/metadata_settings.dart';
+import 'package:nc_photos/widget/settings/photos_settings.dart';
 import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -127,7 +128,7 @@ class _SettingsState extends State<Settings> {
                 leading: const Icon(Icons.image_outlined),
                 label: L10n.global().photosTabLabel,
                 description: L10n.global().settingsPhotosDescription,
-                pageBuilder: () => _PhotosSettings(account: widget.account),
+                pageBuilder: () => const PhotosSettings(),
               ),
               _SubPageItem(
                 leading: const Icon(Icons.grid_view_outlined),
@@ -312,190 +313,6 @@ class _SubPageItem extends StatelessWidget {
   final String label;
   final String? description;
   final Widget Function() pageBuilder;
-}
-
-class _PhotosSettings extends StatefulWidget {
-  const _PhotosSettings({
-    Key? key,
-    required this.account,
-  }) : super(key: key);
-
-  @override
-  createState() => _PhotosSettingsState();
-
-  final Account account;
-}
-
-@npLog
-class _PhotosSettingsState extends State<_PhotosSettings> {
-  @override
-  initState() {
-    super.initState();
-    _memoriesRange = Pref().getMemoriesRangeOr();
-
-    final settings = AccountPref.of(widget.account);
-    _isEnableMemoryAlbum = settings.isEnableMemoryAlbumOr(true);
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().photosTabLabel),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              SwitchListTile(
-                title: Text(L10n.global().settingsMemoriesTitle),
-                subtitle: Text(L10n.global().settingsMemoriesSubtitle),
-                value: _isEnableMemoryAlbum,
-                onChanged: Pref().isPhotosTabSortByNameOr()
-                    ? null
-                    : _onEnableMemoryAlbumChanged,
-              ),
-              ListTile(
-                title: Text(L10n.global().settingsMemoriesRangeTitle),
-                subtitle: Text(L10n.global()
-                    .settingsMemoriesRangeValueText(_memoriesRange)),
-                onTap: () => _onMemoriesRangeTap(context),
-                enabled:
-                    !Pref().isPhotosTabSortByNameOr() && _isEnableMemoryAlbum,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onMemoriesRangeTap(BuildContext context) async {
-    var memoriesRange = _memoriesRange;
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: _MemoriesRangeSlider(
-          initialRange: _memoriesRange,
-          onChanged: (value) {
-            memoriesRange = value;
-          },
-        ),
-        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: Text(L10n.global().applyButtonLabel),
-          ),
-        ],
-      ),
-    );
-    if (result != true || memoriesRange == _memoriesRange) {
-      return;
-    }
-
-    unawaited(_setMemoriesRange(memoriesRange));
-  }
-
-  Future<void> _onEnableMemoryAlbumChanged(bool value) async {
-    _log.info("[_onEnableMemoryAlbumChanged] New value: $value");
-    final oldValue = _isEnableMemoryAlbum;
-    setState(() {
-      _isEnableMemoryAlbum = value;
-    });
-    if (!await AccountPref.of(widget.account).setEnableMemoryAlbum(value)) {
-      _log.severe("[_onEnableMemoryAlbumChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isEnableMemoryAlbum = oldValue;
-      });
-    }
-  }
-
-  Future<void> _setMemoriesRange(int value) async {
-    _log.info("[_setMemoriesRange] New value: $value");
-    final oldValue = _memoriesRange;
-    setState(() {
-      _memoriesRange = value;
-    });
-    if (!await Pref().setMemoriesRange(value)) {
-      _log.severe("[_setMemoriesRange] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _memoriesRange = oldValue;
-      });
-    }
-  }
-
-  late bool _isEnableMemoryAlbum;
-  late int _memoriesRange;
-}
-
-class _MemoriesRangeSlider extends StatefulWidget {
-  const _MemoriesRangeSlider({
-    Key? key,
-    required this.initialRange,
-    this.onChanged,
-  }) : super(key: key);
-
-  @override
-  createState() => _MemoriesRangeSliderState();
-
-  final int initialRange;
-  final ValueChanged<int>? onChanged;
-}
-
-class _MemoriesRangeSliderState extends State<_MemoriesRangeSlider> {
-  @override
-  initState() {
-    super.initState();
-    _memoriesRange = widget.initialRange;
-  }
-
-  @override
-  build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: Text(
-              L10n.global().settingsMemoriesRangeValueText(_memoriesRange)),
-        ),
-        StatefulSlider(
-          initialValue: _memoriesRange.toDouble(),
-          min: 0,
-          max: 4,
-          divisions: 4,
-          onChangeEnd: (value) async {
-            setState(() {
-              _memoriesRange = value.toInt();
-            });
-            widget.onChanged?.call(_memoriesRange);
-          },
-        ),
-      ],
-    );
-  }
-
-  late int _memoriesRange;
 }
 
 class _ViewerSettings extends StatefulWidget {

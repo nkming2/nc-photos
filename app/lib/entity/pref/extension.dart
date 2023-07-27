@@ -293,7 +293,7 @@ extension AccountPrefExtension on AccountPref {
 
   bool? isEnableMemoryAlbum() =>
       provider.getBool(AccountPrefKey.isEnableMemoryAlbum);
-  bool isEnableMemoryAlbumOr([bool def = false]) =>
+  bool isEnableMemoryAlbumOr([bool def = true]) =>
       isEnableMemoryAlbum() ?? def;
   Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
       AccountPrefKey.isEnableMemoryAlbum,

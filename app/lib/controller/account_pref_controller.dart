@@ -17,62 +17,63 @@ class AccountPrefController {
     _shareFolderController.close();
     _accountLabelController.close();
     _personProviderController.close();
+    _isEnableMemoryAlbumController.close();
   }
 
   ValueStream<String> get shareFolder => _shareFolderController.stream;
 
-  Future<void> setShareFolder(String value) async {
-    final backup = _shareFolderController.value;
-    _shareFolderController.add(value);
-    try {
-      if (!await _accountPref.setShareFolder(value)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[setShareFolder] Failed setting preference", e, stackTrace);
-      _shareFolderController
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  Future<void> setShareFolder(String value) => _set<String>(
+        controller: _shareFolderController,
+        setter: (pref, value) => pref.setShareFolder(value),
+        value: value,
+      );
 
   ValueStream<String?> get accountLabel => _accountLabelController.stream;
 
-  Future<void> setAccountLabel(String? value) async {
-    final backup = _accountLabelController.value;
-    _accountLabelController.add(value);
-    try {
-      if (!await _accountPref.setAccountLabel(value)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[setAccountLabel] Failed setting preference", e, stackTrace);
-      _accountLabelController
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  Future<void> setAccountLabel(String? value) => _set<String?>(
+        controller: _accountLabelController,
+        setter: (pref, value) => pref.setAccountLabel(value),
+        value: value,
+      );
 
   ValueStream<PersonProvider> get personProvider =>
       _personProviderController.stream;
 
-  Future<void> setPersonProvider(PersonProvider value) async {
-    final backup = _personProviderController.value;
-    _personProviderController.add(value);
+  Future<void> setPersonProvider(PersonProvider value) => _set<PersonProvider>(
+        controller: _personProviderController,
+        setter: (pref, value) => pref.setPersonProvider(value.index),
+        value: value,
+      );
+
+  ValueStream<bool> get isEnableMemoryAlbum =>
+      _isEnableMemoryAlbumController.stream;
+
+  Future<void> setEnableMemoryAlbum(bool value) => _set<bool>(
+        controller: _isEnableMemoryAlbumController,
+        setter: (pref, value) => pref.setEnableMemoryAlbum(value),
+        value: value,
+      );
+
+  AccountPref get raw => _accountPref;
+
+  Future<void> _set<T>({
+    required BehaviorSubject<T> controller,
+    required Future<bool> Function(AccountPref pref, T value) setter,
+    required T value,
+  }) async {
+    final backup = controller.value;
+    controller.add(value);
     try {
-      if (!await _accountPref.setPersonProvider(value.index)) {
+      if (!await setter(_accountPref, value)) {
         throw StateError("Unknown error");
       }
     } catch (e, stackTrace) {
-      _log.severe(
-          "[setPersonProvider] Failed setting preference", e, stackTrace);
-      _personProviderController
+      _log.severe("[_set] Failed setting preference", e, stackTrace);
+      controller
         ..addError(e, stackTrace)
         ..add(backup);
     }
   }
-
-  AccountPref get raw => _accountPref;
 
   final Account account;
 
@@ -83,4 +84,6 @@ class AccountPrefController {
       BehaviorSubject.seeded(_accountPref.getAccountLabel());
   late final _personProviderController = BehaviorSubject.seeded(
       PersonProvider.fromValue(_accountPref.getPersonProviderOr()));
+  late final _isEnableMemoryAlbumController =
+      BehaviorSubject.seeded(_accountPref.isEnableMemoryAlbumOr(true));
 }

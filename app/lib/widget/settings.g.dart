@@ -13,13 +13,6 @@ extension _$_SettingsStateNpLog on _SettingsState {
   static final log = Logger("widget.settings._SettingsState");
 }
 
-extension _$_PhotosSettingsStateNpLog on _PhotosSettingsState {
-  // ignore: unused_element
-  Logger get _log => log;
-
-  static final log = Logger("widget.settings._PhotosSettingsState");
-}
-
 extension _$_ViewerSettingsStateNpLog on _ViewerSettingsState {
   // ignore: unused_element
   Logger get _log => log;

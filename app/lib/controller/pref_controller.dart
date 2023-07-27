@@ -63,6 +63,23 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<int> get memoriesRange => _memoriesRangeController.stream;
+
+  Future<void> setMemoriesRange(int value) => _set<int>(
+        controller: _memoriesRangeController,
+        setter: (pref, value) => pref.setMemoriesRange(value),
+        value: value,
+      );
+
+  ValueStream<bool> get isPhotosTabSortByName =>
+      _isPhotosTabSortByNameController.stream;
+
+  Future<void> setPhotosTabSortByName(bool value) => _set<bool>(
+        controller: _isPhotosTabSortByNameController,
+        setter: (pref, value) => pref.setPhotosTabSortByName(value),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -107,4 +124,8 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isEnableExifOr(true));
   late final _shouldProcessExifWifiOnlyController =
       BehaviorSubject.seeded(_c.pref.shouldProcessExifWifiOnlyOr(true));
+  late final _memoriesRangeController =
+      BehaviorSubject.seeded(_c.pref.getMemoriesRangeOr(2));
+  late final _isPhotosTabSortByNameController =
+      BehaviorSubject.seeded(_c.pref.isPhotosTabSortByNameOr(false));
 }
