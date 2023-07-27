@@ -112,73 +112,63 @@ class _SettingsState extends State<Settings> {
                   },
                 ),
               ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.palette_outlined),
                 label: L10n.global().settingsThemeTitle,
                 description: L10n.global().settingsThemeDescription,
-                builder: () => const ThemeSettings(),
+                pageBuilder: () => const ThemeSettings(),
               ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.local_offer_outlined),
                 label: L10n.global().settingsMetadataTitle,
-                builder: () => const MetadataSettings(),
+                pageBuilder: () => const MetadataSettings(),
               ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.image_outlined),
                 label: L10n.global().photosTabLabel,
                 description: L10n.global().settingsPhotosDescription,
-                builder: () => _PhotosSettings(account: widget.account),
+                pageBuilder: () => _PhotosSettings(account: widget.account),
               ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.grid_view_outlined),
                 label: L10n.global().collectionsTooltip,
-                builder: () => _AlbumSettings(),
+                pageBuilder: () => _AlbumSettings(),
               ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.view_carousel_outlined),
                 label: L10n.global().settingsViewerTitle,
                 description: L10n.global().settingsViewerDescription,
-                builder: () => _ViewerSettings(),
+                pageBuilder: () => _ViewerSettings(),
               ),
               if (features.isSupportEnhancement)
-                _buildSubSettings(
-                  context,
+                _SubPageItem(
                   leading: const Icon(Icons.auto_fix_high_outlined),
                   label: L10n.global().settingsImageEditTitle,
                   description: L10n.global().settingsImageEditDescription,
-                  builder: () => const EnhancementSettings(),
+                  pageBuilder: () => const EnhancementSettings(),
                 ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.emoji_symbols_outlined),
                 label: L10n.global().settingsMiscellaneousTitle,
-                builder: () => const _MiscSettings(),
+                pageBuilder: () => const _MiscSettings(),
               ),
               // if (_enabledExperiments.isNotEmpty)
-              //   _buildSubSettings(
-              //     context,
+              //   _SubPageItem(
               //     leading: const Icon(Icons.science_outlined),
               //     label: L10n.global().settingsExperimentalTitle,
               //     description: L10n.global().settingsExperimentalDescription,
-              //     builder: () => _ExperimentalSettings(),
+              //     pageBuilder: () => _ExperimentalSettings(),
               //   ),
-              _buildSubSettings(
-                context,
+              _SubPageItem(
                 leading: const Icon(Icons.warning_amber),
                 label: L10n.global().settingsExpertTitle,
-                builder: () => const ExpertSettings(),
+                pageBuilder: () => const ExpertSettings(),
               ),
               if (_isShowDevSettings)
-                _buildSubSettings(
-                  context,
+                _SubPageItem(
                   leading: const Icon(Icons.code_outlined),
                   label: "Developer options",
-                  builder: () => const DeveloperSettings(),
+                  pageBuilder: () => const DeveloperSettings(),
                 ),
               SettingsListCaption(
                 label: L10n.global().settingsAboutSectionTitle,
@@ -232,31 +222,6 @@ class _SettingsState extends State<Settings> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSubSettings(
-    BuildContext context, {
-    Widget? leading,
-    required String label,
-    String? description,
-    required Widget Function() builder,
-  }) {
-    return ListTile(
-      leading: leading == null
-          ? null
-          : ListTileCenterLeading(
-              child: leading,
-            ),
-      title: Text(label),
-      subtitle: description == null ? null : Text(description),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => builder(),
-          ),
-        );
-      },
     );
   }
 
@@ -317,6 +282,36 @@ class _SettingsState extends State<Settings> {
   static const String _sourceRepo = "https://bit.ly/3LQerBv";
   static const String _bugReportUrl = "https://bit.ly/3NANrr7";
   static const String _translationUrl = "https://bit.ly/3NwmdSw";
+}
+
+class _SubPageItem extends StatelessWidget {
+  const _SubPageItem({
+    this.leading,
+    required this.label,
+    this.description,
+    required this.pageBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: leading == null ? null : ListTileCenterLeading(child: leading!),
+      title: Text(label),
+      subtitle: description == null ? null : Text(description!),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => pageBuilder(),
+          ),
+        );
+      },
+    );
+  }
+
+  final Widget? leading;
+  final String label;
+  final String? description;
+  final Widget Function() pageBuilder;
 }
 
 class _PhotosSettings extends StatefulWidget {
