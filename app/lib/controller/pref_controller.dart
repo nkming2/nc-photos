@@ -32,35 +32,51 @@ class PrefController {
   ValueStream<int> get albumBrowserZoomLevel =>
       _albumBrowserZoomLevelController.stream;
 
-  Future<void> setAlbumBrowserZoomLevel(int value) async {
-    final backup = _albumBrowserZoomLevelController.value;
-    _albumBrowserZoomLevelController.add(value);
-    try {
-      if (!await _c.pref.setAlbumBrowserZoomLevel(value)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[setAlbumBrowserZoomLevel] Failed setting preference", e,
-          stackTrace);
-      _albumBrowserZoomLevelController
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  Future<void> setAlbumBrowserZoomLevel(int value) => _set<int>(
+        controller: _albumBrowserZoomLevelController,
+        setter: (pref, value) => pref.setAlbumBrowserZoomLevel(value),
+        value: value,
+      );
 
   ValueStream<int> get homeAlbumsSort => _homeAlbumsSortController.stream;
 
-  Future<void> setHomeAlbumsSort(int value) async {
-    final backup = _homeAlbumsSortController.value;
-    _homeAlbumsSortController.add(value);
+  Future<void> setHomeAlbumsSort(int value) => _set<int>(
+        controller: _homeAlbumsSortController,
+        setter: (pref, value) => pref.setHomeAlbumsSort(value),
+        value: value,
+      );
+
+  ValueStream<bool> get isEnableExif => _isEnableExifController.stream;
+
+  Future<void> setEnableExif(bool value) => _set<bool>(
+        controller: _isEnableExifController,
+        setter: (pref, value) => pref.setEnableExif(value),
+        value: value,
+      );
+
+  ValueStream<bool> get shouldProcessExifWifiOnly =>
+      _shouldProcessExifWifiOnlyController.stream;
+
+  Future<void> setProcessExifWifiOnly(bool value) => _set<bool>(
+        controller: _shouldProcessExifWifiOnlyController,
+        setter: (pref, value) => pref.setProcessExifWifiOnly(value),
+        value: value,
+      );
+
+  Future<void> _set<T>({
+    required BehaviorSubject<T> controller,
+    required Future<bool> Function(Pref pref, T value) setter,
+    required T value,
+  }) async {
+    final backup = controller.value;
+    controller.add(value);
     try {
-      if (!await _c.pref.setHomeAlbumsSort(value)) {
+      if (!await setter(_c.pref, value)) {
         throw StateError("Unknown error");
       }
     } catch (e, stackTrace) {
-      _log.severe(
-          "[setHomeAlbumsSort] Failed setting preference", e, stackTrace);
-      _homeAlbumsSortController
+      _log.severe("[_set] Failed setting preference", e, stackTrace);
+      controller
         ..addError(e, stackTrace)
         ..add(backup);
     }
@@ -87,4 +103,8 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
   late final _homeAlbumsSortController =
       BehaviorSubject.seeded(_c.pref.getHomeAlbumsSortOr(0));
+  late final _isEnableExifController =
+      BehaviorSubject.seeded(_c.pref.isEnableExifOr(true));
+  late final _shouldProcessExifWifiOnlyController =
+      BehaviorSubject.seeded(_c.pref.shouldProcessExifWifiOnlyOr(true));
 }

@@ -16,7 +16,6 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
-import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
@@ -26,6 +25,7 @@ import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
+import 'package:nc_photos/widget/settings/metadata_settings.dart';
 import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
@@ -70,9 +70,6 @@ class _SettingsState extends State<Settings> {
   @override
   initState() {
     super.initState();
-    _isEnableExif = Pref().isEnableExifOr();
-    _shouldProcessExifWifiOnly = Pref().shouldProcessExifWifiOnlyOr();
-
     _prefUpdatedListener.begin();
   }
 
@@ -115,23 +112,12 @@ class _SettingsState extends State<Settings> {
                   },
                 ),
               ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsExifSupportTitle),
-                subtitle: _isEnableExif
-                    ? Text(L10n.global().settingsExifSupportTrueSubtitle)
-                    : null,
-                value: _isEnableExif,
-                onChanged: (value) => _onExifSupportChanged(context, value),
+              _buildSubSettings(
+                context,
+                leading: const Icon(Icons.local_offer_outlined),
+                label: L10n.global().settingsMetadataTitle,
+                builder: () => const MetadataSettings(),
               ),
-              if (platform_k.isMobile)
-                SwitchListTile(
-                  title: Text(L10n.global().settingsExifWifiOnlyTitle),
-                  subtitle: _shouldProcessExifWifiOnly
-                      ? null
-                      : Text(L10n.global().settingsExifWifiOnlyFalseSubtitle),
-                  value: _shouldProcessExifWifiOnly,
-                  onChanged: _isEnableExif ? _onExifWifiOnlyChanged : null,
-                ),
               _buildSubSettings(
                 context,
                 leading: const Icon(Icons.image_outlined),
@@ -275,60 +261,6 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _onExifSupportChanged(BuildContext context, bool value) {
-    if (value) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
-          content: Text(L10n.global().exifSupportDetails),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(L10n.global().enableButtonLabel),
-            ),
-          ],
-        ),
-      ).then((value) {
-        if (value == true) {
-          _setExifSupport(true);
-        }
-      });
-    } else {
-      _setExifSupport(false);
-    }
-  }
-
-  Future<void> _onExifWifiOnlyChanged(bool value) async {
-    _log.info("[_onExifWifiOnlyChanged] New value: $value");
-    final oldValue = _shouldProcessExifWifiOnly;
-    setState(() {
-      _shouldProcessExifWifiOnly = value;
-    });
-    if (!await Pref().setProcessExifWifiOnly(value)) {
-      _log.severe("[_onExifWifiOnlyChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _shouldProcessExifWifiOnly = oldValue;
-      });
-    } else {
-      // this is not very important since the config will be synced during
-      // service startup
-      ServiceConfig.setProcessExifWifiOnly(value).ignore();
-    }
-  }
-
   Future<void> _onCaptureLogChanged(BuildContext context, bool value) async {
     if (value) {
       final result = await showDialog<bool>(
@@ -376,26 +308,6 @@ class _SettingsState extends State<Settings> {
       setState(() {});
     }
   }
-
-  Future<void> _setExifSupport(bool value) async {
-    final oldValue = _isEnableExif;
-    setState(() {
-      _isEnableExif = value;
-    });
-    if (!await Pref().setEnableExif(value)) {
-      _log.severe("[_setExifSupport] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isEnableExif = oldValue;
-      });
-    }
-  }
-
-  late bool _isEnableExif;
-  late bool _shouldProcessExifWifiOnly;
 
   var _devSettingsUnlockCount = 3;
   var _isShowDevSettings = false;

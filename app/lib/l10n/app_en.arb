@@ -270,6 +270,10 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
+	"settingsMetadataTitle": "File metadata",
+	"@settingsMetadataTitle": {
+		"description": "Metadata (e.g., date, resolution, GPS, etc)"
+	},
 	"settingsExifSupportTitle": "EXIF support",
 	"@settingsExifSupportTitle": {
 		"description": "Title of the EXIF support setting"
