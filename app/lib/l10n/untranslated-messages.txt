@@ -1,6 +1,7 @@
 {
   "cs": [
     "nameInputInvalidEmpty",
+    "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerSystemColorButtonLabel",
@@ -22,6 +23,7 @@
     "connectingToServer2",
     "connectingToServerInstruction",
     "nameInputInvalidEmpty",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsMemoriesSubtitle",
     "settingsAccountTitle",
@@ -38,8 +40,6 @@
     "settingsMemoriesRangeTitle",
     "settingsMemoriesRangeValueText",
     "settingsMapProviderTitle",
-    "settingsAlbumTitle",
-    "settingsAlbumDescription",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
     "settingsImageEditTitle",
@@ -230,6 +230,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -333,6 +334,7 @@
   ],
 
   "es": [
+    "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerSystemColorButtonLabel",
@@ -341,6 +343,7 @@
   ],
 
   "fi": [
+    "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerSystemColorButtonLabel",
@@ -355,6 +358,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -477,6 +481,7 @@
   ],
 
   "it": [
+    "settingsMetadataTitle",
     "settingsShareFolderDialogDescription",
     "settingsShareFolderPickerDescription",
     "settingsPersonProviderTitle",
@@ -491,8 +496,6 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsMapProviderTitle",
-    "settingsAlbumTitle",
-    "settingsAlbumDescription",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
     "settingsImageEditTitle",
@@ -815,6 +818,7 @@
     "settingsWidgetTitle",
     "settingsLanguageTitle",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifSupportTitle",
     "settingsExifSupportTrueSubtitle",
     "settingsExifWifiOnlyTitle",
@@ -841,8 +845,6 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsMapProviderTitle",
-    "settingsAlbumTitle",
-    "settingsAlbumDescription",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
     "settingsImageEditTitle",
@@ -1144,6 +1146,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -1282,6 +1285,7 @@
 
   "pt": [
     "nameInputInvalidEmpty",
+    "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerSystemColorButtonLabel",
@@ -1305,6 +1309,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -1429,6 +1434,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -1553,6 +1559,7 @@
     "nameInputInvalidEmpty",
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
+    "settingsMetadataTitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
