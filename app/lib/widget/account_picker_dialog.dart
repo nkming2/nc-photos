@@ -151,6 +151,7 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                   _IconTile(
                     icon: const Icon(Icons.settings_outlined),
                     title: Text(L10n.global().settingsMenuLabel),
+                    isCircularSplash: true,
                     onTap: () {
                       Navigator.of(context)
                         ..pop()
@@ -164,6 +165,7 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                   _IconTile(
                     icon: const Icon(Icons.groups_outlined),
                     title: Text(L10n.global().contributorsTooltip),
+                    isCircularSplash: true,
                     onTap: () {
                       Navigator.of(context).pop();
                       launch(help_util.contributorsUrl);
@@ -172,6 +174,7 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                   _IconTile(
                     icon: const Icon(Icons.help_outline),
                     title: Text(L10n.global().helpTooltip),
+                    isCircularSplash: true,
                     onTap: () {
                       Navigator.of(context).pop();
                       launch(help_util.mainUrl);
@@ -310,11 +313,12 @@ class _IconTile extends StatelessWidget {
     required this.icon,
     required this.title,
     this.onTap,
+    this.isCircularSplash = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    final content = ListTile(
       leading: SizedBox.square(
         dimension: 40,
         child: Center(child: icon),
@@ -322,11 +326,23 @@ class _IconTile extends StatelessWidget {
       title: title,
       onTap: onTap,
     );
+    if (isCircularSplash) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Material(
+          type: MaterialType.transparency,
+          child: content,
+        ),
+      );
+    } else {
+      return content;
+    }
   }
 
   final Widget icon;
   final Widget title;
   final VoidCallback? onTap;
+  final bool isCircularSplash;
 }
 
 class _AccountView extends StatelessWidget {
