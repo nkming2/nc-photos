@@ -1,7 +1,7 @@
 part of '../collection_browser.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> implements BlocLogger {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required DiContainer container,
     required this.account,
@@ -80,9 +80,6 @@ class _Bloc extends Bloc<_Event, _State> implements BlocLogger {
     _itemsControllerSubscription?.cancel();
     return super.close();
   }
-
-  @override
-  String get tag => _log.fullName;
 
   @override
   bool Function(dynamic, dynamic)? get shouldLog => (currentState, nextState) {

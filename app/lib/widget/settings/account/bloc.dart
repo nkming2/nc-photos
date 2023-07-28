@@ -1,7 +1,7 @@
 part of '../account_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required DiContainer container,
     required Account account,
@@ -52,6 +52,9 @@ class _Bloc extends Bloc<_Event, _State> {
 
     on<_SetError>(_onSetError);
   }
+
+  @override
+  String get tag => _log.fullName;
 
   @override
   Future<void> close() {

@@ -1,7 +1,7 @@
 part of '../photos_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
     required this.accountPrefController,
@@ -14,6 +14,9 @@ class _Bloc extends Bloc<_Event, _State> {
     on<_SetEnableMemories>(_onSetEnableMemories);
     on<_SetMemoriesRange>(_onSetMemoriesRange);
   }
+
+  @override
+  String get tag => _log.fullName;
 
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);

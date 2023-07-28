@@ -1,7 +1,7 @@
 part of '../new_collection_dialog.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.account,
     required Set<_ProviderOption> supportedProviders,
@@ -14,6 +14,9 @@ class _Bloc extends Bloc<_Event, _State> {
 
     on<_SetError>(_onSetError);
   }
+
+  @override
+  String get tag => _log.fullName;
 
   @override
   void onError(Object error, StackTrace stackTrace) {

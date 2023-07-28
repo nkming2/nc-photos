@@ -9,12 +9,15 @@ class _Error {
 }
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc(DiContainer c)
       : _c = c,
         super(const _State()) {
     on<_ClearCacheDatabase>(_onClearCacheDatabase);
   }
+
+  @override
+  String get tag => _log.fullName;
 
   Stream<_Error> errorStream() => _errorStream.stream;
 

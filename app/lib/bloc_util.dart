@@ -1,4 +1,4 @@
-abstract class BlocLogger {
+mixin BlocLogger {
   String? get tag => null;
 
   bool Function(dynamic currentState, dynamic nextState)? get shouldLog => null;

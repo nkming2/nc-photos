@@ -7,7 +7,7 @@ class _Error {
 }
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc(DiContainer c)
       : assert(require(c)),
         _c = c,
@@ -22,6 +22,9 @@ class _Bloc extends Bloc<_Event, _State> {
   }
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.pref);
+
+  @override
+  String get tag => _log.fullName;
 
   Stream<_Error> errorStream() => _errorStream.stream;
 

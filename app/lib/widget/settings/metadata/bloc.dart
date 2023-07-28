@@ -1,7 +1,7 @@
 part of '../metadata_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
@@ -12,6 +12,9 @@ class _Bloc extends Bloc<_Event, _State> {
     on<_SetEnable>(_onSetEnable);
     on<_SetWifiOnly>(_onSetWifiOnly);
   }
+
+  @override
+  String get tag => _log.fullName;
 
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
