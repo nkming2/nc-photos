@@ -162,6 +162,14 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                     },
                   ),
                   _IconTile(
+                    icon: const Icon(Icons.groups_outlined),
+                    title: Text(L10n.global().contributorsTooltip),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      launch(help_util.contributorsUrl);
+                    },
+                  ),
+                  _IconTile(
                     icon: const Icon(Icons.help_outline),
                     title: Text(L10n.global().helpTooltip),
                     onTap: () {

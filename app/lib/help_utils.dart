@@ -12,3 +12,4 @@ const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
 const enhanceRetouchUrl = "https://bit.ly/3Ds2cea";
 const editPhotosUrl = "https://bit.ly/3v82oKA";
 const collectionTypesUrl = "https://bit.ly/3OwSiNq";
+const contributorsUrl = "https://bit.ly/3QhlQQs";
