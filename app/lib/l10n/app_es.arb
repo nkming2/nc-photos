@@ -16,7 +16,7 @@
     "@zoomTooltip": {
         "description": "Tooltip of the zoom button"
     },
-    "refreshMenuLabel": "Sincronizar",
+    "refreshMenuLabel": "Recargar",
     "@refreshMenuLabel": {
         "description": "Label of the refresh entry in menu"
     },
@@ -24,7 +24,7 @@
     "@settingsMenuLabel": {
         "description": "Label of the settings entry in menu"
     },
-    "selectionAppBarTitle": "{count, plural, other{{count} seleccionado}}",
+    "selectionAppBarTitle": "{count, plural, other{{count} seleccionados}}",
     "@selectionAppBarTitle": {
         "description": "Title of the contextual app bar that shows number of selected items",
         "placeholders": {
@@ -107,7 +107,7 @@
             }
         }
     },
-    "deleteTooltip": "Borrar",
+    "deleteTooltip": "Eliminar",
     "@deleteTooltip": {
         "description": "Delete selected items"
     },
@@ -153,7 +153,7 @@
             }
         }
     },
-    "albumArchiveLabel": "Archivo",
+    "albumArchiveLabel": "Archivado",
     "@albumArchiveLabel": {
         "description": "A collection containing all archived photos"
     },
@@ -170,7 +170,7 @@
     "@connectingToServer2": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
-    "connectingToServerInstruction": "Por favor inicia sesión con el navegador que se ha abierto.",
+    "connectingToServerInstruction": "Por favor inicia sesión con el navegador que se ha abierto",
     "@connectingToServerInstruction": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
@@ -194,7 +194,7 @@
     "@signInHeaderText": {
         "description": "(deprecated, may be removed in the future)"
     },
-    "signIn2faHintText": "Usa una contraseña de aplicación si en el servidor tienes activada la autentificación en dos pasos.",
+    "signIn2faHintText": "Usa una contraseña de aplicación si el servidor tiene activada la autenticación de doble factor.",
     "@signIn2faHintText": {
         "description": "(deprecated, may be removed in the future)"
     },
@@ -230,7 +230,7 @@
     "@rootPickerHeaderText": {
         "description": "Inform user what to do in root picker widget"
     },
-    "rootPickerSubHeaderText": "Solo se mostrará el contenido de las carpetas marcadas. Toca SALTAR para incluir todas",
+    "rootPickerSubHeaderText": "Solo se mostrará el contenido de las carpetas seleccionadas. Toca SALTAR para incluir todas",
     "@rootPickerSubHeaderText": {
         "description": "Inform user what to do in root picker widget"
     },
@@ -250,7 +250,7 @@
     "@setupWidgetTitle": {
         "description": "Title of the introductory widget"
     },
-    "setupSettingsModifyLaterHint": "Puedes cambiar esto luego en Ajustes",
+    "setupSettingsModifyLaterHint": "Puedes cambiarlo luego en Ajustes",
     "@setupSettingsModifyLaterHint": {
         "description": "Inform user that they can modify this setting after the setup process"
     },
@@ -278,7 +278,7 @@
     "@settingsExifSupportTrueSubtitle": {
         "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
     },
-    "settingsExifWifiOnlyTitle": "Escanear EXIF únicamente conectado por Wi-Fi",
+    "settingsExifWifiOnlyTitle": "Sólo escanear con Wi-Fi",
     "@settingsExifWifiOnlyTitle": {
         "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
     },
@@ -344,9 +344,9 @@
     "settingsViewerTitle": "Visualización",
     "settingsViewerDescription": "Personaliza la visualización de imágenes/vídeos",
     "settingsScreenBrightnessTitle": "Brillo de pantalla",
-    "settingsScreenBrightnessDescription": "Ignorar nivel de brillo del sistema",
+    "settingsScreenBrightnessDescription": "Establecer nivel de brillo al visualizar",
     "settingsForceRotationTitle": "Forzar rotación automática",
-    "settingsForceRotationDescription": "Rotar la pantalla aunque la autorotación del sistema esté desactivada",
+    "settingsForceRotationDescription": "Rotar pantalla aunque la auto-rotación esté desactivada en el sistema",
     "settingsMapProviderTitle": "Proveedor de mapas",
     "settingsAlbumTitle": "Álbumes",
     "settingsAlbumDescription": "Personaliza los álbumes",
@@ -738,7 +738,7 @@
         "description": "Shown when the app has paused reading image metadata"
     },
     "configButtonLabel": "CONFIGURAR",
-    "useAsAlbumCoverTooltip": "Usar como portada",
+    "useAsAlbumCoverTooltip": "Usar de portada",
     "helpTooltip": "Ayuda",
     "helpButtonLabel": "AYUDA",
     "removeFromAlbumTooltip": "Quitar del álbum",
@@ -797,7 +797,7 @@
     "@emptyTrashbinConfirmationDialogContent": {
         "description": "Make sure the user wants to delete all items"
     },
-    "unsetAlbumCoverTooltip": "Quitar portada",
+    "unsetAlbumCoverTooltip": "No usar de portada",
     "@unsetAlbumCoverTooltip": {
         "description": "Unset the cover of the opened album"
     },
@@ -921,7 +921,7 @@
     "@locationLabel": {
         "description": "Show where the file is located"
     },
-    "multipleFilesLinkShareDialogContent": "Nextcloud no soporta compartir enlaces para múltiples archivos. La aplicación en su lugar COPIARÁ los archivos a una nueva carpeta y compartirá la capeta.",
+    "multipleFilesLinkShareDialogContent": "Nextcloud no soporta compartir enlaces para múltiples archivos. La aplicación en su lugar COPIARÁ los archivos a una nueva carpeta y compartirá esa capeta.",
     "@multipleFilesLinkShareDialogContent": {
         "description": "Dialog shown when sharing multiple files as link"
     },
@@ -966,7 +966,7 @@
     "@shareAlbumDialogTitle": {
         "description": "Dialog to share an album with another user"
     },
-    "shareAlbumSuccessWithErrorNotification": "Álbum compartido con  {user}, pero algunos archivos fallaron al compartirlos",
+    "shareAlbumSuccessWithErrorNotification": "Álbum compartido con {user}, pero algunos archivos fallaron al compartirlos",
     "@shareAlbumSuccessWithErrorNotification": {
         "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
         "placeholders": {
@@ -1352,7 +1352,7 @@
     "@collectionPlacesLabel": {
         "description": "Browse photos grouped by place"
     },
-    "imageSaveOptionDialogTitle": "Guardando resultados",
+    "imageSaveOptionDialogTitle": "Ubicación de las ediciones",
     "@imageSaveOptionDialogTitle": {
         "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
     },
@@ -1401,8 +1401,8 @@
     "@createCollectionDialogNextcloudAlbumLabel": {
         "description": "Server-side albums that are available in Nextcloud 25+"
     },
-    "createCollectionDialogNextcloudAlbumDescription": "Álbum en el propio servidor, requiere Nextcloud 25 o mayor",
-    "removeCollectionsFailedNotification": "Error al remover algunas colecciones",
+    "createCollectionDialogNextcloudAlbumDescription": "Álbum alojado en servidor, requiere Nextcloud 25 o superior",
+    "removeCollectionsFailedNotification": "Error al quitar algunas colecciones",
     "errorUnauthenticated": "No estás autentificado. Por favor inicia sesión otra vez si el problema continúa.",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
