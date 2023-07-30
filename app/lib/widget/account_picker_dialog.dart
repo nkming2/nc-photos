@@ -90,6 +90,7 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
         ),
       ],
       child: Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: ClipRRect(
