@@ -71,7 +71,6 @@ class ShareChannelHandler(activity: Activity) :
 				ClipData.newUri(_context.contentResolver, "Share", uris[0])
 			type = mimeTypes[0] ?: "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		} else Intent().apply {
 			action = Intent.ACTION_SEND_MULTIPLE
 			putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
@@ -86,7 +85,6 @@ class ShareChannelHandler(activity: Activity) :
 					it?.startsWith("image/") == true
 				}) "image/*" else "*/*"
 			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-			addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 		}
 		val shareChooser = Intent.createChooser(
 			shareIntent, _context.getString(
