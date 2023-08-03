@@ -3,8 +3,8 @@ package com.nkming.nc_photos.plugin
 class LogConfig {
 	companion object {
 		var isShowInfo = true
-		var isShowDebug = false
-		var isShowVerbose = false
+		var isShowDebug = BuildConfig.DEBUG
+		var isShowVerbose = BuildConfig.DEBUG
 	}
 }
 
