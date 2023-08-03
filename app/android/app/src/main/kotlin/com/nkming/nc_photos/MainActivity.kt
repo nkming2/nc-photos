@@ -6,7 +6,11 @@ import android.os.Bundle
 import androidx.annotation.NonNull
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
-import com.nkming.nc_photos.plugin.*
+import com.nkming.nc_photos.plugin.NcPhotosPlugin
+import com.nkming.nc_photos.plugin.UriUtil
+import com.nkming.nc_photos.plugin.logD
+import com.nkming.nc_photos.plugin.logE
+import com.nkming.nc_photos.plugin.logI
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -61,12 +65,16 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler,
 	}
 
 	override fun onNewIntent(intent: Intent) {
-		if (intent.action == NcPhotosPlugin.ACTION_SHOW_IMAGE_PROCESSOR_RESULT) {
-			val route = getRouteFromImageProcessorResult(intent) ?: return
-			logI(TAG, "Navigate to route: $route")
-			flutterEngine?.navigationChannel?.pushRoute(route)
-		} else {
-			super.onNewIntent(intent)
+		when (intent.action) {
+			NcPhotosPlugin.ACTION_SHOW_IMAGE_PROCESSOR_RESULT -> {
+				val route = getRouteFromImageProcessorResult(intent) ?: return
+				logI(TAG, "Navigate to route: $route")
+				flutterEngine?.navigationChannel?.pushRoute(route)
+			}
+
+			else -> {
+				super.onNewIntent(intent)
+			}
 		}
 	}
 
@@ -91,6 +99,7 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler,
 				logD(TAG, "Using new map renderer")
 				true
 			}
+
 			MapsInitializer.Renderer.LEGACY -> {
 				logD(TAG, "Using legacy map renderer")
 				false
@@ -99,10 +108,9 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler,
 	}
 
 	private fun getRouteFromImageProcessorResult(intent: Intent): String? {
-		val resultUri =
-			intent.getParcelableExtra<Uri>(
-				NcPhotosPlugin.EXTRA_IMAGE_RESULT_URI
-			)
+		val resultUri = intent.getParcelableExtra<Uri>(
+			NcPhotosPlugin.EXTRA_IMAGE_RESULT_URI
+		)
 		if (resultUri == null) {
 			logE(TAG, "Image result uri == null")
 			return null
