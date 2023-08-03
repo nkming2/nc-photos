@@ -18,12 +18,14 @@ import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
@@ -169,6 +171,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     label: L10n.global().addItemToCollectionTooltip,
                     onPressed: () => _onAddToAlbumPressed(context),
                   ),
+                  if (platform_k.isAndroid &&
+                      file_util.isSupportedImageFormat(_file!))
+                    _DetailPaneButton(
+                      icon: Icons.launch,
+                      label: L10n.global().setAsTooltip,
+                      onPressed: () => _onSetAsPressed(context),
+                    ),
                   if (widget.fd.fdIsArchived == true)
                     _DetailPaneButton(
                       icon: Icons.unarchive_outlined,
@@ -415,6 +424,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       selection: [_file!],
       clearSelection: () {},
     );
+  }
+
+  void _onSetAsPressed(BuildContext context) {
+    assert(_file != null);
+    final c = KiwiContainer().resolve<DiContainer>();
+    SetAsHandler(c, context: context).setAsFile(widget.account, _file!);
   }
 
   void _onMapTap() {

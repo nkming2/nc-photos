@@ -94,10 +94,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       }
     }
     if (results.isNotEmpty) {
-      final share = AndroidFileShare(
-        results.map((e) => e.item2 as String).toList(),
-        results.map((e) => e.item1.fdMime).toList(),
-      );
+      final share = AndroidFileShare(results
+          .map((e) => AndroidFileShareFile(e.item2 as String, e.item1.fdMime))
+          .toList());
       unawaited(share.share());
     }
     emit(state.copyWith(result: true));
@@ -129,10 +128,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       }
     }
     if (results.isNotEmpty) {
-      final share = AndroidFileShare(
-        results.map((e) => e.item2 as String).toList(),
-        results.map((e) => e.item1.fdMime).toList(),
-      );
+      final share = AndroidFileShare(results
+          .map((e) => AndroidFileShareFile(e.item2 as String, e.item1.fdMime))
+          .toList());
       unawaited(share.share());
     }
     emit(state.copyWith(result: true));

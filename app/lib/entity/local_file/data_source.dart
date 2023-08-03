@@ -53,8 +53,8 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
       onFailure?.call(f, ArgumentError("File not supported"), null);
     });
 
-    final share = AndroidFileShare(uriFiles.map((e) => e.uri).toList(),
-        uriFiles.map((e) => e.mime).toList());
+    final share = AndroidFileShare(
+        uriFiles.map((e) => AndroidFileShareFile(e.uri, e.mime)).toList());
     try {
       await share.share();
     } catch (e, stackTrace) {

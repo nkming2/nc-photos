@@ -1,16 +1,29 @@
 import 'package:nc_photos/mobile/android/share.dart';
 import 'package:nc_photos/platform/share.dart' as itf;
 
-class AndroidFileShare extends itf.FileShare {
-  AndroidFileShare(this.fileUris, this.mimeTypes);
+class AndroidFileShareFile {
+  const AndroidFileShareFile(this.fileUri, this.mimeType);
+
+  final String fileUri;
+  final String? mimeType;
+}
+
+class AndroidFileShare implements itf.FileShare {
+  const AndroidFileShare(this.files);
 
   @override
-  share() {
-    return Share.shareItems(fileUris, mimeTypes);
+  Future<void> share() {
+    final uris = files.map((e) => e.fileUri).toList();
+    final mimes = files.map((e) => e.mimeType).toList();
+    return Share.shareItems(uris, mimes);
   }
 
-  final List<String> fileUris;
-  final List<String?> mimeTypes;
+  Future<void> setAs() {
+    assert(files.length == 1);
+    return Share.shareAsAttachData(files.first.fileUri, files.first.mimeType);
+  }
+
+  final List<AndroidFileShareFile> files;
 }
 
 class AndroidTextShare extends itf.TextShare {

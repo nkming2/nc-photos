@@ -8,10 +8,15 @@ class Share {
         "mimeTypes": mimeTypes,
       });
 
-  static Future<void> shareText(
-          String text, String? mimeType) =>
+  static Future<void> shareText(String text, String? mimeType) =>
       _channel.invokeMethod("shareText", <String, dynamic>{
         "text": text,
+        "mimeType": mimeType,
+      });
+
+  static Future<void> shareAsAttachData(String fileUri, String? mimeType) =>
+      _channel.invokeMethod("shareAsAttachData", <String, dynamic>{
+        "fileUri": fileUri,
         "mimeType": mimeType,
       });
 

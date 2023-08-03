@@ -1419,6 +1419,10 @@
 	"removeCollectionsFailedNotification": "Failed to remove some collections",
 	"accountSettingsTooltip": "Account settings",
 	"contributorsTooltip": "Contributors",
+	"setAsTooltip": "Set as",
+	"@setAsTooltip": {
+		"description": "e.g., set as wallpaper"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

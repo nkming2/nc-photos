@@ -19,24 +19,35 @@ class ShareChannelHandler(activity: Activity) :
 				try {
 					shareItems(
 						call.argument("fileUris")!!,
-						call.argument("mimeTypes")!!,
-						result
+						call.argument("mimeTypes")!!, result
 					)
 				} catch (e: Throwable) {
 					result.error("systemException", e.toString(), null)
 				}
 			}
+
 			"shareText" -> {
 				try {
 					shareText(
-						call.argument("text")!!,
-						call.argument("mimeType"),
+						call.argument("text")!!, call.argument("mimeType"),
 						result
 					)
 				} catch (e: Throwable) {
 					result.error("systemException", e.toString(), null)
 				}
 			}
+
+			"shareAsAttachData" -> {
+				try {
+					shareAsAttachData(
+						call.argument("fileUri")!!, call.argument("mimeType"),
+						result
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> {
 				result.notImplemented()
 			}
@@ -44,8 +55,7 @@ class ShareChannelHandler(activity: Activity) :
 	}
 
 	private fun shareItems(
-		fileUris: List<String>,
-		mimeTypes: List<String?>,
+		fileUris: List<String>, mimeTypes: List<String?>,
 		result: MethodChannel.Result
 	) {
 		assert(fileUris.isNotEmpty())
@@ -101,6 +111,26 @@ class ShareChannelHandler(activity: Activity) :
 			)
 		)
 		_context.startActivity(shareChooser)
+		result.success(null)
+	}
+
+	private fun shareAsAttachData(
+		fileUri: String, mimeType: String?, result: MethodChannel.Result
+	) {
+		val intent = Intent().apply {
+			action = Intent.ACTION_ATTACH_DATA
+			if (mimeType == null) {
+				data = Uri.parse(fileUri)
+			} else {
+				setDataAndType(Uri.parse(fileUri), mimeType)
+			}
+			addCategory(Intent.CATEGORY_DEFAULT)
+			addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+		}
+		val chooser = Intent.createChooser(
+			intent, _context.getString(R.string.attach_data_chooser_title)
+		)
+		_context.startActivity(chooser)
 		result.success(null)
 	}
 
