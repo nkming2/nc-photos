@@ -2,7 +2,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
-import 'package:nc_photos/lazy.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,22 +12,15 @@ part 'pref_controller.g.dart';
 class PrefController {
   PrefController(this._c);
 
-  ValueStream<language_util.AppLanguage> get language => _languageStream();
+  ValueStream<language_util.AppLanguage> get language =>
+      _languageController.stream;
 
-  Future<void> setAppLanguage(language_util.AppLanguage value) async {
-    final backup = _languageController.value;
-    _languageController.add(value.langId);
-    try {
-      if (!await _c.pref.setLanguage(value.langId)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[setAppLanguage] Failed setting preference", e, stackTrace);
-      _languageController
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  Future<void> setAppLanguage(language_util.AppLanguage value) =>
+      _set<language_util.AppLanguage>(
+        controller: _languageController,
+        setter: (pref, value) => pref.setLanguage(value.langId),
+        value: value,
+      );
 
   ValueStream<int> get albumBrowserZoomLevel =>
       _albumBrowserZoomLevelController.stream;
@@ -136,7 +128,7 @@ class PrefController {
     }
   }
 
-  language_util.AppLanguage _langIdToAppLanguage(int langId) {
+  static language_util.AppLanguage _langIdToAppLanguage(int langId) {
     try {
       return language_util.supportedLanguages[langId]!;
     } catch (_) {
@@ -146,13 +138,7 @@ class PrefController {
 
   final DiContainer _c;
   late final _languageController =
-      BehaviorSubject.seeded(_c.pref.getLanguageOr(0));
-  late final _languageStream = Lazy(
-    () => _languageController
-        .map(_langIdToAppLanguage)
-        .publishValueSeeded(_langIdToAppLanguage(_languageController.value))
-      ..connect(),
-  );
+      BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
   late final _albumBrowserZoomLevelController =
       BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
   late final _homeAlbumsSortController =
