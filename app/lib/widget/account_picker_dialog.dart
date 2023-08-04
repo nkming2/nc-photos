@@ -91,98 +91,101 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
       ],
       child: Dialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 8),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Text(
-                        L10n.global().appTitle,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      if (!Pref().isFollowSystemThemeOr(false))
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: _DarkModeSwitch(
-                            onChanged: _onDarkModeChanged,
-                          ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 512),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 8),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          L10n.global().appTitle,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Container(
-                      color: Theme.of(context).colorScheme.background,
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: _BlocBuilder(
-                          buildWhen: (previous, current) =>
-                              previous.isOpenDropdown !=
-                                  current.isOpenDropdown ||
-                              previous.accounts != current.accounts,
-                          builder: (context, state) {
-                            final bloc = context.read<_Bloc>();
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const _AccountDropdown(),
-                                if (state.isOpenDropdown) ...[
-                                  ...state.accounts
-                                      .where(
-                                          (a) => a.id != bloc.activeAccount.id)
-                                      .map((a) => _AccountView(account: a)),
-                                  const _NewAccountView(),
-                                ] else
-                                  const _AccountSettingsView(),
-                              ],
-                            );
-                          },
+                        if (!Pref().isFollowSystemThemeOr(false))
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: _DarkModeSwitch(
+                              onChanged: _onDarkModeChanged,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Container(
+                        color: Theme.of(context).colorScheme.background,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: _BlocBuilder(
+                            buildWhen: (previous, current) =>
+                                previous.isOpenDropdown !=
+                                    current.isOpenDropdown ||
+                                previous.accounts != current.accounts,
+                            builder: (context, state) {
+                              final bloc = context.read<_Bloc>();
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const _AccountDropdown(),
+                                  if (state.isOpenDropdown) ...[
+                                    ...state.accounts
+                                        .where((a) =>
+                                            a.id != bloc.activeAccount.id)
+                                        .map((a) => _AccountView(account: a)),
+                                    const _NewAccountView(),
+                                  ] else
+                                    const _AccountSettingsView(),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  _IconTile(
-                    icon: const Icon(Icons.settings_outlined),
-                    title: Text(L10n.global().settingsMenuLabel),
-                    isCircularSplash: true,
-                    onTap: () {
-                      Navigator.of(context)
-                        ..pop()
-                        ..pushNamed(
-                          Settings.routeName,
-                          arguments: SettingsArguments(
-                              context.read<_Bloc>().activeAccount),
-                        );
-                    },
-                  ),
-                  _IconTile(
-                    icon: const Icon(Icons.groups_outlined),
-                    title: Text(L10n.global().contributorsTooltip),
-                    isCircularSplash: true,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      launch(help_util.contributorsUrl);
-                    },
-                  ),
-                  _IconTile(
-                    icon: const Icon(Icons.help_outline),
-                    title: Text(L10n.global().helpTooltip),
-                    isCircularSplash: true,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      launch(help_util.mainUrl);
-                    },
-                  ),
-                  const _AboutChin(),
-                ],
+                    _IconTile(
+                      icon: const Icon(Icons.settings_outlined),
+                      title: Text(L10n.global().settingsMenuLabel),
+                      isCircularSplash: true,
+                      onTap: () {
+                        Navigator.of(context)
+                          ..pop()
+                          ..pushNamed(
+                            Settings.routeName,
+                            arguments: SettingsArguments(
+                                context.read<_Bloc>().activeAccount),
+                          );
+                      },
+                    ),
+                    _IconTile(
+                      icon: const Icon(Icons.groups_outlined),
+                      title: Text(L10n.global().contributorsTooltip),
+                      isCircularSplash: true,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        launch(help_util.contributorsUrl);
+                      },
+                    ),
+                    _IconTile(
+                      icon: const Icon(Icons.help_outline),
+                      title: Text(L10n.global().helpTooltip),
+                      isCircularSplash: true,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        launch(help_util.mainUrl);
+                      },
+                    ),
+                    const _AboutChin(),
+                  ],
+                ),
               ),
             ),
           ),
