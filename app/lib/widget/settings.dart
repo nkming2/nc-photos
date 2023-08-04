@@ -18,6 +18,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
+import 'package:nc_photos/widget/settings/collection_settings.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
@@ -117,7 +118,7 @@ class _SettingsState extends State<Settings> {
               _SubPageItem(
                 leading: const Icon(Icons.grid_view_outlined),
                 label: L10n.global().collectionsTooltip,
-                pageBuilder: () => _AlbumSettings(),
+                pageBuilder: () => const CollectionSettings(),
               ),
               _SubPageItem(
                 leading: const Icon(Icons.view_carousel_outlined),
@@ -288,72 +289,6 @@ class _SubPageItem extends StatelessWidget {
   final String label;
   final String? description;
   final Widget Function() pageBuilder;
-}
-
-class _AlbumSettings extends StatefulWidget {
-  @override
-  createState() => _AlbumSettingsState();
-}
-
-@npLog
-class _AlbumSettingsState extends State<_AlbumSettings> {
-  @override
-  initState() {
-    super.initState();
-    _isBrowserShowDate = Pref().isAlbumBrowserShowDateOr();
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().collectionsTooltip),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              SwitchListTile(
-                title: Text(L10n.global().settingsShowDateInAlbumTitle),
-                subtitle:
-                    Text(L10n.global().settingsShowDateInAlbumDescription),
-                value: _isBrowserShowDate,
-                onChanged: (value) => _onBrowserShowDateChanged(value),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onBrowserShowDateChanged(bool value) async {
-    final oldValue = _isBrowserShowDate;
-    setState(() {
-      _isBrowserShowDate = value;
-    });
-    if (!await Pref().setAlbumBrowserShowDate(value)) {
-      _log.severe("[_onBrowserShowDateChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isBrowserShowDate = oldValue;
-      });
-    }
-  }
-
-  late bool _isBrowserShowDate;
 }
 
 class EnhancementSettings extends StatefulWidget {

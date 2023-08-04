@@ -108,6 +108,15 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<bool> get isAlbumBrowserShowDate =>
+      _isAlbumBrowserShowDateController.stream;
+
+  Future<void> setAlbumBrowserShowDate(bool value) => _set<bool>(
+        controller: _isAlbumBrowserShowDateController,
+        setter: (pref, value) => pref.setAlbumBrowserShowDate(value),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -162,4 +171,6 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
   late final _gpsMapProviderController = BehaviorSubject.seeded(
       GpsMapProvider.fromValue(_c.pref.getGpsMapProviderOr(0)));
+  late final _isAlbumBrowserShowDateController =
+      BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
 }
