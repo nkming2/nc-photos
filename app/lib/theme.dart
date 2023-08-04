@@ -241,3 +241,14 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     ],
   );
 }
+
+extension BrightnessExtension on Brightness {
+  Brightness invert() {
+    switch (this) {
+      case Brightness.dark:
+        return Brightness.light;
+      case Brightness.light:
+        return Brightness.dark;
+    }
+  }
+}

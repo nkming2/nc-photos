@@ -619,6 +619,7 @@ class _ThemedMyApp extends StatelessWidget {
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: theme.colorScheme.secondaryContainer,
+        systemNavigationBarIconBrightness: theme.brightness.invert(),
       ),
       child: child,
     );
