@@ -121,13 +121,20 @@ class _ViewerState extends State<Viewer>
     final originalBrightness = Theme.of(context).brightness;
     return Theme(
       data: buildDarkTheme(),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        extendBody: true,
-        appBar: _isShowAppBar ? _buildAppBar(context) : null,
-        bottomNavigationBar: _isShowAppBar ? _buildBottomAppBar(context) : null,
-        body: Builder(
-          builder: (context) => _buildContent(context, originalBrightness),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          extendBody: true,
+          appBar: _isShowAppBar ? _buildAppBar(context) : null,
+          bottomNavigationBar:
+              _isShowAppBar ? _buildBottomAppBar(context) : null,
+          body: Builder(
+            builder: (context) => _buildContent(context, originalBrightness),
+          ),
         ),
       ),
     );
