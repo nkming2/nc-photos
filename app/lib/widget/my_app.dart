@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
@@ -148,7 +149,7 @@ class _WrappedAppState extends State<_WrappedApp>
             ],
             builder: (context, child) {
               MyApp._globalContext = context;
-              return child!;
+              return _ThemedMyApp(child: child!);
             },
             debugShowCheckedModeBanner: false,
             scrollBehavior: const _MyScrollBehavior(),
@@ -603,6 +604,27 @@ class _WrappedAppState extends State<_WrappedApp>
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   late AppEventListener<ThemeChangedEvent> _themeChangedListener;
+}
+
+class _ThemedMyApp extends StatelessWidget {
+  const _ThemedMyApp({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    // set status bar and navigation bar color
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: theme.colorScheme.secondaryContainer,
+      ),
+      child: child,
+    );
+  }
+
+  final Widget child;
 }
 
 class _MyScrollBehavior extends MaterialScrollBehavior {

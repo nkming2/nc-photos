@@ -20,9 +20,6 @@ void main() async {
   if (platform_k.isMobile) {
     // reset orientation override just in case, see #59
     unawaited(SystemChrome.setPreferredOrientations([]));
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
   }
   Bloc.observer = const _BlocObserver();
   Bloc.transformer = sequential();
