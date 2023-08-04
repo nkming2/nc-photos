@@ -13,13 +13,10 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/features.dart' as features;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/platform/notification.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
-import 'package:nc_photos/widget/fancy_option_picker.dart';
-import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
@@ -28,9 +25,9 @@ import 'package:nc_photos/widget/settings/metadata_settings.dart';
 import 'package:nc_photos/widget/settings/photos_settings.dart';
 import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
+import 'package:nc_photos/widget/settings/viewer_settings.dart';
 import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:screen_brightness/screen_brightness.dart';
 import 'package:tuple/tuple.dart';
 
 part 'settings.g.dart';
@@ -126,7 +123,7 @@ class _SettingsState extends State<Settings> {
                 leading: const Icon(Icons.view_carousel_outlined),
                 label: L10n.global().settingsViewerTitle,
                 description: L10n.global().settingsViewerDescription,
-                pageBuilder: () => _ViewerSettings(),
+                pageBuilder: () => const ViewerSettings(),
               ),
               if (features.isSupportEnhancement)
                 _SubPageItem(
@@ -291,210 +288,6 @@ class _SubPageItem extends StatelessWidget {
   final String label;
   final String? description;
   final Widget Function() pageBuilder;
-}
-
-class _ViewerSettings extends StatefulWidget {
-  @override
-  createState() => _ViewerSettingsState();
-}
-
-@npLog
-class _ViewerSettingsState extends State<_ViewerSettings> {
-  @override
-  initState() {
-    super.initState();
-    _screenBrightness = Pref().getViewerScreenBrightnessOr(-1);
-    _isForceRotation = Pref().isViewerForceRotationOr(false);
-    _gpsMapProvider = GpsMapProvider.values[Pref().getGpsMapProviderOr(0)];
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsViewerTitle),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              if (platform_k.isMobile)
-                SwitchListTile(
-                  title: Text(L10n.global().settingsScreenBrightnessTitle),
-                  subtitle:
-                      Text(L10n.global().settingsScreenBrightnessDescription),
-                  value: _screenBrightness >= 0,
-                  onChanged: (value) =>
-                      _onScreenBrightnessChanged(context, value),
-                ),
-              if (platform_k.isMobile)
-                SwitchListTile(
-                  title: Text(L10n.global().settingsForceRotationTitle),
-                  subtitle:
-                      Text(L10n.global().settingsForceRotationDescription),
-                  value: _isForceRotation,
-                  onChanged: (value) => _onForceRotationChanged(value),
-                ),
-              ListTile(
-                title: Text(L10n.global().settingsMapProviderTitle),
-                subtitle: Text(_gpsMapProvider.toUserString()),
-                onTap: () => _onMapProviderTap(context),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onScreenBrightnessChanged(
-      BuildContext context, bool value) async {
-    if (value) {
-      var brightness = 0.5;
-      try {
-        await ScreenBrightness().setScreenBrightness(brightness);
-        final value = await showDialog<int>(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(L10n.global().settingsScreenBrightnessTitle),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(L10n.global().settingsScreenBrightnessDescription),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    const Icon(Icons.brightness_low),
-                    Expanded(
-                      child: StatefulSlider(
-                        initialValue: brightness,
-                        min: 0.01,
-                        onChangeEnd: (value) async {
-                          brightness = value;
-                          try {
-                            await ScreenBrightness().setScreenBrightness(value);
-                          } catch (e, stackTrace) {
-                            _log.severe("Failed while setScreenBrightness", e,
-                                stackTrace);
-                          }
-                        },
-                      ),
-                    ),
-                    const Icon(Icons.brightness_high),
-                  ],
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop((brightness * 100).round());
-                },
-                child: Text(MaterialLocalizations.of(context).okButtonLabel),
-              ),
-            ],
-          ),
-        );
-
-        if (value != null) {
-          unawaited(_setScreenBrightness(value));
-        }
-      } finally {
-        unawaited(ScreenBrightness().resetScreenBrightness());
-      }
-    } else {
-      unawaited(_setScreenBrightness(-1));
-    }
-  }
-
-  void _onForceRotationChanged(bool value) => _setForceRotation(value);
-
-  Future<void> _onMapProviderTap(BuildContext context) async {
-    final oldValue = _gpsMapProvider;
-    final newValue = await showDialog<GpsMapProvider>(
-      context: context,
-      builder: (context) => FancyOptionPicker(
-        items: GpsMapProvider.values
-            .map((provider) => FancyOptionPickerItem(
-                  label: provider.toUserString(),
-                  isSelected: provider == oldValue,
-                  onSelect: () {
-                    _log.info(
-                        "[_onMapProviderTap] Set map provider: ${provider.toUserString()}");
-                    Navigator.of(context).pop(provider);
-                  },
-                ))
-            .toList(),
-      ),
-    );
-    if (newValue == null || newValue == oldValue) {
-      return;
-    }
-    setState(() {
-      _gpsMapProvider = newValue;
-    });
-    try {
-      await Pref().setGpsMapProvider(newValue.index);
-    } catch (e, stackTrace) {
-      _log.severe("[_onMapProviderTap] Failed writing pref", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _gpsMapProvider = oldValue;
-      });
-    }
-  }
-
-  Future<void> _setScreenBrightness(int value) async {
-    final oldValue = _screenBrightness;
-    setState(() {
-      _screenBrightness = value;
-    });
-    if (!await Pref().setViewerScreenBrightness(value)) {
-      _log.severe("[_setScreenBrightness] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _screenBrightness = oldValue;
-      });
-    }
-  }
-
-  Future<void> _setForceRotation(bool value) async {
-    final oldValue = _isForceRotation;
-    setState(() {
-      _isForceRotation = value;
-    });
-    if (!await Pref().setViewerForceRotation(value)) {
-      _log.severe("[_setForceRotation] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isForceRotation = oldValue;
-      });
-    }
-  }
-
-  late int _screenBrightness;
-  late bool _isForceRotation;
-  late GpsMapProvider _gpsMapProvider;
 }
 
 class _AlbumSettings extends StatefulWidget {

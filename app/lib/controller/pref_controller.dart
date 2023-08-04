@@ -3,6 +3,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/lazy.dart';
+import 'package:nc_photos/widget/gps_map.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -80,6 +81,33 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<int> get viewerScreenBrightness =>
+      _viewerScreenBrightnessController.stream;
+
+  Future<void> setViewerScreenBrightness(int value) => _set<int>(
+        controller: _viewerScreenBrightnessController,
+        setter: (pref, value) => pref.setViewerScreenBrightness(value),
+        value: value,
+      );
+
+  ValueStream<bool> get isViewerForceRotation =>
+      _isViewerForceRotationController.stream;
+
+  Future<void> setViewerForceRotation(bool value) => _set<bool>(
+        controller: _isViewerForceRotationController,
+        setter: (pref, value) => pref.setViewerForceRotation(value),
+        value: value,
+      );
+
+  ValueStream<GpsMapProvider> get gpsMapProvider =>
+      _gpsMapProviderController.stream;
+
+  Future<void> setGpsMapProvider(GpsMapProvider value) => _set<GpsMapProvider>(
+        controller: _gpsMapProviderController,
+        setter: (pref, value) => pref.setGpsMapProvider(value.index),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -128,4 +156,10 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.getMemoriesRangeOr(2));
   late final _isPhotosTabSortByNameController =
       BehaviorSubject.seeded(_c.pref.isPhotosTabSortByNameOr(false));
+  late final _viewerScreenBrightnessController =
+      BehaviorSubject.seeded(_c.pref.getViewerScreenBrightnessOr(-1));
+  late final _isViewerForceRotationController =
+      BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
+  late final _gpsMapProviderController = BehaviorSubject.seeded(
+      GpsMapProvider.fromValue(_c.pref.getGpsMapProviderOr(0)));
 }

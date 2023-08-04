@@ -13,14 +13,14 @@ enum GpsMapProvider {
   // the order must not be changed
   google,
   osm,
-}
+  ;
 
-extension GpsMapProviderExtension on GpsMapProvider {
+  static GpsMapProvider fromValue(int value) => GpsMapProvider.values[value];
+
   String toUserString() {
     switch (this) {
       case GpsMapProvider.google:
         return "Google Maps";
-
       case GpsMapProvider.osm:
         return "OpenStreetMap";
     }
