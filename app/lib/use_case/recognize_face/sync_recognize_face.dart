@@ -30,16 +30,10 @@ class SyncRecognizeFace {
     if (faces == null) {
       return false;
     }
-    var shouldUpdate = faces.inserts.isNotEmpty ||
-        faces.deletes.isNotEmpty ||
-        faces.updates.isNotEmpty;
+    var shouldUpdate = !faces.isEmpty;
     final items =
         await _getFaceItemResults(account, faces.results.values.toList());
-    shouldUpdate = shouldUpdate ||
-        items.values.any((e) =>
-            e.inserts.isNotEmpty ||
-            e.deletes.isNotEmpty ||
-            e.updates.isNotEmpty);
+    shouldUpdate = shouldUpdate || items.values.any((e) => !e.isEmpty);
     if (!shouldUpdate) {
       return false;
     }
@@ -51,8 +45,7 @@ class SyncRecognizeFace {
           batch.deleteWhere(
             db.recognizeFaces,
             (sql.$RecognizeFacesTable t) =>
-                t.account.equals(dbAccount.rowId) &
-                t.label.equals(faces.results[d]!.label),
+                t.account.equals(dbAccount.rowId) & t.label.equals(d),
           );
         }
         for (final u in faces.updates) {
@@ -62,8 +55,7 @@ class SyncRecognizeFace {
               label: sql.Value(faces.results[u]!.label),
             ),
             where: (sql.$RecognizeFacesTable t) =>
-                t.account.equals(dbAccount.rowId) &
-                t.label.equals(faces.results[u]!.label),
+                t.account.equals(dbAccount.rowId) & t.label.equals(u),
           );
         }
         for (final i in faces.inserts) {
@@ -267,6 +259,8 @@ class _FaceResult {
     required this.deletes,
   });
 
+  bool get isEmpty => inserts.isEmpty && updates.isEmpty && deletes.isEmpty;
+
   final Map<String, RecognizeFace> results;
   final List<String> inserts;
   final List<String> updates;
@@ -280,6 +274,8 @@ class _FaceItemResult {
     required this.updates,
     required this.deletes,
   });
+
+  bool get isEmpty => inserts.isEmpty && updates.isEmpty && deletes.isEmpty;
 
   final Map<int, RecognizeFaceItem> results;
   final List<int> inserts;
