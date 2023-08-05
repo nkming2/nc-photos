@@ -364,7 +364,7 @@ class _AccountView extends StatelessWidget {
     return _AccountTile(
       account: account,
       trailing: IconButton(
-        icon: const Icon(Icons.close),
+        icon: const Icon(Icons.logout),
         tooltip: L10n.global().deleteTooltip,
         onPressed: () async {
           final result = await showDialog<bool>(
