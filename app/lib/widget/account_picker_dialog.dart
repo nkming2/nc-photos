@@ -235,11 +235,15 @@ class _AccountDropdown extends StatelessWidget {
           return AnimatedRotation(
             turns: state.isOpenDropdown ? .5 : 0,
             duration: k.animationDurationShort,
-            child: Icon(
-              Icons.keyboard_arrow_down_outlined,
-              color: state.isOpenDropdown
-                  ? Theme.of(context).colorScheme.primary
-                  : null,
+            child: IgnorePointer(
+              ignoring: true,
+              child: IconButton(
+                onPressed: () {},
+                color: state.isOpenDropdown
+                    ? Theme.of(context).colorScheme.primary
+                    : null,
+                icon: const Icon(Icons.keyboard_arrow_down_outlined),
+              ),
             ),
           );
         },
