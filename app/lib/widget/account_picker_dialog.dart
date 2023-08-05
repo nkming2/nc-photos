@@ -356,12 +356,22 @@ class _AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accountLabel = AccountPref.of(account).getAccountLabel();
     return _AccountTile(
       account: account,
       trailing: IconButton(
         icon: const Icon(Icons.close),
         tooltip: L10n.global().deleteTooltip,
-        onPressed: () {
+        onPressed: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (_) => _DeleteAccountConfirmDialog(
+              accountLabel: accountLabel ?? account.address,
+            ),
+          );
+          if (!context.mounted || result != true) {
+            return;
+          }
           context.read<_Bloc>().add(_DeleteAccount(account));
         },
       ),
@@ -467,4 +477,33 @@ class _AboutChin extends StatelessWidget {
   }
 
   static final _seed = Random().nextInt(65536);
+}
+
+class _DeleteAccountConfirmDialog extends StatelessWidget {
+  const _DeleteAccountConfirmDialog({
+    required this.accountLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Text(L10n.global().deleteAccountConfirmDialogText(accountLabel)),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+        ),
+      ],
+    );
+  }
+
+  final String accountLabel;
 }

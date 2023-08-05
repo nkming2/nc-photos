@@ -18,7 +18,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "de": [
@@ -108,6 +109,7 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
+    "deleteAccountConfirmDialogText",
     "errorAlbumDowngrade"
   ],
 
@@ -219,7 +221,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "es": [
@@ -230,7 +233,8 @@
     "searchLandingPeopleListEmptyText2",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "fi": [
@@ -241,7 +245,8 @@
     "searchLandingPeopleListEmptyText2",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "fr": [
@@ -372,7 +377,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "it": [
@@ -678,6 +684,7 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
+    "deleteAccountConfirmDialogText",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1029,6 +1036,7 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
+    "deleteAccountConfirmDialogText",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1181,7 +1189,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "pt": [
@@ -1203,7 +1212,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "ru": [
@@ -1330,7 +1340,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "zh": [
@@ -1457,7 +1468,8 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ],
 
   "zh_Hant": [
@@ -1584,6 +1596,7 @@
     "removeCollectionsFailedNotification",
     "accountSettingsTooltip",
     "contributorsTooltip",
-    "setAsTooltip"
+    "setAsTooltip",
+    "deleteAccountConfirmDialogText"
   ]
 }

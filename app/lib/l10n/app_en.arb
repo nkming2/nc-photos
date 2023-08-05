@@ -1423,6 +1423,15 @@
 	"@setAsTooltip": {
 		"description": "e.g., set as wallpaper"
 	},
+	"deleteAccountConfirmDialogText": "You are about to sign out from {server}",
+	"@deleteAccountConfirmDialogText": {
+		"description": "Confirmation dialog when deleting an account (i.e., signing out)",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
