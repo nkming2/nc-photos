@@ -613,8 +613,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.4.0-nc-photos-1"
-      resolved-ref: "361b081221dfe73d84435db880699204790659bd"
+      ref: "v0.4.0-nc-photos-2"
+      resolved-ref: "71b70d8ebc9777ba04378c41128c172e66c9b3bf"
       url: "https://gitlab.com/nc-photos/flutter_staggered_grid_view"
     source: git
     version: "0.4.0"
