@@ -396,53 +396,62 @@ class _ButtonGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverStaggeredGrid.extent(
-      maxCrossAxisExtent: 256,
-      staggeredTiles: List.filled(5, const StaggeredTile.fit(1)),
-      children: [
-        _ButtonGridItemView(
-          icon: Icons.share_outlined,
-          label: L10n.global().collectionSharingLabel,
-          isShowIndicator: AccountPref.of(account).hasNewSharedAlbumOr(),
-          isEnabled: isEnabled,
-          onTap: () {
-            onSharingPressed?.call();
-          },
-        ),
-        if (features.isSupportEnhancement)
+    // needed to workaround a scrolling bug when there are more than one
+    // SliverStaggeredGrids in a CustomScrollView
+    // see: https://github.com/letsar/flutter_staggered_grid_view/issues/98 and
+    // https://github.com/letsar/flutter_staggered_grid_view/issues/265
+    return SliverToBoxAdapter(
+      child: StaggeredGridView.extent(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(0),
+        maxCrossAxisExtent: 256,
+        staggeredTiles: List.filled(5, const StaggeredTile.fit(1)),
+        children: [
           _ButtonGridItemView(
-            icon: Icons.auto_fix_high_outlined,
-            label: L10n.global().collectionEditedPhotosLabel,
+            icon: Icons.share_outlined,
+            label: L10n.global().collectionSharingLabel,
+            isShowIndicator: AccountPref.of(account).hasNewSharedAlbumOr(),
             isEnabled: isEnabled,
             onTap: () {
-              onEnhancedPhotosPressed?.call();
+              onSharingPressed?.call();
             },
           ),
-        _ButtonGridItemView(
-          icon: Icons.archive_outlined,
-          label: L10n.global().albumArchiveLabel,
-          isEnabled: isEnabled,
-          onTap: () {
-            onArchivePressed?.call();
-          },
-        ),
-        _ButtonGridItemView(
-          icon: Icons.delete_outlined,
-          label: L10n.global().albumTrashLabel,
-          isEnabled: isEnabled,
-          onTap: () {
-            onTrashbinPressed?.call();
-          },
-        ),
-        _ButtonGridItemView(
-          icon: Icons.add,
-          label: L10n.global().createCollectionTooltip,
-          isEnabled: isEnabled,
-          onTap: () {
-            onNewCollectionPressed?.call();
-          },
-        ),
-      ],
+          if (features.isSupportEnhancement)
+            _ButtonGridItemView(
+              icon: Icons.auto_fix_high_outlined,
+              label: L10n.global().collectionEditedPhotosLabel,
+              isEnabled: isEnabled,
+              onTap: () {
+                onEnhancedPhotosPressed?.call();
+              },
+            ),
+          _ButtonGridItemView(
+            icon: Icons.archive_outlined,
+            label: L10n.global().albumArchiveLabel,
+            isEnabled: isEnabled,
+            onTap: () {
+              onArchivePressed?.call();
+            },
+          ),
+          _ButtonGridItemView(
+            icon: Icons.delete_outlined,
+            label: L10n.global().albumTrashLabel,
+            isEnabled: isEnabled,
+            onTap: () {
+              onTrashbinPressed?.call();
+            },
+          ),
+          _ButtonGridItemView(
+            icon: Icons.add,
+            label: L10n.global().createCollectionTooltip,
+            isEnabled: isEnabled,
+            onTap: () {
+              onNewCollectionPressed?.call();
+            },
+          ),
+        ],
+      ),
     );
   }
 
