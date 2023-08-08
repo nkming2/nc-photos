@@ -105,9 +105,12 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Text(
-                          L10n.global().appTitle,
-                          style: Theme.of(context).textTheme.headlineSmall,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            L10n.global().appTitle,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
                         if (!Pref().isFollowSystemThemeOr(false))
                           Align(
@@ -266,6 +269,7 @@ class _AccountTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final accountLabel = AccountPref.of(account).getAccountLabel();
     return ListTile(
+      dense: true,
       leading: SizedBox.square(
         dimension: 40,
         child: Center(child: _AccountIcon(account)),
@@ -327,6 +331,7 @@ class _IconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = ListTile(
+      dense: true,
       leading: SizedBox.square(
         dimension: 40,
         child: Center(child: icon),
