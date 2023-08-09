@@ -130,8 +130,9 @@ class _ViewerState extends State<Viewer>
           extendBodyBehindAppBar: true,
           extendBody: true,
           appBar: _isShowAppBar ? _buildAppBar(context) : null,
-          bottomNavigationBar:
-              _isShowAppBar ? _buildBottomAppBar(context) : null,
+          bottomNavigationBar: _isShowAppBar && !_isDetailPaneActive
+              ? _buildBottomAppBar(context)
+              : null,
           body: Builder(
             builder: (context) => _buildContent(context, originalBrightness),
           ),
