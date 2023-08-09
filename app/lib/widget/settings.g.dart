@@ -19,10 +19,3 @@ extension _$_EnhancementSettingsStateNpLog on _EnhancementSettingsState {
 
   static final log = Logger("widget.settings._EnhancementSettingsState");
 }
-
-extension _$_MiscSettingsStateNpLog on _MiscSettingsState {
-  // ignore: unused_element
-  Logger get _log => log;
-
-  static final log = Logger("widget.settings._MiscSettingsState");
-}

@@ -23,6 +23,7 @@ import 'package:nc_photos/widget/settings/developer_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/settings/metadata_settings.dart';
+import 'package:nc_photos/widget/settings/misc_settings.dart';
 import 'package:nc_photos/widget/settings/photos_settings.dart';
 import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
@@ -136,7 +137,7 @@ class _SettingsState extends State<Settings> {
               _SubPageItem(
                 leading: const Icon(Icons.emoji_symbols_outlined),
                 label: L10n.global().settingsMiscellaneousTitle,
-                pageBuilder: () => const _MiscSettings(),
+                pageBuilder: () => const MiscSettings(),
               ),
               // if (_enabledExperiments.isNotEmpty)
               //   _SubPageItem(
@@ -534,96 +535,6 @@ class _EnhanceResolutionSliderState extends State<_EnhanceResolutionSlider> {
 
   late int _width;
   late int _height;
-}
-
-class _MiscSettings extends StatefulWidget {
-  const _MiscSettings({Key? key}) : super(key: key);
-
-  @override
-  createState() => _MiscSettingsState();
-}
-
-@npLog
-class _MiscSettingsState extends State<_MiscSettings> {
-  @override
-  initState() {
-    super.initState();
-    _isPhotosTabSortByName = Pref().isPhotosTabSortByNameOr();
-    _isDoubleTapExit = Pref().isDoubleTapExitOr();
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsMiscellaneousTitle),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              SwitchListTile(
-                title: Text(L10n.global().settingsDoubleTapExitTitle),
-                value: _isDoubleTapExit,
-                onChanged: (value) => _onDoubleTapExitChanged(value),
-              ),
-              SwitchListTile(
-                title: Text(L10n.global().settingsPhotosTabSortByNameTitle),
-                value: _isPhotosTabSortByName,
-                onChanged: (value) => _onPhotosTabSortByNameChanged(value),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onDoubleTapExitChanged(bool value) async {
-    final oldValue = _isDoubleTapExit;
-    setState(() {
-      _isDoubleTapExit = value;
-    });
-    if (!await Pref().setDoubleTapExit(value)) {
-      _log.severe("[_onDoubleTapExitChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isDoubleTapExit = oldValue;
-      });
-    }
-  }
-
-  Future<void> _onPhotosTabSortByNameChanged(bool value) async {
-    final oldValue = _isPhotosTabSortByName;
-    setState(() {
-      _isPhotosTabSortByName = value;
-    });
-    if (!await Pref().setPhotosTabSortByName(value)) {
-      _log.severe("[_onPhotosTabSortByNameChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isPhotosTabSortByName = oldValue;
-      });
-    }
-  }
-
-  late bool _isPhotosTabSortByName;
-  late bool _isDoubleTapExit;
 }
 
 // final _enabledExperiments = [

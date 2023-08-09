@@ -109,6 +109,14 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<bool> get isDoubleTapExit => _isDoubleTapExitController.stream;
+
+  Future<void> setDoubleTapExit(bool value) => _set<bool>(
+        controller: _isDoubleTapExitController,
+        setter: (pref, value) => pref.setDoubleTapExit(value),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -159,4 +167,6 @@ class PrefController {
       GpsMapProvider.fromValue(_c.pref.getGpsMapProviderOr(0)));
   late final _isAlbumBrowserShowDateController =
       BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
+  late final _isDoubleTapExitController =
+      BehaviorSubject.seeded(_c.pref.isDoubleTapExitOr(false));
 }
