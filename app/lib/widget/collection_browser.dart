@@ -240,6 +240,21 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
             children: [
               Listener(
                 onPointerMove: (event) => _onPointerMove(context, event),
+                onPointerDown: (_) {
+                  setState(() {
+                    ++_finger;
+                  });
+                },
+                onPointerUp: (_) {
+                  setState(() {
+                    --_finger;
+                  });
+                },
+                onPointerCancel: (_) {
+                  setState(() {
+                    --_finger;
+                  });
+                },
                 child: GestureDetector(
                   onScaleStart: (_) {
                     _bloc.add(const _StartScaling());
@@ -252,6 +267,9 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                   },
                   child: CustomScrollView(
                     controller: _scrollController,
+                    physics: _finger >= 2
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
                     slivers: [
                       _BlocBuilder(
                         buildWhen: (previous, current) =>
@@ -410,6 +428,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
   late final _bloc = context.read<_Bloc>();
   final _scrollController = ScrollController();
   bool? _isDragScrollingDown;
+  int _finger = 0;
 }
 
 class _ContentList extends StatelessWidget {
