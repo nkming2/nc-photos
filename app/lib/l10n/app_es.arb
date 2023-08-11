@@ -348,8 +348,6 @@
     "settingsForceRotationTitle": "Forzar rotación automática",
     "settingsForceRotationDescription": "Rotar pantalla aunque la auto-rotación esté desactivada en el sistema",
     "settingsMapProviderTitle": "Proveedor de mapas",
-    "settingsAlbumTitle": "Álbumes",
-    "settingsAlbumDescription": "Personaliza los álbumes",
     "settingsShowDateInAlbumTitle": "Agrupar fotos por fecha",
     "settingsShowDateInAlbumDescription": "Se aplica sólo cuando el álbum esté ordenado por fecha",
     "settingsImageEditTitle": "Editor",
@@ -738,7 +736,7 @@
         "description": "Shown when the app has paused reading image metadata"
     },
     "configButtonLabel": "CONFIGURAR",
-    "useAsAlbumCoverTooltip": "Usar de portada",
+    "useAsAlbumCoverTooltip": "Usar como portada",
     "helpTooltip": "Ayuda",
     "helpButtonLabel": "AYUDA",
     "removeFromAlbumTooltip": "Quitar del álbum",
@@ -797,7 +795,7 @@
     "@emptyTrashbinConfirmationDialogContent": {
         "description": "Make sure the user wants to delete all items"
     },
-    "unsetAlbumCoverTooltip": "No usar de portada",
+    "unsetAlbumCoverTooltip": "Restablecer portada",
     "@unsetAlbumCoverTooltip": {
         "description": "Unset the cover of the opened album"
     },
@@ -1265,10 +1263,6 @@
         "description": "Crop the image"
     },
     "categoriesLabel": "Categorías",
-    "searchLandingPeopleListEmptyText": "Toca ayuda para aprender a configurar",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
     "searchLandingCategoryVideosLabel": "Vídeos",
     "@searchLandingCategoryVideosLabel": {
         "description": "Search all videos"
@@ -1434,5 +1428,40 @@
     "errorNoStoragePermission": "Se requiere permiso de acceso al almacenamiento",
     "@errorNoStoragePermission": {
         "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Metadatos",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsPersonProviderTitle": "Proveedor de personas",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsSeedColorSystemColorDescription": "Material You",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "Usar Material You",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Toca ajustes para elegir un proveedor o ayuda para aprender más",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Configurar cuenta",
+    "contributorsTooltip": "Contribuidores",
+    "setAsTooltip": "Establecer como",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Estás a punto de cerrar sesión en {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
     }
 }

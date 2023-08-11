@@ -298,8 +298,6 @@
     "settingsForceRotationTitle": "Игнорировать блокировку поворота экрана",
     "settingsForceRotationDescription": "Поворачивать экран даже если выключен автоповорот",
     "settingsMapProviderTitle": "Постащик карт",
-    "settingsAlbumTitle": "Альбомы",
-    "settingsAlbumDescription": "Настройки альбомов",
     "settingsShowDateInAlbumTitle": "Группировать фото по дате",
     "settingsShowDateInAlbumDescription": "Применяется только в том случае, если альбом отсортирован по времени",
     "settingsThemeTitle": "Оформление",

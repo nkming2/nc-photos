@@ -298,8 +298,6 @@
     "settingsForceRotationTitle": "Αγνόηση κλειδώματος περιστροφής οθόνης",
     "settingsForceRotationDescription": "Περιστροφή οθόνης ακόμα και όταν η αυτόματη περιστροφή είναι απενεργοποιημένη",
     "settingsMapProviderTitle": "Πάροχος χάρτη",
-    "settingsAlbumTitle": "Άλμπουμ",
-    "settingsAlbumDescription": "Επεξεργασία άλμπουμ",
     "settingsShowDateInAlbumTitle": "Ομαδοποίηση φωτογραφιών κατά ημερομηνία",
     "settingsShowDateInAlbumDescription": "Εφαρμογή μόνο όταν το άλμπουμ είναι ταξινομημένο κατά χρόνο",
     "settingsEnhanceMaxResolutionDescription": "Οι φωτογραφίες μεγαλύτερες από την επιλεγμένη ανάλυση θα μειωθούν.\n\nΟι φωτογραφίες υψηλής ανάλυσης απαιτούν πολύ περισσότερη μνήμη και χρόνο για επεξεργασία. Μειώστε αυτή τη ρύθμιση εάν η εφαρμογή διακοπεί κατά τη βελτίωση των φωτογραφιών.",

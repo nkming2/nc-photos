@@ -344,8 +344,6 @@
     "settingsForceRotationTitle": "Ignorovat uzamčení otáčení",
     "settingsForceRotationDescription": "Otáčet obrazovku i při zakázaném automatickém otáčení",
     "settingsMapProviderTitle": "Poskytovatel map",
-    "settingsAlbumTitle": "Album",
-    "settingsAlbumDescription": "Přizpůsobit alba",
     "settingsShowDateInAlbumTitle": "Seskupit fotky podle data",
     "settingsShowDateInAlbumDescription": "Použijte pouze při řazení alba podle času",
     "settingsImageEditTitle": "Editor",
@@ -1257,10 +1255,6 @@
         "description": "Crop the image"
     },
     "categoriesLabel": "Kategorie",
-    "searchLandingPeopleListEmptyText": "Stisknutím nápovědy se dozvíte, jak začít",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
     "searchLandingCategoryVideosLabel": "Videa",
     "@searchLandingCategoryVideosLabel": {
         "description": "Search all videos"

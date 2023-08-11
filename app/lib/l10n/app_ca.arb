@@ -1,0 +1,147 @@
+{
+    "appTitle": "Fotos",
+    "translator": "Arnau Mora",
+    "@translator": {
+        "description": "Name of the translator(s) for this language"
+    },
+    "photosTabLabel": "Fotos",
+    "@photosTabLabel": {
+        "description": "Label of the tab that lists user photos"
+    },
+    "collectionsTooltip": "Col·leccions",
+    "@collectionsTooltip": {
+        "description": "Groups of photos, e.g., albums, trash bin, etc"
+    },
+    "zoomTooltip": "Zoom",
+    "@zoomTooltip": {
+        "description": "Tooltip of the zoom button"
+    },
+    "refreshMenuLabel": "Refrescar",
+    "@refreshMenuLabel": {
+        "description": "Label of the refresh entry in menu"
+    },
+    "settingsMenuLabel": "Configuració",
+    "@settingsMenuLabel": {
+        "description": "Label of the settings entry in menu"
+    },
+    "selectionAppBarTitle": "{count, plural, other{{count} seleccionats}}",
+    "@selectionAppBarTitle": {
+        "description": "Title of the contextual app bar that shows number of selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedProcessingNotification": "{count, plural, one{Eliminant 1 element} other{Eliminant {count} elements}}",
+    "@deleteSelectedProcessingNotification": {
+        "description": "Inform user that the selected items are being deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedSuccessNotification": "Elements eliminats correctament",
+    "@deleteSelectedSuccessNotification": {
+        "description": "Inform user that the selected items are deleted successfully"
+    },
+    "deleteSelectedFailureNotification": "{count, plural, one{No s'ha pogut eliminar 1 element} other{No s'han pogut eliminar {count} elements}}",
+    "@deleteSelectedFailureNotification": {
+        "description": "Inform user that some/all the selected items cannot be deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveTooltip": "Arxivar",
+    "@archiveTooltip": {
+        "description": "Archive selected items"
+    },
+    "archiveSelectedProcessingNotification": "{count, plural, one{Arxivant 1 element} other{Arxivant {count} elements}}",
+    "@archiveSelectedProcessingNotification": {
+        "description": "Archiving the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveSelectedSuccessNotification": "Elements arxivats correctament",
+    "@archiveSelectedSuccessNotification": {
+        "description": "Archived all selected items successfully"
+    },
+    "archiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
+    "@archiveSelectedFailureNotification": {
+        "description": "Cannot archive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveTooltip": "Desarxivar",
+    "@unarchiveTooltip": {
+        "description": "Unarchive selected items"
+    },
+    "unarchiveSelectedProcessingNotification": "{count, plural, one{Desarxivant 1 element} other{Desarxivant {count}  elements}}",
+    "@unarchiveSelectedProcessingNotification": {
+        "description": "Unarchiving selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveSelectedSuccessNotification": "Elements desarxivats correctament",
+    "@unarchiveSelectedSuccessNotification": {
+        "description": "Unarchived all selected items successfully"
+    },
+    "unarchiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
+    "@unarchiveSelectedFailureNotification": {
+        "description": "Cannot unarchive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteTooltip": "Eliminar",
+    "@deleteTooltip": {
+        "description": "Delete selected items"
+    },
+    "deleteProcessingNotification": "Eliminant element",
+    "@deleteProcessingNotification": {
+        "description": "Inform user that the item is being deleted"
+    },
+    "deleteSuccessNotification": "Element eliminat correctament",
+    "@deleteSuccessNotification": {
+        "description": "Inform user that the item is deleted successfully"
+    },
+    "deleteFailureNotification": "No s'ha pogut eliminar",
+    "@deleteFailureNotification": {
+        "description": "Inform user that the item cannot be deleted"
+    },
+    "removeSelectedFromAlbumFailureNotification": "No s'han pogut eliminar de l'àlbum",
+    "@removeSelectedFromAlbumFailureNotification": {
+        "description": "Inform user that the selected items cannot be removed from an album"
+    },
+    "addServerTooltip": "Afegir servidor",
+    "@addServerTooltip": {
+        "description": "Tooltip of the button that adds a new server"
+    },
+    "removeServerSuccessNotification": "{server} eliminat correctament",
+    "@removeServerSuccessNotification": {
+        "description": "Inform user that a server is removed successfully",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "createAlbumTooltip": "Nou àlbum",
+    "@createAlbumTooltip": {
+        "description": "Tooltip of the button that creates a new album"
+    }
+}

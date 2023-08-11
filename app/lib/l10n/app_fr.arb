@@ -294,8 +294,6 @@
     "settingsForceRotationTitle": "Ignorer le verrouillage de la rotation",
     "settingsForceRotationDescription": "Faire pivoter l'écran même lorsque la rotation automatique est désactivée",
     "settingsMapProviderTitle": "Fournisseur de carte",
-    "settingsAlbumTitle": "Album",
-    "settingsAlbumDescription": "Personnaliser les albums",
     "settingsShowDateInAlbumTitle": "Regrouper les photos par date",
     "settingsShowDateInAlbumDescription": "Appliquer uniquement lorsque l'album est trié par heure",
     "settingsThemeTitle": "Thème",

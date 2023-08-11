@@ -298,8 +298,6 @@
     "settingsForceRotationTitle": "Zignoruj systemową blokadę orientacji ekranu",
     "settingsForceRotationDescription": "Obracaj ekran nawet gdy autoobracanie jest wyłączone",
     "settingsMapProviderTitle": "Dostawca map",
-    "settingsAlbumTitle": "Album",
-    "settingsAlbumDescription": "Dostosuj albumy",
     "settingsShowDateInAlbumTitle": "Grupuj zdjęcia według daty",
     "settingsShowDateInAlbumDescription": "Zastosuj tylko wtedy, gdy album jest posortowany według czasu",
     "settingsThemeTitle": "Motyw",

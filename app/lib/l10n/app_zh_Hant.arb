@@ -298,8 +298,6 @@
     "settingsForceRotationTitle": "無視螢幕旋轉鎖定",
     "settingsForceRotationDescription": "在系統鎖定螢幕旋轉時保持自動旋轉",
     "settingsMapProviderTitle": "地圖供應商",
-    "settingsAlbumTitle": "相簿",
-    "settingsAlbumDescription": "設置相簿",
     "settingsShowDateInAlbumTitle": "顯示日期分類",
     "settingsShowDateInAlbumDescription": "只應用於以日期排序的相簿",
     "settingsThemeTitle": "主題",

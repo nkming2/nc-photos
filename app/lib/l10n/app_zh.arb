@@ -298,8 +298,6 @@
     "settingsForceRotationTitle": "无视屏幕旋转锁定",
     "settingsForceRotationDescription": "在系统锁定屏幕旋转时支持自动旋轉",
     "settingsMapProviderTitle": "地图供应商",
-    "settingsAlbumTitle": "相册",
-    "settingsAlbumDescription": "设置相册",
     "settingsShowDateInAlbumTitle": "显示日期分类",
     "settingsShowDateInAlbumDescription": "只应用于以日期排序的相册",
     "settingsThemeTitle": "主题",

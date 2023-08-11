@@ -344,8 +344,6 @@
     "settingsForceRotationTitle": "Ignorar a trava de rotação do sistema",
     "settingsForceRotationDescription": "Rodar a tela mesmo que a rotação do sistema estiver travada",
     "settingsMapProviderTitle": "Provedor de mapa",
-    "settingsAlbumTitle": "Álbum",
-    "settingsAlbumDescription": "Customize os albuns",
     "settingsShowDateInAlbumTitle": "Agrupe as fotos por data",
     "settingsShowDateInAlbumDescription": "Se aplica apenas quando está organizado cronologicamente",
     "settingsImageEditTitle": "Editor",
@@ -1257,10 +1255,6 @@
         "description": "Crop the image"
     },
     "categoriesLabel": "Categorias",
-    "searchLandingPeopleListEmptyText": "Toque em ajuda para aprender como configurar",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
     "searchLandingCategoryVideosLabel": "Vídeos",
     "@searchLandingCategoryVideosLabel": {
         "description": "Search all videos"

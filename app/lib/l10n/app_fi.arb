@@ -348,8 +348,6 @@
     "settingsForceRotationTitle": "Ohita näytön kiertäjän lukitus",
     "settingsForceRotationDescription": "Kierrä näyttöä, vaikka järjestelmän automaattinen näytönkierto on poiskytketty",
     "settingsMapProviderTitle": "Karttapalvelun-tarjoaja",
-    "settingsAlbumTitle": "Albumi",
-    "settingsAlbumDescription": "Muokkaa albumeita",
     "settingsShowDateInAlbumTitle": "Ryhmitä kuvat päivämäärän mukaan",
     "settingsShowDateInAlbumDescription": "Käytä vain kun albumi on lajiteltu ajan mukaan",
     "settingsImageEditTitle": "Editori",
@@ -1265,10 +1263,6 @@
         "description": "Crop the image"
     },
     "categoriesLabel": "Luokat",
-    "searchLandingPeopleListEmptyText": "Paina kysymys-painiketta saadaksesi tietoa ominaisuuden asentamisesta",
-    "@searchLandingPeopleListEmptyText": {
-        "description": "Shown in the search landing page under the People section when there are no people"
-    },
     "searchLandingCategoryVideosLabel": "Videot",
     "@searchLandingCategoryVideosLabel": {
         "description": "Search all videos"
