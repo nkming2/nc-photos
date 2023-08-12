@@ -17,7 +17,7 @@ part 'misc/bloc.dart';
 part 'misc/state_event.dart';
 part 'misc_settings.g.dart';
 
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
