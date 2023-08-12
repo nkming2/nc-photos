@@ -27,6 +27,7 @@ import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
@@ -215,15 +216,17 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                 ),
                 SliverToBoxAdapter(
                   child: SizedBox(
-                    height: NavigationBarTheme.of(context).height,
+                    height: AppDimension.of(context).homeBottomAppBarHeight,
                   ),
                 ),
               ],
             ),
           ),
-          const Align(
+          Align(
             alignment: Alignment.bottomCenter,
-            child: NavigationBarBlurFilter(),
+            child: NavigationBarBlurFilter(
+              height: AppDimension.of(context).homeBottomAppBarHeight,
+            ),
           ),
         ],
       ),

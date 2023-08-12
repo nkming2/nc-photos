@@ -36,6 +36,7 @@ import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
@@ -44,6 +45,7 @@ import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -169,7 +171,7 @@ class _HomePhotosState extends State<HomePhotos>
               overrideMaxScrollExtent: scrollExtent,
               // status bar + app bar
               topOffset: _calcAppBarExtent(context),
-              bottomOffset: _calcBottomAppBarExtent(context),
+              bottomOffset: AppDimension.of(context).homeBottomAppBarHeight,
               labelTextBuilder: (_) => _buildScrollLabel(context),
               labelPadding: const EdgeInsets.symmetric(horizontal: 40),
               backgroundColor: Theme.of(context)
@@ -215,7 +217,8 @@ class _HomePhotosState extends State<HomePhotos>
                       ),
                       SliverToBoxAdapter(
                         child: SizedBox(
-                          height: _calcBottomAppBarExtent(context),
+                          height:
+                              AppDimension.of(context).homeBottomAppBarHeight,
                         ),
                       ),
                     ].whereNotNull().toList(),
@@ -226,17 +229,8 @@ class _HomePhotosState extends State<HomePhotos>
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              width: double.infinity,
-              height: _calcBottomAppBarExtent(context),
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: Theme.of(context).appBarBlurFilter,
-                  child: const ColoredBox(
-                    color: Colors.transparent,
-                  ),
-                ),
-              ),
+            child: NavigationBarBlurFilter(
+              height: AppDimension.of(context).homeBottomAppBarHeight,
             ),
           ),
         ],
@@ -656,7 +650,8 @@ class _HomePhotosState extends State<HomePhotos>
       BuildContext context, BoxConstraints constraints) {
     if (_itemListMaxExtent != null && constraints.hasBoundedHeight) {
       final appBarExtent = _calcAppBarExtent(context);
-      final bottomAppBarExtent = _calcBottomAppBarExtent(context);
+      final bottomAppBarExtent =
+          AppDimension.of(context).homeBottomAppBarHeight;
       final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
           AccountPref.of(widget.account).isEnableMemoryAlbumOr(true) &&
@@ -687,9 +682,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
-
-  double _calcBottomAppBarExtent(BuildContext context) =>
-      NavigationBarTheme.of(context).height!;
 
   Primitive<bool> get _hasFiredMetadataTask {
     final name = bloc_util.getInstNameForRootAwareAccount(

@@ -22,6 +22,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
@@ -29,6 +30,7 @@ import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dar
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_search_suggestion.dart';
+import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
@@ -152,7 +154,8 @@ class _HomeSearchState extends State<HomeSearch>
                           ),
                         SliverToBoxAdapter(
                           child: SizedBox(
-                            height: _calcBottomAppBarExtent(context),
+                            height:
+                                AppDimension.of(context).homeBottomAppBarHeight,
                           ),
                         ),
                       ],
@@ -195,17 +198,8 @@ class _HomeSearchState extends State<HomeSearch>
                     if (state is SearchBlocLoading ||
                         _buildItemQueue.isProcessing)
                       const LinearProgressIndicator(),
-                    SizedBox(
-                      width: double.infinity,
-                      height: _calcBottomAppBarExtent(context),
-                      child: ClipRect(
-                        child: BackdropFilter(
-                          filter: Theme.of(context).appBarBlurFilter,
-                          child: const ColoredBox(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                      ),
+                    NavigationBarBlurFilter(
+                      height: AppDimension.of(context).homeBottomAppBarHeight,
                     ),
                   ],
                 ),
@@ -555,9 +549,6 @@ class _HomeSearchState extends State<HomeSearch>
       _stealFocus.requestFocus();
     }
   }
-
-  double _calcBottomAppBarExtent(BuildContext context) =>
-      NavigationBarTheme.of(context).height!;
 
   bool _isShowLanding(SearchBlocState state) => state is SearchBlocInit;
 

@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/home_photos.dart';
@@ -96,6 +97,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     return NavigationBar(
+      height: AppDimension.of(context).homeBottomAppBarHeight,
       destinations: [
         NavigationDestination(
           icon: const Icon(Icons.photo_outlined),
