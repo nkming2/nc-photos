@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/material3.dart';
+import 'package:nc_photos/theme/material3.dart';
 
 /// Button in the image editor toolbar
 ///

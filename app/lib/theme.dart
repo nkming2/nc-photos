@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/material3.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/theme/material3.dart';
 
 const defaultSeedColor = 0xFF2196F3;
 

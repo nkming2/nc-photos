@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/material3.dart';
+import 'package:nc_photos/theme/material3.dart';
 
 /// A [ListTile]-like widget with unbounded height
 class UnboundedListTile extends StatelessWidget {
