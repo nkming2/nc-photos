@@ -2,6 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/size.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -117,6 +118,29 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<bool> get isSaveEditResultToServer =>
+      _isSaveEditResultToServerController.stream;
+
+  Future<void> setSaveEditResultToServer(bool value) => _set<bool>(
+        controller: _isSaveEditResultToServerController,
+        setter: (pref, value) => pref.setSaveEditResultToServer(value),
+        value: value,
+      );
+
+  ValueStream<SizeInt> get enhanceMaxSize => _enhanceMaxSizeController.stream;
+
+  Future<void> setEnhanceMaxSize(SizeInt value) => _set<SizeInt>(
+        controller: _enhanceMaxSizeController,
+        setter: (pref, value) async {
+          return (await Future.wait([
+            pref.setEnhanceMaxWidth(value.width),
+            pref.setEnhanceMaxHeight(value.height),
+          ]))
+              .reduce((a, b) => a && b);
+        },
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -169,4 +193,8 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
   late final _isDoubleTapExitController =
       BehaviorSubject.seeded(_c.pref.isDoubleTapExitOr(false));
+  late final _isSaveEditResultToServerController =
+      BehaviorSubject.seeded(_c.pref.isSaveEditResultToServerOr(true));
+  late final _enhanceMaxSizeController = BehaviorSubject.seeded(
+      SizeInt(_c.pref.getEnhanceMaxWidthOr(), _c.pref.getEnhanceMaxHeightOr()));
 }

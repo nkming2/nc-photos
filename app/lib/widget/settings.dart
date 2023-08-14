@@ -7,19 +7,18 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/notification.dart';
-import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/settings/collection_settings.dart';
 import 'package:nc_photos/widget/settings/developer_settings.dart';
+import 'package:nc_photos/widget/settings/enhancement_settings.dart';
 import 'package:nc_photos/widget/settings/expert_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/settings/metadata_settings.dart';
@@ -28,9 +27,7 @@ import 'package:nc_photos/widget/settings/photos_settings.dart';
 import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/settings/theme_settings.dart';
 import 'package:nc_photos/widget/settings/viewer_settings.dart';
-import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:tuple/tuple.dart';
 
 part 'settings.g.dart';
 
@@ -290,251 +287,6 @@ class _SubPageItem extends StatelessWidget {
   final String label;
   final String? description;
   final Widget Function() pageBuilder;
-}
-
-class EnhancementSettings extends StatefulWidget {
-  static const routeName = "/enhancement-settings";
-
-  static Route buildRoute() => MaterialPageRoute(
-        builder: (_) => const EnhancementSettings(),
-      );
-
-  const EnhancementSettings({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  createState() => _EnhancementSettingsState();
-}
-
-@npLog
-class _EnhancementSettingsState extends State<EnhancementSettings> {
-  @override
-  initState() {
-    super.initState();
-    _maxWidth = Pref().getEnhanceMaxWidthOr();
-    _maxHeight = Pref().getEnhanceMaxHeightOr();
-    _isSaveEditResultToServer = Pref().isSaveEditResultToServerOr();
-  }
-
-  @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsImageEditTitle),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              SwitchListTile(
-                title: Text(
-                    L10n.global().settingsImageEditSaveResultsToServerTitle),
-                subtitle: Text(_isSaveEditResultToServer
-                    ? L10n.global()
-                        .settingsImageEditSaveResultsToServerTrueDescription
-                    : L10n.global()
-                        .settingsImageEditSaveResultsToServerFalseDescription),
-                value: _isSaveEditResultToServer,
-                onChanged: _onSaveEditResultToServerChanged,
-              ),
-              ListTile(
-                title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
-                subtitle: Text("${_maxWidth}x$_maxHeight"),
-                onTap: () => _onMaxResolutionTap(context),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onMaxResolutionTap(BuildContext context) async {
-    var width = _maxWidth;
-    var height = _maxHeight;
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(L10n.global().settingsEnhanceMaxResolutionTitle2),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(L10n.global().settingsEnhanceMaxResolutionDescription),
-            const SizedBox(height: 16),
-            _EnhanceResolutionSlider(
-              initialWidth: _maxWidth,
-              initialHeight: _maxHeight,
-              onChanged: (value) {
-                width = value.item1;
-                height = value.item2;
-              },
-            )
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          ),
-        ],
-      ),
-    );
-    if (result != true || (width == _maxWidth && height == _maxHeight)) {
-      return;
-    }
-
-    unawaited(_setMaxResolution(width, height));
-  }
-
-  Future<void> _setMaxResolution(int width, int height) async {
-    _log.info(
-        "[_setMaxResolution] ${_maxWidth}x$_maxHeight -> ${width}x$height");
-    final oldWidth = _maxWidth;
-    final oldHeight = _maxHeight;
-    setState(() {
-      _maxWidth = width;
-      _maxHeight = height;
-    });
-    if (!await Pref().setEnhanceMaxWidth(width) ||
-        !await Pref().setEnhanceMaxHeight(height)) {
-      _log.severe("[_setMaxResolution] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      await Pref().setEnhanceMaxWidth(oldWidth);
-      setState(() {
-        _maxWidth = oldWidth;
-        _maxHeight = oldHeight;
-      });
-    }
-  }
-
-  Future<void> _onSaveEditResultToServerChanged(bool value) async {
-    final oldValue = _isSaveEditResultToServer;
-    setState(() {
-      _isSaveEditResultToServer = value;
-    });
-    if (!await Pref().setSaveEditResultToServer(value)) {
-      _log.severe("[_onSaveEditResultToServerChanged] Failed writing pref");
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-      setState(() {
-        _isSaveEditResultToServer = oldValue;
-      });
-    }
-  }
-
-  late int _maxWidth;
-  late int _maxHeight;
-  late bool _isSaveEditResultToServer;
-}
-
-class _EnhanceResolutionSlider extends StatefulWidget {
-  const _EnhanceResolutionSlider({
-    Key? key,
-    required this.initialWidth,
-    required this.initialHeight,
-    this.onChanged,
-  }) : super(key: key);
-
-  @override
-  createState() => _EnhanceResolutionSliderState();
-
-  final int initialWidth;
-  final int initialHeight;
-  final ValueChanged<Tuple2<int, int>>? onChanged;
-}
-
-class _EnhanceResolutionSliderState extends State<_EnhanceResolutionSlider> {
-  @override
-  initState() {
-    super.initState();
-    _width = widget.initialWidth;
-    _height = widget.initialHeight;
-  }
-
-  @override
-  build(BuildContext context) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: Text("${_width}x$_height"),
-        ),
-        StatefulSlider(
-          initialValue: resolutionToSliderValue(_width).toDouble(),
-          min: -3,
-          max: 3,
-          divisions: 6,
-          onChangeEnd: (value) async {
-            final resolution = sliderValueToResolution(value.toInt());
-            setState(() {
-              _width = resolution.item1;
-              _height = resolution.item2;
-            });
-            widget.onChanged?.call(resolution);
-          },
-        ),
-      ],
-    );
-  }
-
-  static Tuple2<int, int> sliderValueToResolution(int value) {
-    switch (value) {
-      case -3:
-        return const Tuple2(1024, 768);
-      case -2:
-        return const Tuple2(1280, 960);
-      case -1:
-        return const Tuple2(1600, 1200);
-      case 1:
-        return const Tuple2(2560, 1920);
-      case 2:
-        return const Tuple2(3200, 2400);
-      case 3:
-        return const Tuple2(4096, 3072);
-      default:
-        return const Tuple2(2048, 1536);
-    }
-  }
-
-  static int resolutionToSliderValue(int width) {
-    switch (width) {
-      case 1024:
-        return -3;
-      case 1280:
-        return -2;
-      case 1600:
-        return -1;
-      case 2560:
-        return 1;
-      case 3200:
-        return 2;
-      case 4096:
-        return 3;
-      default:
-        return 0;
-    }
-  }
-
-  late int _width;
-  late int _height;
 }
 
 // final _enabledExperiments = [

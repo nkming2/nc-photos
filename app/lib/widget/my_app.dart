@@ -38,6 +38,7 @@ import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/settings/account_settings.dart';
+import 'package:nc_photos/widget/settings/enhancement_settings.dart';
 import 'package:nc_photos/widget/settings/language_settings.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
@@ -191,6 +192,7 @@ class _WrappedAppState extends State<_WrappedApp>
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
         PeopleBrowser.routeName: PeopleBrowser.buildRoute,
+        EnhancementSettings.routeName: EnhancementSettings.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -215,7 +217,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleShareFolderPickerRoute(settings);
     route ??= _handleEnhancedPhotoBrowserRoute(settings);
     route ??= _handleLocalFileViewerRoute(settings);
-    route ??= _handleEnhancementSettingsRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
     route ??= _handlePlacesBrowserRoute(settings);
@@ -484,18 +485,6 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleLocalFileViewerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleEnhancementSettingsRoute(RouteSettings settings) {
-    try {
-      if (settings.name == EnhancementSettings.routeName) {
-        return EnhancementSettings.buildRoute();
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleEnhancementSettingsRoute] Failed while handling route", e);
     }
     return null;
   }
