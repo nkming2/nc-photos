@@ -68,7 +68,9 @@ class _AppBar extends StatelessWidget {
                     ),
                   ],
                   if (state.collection.contentProvider
-                      is CollectionAlbumProvider)
+                          is CollectionAlbumProvider &&
+                      CollectionAdapter.of(c, bloc.account, state.collection)
+                          .isPermitted(CollectionCapability.share))
                     PopupMenuItem(
                       value: _MenuOption.albumFixShare,
                       child: Text(L10n.global().fixSharesTooltip),
