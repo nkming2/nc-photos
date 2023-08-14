@@ -853,8 +853,7 @@ class _Web {
                       ),
                     ),
                     onTap: () {
-                      Navigator.of(context).pushNamed(Settings.routeName,
-                          arguments: SettingsArguments(state.widget.account));
+                      Navigator.of(context).pushNamed(Settings.routeName);
                     },
                   ),
                 ),

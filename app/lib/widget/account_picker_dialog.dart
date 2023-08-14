@@ -161,11 +161,7 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context)
                           ..pop()
-                          ..pushNamed(
-                            Settings.routeName,
-                            arguments: SettingsArguments(
-                                context.read<_Bloc>().activeAccount),
-                          );
+                          ..pushNamed(Settings.routeName);
                       },
                     ),
                     _IconTile(

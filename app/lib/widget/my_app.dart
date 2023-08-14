@@ -193,6 +193,7 @@ class _WrappedAppState extends State<_WrappedApp>
         LanguageSettings.routeName: LanguageSettings.buildRoute,
         PeopleBrowser.routeName: PeopleBrowser.buildRoute,
         EnhancementSettings.routeName: EnhancementSettings.buildRoute,
+        Settings.routeName: Settings.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -204,7 +205,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleConnectLegacyRoute(settings);
     route ??= _handleHomeRoute(settings);
     route ??= _handleRootPickerRoute(settings);
-    route ??= _handleSettingsRoute(settings);
     route ??= _handleArchiveBrowserRoute(settings);
     route ??= _handleAlbumDirPickerRoute(settings);
     route ??= _handleAlbumImporterRoute(settings);
@@ -299,18 +299,6 @@ class _WrappedAppState extends State<_WrappedApp>
       }
     } catch (e) {
       _log.severe("[_handleRootPickerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleSettingsRoute(RouteSettings settings) {
-    try {
-      if (settings.name == Settings.routeName && settings.arguments != null) {
-        final args = settings.arguments as SettingsArguments;
-        return Settings.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handleSettingsRoute] Failed while handling route", e);
     }
     return null;
   }
