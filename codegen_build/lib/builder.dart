@@ -4,7 +4,7 @@ import 'package:np_codegen_build/src/np_log_generator.dart';
 import 'package:source_gen/source_gen.dart';
 
 Builder driftTableSortBuilder(BuilderOptions options) =>
-    SharedPartBuilder([DriftTableSortGenerator()], "drift_table_sort");
+    SharedPartBuilder([const DriftTableSortGenerator()], "drift_table_sort");
 
 Builder npLogBuilder(BuilderOptions options) =>
-    SharedPartBuilder([NpLogGenerator()], "np_log");
+    SharedPartBuilder([const NpLogGenerator()], "np_log");

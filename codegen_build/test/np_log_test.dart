@@ -9,7 +9,7 @@ class Logger {
 
 void main() {
   final tester = SourceGenTester.fromPath("test/src/np_log.dart");
-  final generator = NpLogGenerator();
+  const generator = NpLogGenerator();
   Future<void> expectGen(String name, Matcher matcher) async =>
       expectGenerateNamed(await tester, name, generator, matcher);
 

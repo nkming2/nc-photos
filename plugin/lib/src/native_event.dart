@@ -22,7 +22,7 @@ class NativeEvent {
   static const _eventChannel = EventChannel("${k.libId}/native_event");
   static const _methodChannel = MethodChannel("${k.libId}/native_event_method");
 
-  static late final _eventStream = _eventChannel
+  static final _eventStream = _eventChannel
       .receiveBroadcastStream()
       .map((event) {
         if (event is Map) {

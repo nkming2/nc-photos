@@ -78,7 +78,7 @@ $src""";
 }
 
 Future _buildTest(String src, String expected) => buildTest(
-      generators: [DriftTableSortGenerator()],
+      generators: [const DriftTableSortGenerator()],
       pkgName: _pkgName,
       src: src,
       expected: expected,

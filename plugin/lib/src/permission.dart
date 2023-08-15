@@ -28,7 +28,7 @@ class Permission {
 
   static Stream get stream => _eventStream;
 
-  static late final _eventStream =
+  static final _eventStream =
       _eventChannel.receiveBroadcastStream().map((event) {
     if (event is Map) {
       switch (event["event"]) {
