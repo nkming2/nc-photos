@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
   logging: any
+  np_log:
+    path: ../np_log
 
 dev_dependencies:
   np_lints:

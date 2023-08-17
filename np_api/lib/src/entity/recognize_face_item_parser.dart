@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:np_api/src/entity/entity.dart';
 import 'package:np_api/src/entity/parser.dart';
-import 'package:np_common/log.dart';
+import 'package:np_api/src/util.dart';
 import 'package:np_common/type.dart';
 import 'package:xml/xml.dart';
 

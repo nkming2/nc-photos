@@ -103,6 +103,8 @@ dependencies:
     path: ../codegen
   np_common:
     path: ../np_common
+  np_log:
+    path: ../np_log
   octo_image: any
   page_view_indicators: ^2.0.0
   path: ^1.8.0

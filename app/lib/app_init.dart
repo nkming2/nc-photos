@@ -4,7 +4,6 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -46,6 +45,7 @@ import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/touch_manager.dart';
+import 'package:np_log/np_log.dart' as np_log;
 import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
@@ -98,43 +98,10 @@ void initLog() {
     return;
   }
 
-  Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
-  Logger.root.onRecord.listen((record) {
-    // dev.log(
-    //   "${record.level.name} ${record.time}: ${record.message}",
-    //   time: record.time,
-    //   sequenceNumber: record.sequenceNumber,
-    //   level: record.level.value,
-    //   name: record.loggerName,
-    // );
-    String msg =
-        "[${record.loggerName}] ${record.level.name} ${record.time}: ${record.message}";
-    if (record.error != null) {
-      msg += " (throw: ${record.error.runtimeType} { ${record.error} })";
-    }
-    if (record.stackTrace != null) {
-      msg += "\nStack Trace:\n${record.stackTrace}";
-    }
-
-    if (kDebugMode) {
-      // show me colors!
-      int color;
-      if (record.level >= Level.SEVERE) {
-        color = 91;
-      } else if (record.level >= Level.WARNING) {
-        color = 33;
-      } else if (record.level >= Level.INFO) {
-        color = 34;
-      } else if (record.level >= Level.FINER) {
-        color = 32;
-      } else {
-        color = 90;
-      }
-      msg = "\x1B[${color}m$msg\x1B[0m";
-    }
-    debugPrint(msg, wrapWidth: 1024);
-    LogCapturer().onLog(msg);
-  });
+  np_log.initLog(
+    isDebugMode: kDebugMode,
+    print: (log) => debugPrint(log, wrapWidth: 1024),
+  );
 }
 
 void initDrift() {

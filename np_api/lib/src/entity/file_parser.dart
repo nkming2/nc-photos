@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:np_api/src/entity/entity.dart';
 import 'package:np_api/src/entity/parser.dart';
+import 'package:np_api/src/util.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/log.dart';
 import 'package:xml/xml.dart';
 
 part 'file_parser.g.dart';

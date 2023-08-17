@@ -1,10 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-void initLog() {
-  Logger.root.level = kReleaseMode ? Level.WARNING : Level.ALL;
+void initLog({
+  required bool isDebugMode,
+  void Function(String) print = print,
+}) {
+  Logger.root.level = !isDebugMode ? Level.WARNING : Level.ALL;
   Logger.root.onRecord.listen((record) {
     String msg =
         "[${record.loggerName}] ${record.level.name} ${record.time}: ${record.message}";
@@ -15,7 +17,7 @@ void initLog() {
       msg += "\nStack Trace:\n${record.stackTrace}";
     }
 
-    if (kDebugMode) {
+    if (isDebugMode) {
       // show me colors!
       int color;
       if (record.level >= Level.SEVERE) {
@@ -31,7 +33,7 @@ void initLog() {
       }
       msg = "\x1B[${color}m$msg\x1B[0m";
     }
-    debugPrint(msg, wrapWidth: 1024);
+    print(msg);
     LogStream().add(msg);
   });
 }

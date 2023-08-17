@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:np_common/string_extension.dart';
+import 'package:np_log/np_log.dart';
 import 'package:path/path.dart' as path_lib;
 
 class LogCapturer {
@@ -16,28 +18,23 @@ class LogCapturer {
 
   /// Start capturing logs
   void start() {
-    _isEnable = true;
+    _subscription ??= LogStream().stream.listen(_logs.add);
   }
 
   /// Stop capturing and save the captured logs
   Future<dynamic> stop() {
-    _isEnable = false;
+    _subscription?.cancel();
+    _subscription = null;
     final saver = platform.FileSaver();
     final content = const Utf8Encoder().convert(_logs.join("\n"));
     _logs.clear();
     return saver.saveFile("nc-photos.log", content);
   }
 
-  void onLog(String log) {
-    if (_isEnable) {
-      _logs.add(log);
-    }
-  }
-
-  bool get isEnable => _isEnable;
+  bool get isEnable => _subscription != null;
 
   final _logs = <String>[];
-  bool _isEnable = false;
+  StreamSubscription? _subscription;
 
   static LogCapturer? _inst;
 }
