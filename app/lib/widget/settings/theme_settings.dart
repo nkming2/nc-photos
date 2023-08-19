@@ -1,23 +1,23 @@
 import 'dart:async';
 
 import 'package:copy_with/copy_with.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
-import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -25,7 +25,9 @@ part 'theme/bloc.dart';
 part 'theme/state_event.dart';
 part 'theme_settings.g.dart';
 
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 class ThemeSettings extends StatelessWidget {
   const ThemeSettings({super.key});
@@ -33,7 +35,9 @@ class ThemeSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _Bloc(KiwiContainer().resolve<DiContainer>()),
+      create: (_) => _Bloc(
+        prefController: context.read(),
+      ),
       child: const _WrappedThemeSettings(),
     );
   }
@@ -47,89 +51,86 @@ class _WrappedThemeSettings extends StatefulWidget {
 }
 
 @npLog
-class _WrappedThemeSettingsState extends State<_WrappedThemeSettings> {
+class _WrappedThemeSettingsState extends State<_WrappedThemeSettings>
+    with RouteAware, PageVisibilityMixin {
   @override
   void initState() {
     super.initState();
-    _errorSubscription = _bloc.errorStream().listen((_) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().writePreferenceFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    });
-  }
-
-  @override
-  void dispose() {
-    _errorSubscription.cancel();
-    super.dispose();
+    _bloc.add(const _Init());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (context) => _buildContent(context),
+      body: MultiBlocListener(
+        listeners: [
+          _BlocListener(
+            listenWhen: (previous, current) => previous.error != current.error,
+            listener: (context, state) {
+              if (state.error != null && isPageVisible()) {
+                SnackBarManager().showSnackBar(SnackBar(
+                  content:
+                      Text(exception_util.toUserString(state.error!.error)),
+                  duration: k.snackBarDurationNormal,
+                ));
+              }
+            },
+          ),
+        ],
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              title: Text(L10n.global().settingsThemeTitle),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const _SeedColorOption(),
+                  if (platform_k.isAndroid &&
+                      AndroidInfo().sdkInt >= AndroidVersion.Q)
+                    _BlocSelector<bool>(
+                      selector: (state) => state.isFollowSystemTheme,
+                      builder: (_, isFollowSystemTheme) {
+                        return SwitchListTile(
+                          title: Text(
+                              L10n.global().settingsFollowSystemThemeTitle),
+                          value: isFollowSystemTheme,
+                          onChanged: (value) {
+                            _bloc.add(_SetFollowSystemTheme(value));
+                          },
+                        );
+                      },
+                    ),
+                  _BlocSelector<bool>(
+                    selector: (state) => state.isUseBlackInDarkTheme,
+                    builder: (context, isUseBlackInDarkTheme) {
+                      return SwitchListTile(
+                        title: Text(
+                            L10n.global().settingsUseBlackInDarkThemeTitle),
+                        subtitle: Text(isUseBlackInDarkTheme
+                            ? L10n.global()
+                                .settingsUseBlackInDarkThemeTrueDescription
+                            : L10n.global()
+                                .settingsUseBlackInDarkThemeFalseDescription),
+                        value: isUseBlackInDarkTheme,
+                        onChanged: (value) {
+                          _bloc.add(_SetUseBlackInDarkTheme(
+                              value, Theme.of(context)));
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          title: Text(L10n.global().settingsThemeTitle),
-        ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              const _SeedColorOption(),
-              if (platform_k.isAndroid &&
-                  AndroidInfo().sdkInt >= AndroidVersion.Q)
-                _BlocBuilder(
-                  buildWhen: (previous, current) =>
-                      previous.isFollowSystemTheme !=
-                      current.isFollowSystemTheme,
-                  builder: (context, state) {
-                    return SwitchListTile(
-                      title: Text(L10n.global().settingsFollowSystemThemeTitle),
-                      value: state.isFollowSystemTheme,
-                      onChanged: (value) {
-                        _bloc.add(_SetFollowSystemTheme(value));
-                      },
-                    );
-                  },
-                ),
-              _BlocBuilder(
-                buildWhen: (previous, current) =>
-                    previous.isUseBlackInDarkTheme !=
-                    current.isUseBlackInDarkTheme,
-                builder: (context, state) {
-                  return SwitchListTile(
-                    title: Text(L10n.global().settingsUseBlackInDarkThemeTitle),
-                    subtitle: Text(state.isUseBlackInDarkTheme
-                        ? L10n.global()
-                            .settingsUseBlackInDarkThemeTrueDescription
-                        : L10n.global()
-                            .settingsUseBlackInDarkThemeFalseDescription),
-                    value: state.isUseBlackInDarkTheme,
-                    onChanged: (value) {
-                      _bloc.add(
-                          _SetUseBlackInDarkTheme(value, Theme.of(context)));
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   late final _bloc = context.read<_Bloc>();
-  late final StreamSubscription _errorSubscription;
 }
 
 class _SeedColorOption extends StatelessWidget {
@@ -137,21 +138,21 @@ class _SeedColorOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) => previous.seedColor != current.seedColor,
-      builder: (context, state) {
+    return _BlocSelector<int?>(
+      selector: (state) => state.seedColor,
+      builder: (context, seedColor) {
         if (SessionStorage().isSupportDynamicColor) {
           return ListTile(
             title: Text(L10n.global().settingsSeedColorTitle),
-            subtitle: Text(state.seedColor == null
+            subtitle: Text(seedColor == null
                 ? L10n.global().settingsSeedColorSystemColorDescription
                 : L10n.global().settingsSeedColorDescription),
-            trailing: state.seedColor == null
+            trailing: seedColor == null
                 ? null
                 : Icon(
                     Icons.circle,
                     size: 32,
-                    color: Color(state.seedColor!),
+                    color: Color(seedColor),
                   ),
             onTap: () => _onSeedColorPressed(context),
           );
@@ -162,7 +163,7 @@ class _SeedColorOption extends StatelessWidget {
             trailing: Icon(
               Icons.circle,
               size: 32,
-              color: Color(state.seedColor ?? defaultSeedColor),
+              color: seedColor?.run(Color.new) ?? defaultSeedColor,
             ),
             onTap: () => _onSeedColorPressed(context),
           );
@@ -281,7 +282,7 @@ class _SeedColorCustomPickerState extends State<_SeedColorCustomPicker> {
     );
   }
 
-  late Color _customColor = getSeedColor() ?? const Color(defaultSeedColor);
+  late var _customColor = getSeedColor(context) ?? defaultSeedColor;
 }
 
 class _SeedColorPickerItem extends StatelessWidget {

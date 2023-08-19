@@ -65,7 +65,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   @override
   build(BuildContext context) {
     return Theme(
-      data: buildDarkTheme(),
+      data: buildDarkTheme(context),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,

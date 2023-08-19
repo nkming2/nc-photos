@@ -61,7 +61,7 @@ class _ResultViewerState extends State<ResultViewer> {
   build(BuildContext context) {
     if (_file == null) {
       return Theme(
-        data: buildDarkTheme(),
+        data: buildDarkTheme(context),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,

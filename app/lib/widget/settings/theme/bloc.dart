@@ -1,76 +1,68 @@
 part of '../theme_settings.dart';
 
-class _Error {
-  const _Error(this.ev);
-
-  final _Event ev;
-}
-
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
-  _Bloc(DiContainer c)
-      : assert(require(c)),
-        _c = c,
-        super(_State(
-          isFollowSystemTheme: c.pref.isFollowSystemThemeOr(false),
-          isUseBlackInDarkTheme: c.pref.isUseBlackInDarkThemeOr(false),
-          seedColor: getSeedColor()?.value,
+  _Bloc({
+    required this.prefController,
+  }) : super(_State(
+          isFollowSystemTheme: prefController.isFollowSystemTheme.value,
+          isUseBlackInDarkTheme: prefController.isUseBlackInDarkTheme.value,
+          seedColor: prefController.seedColor.value?.value,
         )) {
+    on<_Init>(_onInit);
     on<_SetFollowSystemTheme>(_onSetFollowSystemTheme);
     on<_SetUseBlackInDarkTheme>(_onSetUseBlackInDarkTheme);
     on<_SetSeedColor>(_onSetSeedColor);
   }
 
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.pref);
-
   @override
   String get tag => _log.fullName;
 
-  Stream<_Error> errorStream() => _errorStream.stream;
-
-  Future<void> _onSetFollowSystemTheme(
-      _SetFollowSystemTheme ev, Emitter<_State> emit) async {
+  Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
-    final oldValue = state.isFollowSystemTheme;
-    emit(state.copyWith(isFollowSystemTheme: ev.value));
-    if (await _c.pref.setFollowSystemTheme(ev.value)) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    } else {
-      _log.severe("[_onSetFollowSystemTheme] Failed writing pref");
-      _errorStream.add(_Error(ev));
-      emit(state.copyWith(isFollowSystemTheme: oldValue));
-    }
+    await Future.wait([
+      emit.forEach<bool>(
+        prefController.isFollowSystemTheme,
+        onData: (data) => state.copyWith(isFollowSystemTheme: data),
+        onError: (e, stackTrace) {
+          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
+          return state.copyWith(error: ExceptionEvent(e, stackTrace));
+        },
+      ),
+      emit.forEach<bool>(
+        prefController.isUseBlackInDarkTheme,
+        onData: (data) => state.copyWith(isUseBlackInDarkTheme: data),
+        onError: (e, stackTrace) {
+          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
+          return state.copyWith(error: ExceptionEvent(e, stackTrace));
+        },
+      ),
+      emit.forEach<Color?>(
+        prefController.seedColor,
+        onData: (data) => state.copyWith(seedColor: data?.value),
+        onError: (e, stackTrace) {
+          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
+          return state.copyWith(error: ExceptionEvent(e, stackTrace));
+        },
+      ),
+    ]);
   }
 
-  Future<void> _onSetUseBlackInDarkTheme(
-      _SetUseBlackInDarkTheme ev, Emitter<_State> emit) async {
+  void _onSetFollowSystemTheme(_SetFollowSystemTheme ev, Emitter<_State> emit) {
     _log.info(ev);
-    final oldValue = state.isUseBlackInDarkTheme;
-    emit(state.copyWith(isUseBlackInDarkTheme: ev.value));
-    if (await _c.pref.setUseBlackInDarkTheme(ev.value)) {
-      if (ev.theme.brightness == Brightness.dark) {
-        KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-      }
-    } else {
-      _log.severe("[_onSetUseBlackInDarkTheme] Failed writing pref");
-      _errorStream.add(_Error(ev));
-      emit(state.copyWith(isUseBlackInDarkTheme: oldValue));
-    }
+    prefController.setFollowSystemTheme(ev.value);
   }
 
-  Future<void> _onSetSeedColor(_SetSeedColor ev, Emitter<_State> emit) async {
+  void _onSetUseBlackInDarkTheme(
+      _SetUseBlackInDarkTheme ev, Emitter<_State> emit) {
     _log.info(ev);
-    final oldValue = state.seedColor;
-    emit(state.copyWith(seedColor: ev.value?.value));
-    if (await _c.pref.setSeedColor(ev.value?.withAlpha(0xFF).value)) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    } else {
-      _log.severe("[_onSetSeedColor] Failed writing pref");
-      _errorStream.add(_Error(ev));
-      emit(state.copyWith(seedColor: oldValue));
-    }
+    prefController.setUseBlackInDarkTheme(ev.value);
   }
 
-  final DiContainer _c;
-  final _errorStream = StreamController<_Error>.broadcast();
+  void _onSetSeedColor(_SetSeedColor ev, Emitter<_State> emit) {
+    _log.info(ev);
+    prefController.setSeedColor(ev.value);
+  }
+
+  final PrefController prefController;
 }

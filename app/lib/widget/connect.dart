@@ -73,7 +73,7 @@ class _ConnectState extends State<Connect> {
   @override
   build(BuildContext context) {
     return Theme(
-      data: buildDarkTheme().copyWith(
+      data: buildDarkTheme(context).copyWith(
         scaffoldBackgroundColor: Theme.of(context).nextcloudBlue,
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: Colors.white,

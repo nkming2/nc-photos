@@ -14,7 +14,10 @@ part of 'theme_settings.dart';
 
 abstract class $_StateCopyWithWorker {
   _State call(
-      {bool? isFollowSystemTheme, bool? isUseBlackInDarkTheme, int? seedColor});
+      {bool? isFollowSystemTheme,
+      bool? isUseBlackInDarkTheme,
+      int? seedColor,
+      ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -24,14 +27,16 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _State call(
       {dynamic isFollowSystemTheme,
       dynamic isUseBlackInDarkTheme,
-      dynamic seedColor = copyWithNull}) {
+      dynamic seedColor = copyWithNull,
+      dynamic error = copyWithNull}) {
     return _State(
         isFollowSystemTheme:
             isFollowSystemTheme as bool? ?? that.isFollowSystemTheme,
         isUseBlackInDarkTheme:
             isUseBlackInDarkTheme as bool? ?? that.isUseBlackInDarkTheme,
         seedColor:
-            seedColor == copyWithNull ? that.seedColor : seedColor as int?);
+            seedColor == copyWithNull ? that.seedColor : seedColor as int?,
+        error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
   final _State that;
@@ -68,7 +73,14 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isFollowSystemTheme: $isFollowSystemTheme, isUseBlackInDarkTheme: $isUseBlackInDarkTheme, seedColor: $seedColor}";
+    return "_State {isFollowSystemTheme: $isFollowSystemTheme, isUseBlackInDarkTheme: $isUseBlackInDarkTheme, seedColor: $seedColor, error: $error}";
+  }
+}
+
+extension _$_InitToString on _Init {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_Init {}";
   }
 }
 

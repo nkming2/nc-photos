@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -15,15 +14,16 @@ import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/url_launcher_util.dart';
@@ -50,6 +50,7 @@ class AccountPickerDialog extends StatelessWidget {
       create: (context) => _Bloc(
         container: KiwiContainer().resolve(),
         accountController: context.read(),
+        prefController: context.read(),
       ),
       child: const _WrappedAccountPickerDialog(),
     );
@@ -112,13 +113,27 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        if (!Pref().isFollowSystemThemeOr(false))
-                          Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: _DarkModeSwitch(
-                              onChanged: _onDarkModeChanged,
-                            ),
-                          ),
+                        ValueStreamBuilder<bool>(
+                          stream: context
+                              .read<PrefController>()
+                              .isFollowSystemTheme,
+                          builder: (_, isFollowSystemTheme) {
+                            if (!isFollowSystemTheme.requireData) {
+                              return Align(
+                                alignment: AlignmentDirectional.centerEnd,
+                                child: _DarkModeSwitch(
+                                  onChanged: (value) {
+                                    context
+                                        .read<_Bloc>()
+                                        .add(_SetDarkTheme(value));
+                                  },
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -191,12 +206,6 @@ class _WrappedAccountPickerDialog extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onDarkModeChanged(bool value) {
-    Pref().setDarkTheme(value).then((_) {
-      KiwiContainer().resolve<EventBus>().fire(ThemeChangedEvent());
-    });
   }
 }
 

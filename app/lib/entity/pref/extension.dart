@@ -101,21 +101,30 @@ extension PrefExtension on Pref {
   Future<bool> setLastVersion(int value) => _set<int>(
       PrefKey.lastVersion, value, (key, value) => provider.setInt(key, value));
 
+  @Deprecated("Use PrefController")
   bool? isDarkTheme() => provider.getBool(PrefKey.darkTheme);
+  @Deprecated("Use PrefController")
   bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
+  @Deprecated("Use PrefController")
   Future<bool> setDarkTheme(bool value) => _set<bool>(
       PrefKey.darkTheme, value, (key, value) => provider.setBool(key, value));
 
+  @Deprecated("Use PrefController")
   bool? isFollowSystemTheme() => provider.getBool(PrefKey.followSystemTheme);
+  @Deprecated("Use PrefController")
   bool isFollowSystemThemeOr(bool def) => isFollowSystemTheme() ?? def;
+  @Deprecated("Use PrefController")
   Future<bool> setFollowSystemTheme(bool value) => _set<bool>(
       PrefKey.followSystemTheme,
       value,
       (key, value) => provider.setBool(key, value));
 
+  @Deprecated("Use PrefController")
   bool? isUseBlackInDarkTheme() =>
       provider.getBool(PrefKey.useBlackInDarkTheme);
+  @Deprecated("Use PrefController")
   bool isUseBlackInDarkThemeOr(bool def) => isUseBlackInDarkTheme() ?? def;
+  @Deprecated("Use PrefController")
   Future<bool> setUseBlackInDarkTheme(bool value) => _set<bool>(
       PrefKey.useBlackInDarkTheme,
       value,
@@ -249,8 +258,11 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
+  @Deprecated("Use PrefController")
   int? getSeedColor() => provider.getInt(PrefKey.seedColor);
+  @Deprecated("Use PrefController")
   int getSeedColorOr(int def) => getSeedColor() ?? def;
+  @Deprecated("Use PrefController")
   Future<bool> setSeedColor(int? value) {
     if (value == null) {
       return _remove(PrefKey.seedColor);

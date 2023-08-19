@@ -120,7 +120,7 @@ class _ViewerState extends State<Viewer>
   build(BuildContext context) {
     final originalBrightness = Theme.of(context).brightness;
     return Theme(
-      data: buildDarkTheme(),
+      data: buildDarkTheme(context),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.black,
@@ -299,7 +299,7 @@ class _ViewerState extends State<Viewer>
                         }
                       },
                       child: Theme(
-                        data: buildTheme(originalBrightness),
+                        data: buildTheme(context, originalBrightness),
                         child: Builder(
                           builder: (context) {
                             return Container(

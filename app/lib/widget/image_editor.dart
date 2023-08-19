@@ -87,7 +87,7 @@ class _ImageEditorState extends State<ImageEditor> {
 
   @override
   build(BuildContext context) => Theme(
-        data: buildDarkTheme(),
+        data: buildDarkTheme(context),
         child: Scaffold(
           body: Builder(
             builder: _buildContent,

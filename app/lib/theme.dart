@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/theme/material3.dart';
 
-const defaultSeedColor = 0xFF2196F3;
+const defaultSeedColor = Color(0xFF2196F3);
 
 extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;
@@ -88,20 +88,20 @@ class DarkModeSwitchTheme extends StatelessWidget {
   final Widget child;
 }
 
-ThemeData buildTheme(Brightness brightness) {
+ThemeData buildTheme(BuildContext context, Brightness brightness) {
   return (brightness == Brightness.light)
-      ? buildLightTheme()
-      : buildDarkTheme();
+      ? buildLightTheme(context)
+      : buildDarkTheme(context);
 }
 
-ThemeData buildLightTheme([ColorScheme? dynamicScheme]) {
-  final colorScheme = _getColorScheme(dynamicScheme, Brightness.light);
+ThemeData buildLightTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
+  final colorScheme = _getColorScheme(context, dynamicScheme, Brightness.light);
   return _applyColorScheme(colorScheme);
 }
 
-ThemeData buildDarkTheme([ColorScheme? dynamicScheme]) {
-  final colorScheme = _getColorScheme(dynamicScheme, Brightness.dark);
-  if (Pref().isUseBlackInDarkThemeOr(false)) {
+ThemeData buildDarkTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
+  final colorScheme = _getColorScheme(context, dynamicScheme, Brightness.dark);
+  if (context.read<PrefController>().isUseBlackInDarkTheme.value) {
     return _applyColorScheme(colorScheme.copyWith(
       background: Colors.black,
       surface: Colors.grey[900],
@@ -111,12 +111,13 @@ ThemeData buildDarkTheme([ColorScheme? dynamicScheme]) {
   }
 }
 
-Color? getSeedColor() {
-  return Pref().getSeedColor()?.run((c) => Color(c).withAlpha(0xFF));
+Color? getSeedColor(BuildContext context) {
+  return context.read<PrefController>().seedColor.value;
 }
 
-ColorScheme _getColorScheme(ColorScheme? dynamicScheme, Brightness brightness) {
-  var seedColor = Pref().getSeedColor();
+ColorScheme _getColorScheme(
+    BuildContext context, ColorScheme? dynamicScheme, Brightness brightness) {
+  var seedColor = getSeedColor(context);
   if (seedColor == null) {
     if (dynamicScheme != null) {
       return dynamicScheme;
@@ -125,7 +126,7 @@ ColorScheme _getColorScheme(ColorScheme? dynamicScheme, Brightness brightness) {
     }
   }
   return ColorScheme.fromSeed(
-    seedColor: Color(seedColor),
+    seedColor: seedColor,
     brightness: brightness,
   );
 }

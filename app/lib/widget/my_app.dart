@@ -1,3 +1,4 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,18 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
@@ -51,8 +50,15 @@ import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:to_string/to_string.dart';
 
 part 'my_app.g.dart';
+part 'my_app/bloc.dart';
+part 'my_app/state_event.dart';
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocListener = BlocListener<_Bloc, _State>;
+// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -69,7 +75,12 @@ class MyApp extends StatelessWidget {
           create: (_) => PrefController(_c),
         ),
       ],
-      child: const _WrappedApp(),
+      child: BlocProvider(
+        create: (context) => _Bloc(
+          prefController: context.read(),
+        ),
+        child: const _WrappedApp(),
+      ),
     );
   }
 
@@ -96,43 +107,48 @@ class _WrappedAppState extends State<_WrappedApp>
     super.initState();
     SnackBarManager().registerHandler(this);
     NavigationManager().setHandler(this);
-    _themeChangedListener =
-        AppEventListener<ThemeChangedEvent>(_onThemeChangedEvent)..begin();
+
+    _bloc.add(const _Init());
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeMode themeMode;
-    if (Pref().isFollowSystemThemeOr(false)) {
-      themeMode = ThemeMode.system;
-    } else {
-      themeMode =
-          Pref().isDarkThemeOr(false) ? ThemeMode.dark : ThemeMode.light;
-    }
-    final prefController = context.read<PrefController>();
-    return ValueStreamBuilder<language_util.AppLanguage>(
-      stream: prefController.language,
-      builder: (context, snapshot) => DynamicColorBuilder(
+    return _BlocBuilder(
+      buildWhen: (previous, current) =>
+          previous.language != current.language ||
+          previous.isDarkTheme != current.isDarkTheme ||
+          previous.isFollowSystemTheme != current.isFollowSystemTheme ||
+          previous.isUseBlackInDarkTheme != current.isUseBlackInDarkTheme ||
+          previous.seedColor != current.seedColor,
+      builder: (context, state) => DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           if (lightDynamic != null) {
             SessionStorage().isSupportDynamicColor = true;
           }
+          final ThemeMode themeMode;
+          if (state.isFollowSystemTheme) {
+            themeMode = ThemeMode.system;
+          } else {
+            themeMode = state.isDarkTheme ? ThemeMode.dark : ThemeMode.light;
+          }
           return MaterialApp(
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: buildLightTheme(lightDynamic),
-            darkTheme: buildDarkTheme(darkDynamic),
+            theme: buildLightTheme(context, lightDynamic),
+            darkTheme: buildDarkTheme(context, darkDynamic),
             themeMode: themeMode,
             initialRoute: Splash.routeName,
             onGenerateRoute: _onGenerateRoute,
-            navigatorObservers: <NavigatorObserver>[MyApp.routeObserver],
+            navigatorObservers: [
+              MyApp.routeObserver,
+            ],
             navigatorKey: _navigatorKey,
             scaffoldMessengerKey: _scaffoldMessengerKey,
-            locale: snapshot.requireData.locale,
+            locale: state.language.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: const <Locale>[
-              // the order here doesn't matter, except for the first one, which must
-              // be en
+            supportedLocales: const [
+              // the order here doesn't matter, except for the first one, which
+              // must be en
               Locale("en"),
               Locale("el"),
               Locale("es"),
@@ -166,7 +182,6 @@ class _WrappedAppState extends State<_WrappedApp>
     super.dispose();
     SnackBarManager().unregisterHandler(this);
     NavigationManager().unsetHandler(this);
-    _themeChangedListener.end();
   }
 
   @override
@@ -225,10 +240,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleCollectionBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
     return route;
-  }
-
-  void _onThemeChangedEvent(ThemeChangedEvent ev) {
-    setState(() {});
   }
 
   Route<dynamic>? _handleBasicRoute(RouteSettings settings) {
@@ -578,10 +589,9 @@ class _WrappedAppState extends State<_WrappedApp>
     return null;
   }
 
+  late final _bloc = context.read<_Bloc>();
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   final _navigatorKey = GlobalKey<NavigatorState>();
-
-  late AppEventListener<ThemeChangedEvent> _themeChangedListener;
 }
 
 class _ThemedMyApp extends StatelessWidget {

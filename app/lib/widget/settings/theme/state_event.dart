@@ -7,6 +7,7 @@ class _State {
     required this.isFollowSystemTheme,
     required this.isUseBlackInDarkTheme,
     required this.seedColor,
+    this.error,
   });
 
   @override
@@ -16,10 +17,20 @@ class _State {
   final bool isUseBlackInDarkTheme;
   // workaround analyzer bug where Color type can't be recognized
   final int? seedColor;
+
+  final ExceptionEvent? error;
 }
 
 abstract class _Event {
   const _Event();
+}
+
+@toString
+class _Init implements _Event {
+  const _Init();
+
+  @override
+  String toString() => _$toString();
 }
 
 @toString

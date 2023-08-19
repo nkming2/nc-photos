@@ -37,7 +37,7 @@ class _SignInState extends State<SignIn> {
   @override
   build(BuildContext context) {
     return Theme(
-      data: buildDarkTheme().copyWith(
+      data: buildDarkTheme(context).copyWith(
         scaffoldBackgroundColor: Colors.transparent,
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: Colors.white,

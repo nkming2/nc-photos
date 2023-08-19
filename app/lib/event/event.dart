@@ -117,8 +117,6 @@ class FavoriteResyncedEvent {
   final Account account;
 }
 
-class ThemeChangedEvent {}
-
 enum MetadataTaskState {
   /// No work is being done
   idle,

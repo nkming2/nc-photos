@@ -89,6 +89,13 @@ extension _$_DeleteAccountToString on _DeleteAccount {
   }
 }
 
+extension _$_SetDarkThemeToString on _SetDarkTheme {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetDarkTheme {value: $value}";
+  }
+}
+
 extension _$_SetErrorToString on _SetError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

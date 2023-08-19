@@ -1,3 +1,6 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
+import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
@@ -141,6 +144,41 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<bool> get isDarkTheme => _isDarkThemeController.stream;
+
+  Future<void> setDarkTheme(bool value) => _set<bool>(
+        controller: _isDarkThemeController,
+        setter: (pref, value) => pref.setDarkTheme(value),
+        value: value,
+      );
+
+  ValueStream<bool> get isFollowSystemTheme =>
+      _isFollowSystemThemeController.stream;
+
+  Future<void> setFollowSystemTheme(bool value) => _set<bool>(
+        controller: _isFollowSystemThemeController,
+        setter: (pref, value) => pref.setFollowSystemTheme(value),
+        value: value,
+      );
+
+  ValueStream<bool> get isUseBlackInDarkTheme =>
+      _isUseBlackInDarkThemeController.stream;
+
+  Future<void> setUseBlackInDarkTheme(bool value) => _set<bool>(
+        controller: _isUseBlackInDarkThemeController,
+        setter: (pref, value) => pref.setUseBlackInDarkTheme(value),
+        value: value,
+      );
+
+  ValueStream<Color?> get seedColor => _seedColorController.stream;
+
+  Future<void> setSeedColor(Color? value) => _setOrRemove<Color>(
+        controller: _seedColorController,
+        setter: (pref, value) => pref.setSeedColor(value.withAlpha(0xFF).value),
+        remover: (pref) => pref.setSeedColor(null),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -160,6 +198,33 @@ class PrefController {
     }
   }
 
+  Future<void> _setOrRemove<T>({
+    required BehaviorSubject<T?> controller,
+    required Future<bool> Function(Pref pref, T value) setter,
+    required Future<bool> Function(Pref pref) remover,
+    required T? value,
+    T? defaultValue,
+  }) async {
+    final backup = controller.value;
+    controller.add(value ?? defaultValue);
+    try {
+      if (value == null) {
+        if (!await remover(_c.pref)) {
+          throw StateError("Unknown error");
+        }
+      } else {
+        if (!await setter(_c.pref, value)) {
+          throw StateError("Unknown error");
+        }
+      }
+    } catch (e, stackTrace) {
+      _log.severe("[_set] Failed setting preference", e, stackTrace);
+      controller
+        ..addError(e, stackTrace)
+        ..add(backup);
+    }
+  }
+
   static language_util.AppLanguage _langIdToAppLanguage(int langId) {
     try {
       return language_util.supportedLanguages[langId]!;
@@ -167,6 +232,8 @@ class PrefController {
       return language_util.supportedLanguages[0]!;
     }
   }
+
+  static const _seedColorDef = 0xFF2196F3;
 
   final DiContainer _c;
   late final _languageController =
@@ -197,4 +264,12 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isSaveEditResultToServerOr(true));
   late final _enhanceMaxSizeController = BehaviorSubject.seeded(
       SizeInt(_c.pref.getEnhanceMaxWidthOr(), _c.pref.getEnhanceMaxHeightOr()));
+  late final _isDarkThemeController =
+      BehaviorSubject.seeded(_c.pref.isDarkThemeOr(false));
+  late final _isFollowSystemThemeController =
+      BehaviorSubject.seeded(_c.pref.isFollowSystemThemeOr(false));
+  late final _isUseBlackInDarkThemeController =
+      BehaviorSubject.seeded(_c.pref.isUseBlackInDarkThemeOr(false));
+  late final _seedColorController = BehaviorSubject<Color?>.seeded(
+      Color(_c.pref.getSeedColorOr(_seedColorDef)));
 }

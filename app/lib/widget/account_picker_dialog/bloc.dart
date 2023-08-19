@@ -5,6 +5,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required DiContainer container,
     required this.accountController,
+    required this.prefController,
   })  : _c = container,
         super(_State.init(
           accounts: container.pref.getAccounts3Or([]),
@@ -12,6 +13,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_ToggleDropdown>(_onToggleDropdown);
     on<_SwitchAccount>(_onSwitchAccount);
     on<_DeleteAccount>(_onDeleteAccount);
+    on<_SetDarkTheme>(_onSetDarkTheme);
 
     on<_SetError>(_onSetError);
   }
@@ -86,6 +88,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
   }
 
+  void _onSetDarkTheme(_SetDarkTheme ev, Emitter<_State> emit) {
+    _log.info(ev);
+    prefController.setDarkTheme(ev.value);
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -104,6 +111,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   final DiContainer _c;
   final AccountController accountController;
+  final PrefController prefController;
   late final Account activeAccount = accountController.account;
 
   final _prefLock = Mutex();

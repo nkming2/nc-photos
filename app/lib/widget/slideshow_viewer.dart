@@ -100,7 +100,7 @@ class _SlideshowViewerState extends State<SlideshowViewer>
   @override
   build(BuildContext context) {
     return Theme(
-      data: buildDarkTheme(),
+      data: buildDarkTheme(context),
       child: Scaffold(
         body: Builder(
           builder: _buildContent,
