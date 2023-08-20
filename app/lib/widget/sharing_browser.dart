@@ -25,8 +25,8 @@ import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
-import 'package:nc_photos/widget/unbounded_list_tile.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'sharing_browser.g.dart';
 

@@ -24,7 +24,6 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
@@ -39,6 +38,7 @@ import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'home_search.g.dart';
 

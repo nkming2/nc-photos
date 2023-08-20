@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Icon using an image in asset
 class AssetIcon extends StatelessWidget {
   const AssetIcon(
     this.assetName, {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/theme/dimension.dart';
-import 'package:nc_photos/theme/material3.dart';
+import 'package:np_ui/np_ui.dart';
 
 const defaultSeedColor = Color(0xFF2196F3);
 

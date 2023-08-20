@@ -32,12 +32,12 @@ import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
-import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:tuple/tuple.dart';
 

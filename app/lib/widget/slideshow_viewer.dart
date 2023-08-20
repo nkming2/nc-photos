@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/widget/animated_visibility.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
@@ -17,6 +16,7 @@ import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'slideshow_viewer.g.dart';
 

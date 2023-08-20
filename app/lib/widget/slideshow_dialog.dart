@@ -4,8 +4,8 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/widget/switch_form_field.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'slideshow_dialog.g.dart';

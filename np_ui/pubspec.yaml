@@ -1,0 +1,16 @@
+name: np_ui
+description: Generic UI widgets and theming support package
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  np_lints:
+    path: ../np_lints

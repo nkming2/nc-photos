@@ -46,7 +46,6 @@ import 'package:nc_photos/use_case/archive_file.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
-import 'package:nc_photos/widget/asset_icon.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
 import 'package:nc_photos/widget/export_collection_dialog.dart';
@@ -63,6 +62,7 @@ import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:to_string/to_string.dart';
 

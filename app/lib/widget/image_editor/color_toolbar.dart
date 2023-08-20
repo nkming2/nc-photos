@@ -4,8 +4,8 @@ import 'package:nc_photos/double_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
-import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_ui/np_ui.dart';
 
 enum ColorToolType {
   brightness,

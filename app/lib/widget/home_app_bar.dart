@@ -7,9 +7,8 @@ import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
-import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
-import 'package:nc_photos/widget/app_bar_title_container.dart';
 import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
+import 'package:np_ui/np_ui.dart';
 
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {

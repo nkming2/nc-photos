@@ -16,7 +16,6 @@ import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/theme/material3.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
@@ -24,6 +23,7 @@ import 'package:nc_photos/widget/image_editor/crop_controller.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_ui/np_ui.dart';
 
 class ImageEditorArguments {
   const ImageEditorArguments(this.account, this.file);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/theme/material3.dart';
+import 'package:np_ui/src/material3.dart';
 
 /// A [ListTile]-like widget with unbounded height
 class UnboundedListTile extends StatelessWidget {
@@ -13,7 +13,7 @@ class UnboundedListTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final content = Padding(
       padding: const EdgeInsets.all(16),
       child: Row(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Material 3 theming support to provide features not yet supported natively
+/// in Flutter
 class M3 extends ThemeExtension<M3> {
   const M3({
     required this.checkbox,

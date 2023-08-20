@@ -983,6 +983,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  np_ui:
+    dependency: "direct main"
+    description:
+      path: "../np_ui"
+      relative: true
+    source: path
+    version: "0.0.1"
   octo_image:
     dependency: "direct main"
     description:

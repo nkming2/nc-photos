@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 /// Slider with state
 class StatefulSlider extends StatefulWidget {
   const StatefulSlider({
-    Key? key,
+    super.key,
     required this.initialValue,
     this.min = 0.0,
     this.max = 1.0,
     this.divisions,
     this.onChangeEnd,
-  }) : super(key: key);
+  });
 
   @override
-  createState() => _StatefulSliderState();
+  State<StatefulWidget> createState() => _StatefulSliderState();
 
   final double initialValue;
   final double min;
@@ -23,13 +23,13 @@ class StatefulSlider extends StatefulWidget {
 
 class _StatefulSliderState extends State<StatefulSlider> {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _value = widget.initialValue;
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Slider(
       value: _value,
       min: widget.min,

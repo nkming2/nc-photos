@@ -11,8 +11,8 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/size.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 

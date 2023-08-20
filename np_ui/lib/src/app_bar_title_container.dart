@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/theme/material3.dart';
+import 'package:np_ui/src/material3.dart';
 
 /// App bar title with optional subtitle and leading icon
 class AppBarTitleContainer extends StatelessWidget {

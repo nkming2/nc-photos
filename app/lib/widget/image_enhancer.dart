@@ -28,9 +28,9 @@ import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings/enhancement_settings.dart';
-import 'package:nc_photos/widget/stateful_slider.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'image_enhancer.g.dart';
 
