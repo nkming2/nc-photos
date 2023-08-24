@@ -4,6 +4,7 @@ import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
+import 'package:nc_photos/controller/session_controller.dart';
 import 'package:nc_photos/controller/sync_controller.dart';
 import 'package:nc_photos/di_container.dart';
 
@@ -20,6 +21,8 @@ class AccountController {
     _personsController = null;
     _syncController?.dispose();
     _syncController = null;
+    _sessionController?.dispose();
+    _sessionController = null;
   }
 
   Account get account => _account!;
@@ -52,10 +55,14 @@ class AccountController {
         account: _account!,
       );
 
+  SessionController get sessionController =>
+      _sessionController ??= SessionController();
+
   Account? _account;
   CollectionsController? _collectionsController;
   ServerController? _serverController;
   AccountPrefController? _accountPrefController;
   PersonsController? _personsController;
   SyncController? _syncController;
+  SessionController? _sessionController;
 }

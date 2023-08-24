@@ -12,7 +12,6 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/bloc_util.dart' as bloc_util;
 import 'package:nc_photos/bloc/progress.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/compute_queue.dart';
@@ -31,7 +30,6 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
-import 'package:nc_photos/primitive.dart';
 import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -183,7 +181,7 @@ class _HomePhotosState extends State<HomePhotos>
                     ScrollConfiguration.of(context).copyWith(scrollbars: false),
                 child: RefreshIndicator(
                   onRefresh: () async {
-                    _onRefreshSelected();
+                    _onRefreshSelected(context);
                     await _waitRefresh();
                   },
                   child: CustomScrollView(
@@ -381,8 +379,11 @@ class _HomePhotosState extends State<HomePhotos>
     }
   }
 
-  void _onRefreshSelected() {
-    _hasFiredMetadataTask.value = false;
+  void _onRefreshSelected(BuildContext context) {
+    context
+        .read<AccountController>()
+        .sessionController
+        .setFiredMetadataTask(false);
     _reqRefresh();
   }
 
@@ -484,7 +485,7 @@ class _HomePhotosState extends State<HomePhotos>
   void _onPrefUpdated(PrefUpdatedEvent ev) {
     if (ev.key == PrefKey.enableExif) {
       if (ev.value == true) {
-        _tryStartMetadataTask(ignoreFired: true);
+        _tryStartMetadataTask(context, ignoreFired: true);
       } else {
         _stopMetadataTask();
       }
@@ -505,19 +506,28 @@ class _HomePhotosState extends State<HomePhotos>
       ImageProcessorUploadSuccessEvent ev) {
     _log.info(
         "[_onImageProcessorUploadSuccessEvent] Scheduling metadata task after next refresh");
-    _hasFiredMetadataTask.value = false;
+    context
+        .read<AccountController>()
+        .sessionController
+        .setFiredMetadataTask(false);
   }
 
   void _onBackToTop(HomePhotosBackToTopEvent ev) {
     _scrollController.jumpTo(0);
   }
 
-  Future<void> _tryStartMetadataTask({
+  Future<void> _tryStartMetadataTask(
+    BuildContext context, {
     bool ignoreFired = false,
   }) async {
     if (_bloc.state is ScanAccountDirBlocSuccess &&
         Pref().isEnableExifOr() &&
-        (!_hasFiredMetadataTask.value || ignoreFired)) {
+        (ignoreFired ||
+            !context
+                .read<AccountController>()
+                .sessionController
+                .hasFiredMetadataTask
+                .value)) {
       try {
         final c = KiwiContainer().resolve<DiContainer>();
         final missingMetadataCount = await c.sqliteDb.use((db) async {
@@ -536,7 +546,10 @@ class _HomePhotosState extends State<HomePhotos>
           }
         }
 
-        _hasFiredMetadataTask.value = true;
+        context
+            .read<AccountController>()
+            .sessionController
+            .setFiredMetadataTask(true);
       } catch (e, stackTrace) {
         _log.shout("[_tryStartMetadataTask] Failed starting metadata task", e,
             stackTrace);
@@ -592,7 +605,7 @@ class _HomePhotosState extends State<HomePhotos>
               _isScrollbarVisible = true;
               context.read<AccountController>().syncController.requestSync(
                   widget.account, _accountPrefController.personProvider.value);
-              _tryStartMetadataTask();
+              _tryStartMetadataTask(context);
             }
           });
         }
@@ -682,21 +695,6 @@ class _HomePhotosState extends State<HomePhotos>
 
   double _calcAppBarExtent(BuildContext context) =>
       MediaQuery.of(context).padding.top + kToolbarHeight;
-
-  Primitive<bool> get _hasFiredMetadataTask {
-    final name = bloc_util.getInstNameForRootAwareAccount(
-        "HomePhotosState.hasFiredMetadataTask", widget.account);
-    try {
-      _log.fine("[_hasFiredMetadataTask] Resolving for '$name'");
-      return KiwiContainer().resolve<Primitive<bool>>(name);
-    } catch (_) {
-      _log.info(
-          "[_hasFiredMetadataTask] New instance for account: ${widget.account}");
-      final obj = Primitive(false);
-      KiwiContainer().registerInstance<Primitive<bool>>(obj, name: name);
-      return obj;
-    }
-  }
 
   late final _bloc = ScanAccountDirBloc.of(widget.account);
   late final _queryProgressBloc = ProgressBloc();
