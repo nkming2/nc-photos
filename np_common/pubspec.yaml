@@ -6,14 +6,8 @@ publish_to: none
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
-  flutter: ">=3.3.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-  logging: any
-  np_log:
-    path: ../np_log
 
 dev_dependencies:
   np_lints:
