@@ -2,8 +2,8 @@ import 'package:clock/clock.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -815,7 +815,7 @@ void main() {
       });
 
       test("etag", () {
-        final file = src.copyWith(etag: OrNull("000"));
+        final file = src.copyWith(etag: const OrNull("000"));
         expect(
             file,
             File(
@@ -1090,7 +1090,7 @@ void main() {
           isArchived: true,
           overrideDateTime: DateTime.utc(2021, 1, 2, 3, 4, 5),
         );
-        final file = src.copyWith(metadata: OrNull(null));
+        final file = src.copyWith(metadata: const OrNull(null));
         expect(
             file,
             File(
@@ -1113,7 +1113,7 @@ void main() {
       });
 
       test("isArchived", () {
-        final file = src.copyWith(isArchived: OrNull(false));
+        final file = src.copyWith(isArchived: const OrNull(false));
         expect(
             file,
             File(
@@ -1136,7 +1136,7 @@ void main() {
       });
 
       test("clear isArchived", () {
-        final file = src.copyWith(isArchived: OrNull(null));
+        final file = src.copyWith(isArchived: const OrNull(null));
         expect(
             file,
             File(
@@ -1182,7 +1182,7 @@ void main() {
       });
 
       test("clear overrideDateTime", () {
-        final file = src.copyWith(overrideDateTime: OrNull(null));
+        final file = src.copyWith(overrideDateTime: const OrNull(null));
         expect(
             file,
             File(

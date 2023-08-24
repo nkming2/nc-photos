@@ -9,9 +9,9 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 

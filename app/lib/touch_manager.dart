@@ -8,12 +8,12 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:uuid/uuid.dart';
 

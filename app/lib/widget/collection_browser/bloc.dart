@@ -243,7 +243,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onUnsetCover(_UnsetCover ev, Emitter<_State> emit) {
     _log.info("$ev");
-    collectionsController.edit(state.collection, cover: OrNull(null));
+    collectionsController.edit(state.collection, cover: const OrNull(null));
   }
 
   void _onSetSelectedItems(_SetSelectedItems ev, Emitter<_State> emit) {

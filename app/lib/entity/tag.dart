@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/json_util.dart' as json_util;
-import 'package:nc_photos/or_null.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 

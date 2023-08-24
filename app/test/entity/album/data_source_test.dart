@@ -8,8 +8,8 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;
@@ -325,7 +325,7 @@ Future<void> _dbUpdateDeleteShares() async {
     ),
     coverProvider: AlbumManualCoverProvider(coverFile: files[1].toDescriptor()),
     sortProvider: const AlbumTimeSortProvider(isAscending: true),
-    shares: OrNull(null),
+    shares: const OrNull(null),
   );
   final src = AlbumSqliteDbDataSource(c);
   await src.update(account, updateAlbum);

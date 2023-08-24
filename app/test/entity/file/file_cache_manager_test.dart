@@ -5,7 +5,7 @@ import 'package:nc_photos/entity/file/file_cache_manager.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/int_extension.dart';
 import 'package:nc_photos/list_extension.dart';
-import 'package:nc_photos/or_null.dart';
+import 'package:np_common/or_null.dart';
 import 'package:test/test.dart';
 
 import '../../mock_type.dart';
@@ -84,7 +84,7 @@ Future<void> _loaderOutdatedCache() async {
   );
   addTearDown(() => c.sqliteDb.close());
   final dbFiles = [
-    files[0].copyWith(etag: OrNull("a")),
+    files[0].copyWith(etag: const OrNull("a")),
     ...files.slice(1),
   ];
   await c.sqliteDb.transaction(() async {
@@ -134,7 +134,8 @@ Future<void> _loaderQueryRemoteSameEtag() async {
   final remoteSrc = MockFileWebdavDataSource(MockFileMemoryDataSource(files));
   final loader = FileCacheLoader(c, cacheSrc: cacheSrc, remoteSrc: remoteSrc);
   expect(
-    (await loader(account, files[0].copyWith(etag: OrNull(null))))?.toSet(),
+    (await loader(account, files[0].copyWith(etag: const OrNull(null))))
+        ?.toSet(),
     files.slice(0, 3).toSet(),
   );
   expect(loader.isGood, true);
@@ -158,7 +159,7 @@ Future<void> _loaderQueryRemoteDiffEtag() async {
   );
   addTearDown(() => c.sqliteDb.close());
   final dbFiles = [
-    files[0].copyWith(etag: OrNull("a")),
+    files[0].copyWith(etag: const OrNull("a")),
     ...files.slice(1),
   ];
   await c.sqliteDb.transaction(() async {
@@ -173,7 +174,8 @@ Future<void> _loaderQueryRemoteDiffEtag() async {
   final remoteSrc = MockFileWebdavDataSource(MockFileMemoryDataSource(files));
   final loader = FileCacheLoader(c, cacheSrc: cacheSrc, remoteSrc: remoteSrc);
   expect(
-    (await loader(account, files[0].copyWith(etag: OrNull(null))))?.toSet(),
+    (await loader(account, files[0].copyWith(etag: const OrNull(null))))
+        ?.toSet(),
     dbFiles.slice(0, 3).toSet(),
   );
   expect(loader.isGood, false);

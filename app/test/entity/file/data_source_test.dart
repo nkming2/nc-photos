@@ -3,7 +3,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/list_extension.dart';
-import 'package:nc_photos/or_null.dart';
+import 'package:np_common/or_null.dart';
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;
@@ -228,11 +228,11 @@ Future<void> _updateFileProperty() async {
   await src.updateProperty(
     account,
     files[1],
-    isArchived: OrNull(true),
+    isArchived: const OrNull(true),
     overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
   );
   final expectFile = files[1].copyWith(
-    isArchived: OrNull(true),
+    isArchived: const OrNull(true),
     overrideDateTime: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
   );
   expect(
@@ -358,10 +358,10 @@ Future<void> _updateDeleteMetadata() async {
   await src.updateProperty(
     account,
     files[1],
-    metadata: OrNull(null),
+    metadata: const OrNull(null),
   );
   final expectFile = files[1].copyWith(
-    metadata: OrNull(null),
+    metadata: const OrNull(null),
   );
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),

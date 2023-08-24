@@ -17,8 +17,8 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:tuple/tuple.dart';
 
 class FilesBuilder {
@@ -612,7 +612,7 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
       ..where((t) => t.album.equals(a.item1));
     final dbShares = await shareQuery.get();
     results.add(a.item2.copyWith(
-      lastUpdated: OrNull(null),
+      lastUpdated: const OrNull(null),
       shares: dbShares.isEmpty
           ? null
           : OrNull(dbShares

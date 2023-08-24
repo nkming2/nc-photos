@@ -13,8 +13,8 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/touch_manager.dart';
+import 'package:np_common/or_null.dart';
 
 enum DiType {
   albumRepo,

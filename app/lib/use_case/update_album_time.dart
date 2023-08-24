@@ -4,7 +4,7 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/or_null.dart';
+import 'package:np_common/or_null.dart';
 
 class UpdateAlbumTime {
   /// Update the latest item time of an album with unsorted items
@@ -37,7 +37,7 @@ class UpdateAlbumTime {
     if (sortedItems.isEmpty) {
       return album.copyWith(
         provider: (album.provider as AlbumProviderBase).copyWith(
-          latestItemTime: OrNull(null),
+          latestItemTime: const OrNull(null),
         ),
       );
     }

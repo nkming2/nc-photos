@@ -15,7 +15,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
@@ -23,6 +22,7 @@ import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/home_photos.dart';
 import 'package:nc_photos/widget/home_search.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 
 part 'home.g.dart';
 
@@ -180,7 +180,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Future<List<Album>> _importPotentialSharedAlbum() async {
     final c = KiwiContainer().resolve<DiContainer>().copyWith(
           // don't want the potential albums to be cached at this moment
-          fileRepo: OrNull(const FileRepo(FileWebdavDataSource())),
+          fileRepo: const OrNull(FileRepo(FileWebdavDataSource())),
           albumRepo: OrNull(AlbumRepo(AlbumRemoteDataSource())),
         );
     try {

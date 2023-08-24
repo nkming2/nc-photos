@@ -22,7 +22,6 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/set_as_handler.dart';
@@ -37,6 +36,7 @@ import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dar
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:tuple/tuple.dart';

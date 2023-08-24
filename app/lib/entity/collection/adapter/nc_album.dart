@@ -15,7 +15,6 @@ import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/find_file_descriptor.dart';
 import 'package:nc_photos/use_case/nc_album/add_file_to_nc_album.dart';
 import 'package:nc_photos/use_case/nc_album/edit_nc_album.dart';
@@ -24,6 +23,7 @@ import 'package:nc_photos/use_case/nc_album/list_nc_album_item.dart';
 import 'package:nc_photos/use_case/nc_album/remove_from_nc_album.dart';
 import 'package:nc_photos/use_case/nc_album/remove_nc_album.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 
 part 'nc_album.g.dart';

@@ -21,7 +21,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/album/add_file_to_album.dart';
 import 'package:nc_photos/use_case/album/edit_album.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
@@ -34,6 +33,7 @@ import 'package:nc_photos/use_case/unimport_shared_album.dart';
 import 'package:nc_photos/use_case/update_album_with_actual_items.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:tuple/tuple.dart';
 

@@ -17,9 +17,9 @@ import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_common/ci_string.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 
 extension SqlTagListExtension on List<sql.Tag> {

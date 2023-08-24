@@ -15,7 +15,6 @@ import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
@@ -25,6 +24,7 @@ import 'package:nc_photos/use_case/collection/remove_collections.dart';
 import 'package:nc_photos/use_case/collection/share_collection.dart';
 import 'package:nc_photos/use_case/collection/unshare_collection.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:rxdart/rxdart.dart';
 

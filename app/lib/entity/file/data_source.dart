@@ -17,10 +17,10 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:path/path.dart' as path_lib;
 
 part 'data_source.g.dart';
@@ -327,7 +327,7 @@ class FileWebdavDataSource implements FileDataSource {
             return e;
           } else {
             _log.info("[list] Ignore outdated metadata for ${e.path}");
-            return e.copyWith(metadata: OrNull(null));
+            return e.copyWith(metadata: const OrNull(null));
           }
         })
         .toList();

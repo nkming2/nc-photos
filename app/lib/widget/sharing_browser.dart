@@ -18,7 +18,6 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
@@ -26,6 +25,7 @@ import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_ui/np_ui.dart';
 
 part 'sharing_browser.g.dart';
@@ -285,7 +285,7 @@ class _SharingBrowserState extends State<SharingBrowser> {
   Future<List<Album>> _importPotentialSharedAlbum() async {
     final c = KiwiContainer().resolve<DiContainer>().copyWith(
           // don't want the potential albums to be cached at this moment
-          fileRepo: OrNull(const FileRepo(FileWebdavDataSource())),
+          fileRepo: const OrNull(FileRepo(FileWebdavDataSource())),
           albumRepo: OrNull(AlbumRepo(AlbumRemoteDataSource())),
         );
     try {

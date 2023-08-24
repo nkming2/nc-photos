@@ -16,12 +16,12 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart' as sql;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/or_null.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 
 part 'data_source2.g.dart';
@@ -90,7 +90,7 @@ class AlbumRemoteDataSource2 implements AlbumDataSource2 {
         ),
       );
       return album!.copyWith(
-        lastUpdated: OrNull(null),
+        lastUpdated: const OrNull(null),
         albumFile: OrNull(albumFile),
       );
     } catch (e, stacktrace) {
