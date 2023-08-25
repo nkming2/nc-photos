@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:np_common/string_extension.dart';
 import 'package:np_log/np_log.dart';
+import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 
 class LogCapturer {

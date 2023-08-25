@@ -1,4 +1,4 @@
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/src/string_extension.dart';
 import 'package:test/test.dart';
 
 void main() {

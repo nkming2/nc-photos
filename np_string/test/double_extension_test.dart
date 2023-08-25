@@ -1,4 +1,4 @@
-import 'package:nc_photos/double_extension.dart';
+import 'package:np_string/src/double_extension.dart';
 import 'package:test/test.dart';
 
 void main() {

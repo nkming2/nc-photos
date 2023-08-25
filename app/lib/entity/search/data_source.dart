@@ -16,7 +16,7 @@ import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/person/list_person_face.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 
 part 'data_source.g.dart';
 

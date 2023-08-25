@@ -12,7 +12,7 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/album/add_file_to_album.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';

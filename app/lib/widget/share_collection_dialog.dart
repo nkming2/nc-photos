@@ -23,7 +23,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/suggester.dart';
 import 'package:nc_photos/toast.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'share_collection_dialog.g.dart';

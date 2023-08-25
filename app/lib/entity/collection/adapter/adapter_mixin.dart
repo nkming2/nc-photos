@@ -6,9 +6,9 @@ import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sharee.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 
 /// A read-only collection that does not support modifying its items
 mixin CollectionAdapterReadOnlyTag implements CollectionAdapter {

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'sharee.g.dart';

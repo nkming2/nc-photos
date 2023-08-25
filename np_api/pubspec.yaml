@@ -20,6 +20,8 @@ dependencies:
     path: ../np_common
   np_log:
     path: ../np_log
+  np_string:
+    path: ../np_string
   to_string:
     git:
       url: https://gitlab.com/nkming2/dart-to-string

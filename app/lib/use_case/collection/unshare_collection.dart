@@ -4,7 +4,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection/util.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 
 class UnshareCollection {
   const UnshareCollection(this._c);

@@ -21,8 +21,7 @@ import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/widget/cloud_progress_indicator.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 
 part 'connect.g.dart';
 

@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/collection.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 

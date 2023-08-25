@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:np_api/src/util.dart';
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'type.g.dart';

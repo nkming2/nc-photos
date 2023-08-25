@@ -1,6 +1,6 @@
 // ignore_for_file: unrelated_type_equality_checks
 
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/src/ci_string.dart';
 import 'package:test/test.dart';
 
 void main() {

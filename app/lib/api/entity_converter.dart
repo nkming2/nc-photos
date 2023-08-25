@@ -17,8 +17,7 @@ import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 
 part 'entity_converter.g.dart';
 

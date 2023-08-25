@@ -7,7 +7,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/exception.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'app_password_exchange.g.dart';

@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/location_util.dart' as location_util;
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 
 enum FilesQueryMode {
   file,

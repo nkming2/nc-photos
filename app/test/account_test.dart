@@ -1,5 +1,5 @@
 import 'package:nc_photos/account.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
 void main() {

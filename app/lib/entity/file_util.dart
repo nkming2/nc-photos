@@ -6,8 +6,7 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:np_api/np_api.dart' as api;
-import 'package:np_common/ci_string.dart';
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 
 bool isSupportedMime(String mime) => supportedFormatMimes.contains(mime);

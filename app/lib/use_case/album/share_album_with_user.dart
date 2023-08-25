@@ -11,9 +11,9 @@ import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 
 part 'share_album_with_user.g.dart';
 

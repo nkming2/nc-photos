@@ -11,8 +11,8 @@ import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;

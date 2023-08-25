@@ -1,0 +1,13 @@
+name: np_string
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dev_dependencies:
+  np_lints:
+    path: ../np_lints
+  test: ^1.21.0

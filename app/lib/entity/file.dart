@@ -9,10 +9,9 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
-import 'package:np_common/string_extension.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'file.g.dart';

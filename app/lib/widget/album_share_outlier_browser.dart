@@ -20,8 +20,7 @@ import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
 
 part 'album_share_outlier_browser.g.dart';

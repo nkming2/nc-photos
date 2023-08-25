@@ -11,9 +11,9 @@ import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:nc_photos/use_case/update_album.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 
 part 'unshare_album_with_user.g.dart';
 

@@ -8,8 +8,8 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;

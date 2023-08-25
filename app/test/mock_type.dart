@@ -19,8 +19,8 @@ import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/future_util.dart' as future_util;
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 
 /// Mock of [AlbumRepo] where all methods will throw UnimplementedError

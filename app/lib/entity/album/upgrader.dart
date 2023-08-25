@@ -9,8 +9,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 import 'package:tuple/tuple.dart';
 
 part 'upgrader.g.dart';

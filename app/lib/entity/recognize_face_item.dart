@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:np_api/np_api.dart' as api;
-import 'package:np_common/string_extension.dart';
+import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
 part 'recognize_face_item.g.dart';

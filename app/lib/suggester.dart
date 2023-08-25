@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/ci_string.dart';
+import 'package:np_string/np_string.dart';
 import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
 

@@ -107,6 +107,8 @@ dependencies:
     path: ../np_log
   np_math:
     path: ../np_math
+  np_string:
+    path: ../np_string
   np_ui:
     path: ../np_ui
   octo_image: any
