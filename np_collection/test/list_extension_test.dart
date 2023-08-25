@@ -1,4 +1,4 @@
-import 'package:nc_photos/list_extension.dart';
+import 'package:np_collection/src/list_extension.dart';
 import 'package:test/test.dart';
 
 void main() {

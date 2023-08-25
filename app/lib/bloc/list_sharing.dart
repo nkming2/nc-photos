@@ -11,7 +11,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/find_file.dart';
@@ -19,6 +18,7 @@ import 'package:nc_photos/use_case/list_share_with_me.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 

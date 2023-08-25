@@ -1,7 +1,7 @@
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/use_case/ls.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:test/test.dart';
 
 import '../mock_type.dart';

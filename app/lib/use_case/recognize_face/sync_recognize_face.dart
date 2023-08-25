@@ -8,12 +8,10 @@ import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
-import 'package:nc_photos/map_extension.dart';
 import 'package:nc_photos/use_case/recognize_face/list_recognize_face.dart';
 import 'package:nc_photos/use_case/recognize_face/list_recognize_face_item.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'sync_recognize_face.g.dart';
 
@@ -96,7 +94,7 @@ class SyncRecognizeFace {
     }
     final cache = (await ListRecognizeFace(_c.withLocalRepo())(account).last)
       ..sort(faceSorter);
-    final diff = list_util.diffWith(cache, remote, faceSorter);
+    final diff = getDiffWith(cache, remote, faceSorter);
     final inserts = diff.onlyInB;
     _log.info("[_getFaceResults] New face: ${inserts.toReadableString()}");
     final deletes = diff.onlyInA;
@@ -152,8 +150,8 @@ class SyncRecognizeFace {
     for (final f in faces) {
       final thisCache = (cache[f] ?? [])..sort(itemSorter);
       final thisRemote = (remote[f] ?? [])..sort(itemSorter);
-      final diff = list_util.diffWith<RecognizeFaceItem>(
-          thisCache, thisRemote, itemSorter);
+      final diff =
+          getDiffWith<RecognizeFaceItem>(thisCache, thisRemote, itemSorter);
       final inserts = diff.onlyInB;
       _log.info(
           "[_getFaceItemResults] New item: ${inserts.toReadableString()}");
@@ -194,7 +192,7 @@ class SyncRecognizeFace {
   //       await ListRecognizeFaceItem(_c.withLocalRepo())(account, face).last;
   //   int itemSorter(RecognizeFaceItem a, RecognizeFaceItem b) =>
   //       a.fileId.compareTo(b.fileId);
-  //   final diff = list_util.diffWith(cache, remote, itemSorter);
+  //   final diff = getDiffWith(cache, remote, itemSorter);
   //   final inserts = diff.onlyInB;
   //   _log.info("[_getFaceItemResults] New face: ${inserts.toReadableString()}");
   //   final deletes = diff.onlyInA;

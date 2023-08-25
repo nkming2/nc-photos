@@ -9,10 +9,10 @@ import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'data_source.g.dart';
 
@@ -236,7 +236,7 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
       final existingItems = await db.ncAlbumItemsByParent(
         parent: dbAlbum!,
       );
-      final diff = list_util.diffWith<NcAlbumItem>(
+      final diff = getDiffWith<NcAlbumItem>(
         existingItems
             .map((e) => SqliteNcAlbumItemConverter.fromSql(
                 account.userId.raw, album.strippedPath, e))

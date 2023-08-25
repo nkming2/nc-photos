@@ -1,4 +1,4 @@
-import 'package:nc_photos/list_util.dart' as list_util;
+import 'package:np_collection/src/list_util.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -26,7 +26,7 @@ void main() {
 /// b: [1, 2, 3, 4, 5]
 /// Expect: [1, 2], []
 void _diffExtraBBegin() {
-  final diff = list_util.diff([3, 4, 5], [1, 2, 3, 4, 5]);
+  final diff = getDiff([3, 4, 5], [1, 2, 3, 4, 5]);
   expect(diff.onlyInB, [1, 2]);
   expect(diff.onlyInA, []);
 }
@@ -37,7 +37,7 @@ void _diffExtraBBegin() {
 /// b: [1, 2, 3, 4, 5]
 /// Expect: [4, 5], []
 void _diffExtraBEnd() {
-  final diff = list_util.diff([1, 2, 3], [1, 2, 3, 4, 5]);
+  final diff = getDiff([1, 2, 3], [1, 2, 3, 4, 5]);
   expect(diff.onlyInB, [4, 5]);
   expect(diff.onlyInA, []);
 }
@@ -48,7 +48,7 @@ void _diffExtraBEnd() {
 /// b: [1, 2, 3, 4, 5]
 /// Expect: [3, 4], []
 void _diffExtraBMid() {
-  final diff = list_util.diff([1, 2, 5], [1, 2, 3, 4, 5]);
+  final diff = getDiff([1, 2, 5], [1, 2, 3, 4, 5]);
   expect(diff.onlyInB, [3, 4]);
   expect(diff.onlyInA, []);
 }
@@ -59,7 +59,7 @@ void _diffExtraBMid() {
 /// b: [1, 2, 3]
 /// Expect: [1, 2, 3], []
 void _diffAEmpty() {
-  final diff = list_util.diff(<int>[], [1, 2, 3]);
+  final diff = getDiff(<int>[], [1, 2, 3]);
   expect(diff.onlyInB, [1, 2, 3]);
   expect(diff.onlyInA, []);
 }
@@ -70,7 +70,7 @@ void _diffAEmpty() {
 /// b: [3, 4, 5]
 /// Expect: [], [1, 2]
 void _diffExtraABegin() {
-  final diff = list_util.diff([1, 2, 3, 4, 5], [3, 4, 5]);
+  final diff = getDiff([1, 2, 3, 4, 5], [3, 4, 5]);
   expect(diff.onlyInB, []);
   expect(diff.onlyInA, [1, 2]);
 }
@@ -81,7 +81,7 @@ void _diffExtraABegin() {
 /// b: [1, 2, 3]
 /// Expect: [], [4, 5]
 void _diffExtraAEnd() {
-  final diff = list_util.diff([1, 2, 3, 4, 5], [1, 2, 3]);
+  final diff = getDiff([1, 2, 3, 4, 5], [1, 2, 3]);
   expect(diff.onlyInB, []);
   expect(diff.onlyInA, [4, 5]);
 }
@@ -92,7 +92,7 @@ void _diffExtraAEnd() {
 /// b: [1, 2, 5]
 /// Expect: [], [3, 4]
 void _diffExtraAMid() {
-  final diff = list_util.diff([1, 2, 3, 4, 5], [1, 2, 5]);
+  final diff = getDiff([1, 2, 3, 4, 5], [1, 2, 5]);
   expect(diff.onlyInB, []);
   expect(diff.onlyInA, [3, 4]);
 }
@@ -103,7 +103,7 @@ void _diffExtraAMid() {
 /// b: []
 /// Expect: [], [1, 2, 3]
 void _diffBEmpty() {
-  final diff = list_util.diff([1, 2, 3], <int>[]);
+  final diff = getDiff([1, 2, 3], <int>[]);
   expect(diff.onlyInB, []);
   expect(diff.onlyInA, [1, 2, 3]);
 }
@@ -114,7 +114,7 @@ void _diffBEmpty() {
 /// b: [2, 4]
 /// Expect: [2, 4], [1, 3, 5]
 void _diffNoMatches() {
-  final diff = list_util.diff([1, 3, 5], [2, 4]);
+  final diff = getDiff([1, 3, 5], [2, 4]);
   expect(diff.onlyInB, [2, 4]);
   expect(diff.onlyInA, [1, 3, 5]);
 }
@@ -125,7 +125,7 @@ void _diffNoMatches() {
 /// b: [1, 2, 2, 3]
 /// Expect: [2], []
 void _diffRepeatedElements() {
-  final diff = list_util.diff([1, 2, 3], [1, 2, 2, 3]);
+  final diff = getDiff([1, 2, 3], [1, 2, 2, 3]);
   expect(diff.onlyInB, [2]);
   expect(diff.onlyInA, []);
 }
@@ -136,7 +136,7 @@ void _diffRepeatedElements() {
 /// b: [1, 2, 2, 3, 5]
 /// Expect: [2, 2], [4, 4]
 void _diffRepeatedElements2() {
-  final diff = list_util.diff([1, 3, 4, 4, 5], [1, 2, 2, 3, 5]);
+  final diff = getDiff([1, 3, 4, 4, 5], [1, 2, 2, 3, 5]);
   expect(diff.onlyInB, [2, 2]);
   expect(diff.onlyInA, [4, 4]);
 }
@@ -147,7 +147,7 @@ void _diffRepeatedElements2() {
 /// b: [1, 3, 4, 8, 13, 14]
 /// Expect: [1, 4, 8, 13, 14], [2, 7, 10, 11, 12]
 void _diffMix() {
-  final diff = list_util.diff([2, 3, 7, 10, 11, 12], [1, 3, 4, 8, 13, 14]);
+  final diff = getDiff([2, 3, 7, 10, 11, 12], [1, 3, 4, 8, 13, 14]);
   expect(diff.onlyInB, [1, 4, 8, 13, 14]);
   expect(diff.onlyInA, [2, 7, 10, 11, 12]);
 }

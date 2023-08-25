@@ -1,4 +1,4 @@
-import 'package:nc_photos/iterator_extension.dart';
+import 'package:np_collection/src/iterator_extension.dart';
 
 /// Contain results from the diff functions
 ///
@@ -18,7 +18,7 @@ class DiffResult<T> {
 ///
 /// [a] and [b] MUST be sorted in ascending order, otherwise the result is
 /// undefined
-DiffResult<T> diffWith<T>(
+DiffResult<T> getDiffWith<T>(
     Iterable<T> a, Iterable<T> b, int Function(T a, T b) comparator) {
   final aIt = a.iterator, bIt = b.iterator;
   final aMissing = <T>[], bMissing = <T>[];
@@ -41,8 +41,8 @@ DiffResult<T> diffWith<T>(
   }
 }
 
-DiffResult<T> diff<T extends Comparable>(Iterable<T> a, Iterable<T> b) =>
-    diffWith(a, b, Comparable.compare);
+DiffResult<T> getDiff<T extends Comparable>(Iterable<T> a, Iterable<T> b) =>
+    getDiffWith(a, b, Comparable.compare);
 
 DiffResult<T> _diffUntilEqual<T>(
     Iterator<T> aIt, Iterator<T> bIt, int Function(T a, T b) comparator) {

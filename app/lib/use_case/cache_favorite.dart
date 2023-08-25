@@ -8,10 +8,9 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'cache_favorite.g.dart';
 
@@ -32,8 +31,7 @@ class CacheFavorite {
       final cache = await _getCacheFavorites(db, dbAccount);
       final cacheMap =
           Map.fromEntries(cache.map((e) => MapEntry(e.fileId, e.rowId)));
-      final diff =
-          list_util.diff(cacheMap.keys.sorted(Comparable.compare), remote);
+      final diff = getDiff(cacheMap.keys.sorted(Comparable.compare), remote);
       final newFileIds = diff.onlyInB;
       _log.info("[call] New favorites: ${newFileIds.toReadableString()}");
       final removedFildIds = diff.onlyInA;

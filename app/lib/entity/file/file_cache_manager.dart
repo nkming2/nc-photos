@@ -12,10 +12,9 @@ import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'file_cache_manager.g.dart';
 
@@ -136,7 +135,7 @@ class FileSqliteCacheUpdater {
         ..where((t) => t.dir.equals(_dirRowId!))
         ..orderBy([(t) => sql.OrderingTerm.asc(t.rowId)]);
       final dirFiles = await dirFileQuery.get();
-      final diff = list_util.diff(dirFiles.map((e) => e.child),
+      final diff = getDiff(dirFiles.map((e) => e.child),
           _childRowIds.sorted(Comparable.compare));
       if (diff.onlyInB.isNotEmpty) {
         await db.batch((batch) {

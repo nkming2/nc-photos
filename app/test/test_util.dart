@@ -16,7 +16,7 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_string/np_string.dart';
 import 'package:tuple/tuple.dart';

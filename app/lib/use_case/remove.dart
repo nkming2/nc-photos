@@ -10,13 +10,13 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/use_case/album/list_album.dart';
 import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:nc_photos/use_case/list_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/type.dart';
 import 'package:np_string/np_string.dart';
 

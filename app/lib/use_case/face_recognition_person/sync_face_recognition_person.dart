@@ -7,10 +7,9 @@ import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:nc_photos/use_case/face_recognition_person/list_face_recognition_person.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'sync_face_recognition_person.g.dart';
 
@@ -41,7 +40,7 @@ class SyncFaceRecognitionPerson {
     final cache = (await ListFaceRecognitionPerson(_c.withLocalRepo())(account)
         .last)
       ..sort(personSorter);
-    final diff = list_util.diffWith(cache, remote, personSorter);
+    final diff = getDiffWith(cache, remote, personSorter);
     final inserts = diff.onlyInB;
     _log.info("[call] New people: ${inserts.toReadableString()}");
     final deletes = diff.onlyInA;

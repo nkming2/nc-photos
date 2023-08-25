@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:tuple/tuple.dart';
 
 part 'v55.g.dart';

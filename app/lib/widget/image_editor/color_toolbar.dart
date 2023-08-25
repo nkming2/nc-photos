@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
 

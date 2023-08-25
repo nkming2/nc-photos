@@ -1,4 +1,4 @@
-import 'package:nc_photos/iterator_extension.dart';
+import 'package:np_collection/src/iterator_extension.dart';
 import 'package:test/test.dart';
 
 void main() {

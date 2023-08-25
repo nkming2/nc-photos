@@ -5,9 +5,9 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/use_case/scan_local_dir.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:to_string/to_string.dart';
 
 part 'scan_local_dir.g.dart';

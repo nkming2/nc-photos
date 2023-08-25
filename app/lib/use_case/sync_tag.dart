@@ -6,9 +6,8 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/entity/tag.dart';
-import 'package:nc_photos/iterable_extension.dart';
-import 'package:nc_photos/list_util.dart' as list_util;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'sync_tag.g.dart';
 
@@ -26,7 +25,7 @@ class SyncTag {
     int tagSorter(Tag a, Tag b) => a.id.compareTo(b.id);
     final remote = (await _c.tagRepoRemote.list(account))..sort(tagSorter);
     final cache = (await _c.tagRepoLocal.list(account))..sort(tagSorter);
-    final diff = list_util.diffWith<Tag>(cache, remote, tagSorter);
+    final diff = getDiffWith<Tag>(cache, remote, tagSorter);
     final inserts = diff.onlyInB;
     _log.info("[call] New tags: ${inserts.toReadableString()}");
     final deletes = diff.onlyInA;

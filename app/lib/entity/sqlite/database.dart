@@ -16,6 +16,7 @@ import 'package:nc_photos/mobile/platform.dart'
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'database.g.dart';
 part 'database/nc_album_extension.dart';

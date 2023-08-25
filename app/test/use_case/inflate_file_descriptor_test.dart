@@ -2,8 +2,8 @@ import 'package:clock/clock.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/list_extension.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;

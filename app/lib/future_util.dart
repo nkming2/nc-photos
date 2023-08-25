@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_collection/np_collection.dart';
 
 Future<List<T>> waitOr<T>(
   Iterable<Future<T>> futures,

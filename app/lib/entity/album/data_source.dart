@@ -9,8 +9,8 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'data_source.g.dart';
 

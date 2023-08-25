@@ -103,6 +103,8 @@ dependencies:
     path: ../codegen
   np_common:
     path: ../np_common
+  np_collection:
+    path: ../np_collection
   np_log:
     path: ../np_log
   np_math:
@@ -115,7 +117,6 @@ dependencies:
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.15
-  quiver: ^3.2.1
   rxdart: ^0.27.7
   screen_brightness:  ^0.2.2
   shared_preferences: ^2.0.8

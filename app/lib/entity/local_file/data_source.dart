@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
 import 'package:nc_photos/mobile/share.dart';
@@ -10,6 +9,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'data_source.g.dart';
 

@@ -5,10 +5,10 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 
 part 'data_source.g.dart';
 
