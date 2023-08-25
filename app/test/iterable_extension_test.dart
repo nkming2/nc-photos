@@ -1,5 +1,5 @@
-import 'package:nc_photos/int_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
+import 'package:np_math/np_math.dart';
 import 'package:quiver/core.dart';
 import 'package:test/test.dart';
 import 'package:tuple/tuple.dart';

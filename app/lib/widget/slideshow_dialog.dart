@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/num_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_math/np_math.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 

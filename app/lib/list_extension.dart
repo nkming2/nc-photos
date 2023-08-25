@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:nc_photos/int_extension.dart';
+import 'package:np_math/np_math.dart';
 
 extension ListExtension<T> on List<T> {
   Iterable<T> takeIndex(List<int> indexes) => indexes.map((e) => this[e]);

@@ -3,9 +3,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/int_extension.dart';
 import 'package:nc_photos/list_extension.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_math/np_math.dart';
 import 'package:test/test.dart';
 
 import '../../mock_type.dart';

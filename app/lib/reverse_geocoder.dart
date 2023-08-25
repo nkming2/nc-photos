@@ -4,10 +4,10 @@ import 'package:collection/collection.dart';
 import 'package:kdtree/kdtree.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/math_util.dart' as math_util;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_math/np_math.dart';
 import 'package:sqlite3/common.dart';
 import 'package:to_string/to_string.dart';
 
@@ -58,10 +58,10 @@ class ReverseGeocoder {
     _log.info("[call] Nearest point, (lat: $nearestLatF, lng: $nearestLngF)");
     try {
       final distance = _distanceInKm(
-        math_util.degToRad(latitude),
-        math_util.degToRad(longitude),
-        math_util.degToRad(nearestLatF),
-        math_util.degToRad(nearestLngF),
+        degToRad(latitude),
+        degToRad(longitude),
+        degToRad(nearestLatF),
+        degToRad(nearestLngF),
       );
       _log.info(
           "[call] (lat: ${latitude.toStringAsFixed(3)}, lng: ${longitude.toStringAsFixed(3)}) <-> (lat: $nearestLatF, lng: $nearestLngF) = ${distance.toStringAsFixed(3)}km");

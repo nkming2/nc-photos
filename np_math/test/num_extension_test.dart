@@ -1,4 +1,4 @@
-import 'package:nc_photos/num_extension.dart';
+import 'package:np_math/src/num_extension.dart';
 import 'package:test/test.dart';
 
 void main() {

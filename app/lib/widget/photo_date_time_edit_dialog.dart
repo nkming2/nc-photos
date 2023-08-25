@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/num_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_math/np_math.dart';
 
 part 'photo_date_time_edit_dialog.g.dart';
 
