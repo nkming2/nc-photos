@@ -3,6 +3,7 @@ package com.nkming.nc_photos.plugin
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.nkming.nc_photos.np_android_log.logI
 
 interface UriUtil {
 	companion object {

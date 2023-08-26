@@ -1,10 +1,10 @@
-package com.nkming.nc_photos.plugin
+package com.nkming.nc_photos.np_android_log
 
 class LogConfig {
 	companion object {
 		var isShowInfo = true
-		var isShowDebug = BuildConfig.DEBUG
-		var isShowVerbose = BuildConfig.DEBUG
+		var isShowDebug = true
+		var isShowVerbose = true
 	}
 }
 

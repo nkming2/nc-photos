@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
+import com.nkming.nc_photos.np_android_log.logD
+import com.nkming.nc_photos.np_android_log.logE
+import com.nkming.nc_photos.np_android_log.logI
 import java.io.InputStream
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind

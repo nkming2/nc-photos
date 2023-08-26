@@ -2,28 +2,29 @@ package com.nkming.nc_photos
 
 import android.content.Context
 import android.util.Pair
-import com.nkming.nc_photos.plugin.logE
-import com.nkming.nc_photos.plugin.logI
-import io.flutter.Log
+import com.nkming.nc_photos.np_android_log.logE
+import com.nkming.nc_photos.np_android_log.logI
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
 import java.security.cert.Certificate
-import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.time.OffsetDateTime
-import java.util.*
 
 // Modifications to this class must also reflect on dart side
-data class CertInfo(val host: String, val sha1: String, val subject: String,
-		val issuer: String, val startValidity: OffsetDateTime,
-		val endValidity: OffsetDateTime) {
+data class CertInfo(
+	val host: String, val sha1: String, val subject: String,
+	val issuer: String, val startValidity: OffsetDateTime,
+	val endValidity: OffsetDateTime
+) {
 	companion object {
 		fun fromJson(json: JSONObject): CertInfo {
-			return CertInfo(json.getString("host"), json.getString("sha1"),
-					json.getString("subject"), json.getString("issuer"),
-					OffsetDateTime.parse(json.getString("startValidity")),
-					OffsetDateTime.parse(json.getString("endValidity")))
+			return CertInfo(
+				json.getString("host"), json.getString("sha1"),
+				json.getString("subject"), json.getString("issuer"),
+				OffsetDateTime.parse(json.getString("startValidity")),
+				OffsetDateTime.parse(json.getString("endValidity"))
+			)
 		}
 	}
 }
@@ -49,12 +50,16 @@ class SelfSignedCertManager {
 				val jsonFile = File(certDir, f.name + ".json")
 				val jsonStr = jsonFile.bufferedReader().use { it.readText() }
 				val info = CertInfo.fromJson(JSONObject(jsonStr))
-				logI("SelfSignedCertManager::readAllCerts",
-						"Found certificate: ${f.name} for host: ${info.host}")
+				logI(
+					"SelfSignedCertManager::readAllCerts",
+					"Found certificate: ${f.name} for host: ${info.host}"
+				)
 				products.add(Pair(info, c))
 			} catch (e: Exception) {
-				logE("SelfSignedCertManager::readAllCerts",
-						"Failed to read certificate file: ${f.name}", e)
+				logE(
+					"SelfSignedCertManager::readAllCerts",
+					"Failed to read certificate file: ${f.name}", e
+				)
 			}
 		}
 		return products
@@ -89,8 +94,10 @@ class SelfSignedCertManager {
 			certDir.mkdir()
 			certDir
 		} else if (!certDir.isDirectory) {
-			logE("SelfSignedCertManager::openCertsDir",
-					"Removing certs file to make way for the directory")
+			logE(
+				"SelfSignedCertManager::openCertsDir",
+				"Removing certs file to make way for the directory"
+			)
 			certDir.delete()
 			certDir.mkdir()
 			certDir

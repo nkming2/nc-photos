@@ -18,6 +18,7 @@ import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_lock/np_platform_lock.dart';
 import 'package:to_string/to_string.dart';
 
 part 'developer/bloc.dart';

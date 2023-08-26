@@ -1,7 +1,7 @@
 package com.nkming.nc_photos.plugin.image_processor
 
 import androidx.exifinterface.media.ExifInterface
-import com.nkming.nc_photos.plugin.logI
+import com.nkming.nc_photos.np_android_log.logI
 
 /**
  * Lossless rotation is done by modifying the EXIF orientation tag in such a way

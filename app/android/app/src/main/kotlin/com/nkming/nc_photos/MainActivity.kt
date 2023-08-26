@@ -6,11 +6,11 @@ import android.os.Bundle
 import androidx.annotation.NonNull
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapsSdkInitializedCallback
+import com.nkming.nc_photos.np_android_log.logD
+import com.nkming.nc_photos.np_android_log.logE
+import com.nkming.nc_photos.np_android_log.logI
 import com.nkming.nc_photos.plugin.NcPhotosPlugin
 import com.nkming.nc_photos.plugin.UriUtil
-import com.nkming.nc_photos.plugin.logD
-import com.nkming.nc_photos.plugin.logE
-import com.nkming.nc_photos.plugin.logI
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel

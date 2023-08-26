@@ -1,8 +1,7 @@
 package com.nkming.nc_photos
 
 import android.app.Activity
-import com.nkming.nc_photos.plugin.logE
-import io.flutter.Log
+import com.nkming.nc_photos.np_android_log.logE
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import javax.net.ssl.HttpsURLConnection
@@ -16,7 +15,7 @@ import javax.net.ssl.HttpsURLConnection
  * fun reload(): Unit
  */
 class SelfSignedCertChannelHandler(activity: Activity) :
-		MethodChannel.MethodCallHandler {
+	MethodChannel.MethodCallHandler {
 	companion object {
 		const val CHANNEL = "com.nkming.nc_photos/self-signed-cert"
 	}
@@ -50,9 +49,11 @@ class SelfSignedCertChannelHandler(activity: Activity) :
 			HttpsURLConnection.setDefaultSSLSocketFactory(_sslSocketFactory)
 			HttpsURLConnection.setDefaultHostnameVerifier(_hostNameVerifier)
 		} catch (e: Exception) {
-			logE("SelfSignedCertChannelHandler::init",
-					"Failed while setting custom SSL handler, self-signed cert will not work",
-					e)
+			logE(
+				"SelfSignedCertChannelHandler::init",
+				"Failed while setting custom SSL handler, self-signed cert will not work",
+				e
+			)
 		}
 	}
 }

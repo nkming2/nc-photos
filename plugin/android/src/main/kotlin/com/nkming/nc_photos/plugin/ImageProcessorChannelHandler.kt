@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.ContextCompat
+import com.nkming.nc_photos.np_android_log.logE
 import com.nkming.nc_photos.plugin.image_processor.*
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall

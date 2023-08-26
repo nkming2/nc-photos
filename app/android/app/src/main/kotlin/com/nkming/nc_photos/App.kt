@@ -1,6 +1,6 @@
 package com.nkming.nc_photos
 
-import com.nkming.nc_photos.plugin.LogConfig
+import com.nkming.nc_photos.np_android_log.LogConfig
 import io.flutter.BuildConfig
 import io.flutter.app.FlutterApplication
 

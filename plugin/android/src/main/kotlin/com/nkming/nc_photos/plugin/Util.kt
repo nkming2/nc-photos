@@ -3,6 +3,7 @@ package com.nkming.nc_photos.plugin
 import android.app.PendingIntent
 import android.os.Build
 import android.os.Bundle
+import com.nkming.nc_photos.np_android_log.logI
 import java.io.Serializable
 import java.net.HttpURLConnection
 

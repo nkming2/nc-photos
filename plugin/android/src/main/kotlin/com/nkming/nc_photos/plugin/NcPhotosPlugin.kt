@@ -2,6 +2,7 @@ package com.nkming.nc_photos.plugin
 
 import android.content.Intent
 import androidx.annotation.NonNull
+import com.nkming.nc_photos.np_android_log.logE
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -31,12 +32,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		lockChannelHandler = LockChannelHandler()
-		lockChannel = MethodChannel(
-			flutterPluginBinding.binaryMessenger, LockChannelHandler.CHANNEL
-		)
-		lockChannel.setMethodCallHandler(lockChannelHandler)
-
 		notificationChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			NotificationChannelHandler.CHANNEL
@@ -130,8 +125,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		lockChannelHandler.dismiss()
-		lockChannel.setMethodCallHandler(null)
 		notificationChannel.setMethodCallHandler(null)
 		nativeEventChannel.setStreamHandler(null)
 		nativeEventMethodChannel.setMethodCallHandler(null)
@@ -220,7 +213,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 
 	private var pluginBinding: ActivityPluginBinding? = null
 
-	private lateinit var lockChannel: MethodChannel
 	private lateinit var notificationChannel: MethodChannel
 	private lateinit var nativeEventChannel: EventChannel
 	private lateinit var nativeEventMethodChannel: MethodChannel
@@ -234,7 +226,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
 	private lateinit var preferenceMethodChannel: MethodChannel
 	private lateinit var imageLoaderMethodChannel: MethodChannel
 
-	private lateinit var lockChannelHandler: LockChannelHandler
 	private lateinit var mediaStoreChannelHandler: MediaStoreChannelHandler
 	private lateinit var permissionChannelHandler: PermissionChannelHandler
 }

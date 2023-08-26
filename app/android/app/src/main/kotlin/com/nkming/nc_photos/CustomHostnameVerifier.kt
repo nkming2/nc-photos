@@ -1,9 +1,8 @@
 package com.nkming.nc_photos
 
 import android.content.Context
-import com.nkming.nc_photos.plugin.logI
-import io.flutter.Log
-import java.util.*
+import com.nkming.nc_photos.np_android_log.logI
+import java.util.Locale
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSession
@@ -14,10 +13,14 @@ class CustomHostnameVerifier(context: Context) : HostnameVerifier {
 	 * behavior
 	 */
 	override fun verify(hostname: String, session: SSLSession): Boolean {
-		return if (allowedHosts.contains(hostname.toLowerCase())) {
+		return if (allowedHosts.contains(
+				hostname.lowercase(Locale.getDefault())
+			)) {
 			// good
-			logI("CustomHostnameVerifier::verify",
-					"Allowing registered host: $hostname")
+			logI(
+				"CustomHostnameVerifier::verify",
+				"Allowing registered host: $hostname"
+			)
 			true
 		} else {
 			defaultHostnameVerifier.verify(hostname, session)
@@ -29,12 +32,12 @@ class CustomHostnameVerifier(context: Context) : HostnameVerifier {
 		val certs = certManager.readAllCerts(context)
 		allowedHosts.clear()
 		for (c in certs) {
-			allowedHosts.add(c.first.host.toLowerCase())
+			allowedHosts.add(c.first.host.lowercase(Locale.getDefault()))
 		}
 	}
 
 	private val defaultHostnameVerifier: HostnameVerifier =
-			HttpsURLConnection.getDefaultHostnameVerifier()
+		HttpsURLConnection.getDefaultHostnameVerifier()
 	private val allowedHosts: MutableList<String> = ArrayList()
 
 	init {

@@ -18,6 +18,10 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.exifinterface.media.ExifInterface
+import com.nkming.nc_photos.np_android_log.logD
+import com.nkming.nc_photos.np_android_log.logE
+import com.nkming.nc_photos.np_android_log.logI
+import com.nkming.nc_photos.np_android_log.logW
 import com.nkming.nc_photos.plugin.image_processor.*
 import java.io.File
 import java.io.Serializable
@@ -116,13 +120,16 @@ class ImageProcessorService : Service() {
 			METHOD_DEEP_LAP_PORTRAIT -> onDeepLapPortrait(
 				startId, intent.extras!!
 			)
+
 			METHOD_ESRGAN -> onEsrgan(startId, intent.extras!!)
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
 				startId, intent.extras!!
 			)
+
 			METHOD_DEEP_LAP_COLOR_POP -> onDeepLapColorPop(
 				startId, intent.extras!!
 			)
+
 			METHOD_NEUR_OP -> onNeurOp(startId, intent.extras!!)
 			METHOD_FILTER -> onFilter(startId, intent.extras!!)
 			else -> {
@@ -141,40 +148,33 @@ class ImageProcessorService : Service() {
 	}
 
 	private fun onZeroDce(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params ->
-				ImageProcessorZeroDceCommand(
-					params, extras.getIntOrNull(EXTRA_ITERATION)
-				)
-			}
-		)
+		return onMethod(startId, extras, { params ->
+			ImageProcessorZeroDceCommand(
+				params, extras.getIntOrNull(EXTRA_ITERATION)
+			)
+		})
 	}
 
 	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params ->
-				ImageProcessorDeepLapPortraitCommand(
-					params, extras.getIntOrNull(EXTRA_RADIUS)
-				)
-			}
-		)
+		return onMethod(startId, extras, { params ->
+			ImageProcessorDeepLapPortraitCommand(
+				params, extras.getIntOrNull(EXTRA_RADIUS)
+			)
+		})
 	}
 
 	private fun onEsrgan(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params -> ImageProcessorEsrganCommand(params) })
+		return onMethod(startId, extras,
+			{ params -> ImageProcessorEsrganCommand(params) })
 	}
 
 	private fun onArbitraryStyleTransfer(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params ->
-				ImageProcessorArbitraryStyleTransferCommand(
-					params,
-					extras.getParcelable(EXTRA_STYLE_URI)!!,
-					extras.getFloat(EXTRA_WEIGHT)
-				)
-			}
-		)
+		return onMethod(startId, extras, { params ->
+			ImageProcessorArbitraryStyleTransferCommand(
+				params, extras.getParcelable(EXTRA_STYLE_URI)!!,
+				extras.getFloat(EXTRA_WEIGHT)
+			)
+		})
 	}
 
 	private fun onDeepLapColorPop(startId: Int, extras: Bundle) {
@@ -201,8 +201,7 @@ class ImageProcessorService : Service() {
 
 		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
 
-		@Suppress("Unchecked_cast")
-		val headers =
+		@Suppress("Unchecked_cast") val headers =
 			extras.getSerializable(EXTRA_HEADERS) as HashMap<String, String>?
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
@@ -211,8 +210,8 @@ class ImageProcessorService : Service() {
 		addCommand(
 			ImageProcessorFilterCommand(
 				ImageProcessorImageCommand.Params(
-					startId, fileUrl, headers, filename, maxWidth,
-					maxHeight, isSaveToServer
+					startId, fileUrl, headers, filename, maxWidth, maxHeight,
+					isSaveToServer
 				), filters
 			)
 		)
@@ -231,8 +230,7 @@ class ImageProcessorService : Service() {
 	) {
 		val fileUrl = extras.getString(EXTRA_FILE_URL)!!
 
-		@Suppress("Unchecked_cast")
-		val headers =
+		@Suppress("Unchecked_cast") val headers =
 			extras.getSerializable(EXTRA_HEADERS) as HashMap<String, String>?
 		val filename = extras.getString(EXTRA_FILENAME)!!
 		val maxWidth = extras.getInt(EXTRA_MAX_WIDTH)
@@ -241,8 +239,8 @@ class ImageProcessorService : Service() {
 		addCommand(
 			builder(
 				ImageProcessorImageCommand.Params(
-					startId, fileUrl, headers, filename, maxWidth,
-					maxHeight, isSaveToServer
+					startId, fileUrl, headers, filename, maxWidth, maxHeight,
+					isSaveToServer
 				)
 			)
 		)
@@ -357,14 +355,16 @@ class ImageProcessorService : Service() {
 				cmds.removeFirst()
 				stopSelf(cmd.startId)
 				cmdTask = null
-				@Suppress("Deprecation")
-				if (cmds.isNotEmpty() && !isCancelled) {
+				@Suppress(
+					"Deprecation"
+				) if (cmds.isNotEmpty() && !isCancelled) {
 					runCommand()
 				}
 			}
 		}.apply {
-			@Suppress("Deprecation")
-			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, cmd)
+			@Suppress("Deprecation") executeOnExecutor(
+				AsyncTask.THREAD_POOL_EXECUTOR, cmd
+			)
 		}
 	}
 
@@ -375,28 +375,28 @@ class ImageProcessorService : Service() {
 		notificationManager.notify(
 			NOTIFICATION_ID, buildGracePeriodNotification()
 		)
-		@Suppress("Deprecation")
-		cmdTask = object : AsyncTask<Unit, Unit, Unit>(), AsyncTaskCancellable {
-			override fun doInBackground(vararg params: Unit?) {
-				// 10 seconds
-				for (i in 0 until 20) {
-					if (isCancelled) {
-						return
+		@Suppress("Deprecation") cmdTask =
+			object : AsyncTask<Unit, Unit, Unit>(), AsyncTaskCancellable {
+				override fun doInBackground(vararg params: Unit?) {
+					// 10 seconds
+					for (i in 0 until 20) {
+						if (isCancelled) {
+							return
+						}
+						Thread.sleep(500)
 					}
-					Thread.sleep(500)
 				}
-			}
 
-			override fun onPostExecute(result: Unit?) {
-				cmdTask = null
-				cmds.removeFirst()
-				if (cmds.isNotEmpty() && !isCancelled) {
-					runCommand()
+				override fun onPostExecute(result: Unit?) {
+					cmdTask = null
+					cmds.removeFirst()
+					if (cmds.isNotEmpty() && !isCancelled) {
+						runCommand()
+					}
 				}
+			}.apply {
+				executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 			}
-		}.apply {
-			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-		}
 	}
 
 	private fun notifyResult(event: MessageEvent, shouldFireEvent: Boolean) {
@@ -802,8 +802,7 @@ private open class ImageProcessorCommandTask(context: Context) :
 		}.use {
 			val responseCode = it.responseCode
 			if (responseCode / 100 == 2) {
-				val file =
-					File.createTempFile("img", null, getTempDir(context))
+				val file = File.createTempFile("img", null, getTempDir(context))
 				file.outputStream().use { oStream ->
 					it.inputStream.copyTo(oStream)
 				}
@@ -918,8 +917,7 @@ private class EnhancedFileDevicePersister(context: Context) :
 	val context = context
 }
 
-private class EnhancedFileServerPersister :
-	EnhancedFilePersister {
+private class EnhancedFileServerPersister : EnhancedFilePersister {
 	companion object {
 		const val TAG = "EnhancedFileServerPersister"
 	}

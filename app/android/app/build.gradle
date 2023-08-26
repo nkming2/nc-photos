@@ -121,5 +121,6 @@ dependencies {
     // fix crash on sdk33, need investigation
     implementation "androidx.window:window:1.0.0"
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.nkming.nc_photos.np_android_log:np_android_log'
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
 }

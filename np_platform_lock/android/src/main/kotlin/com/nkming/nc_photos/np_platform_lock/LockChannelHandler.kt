@@ -1,5 +1,6 @@
-package com.nkming.nc_photos.plugin
+package com.nkming.nc_photos.np_platform_lock
 
+import com.nkming.nc_photos.np_android_log.logW
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 

@@ -1,6 +1,6 @@
 import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/web/lock.dart' as web;
-import 'package:nc_photos_plugin/nc_photos_plugin.dart' as plugin;
+import 'package:np_platform_lock/np_platform_lock.dart' as plugin;
 
 class Lock {
   static Future<T> synchronized<T>(int lockId, Future<T> Function() fn) async {

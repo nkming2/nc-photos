@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:nc_photos_plugin/src/k.dart' as k;
+import 'package:np_platform_lock/src/k.dart' as k;
 
 class Lock {
   static Future<bool> tryLock(int lockId) async {

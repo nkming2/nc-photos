@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.net.Uri
+import com.nkming.nc_photos.np_android_log.logI
 import com.nkming.nc_photos.plugin.BitmapResizeMethod
 import com.nkming.nc_photos.plugin.BitmapUtil
-import com.nkming.nc_photos.plugin.logI
 import com.nkming.nc_photos.plugin.use
 
 class ArbitraryStyleTransfer(
