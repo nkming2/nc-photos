@@ -9,7 +9,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:np_platform_util/np_platform_util.dart';
 
 typedef ComputeWithDbCallback<T, U> = Future<U> Function(
     SqliteDb db, T message);
@@ -26,7 +26,7 @@ Future<SqliteDb> createDb() async {
 
 Future<U> computeWithDb<T, U>(
     ComputeWithDbCallback<T, U> callback, T args) async {
-  if (platform_k.isWeb) {
+  if (getRawPlatform() == NpPlatform.web) {
     final c = KiwiContainer().resolve<DiContainer>();
     return await callback(c.sqliteDb, args);
   } else {

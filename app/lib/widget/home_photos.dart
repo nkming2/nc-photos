@@ -29,7 +29,6 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/metadata_task_manager.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -53,6 +52,7 @@ import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 part 'home_photos.g.dart';
@@ -726,14 +726,16 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
-  late final _imageProcessorUploadSuccessListener = platform_k.isWeb
-      ? null
-      : NativeEventListener<ImageProcessorUploadSuccessEvent>(
-          _onImageProcessorUploadSuccessEvent);
+  late final _imageProcessorUploadSuccessListener =
+      getRawPlatform() == NpPlatform.web
+          ? null
+          : NativeEventListener<ImageProcessorUploadSuccessEvent>(
+              _onImageProcessorUploadSuccessEvent);
   late final _onBackToTopListener =
       AppEventListener<HomePhotosBackToTopEvent>(_onBackToTop);
 
-  late final _Web? _web = platform_k.isWeb ? _Web(this) : null;
+  late final _Web? _web =
+      getRawPlatform() == NpPlatform.web ? _Web(this) : null;
 
   var _isScrollbarVisible = false;
   var _isRefreshIndicatorActive = false;

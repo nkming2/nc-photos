@@ -11,13 +11,13 @@ import 'package:nc_photos/entity/pref_util.dart' as pref_util;
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/legacy/connect.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 
 part 'sign_in.g.dart';
@@ -122,7 +122,8 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                         ),
-                        if (!platform_k.isWeb) Expanded(child: Container()),
+                        if (getRawPlatform() != NpPlatform.web)
+                          Expanded(child: Container()),
                         Container(
                           constraints: BoxConstraints(
                             maxWidth:

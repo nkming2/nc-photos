@@ -148,7 +148,7 @@ extension SqliteDbExtension on SqliteDb {
     return await PlatformLock.synchronized(k.appDbLockId, () async {
       // in unit tests we use an in-memory db, which mean there's no way to
       // access it in other isolates
-      if (platform_k.isUnitTest) {
+      if (isUnitTest) {
         return await callback(this, args);
       } else {
         return await computeWithDb(callback, args);

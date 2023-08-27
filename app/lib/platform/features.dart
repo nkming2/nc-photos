@@ -1,5 +1,6 @@
-import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:np_platform_util/np_platform_util.dart';
 
-final isSupportMapView = platform_k.isWeb || platform_k.isAndroid;
-final isSupportSelfSignedCert = platform_k.isAndroid;
-final isSupportEnhancement = platform_k.isAndroid;
+final isSupportMapView =
+    [NpPlatform.android, NpPlatform.web].contains(getRawPlatform());
+final isSupportSelfSignedCert = getRawPlatform() == NpPlatform.android;
+final isSupportEnhancement = getRawPlatform() == NpPlatform.android;

@@ -4,12 +4,12 @@ import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 class DownloadPreview {
   Future<dynamic> call(Account account, FileDescriptor file) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     final previewUrl = api_util.getFilePreviewUrl(
       account,
       file,

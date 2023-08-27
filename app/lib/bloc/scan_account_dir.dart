@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls.dart';
@@ -24,6 +23,7 @@ import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
 part 'scan_account_dir.g.dart';
@@ -523,13 +523,14 @@ class ScanAccountDirBloc
   late final _accountPrefUpdatedEventListener =
       AppEventListener<AccountPrefUpdatedEvent>(_onAccountPrefUpdatedEvent);
 
-  late final _nativeFileExifUpdatedListener = platform_k.isWeb
+  late final _nativeFileExifUpdatedListener = getRawPlatform() == NpPlatform.web
       ? null
       : NativeEventListener<FileExifUpdatedEvent>(_onNativeFileExifUpdated);
-  late final _imageProcessorUploadSuccessListener = platform_k.isWeb
-      ? null
-      : NativeEventListener<ImageProcessorUploadSuccessEvent>(
-          _onImageProcessorUploadSuccessEvent);
+  late final _imageProcessorUploadSuccessListener =
+      getRawPlatform() == NpPlatform.web
+          ? null
+          : NativeEventListener<ImageProcessorUploadSuccessEvent>(
+              _onImageProcessorUploadSuccessEvent);
 
   late final _refreshThrottler = Throttler(
     onTriggered: (_) {

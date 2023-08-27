@@ -3,9 +3,9 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:np_api/np_api.dart' as api;
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 
@@ -119,7 +119,8 @@ final supportedFormatMimes = [
   "image/gif",
   "video/mp4",
   "video/quicktime",
-  if (platform_k.isAndroid || platform_k.isWeb) "video/webm",
+  if ([NpPlatform.android, NpPlatform.web].contains(getRawPlatform()))
+    "video/webm",
 ];
 
 final supportedImageFormatMimes =

@@ -10,11 +10,11 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/internal_download_handler.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/widget/set_as_method_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'set_as_handler.g.dart';
 
@@ -60,7 +60,7 @@ class SetAsHandler {
   }
 
   Future<void> _setAsAsPreview(Account account, File file) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     final results = await InternalDownloadHandler(account)
         .downloadPreviews(context, [file]);
     final share = AndroidFileShare(results.entries
@@ -70,7 +70,7 @@ class SetAsHandler {
   }
 
   Future<void> _setAsAsFile(Account account, File file) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     final results =
         await InternalDownloadHandler(account).downloadFiles(context, [file]);
     final share = AndroidFileShare(results.entries

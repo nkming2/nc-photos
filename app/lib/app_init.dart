@@ -43,9 +43,9 @@ import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/touch_manager.dart';
 import 'package:np_log/np_log.dart' as np_log;
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 enum InitIsolateType {
@@ -80,7 +80,7 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
 
-  if (platform_k.isAndroid) {
+  if (getRawPlatform() == NpPlatform.android) {
     if (isolateType == InitIsolateType.main) {
       try {
         _isNewGMapsRenderer = await Activity.isNewGMapsRenderer();
@@ -109,7 +109,7 @@ void initDrift() {
 }
 
 Future<void> _initDriftWorkaround() async {
-  if (platform_k.isAndroid && AndroidInfo().sdkInt < 24) {
+  if (getRawPlatform() == NpPlatform.android && AndroidInfo().sdkInt < 24) {
     _log.info("[_initDriftWorkaround] Workaround Android 6- bug");
     // see: https://github.com/flutter/flutter/issues/73318 and
     // https://github.com/simolus3/drift/issues/895
@@ -146,7 +146,7 @@ Future<void> _initAccountPrefs() async {
 }
 
 Future<void> _initDeviceInfo() async {
-  if (platform_k.isAndroid) {
+  if (getRawPlatform() == NpPlatform.android) {
     await AndroidInfo.init();
   }
 }
@@ -206,7 +206,7 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
 
   c.touchManager = TouchManager(c);
 
-  if (platform_k.isAndroid) {
+  if (getRawPlatform() == NpPlatform.android) {
     // local file currently only supported on Android
     c.localFileRepo = const LocalFileRepo(LocalFileMediaStoreDataSource());
   }
@@ -222,7 +222,7 @@ Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
   switch (isolateType) {
     case InitIsolateType.main:
       // use driftIsolate to prevent DB blocking the UI thread
-      if (platform_k.isWeb) {
+      if (getRawPlatform() == NpPlatform.web) {
         // no isolate support on web
         return sql.SqliteDb();
       } else {

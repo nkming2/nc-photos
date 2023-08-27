@@ -6,13 +6,13 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:uuid/uuid.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -47,7 +47,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
     BuildContext context, {
     required Widget child,
   }) {
-    if (platform_k.isWeb) {
+    if (getRawPlatform() == NpPlatform.web) {
       // support shift+click group selection on web
       return RawKeyboardListener(
         onKey: (ev) {
@@ -105,7 +105,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         mainAxisSpacing: mainAxisSpacing,
       );
     }
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       return WillPopScope(
         onWillPop: onBackButtonPressed,
         child: content,
@@ -182,7 +182,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
         childBorderRadius: childBorderRadius,
         indicatorAlignment: indicatorAlignment,
         onTap: () => _onItemTap(item, index),
-        onLongPress: isSelectionMode && platform_k.isWeb
+        onLongPress: isSelectionMode && getRawPlatform() == NpPlatform.web
             ? null
             : () => _onItemLongPress(item, index),
         child: content,
@@ -242,7 +242,9 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       return;
     }
     final wasSelectionMode = isSelectionMode;
-    if (!platform_k.isWeb && wasSelectionMode && _lastSelectPosition != null) {
+    if (getRawPlatform() != NpPlatform.web &&
+        wasSelectionMode &&
+        _lastSelectPosition != null) {
       setState(() {
         _selectedItems.addAll(_items
             .sublist(math.min(_lastSelectPosition!, index),
@@ -262,7 +264,7 @@ mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(
           SnackBar(
-            content: Text(platform_k.isWeb
+            content: Text(getRawPlatform() == NpPlatform.web
                 ? L10n.global().webSelectRangeNotification
                 : L10n.global().mobileSelectRangeNotification),
             duration: k.snackBarDurationNormal,

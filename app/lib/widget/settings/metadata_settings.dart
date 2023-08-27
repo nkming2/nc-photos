@@ -8,11 +8,11 @@ import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
 part 'metadata/bloc.dart';
@@ -93,7 +93,7 @@ class _WrappedMetadataSettingsState extends State<_WrappedMetadataSettings>
                       );
                     },
                   ),
-                  if (platform_k.isMobile)
+                  if (getRawPlatform().isMobile)
                     _BlocBuilder(
                       buildWhen: (previous, current) =>
                           previous.isEnable != current.isEnable ||

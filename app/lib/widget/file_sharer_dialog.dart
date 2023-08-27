@@ -19,7 +19,6 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/use_case/copy.dart';
@@ -34,6 +33,7 @@ import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 import 'package:tuple/tuple.dart';
 
@@ -153,7 +153,7 @@ class _ShareMethodDialog extends StatelessWidget {
     return SimpleDialog(
       title: Text(L10n.global().shareMethodDialogTitle),
       children: [
-        if (platform_k.isAndroid) ...[
+        if (getRawPlatform() == NpPlatform.android) ...[
           if (isSupportPerview)
             SimpleDialogOption(
               child: ListTile(

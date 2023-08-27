@@ -10,12 +10,12 @@ import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/use_case/person/sync_person.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/use_case/sync_tag.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'startup_sync.g.dart';
 
@@ -31,7 +31,7 @@ class StartupSync {
   static Future<SyncResult> runInIsolate(
       Account account, PersonProvider personProvider) async {
     return _mutex.protect(() async {
-      if (platform_k.isWeb) {
+      if (getRawPlatform() == NpPlatform.web) {
         // not supported on web
         final c = KiwiContainer().resolve<DiContainer>();
         return await StartupSync(c)(account, personProvider);

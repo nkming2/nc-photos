@@ -5,10 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
 part 'viewer_mixin.g.dart';
@@ -19,9 +19,9 @@ mixin ViewerControllersMixin<T extends StatefulWidget>
   initDisposables() {
     return [
       ...super.initDisposables(),
-      if (platform_k.isMobile) _ViewerBrightnessController(),
+      if (getRawPlatform().isMobile) _ViewerBrightnessController(),
       _ViewerSystemUiResetter(),
-      if (platform_k.isMobile && Pref().isViewerForceRotationOr(false))
+      if (getRawPlatform().isMobile && Pref().isViewerForceRotationOr(false))
         _ViewerOrientationController(
           onChanged: _onOrientationChanged,
         ),

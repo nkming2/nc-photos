@@ -15,7 +15,6 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
@@ -28,6 +27,7 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'enhanced_photo_browser.g.dart';
 
@@ -337,7 +337,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   Future<bool> _ensurePermission() async {
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       if (AndroidInfo().sdkInt >= AndroidVersion.R) {
         if (!await Permission.hasReadExternalStorage()) {
           final results = await requestPermissionsForResult([

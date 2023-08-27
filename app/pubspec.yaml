@@ -111,6 +111,8 @@ dependencies:
     path: ../np_math
   np_platform_lock:
     path: ../np_platform_lock
+  np_platform_util:
+    path: ../np_platform_util
   np_string:
     path: ../np_string
   np_ui:

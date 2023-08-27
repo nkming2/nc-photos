@@ -20,7 +20,6 @@ import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
@@ -30,6 +29,7 @@ import 'package:nc_photos/widget/selectable.dart';
 import 'package:nc_photos/widget/settings/enhancement_settings.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
 
 part 'image_enhancer.g.dart';
@@ -525,7 +525,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   }
 
   late final _options = [
-    if (platform_k.isAndroid) ...[
+    if (getRawPlatform() == NpPlatform.android) ...[
       _Option(
         title: L10n.global().enhanceRetouchTitle,
         description: L10n.global().enhanceRetouchDescription,

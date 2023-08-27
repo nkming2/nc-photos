@@ -15,12 +15,12 @@ import 'package:nc_photos/mobile/android/download.dart';
 import 'package:nc_photos/mobile/notification.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:tuple/tuple.dart';
 
 part 'download_handler.g.dart';
@@ -39,7 +39,7 @@ class DownloadHandler {
   }) async {
     final files = await InflateFileDescriptor(_c)(account, fds);
     final _DownloadHandlerBase handler;
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       handler = _DownlaodHandlerAndroid();
     } else {
       handler = _DownloadHandlerWeb();

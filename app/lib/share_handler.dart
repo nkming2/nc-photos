@@ -20,7 +20,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/internal_download_handler.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/copy.dart';
@@ -32,6 +31,7 @@ import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
 import 'package:nc_photos/widget/share_method_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'share_handler.g.dart';
 
@@ -112,7 +112,7 @@ class ShareHandler {
   }
 
   Future<void> _shareAsPreview(Account account, List<File> files) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     final results =
         await InternalDownloadHandler(account).downloadPreviews(context, files);
     final share = AndroidFileShare(results.entries
@@ -122,7 +122,7 @@ class ShareHandler {
   }
 
   Future<void> _shareAsFile(Account account, List<File> files) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     final results =
         await InternalDownloadHandler(account).downloadFiles(context, files);
     final share = AndroidFileShare(results.entries
@@ -189,7 +189,7 @@ class ShareHandler {
         duration: k.snackBarDurationNormal,
       ));
 
-      if (platform_k.isAndroid) {
+      if (getRawPlatform() == NpPlatform.android) {
         final textShare = AndroidTextShare(share.url!);
         await textShare.share();
       }

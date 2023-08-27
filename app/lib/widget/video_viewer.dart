@@ -12,12 +12,12 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:video_player/video_player.dart';
 
@@ -286,7 +286,7 @@ class _VideoViewerState extends State<VideoViewer>
   }
 
   Future<String> _getVideoUrl() async {
-    if (platform_k.isWeb) {
+    if (getRawPlatform() == NpPlatform.web) {
       return RequestPublicLink()(widget.account, widget.file);
     } else {
       return api_util.getFileUrl(widget.account, widget.file);

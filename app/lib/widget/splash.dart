@@ -11,7 +11,6 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/use_case/compat/v55.dart';
@@ -20,6 +19,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
 part 'splash.g.dart';
@@ -141,7 +141,7 @@ class _SplashState extends State<Splash> {
         Navigator.pushReplacementNamed(context, Home.routeName,
             arguments: HomeArguments(account)),
       );
-      if (platform_k.isAndroid) {
+      if (getRawPlatform() == NpPlatform.android) {
         final initialRoute = await Activity.consumeInitialRoute();
         if (initialRoute != null) {
           unawaited(Navigator.pushNamed(context, initialRoute));

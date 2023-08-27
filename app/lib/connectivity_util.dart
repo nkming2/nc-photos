@@ -1,8 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:np_platform_util/np_platform_util.dart';
 
 Future<bool> isWifi() async {
-  if (platform_k.isWeb) {
+  if (getRawPlatform() == NpPlatform.web) {
     // connectivity does NOT work on web, currently it will always return mobile
     // on Blink, and none on Gecko
     return true;

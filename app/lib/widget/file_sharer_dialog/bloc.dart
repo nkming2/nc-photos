@@ -70,7 +70,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   Future<void> _doShareFile(Emitter<_State> emit) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     emit(state.copyWith(
       previewState: _PreviewState(index: 0, count: files.length),
     ));
@@ -103,7 +103,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   Future<void> _doSharePreview(Emitter<_State> emit) async {
-    assert(platform_k.isAndroid);
+    assert(getRawPlatform() == NpPlatform.android);
     emit(state.copyWith(
       previewState: _PreviewState(index: 0, count: files.length),
     ));
@@ -186,7 +186,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
     await Clipboard.setData(ClipboardData(text: share.url));
 
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       final textShare = AndroidTextShare(share.url!);
       unawaited(textShare.share());
     }

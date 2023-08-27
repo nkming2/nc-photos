@@ -14,10 +14,10 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_platform_lock/np_platform_lock.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'database.g.dart';
 part 'database/nc_album_extension.dart';

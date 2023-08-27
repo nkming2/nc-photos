@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,7 +23,7 @@ class DownloadBuilder extends itf.DownloadBuilder {
     String? parentDir,
     bool? shouldNotify,
   }) {
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       return _AndroidDownload(
         url: url,
         headers: headers,

@@ -6,12 +6,12 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'selectable_item_list.g.dart';
 
@@ -75,7 +75,7 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
 
   @override
   Widget build(BuildContext context) {
-    if (platform_k.isWeb) {
+    if (getRawPlatform() == NpPlatform.web) {
       // support shift+click group selection on web
       return RawKeyboardListener(
         onKey: (ev) {
@@ -178,7 +178,7 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
       if (!SessionStorage().hasShowRangeSelectNotification) {
         SnackBarManager().showSnackBar(
           SnackBar(
-            content: Text(platform_k.isWeb
+            content: Text(getRawPlatform() == NpPlatform.web
                 ? L10n.global().webSelectRangeNotification
                 : L10n.global().mobileSelectRangeNotification),
             duration: k.snackBarDurationNormal,

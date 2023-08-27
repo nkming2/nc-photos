@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/platform/k.dart' as platform_k;
+import 'package:np_platform_util/np_platform_util.dart';
 
 enum ShareMethod {
   file,
@@ -20,7 +20,7 @@ class ShareMethodDialog extends StatelessWidget {
     return SimpleDialog(
       title: Text(L10n.global().shareMethodDialogTitle),
       children: [
-        if (platform_k.isAndroid) ...[
+        if (getRawPlatform() == NpPlatform.android) ...[
           if (isSupportPerview)
             SimpleDialogOption(
               child: ListTile(

@@ -22,7 +22,6 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -36,6 +35,7 @@ import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as path_lib;
@@ -171,7 +171,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     label: L10n.global().addItemToCollectionTooltip,
                     onPressed: () => _onAddToAlbumPressed(context),
                   ),
-                  if (platform_k.isAndroid &&
+                  if (getRawPlatform() == NpPlatform.android &&
                       file_util.isSupportedImageFormat(_file!))
                     _DetailPaneButton(
                       icon: Icons.launch,
@@ -433,7 +433,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   }
 
   void _onMapTap() {
-    if (platform_k.isAndroid) {
+    if (getRawPlatform() == NpPlatform.android) {
       final intent = AndroidIntent(
         action: "action_view",
         data: Uri.encodeFull("geo:${_gps!.item1},${_gps!.item2}?z=16"),

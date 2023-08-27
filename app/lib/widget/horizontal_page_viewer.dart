@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/platform/k.dart' as platform_k;
 import 'package:nc_photos/widget/page_changed_listener.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 class HorizontalPageViewer extends StatefulWidget {
   HorizontalPageViewer({
@@ -54,7 +54,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
       _updateNavigationState(widget.initialPage);
       _hasInit = true;
     }
-    return platform_k.isWeb
+    return getRawPlatform() == NpPlatform.web
         ? _buildWebContent(context)
         : _buildContent(context);
   }
@@ -66,7 +66,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
   }
 
   Widget _buildWebContent(BuildContext context) {
-    assert(platform_k.isWeb);
+    assert(getRawPlatform() == NpPlatform.web);
     // support switching pages with keyboard on web
     return RawKeyboardListener(
       onKey: (ev) {
@@ -91,11 +91,13 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
           controller: widget.controller._pageController,
           itemCount: widget.pageCount,
           itemBuilder: widget.pageBuilder,
-          physics: !platform_k.isWeb && widget.canSwitchPage
-              ? null
-              : const NeverScrollableScrollPhysics(),
+          physics:
+              getRawPlatform() != NpPlatform.web && widget.canSwitchPage
+                  ? null
+                  : const NeverScrollableScrollPhysics(),
         ),
-        if (platform_k.isWeb) ..._buildNavigationButtons(context),
+        if (getRawPlatform() == NpPlatform.web)
+          ..._buildNavigationButtons(context),
       ],
     );
   }
@@ -221,7 +223,7 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
   /// Update the navigation state for [page]
   void _updateNavigationState(int page) {
     // currently useless to run on non-web platform
-    if (!platform_k.isWeb) {
+    if (getRawPlatform() != NpPlatform.web) {
       return;
     }
     final hasNext = widget.pageCount == null || page < widget.pageCount! - 1;
