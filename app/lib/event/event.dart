@@ -4,7 +4,6 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/local_file.dart';
@@ -46,20 +45,6 @@ class AccountPrefUpdatedEvent {
   final dynamic value;
 }
 
-class AlbumCreatedEvent {
-  AlbumCreatedEvent(this.account, this.album);
-
-  final Account account;
-  final Album album;
-}
-
-class AlbumUpdatedEvent {
-  AlbumUpdatedEvent(this.account, this.album);
-
-  final Account account;
-  final Album album;
-}
-
 class FilePropertyUpdatedEvent {
   FilePropertyUpdatedEvent(this.account, this.file, this.properties);
 
@@ -95,13 +80,6 @@ class FileMovedEvent {
   final Account account;
   final File file;
   final String destination;
-}
-
-class ShareCreatedEvent {
-  const ShareCreatedEvent(this.account, this.share);
-
-  final Account account;
-  final Share share;
 }
 
 class ShareRemovedEvent {
