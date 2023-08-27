@@ -1,17 +1,9 @@
-import 'package:flutter/services.dart';
-import 'package:np_platform_lock/src/k.dart' as k;
+import 'package:np_platform_lock/src/raw_lock.dart';
 
-class Lock {
-  static Future<bool> tryLock(int lockId) async {
-    return (await _channel.invokeMethod<bool>("tryLock", <String, dynamic>{
-      "lockId": lockId,
-    }))!;
-  }
+class PlatformLock {
+  static Future<T> synchronized<T>(int lockId, Future<T> Function() fn) =>
+      RawLockInterface().synchronized(lockId, fn);
 
-  static Future<void> unlock(int lockId) =>
-      _channel.invokeMethod("unlock", <String, dynamic>{
-        "lockId": lockId,
-      });
-
-  static const _channel = MethodChannel("${k.libId}/lock");
+  static Future<void> forceUnlock(int lockId) =>
+      RawLockInterface().forceUnlock(lockId);
 }

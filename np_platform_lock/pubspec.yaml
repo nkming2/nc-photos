@@ -11,6 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  np_platform_util:
+    path: ../np_platform_util
+  synchronized: ^3.1.0
 
 dev_dependencies:
   np_lints:

@@ -122,7 +122,7 @@ extension SqliteDbExtension on SqliteDb {
   ///
   /// Do NOT call this when using [isolate], call [useInIsolate] instead
   Future<T> use<T>(Future<T> Function(SqliteDb db) block) async {
-    return await platform.Lock.synchronized(k.appDbLockId, () async {
+    return await PlatformLock.synchronized(k.appDbLockId, () async {
       return await transaction(() async {
         return await block(this);
       });
@@ -135,7 +135,7 @@ extension SqliteDbExtension on SqliteDb {
   ///
   /// This function does not start a transaction, see [use] instead
   Future<T> useNoTransaction<T>(Future<T> Function(SqliteDb db) block) async {
-    return await platform.Lock.synchronized(k.appDbLockId, () async {
+    return await PlatformLock.synchronized(k.appDbLockId, () async {
       return await block(this);
     });
   }
@@ -145,7 +145,7 @@ extension SqliteDbExtension on SqliteDb {
   Future<U> isolate<T, U>(T args, ComputeWithDbCallback<T, U> callback) async {
     // we need to acquire the lock here as method channel is not supported in
     // background isolates
-    return await platform.Lock.synchronized(k.appDbLockId, () async {
+    return await PlatformLock.synchronized(k.appDbLockId, () async {
       // in unit tests we use an in-memory db, which mean there's no way to
       // access it in other isolates
       if (platform_k.isUnitTest) {

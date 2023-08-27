@@ -1004,6 +1004,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_platform_util:
+    dependency: transitive
+    description:
+      path: "../np_platform_util"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_string:
     dependency: "direct main"
     description:
@@ -1504,7 +1511,7 @@ packages:
     source: hosted
     version: "1.2.0"
   synchronized:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: synchronized
       sha256: "5fcbd27688af6082f5abd611af56ee575342c30e87541d0245f7ff99faa02c60"
