@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:nc_photos/future_extension.dart';
+import 'package:np_async/np_async.dart';
 
 class Activity {
   static Future<String?> consumeInitialRoute() =>

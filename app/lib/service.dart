@@ -18,11 +18,11 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
-import 'package:nc_photos/future_extension.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'service.g.dart';

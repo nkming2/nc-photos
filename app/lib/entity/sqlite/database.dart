@@ -8,12 +8,12 @@ import 'package:nc_photos/entity/sqlite/files_query_builder.dart';
 import 'package:nc_photos/entity/sqlite/isolate_util.dart';
 import 'package:nc_photos/entity/sqlite/table.dart';
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/future_extension.dart';
 import 'package:nc_photos/iterable_extension.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/object_extension.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_platform_lock/np_platform_lock.dart';

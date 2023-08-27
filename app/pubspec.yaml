@@ -99,6 +99,8 @@ dependencies:
     path: ../plugin
   np_api:
     path: ../np_api
+  np_async:
+    path: ../np_async
   np_codegen:
     path: ../codegen
   np_common:

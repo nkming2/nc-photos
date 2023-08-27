@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/async_util.dart' as async_util;
 import 'package:nc_photos/bloc/list_tag.dart';
 import 'package:nc_photos/bloc/search_suggestion.dart';
 import 'package:nc_photos/entity/tag.dart';
@@ -11,6 +10,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_string/np_string.dart';
 
 class TagPickerDialog extends StatefulWidget {
@@ -137,8 +137,7 @@ class _TagPickerDialogState extends State<TagPickerDialog> {
   Future<Iterable<Tag>> _onSearch(String pattern) async {
     _suggestionBloc.add(SearchSuggestionBlocSearchEvent(pattern.toCi()));
     await Future.delayed(const Duration(milliseconds: 250));
-    await async_util
-        .wait(() => _suggestionBloc.state is! SearchSuggestionBlocLoading);
+    await wait(() => _suggestionBloc.state is! SearchSuggestionBlocLoading);
     if (_suggestionBloc.state is SearchSuggestionBlocSuccess) {
       return _suggestionBloc.state.results;
     } else {

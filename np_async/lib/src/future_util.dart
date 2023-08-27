@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:np_collection/np_collection.dart';
 
+extension FutureNotNullExtension<T> on Future<T?> {
+  Future<T> notNull() async => (await this)!;
+}
+
 Future<List<T>> waitOr<T>(
   Iterable<Future<T>> futures,
   T Function(Object error, StackTrace? stackTrace) onError,

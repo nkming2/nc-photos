@@ -8,7 +8,6 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search.dart';
-import 'package:nc_photos/compute_queue.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -37,6 +36,7 @@ import 'package:nc_photos/widget/search_landing.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_ui/np_ui.dart';
 

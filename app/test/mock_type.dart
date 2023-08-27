@@ -18,7 +18,7 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/future_util.dart' as future_util;
+import 'package:np_async/np_async.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
@@ -63,7 +63,7 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
 
   @override
   getAll(Account account, List<File> albumFiles) async* {
-    final results = await future_util.waitOr(
+    final results = await waitOr(
       albumFiles.map((f) => get(account, f)),
       (error, stackTrace) => ExceptionEvent(error, stackTrace),
     );

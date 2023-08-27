@@ -948,6 +948,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_async:
+    dependency: "direct main"
+    description:
+      path: "../np_async"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_codegen:
     dependency: "direct main"
     description:
