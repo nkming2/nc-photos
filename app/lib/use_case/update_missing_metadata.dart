@@ -9,13 +9,14 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/reverse_geocoder.dart';
+import 'package:nc_photos/geocoder_util.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:nc_photos/use_case/scan_missing_metadata.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_geocoder/np_geocoder.dart';
 
 part 'update_missing_metadata.g.dart';
 

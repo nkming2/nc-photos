@@ -10,7 +10,7 @@ extension _$ReverseGeocoderNpLog on ReverseGeocoder {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("reverse_geocoder.ReverseGeocoder");
+  static final log = Logger("src.reverse_geocoder.ReverseGeocoder");
 }
 
 // **************************************************************************
@@ -20,6 +20,6 @@ extension _$ReverseGeocoderNpLog on ReverseGeocoder {
 extension _$ReverseGeocoderLocationToString on ReverseGeocoderLocation {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "ReverseGeocoderLocation {name: $name, latitude: ${latitude.toStringAsFixed(3)}, longitude: ${longitude.toStringAsFixed(3)}, countryCode: $countryCode, admin1: $admin1, admin2: $admin2}";
+    return "ReverseGeocoderLocation {name: $name, latitude: $latitude, longitude: $longitude, countryCode: $countryCode, admin1: $admin1, admin2: $admin2}";
   }
 }

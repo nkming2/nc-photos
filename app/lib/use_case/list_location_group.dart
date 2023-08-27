@@ -4,8 +4,8 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_geocoder/np_geocoder.dart';
 import 'package:to_string/to_string.dart';
 
 part 'list_location_group.g.dart';
@@ -141,7 +141,7 @@ class ListLocationGroup {
               await countryCodeQ.map((r) {
                 final cc = r.read(db.imageLocations.countryCode)!;
                 return LocationGroup(
-                  location_util.alpha2CodeToName(cc) ?? cc,
+                  alpha2CodeToName(cc) ?? cc,
                   cc,
                   r.read(count)!,
                   r.read(db.files.fileId)!,

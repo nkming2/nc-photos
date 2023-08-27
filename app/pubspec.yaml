@@ -84,10 +84,6 @@ dependencies:
       ref: 1.0.0-nc-photos-2
       path: library
   intl: ^0.17.0
-  kdtree:
-    git:
-      url: https://gitlab.com/nc-photos/kd-tree-dart.git
-      ref: 0.2.0-nc-photos-1
   kiwi: ^4.1.0
   latlong2: any
   logging: ^1.1.1
@@ -107,6 +103,8 @@ dependencies:
     path: ../np_common
   np_collection:
     path: ../np_collection
+  np_geocoder:
+    path: ../np_geocoder
   np_log:
     path: ../np_log
   np_math:

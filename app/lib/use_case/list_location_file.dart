@@ -6,8 +6,8 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
+import 'package:np_geocoder/np_geocoder.dart';
 
 class ListLocationFile {
   ListLocationFile(this._c) : assert(require(_c));
@@ -29,8 +29,7 @@ class ListLocationFile {
         });
         return q.build();
       });
-      if (place == null ||
-          location_util.alpha2CodeToName(countryCode) == place) {
+      if (place == null || alpha2CodeToName(countryCode) == place) {
         // some places in the DB have the same name as the country, in such
         // cases, we return all photos from the country
         query.where(db.imageLocations.countryCode.equals(countryCode));

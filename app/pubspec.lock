@@ -782,7 +782,7 @@ packages:
     source: hosted
     version: "4.8.1"
   kdtree:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
       ref: "0.2.0-nc-photos-1"
@@ -980,6 +980,13 @@ packages:
     dependency: "direct main"
     description:
       path: "../np_common"
+      relative: true
+    source: path
+    version: "0.0.1"
+  np_geocoder:
+    dependency: "direct main"
+    description:
+      path: "../np_geocoder"
       relative: true
     source: path
     version: "0.0.1"

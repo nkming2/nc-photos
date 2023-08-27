@@ -19,7 +19,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/location_util.dart' as location_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/set_as_handler.dart';
@@ -35,6 +34,7 @@ import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
@@ -564,11 +564,11 @@ extension on ImageLocation {
     if (countryCode == null) {
       return null;
     } else if (admin1 == null) {
-      return location_util.alpha2CodeToName(countryCode!);
+      return alpha2CodeToName(countryCode!);
     } else if (admin2 == null) {
-      return "$admin1, ${location_util.alpha2CodeToName(countryCode!)}";
+      return "$admin1, ${alpha2CodeToName(countryCode!)}";
     } else {
-      return "$admin2, $admin1, ${location_util.alpha2CodeToName(countryCode!)}";
+      return "$admin2, $admin1, ${alpha2CodeToName(countryCode!)}";
     }
   }
 }

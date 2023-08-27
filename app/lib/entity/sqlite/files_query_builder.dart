@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:nc_photos/account.dart' as app;
 import 'package:nc_photos/entity/sqlite/database.dart';
-import 'package:nc_photos/location_util.dart' as location_util;
+import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_string/np_string.dart';
 
 enum FilesQueryMode {
@@ -181,11 +181,11 @@ class FilesQueryBuilder {
       var clause = db.imageLocations.name.like(_byLocation!) |
           db.imageLocations.admin1.like(_byLocation!) |
           db.imageLocations.admin2.like(_byLocation!);
-      final countryCode = location_util.nameToAlpha2Code(_byLocation!.toCi());
+      final countryCode = nameToAlpha2Code(_byLocation!.toCi());
       if (countryCode != null) {
         clause = clause | db.imageLocations.countryCode.equals(countryCode);
       } else if (_byLocation!.length == 2 &&
-          location_util.alpha2CodeToName(_byLocation!.toUpperCase()) != null) {
+          alpha2CodeToName(_byLocation!.toUpperCase()) != null) {
         clause = clause |
             db.imageLocations.countryCode.equals(_byLocation!.toUpperCase());
       }

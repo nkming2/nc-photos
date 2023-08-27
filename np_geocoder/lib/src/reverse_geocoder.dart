@@ -3,10 +3,9 @@ import 'dart:math' as math;
 import 'package:collection/collection.dart';
 import 'package:kdtree/kdtree.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_geocoder/src/native/db_util.dart'
+    if (dart.library.html) 'package:np_geocoder/src/web/db_util.dart';
 import 'package:np_math/np_math.dart';
 import 'package:sqlite3/common.dart';
 import 'package:to_string/to_string.dart';
@@ -109,19 +108,6 @@ class ReverseGeocoder {
   late final KDTree _searchTree;
 }
 
-extension ReverseGeocoderExtension on ReverseGeocoderLocation {
-  ImageLocation toImageLocation() {
-    return ImageLocation(
-      name: name,
-      latitude: latitude,
-      longitude: longitude,
-      countryCode: countryCode,
-      admin1: admin1,
-      admin2: admin2,
-    );
-  }
-}
-
 class _DatabaseRow {
   const _DatabaseRow(this.name, this.latitude, this.longitude, this.countryCode,
       this.admin1, this.admin2);
@@ -135,7 +121,7 @@ class _DatabaseRow {
 }
 
 Future<CommonDatabase> _openDatabase() async {
-  return platform.openRawSqliteDbFromAsset("cities.sqlite", "cities.sqlite");
+  return openRawSqliteDbFromAsset("cities.sqlite", "cities.sqlite");
 }
 
 KDTree _buildSearchTree(CommonDatabase db) {

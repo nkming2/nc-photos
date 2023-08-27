@@ -9,9 +9,9 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/reverse_geocoder.dart';
 import 'package:nc_photos/use_case/update_missing_metadata.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_geocoder/np_geocoder.dart';
 import 'package:to_string/to_string.dart';
 
 part 'metadata_task_manager.g.dart';
