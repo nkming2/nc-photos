@@ -1,21 +1,21 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:nc_photos/platform/universal_storage.dart' as itf;
 import 'package:np_string/np_string.dart';
+import 'package:np_universal_storage/src/universal_storage.dart' as itf;
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 
-class UniversalStorage extends itf.UniversalStorage {
+class UniversalStorage implements itf.UniversalStorage {
   @override
-  putBinary(String name, Uint8List content) async {
+  Future<void> putBinary(String name, Uint8List content) async {
     final storageDir = await _openStorageDirForFile(name);
     final file = File("${storageDir.path}/$name");
     await file.writeAsBytes(content, flush: true);
   }
 
   @override
-  getBinary(String name) async {
+  Future<Uint8List?> getBinary(String name) async {
     final storageDir = await _openStorageDirForFile(name);
     final file = File("${storageDir.path}/$name");
     if (await file.exists()) {
@@ -26,14 +26,14 @@ class UniversalStorage extends itf.UniversalStorage {
   }
 
   @override
-  putString(String name, String content) async {
+  Future<void> putString(String name, String content) async {
     final storageDir = await _openStorageDirForFile(name);
     final file = File("${storageDir.path}/$name");
     await file.writeAsString(content, flush: true);
   }
 
   @override
-  getString(String name) async {
+  Future<String?> getString(String name) async {
     final storageDir = await _openStorageDirForFile(name);
     final file = File("${storageDir.path}/$name");
     if (await file.exists()) {
@@ -44,7 +44,7 @@ class UniversalStorage extends itf.UniversalStorage {
   }
 
   @override
-  remove(String name) async {
+  Future<void> remove(String name) async {
     final storageDir = await _openStorageDirForFile(name);
     final file = File("${storageDir.path}/$name");
     if (await file.exists()) {

@@ -117,6 +117,8 @@ dependencies:
     path: ../np_string
   np_ui:
     path: ../np_ui
+  np_universal_storage:
+    path: ../np_universal_storage
   octo_image: any
   page_view_indicators: ^2.0.0
   path: ^1.8.0

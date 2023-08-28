@@ -6,14 +6,13 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_universal_storage/np_universal_storage.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:uuid/uuid.dart';
 
@@ -116,10 +115,10 @@ class TouchManager {
   Future<void> setLocalEtag(Account account, File dir, String? etag) {
     final name = _getLocalStorageName(account, dir);
     if (etag == null) {
-      return platform.UniversalStorage().remove(name);
+      return UniversalStorage().remove(name);
     } else {
       _log.info("[setLocalEtag] Set local etag for file '${dir.path}': $etag");
-      return platform.UniversalStorage().putString(name, etag);
+      return UniversalStorage().putString(name, etag);
     }
   }
 
@@ -175,7 +174,7 @@ class TouchManager {
 
   Future<String?> _getLocalEtag(Account account, File file) async {
     final name = _getLocalStorageName(account, file);
-    return platform.UniversalStorage().getString(name);
+    return UniversalStorage().getString(name);
   }
 
   String _getLocalStorageName(Account account, File file) {

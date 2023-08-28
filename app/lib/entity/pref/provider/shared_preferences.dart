@@ -1,8 +1,7 @@
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/use_case/compat/v34.dart';
 import 'package:np_common/type.dart';
+import 'package:np_universal_storage/np_universal_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
@@ -14,7 +13,7 @@ class PrefSharedPreferencesProvider extends PrefProvider {
     //   await CompatV32.migratePref();
     // }
     if (await CompatV34.isPrefNeedMigration()) {
-      await CompatV34.migratePref(platform.UniversalStorage());
+      await CompatV34.migratePref(UniversalStorage());
     }
     return SharedPreferences.getInstance().then((pref) {
       _pref = pref;

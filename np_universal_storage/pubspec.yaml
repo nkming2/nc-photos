@@ -1,0 +1,22 @@
+name: np_universal_storage
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  np_string:
+    path: ../np_string
+  path: ^1.8.0
+  path_provider: ^2.0.15
+  shared_preferences: ^2.0.8
+
+dev_dependencies:
+  np_lints:
+    path: ../np_lints

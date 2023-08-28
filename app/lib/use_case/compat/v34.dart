@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/platform/universal_storage.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
+import 'package:np_universal_storage/np_universal_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'v34.g.dart';
@@ -39,7 +39,8 @@ class CompatV34 {
       final id = Account.newId();
       account2["account"]["id"] = id;
       newJsons.add(account2["account"]);
-      await storage.putString("accounts/$id/pref", jsonEncode(account2["settings"]));
+      await storage.putString(
+          "accounts/$id/pref", jsonEncode(account2["settings"]));
     }
     if (await pref.setStringList(
         "accounts3", newJsons.map((e) => jsonEncode(e)).toList())) {

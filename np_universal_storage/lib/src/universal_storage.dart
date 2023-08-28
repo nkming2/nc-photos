@@ -1,10 +1,16 @@
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
+
+import 'package:np_universal_storage/src/native/universal_storage.dart'
+    if (dart.library.html) 'package:np_universal_storage/src/web/universal_storage.dart'
+    as impl;
 
 /// Store simple contents across different platforms
 ///
 /// On mobile, the contents will be persisted as a file. On web, the contents
 /// will be stored in local storage
 abstract class UniversalStorage {
+  factory UniversalStorage() => impl.UniversalStorage();
+
   Future<void> putBinary(String name, Uint8List content);
 
   /// Return the content associated with [name], or null if no such association
@@ -18,31 +24,4 @@ abstract class UniversalStorage {
   Future<String?> getString(String name);
 
   Future<void> remove(String name);
-}
-
-/// UniversalStorage backed by memory, useful in unit tests
-@visibleForTesting
-class UniversalMemoryStorage implements UniversalStorage {
-  @override
-  putBinary(String name, Uint8List content) async {
-    data[name] = content;
-  }
-
-  @override
-  getBinary(String name) async => data[name];
-
-  @override
-  putString(String name, String content) async {
-    data[name] = content;
-  }
-
-  @override
-  getString(String name) async => data[name];
-
-  @override
-  remove(String name) async {
-    data.remove(name);
-  }
-
-  final data = <String, dynamic>{};
 }

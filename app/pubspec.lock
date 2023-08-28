@@ -1039,6 +1039,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_universal_storage:
+    dependency: "direct main"
+    description:
+      path: "../np_universal_storage"
+      relative: true
+    source: path
+    version: "0.0.1"
   octo_image:
     dependency: "direct main"
     description:

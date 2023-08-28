@@ -1,16 +1,15 @@
 import 'dart:convert';
 
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:np_common/type.dart';
+import 'package:np_universal_storage/np_universal_storage.dart';
 
 /// [Pref] backed by [UniversalStorage]
 class PrefUniversalStorageProvider extends PrefProvider {
   PrefUniversalStorageProvider(this.name);
 
   Future<void> init() async {
-    final prefStr = await platform.UniversalStorage().getString(name) ?? "{}";
+    final prefStr = await UniversalStorage().getString(name) ?? "{}";
     _data
       ..clear()
       ..addAll(jsonDecode(prefStr));
@@ -41,14 +40,14 @@ class PrefUniversalStorageProvider extends PrefProvider {
   @override
   Future<bool> remove(PrefKeyInterface key) async {
     final newData = Map.of(_data)..remove(key.toStringKey());
-    await platform.UniversalStorage().putString(name, jsonEncode(newData));
+    await UniversalStorage().putString(name, jsonEncode(newData));
     _data.remove(key.toStringKey());
     return true;
   }
 
   @override
   Future<bool> clear() async {
-    await platform.UniversalStorage().remove(name);
+    await UniversalStorage().remove(name);
     _data.clear();
     return true;
   }
@@ -61,7 +60,7 @@ class PrefUniversalStorageProvider extends PrefProvider {
   Future<bool> _set<T>(PrefKeyInterface key, T value) async {
     final newData = Map.of(_data)
       ..addEntries([MapEntry(key.toStringKey(), value)]);
-    await platform.UniversalStorage().putString(name, jsonEncode(newData));
+    await UniversalStorage().putString(name, jsonEncode(newData));
     _data[key.toStringKey()] = value;
     return true;
   }
