@@ -146,25 +146,7 @@ class _WrappedAppState extends State<_WrappedApp>
             scaffoldMessengerKey: _scaffoldMessengerKey,
             locale: state.language.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: const [
-              // the order here doesn't matter, except for the first one, which
-              // must be en
-              Locale("en"),
-              Locale("el"),
-              Locale("es"),
-              Locale("fr"),
-              Locale("ru"),
-              Locale("de"),
-              Locale("cs"),
-              Locale("fi"),
-              Locale("pl"),
-              Locale("pt"),
-              Locale.fromSubtags(languageCode: "zh", scriptCode: "Hans"),
-              Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"),
-              Locale("it"),
-              Locale("nl"),
-              Locale("ca"),
-            ],
+            supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) {
               MyApp._globalContext = context;
               return _ThemedMyApp(child: child!);
