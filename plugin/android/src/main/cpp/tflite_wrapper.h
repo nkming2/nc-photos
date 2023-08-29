@@ -1,8 +1,9 @@
 #pragma once
 
-#include "util.h"
 #include <cstdint>
 #include <tensorflow/lite/c/c_api.h>
+
+#include "util.h"
 
 namespace tflite {
 

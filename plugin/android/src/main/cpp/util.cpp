@@ -1,6 +1,3 @@
-#include "util.h"
-#include "log.h"
-#include "math_util.h"
 #include <RenderScriptToolkit.h>
 #include <algorithm>
 #include <android/asset_manager.h>
@@ -13,6 +10,10 @@
 #include <string>
 #include <tensorflow/lite/c/c_api.h>
 #include <vector>
+
+#include "util.h"
+#include "log.h"
+#include "math_util.h"
 
 using namespace plugin;
 using namespace std;

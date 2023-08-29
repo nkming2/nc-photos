@@ -1,11 +1,12 @@
-#include "image_splitter.h"
-#include "log.h"
-#include "util.h"
 #include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <deque>
 #include <vector>
+
+#include "image_splitter.h"
+#include "log.h"
+#include "util.h"
 
 using namespace std;
 

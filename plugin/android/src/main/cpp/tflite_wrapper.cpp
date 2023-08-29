@@ -1,7 +1,8 @@
-#include "tflite_wrapper.h"
-#include "util.h"
 #include <exception>
 #include <tensorflow/lite/c/c_api.h>
+
+#include "tflite_wrapper.h"
+#include "util.h"
 
 using namespace plugin;
 using namespace std;

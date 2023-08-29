@@ -1,5 +1,6 @@
-#include "stopwatch.h"
 #include <chrono>
+
+#include "stopwatch.h"
 
 using namespace std;
 
