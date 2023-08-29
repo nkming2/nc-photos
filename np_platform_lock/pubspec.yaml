@@ -25,3 +25,5 @@ flutter:
       android:
         package: com.nkming.nc_photos.np_platform_lock
         pluginClass: NpPlatformLockPlugin
+      ios:
+        pluginClass: NpPlatformLockPlugin
