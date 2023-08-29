@@ -2,11 +2,11 @@
 #include <cstdint>
 
 #include "../math_util.h"
-#include "./yuv.h"
+#include "yuv.h"
 
 using namespace std;
 
-namespace plugin {
+namespace core {
 namespace filter {
 
 array<float, 3> rgb8ToYuv(const uint8_t *rgb8) {
@@ -37,4 +37,4 @@ array<uint8_t, 3> yuvToRgb8(const float *yuv) {
 }
 
 } // namespace filter
-} // namespace plugin
+} // namespace core

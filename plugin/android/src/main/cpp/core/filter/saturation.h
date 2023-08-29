@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace plugin {
+namespace core {
 namespace filter {
 
 class Saturation {
@@ -14,4 +14,4 @@ private:
 };
 
 } // namespace filter
-} // namespace plugin
+} // namespace core

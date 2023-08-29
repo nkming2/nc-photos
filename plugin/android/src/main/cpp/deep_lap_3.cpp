@@ -1,9 +1,3 @@
-#include "exception.h"
-#include "lib/base_resample.h"
-#include "log.h"
-#include "stopwatch.h"
-#include "tflite_wrapper.h"
-#include "util.h"
 #include <RenderScriptToolkit.h>
 #include <algorithm>
 #include <android/asset_manager.h>
@@ -15,8 +9,15 @@
 #include <jni.h>
 #include <tensorflow/lite/c/c_api.h>
 
-#include "./filter/saturation.h"
+#include "core/filter/filters.h"
+#include "core/lib/base_resample.h"
+#include "exception.h"
+#include "log.h"
+#include "stopwatch.h"
+#include "tflite_wrapper.h"
+#include "util.h"
 
+using namespace core;
 using namespace plugin;
 using namespace renderscript;
 using namespace std;
@@ -305,8 +306,8 @@ vector<uint8_t> DeepLab3ColorPop::enhance(const uint8_t *image,
   // desaturate input
   auto rgba8 = rgb8ToRgba8(image, width, height);
   vector<uint8_t> desaturate(width * height * 4);
-  plugin::filter::Saturation saturation;
-  desaturate = saturation.apply(rgba8.data(), width, height, -1 * weight);
+  desaturate =
+      filter::applySaturation(rgba8.data(), width, height, -1 * weight);
 
   // draw input on top of blurred image, with alpha map
   replaceChannel<4>(rgba8.data(), alphaFiltered.data(), width, height, 3);

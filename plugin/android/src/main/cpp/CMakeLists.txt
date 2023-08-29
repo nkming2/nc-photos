@@ -33,18 +33,24 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
+             core/filter/brightness.cpp
+             core/filter/color_levels.cpp
+             core/filter/contrast.cpp
+             core/filter/curve.cpp
+             core/filter/hslhsv.cpp
+             core/filter/saturation.cpp
+             core/filter/tint.cpp
+             core/filter/warmth.cpp
+             core/filter/yuv.cpp
+             core/lib/spline/spline.cpp
              filter/brightness.cpp
              filter/color_levels.cpp
              filter/contrast.cpp
              filter/crop.cpp
-             filter/curve.cpp
-             filter/hslhsv.cpp
              filter/orientation.cpp
              filter/saturation.cpp
              filter/tint.cpp
              filter/warmth.cpp
-             filter/yuv.cpp
-             lib/spline/spline.cpp
              arbitrary_style_transfer.cpp
              deep_lap_3.cpp
              esrgan.cpp

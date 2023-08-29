@@ -4,11 +4,11 @@
 #include <cstdint>
 
 #include "../math_util.h"
-#include "./hslhsv.h"
+#include "hslhsv.h"
 
 using namespace std;
 
-namespace plugin {
+namespace core {
 namespace filter {
 
 array<float, 3> rgb8ToHsl(const uint8_t *rgb8) {
@@ -167,4 +167,4 @@ std::array<float, 3> hsvToHsl(const float *hsv) {
 }
 
 } // namespace filter
-} // namespace plugin
+} // namespace core

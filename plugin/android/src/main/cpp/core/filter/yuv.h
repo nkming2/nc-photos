@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 
-namespace plugin {
+namespace core {
 namespace filter {
 
 /**
@@ -23,4 +23,4 @@ std::array<float, 3> rgb8ToYuv(const uint8_t *rgb8);
 std::array<uint8_t, 3> yuvToRgb8(const float *yuv);
 
 } // namespace filter
-} // namespace plugin
+} // namespace core

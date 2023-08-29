@@ -1,9 +1,3 @@
-#include "exception.h"
-#include "lib/base_resample.h"
-#include "log.h"
-#include "stopwatch.h"
-#include "tflite_wrapper.h"
-#include "util.h"
 #include <algorithm>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -11,6 +5,13 @@
 #include <exception>
 #include <jni.h>
 #include <tensorflow/lite/c/c_api.h>
+
+#include "core/lib/base_resample.h"
+#include "exception.h"
+#include "log.h"
+#include "stopwatch.h"
+#include "tflite_wrapper.h"
+#include "util.h"
 
 using namespace plugin;
 using namespace std;
