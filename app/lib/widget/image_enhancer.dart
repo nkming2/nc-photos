@@ -5,6 +5,7 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -89,9 +90,15 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   @override
   build(BuildContext context) => Theme(
         data: buildDarkTheme(context),
-        child: Scaffold(
-          body: Builder(
-            builder: _buildContent,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.black,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: Scaffold(
+            body: Builder(
+              builder: _buildContent,
+            ),
           ),
         ),
       );

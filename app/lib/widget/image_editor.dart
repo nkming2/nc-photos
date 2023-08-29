@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
@@ -88,9 +89,15 @@ class _ImageEditorState extends State<ImageEditor> {
   @override
   build(BuildContext context) => Theme(
         data: buildDarkTheme(context),
-        child: Scaffold(
-          body: Builder(
-            builder: _buildContent,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.black,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: Scaffold(
+            body: Builder(
+              builder: _buildContent,
+            ),
           ),
         ),
       );
