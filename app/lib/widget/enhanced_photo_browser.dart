@@ -27,6 +27,7 @@ import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_platform_permission/np_platform_permission.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 
 part 'enhanced_photo_browser.g.dart';

@@ -1,7 +1,7 @@
 package com.nkming.nc_photos
 
 import android.app.Activity
-import com.nkming.nc_photos.np_android_log.logE
+import com.nkming.nc_photos.np_android_core.logE
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import javax.net.ssl.HttpsURLConnection

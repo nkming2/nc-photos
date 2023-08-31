@@ -1011,10 +1011,31 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  np_platform_image_processor:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_image_processor"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_platform_lock:
     dependency: "direct main"
     description:
       path: "../np_platform_lock"
+      relative: true
+    source: path
+    version: "0.0.1"
+  np_platform_permission:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_permission"
+      relative: true
+    source: path
+    version: "0.0.1"
+  np_platform_raw_image:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_raw_image"
       relative: true
     source: path
     version: "0.0.1"

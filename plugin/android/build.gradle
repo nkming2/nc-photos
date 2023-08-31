@@ -29,7 +29,6 @@ apply plugin: 'kotlin-android'
 android {
     namespace 'com.nkming.nc_photos.plugin'
    	compileSdk 31
-    ndkVersion "23.2.8568313"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -47,23 +46,12 @@ android {
 
     defaultConfig {
         minSdk 21
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
-        }
-    }
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1'
-        }
     }
 }
 
 dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
-    implementation "androidx.annotation:annotation:1.6.0"
     implementation "androidx.core:core-ktx:1.10.1"
-    implementation "androidx.exifinterface:exifinterface:1.3.6"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "com.nkming.nc_photos.np_android_log:np_android_log"
+    implementation "com.nkming.nc_photos.np_android_core:np_android_core"
 }

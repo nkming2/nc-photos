@@ -1,6 +1,6 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/stream_extension.dart';
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_platform_permission/np_platform_permission.dart';
 
 Future<Map<String, int>> requestPermissionsForResult(
     List<String> permissions) async {

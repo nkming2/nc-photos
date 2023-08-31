@@ -1,5 +1,5 @@
 include ':app'
-includeBuild '../../np_android_log'
+includeBuild '../../np_android_core'
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
 def properties = new Properties()

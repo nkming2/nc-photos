@@ -1,23 +1,16 @@
 package com.nkming.nc_photos.plugin
 
-interface K {
-	companion object {
-		const val DOWNLOAD_NOTIFICATION_ID_MIN = 1000
-		const val DOWNLOAD_NOTIFICATION_ID_MAX = 2000
-		const val IMAGE_PROCESSOR_SERVICE_NOTIFICATION_ID = 5000
-		const val IMAGE_PROCESSOR_SERVICE_RESULT_NOTIFICATION_ID = 5001
-		const val IMAGE_PROCESSOR_SERVICE_RESULT_FAILED_NOTIFICATION_ID = 5002
+internal interface K {
+    companion object {
+        const val DOWNLOAD_NOTIFICATION_ID_MIN = 1000
+        const val DOWNLOAD_NOTIFICATION_ID_MAX = 2000
 
-		const val PERMISSION_REQUEST_CODE = 11011
-		const val MEDIA_STORE_DELETE_REQUEST_CODE = 11012
+        const val MEDIA_STORE_DELETE_REQUEST_CODE = 11012
 
-		const val LIB_ID = "com.nkming.nc_photos.plugin"
+        const val LIB_ID = "com.nkming.nc_photos.plugin"
 
-		const val ACTION_DOWNLOAD_CANCEL = "${LIB_ID}.ACTION_DOWNLOAD_CANCEL"
-		const val ACTION_SHOW_IMAGE_PROCESSOR_RESULT =
-			"${LIB_ID}.ACTION_SHOW_IMAGE_PROCESSOR_RESULT"
+        const val ACTION_DOWNLOAD_CANCEL = "${LIB_ID}.ACTION_DOWNLOAD_CANCEL"
 
-		const val EXTRA_NOTIFICATION_ID = "${LIB_ID}.EXTRA_NOTIFICATION_ID"
-		const val EXTRA_IMAGE_RESULT_URI = "${LIB_ID}.EXTRA_IMAGE_RESULT_URI"
-	}
+        const val EXTRA_NOTIFICATION_ID = "${LIB_ID}.EXTRA_NOTIFICATION_ID"
+    }
 }

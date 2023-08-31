@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_image_processor/np_platform_image_processor.dart';
+import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 
 part 'crop_controller.g.dart';
 

@@ -1,0 +1,2 @@
+rootProject.name = 'np_platform_raw_image'
+includeBuild '../../np_android_core'

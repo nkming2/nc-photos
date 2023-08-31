@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.nkming.nc_photos.np_platform_image_processor">
+
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+	<application>
+		<service
+			android:name=".ImageProcessorService"
+			android:exported="false" />
+	</application>
+</manifest>

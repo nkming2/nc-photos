@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/widget/image_editor/toolbar_button.dart';
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 
 enum TransformToolType {
   crop,

@@ -1,2 +1,2 @@
 rootProject.name = 'np_platform_lock'
-includeBuild '../../np_android_log'
+includeBuild '../../np_android_core'

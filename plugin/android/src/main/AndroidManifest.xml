@@ -1,11 +1,3 @@
 <manifest package="com.nkming.nc_photos.plugin"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-	<application>
-		<service
-			android:name=".ImageProcessorService"
-			android:exported="false" />
-	</application>
 </manifest>

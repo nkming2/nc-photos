@@ -23,7 +23,8 @@ import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
 import 'package:nc_photos/widget/image_editor/crop_controller.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_platform_image_processor/np_platform_image_processor.dart';
+import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 import 'package:np_ui/np_ui.dart';
 
 class ImageEditorArguments {

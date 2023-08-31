@@ -52,5 +52,5 @@ android {
 
 dependencies {
     implementation "androidx.annotation:annotation:1.6.0"
-    implementation 'com.nkming.nc_photos.np_android_log:np_android_log'
+    implementation 'com.nkming.nc_photos.np_android_core:np_android_core'
 }
