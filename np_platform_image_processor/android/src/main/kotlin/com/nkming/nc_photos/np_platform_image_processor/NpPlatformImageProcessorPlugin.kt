@@ -19,38 +19,28 @@ class NpPlatformImageProcessorPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
+		val imageProcessorHandler = ImageProcessorChannelHandler(
+			flutterPluginBinding.applicationContext
+		)
+		imageProcessorEventChannel = EventChannel(
+			flutterPluginBinding.binaryMessenger,
+			ImageProcessorChannelHandler.EVENT_CHANNEL
+		)
+		imageProcessorEventChannel.setStreamHandler(imageProcessorHandler)
 		imageProcessorMethodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			ImageProcessorChannelHandler.METHOD_CHANNEL
 		)
-		imageProcessorMethodChannel.setMethodCallHandler(
-			ImageProcessorChannelHandler(
-				flutterPluginBinding.applicationContext
-			)
-		)
-
-		val nativeEventHandler = NativeEventChannelHandler()
-		nativeEventChannel = EventChannel(
-			flutterPluginBinding.binaryMessenger,
-			NativeEventChannelHandler.EVENT_CHANNEL
-		)
-		nativeEventChannel.setStreamHandler(nativeEventHandler)
-		nativeEventMethodChannel = MethodChannel(
-			flutterPluginBinding.binaryMessenger,
-			NativeEventChannelHandler.METHOD_CHANNEL
-		)
-		nativeEventMethodChannel.setMethodCallHandler(nativeEventHandler)
+		imageProcessorMethodChannel.setMethodCallHandler(imageProcessorHandler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
+		imageProcessorEventChannel.setStreamHandler(null)
 		imageProcessorMethodChannel.setMethodCallHandler(null)
-		nativeEventChannel.setStreamHandler(null)
-		nativeEventMethodChannel.setMethodCallHandler(null)
 	}
 
 	private lateinit var imageProcessorMethodChannel: MethodChannel
-	private lateinit var nativeEventChannel: EventChannel
-	private lateinit var nativeEventMethodChannel: MethodChannel
+	private lateinit var imageProcessorEventChannel: EventChannel
 }

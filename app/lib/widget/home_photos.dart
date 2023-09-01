@@ -22,7 +22,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
-import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -31,6 +30,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/throttler.dart';
@@ -52,6 +52,7 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -87,7 +88,8 @@ class _HomePhotosState extends State<HomePhotos>
     _initBloc();
     _web?.onInitState();
     _prefUpdatedListener.begin();
-    _imageProcessorUploadSuccessListener?.begin();
+    _imageProcessorUploadSuccessListener = _imageProcessorUploadSuccessStream
+        ?.listen(_onImageProcessorUploadSuccessEvent);
     _onBackToTopListener.begin();
   }
 
@@ -95,7 +97,8 @@ class _HomePhotosState extends State<HomePhotos>
   dispose() {
     _onBackToTopListener.end();
     _prefUpdatedListener.end();
-    _imageProcessorUploadSuccessListener?.end();
+    _imageProcessorUploadSuccessListener?.cancel();
+    _imageProcessorUploadSuccessListener = null;
     _web?.onDispose();
     super.dispose();
   }
@@ -726,13 +729,15 @@ class _HomePhotosState extends State<HomePhotos>
 
   late final _prefUpdatedListener =
       AppEventListener<PrefUpdatedEvent>(_onPrefUpdated);
-  late final _imageProcessorUploadSuccessListener =
-      getRawPlatform() == NpPlatform.web
-          ? null
-          : NativeEventListener<ImageProcessorUploadSuccessEvent>(
-              _onImageProcessorUploadSuccessEvent);
   late final _onBackToTopListener =
       AppEventListener<HomePhotosBackToTopEvent>(_onBackToTop);
+
+  Stream<ImageProcessorUploadSuccessEvent>?
+      get _imageProcessorUploadSuccessStream => getRawPlatform() ==
+              NpPlatform.web
+          ? null
+          : ImageProcessor.stream.whereType<ImageProcessorUploadSuccessEvent>();
+  StreamSubscription? _imageProcessorUploadSuccessListener;
 
   late final _Web? _web =
       getRawPlatform() == NpPlatform.web ? _Web(this) : null;

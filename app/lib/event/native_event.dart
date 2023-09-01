@@ -31,9 +31,6 @@ class NativeEventListener<T> {
       case FileExifUpdatedEvent._id:
         return FileExifUpdatedEvent.fromEvent(ev);
 
-      case ImageProcessorUploadSuccessEvent._id:
-        return ImageProcessorUploadSuccessEvent.fromEvent(ev);
-
       default:
         throw ArgumentError("Invalid event: ${ev.event}");
     }
@@ -65,16 +62,4 @@ class FileExifUpdatedEvent {
   static const _id = "FileExifUpdatedEvent";
 
   final List<int> fileIds;
-}
-
-class ImageProcessorUploadSuccessEvent {
-  const ImageProcessorUploadSuccessEvent();
-
-  factory ImageProcessorUploadSuccessEvent.fromEvent(NativeEventObject ev) {
-    assert(ev.event == _id);
-    assert(ev.data == null);
-    return const ImageProcessorUploadSuccessEvent();
-  }
-
-  static const _id = "ImageProcessorUploadSuccessEvent";
 }

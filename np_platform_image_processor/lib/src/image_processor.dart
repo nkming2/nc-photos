@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:np_platform_image_processor/src/event.dart';
+import 'package:np_platform_image_processor/src/event_handler.dart';
 import 'package:np_platform_image_processor/src/k.dart' as k;
 import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 
@@ -75,6 +77,8 @@ class TransformOrientationFilter implements ImageFilter {
 }
 
 class ImageProcessor {
+  static Stream<ImageProcessorEvent> get stream => EventHandler.stream;
+
   static Future<void> zeroDce(
     String fileUrl,
     String filename,

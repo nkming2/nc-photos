@@ -11,11 +11,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  collection: ^1.15.0
   logging: ^1.1.1
+  np_codegen:
+    path: ../codegen
   np_platform_raw_image:
     path: ../np_platform_raw_image
 
 dev_dependencies:
+  build_runner: ^2.2.1
+  np_codegen_build:
+    path: ../codegen_build
   np_lints:
     path: ../np_lints
 

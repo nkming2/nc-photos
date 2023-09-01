@@ -23,7 +23,21 @@ import java.io.Serializable
 internal class ImageProcessorChannelHandler(context: Context) :
 	MethodChannel.MethodCallHandler, EventChannel.StreamHandler {
 	companion object {
+		const val EVENT_CHANNEL = "${K.LIB_ID}/image_processor_event"
 		const val METHOD_CHANNEL = "${K.LIB_ID}/image_processor_method"
+
+		fun fire(ev: ImageProcessorEvent) {
+			synchronized(eventSinks) {
+				for (s in eventSinks.values) {
+					s.success(buildMap {
+						put("event", ev.getId())
+					})
+				}
+			}
+		}
+
+		private val eventSinks = mutableMapOf<Int, EventChannel.EventSink>()
+		private var nextId = 0
 
 		private const val TAG = "ImageProcessorChannelHandler"
 	}
@@ -158,11 +172,15 @@ internal class ImageProcessorChannelHandler(context: Context) :
 	}
 
 	override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
-		eventSink = events
+		synchronized(eventSinks) {
+			eventSinks[id] = events
+		}
 	}
 
 	override fun onCancel(arguments: Any?) {
-		eventSink = null
+		synchronized(eventSinks) {
+			eventSinks.remove(id)
+		}
 	}
 
 	private fun zeroDce(
@@ -271,7 +289,7 @@ internal class ImageProcessorChannelHandler(context: Context) :
 	}
 
 	private val context = context
-	private var eventSink: EventChannel.EventSink? = null
+	private val id = nextId++
 }
 
 internal interface ImageFilter {

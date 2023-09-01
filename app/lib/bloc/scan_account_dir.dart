@@ -17,12 +17,14 @@ import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/progress_util.dart';
+import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:nc_photos/use_case/scan_dir.dart';
 import 'package:nc_photos/use_case/scan_dir_offline.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
@@ -132,7 +134,8 @@ class ScanAccountDirBloc
     _accountPrefUpdatedEventListener.begin();
 
     _nativeFileExifUpdatedListener?.begin();
-    _imageProcessorUploadSuccessListener?.begin();
+    _imageProcessorUploadSuccessListener = _imageProcessorUploadSuccessStream
+        ?.listen(_onImageProcessorUploadSuccessEvent);
 
     on<ScanAccountDirBlocEvent>(_onEvent, transformer: ((events, mapper) {
       return events.distinct((a, b) {
@@ -166,7 +169,7 @@ class ScanAccountDirBloc
   }
 
   @override
-  close() {
+  Future<void> close() {
     _fileRemovedEventListener.end();
     _filePropertyUpdatedEventListener.end();
     _fileTrashbinRestoredEventListener.end();
@@ -176,7 +179,8 @@ class ScanAccountDirBloc
     _accountPrefUpdatedEventListener.end();
 
     _nativeFileExifUpdatedListener?.end();
-    _imageProcessorUploadSuccessListener?.end();
+    _imageProcessorUploadSuccessListener?.cancel();
+    _imageProcessorUploadSuccessListener = null;
 
     _refreshThrottler.clear();
     return super.close();
@@ -526,11 +530,13 @@ class ScanAccountDirBloc
   late final _nativeFileExifUpdatedListener = getRawPlatform() == NpPlatform.web
       ? null
       : NativeEventListener<FileExifUpdatedEvent>(_onNativeFileExifUpdated);
-  late final _imageProcessorUploadSuccessListener =
-      getRawPlatform() == NpPlatform.web
+
+  Stream<ImageProcessorUploadSuccessEvent>?
+      get _imageProcessorUploadSuccessStream => getRawPlatform() ==
+              NpPlatform.web
           ? null
-          : NativeEventListener<ImageProcessorUploadSuccessEvent>(
-              _onImageProcessorUploadSuccessEvent);
+          : ImageProcessor.stream.whereType<ImageProcessorUploadSuccessEvent>();
+  StreamSubscription? _imageProcessorUploadSuccessListener;
 
   late final _refreshThrottler = Throttler(
     onTriggered: (_) {

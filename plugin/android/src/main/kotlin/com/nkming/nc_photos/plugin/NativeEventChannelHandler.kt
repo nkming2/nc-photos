@@ -1,4 +1,4 @@
-package com.nkming.nc_photos.np_platform_image_processor
+package com.nkming.nc_photos.plugin
 
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
