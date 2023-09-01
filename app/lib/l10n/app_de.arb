@@ -1,6 +1,6 @@
 {
     "appTitle": "Fotos",
-    "translator": "Andreas\nPhilProg\nSebastian",
+    "translator": "Andreas\nPhilProg\nSebastian\nOdious",
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
@@ -170,7 +170,7 @@
     "@connectingToServer2": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
-    "connectingToServerInstruction": "Bitte via den geöffneten Browser anmelden",
+    "connectingToServerInstruction": "Bitte via dem geöffneten Browser anmelden",
     "@connectingToServerInstruction": {
         "description": "Shown when the app is waiting for the user to sign in via an external browser"
     },
@@ -242,7 +242,7 @@
     "@rootPickerUnpickFailureNotification": {
         "description": "Failed while unpicking an item in the root picker list"
     },
-    "rootPickerListEmptyNotification": "Bitte wählen Sie mindestens einen Ordner aus oder drücken Sie Überspringen, um alle aufgenommen",
+    "rootPickerListEmptyNotification": "Bitte wählen Sie mindestens einen Ordner aus oder drücken Sie Überspringen, um alle aufzunehmen",
     "@rootPickerListEmptyNotification": {
         "description": "Error when user pressing confirm without picking any folders"
     },
@@ -295,6 +295,11 @@
         "description": "Memory albums contain photos taken in a specific time range in the past"
     },
     "settingsAccountTitle": "Konto",
+    "settingsAccountLabelTitle": "Bezeichnung",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Legen Sie eine Bezeichnung fest, die ansteller der Server-URL angezeigt wird",
     "settingsIncludedFoldersTitle": "Enthaltene Ordner",
     "@settingsIncludedFoldersTitle": {
         "description": "Change the included folders of an account"
@@ -615,6 +620,10 @@
     "@sortOptionAlbumNameDescendingLabel": {
         "description": "Sort by album name, in descending order"
     },
+    "sortOptionManualLabel": "Manuell",
+    "@sortOptionManualLabel": {
+        "description": "Sort manually"
+    },
     "albumEditDragRearrangeNotification": "Halten Sie ein Element gedrückt und ziehen Sie es, um es manuell neu anzuordnen",
     "@albumEditDragRearrangeNotification": {
         "description": "Instructions on how to rearrange photos"
@@ -873,6 +882,14 @@
     "@sharedWithLabel": {
         "description": "A list of users or links where this file is sharing with"
     },
+    "unshareTooltip": "Freigabe aufheben",
+    "@unshareTooltip": {
+        "description": "Remove a share"
+    },
+    "unshareSuccessNotification": "Freigabe entfernen",
+    "@unshareSuccessNotification": {
+        "description": "Removed a share"
+    },
     "locationLabel": "Ort",
     "@locationLabel": {
         "description": "Show where the file is located"
@@ -933,6 +950,10 @@
     "@addUserInputHint": {
         "description": "Input a user name to share this album with"
     },
+    "sharedAlbumInfoDialogContent": "Geteilte Alben erlauben mehreren Nutzern auf dem gleichen Server auf das gleiche Album zuzugreifen. Bitte lesen Sie die Einschränkungen sorgfältig durch, bevor Sie fortfahren",
+    "@sharedAlbumInfoDialogContent": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
     "learnMoreButtonLabel": "ERFAHRE MEHR",
     "migrateDatabaseProcessingNotification": "Aktualisiere Datenbank",
     "@migrateDatabaseProcessingNotification": {
@@ -947,6 +968,10 @@
                 "example": "2"
             }
         }
+    },
+    "homeFolderNotFoundDialogTitle": "Home-Ordner nicht gefunden",
+    "@homeFolderNotFoundDialogTitle": {
+        "description": "The app failed to scan the user's home folder on signing in"
     },
     "createCollectionTooltip": "Neues Album",
     "@createCollectionTooltip": {

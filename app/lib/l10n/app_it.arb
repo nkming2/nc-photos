@@ -4,7 +4,7 @@
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
-    "photosTabLabel": "Photos",
+    "photosTabLabel": "Foto",
     "@photosTabLabel": {
         "description": "Label of the tab that lists user photos"
     },
@@ -286,7 +286,7 @@
     "@settingsExifWifiOnlyFalseSubtitle": {
         "description": "Shown when users allow processing exif data over any network"
     },
-    "settingsMemoriesTitle": "Memories",
+    "settingsMemoriesTitle": "Ricordi",
     "@settingsMemoriesTitle": {
         "description": "Memory albums contain photos taken in a specific time range in the past"
     },
@@ -311,5 +311,1137 @@
     "settingsShareFolderDialogTitle": "Localizza la cartella condivisa",
     "@settingsShareFolderDialogTitle": {
         "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogDescription": "Questo parametro corrisponde a share_folder in config.PHP. I due valori DEVONO essere identici.\n\nPer favore definisci il percorso della cartella come in config.php.",
+    "@settingsShareFolderDialogDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderPickerDescription": "Per favore definisci il percorso della cartella come in config.php. Seleziona default de non hai impostato il parametro.",
+    "@settingsShareFolderPickerDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsServerAppSectionTitle": "Supporto all'app lato server",
+    "@settingsServerAppSectionTitle": {
+        "description": "Enable/disable various server apps"
+    },
+    "settingsPhotosDescription": "Personalizza i contenuti mostrati nella tab Foto",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "Intervallo dei ricordi",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be inclded in memories for a particular year"
+    },
+    "settingsMemoriesRangeValueText": "{range, plural, one{+-{range} giorno} other{+-{range} giorni}}\n",
+    "@settingsMemoriesRangeValueText": {
+        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+        "placeholders": {
+            "range": {
+                "example": "1"
+            }
+        }
+    },
+    "settingsViewerTitle": "Vista",
+    "settingsViewerDescription": "Personalizza la vista di immagini/video",
+    "settingsScreenBrightnessTitle": "Luminosità dello schermo",
+    "settingsScreenBrightnessDescription": "Sovrascrivi il livello di luminosità di sistema",
+    "settingsForceRotationTitle": "Ignora il blocco della rotazione",
+    "settingsForceRotationDescription": "Ruota lo schermo anche quando la rotazione automatica è disabilitata",
+    "settingsMapProviderTitle": "Fornitore di mappe",
+    "settingsShowDateInAlbumTitle": "Raggruppa le foto per data",
+    "settingsShowDateInAlbumDescription": "Si applica solo quando l'album viene ordinato per data",
+    "settingsImageEditDescription": "Personalizza i miglioramenti e l'editor dell'immagine",
+    "settingsEnhanceMaxResolutionTitle2": "Risoluzione dell'immagine per i miglioramenti",
+    "settingsEnhanceMaxResolutionDescription": "Le immagini più grandi della risoluzione selezionata verranno scalate.\n\nLe immagini ad alta risoluzione richiedono memoria e tempo di processo significativamente più lunghi. Per favore riduci gquesto parametro se l'app va in crash durante il miglioramento delle tue foto.",
+    "settingsImageEditSaveResultsToServerTitle": "Salva i risultati sul server",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "I risultati sono salvati sul server, il salvataggio locale è fallito",
+    "settingsImageEditSaveResultsToServerFalseDescription": "I risultati sono salvati su questo dispositivo",
+    "settingsThemeTitle": "Tema",
+    "settingsThemeDescription": "Personalizza l'aspetto dell'app",
+    "settingsFollowSystemThemeTitle": "Segui il tema di sistema",
+    "@settingsFollowSystemThemeTitle": {
+        "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "Colore del tema",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorDescription": "Usato per derivare tutti i colori dell'app",
+    "@settingsSeedColorDescription": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorPickerTitle": "Seleziona un colore",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
+    },
+    "settingsUseBlackInDarkThemeTitle": "Tema più scuro",
+    "@settingsUseBlackInDarkThemeTitle": {
+        "description": "Make the dark theme darker"
+    },
+    "settingsUseBlackInDarkThemeTrueDescription": "Usa il nero nel tema scuro",
+    "@settingsUseBlackInDarkThemeTrueDescription": {
+        "description": "When black in dark theme is set to true"
+    },
+    "settingsUseBlackInDarkThemeFalseDescription": "Usa grigio scuro nel tema scuro",
+    "@settingsUseBlackInDarkThemeFalseDescription": {
+        "description": "When black in dark theme is set to false"
+    },
+    "settingsMiscellaneousTitle": "Varie",
+    "settingsDoubleTapExitTitle": "Doppio tap per uscire",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "Ordina per nome del file in Photos",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
+    "settingsExperimentalTitle": "Sperimentale",
+    "settingsExperimentalDescription": "Feature non ancora pronte per l'uso quotidiano",
+    "settingsExpertTitle": "Avanzate",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "Per favore assicurati di capire a fondo cosa fa ciascuna opzione prima di procedere",
+    "settingsClearCacheDatabaseTitle": "Pulisci il database",
+    "settingsClearCacheDatabaseDescription": "Pulisci la cache e ripeti la sincronizzazione completa con il server",
+    "settingsClearCacheDatabaseSuccessNotification": "Il database è stato pulito con successo. È raccomandato il riavvio dell'app.",
+    "settingsAboutSectionTitle": "Altro",
+    "@settingsAboutSectionTitle": {
+        "description": "Title of the about section in settings widget"
+    },
+    "settingsVersionTitle": "Versione",
+    "@settingsVersionTitle": {
+        "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Server",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
+    },
+    "settingsSourceCodeTitle": "Codice sorgente",
+    "@settingsSourceCodeTitle": {
+        "description": "Title of the source code item"
+    },
+    "settingsBugReportTitle": "Riporta un problema",
+    "@settingsBugReportTitle": {
+        "description": "Report issue"
+    },
+    "settingsCaptureLogsTitle": "Cattura i log",
+    "@settingsCaptureLogsTitle": {
+        "description": "Capture app logs for bug report"
+    },
+    "settingsCaptureLogsDescription": "Aiuta gli sviluppatori a identificare bug",
+    "settingsTranslatorTitle": "Traduttore",
+    "@settingsTranslatorTitle": {
+        "description": "Title of the translator item"
+    },
+    "writePreferenceFailureNotification": "Fallita impostazione preferenza",
+    "@writePreferenceFailureNotification": {
+        "description": "Inform user that the preference file cannot be modified"
+    },
+    "enableButtonLabel": "ABILITA",
+    "@enableButtonLabel": {
+        "description": "Label of the enable button"
+    },
+    "exifSupportDetails": "Abilitare il supporto EXIF renderà disponibili vari metadati come la data dello scatto, il modello della macchinetta fotografica, ecc... Per leggere questi metadati verranno utilizzato maggiori dati per scaricare la foto a piena scala. L'app comincerà a scaricare solo quando connessa a una rete Wi-Fi",
+    "@exifSupportDetails": {
+        "description": "Detailed description of the exif support feature"
+    },
+    "exifSupportConfirmationDialogTitle": "Abilitare supporto EXIF?",
+    "@exifSupportConfirmationDialogTitle": {
+        "description": "Title of the dialog to confirm enabling exif support"
+    },
+    "captureLogDetails": "Per registrare un log per riportare un bug:\n\n1. Abilita questa opzione\n2. Riproduci il problema\n3. Disabilita questa opzione\n4. Cerca il file nc-photos.log nella cartella Download\n\n* Non sarà generaro alcun log se il problema causa il crash dell'app. In questo caso contatta gli sviluppatori per avere ulteriori istruzioni",
+    "@captureLogDetails": {
+        "description": "Detailed description on capturing logs"
+    },
+    "captureLogSuccessNotification": "Log salvato con successo",
+    "@captureLogSuccessNotification": {
+        "description": "Captured logs are successfully saved to the download directory"
+    },
+    "doneButtonLabel": "FATTO",
+    "@doneButtonLabel": {
+        "description": "Label of the done button"
+    },
+    "nextButtonLabel": "PROSSIMO",
+    "@nextButtonLabel": {
+        "description": "Label of the next button"
+    },
+    "connectButtonLabel": "CONNETTI",
+    "@connectButtonLabel": {
+        "description": "Label of the connect button"
+    },
+    "rootPickerSkipConfirmationDialogContent2": "Tutti i tuoi file saranno inclusi\n Questo aumenterà l'utilizzo di memoria e degraderà le prestazioni",
+    "@rootPickerSkipConfirmationDialogContent2": {
+        "description": "Warn user not to include all files in their server"
+    },
+    "megapixelCount": "{count}MP",
+    "@megapixelCount": {
+        "description": "Resolution of an image in megapixel",
+        "placeholders": {
+            "count": {
+                "example": "1.3"
+            }
+        }
+    },
+    "secondCountSymbol": "{count}s",
+    "@secondCountSymbol": {
+        "description": "Number of seconds",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "millimeterCountSymbol": "{count}mm",
+    "@millimeterCountSymbol": {
+        "description": "Number of millimeters",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "detailsTooltip": "Dettagli",
+    "@detailsTooltip": {
+        "description": "Tooltip of the details button"
+    },
+    "downloadTooltip": "Scarica",
+    "@downloadTooltip": {
+        "description": "Tooltip of the download button"
+    },
+    "downloadProcessingNotification": "File in scaricamento",
+    "@downloadProcessingNotification": {
+        "description": "Inform user that the file is being downloaded"
+    },
+    "downloadSuccessNotification": "File scaricato correttamente",
+    "@downloadSuccessNotification": {
+        "description": "Inform user that the file is downloaded successfully"
+    },
+    "downloadFailureNotification": "Scaricamento del file fallito",
+    "@downloadFailureNotification": {
+        "description": "Inform user that the file cannot be downloaded"
+    },
+    "nextTooltip": "Successivo",
+    "@nextTooltip": {
+        "description": "Tooltip of the next button"
+    },
+    "previousTooltip": "Precedente",
+    "@previousTooltip": {
+        "description": "Tooltip of the previous button"
+    },
+    "webSelectRangeNotification": "Tieni premuto e clicca per selezionare tutto nell'intervallo",
+    "@webSelectRangeNotification": {
+        "description": "Inform web user how to select items in range"
+    },
+    "mobileSelectRangeNotification": "Tieni premuto un altro elemento per selezionare tutto nell'intervallo",
+    "@mobileSelectRangeNotification": {
+        "description": "Inform mobile user how to select items in range"
+    },
+    "updateDateTimeDialogTitle": "Modifica la data e l'ora",
+    "@updateDateTimeDialogTitle": {
+        "description": "Dialog to modify the date & time of a file"
+    },
+    "dateSubtitle": "Data",
+    "timeSubtitle": "Ora",
+    "dateYearInputHint": "Anno",
+    "dateMonthInputHint": "Mese",
+    "dateDayInputHint": "Giorno",
+    "timeHourInputHint": "Ora",
+    "timeMinuteInputHint": "Minuto",
+    "timeSecondInputHint": "Secondo",
+    "dateTimeInputInvalid": "Valore non valido",
+    "@dateTimeInputInvalid": {
+        "description": "Invalid date/time input (e.g., non-numeric characters)"
+    },
+    "updateDateTimeFailureNotification": "Modifica di ora e data fallita",
+    "@updateDateTimeFailureNotification": {
+        "description": "Failed to set the date & time of a file"
+    },
+    "albumDirPickerHeaderText": "Seleziona le cartelle da associare",
+    "@albumDirPickerHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerSubHeaderText": "Solo le foto nelle cartelle da associare saranno incluse in questo album",
+    "@albumDirPickerSubHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerListEmptyNotification": "Per favore seleziona almeno una cartella",
+    "@albumDirPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "importFoldersTooltip": "Importa cartelle",
+    "@importFoldersTooltip": {
+        "description": "Menu entry in the album page to import folders as albums"
+    },
+    "albumImporterHeaderText": "Importa le cartelle come album",
+    "@albumImporterHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "albumImporterSubHeaderText": "Le cartelle suggerite sono elencate in basso. A seconda del numero di file nel tuo server ci può mettere un po'",
+    "@albumImporterSubHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "importButtonLabel": "IMPORTA",
+    "albumImporterProgressText": "importazione delle cartelle in corso",
+    "@albumImporterProgressText": {
+        "description": "Message shown while importing"
+    },
+    "doneButtonTooltip": "Fatto",
+    "editTooltip": "Modifica",
+    "editAccountConflictFailureNotification": "Esiste già un account con le stesse impostazioni",
+    "@editAccountConflictFailureNotification": {
+        "description": "Error when user modified an account such that it's identical to another one"
+    },
+    "genericProcessingDialogContent": "Attendi per favore",
+    "@genericProcessingDialogContent": {
+        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+    },
+    "sortTooltip": "Ordina",
+    "sortOptionDialogTitle": "Ordina per",
+    "@sortOptionDialogTitle": {
+        "description": "Select how the photos should be sorted"
+    },
+    "sortOptionTimeAscendingLabel": "Prima i più vecchi",
+    "@sortOptionTimeAscendingLabel": {
+        "description": "Sort by time, in ascending order"
+    },
+    "sortOptionTimeDescendingLabel": "Prima i più recenti",
+    "@sortOptionTimeDescendingLabel": {
+        "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "Nome del file",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "Nome del file (decrescente)",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
+    },
+    "sortOptionAlbumNameLabel": "Nome dell'album",
+    "@sortOptionAlbumNameLabel": {
+        "description": "Sort by album name, in ascending order"
+    },
+    "sortOptionAlbumNameDescendingLabel": "Nome dell'album (decrescente)",
+    "@sortOptionAlbumNameDescendingLabel": {
+        "description": "Sort by album name, in descending order"
+    },
+    "sortOptionManualLabel": "Manuale",
+    "@sortOptionManualLabel": {
+        "description": "Sort manually"
+    },
+    "albumEditDragRearrangeNotification": "Tieni premuto e sposta un elemento per riposizionarlo manualmente",
+    "@albumEditDragRearrangeNotification": {
+        "description": "Instructions on how to rearrange photos"
+    },
+    "albumAddTextTooltip": "Aggiungi testo",
+    "@albumAddTextTooltip": {
+        "description": "Add some text that display between photos to an album"
+    },
+    "shareTooltip": "Condividi",
+    "@shareTooltip": {
+        "description": "Share selected items to other apps"
+    },
+    "shareSelectedEmptyNotification": "Seleziona alcune foto da condividere",
+    "@shareSelectedEmptyNotification": {
+        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+    },
+    "shareDownloadingDialogContent": "Scaricamento in corso",
+    "@shareDownloadingDialogContent": {
+        "description": "Downloading photos to be shared"
+    },
+    "searchTooltip": "Cerca",
+    "clearTooltip": "Pulisci",
+    "@clearTooltip": {
+        "description": "Clear some sort of user input, typically a text field"
+    },
+    "listNoResultsText": "Nessun risultato",
+    "@listNoResultsText": {
+        "description": "When there's nothing in a list"
+    },
+    "listEmptyText": "Vuoto",
+    "@listEmptyText": {
+        "description": "When there's nothing in a list"
+    },
+    "albumTrashLabel": "Cestino",
+    "@albumTrashLabel": {
+        "description": "Deleted photos"
+    },
+    "restoreTooltip": "Ripristina",
+    "@restoreTooltip": {
+        "description": "Restore selected items from trashbin"
+    },
+    "restoreSelectedProcessingNotification": "{count, plural, one{Ripristino 1 elemento} other{Ripristino {count} elementi}}",
+    "@restoreSelectedProcessingNotification": {
+        "description": "Restoring selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreSelectedSuccessNotification": "Tutto gli elementi sono stati ripristinati",
+    "@restoreSelectedSuccessNotification": {
+        "description": "Restored all selected items from trashbin successfully"
+    },
+    "restoreSelectedFailureNotification": "{count, plural, one{Ripristino 1 elemento fallito} other{Ripristino {count} elementi fallito}}",
+    "@restoreSelectedFailureNotification": {
+        "description": "Cannot restore some of the selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreProcessingNotification": "Ripristino in corso",
+    "@restoreProcessingNotification": {
+        "description": "Restoring the opened item from trashbin"
+    },
+    "restoreSuccessNotification": "Elementi ripristinati correttamente",
+    "@restoreSuccessNotification": {
+        "description": "Restored the opened item from trashbin successfully"
+    },
+    "restoreFailureNotification": "Ripristino fallito",
+    "@restoreFailureNotification": {
+        "description": "Cannot restore the opened item from trashbin"
+    },
+    "deletePermanentlyTooltip": "Elimina definitivamente",
+    "@deletePermanentlyTooltip": {
+        "description": "Permanently delete selected items from trashbin"
+    },
+    "deletePermanentlyConfirmationDialogTitle": "Eliminato definitivamente",
+    "@deletePermanentlyConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "deletePermanentlyConfirmationDialogContent": "Gli elementi elezionati verranno cancellati definitivamente dal server",
+    "@deletePermanentlyConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "albumSharedLabel": "Condiviso",
+    "@albumSharedLabel": {
+        "description": "A small label placed next to a shared album"
+    },
+    "metadataTaskProcessingNotification": "Processando i metadati delle immagini in background",
+    "@metadataTaskProcessingNotification": {
+        "description": "Shown when the app is reading image metadata"
+    },
+    "metadataTaskPauseNoWiFiNotification": "In attesa di Wi-Fi",
+    "@metadataTaskPauseNoWiFiNotification": {
+        "description": "Shown when the app has paused reading image metadata"
+    },
+    "configButtonLabel": "CONFIGURAZIONE",
+    "useAsAlbumCoverTooltip": "Usa come copertina dell'album",
+    "helpTooltip": "Aiuto",
+    "helpButtonLabel": "AIUTO",
+    "removeFromAlbumTooltip": "Rimuovi dall'album",
+    "@removeFromAlbumTooltip": {
+        "description": "Remove the opened photo from an album"
+    },
+    "changelogTitle": "Registro delle modifiche",
+    "@changelogTitle": {
+        "description": "Title of the changelog page"
+    },
+    "serverCertErrorDialogTitle": "Il certificato del server non è sicuro",
+    "@serverCertErrorDialogTitle": {
+        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
+    },
+    "serverCertErrorDialogContent": "Il server può essere stato compromesso oppure qualcuno sta cercando di rubare le tue informazioni",
+    "@serverCertErrorDialogContent": {
+        "description": "Warn user about an untrusted SSL certificate"
+    },
+    "advancedButtonLabel": "AVANZATE",
+    "@advancedButtonLabel": {
+        "description": "Label of the advanced button"
+    },
+    "whitelistCertDialogTitle": "Vuoi accettare un certificato sconosciuto?",
+    "@whitelistCertDialogTitle": {
+        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+    },
+    "whitelistCertDialogContent": "È possibile inserire il certificato nella lista bianca per far sì che l'applicazione lo accetti. ATTENZIONE: questo comporta un grande rischio per la sicurezza. Assicuratevi che il certificato sia autofirmato da voi o da una persona fidata\n\nHost: {host}\nImpronta digitale: {fingerprint}",
+    "@whitelistCertDialogContent": {
+        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
+        "placeholders": {
+            "host": {
+                "example": "www.example.com"
+            },
+            "fingerprint": {
+                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+            }
+        }
+    },
+    "whitelistCertButtonLabel": "ACCETTA IL RISCHIO E METTI IN LISTA BIANCA",
+    "@whitelistCertButtonLabel": {
+        "description": "Label of the whitelist certificate button"
+    },
+    "fileSharedByDescription": "Condiviso con te da questo utente",
+    "@fileSharedByDescription": {
+        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+    },
+    "emptyTrashbinTooltip": "Svuota il cestino",
+    "@emptyTrashbinTooltip": {
+        "description": "Permanently delete all items from trashbin"
+    },
+    "emptyTrashbinConfirmationDialogTitle": "Svuota il cestino",
+    "@emptyTrashbinConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "emptyTrashbinConfirmationDialogContent": "Tutti gli elementi saranno cancellati permanentemente dal server.\n\nQuesta azione non è reversibile.",
+    "@emptyTrashbinConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "unsetAlbumCoverTooltip": "Rimuovi copertina",
+    "@unsetAlbumCoverTooltip": {
+        "description": "Unset the cover of the opened album"
+    },
+    "muteTooltip": "Silenzia",
+    "@muteTooltip": {
+        "description": "Mute the video player"
+    },
+    "collectionPeopleLabel": "Persone",
+    "@collectionPeopleLabel": {
+        "description": "Browse photos grouped by person"
+    },
+    "slideshowSetupDialogTitle": "Imposta slideshow",
+    "@slideshowSetupDialogTitle": {
+        "description": "Setup slideshow before starting"
+    },
+    "slideshowSetupDialogDurationTitle": "Durata dell'immagine (MM:SS)",
+    "@slideshowSetupDialogDurationTitle": {
+        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+    },
+    "slideshowSetupDialogShuffleTitle": "Mischia",
+    "@slideshowSetupDialogShuffleTitle": {
+        "description": "Whether to shuffle the collection"
+    },
+    "slideshowSetupDialogRepeatTitle": "Ripeti",
+    "@slideshowSetupDialogRepeatTitle": {
+        "description": "Whether to restart the slideshow from the beginning after the last slide"
+    },
+    "slideshowSetupDialogReverseTitle": "Inverti",
+    "@slideshowSetupDialogReverseTitle": {
+        "description": "Whether to play the slideshow in reverse order"
+    },
+    "linkCopiedNotification": "Link copiato",
+    "@linkCopiedNotification": {
+        "description": "Copied the share link to clipboard"
+    },
+    "shareMethodDialogTitle": "Condividi come",
+    "@shareMethodDialogTitle": {
+        "description": "Let the user pick how they want to share"
+    },
+    "shareMethodPreviewTitle": "Anteprima",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "Condividi con altre app una anteprima di qualità ridotta (solo immagini)",
+    "shareMethodOriginalFileTitle": "File originale",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "Scarica il file originale e condividilo con altre app",
+    "shareMethodPublicLinkTitle": "Collegamento pubblico",
+    "@shareMethodPublicLinkTitle": {
+        "description": "Create a share link on server and share it"
+    },
+    "shareMethodPublicLinkDescription": "Crea un nuovo collegamento pubblico sul server. Chiunque abbia il collegamento può accedere al file",
+    "shareMethodPasswordLinkTitle": "Collegamento protetto da password",
+    "@shareMethodPasswordLinkTitle": {
+        "description": "Create a password protected share link on server and share it"
+    },
+    "shareMethodPasswordLinkDescription": "Crea un nuovo collegamento protetto da password al server",
+    "collectionSharingLabel": "Condivisione",
+    "@collectionSharingLabel": {
+        "description": "List items being shared by the current account"
+    },
+    "fileLastSharedDescription": "Ultima condivisione il {date}",
+    "@fileLastSharedDescription": {
+        "description": "The date when this file was last shared by you",
+        "placeholders": {
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "fileLastSharedByOthersDescription": "{user} ha condiviso con te il {date}",
+    "@fileLastSharedByOthersDescription": {
+        "description": "The date when this file was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "albumLastSharedByOthersDescription": "{user} ha condiviso con te un albun il {date}",
+    "@albumLastSharedByOthersDescription": {
+        "description": "The date when this album was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "sharedWithLabel": "Condiviso con",
+    "@sharedWithLabel": {
+        "description": "A list of users or links where this file is sharing with"
+    },
+    "unshareTooltip": "Rimuovi condivisione",
+    "@unshareTooltip": {
+        "description": "Remove a share"
+    },
+    "unshareSuccessNotification": "Condivisione rimossa",
+    "@unshareSuccessNotification": {
+        "description": "Removed a share"
+    },
+    "locationLabel": "Luogo",
+    "@locationLabel": {
+        "description": "Show where the file is located"
+    },
+    "multipleFilesLinkShareDialogContent": "Nextcloud non supporta collegamenti di condivisione a file multipli. L'app invece COPIA i file un una nuova cartella e condivide la cartella.",
+    "@multipleFilesLinkShareDialogContent": {
+        "description": "Dialog shown when sharing multiple files as link"
+    },
+    "folderNameInputHint": "Nome della cartella",
+    "@folderNameInputHint": {
+        "description": "Input field for folder name"
+    },
+    "folderNameInputInvalidEmpty": "Per favore inserisci il nome della cartella",
+    "@folderNameInputInvalidEmpty": {
+        "description": "Folder name cannot be left empty"
+    },
+    "folderNameInputInvalidCharacters": "Contiene caratteri non validi",
+    "@folderNameInputInvalidCharacters": {
+        "description": "Folder name contains characters that are not allowed"
+    },
+    "createShareProgressText": "Creando la condivisione",
+    "@createShareProgressText": {
+        "description": "Message shown when sharing files"
+    },
+    "copyItemsFailureNotification": "{count, plural, one{Copia 1 elemento fallita} other{Copia {count} elementi fallita}}",
+    "@copyItemsFailureNotification": {
+        "description": "Error message shown when some files cannot be copied",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unshareLinkShareDirDialogTitle": "Cancellare la cartella?",
+    "@unshareLinkShareDirDialogTitle": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "unshareLinkShareDirDialogContent": "Questa cartella è stata creata dall'app per condividere più file come link. Ora non è più condivisa con alcuno, vuoi cancellarla?",
+    "@unshareLinkShareDirDialogContent": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "addToCollectionsViewTooltip": "Aggiungi a Collezioni",
+    "@addToCollectionsViewTooltip": {
+        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+    },
+    "shareAlbumDialogTitle": "Condividi con",
+    "@shareAlbumDialogTitle": {
+        "description": "Dialog to share an album with another user"
+    },
+    "shareAlbumSuccessWithErrorNotification": "Album condiviso con {user}, ma alcuni file non sono stati condivisi per un problema",
+    "@shareAlbumSuccessWithErrorNotification": {
+        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "unshareAlbumSuccessWithErrorNotification": "La condivisione dell'album è stata rimossa con {user}, ma è fallita per alcuni file",
+    "@unshareAlbumSuccessWithErrorNotification": {
+        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "fixSharesTooltip": "Aggiusta le condivisioni",
+    "@fixSharesTooltip": {
+        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+    },
+    "fixTooltip": "Aggiusta",
+    "@fixTooltip": {
+        "description": "Fix an issue"
+    },
+    "fixAllTooltip": "Aggiusta tutto",
+    "@fixAllTooltip": {
+        "description": "Fix all listed issues"
+    },
+    "missingShareDescription": "Non condiviso con {user}",
+    "@missingShareDescription": {
+        "description": "The album is shared with user but a file is NOT",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "extraShareDescription": "Condiviso con {user}",
+    "@extraShareDescription": {
+        "description": "The album is NOT shared with user but a file is",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "defaultButtonLabel": "PREDEFINITO",
+    "addUserInputHint": "Aggiungi utente",
+    "@addUserInputHint": {
+        "description": "Input a user name to share this album with"
+    },
+    "sharedAlbumInfoDialogTitle": "Album condiviso",
+    "@sharedAlbumInfoDialogTitle": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "sharedAlbumInfoDialogContent": "Gli album condivisi permettono a più utenti dello stesso server di accedere allo stesso album. Per favore leggi attentamente le limitazioni prima di procedere",
+    "@sharedAlbumInfoDialogContent": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "learnMoreButtonLabel": "MOSTRA DI PIÙ",
+    "migrateDatabaseProcessingNotification": "Aggiornando il databasw",
+    "@migrateDatabaseProcessingNotification": {
+        "description": "Migrate database to work with the updated app"
+    },
+    "migrateDatabaseFailureNotification": "Migrazione del database fallita",
+    "memoryAlbumName": "{count, plurale one {1 anno fa} other {{count} anni fa}}",
+    "@memoryAlbumName": {
+        "description": "Memory albums are generated by the app and include photos in the past years",
+        "placeholders": {
+            "count": {
+                "example": "2"
+            }
+        }
+    },
+    "homeFolderNotFoundDialogTitle": "La cartella home non è stata trovata",
+    "@homeFolderNotFoundDialogTitle": {
+        "description": "The app failed to scan the user's home folder on signing in"
+    },
+    "homeFolderNotFoundDialogContent": "Per favore correggi l'URL WebDAV qui sotto. Puoi trovare l'URL nell'interfaccia web di Nextcloud.",
+    "@homeFolderNotFoundDialogContent": {
+        "description": "Ask the user to provide us the correct WebDAV URL"
+    },
+    "homeFolderInputInvalidEmpty": "Per favore inserisci il nome della tua cartella home",
+    "@homeFolderInputInvalidEmpty": {
+        "description": "Home folder can't be left empty"
+    },
+    "createCollectionTooltip": "Nuova collezione",
+    "@createCollectionTooltip": {
+        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+    },
+    "createCollectionDialogAlbumLabel": "Album",
+    "@createCollectionDialogAlbumLabel": {
+        "description": "Create an album as collection"
+    },
+    "createCollectionDialogAlbumDescription": "Mostra le foto aggiunte da te nel server",
+    "@createCollectionDialogAlbumDescription": {
+        "description": "Describe how an album collection works"
+    },
+    "createCollectionDialogFolderLabel": "Cartella",
+    "@createCollectionDialogFolderLabel": {
+        "description": "Create a folder as collection"
+    },
+    "createCollectionDialogFolderDescription": "Mostra le foto dentro una cartella",
+    "@createCollectionDialogFolderDescription": {
+        "description": "Describe how a folder collection works"
+    },
+    "collectionFavoritesLabel": "Preferiti",
+    "@collectionFavoritesLabel": {
+        "description": "Browse photos added to favorites"
+    },
+    "favoriteTooltip": "Preferito",
+    "@favoriteTooltip": {
+        "description": "Add photo to favorites"
+    },
+    "favoriteSuccessNotification": "Aggiunto ai preferiti",
+    "@favoriteSuccessNotification": {
+        "description": "Successfully added photos to favorites"
+    },
+    "favoriteFailureNotification": "Non aggiunto ai preferiti per un problema",
+    "@favoriteFailureNotification": {
+        "description": "Failed adding photos to favorites"
+    },
+    "unfavoriteTooltip": "Rimovi dai preferiti",
+    "@unfavoriteTooltip": {
+        "description": "Remove photo to favorites"
+    },
+    "unfavoriteSuccessNotification": "Rimosso dai preferiti",
+    "@unfavoriteSuccessNotification": {
+        "description": "Successfully removed photos from favorites"
+    },
+    "unfavoriteFailureNotification": "Non rimosso dai preferiti per errore",
+    "@unfavoriteFailureNotification": {
+        "description": "Failed removing photos from favorites"
+    },
+    "createCollectionDialogTagLabel": "Tag",
+    "@createCollectionDialogTagLabel": {
+        "description": "Create a collection containing files with tags"
+    },
+    "createCollectionDialogTagDescription": "Mostra le foto con un tag specifico",
+    "@createCollectionDialogTagDescription": {
+        "description": "Describe how a tag collection works"
+    },
+    "addTagInputHint": "Aggiungi tag",
+    "@addTagInputHint": {
+        "description": "Input a tag"
+    },
+    "tagPickerNoTagSelectedNotification": "Per favore aggiungi almeno un tag",
+    "@tagPickerNoTagSelectedNotification": {
+        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+    },
+    "backgroundServiceStopping": "Fermando il servizio",
+    "@backgroundServiceStopping": {
+        "description": "The background service is stopping itself"
+    },
+    "metadataTaskPauseLowBatteryNotification": "La batteria è scarica",
+    "@metadataTaskPauseLowBatteryNotification": {
+        "description": "Shown when the app has paused reading image metadata due to low battery"
+    },
+    "enhanceTooltip": "Migliora",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "MIGLIORA",
+    "enhanceIntroDialogTitle": "Migliora le tue foto",
+    "enhanceIntroDialogDescription": "Le tue foto sono processate localmente nel tuo dispositivo. Sono ridotte a 2048x1536 per preimpostazione. Puoi modificare la risoluzione di uscita su Impostazioni",
+    "enhanceLowLightTitle": "Migliora sottoesposizione",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "Aumenta la luminosità delle foto sottoesposte",
+    "enhanceLowLightParamBrightnessLabel": "Luminosità",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "Modificata (localmente)",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "Gli elementi selezionati saranno eliminati permanentemente dal dispositivo.\n\nQuesta azione è irreversibile",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "Sfocatura del ritratto",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "Sfoca lo sfondo delle tue foto, funziona al meglio con i ritratti",
+    "enhancePortraitBlurParamBlurLabel": "Sfocatura",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Super risoluzione (4x)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "Quadruplica la risoluzione delle tue foto (consulta la guida per dettagli su come si applica la massima risoluzione)",
+    "enhanceStyleTransferTitle": "Trasferisci stile",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "Scegli uno stile",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "Trasferisci lo stile dell'immagine da una immagine di riferimento alle tue foto",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Scegli uno stile",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopDescription": "Desatura lo sfondo, funziona al meglio con i primi piani",
+    "enhanceGenericParamWeightLabel": "Peso",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchTitle": "Auto ritocco",
+    "@enhanceRetouchTitle": {
+        "description": "Automatically improve your photo"
+    },
+    "enhanceRetouchDescription": "Ritocca automaticamente le tue foto, migliora il colore e vitalità",
+    "doubleTapExitNotification": "Un altro tap per uscire",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "Scarti le modifiche?",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "Le tue modifiche non sono state salvate",
+    "discardButtonLabel": "SCARTA",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "Salva",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditColorBrightness": "Luminosità",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "imageEditColorContrast": "Contrasto",
+    "@imageEditColorContrast": {
+        "description": "Adjust the contrast of an image"
+    },
+    "imageEditColorWhitePoint": "Punto bianco",
+    "@imageEditColorWhitePoint": {
+        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+    },
+    "imageEditColorBlackPoint": "Punto nero",
+    "@imageEditColorBlackPoint": {
+        "description": "Adjust the black point of an image"
+    },
+    "imageEditColorSaturation": "Saturazione",
+    "@imageEditColorSaturation": {
+        "description": "Adjust the color saturation of an image"
+    },
+    "imageEditColorWarmth": "Calore",
+    "@imageEditColorWarmth": {
+        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+    },
+    "imageEditColorTint": "Tinta",
+    "@imageEditColorTint": {
+        "description": "Shift colors from a green to a magenta tint"
+    },
+    "imageEditTitle": "Anteprima modifiche",
+    "@imageEditTitle": {
+        "description": "Title of the image editor"
+    },
+    "imageEditToolbarColorLabel": "Colore",
+    "@imageEditToolbarColorLabel": {
+        "description": "Label of the color tools. These can be used to adjust the color of an image"
+    },
+    "imageEditToolbarTransformLabel": "Trasforma",
+    "@imageEditToolbarTransformLabel": {
+        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+    },
+    "imageEditTransformOrientation": "Orientamento",
+    "@imageEditTransformOrientation": {
+        "description": "Change the orientation of the image, 90 degree per step"
+    },
+    "imageEditTransformOrientationClockwise": "orario",
+    "@imageEditTransformOrientationClockwise": {
+        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformOrientationCounterclockwise": "antiorario",
+    "@imageEditTransformOrientationCounterclockwise": {
+        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformCrop": "Taglia",
+    "@imageEditTransformCrop": {
+        "description": "Crop the image"
+    },
+    "categoriesLabel": "Categorie",
+    "searchLandingCategoryVideosLabel": "Video",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "FILTRI",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "Cerca filtri",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "APPLICA",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "Qualunque",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "Vero",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "Falso",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "Tipo",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "Immagine",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "immagini",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "Video",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "video",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "Preferito",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "searchFilterBubbleFavoriteTrueText": "preferiti",
+    "@searchFilterBubbleFavoriteTrueText": {
+        "description": "List of active search filters shown in the result page (by favorites, true)"
+    },
+    "searchFilterBubbleFavoriteFalseText": "non preferiti",
+    "@searchFilterBubbleFavoriteFalseText": {
+        "description": "List of active search filters shown in the result page (by favorites, false)"
+    },
+    "showAllButtonLabel": "MOSTRA TUTTO",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceText": "Vicinanze {place}",
+    "@gpsPlaceText": {
+        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+        "placeholders": {
+            "place": {}
+        }
+    },
+    "gpsPlaceAboutDialogTitle": "Info sul posto",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "La posizione è approssimativa e non c'è garanzia circa l'accuratezza. Non rappresenta la nostra visione su alcuna area disputata.",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "Luoghi",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "Salvataggio del riaultato",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogContent": "Seleziona dove salvare le immagini processate. Se hai scelto di salvarle sul server e l'app non riesce a caricarle, verranno salvare sul tuo dispositivo.",
+    "@imageSaveOptionDialogContent": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "DISPOSITIVO",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "SERVER",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "Prima sincronizzazione con il server",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "loopTooltip": "Ciclo",
+    "@loopTooltip": {
+        "description": "Enable or disable loop in the video player"
+    },
+    "createCollectionFailureNotification": "Fallita la creazione di una collezione",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Aggiungi a collezione",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Non aggiunto alla collezione per un problema",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Copertina non impostata per un problema",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Esporta",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Esporta collezione",
+    "createCollectionDialogNextcloudAlbumLabel": "Album Nextcloud",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "Gli album su server richiedono Nextcloud 25 o superiore",
+    "removeCollectionsFailedNotification": "Qualche collezione non è stata rimossa per un problema",
+    "errorUnauthenticated": "Accesso non autenticato. Accedi nuovamente se il problema persiste",
+    "@errorUnauthenticated": {
+        "description": "Error message when server responds with HTTP401"
+    },
+    "errorDisconnected": "Impossibile connettersi. Il server può essere offline o il tuo dispositivo può essere disconnesso",
+    "@errorDisconnected": {
+        "description": "Error message when the app can't connect to the server"
+    },
+    "errorLocked": "Il file è bloccato nel server. Riprova più tardi",
+    "@errorLocked": {
+        "description": "Error message when server responds with HTTP423"
+    },
+    "errorInvalidBaseUrl": "Impossibile comunicare. Verifica che l'indirizzo sia l'URL di base della tua istanza Nextcloud",
+    "@errorInvalidBaseUrl": {
+        "description": "Error message when the base URL is invalid"
+    },
+    "errorWrongPassword": "Impossibile autenticarsi. Verifica nome utente e password",
+    "@errorWrongPassword": {
+        "description": "Error message when the username or password is wrong"
+    },
+    "errorServerError": "Errore del server. Verifica la configurazione del server",
+    "@errorServerError": {
+        "description": "HTTP 500"
+    },
+    "errorAlbumDowngrade": "Non è possibile modificare l'album perché creato con una versione successiva di questa app. Aggiorna l'app e riprova",
+    "@errorAlbumDowngrade": {
+        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+    },
+    "errorNoStoragePermission": "Richiede il permesso di accedere all'archivio",
+    "@errorNoStoragePermission": {
+        "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Metadati del file",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsSeedColorSystemColorDescription": "Usa in colori di sistema",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "USA I COLORI DI SISTEMA",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Premere impostazioni per cambiare fornitore o premere aiuto per saperne di più",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Impostazioni account",
+    "contributorsTooltip": "Contributori",
+    "setAsTooltip": "Imposta come",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Stai per scollegarti da {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
     }
 }

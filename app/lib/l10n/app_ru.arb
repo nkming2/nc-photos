@@ -1,6 +1,6 @@
 {
     "appTitle": "Фото",
-    "translator": "kvasenok\nmeixnt & eriane",
+    "translator": "kvasenok\nmeixnt & eriane\nRandomRoot",
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
@@ -166,9 +166,21 @@
             }
         }
     },
+    "connectingToServer2": "Ожидание ответа от сервера",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Пожалуйста, авторизуйтесь через браузер",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
     "nameInputHint": "Название альбома",
     "@nameInputHint": {
         "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "Введите название",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
     },
     "skipButtonLabel": "ПРОПУСТИТЬ",
     "@skipButtonLabel": {
@@ -185,6 +197,10 @@
     "signIn2faHintText": "Воспользуйтесь паролем приложения, если на сервере действует двухфакторная аутентификация",
     "@signIn2faHintText": {
         "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\nВход",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
     },
     "serverAddressInputHint": "Адрес сервера",
     "@serverAddressInputHint": {
@@ -250,6 +266,10 @@
     "@settingsLanguageTitle": {
         "description": "Set display language"
     },
+    "settingsLanguageOptionSystemDefaultLabel": "По умолчанию",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
     "settingsExifSupportTitle": "Поддержка EXIF",
     "@settingsExifSupportTitle": {
         "description": "Title of the EXIF support setting"
@@ -257,6 +277,14 @@
     "settingsExifSupportTrueSubtitle": "Повышенный расход трафика",
     "@settingsExifSupportTrueSubtitle": {
         "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsExifWifiOnlyTitle": "Обработка EXIF только через Wi-Fi",
+    "@settingsExifWifiOnlyTitle": {
+        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+    },
+    "settingsExifWifiOnlyFalseSubtitle": "Возможна плата за передачу данных",
+    "@settingsExifWifiOnlyFalseSubtitle": {
+        "description": "Shown when users allow processing exif data over any network"
     },
     "settingsMemoriesTitle": "Воспоминания",
     "@settingsMemoriesTitle": {
@@ -267,6 +295,11 @@
         "description": "Memory albums contain photos taken in a specific time range in the past"
     },
     "settingsAccountTitle": "Учётная запись",
+    "settingsAccountLabelTitle": "Ярлык",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Установить текст, который будет отображаться вместо URL-адреса сервера",
     "settingsIncludedFoldersTitle": "Выбранные папки",
     "@settingsIncludedFoldersTitle": {
         "description": "Change the included folders of an account"
@@ -291,6 +324,23 @@
     "@settingsServerAppSectionTitle": {
         "description": "Enable/disable various server apps"
     },
+    "settingsPhotosDescription": "Настройка содержимого, отображаемого на вкладке Фото",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "Диапазон воспоминаний",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be inclded in memories for a particular year"
+    },
+    "settingsMemoriesRangeValueText": "{range, plural, =1{+-{range} день} other{+-{range} дней}}",
+    "@settingsMemoriesRangeValueText": {
+        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+        "placeholders": {
+            "range": {
+                "example": "1"
+            }
+        }
+    },
     "settingsViewerTitle": "Просмотр",
     "settingsViewerDescription": "Настройки просмотра фото/видео",
     "settingsScreenBrightnessTitle": "Яркость экрана",
@@ -300,11 +350,36 @@
     "settingsMapProviderTitle": "Постащик карт",
     "settingsShowDateInAlbumTitle": "Группировать фото по дате",
     "settingsShowDateInAlbumDescription": "Применяется только в том случае, если альбом отсортирован по времени",
+    "settingsImageEditTitle": "Редактор",
+    "@settingsImageEditTitle": {
+        "description": "Include settings for image enhancements and the image editor"
+    },
+    "settingsImageEditDescription": "Настроить параметры улучшений и редактора изображений",
+    "settingsEnhanceMaxResolutionTitle2": "Разрешение изображения для улучшений",
+    "settingsEnhanceMaxResolutionDescription": "Фотографии, размер которых превышает выбранное разрешение, будут уменьшены.\n\nДля обработки фотографий высокого разрешения требуется значительно больше памяти и времени. Уменьшите этот параметр, если при улучшении фотографий произошел сбой приложения.",
+    "settingsImageEditSaveResultsToServerTitle": "Сохранить результат на сервер",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "Результаты сохраняются на сервере, а в случае неудачи - на устройстве",
+    "settingsImageEditSaveResultsToServerFalseDescription": "Результаты сохраняются на этом устройстве",
     "settingsThemeTitle": "Оформление",
     "settingsThemeDescription": "Настройки внешнего вида приложения",
     "settingsFollowSystemThemeTitle": "Использовать системные настройки",
     "@settingsFollowSystemThemeTitle": {
         "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "Цвет темы",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorDescription": "Для получения всех цветов, используемых в приложении",
+    "@settingsSeedColorDescription": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorPickerTitle": "Выберите цвет",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
     },
     "settingsUseBlackInDarkThemeTitle": "Тёмная тема",
     "@settingsUseBlackInDarkThemeTitle": {
@@ -318,8 +393,25 @@
     "@settingsUseBlackInDarkThemeFalseDescription": {
         "description": "When black in dark theme is set to false"
     },
+    "settingsMiscellaneousTitle": "Разное",
+    "settingsDoubleTapExitTitle": "Двойной тап для выхода",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "Сортировка по имени в Фото",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
     "settingsExperimentalTitle": "Экспериментальные",
     "settingsExperimentalDescription": "Функции, которые не готовы к повседневному использованию",
+    "settingsExpertTitle": "Расширенные",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "Прежде чем приступить к работе, убедитесь, что вы полностью понимаете, что делает каждый параметр",
+    "settingsClearCacheDatabaseTitle": "Очистить базу данных файлов",
+    "settingsClearCacheDatabaseDescription": "Очистить кэш и запустить полную синхронизацию с сервером",
+    "settingsClearCacheDatabaseSuccessNotification": "База данных успешно очищена. Пожалуйста, перезапустите приложение",
     "settingsAboutSectionTitle": "О программе",
     "@settingsAboutSectionTitle": {
         "description": "Title of the about section in settings widget"
@@ -327,6 +419,10 @@
     "settingsVersionTitle": "Версия",
     "@settingsVersionTitle": {
         "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Сервер",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
     },
     "settingsSourceCodeTitle": "Исходный код",
     "@settingsSourceCodeTitle": {
@@ -519,6 +615,14 @@
     "sortOptionTimeDescendingLabel": "Сначала новые",
     "@sortOptionTimeDescendingLabel": {
         "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "Имя",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "Имя (по убыванию)",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
     },
     "sortOptionAlbumNameLabel": "Название альбома",
     "@sortOptionAlbumNameLabel": {
@@ -727,6 +831,10 @@
     "@slideshowSetupDialogRepeatTitle": {
         "description": "Whether to restart the slideshow from the beginning after the last slide"
     },
+    "slideshowSetupDialogReverseTitle": "Обратный",
+    "@slideshowSetupDialogReverseTitle": {
+        "description": "Whether to play the slideshow in reverse order"
+    },
     "linkCopiedNotification": "Ссылка скопирована",
     "@linkCopiedNotification": {
         "description": "Copied the share link to clipboard"
@@ -735,6 +843,16 @@
     "@shareMethodDialogTitle": {
         "description": "Let the user pick how they want to share"
     },
+    "shareMethodPreviewTitle": "Предпросмотр",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "Передавать другим приложениям предпросмотр с низким качеством (только фото)",
+    "shareMethodOriginalFileTitle": "Исходный файл",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "Загрузить исходный файл и передать его другим приложениям",
     "shareMethodPublicLinkTitle": "Общедоступная ссылка",
     "@shareMethodPublicLinkTitle": {
         "description": "Create a share link on server and share it"
@@ -1006,6 +1124,279 @@
     "@metadataTaskPauseLowBatteryNotification": {
         "description": "Shown when the app has paused reading image metadata due to low battery"
     },
+    "enhanceTooltip": "Улучшить",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "УЛУЧШИТЬ",
+    "enhanceIntroDialogTitle": "Улучшите ваши фото",
+    "enhanceIntroDialogDescription": "Обработка фотографий производится на устройстве. По умолчанию они уменьшаются до 2048x1536. Настроить выходное разрешение можно в Настройках",
+    "enhanceLowLightTitle": "Улучшение освещения",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "Повыcить яркость фотографий, сделанных в условиях недостаточной освещенности",
+    "enhanceLowLightParamBrightnessLabel": "Яркость",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "Изменено (локально)",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "Выбранные элементы будут удалены с данного устройства навсегда.\n\nЭто действие является необратимым",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "Размытие заднего фона",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "Размытие фона фотографий, лучше всего работает с портретами",
+    "enhancePortraitBlurParamBlurLabel": "Размытость",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Супер-разрешение (4x)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "Увеличение фотографий до 4x от исходного разрешения (подробнее о том, как это работает, см. в справке)",
+    "enhanceStyleTransferTitle": "Перенос стиля",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "Выберите стиль",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "Перенос стиля изображения с эталонного изображения на ваши фотографии",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Пожалуйста, выберите стиль",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopTitle": "Обесцветить фон",
+    "@enhanceColorPopTitle": {
+        "description": "Desaturate the background of a photo"
+    },
+    "enhanceColorPopDescription": "Обесцветить фон фотографий, лучше всего работает с портретами",
+    "enhanceGenericParamWeightLabel": "Вес",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchTitle": "Авторетушь",
+    "@enhanceRetouchTitle": {
+        "description": "Automatically improve your photo"
+    },
+    "enhanceRetouchDescription": "Автоматически ретушировать фото, улучшить цвет и сочность",
+    "doubleTapExitNotification": "Для выхода тапните еще раз",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "Сбросить изменения?",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "Изменения не сохранены",
+    "discardButtonLabel": "СБРОСИТЬ",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "Сохранить",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditColorBrightness": "Яркость",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "imageEditColorContrast": "Контрастность",
+    "@imageEditColorContrast": {
+        "description": "Adjust the contrast of an image"
+    },
+    "imageEditColorWhitePoint": "Белая точка",
+    "@imageEditColorWhitePoint": {
+        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+    },
+    "imageEditColorBlackPoint": "Черная точка",
+    "@imageEditColorBlackPoint": {
+        "description": "Adjust the black point of an image"
+    },
+    "imageEditColorSaturation": "Насыщенность",
+    "@imageEditColorSaturation": {
+        "description": "Adjust the color saturation of an image"
+    },
+    "imageEditColorWarmth": "Теплота",
+    "@imageEditColorWarmth": {
+        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+    },
+    "imageEditColorTint": "Оттенок",
+    "@imageEditColorTint": {
+        "description": "Shift colors from a green to a magenta tint"
+    },
+    "imageEditTitle": "Предпросмотр",
+    "@imageEditTitle": {
+        "description": "Title of the image editor"
+    },
+    "imageEditToolbarColorLabel": "Цвет",
+    "@imageEditToolbarColorLabel": {
+        "description": "Label of the color tools. These can be used to adjust the color of an image"
+    },
+    "imageEditToolbarTransformLabel": "Преобразовать",
+    "@imageEditToolbarTransformLabel": {
+        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+    },
+    "imageEditTransformOrientation": "Поворот",
+    "@imageEditTransformOrientation": {
+        "description": "Change the orientation of the image, 90 degree per step"
+    },
+    "imageEditTransformOrientationClockwise": "cw",
+    "@imageEditTransformOrientationClockwise": {
+        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformOrientationCounterclockwise": "ccw",
+    "@imageEditTransformOrientationCounterclockwise": {
+        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformCrop": "Обрезать",
+    "@imageEditTransformCrop": {
+        "description": "Crop the image"
+    },
+    "categoriesLabel": "Категории",
+    "searchLandingCategoryVideosLabel": "Видео",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "ФИЛЬТРЫ",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "Фильтры поиска",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "ПРИМЕНИТЬ",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "Любой",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "Истина",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "Ложь",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "Тип",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "Фото",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "фото",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "Видео",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "видео",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "Избранное",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "searchFilterBubbleFavoriteTrueText": "избранное",
+    "@searchFilterBubbleFavoriteTrueText": {
+        "description": "List of active search filters shown in the result page (by favorites, true)"
+    },
+    "searchFilterBubbleFavoriteFalseText": "не избранное",
+    "@searchFilterBubbleFavoriteFalseText": {
+        "description": "List of active search filters shown in the result page (by favorites, false)"
+    },
+    "showAllButtonLabel": "ПОКАЗАТЬ ВСЕ",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceText": "Около {place}",
+    "@gpsPlaceText": {
+        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+        "placeholders": {
+            "place": {}
+        }
+    },
+    "gpsPlaceAboutDialogTitle": "О месте",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "Не гарантируется точность информации о местоположении данной точки. Оно не отражает нашу точку зрения на какие-либо спорные территории.",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "Места",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "Сохранить результат",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogContent": "Выберите место сохранения обработанных изображений. Если вы выберете сервер, но произойдет ошибка при загрузке, то они будет сохранены на вашем устройстве.",
+    "@imageSaveOptionDialogContent": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "УСТРОЙСТВО",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "СЕРВЕР",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "Синхронизация с сервером в первый раз",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "loopTooltip": "Повтор",
+    "@loopTooltip": {
+        "description": "Enable or disable loop in the video player"
+    },
+    "createCollectionFailureNotification": "Не удалось создать альбом",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Добавить в альбом",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Не удалось добавить в альбом",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Не удалось установить обложку альбома",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Экспорт",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Экспорт альбома",
+    "createCollectionDialogNextcloudAlbumLabel": "Альбом Nextcloud",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "Альбом на сервере, требуется Nextcloud 25 и выше",
+    "removeCollectionsFailedNotification": "Не удалось удалить некоторые альбомы",
     "errorUnauthenticated": "Неавторизованный доступ. Если ошибка возникает снова, попробуйте перелогиниться",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
@@ -1037,5 +1428,40 @@
     "errorNoStoragePermission": "Необходимо разрешение на доступ к хранилищу",
     "@errorNoStoragePermission": {
         "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Метаданные файла",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsPersonProviderTitle": "Провайдер распознавания лиц",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsSeedColorSystemColorDescription": "Использовать цвет системы",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "ИСПОЛЬЗОВАТЬ ЦВЕТ СИСТЕМЫ",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Нажмите на настройки, чтобы сменить провайдера или воспользуйтесь справкой",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Настройка аккаунта",
+    "contributorsTooltip": "Контрибьюторы",
+    "setAsTooltip": "Установить как",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Вы собираетесь выйти из {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
     }
 }
