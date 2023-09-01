@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/stream_extension.dart';
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_platform_message_relay/np_platform_message_relay.dart';
 
 class NativeEventListener<T> {
   NativeEventListener(this.listener);
@@ -26,7 +26,7 @@ class NativeEventListener<T> {
   }
 
   static final _mappedStream =
-      NativeEvent.stream.whereType<NativeEventObject>().map((ev) {
+      MessageRelay.stream.whereType<Message>().map((ev) {
     switch (ev.event) {
       case FileExifUpdatedEvent._id:
         return FileExifUpdatedEvent.fromEvent(ev);
@@ -39,20 +39,21 @@ class NativeEventListener<T> {
   final void Function(T) listener;
   StreamSubscription<T>? _subscription;
 
-  final _log = Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
+  final _log =
+      Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
 }
 
 class FileExifUpdatedEvent {
   const FileExifUpdatedEvent(this.fileIds);
 
-  factory FileExifUpdatedEvent.fromEvent(NativeEventObject ev) {
+  factory FileExifUpdatedEvent.fromEvent(Message ev) {
     assert(ev.event == _id);
     assert(ev.data != null);
     final dataJson = jsonDecode(ev.data!) as Map;
     return FileExifUpdatedEvent((dataJson["fileIds"] as List).cast<int>());
   }
 
-  NativeEventObject toEvent() => NativeEventObject(
+  Message toEvent() => Message(
         _id,
         jsonEncode({
           "fileIds": fileIds,

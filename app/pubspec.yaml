@@ -115,6 +115,8 @@ dependencies:
     path: ../np_platform_lock
   np_platform_log:
     path: ../np_platform_log
+  np_platform_message_relay:
+    path: ../np_platform_message_relay
   np_platform_permission:
     path: ../np_platform_permission
   np_platform_raw_image:

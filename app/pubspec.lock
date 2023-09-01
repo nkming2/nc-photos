@@ -1032,6 +1032,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_platform_message_relay:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_message_relay"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_platform_permission:
     dependency: "direct main"
     description:

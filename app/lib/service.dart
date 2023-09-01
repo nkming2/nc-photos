@@ -24,6 +24,7 @@ import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_geocoder/np_geocoder.dart';
+import 'package:np_platform_message_relay/np_platform_message_relay.dart';
 
 part 'service.g.dart';
 
@@ -237,7 +238,7 @@ class _MetadataTask {
     }
     if (_processedIds.isNotEmpty) {
       unawaited(
-        NativeEvent.fire(FileExifUpdatedEvent(_processedIds).toEvent()),
+        MessageRelay.broadcast(FileExifUpdatedEvent(_processedIds).toEvent()),
       );
       _processedIds = [];
     }
@@ -319,7 +320,7 @@ class _MetadataTask {
 
     _processedIds.add(file.fileId!);
     if (_processedIds.length >= 10) {
-      NativeEvent.fire(FileExifUpdatedEvent(_processedIds).toEvent());
+      MessageRelay.broadcast(FileExifUpdatedEvent(_processedIds).toEvent());
       _processedIds = [];
     }
   }
