@@ -222,10 +222,10 @@ internal class MediaStoreChannelHandler(context: Context) :
 					put("mimeType", mimeType)
 					if (dateTaken != 0L) put("dateTaken", dateTaken)
 				})
-				logD(
-					TAG,
-					"[queryEnhancedPhotos] Found $displayName, path=$path, uri=$contentUri"
-				)
+				// logD(
+				// 	TAG,
+				// 	"[queryEnhancedPhotos] Found $displayName, path=$path, uri=$contentUri"
+				// )
 			}
 			products
 		}
