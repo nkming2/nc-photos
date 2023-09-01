@@ -9,6 +9,8 @@ import 'package:np_platform_permission/src/k.dart' as k;
 class Permission {
   static const READ_EXTERNAL_STORAGE =
       "android.permission.READ_EXTERNAL_STORAGE";
+  static const READ_MEDIA_IMAGES =
+      "android.permission.READ_MEDIA_IMAGES";
   static const WRITE_EXTERNAL_STORAGE =
       "android.permission.WRITE_EXTERNAL_STORAGE";
 
@@ -25,6 +27,16 @@ class Permission {
   static Future<bool> hasReadExternalStorage() async {
     return (await _methodChannel.invokeMethod<bool>("hasReadExternalStorage"))!;
   }
+
+  static Future<void> requestReadExternalStorage() =>
+      _methodChannel.invokeMethod("requestReadExternalStorage");
+
+  static Future<bool> hasPostNotifications() async {
+    return (await _methodChannel.invokeMethod<bool>("hasPostNotifications"))!;
+  }
+
+  static Future<void> requestPostNotifications() =>
+      _methodChannel.invokeMethod("requestPostNotifications");
 
   static Stream get stream => _eventStream;
 

@@ -341,11 +341,11 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     if (getRawPlatform() == NpPlatform.android) {
       if (AndroidInfo().sdkInt >= AndroidVersion.R) {
         if (!await Permission.hasReadExternalStorage()) {
-          final results = await requestPermissionsForResult([
-            Permission.READ_EXTERNAL_STORAGE,
-          ]);
+          final results = await requestReadExternalStorageForResult();
           return results[Permission.READ_EXTERNAL_STORAGE] ==
-              PermissionRequestResult.granted;
+                  PermissionRequestResult.granted ||
+              results[Permission.READ_MEDIA_IMAGES] ==
+                  PermissionRequestResult.granted;
         }
       } else {
         if (!await Permission.hasWriteExternalStorage()) {

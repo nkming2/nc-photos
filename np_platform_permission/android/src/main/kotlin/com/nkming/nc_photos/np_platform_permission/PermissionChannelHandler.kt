@@ -93,6 +93,34 @@ internal class PermissionChannelHandler(context: Context) :
 				}
 			}
 
+			"requestReadExternalStorage" -> {
+				try {
+					PermissionUtil.requestReadExternalStorage(activity!!)
+					result.success(null)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
+			"hasPostNotifications" -> {
+				try {
+					result.success(
+						PermissionUtil.hasPostNotifications(context)
+					)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
+			"requestPostNotifications" -> {
+				try {
+					PermissionUtil.requestPostNotifications(activity!!)
+					result.success(null)
+				} catch (e: Throwable) {
+					result.error("systemException", e.toString(), null)
+				}
+			}
+
 			else -> result.notImplemented()
 		}
 	}
