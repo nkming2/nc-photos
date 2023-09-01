@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
@@ -54,9 +55,15 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
   build(BuildContext context) {
     return Theme(
       data: buildDarkTheme(context),
-      child: Scaffold(
-        body: Builder(
-          builder: _buildContent,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          body: Builder(
+            builder: _buildContent,
+          ),
         ),
       ),
     );
