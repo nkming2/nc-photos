@@ -1025,6 +1025,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_platform_log:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_log"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_platform_permission:
     dependency: "direct main"
     description:

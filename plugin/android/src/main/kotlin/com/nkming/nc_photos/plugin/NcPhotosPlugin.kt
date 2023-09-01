@@ -53,13 +53,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
             ContentUriChannelHandler(flutterPluginBinding.applicationContext)
         )
 
-        val logcatChannelHandler = LogcatChannelHandler()
-        logcatMethodChannel = MethodChannel(
-            flutterPluginBinding.binaryMessenger,
-            LogcatChannelHandler.METHOD_CHANNEL
-        )
-        logcatMethodChannel.setMethodCallHandler(logcatChannelHandler)
-
         val preferenceChannelHandler =
             PreferenceChannelHandler(flutterPluginBinding.applicationContext)
         preferenceMethodChannel = MethodChannel(
@@ -76,7 +69,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
         mediaStoreChannel.setStreamHandler(null)
         mediaStoreMethodChannel.setMethodCallHandler(null)
         contentUriMethodChannel.setMethodCallHandler(null)
-        logcatMethodChannel.setMethodCallHandler(null)
         preferenceMethodChannel.setMethodCallHandler(null)
     }
 
@@ -129,7 +121,6 @@ class NcPhotosPlugin : FlutterPlugin, ActivityAware,
     private lateinit var mediaStoreChannel: EventChannel
     private lateinit var mediaStoreMethodChannel: MethodChannel
     private lateinit var contentUriMethodChannel: MethodChannel
-    private lateinit var logcatMethodChannel: MethodChannel
     private lateinit var preferenceMethodChannel: MethodChannel
 
     private lateinit var mediaStoreChannelHandler: MediaStoreChannelHandler
