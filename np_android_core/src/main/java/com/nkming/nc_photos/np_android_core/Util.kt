@@ -7,13 +7,11 @@ import java.io.Serializable
 import java.net.HttpURLConnection
 
 fun getPendingIntentFlagImmutable(): Int {
-	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-		PendingIntent.FLAG_IMMUTABLE else 0
+	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
 }
 
 fun getPendingIntentFlagMutable(): Int {
-	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-		PendingIntent.FLAG_MUTABLE else 0
+	return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
 }
 
 inline fun <T> HttpURLConnection.use(block: (HttpURLConnection) -> T): T {

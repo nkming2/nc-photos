@@ -8,35 +8,35 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 interface PermissionUtil {
-    companion object {
-        const val REQUEST_CODE = K.PERMISSION_REQUEST_CODE
+	companion object {
+		const val REQUEST_CODE = K.PERMISSION_REQUEST_CODE
 
-        fun request(
-            activity: Activity, vararg permissions: String
-        ) {
-            ActivityCompat.requestPermissions(
-                activity, permissions, REQUEST_CODE
-            )
-        }
+		fun request(
+			activity: Activity, vararg permissions: String
+		) {
+			ActivityCompat.requestPermissions(
+				activity, permissions, REQUEST_CODE
+			)
+		}
 
-        fun hasReadExternalStorage(context: Context): Boolean {
-            return ContextCompat.checkSelfPermission(
-                context, Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+		fun hasReadExternalStorage(context: Context): Boolean {
+			return ContextCompat.checkSelfPermission(
+				context, Manifest.permission.READ_EXTERNAL_STORAGE
+			) == PackageManager.PERMISSION_GRANTED
+		}
 
-        fun requestReadExternalStorage(activity: Activity) = request(
-            activity, Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+		fun requestReadExternalStorage(activity: Activity) = request(
+			activity, Manifest.permission.READ_EXTERNAL_STORAGE
+		)
 
-        fun hasWriteExternalStorage(context: Context): Boolean {
-            return ContextCompat.checkSelfPermission(
-                context, Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+		fun hasWriteExternalStorage(context: Context): Boolean {
+			return ContextCompat.checkSelfPermission(
+				context, Manifest.permission.WRITE_EXTERNAL_STORAGE
+			) == PackageManager.PERMISSION_GRANTED
+		}
 
-        fun requestWriteExternalStorage(activity: Activity) = request(
-            activity, Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
+		fun requestWriteExternalStorage(activity: Activity) = request(
+			activity, Manifest.permission.WRITE_EXTERNAL_STORAGE
+		)
+	}
 }

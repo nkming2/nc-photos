@@ -113,10 +113,10 @@ interface MediaStoreUtil {
 				throw PermissionException("Permission not granted")
 			}
 
-			@Suppress("Deprecation")
-			val path = Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_DOWNLOADS
-			)
+			@Suppress("Deprecation") val path =
+				Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_DOWNLOADS
+				)
 			val prefix = if (subDir != null) "$subDir/" else ""
 			var file = File(path, prefix + filename)
 			val baseFilename = file.nameWithoutExtension
@@ -142,8 +142,8 @@ interface MediaStoreUtil {
 
 		private fun triggerMediaScan(context: Context, uri: Uri) {
 			val scanIntent = Intent().apply {
-				@Suppress("Deprecation")
-				action = Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
+				@Suppress("Deprecation") action =
+					Intent.ACTION_MEDIA_SCANNER_SCAN_FILE
 				data = uri
 			}
 			context.sendBroadcast(scanIntent)

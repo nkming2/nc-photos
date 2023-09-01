@@ -5,9 +5,9 @@ import android.net.Uri
 internal interface MessageEvent
 
 internal data class ImageProcessorCompletedEvent(
-    val result: Uri,
+	val result: Uri,
 ) : MessageEvent
 
 internal data class ImageProcessorFailedEvent(
-    val exception: Throwable,
+	val exception: Throwable,
 ) : MessageEvent
