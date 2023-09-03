@@ -1747,17 +1747,18 @@ packages:
   video_player:
     dependency: "direct main"
     description:
-      name: video_player
-      sha256: fe82e69e9cabe9c575c67af8c87f287370a0fbdda4b3586e65f1524a7863b9a1
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/video_player/video_player"
+      ref: "video_player-v2.4.5-nc-photos-2"
+      resolved-ref: b5c28c21f29f09b623900d5a8cc88a70da29de3a
+      url: "https://gitlab.com/nc-photos/flutter-plugins"
+    source: git
     version: "2.4.5"
   video_player_android:
     dependency: "direct overridden"
     description:
       path: "packages/video_player/video_player_android"
-      ref: "video_player-v2.4.5-nc-photos-1"
-      resolved-ref: fade05907d60e1076c270cd41a5f2b842c4a4d00
+      ref: "video_player-v2.4.5-nc-photos-2"
+      resolved-ref: b5c28c21f29f09b623900d5a8cc88a70da29de3a
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.3.6"

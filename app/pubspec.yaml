@@ -155,10 +155,15 @@ dependencies:
   woozy_search: ^2.0.3
 
 dependency_overrides:
+  video_player:
+    git:
+      url: https://gitlab.com/nc-photos/flutter-plugins
+      ref: video_player-v2.4.5-nc-photos-2
+      path: packages/video_player/video_player
   video_player_android:
     git:
       url: https://gitlab.com/nc-photos/flutter-plugins
-      ref: video_player-v2.4.5-nc-photos-1
+      ref: video_player-v2.4.5-nc-photos-2
       path: packages/video_player/video_player_android
 
 dev_dependencies:
