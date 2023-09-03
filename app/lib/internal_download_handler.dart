@@ -5,16 +5,21 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/platform/download.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/download_preview.dart';
-import 'package:nc_photos/widget/processing_dialog.dart';
+import 'package:nc_photos/widget/download_progress_dialog.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'internal_download_handler.g.dart';
 
@@ -25,15 +30,27 @@ class InternalDownloadHandler {
 
   Future<Map<File, dynamic>> downloadPreviews(
       BuildContext context, List<File> files) async {
-    final controller = StreamController<String>();
+    if (files.isEmpty) {
+      return {};
+    }
+    final controller =
+        BehaviorSubject.seeded(const _DownloadProgress(current: 0));
+    bool shouldRun = true;
+    Download? download;
     unawaited(
       showDialog(
         context: context,
-        builder: (context) => StreamBuilder(
+        builder: (context) => ValueStreamBuilder<_DownloadProgress>(
           stream: controller.stream,
-          builder: (context, snapshot) => ProcessingDialog(
-            text: L10n.global().shareDownloadingDialogContent +
-                (snapshot.hasData ? " ${snapshot.data}" : ""),
+          builder: (_, snapshot) => DownloadProgressDialog(
+            max: files.length,
+            current: snapshot.requireData.current,
+            progress: snapshot.requireData.progress,
+            label: files[snapshot.requireData.current].filename,
+            onCancel: () {
+              download?.cancel();
+              shouldRun = false;
+            },
           ),
         ),
       ),
@@ -42,16 +59,28 @@ class InternalDownloadHandler {
       final results = <MapEntry<File, dynamic>>[];
       for (final pair in files.withIndex()) {
         final i = pair.item1, f = pair.item2;
-        controller.add("($i/${files.length})");
+        controller.add(_DownloadProgress(current: i));
         try {
-          final dynamic uri;
+          final dynamic result;
           if (file_util.isSupportedImageFormat(f) &&
               f.contentType != "image/gif") {
-            uri = await DownloadPreview()(account, f);
+            result = await DownloadPreview()(account, f);
           } else {
-            uri = await DownloadFile()(account, f);
+            download = DownloadFile().build(
+              account,
+              f,
+              shouldNotify: false,
+              onProgress: (progress) {
+                controller
+                    .add(_DownloadProgress(current: i, progress: progress));
+              },
+            );
+            result = await download();
           }
-          results.add(MapEntry(f, uri));
+          if (!shouldRun) {
+            throw const JobCanceledException();
+          }
+          results.add(MapEntry(f, result));
         } catch (e, stacktrace) {
           _log.shout(
               "[downloadPreviews] Failed while DownloadPreview", e, stacktrace);
@@ -70,15 +99,27 @@ class InternalDownloadHandler {
 
   Future<Map<File, dynamic>> downloadFiles(
       BuildContext context, List<File> files) async {
-    final controller = StreamController<String>();
+    if (files.isEmpty) {
+      return {};
+    }
+    final controller =
+        BehaviorSubject.seeded(const _DownloadProgress(current: 0));
+    bool shouldRun = true;
+    Download? download;
     unawaited(
       showDialog(
         context: context,
-        builder: (context) => StreamBuilder(
+        builder: (context) => ValueStreamBuilder<_DownloadProgress>(
           stream: controller.stream,
-          builder: (context, snapshot) => ProcessingDialog(
-            text: L10n.global().shareDownloadingDialogContent +
-                (snapshot.hasData ? " ${snapshot.data}" : ""),
+          builder: (_, snapshot) => DownloadProgressDialog(
+            max: files.length,
+            current: snapshot.requireData.current,
+            progress: snapshot.requireData.progress,
+            label: files[snapshot.requireData.current].filename,
+            onCancel: () {
+              download?.cancel();
+              shouldRun = false;
+            },
           ),
         ),
       ),
@@ -87,15 +128,21 @@ class InternalDownloadHandler {
       final results = <MapEntry<File, dynamic>>[];
       for (final pair in files.withIndex()) {
         final i = pair.item1, f = pair.item2;
-        controller.add("($i/${files.length})");
+        controller.add(_DownloadProgress(current: i));
         try {
-          results.add(MapEntry(
-              f,
-              await DownloadFile()(
-                account,
-                f,
-                shouldNotify: false,
-              )));
+          download = DownloadFile().build(
+            account,
+            f,
+            shouldNotify: false,
+            onProgress: (progress) {
+              controller.add(_DownloadProgress(current: i, progress: progress));
+            },
+          );
+          final result = await download();
+          if (!shouldRun) {
+            throw const JobCanceledException();
+          }
+          results.add(MapEntry(f, result));
         } on PermissionException catch (_) {
           _log.warning("[downloadFiles] Permission not granted");
           SnackBarManager().showSnackBar(SnackBar(
@@ -103,6 +150,9 @@ class InternalDownloadHandler {
             duration: k.snackBarDurationNormal,
           ));
           rethrow;
+        } on JobCanceledException catch (_) {
+          _log.info("[downloadFiles] Job canceled");
+          return {};
         } catch (e, stacktrace) {
           _log.shout(
               "[downloadFiles] Failed while downloadFile", e, stacktrace);
@@ -120,4 +170,14 @@ class InternalDownloadHandler {
   }
 
   final Account account;
+}
+
+class _DownloadProgress {
+  const _DownloadProgress({
+    required this.current,
+    this.progress,
+  });
+
+  final int current;
+  final double? progress;
 }

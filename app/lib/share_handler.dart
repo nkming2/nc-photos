@@ -125,6 +125,9 @@ class ShareHandler {
     assert(getRawPlatform() == NpPlatform.android);
     final results =
         await InternalDownloadHandler(account).downloadFiles(context, files);
+    if (results.isEmpty) {
+      return;
+    }
     final share = AndroidFileShare(results.entries
         .map((e) => AndroidFileShareFile(e.value as String, e.key.contentType))
         .toList());

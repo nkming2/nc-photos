@@ -22,6 +22,7 @@ class DownloadBuilder extends itf.DownloadBuilder {
     required String filename,
     String? parentDir,
     bool? shouldNotify,
+    void Function(double progress)? onProgress,
   }) {
     if (getRawPlatform() == NpPlatform.android) {
       return _AndroidDownload(
@@ -31,6 +32,7 @@ class DownloadBuilder extends itf.DownloadBuilder {
         filename: filename,
         parentDir: parentDir,
         shouldNotify: shouldNotify,
+        onProgress: onProgress,
       );
     } else {
       throw UnimplementedError();
@@ -47,10 +49,11 @@ class _AndroidDownload extends itf.Download {
     required this.filename,
     this.parentDir,
     this.shouldNotify,
+    this.onProgress,
   });
 
   @override
-  call() async {
+  Future<String> call() async {
     if (_isInitialDownload) {
       await _cleanUp();
       _isInitialDownload = false;
@@ -65,8 +68,16 @@ class _AndroidDownload extends itf.Download {
         final response = await http.Client().send(req);
         bool isEnd = false;
         Object? error;
+        final size = response.contentLength;
+        var received = 0;
         final subscription = response.stream.listen(
-          fileWrite.add,
+          (value) {
+            fileWrite.add(value);
+            received += value.length;
+            if (size != null && size > 0) {
+              onProgress?.call((received / size).clamp(0, 1));
+            }
+          },
           onDone: () {
             isEnd = true;
           },
@@ -93,7 +104,7 @@ class _AndroidDownload extends itf.Download {
         await fileWrite.close();
       }
       if (shouldInterrupt) {
-        throw JobCanceledException();
+        throw const JobCanceledException();
       }
 
       // copy the file to the actual dir
@@ -108,7 +119,7 @@ class _AndroidDownload extends itf.Download {
   }
 
   @override
-  cancel() {
+  bool cancel() {
     shouldInterrupt = true;
     return true;
   }
@@ -152,6 +163,7 @@ class _AndroidDownload extends itf.Download {
   final String filename;
   final String? parentDir;
   final bool? shouldNotify;
+  final void Function(double progress)? onProgress;
 
   bool shouldInterrupt = false;
 

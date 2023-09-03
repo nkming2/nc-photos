@@ -7,11 +7,16 @@ import 'package:nc_photos/platform/download.dart';
 
 class DownloadFile {
   /// Create a new download but don't start it yet
+  ///
+  /// [onProgress] is not supported by all implementors. If supported, it will
+  /// be called with the current download progress, normalized from 0 to 1.
+  /// There's no guarantee that you will receive a 1 in [onProgress]
   Download build(
     Account account,
     FileDescriptor file, {
     String? parentDir,
     bool? shouldNotify,
+    void Function(double progress)? onProgress,
   }) {
     final url = "${account.url}/${file.fdPath}";
     return platform.DownloadBuilder().build(
@@ -23,6 +28,7 @@ class DownloadFile {
       filename: file.filename,
       parentDir: parentDir,
       shouldNotify: shouldNotify,
+      onProgress: onProgress,
     );
   }
 
@@ -34,11 +40,13 @@ class DownloadFile {
     FileDescriptor file, {
     String? parentDir,
     bool? shouldNotify,
+    void Function(double progress)? onProgress,
   }) =>
       build(
         account,
         file,
         parentDir: parentDir,
         shouldNotify: shouldNotify,
+        onProgress: onProgress,
       )();
 }

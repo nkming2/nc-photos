@@ -64,10 +64,10 @@ class DownloadException implements Exception {
 
 /// A running job has been canceled
 class JobCanceledException implements Exception {
-  JobCanceledException([this.message]);
+  const JobCanceledException([this.message]);
 
   @override
-  toString() {
+  String toString() {
     return "JobCanceledException: $message";
   }
 
