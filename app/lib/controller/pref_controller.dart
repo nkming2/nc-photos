@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/size.dart';
 import 'package:nc_photos/widget/gps_map.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -270,6 +271,6 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isFollowSystemThemeOr(false));
   late final _isUseBlackInDarkThemeController =
       BehaviorSubject.seeded(_c.pref.isUseBlackInDarkThemeOr(false));
-  late final _seedColorController = BehaviorSubject<Color?>.seeded(
-      Color(_c.pref.getSeedColorOr(_seedColorDef)));
+  late final _seedColorController =
+      BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.run(Color.new));
 }
