@@ -25,6 +25,10 @@ internal class MessageRelayChannelHandler : MethodChannel.MethodCallHandler,
 					result.error("systemException", e.toString(), null)
 				}
 			}
+
+			else -> {
+				result.notImplemented()
+			}
 		}
 	}
 
