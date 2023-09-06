@@ -28,3 +28,5 @@ flutter:
       android:
         package: com.nkming.nc_photos.np_platform_message_relay
         pluginClass: NpPlatformMessageRelayPlugin
+      ios:
+        pluginClass: NpPlatformMessageRelayPlugin
