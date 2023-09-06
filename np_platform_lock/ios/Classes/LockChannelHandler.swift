@@ -1,5 +1,6 @@
 import Flutter
 import Foundation
+import NpIosCore
 
 class LockChannelHandler {
   func onMethodCall(call: FlutterMethodCall, result: FlutterResult) {
