@@ -19,29 +19,29 @@ class NpPlatformPermissionPlugin : FlutterPlugin, ActivityAware,
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		permissionChannelHandler =
+		handler =
 			PermissionChannelHandler(flutterPluginBinding.applicationContext)
-		permissionChannel = EventChannel(
+		eventChannel = EventChannel(
 			flutterPluginBinding.binaryMessenger,
 			PermissionChannelHandler.EVENT_CHANNEL
 		)
-		permissionChannel.setStreamHandler(permissionChannelHandler)
-		permissionMethodChannel = MethodChannel(
+		eventChannel.setStreamHandler(handler)
+		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			PermissionChannelHandler.METHOD_CHANNEL
 		)
-		permissionMethodChannel.setMethodCallHandler(permissionChannelHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		permissionChannel.setStreamHandler(null)
-		permissionMethodChannel.setMethodCallHandler(null)
+		eventChannel.setStreamHandler(null)
+		methodChannel.setMethodCallHandler(null)
 	}
 
 	override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-		permissionChannelHandler.onAttachedToActivity(binding)
+		handler.onAttachedToActivity(binding)
 		pluginBinding = binding
 		binding.addRequestPermissionsResultListener(this)
 	}
@@ -49,18 +49,18 @@ class NpPlatformPermissionPlugin : FlutterPlugin, ActivityAware,
 	override fun onReattachedToActivityForConfigChanges(
 		binding: ActivityPluginBinding
 	) {
-		permissionChannelHandler.onReattachedToActivityForConfigChanges(binding)
+		handler.onReattachedToActivityForConfigChanges(binding)
 		pluginBinding = binding
 		binding.addRequestPermissionsResultListener(this)
 	}
 
 	override fun onDetachedFromActivity() {
-		permissionChannelHandler.onDetachedFromActivity()
+		handler.onDetachedFromActivity()
 		pluginBinding?.removeRequestPermissionsResultListener(this)
 	}
 
 	override fun onDetachedFromActivityForConfigChanges() {
-		permissionChannelHandler.onDetachedFromActivityForConfigChanges()
+		handler.onDetachedFromActivityForConfigChanges()
 		pluginBinding?.removeRequestPermissionsResultListener(this)
 	}
 
@@ -70,7 +70,7 @@ class NpPlatformPermissionPlugin : FlutterPlugin, ActivityAware,
 		return try {
 			when (requestCode) {
 				PermissionUtil.REQUEST_CODE -> {
-					permissionChannelHandler.onRequestPermissionsResult(
+					handler.onRequestPermissionsResult(
 						requestCode, permissions, grantResults
 					)
 				}
@@ -87,7 +87,7 @@ class NpPlatformPermissionPlugin : FlutterPlugin, ActivityAware,
 
 	private var pluginBinding: ActivityPluginBinding? = null
 
-	private lateinit var permissionChannel: EventChannel
-	private lateinit var permissionMethodChannel: MethodChannel
-	private lateinit var permissionChannelHandler: PermissionChannelHandler
+	private lateinit var eventChannel: EventChannel
+	private lateinit var methodChannel: MethodChannel
+	private lateinit var handler: PermissionChannelHandler
 }

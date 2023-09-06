@@ -9,17 +9,17 @@ class NpPlatformMessageRelayPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		val messageRelayHandler = MessageRelayChannelHandler()
+		val handler = MessageRelayChannelHandler()
 		eventChannel = EventChannel(
 			flutterPluginBinding.binaryMessenger,
 			MessageRelayChannelHandler.EVENT_CHANNEL
 		)
-		eventChannel.setStreamHandler(messageRelayHandler)
+		eventChannel.setStreamHandler(handler)
 		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			MessageRelayChannelHandler.METHOD_CHANNEL
 		)
-		methodChannel.setMethodCallHandler(messageRelayHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(

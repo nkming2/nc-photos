@@ -8,20 +8,20 @@ class NpPlatformRawImagePlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		val imageLoaderChannelHandler =
+		val handler =
 			ImageLoaderChannelHandler(flutterPluginBinding.applicationContext)
-		imageLoaderMethodChannel = MethodChannel(
+		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			ImageLoaderChannelHandler.METHOD_CHANNEL
 		)
-		imageLoaderMethodChannel.setMethodCallHandler(imageLoaderChannelHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		imageLoaderMethodChannel.setMethodCallHandler(null)
+		methodChannel.setMethodCallHandler(null)
 	}
 
-	private lateinit var imageLoaderMethodChannel: MethodChannel
+	private lateinit var methodChannel: MethodChannel
 }

@@ -8,19 +8,19 @@ class NpPlatformLogPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		val logcatChannelHandler = LogcatChannelHandler()
-		logcatMethodChannel = MethodChannel(
+		val handler = LogcatChannelHandler()
+		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			LogcatChannelHandler.METHOD_CHANNEL
 		)
-		logcatMethodChannel.setMethodCallHandler(logcatChannelHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		logcatMethodChannel.setMethodCallHandler(null)
+		methodChannel.setMethodCallHandler(null)
 	}
 
-	private lateinit var logcatMethodChannel: MethodChannel
+	private lateinit var methodChannel: MethodChannel
 }

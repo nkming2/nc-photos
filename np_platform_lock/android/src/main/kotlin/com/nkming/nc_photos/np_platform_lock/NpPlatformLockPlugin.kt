@@ -8,20 +8,20 @@ class NpPlatformLockPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		lockChannelHandler = LockChannelHandler()
-		lockChannel = MethodChannel(
+		handler = LockChannelHandler()
+		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger, LockChannelHandler.CHANNEL
 		)
-		lockChannel.setMethodCallHandler(lockChannelHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		lockChannelHandler.dismiss()
-		lockChannel.setMethodCallHandler(null)
+		handler.dismiss()
+		methodChannel.setMethodCallHandler(null)
 	}
 
-	private lateinit var lockChannel: MethodChannel
-	private lateinit var lockChannelHandler: LockChannelHandler
+	private lateinit var methodChannel: MethodChannel
+	private lateinit var handler: LockChannelHandler
 }

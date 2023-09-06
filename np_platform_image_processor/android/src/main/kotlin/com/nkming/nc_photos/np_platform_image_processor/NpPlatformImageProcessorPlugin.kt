@@ -19,28 +19,28 @@ class NpPlatformImageProcessorPlugin : FlutterPlugin {
 	override fun onAttachedToEngine(
 		@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
 	) {
-		val imageProcessorHandler = ImageProcessorChannelHandler(
+		val handler = ImageProcessorChannelHandler(
 			flutterPluginBinding.applicationContext
 		)
-		imageProcessorEventChannel = EventChannel(
+		eventChannel = EventChannel(
 			flutterPluginBinding.binaryMessenger,
 			ImageProcessorChannelHandler.EVENT_CHANNEL
 		)
-		imageProcessorEventChannel.setStreamHandler(imageProcessorHandler)
-		imageProcessorMethodChannel = MethodChannel(
+		eventChannel.setStreamHandler(handler)
+		methodChannel = MethodChannel(
 			flutterPluginBinding.binaryMessenger,
 			ImageProcessorChannelHandler.METHOD_CHANNEL
 		)
-		imageProcessorMethodChannel.setMethodCallHandler(imageProcessorHandler)
+		methodChannel.setMethodCallHandler(handler)
 	}
 
 	override fun onDetachedFromEngine(
 		@NonNull binding: FlutterPlugin.FlutterPluginBinding
 	) {
-		imageProcessorEventChannel.setStreamHandler(null)
-		imageProcessorMethodChannel.setMethodCallHandler(null)
+		eventChannel.setStreamHandler(null)
+		methodChannel.setMethodCallHandler(null)
 	}
 
-	private lateinit var imageProcessorMethodChannel: MethodChannel
-	private lateinit var imageProcessorEventChannel: EventChannel
+	private lateinit var methodChannel: MethodChannel
+	private lateinit var eventChannel: EventChannel
 }
