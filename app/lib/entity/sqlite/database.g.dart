@@ -4271,6 +4271,18 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
   late final GeneratedColumn<String> collaborators = GeneratedColumn<String>(
       'collaborators', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _isOwnedMeta =
+      const VerificationMeta('isOwned');
+  @override
+  late final GeneratedColumn<bool> isOwned =
+      GeneratedColumn<bool>('is_owned', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_owned" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
@@ -4281,7 +4293,8 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
         location,
         dateStart,
         dateEnd,
-        collaborators
+        collaborators,
+        isOwned
       ];
   @override
   String get aliasedName => _alias ?? 'nc_albums';
@@ -4334,6 +4347,12 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
     } else if (isInserting) {
       context.missing(_collaboratorsMeta);
     }
+    if (data.containsKey('is_owned')) {
+      context.handle(_isOwnedMeta,
+          isOwned.isAcceptableOrUnknown(data['is_owned']!, _isOwnedMeta));
+    } else if (isInserting) {
+      context.missing(_isOwnedMeta);
+    }
     return context;
   }
 
@@ -4367,6 +4386,8 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date_end'])),
       collaborators: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}collaborators'])!,
+      isOwned: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_owned'])!,
     );
   }
 
@@ -4395,6 +4416,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
   final DateTime? dateStart;
   final DateTime? dateEnd;
   final String collaborators;
+  final bool isOwned;
   const NcAlbum(
       {required this.rowId,
       required this.account,
@@ -4404,7 +4426,8 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       this.location,
       this.dateStart,
       this.dateEnd,
-      required this.collaborators});
+      required this.collaborators,
+      required this.isOwned});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4427,6 +4450,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       map['date_end'] = Variable<DateTime>(converter.toSql(dateEnd));
     }
     map['collaborators'] = Variable<String>(collaborators);
+    map['is_owned'] = Variable<bool>(isOwned);
     return map;
   }
 
@@ -4449,6 +4473,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
           ? const Value.absent()
           : Value(dateEnd),
       collaborators: Value(collaborators),
+      isOwned: Value(isOwned),
     );
   }
 
@@ -4465,6 +4490,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       dateStart: serializer.fromJson<DateTime?>(json['dateStart']),
       dateEnd: serializer.fromJson<DateTime?>(json['dateEnd']),
       collaborators: serializer.fromJson<String>(json['collaborators']),
+      isOwned: serializer.fromJson<bool>(json['isOwned']),
     );
   }
   @override
@@ -4480,6 +4506,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       'dateStart': serializer.toJson<DateTime?>(dateStart),
       'dateEnd': serializer.toJson<DateTime?>(dateEnd),
       'collaborators': serializer.toJson<String>(collaborators),
+      'isOwned': serializer.toJson<bool>(isOwned),
     };
   }
 
@@ -4492,7 +4519,8 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
           Value<String?> location = const Value.absent(),
           Value<DateTime?> dateStart = const Value.absent(),
           Value<DateTime?> dateEnd = const Value.absent(),
-          String? collaborators}) =>
+          String? collaborators,
+          bool? isOwned}) =>
       NcAlbum(
         rowId: rowId ?? this.rowId,
         account: account ?? this.account,
@@ -4503,6 +4531,7 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
         dateStart: dateStart.present ? dateStart.value : this.dateStart,
         dateEnd: dateEnd.present ? dateEnd.value : this.dateEnd,
         collaborators: collaborators ?? this.collaborators,
+        isOwned: isOwned ?? this.isOwned,
       );
   @override
   String toString() {
@@ -4515,14 +4544,15 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
           ..write('location: $location, ')
           ..write('dateStart: $dateStart, ')
           ..write('dateEnd: $dateEnd, ')
-          ..write('collaborators: $collaborators')
+          ..write('collaborators: $collaborators, ')
+          ..write('isOwned: $isOwned')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(rowId, account, relativePath, lastPhoto,
-      nbItems, location, dateStart, dateEnd, collaborators);
+      nbItems, location, dateStart, dateEnd, collaborators, isOwned);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4535,7 +4565,8 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
           other.location == this.location &&
           other.dateStart == this.dateStart &&
           other.dateEnd == this.dateEnd &&
-          other.collaborators == this.collaborators);
+          other.collaborators == this.collaborators &&
+          other.isOwned == this.isOwned);
 }
 
 class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
@@ -4548,6 +4579,7 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
   final Value<DateTime?> dateStart;
   final Value<DateTime?> dateEnd;
   final Value<String> collaborators;
+  final Value<bool> isOwned;
   const NcAlbumsCompanion({
     this.rowId = const Value.absent(),
     this.account = const Value.absent(),
@@ -4558,6 +4590,7 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
     this.dateStart = const Value.absent(),
     this.dateEnd = const Value.absent(),
     this.collaborators = const Value.absent(),
+    this.isOwned = const Value.absent(),
   });
   NcAlbumsCompanion.insert({
     this.rowId = const Value.absent(),
@@ -4569,10 +4602,12 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
     this.dateStart = const Value.absent(),
     this.dateEnd = const Value.absent(),
     required String collaborators,
+    required bool isOwned,
   })  : account = Value(account),
         relativePath = Value(relativePath),
         nbItems = Value(nbItems),
-        collaborators = Value(collaborators);
+        collaborators = Value(collaborators),
+        isOwned = Value(isOwned);
   static Insertable<NcAlbum> custom({
     Expression<int>? rowId,
     Expression<int>? account,
@@ -4583,6 +4618,7 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
     Expression<DateTime>? dateStart,
     Expression<DateTime>? dateEnd,
     Expression<String>? collaborators,
+    Expression<bool>? isOwned,
   }) {
     return RawValuesInsertable({
       if (rowId != null) 'row_id': rowId,
@@ -4594,6 +4630,7 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
       if (dateStart != null) 'date_start': dateStart,
       if (dateEnd != null) 'date_end': dateEnd,
       if (collaborators != null) 'collaborators': collaborators,
+      if (isOwned != null) 'is_owned': isOwned,
     });
   }
 
@@ -4606,7 +4643,8 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
       Value<String?>? location,
       Value<DateTime?>? dateStart,
       Value<DateTime?>? dateEnd,
-      Value<String>? collaborators}) {
+      Value<String>? collaborators,
+      Value<bool>? isOwned}) {
     return NcAlbumsCompanion(
       rowId: rowId ?? this.rowId,
       account: account ?? this.account,
@@ -4617,6 +4655,7 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
       dateStart: dateStart ?? this.dateStart,
       dateEnd: dateEnd ?? this.dateEnd,
       collaborators: collaborators ?? this.collaborators,
+      isOwned: isOwned ?? this.isOwned,
     );
   }
 
@@ -4652,6 +4691,9 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
     if (collaborators.present) {
       map['collaborators'] = Variable<String>(collaborators.value);
     }
+    if (isOwned.present) {
+      map['is_owned'] = Variable<bool>(isOwned.value);
+    }
     return map;
   }
 
@@ -4666,7 +4708,8 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
           ..write('location: $location, ')
           ..write('dateStart: $dateStart, ')
           ..write('dateEnd: $dateEnd, ')
-          ..write('collaborators: $collaborators')
+          ..write('collaborators: $collaborators, ')
+          ..write('isOwned: $isOwned')
           ..write(')'))
         .toString();
   }

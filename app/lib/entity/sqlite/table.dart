@@ -142,6 +142,7 @@ class NcAlbums extends Table {
   DateTimeColumn get dateEnd =>
       dateTime().map(const SqliteDateTimeConverter()).nullable()();
   TextColumn get collaborators => text()();
+  BoolColumn get isOwned => boolean()();
 
   @override
   List<Set<Column>>? get uniqueKeys => [

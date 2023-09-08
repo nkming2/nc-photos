@@ -282,7 +282,8 @@ class SqliteNcAlbumConverter {
     final json = ncAlbum.collaborators
         .run((obj) => (jsonDecode(obj) as List).cast<Map>());
     return NcAlbum(
-      path: "${api.ApiPhotos.path}/$userId/albums/${ncAlbum.relativePath}",
+      path:
+          "${api.ApiPhotos.path}/$userId/${ncAlbum.isOwned ? "albums" : "sharedalbums"}/${ncAlbum.relativePath}",
       lastPhoto: ncAlbum.lastPhoto,
       nbItems: ncAlbum.nbItems,
       location: ncAlbum.location,
@@ -306,15 +307,16 @@ class SqliteNcAlbumConverter {
         dateEnd: Value(ncAlbum.dateEnd),
         collaborators: Value(
             jsonEncode(ncAlbum.collaborators.map((c) => c.toJson()).toList())),
+        isOwned: Value(ncAlbum.isOwned),
       );
 }
 
 class SqliteNcAlbumItemConverter {
-  static NcAlbumItem fromSql(
-          String userId, String albumRelativePath, sql.NcAlbumItem item) =>
+  static NcAlbumItem fromSql(String userId, String albumRelativePath,
+          bool isAlbumOwned, sql.NcAlbumItem item) =>
       NcAlbumItem(
         path:
-            "${api.ApiPhotos.path}/$userId/albums/$albumRelativePath/${item.relativePath}",
+            "${api.ApiPhotos.path}/$userId/${isAlbumOwned ? "albums" : "sharedalbums"}/$albumRelativePath/${item.relativePath}",
         fileId: item.fileId,
         contentLength: item.contentLength,
         contentType: item.contentType,

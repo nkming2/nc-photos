@@ -64,6 +64,9 @@ class Collection with EquatableMixin {
   /// See [CollectionContentProvider.isPendingSharedAlbum]
   bool get isPendingSharedAlbum => contentProvider.isPendingSharedAlbum;
 
+  /// See [CollectionContentProvider.isOwned]
+  bool get isOwned => contentProvider.isOwned;
+
   @override
   List<Object?> get props => [
         name,
@@ -145,4 +148,7 @@ abstract class CollectionContentProvider with EquatableMixin {
   /// In some implementation, shared album does not immediately get added to the
   /// collections list
   bool get isPendingSharedAlbum;
+
+  /// Return if this collection is owned by you
+  bool get isOwned;
 }

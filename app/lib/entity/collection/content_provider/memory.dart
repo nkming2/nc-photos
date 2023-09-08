@@ -65,6 +65,9 @@ class CollectionMemoryProvider
   bool get isPendingSharedAlbum => false;
 
   @override
+  bool get isOwned => true;
+
+  @override
   String toString() => _$toString();
 
   @override

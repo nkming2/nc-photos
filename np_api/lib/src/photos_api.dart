@@ -4,6 +4,7 @@ class ApiPhotos {
   const ApiPhotos(this.api, this.userId);
 
   ApiPhotosAlbums albums() => ApiPhotosAlbums(this);
+  ApiPhotosSharedAlbums sharedalbums() => ApiPhotosSharedAlbums(this);
   ApiPhotosAlbum album(String name) => ApiPhotosAlbum(this, name);
 
   static String get path => "remote.php/dav/photos";
@@ -23,56 +24,111 @@ class ApiPhotosAlbums {
     location,
     dateRange,
     collaborators,
-  }) async {
-    final endpoint = "${ApiPhotos.path}/${photos.userId}/albums";
+  }) {
     try {
-      if (lastPhoto == null &&
-          nbItems == null &&
-          location == null &&
-          dateRange == null &&
-          collaborators == null) {
-        // no body
-        return await api.request("PROPFIND", endpoint);
-      }
-
-      final namespaces = <String, String>{
-        "DAV:": "d",
-        "http://nextcloud.org/ns": "nc",
-      };
-      final builder = XmlBuilder();
-      builder
-        ..processing("xml", "version=\"1.0\"")
-        ..element("d:propfind", namespaces: namespaces, nest: () {
-          builder.element("d:prop", nest: () {
-            if (lastPhoto != null) {
-              builder.element("nc:last-photo");
-            }
-            if (nbItems != null) {
-              builder.element("nc:nbItems");
-            }
-            if (location != null) {
-              builder.element("nc:location");
-            }
-            if (dateRange != null) {
-              builder.element("nc:dateRange");
-            }
-            if (collaborators != null) {
-              builder.element("nc:collaborators");
-            }
-          });
-        });
-      return await api.request(
-        "PROPFIND",
-        endpoint,
-        header: {
-          "Content-Type": "application/xml",
-        },
-        body: builder.buildDocument().toXmlString(),
+      return _ApiPhotosAlbumsAlike(photos).propfind(
+        endpoint: "${ApiPhotos.path}/${photos.userId}/albums",
+        lastPhoto: lastPhoto,
+        nbItems: nbItems,
+        location: location,
+        dateRange: dateRange,
+        collaborators: collaborators,
       );
     } catch (e) {
       _log.severe("[propfind] Failed while propfind", e);
       rethrow;
     }
+  }
+
+  final ApiPhotos photos;
+}
+
+@npLog
+class ApiPhotosSharedAlbums {
+  const ApiPhotosSharedAlbums(this.photos);
+
+  /// Retrieve all albums associated with a user
+  Future<Response> propfind({
+    lastPhoto,
+    nbItems,
+    location,
+    dateRange,
+    collaborators,
+  }) {
+    try {
+      return _ApiPhotosAlbumsAlike(photos).propfind(
+        endpoint: "${ApiPhotos.path}/${photos.userId}/sharedalbums",
+        lastPhoto: lastPhoto,
+        nbItems: nbItems,
+        location: location,
+        dateRange: dateRange,
+        collaborators: collaborators,
+      );
+    } catch (e) {
+      _log.severe("[propfind] Failed while propfind", e);
+      rethrow;
+    }
+  }
+
+  Api get api => photos.api;
+  final ApiPhotos photos;
+}
+
+class _ApiPhotosAlbumsAlike {
+  const _ApiPhotosAlbumsAlike(this.photos);
+
+  /// Retrieve all albums associated with a user
+  Future<Response> propfind({
+    required String endpoint,
+    lastPhoto,
+    nbItems,
+    location,
+    dateRange,
+    collaborators,
+  }) async {
+    if (lastPhoto == null &&
+        nbItems == null &&
+        location == null &&
+        dateRange == null &&
+        collaborators == null) {
+      // no body
+      return await api.request("PROPFIND", endpoint);
+    }
+
+    final namespaces = <String, String>{
+      "DAV:": "d",
+      "http://nextcloud.org/ns": "nc",
+    };
+    final builder = XmlBuilder();
+    builder
+      ..processing("xml", "version=\"1.0\"")
+      ..element("d:propfind", namespaces: namespaces, nest: () {
+        builder.element("d:prop", nest: () {
+          if (lastPhoto != null) {
+            builder.element("nc:last-photo");
+          }
+          if (nbItems != null) {
+            builder.element("nc:nbItems");
+          }
+          if (location != null) {
+            builder.element("nc:location");
+          }
+          if (dateRange != null) {
+            builder.element("nc:dateRange");
+          }
+          if (collaborators != null) {
+            builder.element("nc:collaborators");
+          }
+        });
+      });
+    return await api.request(
+      "PROPFIND",
+      endpoint,
+      header: {
+        "Content-Type": "application/xml",
+      },
+      body: builder.buildDocument().toXmlString(),
+    );
   }
 
   Api get api => photos.api;

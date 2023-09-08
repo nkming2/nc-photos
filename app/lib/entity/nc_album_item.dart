@@ -41,19 +41,17 @@ extension NcAlbumItemExtension on NcAlbumItem {
   /// WebDAV file path: remote.php/dav/photos/{userId}/albums/{album}/{strippedPath}.
   /// If this path points to the user's root album path, return "."
   String get strippedPath {
-    if (!path.startsWith("${api.ApiPhotos.path}/")) {
+    // [albums/sharedalbums]/{album}/{strippedPath}
+    final p = _partialStrippedPath;
+    var begin = 0;
+    if (p.startsWith("albums")) {
+      begin += 6;
+    } else if (p.startsWith("sharedalbums")) {
+      begin += 12;
+    } else {
       throw ArgumentError("Unsupported path: $path");
     }
-    var begin = "${api.ApiPhotos.path}/".length;
-    begin = path.indexOf("/", begin);
-    if (begin == -1) {
-      throw ArgumentError("Unsupported path: $path");
-    }
-    // /albums/{album}/{strippedPath}
-    if (path.slice(begin, begin + 7) != "/albums") {
-      throw ArgumentError("Unsupported path: $path");
-    }
-    begin += 8;
+    begin += 1;
     // {album}/{strippedPath}
     begin = path.indexOf("/", begin);
     if (begin == -1) {
@@ -88,5 +86,18 @@ extension NcAlbumItemExtension on NcAlbumItem {
       isFavorite: isFavorite,
       metadata: metadata,
     );
+  }
+
+  /// Return a new path without the part before albums/sharedalbums
+  String get _partialStrippedPath {
+    if (!path.startsWith("${api.ApiPhotos.path}/")) {
+      throw ArgumentError("Unsupported path: $path");
+    }
+    var begin = "${api.ApiPhotos.path}/".length;
+    begin = path.indexOf("/", begin);
+    if (begin == -1) {
+      throw ArgumentError("Unsupported path: $path");
+    }
+    return path.slice(begin + 1);
   }
 }

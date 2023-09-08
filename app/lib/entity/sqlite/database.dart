@@ -51,7 +51,7 @@ class SqliteDb extends _$SqliteDb {
   }) : super(executor ?? platform.openSqliteConnection());
 
   @override
-  get schemaVersion => 6;
+  get schemaVersion => 7;
 
   @override
   get migration => MigrationStrategy(
@@ -110,6 +110,15 @@ class SqliteDb extends _$SqliteDb {
                 }
                 await m.createTable(recognizeFaces);
                 await m.createTable(recognizeFaceItems);
+              }
+              if (from < 7) {
+                await m.alterTable(TableMigration(
+                  ncAlbums,
+                  newColumns: [ncAlbums.isOwned],
+                  columnTransformer: {
+                    ncAlbums.isOwned: const Constant(true),
+                  },
+                ));
               }
             });
           } catch (e, stackTrace) {

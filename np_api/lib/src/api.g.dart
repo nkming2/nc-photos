@@ -70,6 +70,13 @@ extension _$ApiPhotosAlbumsNpLog on ApiPhotosAlbums {
   static final log = Logger("src.api.ApiPhotosAlbums");
 }
 
+extension _$ApiPhotosSharedAlbumsNpLog on ApiPhotosSharedAlbums {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("src.api.ApiPhotosSharedAlbums");
+}
+
 extension _$ApiPhotosAlbumNpLog on ApiPhotosAlbum {
   // ignore: unused_element
   Logger get _log => log;

@@ -80,6 +80,9 @@ class CollectionNcAlbumProvider
   bool get isPendingSharedAlbum => false;
 
   @override
+  bool get isOwned => album.isOwned;
+
+  @override
   List<Object?> get props => [account, album];
 
   final Account account;

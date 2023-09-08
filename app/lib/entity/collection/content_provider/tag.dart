@@ -50,6 +50,9 @@ class CollectionTagProvider
   bool get isPendingSharedAlbum => false;
 
   @override
+  bool get isOwned => true;
+
+  @override
   List<Object?> get props => [account, tags];
 
   final Account account;

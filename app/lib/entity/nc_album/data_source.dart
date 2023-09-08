@@ -23,29 +23,11 @@ class NcAlbumRemoteDataSource implements NcAlbumDataSource {
   @override
   Future<List<NcAlbum>> getAlbums(Account account) async {
     _log.info("[getAlbums] account: ${account.userId}");
-    final response = await ApiUtil.fromAccount(account)
-        .photos(account.userId.toString())
-        .albums()
-        .propfind(
-          lastPhoto: 1,
-          nbItems: 1,
-          location: 1,
-          dateRange: 1,
-          collaborators: 1,
-        );
-    if (!response.isGood) {
-      _log.severe("[getAlbums] Failed requesting server: $response");
-      throw ApiException(
-        response: response,
-        message: "Server responed with an error: HTTP ${response.statusCode}",
-      );
-    }
-
-    final apiNcAlbums = await api.NcAlbumParser().parse(response.body);
-    return apiNcAlbums
-        .map(ApiNcAlbumConverter.fromApi)
-        .where((a) => a.strippedPath != ".")
-        .toList();
+    final results = await Future.wait([
+      _getAlbums(account),
+      _getSharedAlbums(account),
+    ]);
+    return results.flattened.toList();
   }
 
   @override
@@ -114,6 +96,58 @@ class NcAlbumRemoteDataSource implements NcAlbumDataSource {
         .map(ApiNcAlbumItemConverter.fromApi)
         .toList();
   }
+
+  Future<List<NcAlbum>> _getAlbums(Account account) async {
+    final response = await ApiUtil.fromAccount(account)
+        .photos(account.userId.toString())
+        .albums()
+        .propfind(
+          lastPhoto: 1,
+          nbItems: 1,
+          location: 1,
+          dateRange: 1,
+          collaborators: 1,
+        );
+    if (!response.isGood) {
+      _log.severe("[_getAlbums] Failed requesting server: $response");
+      throw ApiException(
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
+    }
+
+    final apiNcAlbums = await api.NcAlbumParser().parse(response.body);
+    return apiNcAlbums
+        .map(ApiNcAlbumConverter.fromApi)
+        .where((a) => a.strippedPath != ".")
+        .toList();
+  }
+
+  Future<List<NcAlbum>> _getSharedAlbums(Account account) async {
+    final response = await ApiUtil.fromAccount(account)
+        .photos(account.userId.toString())
+        .sharedalbums()
+        .propfind(
+          lastPhoto: 1,
+          nbItems: 1,
+          location: 1,
+          dateRange: 1,
+          collaborators: 1,
+        );
+    if (!response.isGood) {
+      _log.severe("[_getSharedAlbums] Failed requesting server: $response");
+      throw ApiException(
+        response: response,
+        message: "Server responed with an error: HTTP ${response.statusCode}",
+      );
+    }
+
+    final apiNcAlbums = await api.NcAlbumParser().parse(response.body);
+    return apiNcAlbums
+        .map(ApiNcAlbumConverter.fromApi)
+        .where((a) => a.strippedPath != ".")
+        .toList();
+  }
 }
 
 @npLog
@@ -175,8 +209,8 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
     return dbItems
         .map((i) {
           try {
-            return SqliteNcAlbumItemConverter.fromSql(
-                account.userId.toString(), album.strippedPath, i);
+            return SqliteNcAlbumItemConverter.fromSql(account.userId.toString(),
+                album.strippedPath, album.isOwned, i);
           } catch (e, stackTrace) {
             _log.severe(
                 "[getItems] Failed while converting DB entry", e, stackTrace);
@@ -239,7 +273,7 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
       final diff = getDiffWith<NcAlbumItem>(
         existingItems
             .map((e) => SqliteNcAlbumItemConverter.fromSql(
-                account.userId.raw, album.strippedPath, e))
+                account.userId.raw, album.strippedPath, album.isOwned, e))
             .sorted(NcAlbumItemExtension.identityComparator),
         remote.sorted(NcAlbumItemExtension.identityComparator),
         NcAlbumItemExtension.identityComparator,
