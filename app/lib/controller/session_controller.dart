@@ -1,9 +1,7 @@
-import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// Manage volatile global variables bonded to an account session, when the
 /// session ends (i.e., sign out), the variables are cleared
-@npLog
 class SessionController {
   SessionController();
 
