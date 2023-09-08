@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 
@@ -77,7 +78,7 @@ extension FileDescriptorExtension on FileDescriptor {
   ///
   /// See: [strippedPathWithEmpty]
   String get strippedPath {
-    if (fdPath.contains("remote.php/dav/files")) {
+    if (fdPath.startsWith("remote.php/dav/files")) {
       final position = fdPath.indexOf("/", "remote.php/dav/files/".length) + 1;
       if (position == 0) {
         // root dir path
@@ -85,6 +86,11 @@ extension FileDescriptorExtension on FileDescriptor {
       } else {
         return fdPath.substring(position);
       }
+    } else if (fdPath.startsWith("remote.php/dav/photos/")) {
+      // nextcloud albums
+      var position = fdPath.indexOf("/", "remote.php/dav/photos/".length) + 1;
+      position = fdPath.indexOf("/", position);
+      return fdPath.slice(position + 1);
     } else {
       return fdPath;
     }
