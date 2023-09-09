@@ -349,6 +349,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
   Future<void> _initTags() async {
     assert(_file != null);
+    if (file_util.isNcAlbumFile(widget.account, _file!)) {
+      // tag is not supported here
+      return;
+    }
     final c = KiwiContainer().resolve<DiContainer>();
     try {
       final tags = await ListFileTag(c)(widget.account, _file!);
