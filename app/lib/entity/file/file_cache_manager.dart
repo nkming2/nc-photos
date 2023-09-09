@@ -133,7 +133,7 @@ class FileSqliteCacheUpdater {
 
       final dirFileQuery = db.select(db.dirFiles)
         ..where((t) => t.dir.equals(_dirRowId!))
-        ..orderBy([(t) => sql.OrderingTerm.asc(t.rowId)]);
+        ..orderBy([(t) => sql.OrderingTerm.asc(t.child)]);
       final dirFiles = await dirFileQuery.get();
       final diff = getDiff(dirFiles.map((e) => e.child),
           _childRowIds.sorted(Comparable.compare));
