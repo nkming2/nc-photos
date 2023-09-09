@@ -34,7 +34,7 @@ class CollectionBuilder {
 
   static Collection byNcAlbum(Account account, NcAlbum album) {
     return Collection(
-      name: album.strippedPath,
+      name: album.name,
       contentProvider: CollectionNcAlbumProvider(
         account: account,
         album: album,

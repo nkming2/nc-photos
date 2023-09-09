@@ -75,6 +75,24 @@ extension NcAlbumExtension on NcAlbum {
     return p.startsWith("albums/");
   }
 
+  /// Return the name of this album
+  ///
+  /// Normally this is identical to [strippedPath], except for those shared by
+  /// others
+  String get name {
+    if (isOwned) {
+      return strippedPath;
+    }
+    final p = strippedPath;
+    final found = p.lastIndexOf(" (");
+    if (found == -1) {
+      // ?
+      return p;
+    } else {
+      return p.slice(0, found);
+    }
+  }
+
   /// Return the path of this file with the DAV part stripped
   ///
   /// WebDAV file path: remote.php/dav/photos/{userId}/albums/{strippedPath}.
