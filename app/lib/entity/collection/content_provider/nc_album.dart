@@ -44,6 +44,11 @@ class CollectionNcAlbumProvider
         // CollectionCapability.share,
       ];
 
+  /// Capabilities when this album is shared to this user by someone else
+  List<CollectionCapability> get guestCapabilities => [
+        CollectionCapability.manualItem,
+      ];
+
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;
 

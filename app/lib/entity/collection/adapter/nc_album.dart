@@ -150,8 +150,16 @@ class CollectionNcAlbumAdapter
   Future<void> remove() => RemoveNcAlbum(_c)(account, _provider.album);
 
   @override
-  bool isPermitted(CollectionCapability capability) =>
-      _provider.capabilities.contains(capability);
+  bool isPermitted(CollectionCapability capability) {
+    if (!_provider.capabilities.contains(capability)) {
+      return false;
+    }
+    if (_provider.isOwned) {
+      return true;
+    } else {
+      return _provider.guestCapabilities.contains(capability);
+    }
+  }
 
   @override
   bool isManualCover() => false;
