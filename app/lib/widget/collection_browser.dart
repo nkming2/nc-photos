@@ -136,7 +136,9 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
 
     if (_bloc.state.collection.shares.isNotEmpty &&
         _bloc.state.collection.contentProvider is CollectionAlbumProvider) {
-      _showSharedAlbumInfoDialog();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showSharedAlbumInfoDialog();
+      });
     }
   }
 
