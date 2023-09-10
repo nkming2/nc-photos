@@ -156,36 +156,16 @@ class _SharingBrowserState extends State<SharingBrowser> {
 
   Widget _buildFileItem(BuildContext context, List<ListSharingItem> shares) {
     assert(shares.first is ListSharingFile);
-    final dateStr =
-        _getDateFormat(context).format(shares.first.share.stime.toLocal());
-    final firstItem = shares.first as ListSharingFile;
-    return _ListTile(
-      leading: shares.first.share.itemType == ShareItemType.folder
-          ? const SizedBox(
-              height: _leadingSize,
-              width: _leadingSize,
-              child: Icon(Icons.folder, size: 32),
-            )
-          : NetworkRectThumbnail(
-              account: widget.account,
-              imageUrl: NetworkRectThumbnail.imageUrlForFile(
-                  widget.account, firstItem.file),
-              dimension: _leadingSize,
-              errorBuilder: (_) => const Icon(Icons.folder, size: 32),
-            ),
-      label: shares.first.share.filename,
-      description: shares.first.share.uidOwner == widget.account.userId
-          ? L10n.global().fileLastSharedDescription(dateStr)
-          : L10n.global().fileLastSharedByOthersDescription(
-              shares.first.share.displaynameOwner, dateStr),
-      trailing: (shares.any((element) => element.share.url?.isNotEmpty == true))
-          ? const Icon(Icons.link)
-          : null,
+    final item = shares.first as ListSharingFile;
+    return _FileTile(
+      account: widget.account,
+      item: item,
+      isLinkShare: shares.any((e) => e.share.url?.isNotEmpty == true),
       onTap: () {
         Navigator.of(context).pushNamed(SharedFileViewer.routeName,
             arguments: SharedFileViewerArguments(
               widget.account,
-              firstItem.file,
+              item.file,
               shares.map((e) => e.share).toList(),
             ));
       },
@@ -194,32 +174,11 @@ class _SharingBrowserState extends State<SharingBrowser> {
 
   Widget _buildAlbumItem(BuildContext context, List<ListSharingItem> shares) {
     assert(shares.first is ListSharingAlbum);
-    final dateStr =
-        _getDateFormat(context).format(shares.first.share.stime.toLocal());
-    final firstItem = shares.first as ListSharingAlbum;
-    final cover = firstItem.album.coverProvider.getCover(firstItem.album);
-    return _ListTile(
-      leading: cover == null
-          ? const SizedBox(
-              height: _leadingSize,
-              width: _leadingSize,
-              child: Icon(Icons.photo_album, size: 32),
-            )
-          : NetworkRectThumbnail(
-              account: widget.account,
-              imageUrl:
-                  NetworkRectThumbnail.imageUrlForFile(widget.account, cover),
-              dimension: _leadingSize,
-              errorBuilder: (_) => const Icon(Icons.photo_album, size: 32),
-            ),
-      label: firstItem.album.name,
-      description: shares.first.share.uidOwner == widget.account.userId
-          ? L10n.global().fileLastSharedDescription(dateStr)
-          : L10n.global().albumLastSharedByOthersDescription(
-              shares.first.share.displaynameOwner, dateStr),
-      trailing: const Icon(Icons.photo_album_outlined),
-      onTap: () =>
-          _onAlbumShareItemTap(context, shares.first as ListSharingAlbum),
+    final item = shares.first as ListSharingAlbum;
+    return _AlbumTile(
+      account: widget.account,
+      item: item,
+      onTap: () => _onAlbumShareItemTap(context, item),
     );
   }
 
@@ -311,7 +270,7 @@ class _ListTile extends StatelessWidget {
     required this.label,
     required this.description,
     this.trailing,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
@@ -333,7 +292,87 @@ class _ListTile extends StatelessWidget {
   final String label;
   final String description;
   final Widget? trailing;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+}
+
+class _FileTile extends StatelessWidget {
+  const _FileTile({
+    required this.account,
+    required this.item,
+    required this.isLinkShare,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dateStr = _getDateFormat(context).format(item.share.stime.toLocal());
+    return _ListTile(
+      leading: item.share.itemType == ShareItemType.folder
+          ? const SizedBox(
+              height: _leadingSize,
+              width: _leadingSize,
+              child: Icon(Icons.folder, size: 32),
+            )
+          : NetworkRectThumbnail(
+              account: account,
+              imageUrl:
+                  NetworkRectThumbnail.imageUrlForFile(account, item.file),
+              dimension: _leadingSize,
+              errorBuilder: (_) => const Icon(Icons.folder, size: 32),
+            ),
+      label: item.share.filename,
+      description: item.share.uidOwner == account.userId
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().fileLastSharedByOthersDescription(
+              item.share.displaynameOwner, dateStr),
+      trailing: isLinkShare ? const Icon(Icons.link) : null,
+      onTap: onTap,
+    );
+  }
+
+  final Account account;
+  final ListSharingFile item;
+  final bool isLinkShare;
+  final VoidCallback? onTap;
+}
+
+class _AlbumTile extends StatelessWidget {
+  const _AlbumTile({
+    required this.account,
+    required this.item,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dateStr = _getDateFormat(context).format(item.share.stime.toLocal());
+    final cover = item.album.coverProvider.getCover(item.album);
+    return _ListTile(
+      leading: cover == null
+          ? const SizedBox(
+              height: _leadingSize,
+              width: _leadingSize,
+              child: Icon(Icons.photo_album, size: 32),
+            )
+          : NetworkRectThumbnail(
+              account: account,
+              imageUrl: NetworkRectThumbnail.imageUrlForFile(account, cover),
+              dimension: _leadingSize,
+              errorBuilder: (_) => const Icon(Icons.photo_album, size: 32),
+            ),
+      label: item.album.name,
+      description: item.share.uidOwner == account.userId
+          ? L10n.global().fileLastSharedDescription(dateStr)
+          : L10n.global().albumLastSharedByOthersDescription(
+              item.share.displaynameOwner, dateStr),
+      trailing: const Icon(Icons.photo_album_outlined),
+      onTap: onTap,
+    );
+  }
+
+  final Account account;
+  final ListSharingAlbum item;
+  final VoidCallback? onTap;
 }
 
 const _leadingSize = 56.0;

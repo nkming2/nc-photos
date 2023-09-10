@@ -31,13 +31,13 @@ abstract class ListSharingItem {
 }
 
 class ListSharingFile extends ListSharingItem {
-  const ListSharingFile(Share share, this.file) : super(share);
+  const ListSharingFile(super.share, this.file);
 
   final File file;
 }
 
 class ListSharingAlbum extends ListSharingItem {
-  const ListSharingAlbum(Share share, this.album) : super(share);
+  const ListSharingAlbum(super.share, this.album);
 
   final Album album;
 }
