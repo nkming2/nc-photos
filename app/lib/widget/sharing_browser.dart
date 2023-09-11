@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +9,9 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/list_sharing.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
+import 'package:nc_photos/controller/sharings_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -15,6 +20,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/share.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
@@ -23,12 +29,22 @@ import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/shared_file_viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_ui/np_ui.dart';
+import 'package:to_string/to_string.dart';
 
 part 'sharing_browser.g.dart';
+part 'sharing_browser/bloc.dart';
+part 'sharing_browser/state_event.dart';
+part 'sharing_browser/type.dart';
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 class SharingBrowserArguments {
   SharingBrowserArguments(this.account);
@@ -37,39 +53,44 @@ class SharingBrowserArguments {
 }
 
 /// Show a list of all shares associated with this account
-class SharingBrowser extends StatefulWidget {
+class SharingBrowser extends StatelessWidget {
   static const routeName = "/sharing-browser";
 
-  static Route buildRoute(SharingBrowserArguments args) => MaterialPageRoute(
-        builder: (context) => SharingBrowser.fromArgs(args),
+  static Route buildRoute() => MaterialPageRoute(
+        builder: (_) => const SharingBrowser(),
       );
 
-  const SharingBrowser({
-    Key? key,
-    required this.account,
-  }) : super(key: key);
-
-  SharingBrowser.fromArgs(SharingBrowserArguments args, {Key? key})
-      : this(
-          key: key,
-          account: args.account,
-        );
+  const SharingBrowser({super.key});
 
   @override
-  createState() => _SharingBrowserState();
+  Widget build(BuildContext context) {
+    final accountController = context.read<AccountController>();
+    return BlocProvider(
+      create: (_) => _Bloc(
+        account: accountController.account,
+        accountPrefController: accountController.accountPrefController,
+        sharingsController: accountController.sharingsController,
+      ),
+      child: const _WrappedSharingBrowser(),
+    );
+  }
+}
 
-  final Account account;
+class _WrappedSharingBrowser extends StatefulWidget {
+  const _WrappedSharingBrowser();
+
+  @override
+  State<StatefulWidget> createState() => _WrappedSharingBrowserState();
 }
 
 @npLog
-class _SharingBrowserState extends State<SharingBrowser> {
+class _WrappedSharingBrowserState extends State<_WrappedSharingBrowser>
+    with RouteAware, PageVisibilityMixin {
   @override
   initState() {
     super.initState();
-    _importPotentialSharedAlbum().whenComplete(() {
-      _initBloc();
-    });
-    AccountPref.of(widget.account).run((obj) {
+    _bloc.add(const _Init());
+    AccountPref.of(_bloc.account).run((obj) {
       if (obj.hasNewSharedAlbumOr()) {
         obj.setNewSharedAlbum(false);
       }
@@ -77,67 +98,82 @@ class _SharingBrowserState extends State<SharingBrowser> {
   }
 
   @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<ListSharingBloc, ListSharingBlocState>(
-        bloc: _bloc,
-        listener: (context, state) => _onStateChange(context, state),
-        child: BlocBuilder<ListSharingBloc, ListSharingBlocState>(
-          bloc: _bloc,
-          builder: (context, state) => _buildContent(context, state),
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListener(
+          listenWhen: (previous, current) => previous.items != current.items,
+          listener: (context, state) {
+            _bloc.add(_TransformItems(state.items));
+          },
+        ),
+        _BlocListener(
+          listenWhen: (previous, current) => previous.error != current.error,
+          listener: (context, state) {
+            if (state.error != null && isPageVisible()) {
+              SnackBarManager().showSnackBar(SnackBar(
+                content: Text(exception_util.toUserString(state.error!.error)),
+                duration: k.snackBarDurationNormal,
+              ));
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        body: _BlocBuilder(
+          buildWhen: (previous, current) =>
+              previous.items.isEmpty != current.items.isEmpty ||
+              previous.isLoading != current.isLoading,
+          builder: (context, state) {
+            if (state.items.isEmpty && !state.isLoading) {
+              return const _EmptyContentList();
+            } else {
+              return Stack(
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      const _AppBar(),
+                      SliverToBoxAdapter(
+                        child: _BlocBuilder(
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading,
+                          builder: (context, state) => state.isLoading
+                              ? const LinearProgressIndicator()
+                              : const SizedBox(height: 4),
+                        ),
+                      ),
+                      const _ContentList(),
+                    ],
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
   }
 
-  void _initBloc() {
-    if (_bloc.state is ListSharingBlocInit) {
-      _log.info("[_initBloc] Initialize bloc");
-    } else {
-      // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _onStateChange(context, _bloc.state);
-          });
-        }
-      });
-    }
-    _reqQuery();
-  }
+  late final _bloc = context.read<_Bloc>();
+}
 
-  Widget _buildContent(BuildContext context, ListSharingBlocState state) {
-    if ((state is ListSharingBlocSuccess || state is ListSharingBlocFailure) &&
-        state.items.isEmpty) {
-      return _buildEmptyContent(context);
-    } else {
-      return Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                title: Text(L10n.global().collectionSharingLabel),
-                floating: true,
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _buildItem(context, _items[index]),
-                  childCount: _items.length,
-                ),
-              ),
-            ],
-          ),
-          if (state is ListSharingBlocLoading)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: LinearProgressIndicator(),
-            ),
-        ],
-      );
-    }
-  }
+class _AppBar extends StatelessWidget {
+  const _AppBar();
 
-  Widget _buildEmptyContent(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      title: Text(L10n.global().collectionSharingLabel),
+      floating: true,
+    );
+  }
+}
+
+class _EmptyContentList extends StatelessWidget {
+  const _EmptyContentList();
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         AppBar(
@@ -153,115 +189,63 @@ class _SharingBrowserState extends State<SharingBrowser> {
       ],
     );
   }
+}
 
-  Widget _buildFileItem(BuildContext context, List<ListSharingItem> shares) {
-    assert(shares.first is ListSharingFile);
-    final item = shares.first as ListSharingFile;
-    return _FileTile(
-      account: widget.account,
-      item: item,
-      isLinkShare: shares.any((e) => e.share.url?.isNotEmpty == true),
-      onTap: () {
-        Navigator.of(context).pushNamed(SharedFileViewer.routeName,
-            arguments: SharedFileViewerArguments(
-              widget.account,
-              item.file,
-              shares.map((e) => e.share).toList(),
-            ));
-      },
-    );
-  }
+class _ContentList extends StatelessWidget {
+  const _ContentList();
 
-  Widget _buildAlbumItem(BuildContext context, List<ListSharingItem> shares) {
-    assert(shares.first is ListSharingAlbum);
-    final item = shares.first as ListSharingAlbum;
-    return _AlbumTile(
-      account: widget.account,
-      item: item,
-      onTap: () => _onAlbumShareItemTap(context, item),
-    );
-  }
-
-  Widget _buildItem(BuildContext context, List<ListSharingItem> shares) {
-    if (shares.first is ListSharingFile) {
-      return _buildFileItem(context, shares);
-    } else if (shares.first is ListSharingAlbum) {
-      return _buildAlbumItem(context, shares);
-    } else {
-      throw StateError("Unknown item type: ${shares.first.runtimeType}");
-    }
-  }
-
-  void _onStateChange(BuildContext context, ListSharingBlocState state) {
-    if (state is ListSharingBlocInit) {
-      _items = [];
-    } else if (state is ListSharingBlocSuccess ||
-        state is ListSharingBlocLoading) {
-      _transformItems(state.items);
-    } else if (state is ListSharingBlocFailure) {
-      _transformItems(state.items);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  void _onAlbumShareItemTap(BuildContext context, ListSharingAlbum share) {
-    Navigator.of(context).pushNamed(
-      CollectionBrowser.routeName,
-      arguments: CollectionBrowserArguments(
-        CollectionBuilder.byAlbum(widget.account, share.album),
+  @override
+  Widget build(BuildContext context) {
+    return _BlocBuilder(
+      buildWhen: (previous, current) =>
+          previous.transformedItems != current.transformedItems,
+      builder: (_, state) => SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) =>
+              _buildItem(context, state.transformedItems[index]),
+          childCount: state.transformedItems.length,
+        ),
       ),
     );
   }
 
-  void _transformItems(List<ListSharingItem> items) {
-    // group shares of the same file
-    final map = <String, List<ListSharingItem>>{};
-    for (final i in items) {
-      final isSharedByMe = (i.share.uidOwner == widget.account.userId);
-      final groupKey = "${i.share.path}?$isSharedByMe";
-      map[groupKey] ??= <ListSharingItem>[];
-      map[groupKey]!.add(i);
+  Widget _buildItem(BuildContext context, _Item data) {
+    if (data is _FileShareItem) {
+      return _buildFileItem(context, data);
+    } else if (data is _AlbumShareItem) {
+      return _buildAlbumItem(context, data);
+    } else {
+      throw ArgumentError("Unknown item type: ${data.runtimeType}");
     }
-    // sort the sub-lists
-    for (final list in map.values) {
-      list.sort((a, b) => b.share.stime.compareTo(a.share.stime));
-    }
-    // then sort the map and convert it to list
-    _items = map.entries
-        .sorted((a, b) =>
-            b.value.first.share.stime.compareTo(a.value.first.share.stime))
-        .map((e) => e.value)
-        .toList();
   }
 
-  void _reqQuery() {
-    _bloc.add(ListSharingBlocQuery(widget.account));
+  Widget _buildFileItem(BuildContext context, _FileShareItem item) {
+    return _FileTile(
+      account: item.account,
+      item: item,
+      isLinkShare: item.shares.any((e) => e.url?.isNotEmpty == true),
+      onTap: () {
+        Navigator.of(context).pushNamed(SharedFileViewer.routeName,
+            arguments: SharedFileViewerArguments(
+                item.account, item.file, item.shares));
+      },
+    );
   }
 
-  Future<List<Album>> _importPotentialSharedAlbum() async {
-    final c = KiwiContainer().resolve<DiContainer>().copyWith(
-          // don't want the potential albums to be cached at this moment
-          fileRepo: const OrNull(FileRepo(FileWebdavDataSource())),
-          albumRepo: OrNull(AlbumRepo(AlbumRemoteDataSource())),
+  Widget _buildAlbumItem(BuildContext context, _AlbumShareItem item) {
+    return _AlbumTile(
+      account: item.account,
+      item: item,
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          CollectionBrowser.routeName,
+          arguments: CollectionBrowserArguments(
+            CollectionBuilder.byAlbum(item.account, item.album),
+          ),
         );
-    try {
-      return await ImportPotentialSharedAlbum(c)(
-          widget.account, AccountPref.of(widget.account));
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",
-          e,
-          stackTrace);
-      return [];
-    }
+      },
+    );
   }
-
-  late final _bloc = ListSharingBloc.of(widget.account);
-
-  var _items = <List<ListSharingItem>>[];
 }
 
 class _ListTile extends StatelessWidget {
@@ -274,7 +258,7 @@ class _ListTile extends StatelessWidget {
   });
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return UnboundedListTile(
       leading: leading,
       title: Text(
@@ -305,9 +289,9 @@ class _FileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = _getDateFormat(context).format(item.share.stime.toLocal());
+    final dateStr = _getDateFormat(context).format(item.sharedTime!.toLocal());
     return _ListTile(
-      leading: item.share.itemType == ShareItemType.folder
+      leading: item.shares.first.itemType == ShareItemType.folder
           ? const SizedBox(
               height: _leadingSize,
               width: _leadingSize,
@@ -320,18 +304,18 @@ class _FileTile extends StatelessWidget {
               dimension: _leadingSize,
               errorBuilder: (_) => const Icon(Icons.folder, size: 32),
             ),
-      label: item.share.filename,
-      description: item.share.uidOwner == account.userId
+      label: item.name,
+      description: item.sharedBy == null
           ? L10n.global().fileLastSharedDescription(dateStr)
-          : L10n.global().fileLastSharedByOthersDescription(
-              item.share.displaynameOwner, dateStr),
+          : L10n.global()
+              .fileLastSharedByOthersDescription(item.sharedBy!, dateStr),
       trailing: isLinkShare ? const Icon(Icons.link) : null,
       onTap: onTap,
     );
   }
 
   final Account account;
-  final ListSharingFile item;
+  final _FileShareItem item;
   final bool isLinkShare;
   final VoidCallback? onTap;
 }
@@ -345,7 +329,7 @@ class _AlbumTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = _getDateFormat(context).format(item.share.stime.toLocal());
+    final dateStr = _getDateFormat(context).format(item.sharedTime!.toLocal());
     final cover = item.album.coverProvider.getCover(item.album);
     return _ListTile(
       leading: cover == null
@@ -361,17 +345,17 @@ class _AlbumTile extends StatelessWidget {
               errorBuilder: (_) => const Icon(Icons.photo_album, size: 32),
             ),
       label: item.album.name,
-      description: item.share.uidOwner == account.userId
+      description: item.sharedBy == null
           ? L10n.global().fileLastSharedDescription(dateStr)
-          : L10n.global().albumLastSharedByOthersDescription(
-              item.share.displaynameOwner, dateStr),
+          : L10n.global()
+              .albumLastSharedByOthersDescription(item.sharedBy!, dateStr),
       trailing: const Icon(Icons.photo_album_outlined),
       onTap: onTap,
     );
   }
 
   final Account account;
-  final ListSharingAlbum item;
+  final _AlbumShareItem item;
   final VoidCallback? onTap;
 }
 

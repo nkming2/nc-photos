@@ -191,6 +191,7 @@ class _WrappedAppState extends State<_WrappedApp>
         PeopleBrowser.routeName: PeopleBrowser.buildRoute,
         EnhancementSettings.routeName: EnhancementSettings.buildRoute,
         Settings.routeName: Settings.buildRoute,
+        SharingBrowser.routeName: SharingBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -208,7 +209,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleTrashbinBrowserRoute(settings);
     route ??= _handleTrashbinViewerRoute(settings);
     route ??= _handleSlideshowViewerRoute(settings);
-    route ??= _handleSharingBrowserRoute(settings);
     route ??= _handleSharedFileViewerRoute(settings);
     route ??= _handleAlbumShareOutlierBrowserRoute(settings);
     route ??= _handleShareFolderPickerRoute(settings);
@@ -375,20 +375,6 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleSlideshowViewerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleSharingBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == SharingBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as SharingBrowserArguments;
-        return SharingBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleSharingBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

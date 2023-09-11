@@ -5,6 +5,7 @@ import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/controller/session_controller.dart';
+import 'package:nc_photos/controller/sharings_controller.dart';
 import 'package:nc_photos/controller/sync_controller.dart';
 import 'package:nc_photos/di_container.dart';
 
@@ -23,6 +24,8 @@ class AccountController {
     _syncController = null;
     _sessionController?.dispose();
     _sessionController = null;
+    _sharingsController?.dispose();
+    _sharingsController = null;
   }
 
   Account get account => _account!;
@@ -58,6 +61,12 @@ class AccountController {
   SessionController get sessionController =>
       _sessionController ??= SessionController();
 
+  SharingsController get sharingsController =>
+      _sharingsController ??= SharingsController(
+        KiwiContainer().resolve(),
+        account: _account!,
+      );
+
   Account? _account;
   CollectionsController? _collectionsController;
   ServerController? _serverController;
@@ -65,4 +74,5 @@ class AccountController {
   PersonsController? _personsController;
   SyncController? _syncController;
   SessionController? _sessionController;
+  SharingsController? _sharingsController;
 }
