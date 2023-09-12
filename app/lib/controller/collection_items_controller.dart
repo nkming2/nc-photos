@@ -205,7 +205,7 @@ class CollectionItemsController {
             ?.run((e) => _dataStreamController.addError(e.error, e.stackTrace));
         if (failed.isNotEmpty) {
           _dataStreamController.addWithValue((value) => value.copyWith(
-                items: value.items + failed,
+                items: [...value.items, ...failed],
               ));
         }
       } else if (isInited != _isDataStreamInited) {
@@ -265,7 +265,7 @@ class CollectionItemsController {
             ?.run((e) => _dataStreamController.addError(e.error, e.stackTrace));
         if (failed.isNotEmpty) {
           _dataStreamController.addWithValue((value) => value.copyWith(
-                items: value.items + failed,
+                items: [...value.items, ...failed],
               ));
         }
       } else if (isInited != _isDataStreamInited) {

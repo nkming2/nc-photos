@@ -4,7 +4,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection_item.dart';
-import 'package:nc_photos/entity/collection_item/basic_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -29,7 +28,7 @@ class RemoveFromNcAlbum {
         "[call] Remove ${items.length} items from album '${album.strippedPath}'");
     final fileItems = items
         .whereIndexed((i, e) {
-          if (e is! BasicCollectionFileItem) {
+          if (e is! CollectionFileItem) {
             onError?.call(
               i,
               e,
@@ -41,7 +40,7 @@ class RemoveFromNcAlbum {
             return true;
           }
         })
-        .cast<BasicCollectionFileItem>()
+        .cast<CollectionFileItem>()
         .toList();
     var count = fileItems.length;
     await Remove(_c)(
