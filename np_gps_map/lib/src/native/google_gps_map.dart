@@ -4,14 +4,14 @@ import 'package:tuple/tuple.dart';
 
 class GoogleGpsMap extends StatelessWidget {
   const GoogleGpsMap({
-    Key? key,
+    super.key,
     required this.center,
     required this.zoom,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final centerLl = LatLng(center.item1, center.item2);
     return GoogleMap(
       compassEnabled: false,

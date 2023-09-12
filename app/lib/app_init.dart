@@ -37,13 +37,13 @@ import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/tagged_file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/touch_manager.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_log/np_log.dart' as np_log;
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -55,8 +55,6 @@ enum InitIsolateType {
   /// flutter_background_service
   flutterIsolate,
 }
-
-bool isNewGMapsRenderer() => _isNewGMapsRenderer;
 
 Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
@@ -79,16 +77,7 @@ Future<void> init(InitIsolateType isolateType) async {
   }
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
-
-  if (getRawPlatform() == NpPlatform.android) {
-    if (isolateType == InitIsolateType.main) {
-      try {
-        _isNewGMapsRenderer = await Activity.isNewGMapsRenderer();
-      } catch (e, stackTrace) {
-        _log.severe("[init] Failed while isNewGMapsRenderer", e, stackTrace);
-      }
-    }
-  }
+  GpsMap.init();
 
   _hasInitedInThisIsolate = true;
 }
@@ -237,4 +226,3 @@ Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
 
 final _log = Logger("app_init");
 var _hasInitedInThisIsolate = false;
-var _isNewGMapsRenderer = false;

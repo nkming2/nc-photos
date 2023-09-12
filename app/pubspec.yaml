@@ -69,7 +69,6 @@ dependencies:
   flutter_cache_manager: any
   flutter_colorpicker: ^1.0.3
   flutter_isolate: ^2.0.4
-  flutter_map: ^2.2.0
   flutter_staggered_grid_view:
     git:
       url: https://gitlab.com/nc-photos/flutter_staggered_grid_view
@@ -85,7 +84,6 @@ dependencies:
       path: library
   intl: ^0.17.0
   kiwi: ^4.1.0
-  latlong2: any
   logging: ^1.1.1
   memory_info: ^0.0.3
   mime: ^1.0.4
@@ -105,6 +103,8 @@ dependencies:
     path: ../np_collection
   np_geocoder:
     path: ../np_geocoder
+  np_gps_map:
+    path: ../np_gps_map
   np_log:
     path: ../np_log
   np_math:

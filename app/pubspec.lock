@@ -594,7 +594,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_map:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_map
       sha256: "09010e452bcd8c57ade1b936b79643c4fd599f93b00d1696630f0b919b6f374a"
@@ -799,7 +799,7 @@ packages:
     source: hosted
     version: "4.1.0"
   latlong2:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: latlong2
       sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
@@ -987,6 +987,13 @@ packages:
     dependency: "direct main"
     description:
       path: "../np_geocoder"
+      relative: true
+    source: path
+    version: "0.0.1"
+  np_gps_map:
+    dependency: "direct main"
+    description:
+      path: "../np_gps_map"
       relative: true
     source: path
     version: "0.0.1"

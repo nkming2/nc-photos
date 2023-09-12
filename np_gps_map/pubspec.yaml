@@ -1,0 +1,35 @@
+name: np_gps_map
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_map: ^2.2.0
+  google_maps_flutter: ^2.2.8
+  latlong2: any
+  np_async:
+    path: ../np_async
+  np_platform_util:
+    path: ../np_platform_util
+  tuple: ^2.0.1
+  url_launcher: ^6.1.11
+
+dev_dependencies:
+  np_lints:
+    path: ../np_lints
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.nkming.nc_photos.np_gps_map
+        pluginClass: NpGpsMapPlugin
+  assets:
+    - assets/

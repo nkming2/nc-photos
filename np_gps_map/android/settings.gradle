@@ -1,0 +1,2 @@
+rootProject.name = 'np_gps_map'
+includeBuild '../../np_android_core'

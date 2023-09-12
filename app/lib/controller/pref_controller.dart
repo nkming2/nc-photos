@@ -7,8 +7,8 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/size.dart';
-import 'package:nc_photos/widget/gps_map.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'pref_controller.g.dart';
@@ -256,7 +256,7 @@ class PrefController {
   late final _isViewerForceRotationController =
       BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
   late final _gpsMapProviderController = BehaviorSubject.seeded(
-      GpsMapProvider.fromValue(_c.pref.getGpsMapProviderOr(0)));
+      GpsMapProvider.values[_c.pref.getGpsMapProviderOr(0)]);
   late final _isAlbumBrowserShowDateController =
       BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
   late final _isDoubleTapExitController =

@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -23,18 +24,19 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/about_geocoding_dialog.dart';
-import 'package:nc_photos/widget/gps_map.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
 import 'package:nc_photos/widget/list_tile_center_leading.dart';
 import 'package:nc_photos/widget/photo_date_time_edit_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_geocoder/np_geocoder.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
@@ -300,10 +302,14 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                 duration: k.animationDurationNormal,
                 child: SizedBox(
                   height: 256,
-                  child: GpsMap(
-                    center: _gps!,
-                    zoom: 16,
-                    onTap: _onMapTap,
+                  child: ValueStreamBuilder<GpsMapProvider>(
+                    stream: context.read<PrefController>().gpsMapProvider,
+                    builder: (context, gpsMapProvider) => GpsMap(
+                      providerHint: gpsMapProvider.requireData,
+                      center: _gps!,
+                      zoom: 16,
+                      onTap: _onMapTap,
+                    ),
                   ),
                 ),
               ),
