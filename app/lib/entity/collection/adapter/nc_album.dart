@@ -53,7 +53,14 @@ class CollectionNcAlbumAdapter
       );
       return items.map((i) {
         final f = found.firstWhereOrNull((e) => e.fdId == i.fileId);
-        return CollectionFileItemNcAlbumItemAdapter(i, f);
+        return CollectionFileItemNcAlbumItemAdapter(
+          i,
+          // retain the path such that it is correct recognized as part of an
+          // album
+          f?.copyWith(
+            fdPath: i.path,
+          ),
+        );
       }).toList();
     });
   }

@@ -1,3 +1,4 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:np_common/type.dart';
@@ -18,6 +19,7 @@ int compareFileDescriptorDateTimeDescending(
   }
 }
 
+@genCopyWith
 @toString
 class FileDescriptor with EquatableMixin {
   const FileDescriptor({
