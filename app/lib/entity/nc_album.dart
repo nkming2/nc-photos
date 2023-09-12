@@ -75,6 +75,22 @@ extension NcAlbumExtension on NcAlbum {
     return p.startsWith("albums/");
   }
 
+  /// Return the owner of this shared album, or null if this album is owned by
+  /// you
+  String? get owner {
+    if (isOwned) {
+      return null;
+    }
+    final p = strippedPath;
+    final found = p.lastIndexOf("(");
+    if (found == -1) {
+      // ?
+      return null;
+    } else {
+      return p.slice(found + 1);
+    }
+  }
+
   /// Return the name of this album
   ///
   /// Normally this is identical to [strippedPath], except for those shared by
