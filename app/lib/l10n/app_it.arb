@@ -107,11 +107,11 @@
             }
         }
     },
-    "deleteTooltip": "Cancella",
+    "deleteTooltip": "Elimina",
     "@deleteTooltip": {
         "description": "Delete selected items"
     },
-    "deleteProcessingNotification": "Cancellazione elemento",
+    "deleteProcessingNotification": "Eliminazione elemento in corso",
     "@deleteProcessingNotification": {
         "description": "Inform user that the item is being deleted"
     },

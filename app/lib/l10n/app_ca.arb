@@ -143,5 +143,103 @@
     "createAlbumTooltip": "Nou àlbum",
     "@createAlbumTooltip": {
         "description": "Tooltip of the button that creates a new album"
+    },
+    "albumSize": "{count, plural, =0{Buit} one{1 element} other{{count} elements}}",
+    "@albumSize": {
+        "description": "Number of items inside an album",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "albumArchiveLabel": "Arxiu",
+    "@albumArchiveLabel": {
+        "description": "A collection containing all archived photos"
+    },
+    "connectingToServer": "Connectant amb\n{server}",
+    "@connectingToServer": {
+        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "connectingToServer2": "Esperant a que el servidor ens autoritze",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Per favor, inicia sessió amb el navegador obert",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "nameInputHint": "Nom",
+    "@nameInputHint": {
+        "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "El nom és necessari",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
+    "skipButtonLabel": "SALTAR",
+    "@skipButtonLabel": {
+        "description": "Label of the skip button"
+    },
+    "confirmButtonLabel": "CONFIRMAR",
+    "@confirmButtonLabel": {
+        "description": "Label of the confirm button"
+    },
+    "signInHeaderText": "Inicia sessió al servidor de Nextcloud",
+    "@signInHeaderText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signIn2faHintText": "Fes servir una contrasenya d'aplicació si tens habilitada l'autentificació de dos passes al servidor",
+    "@signIn2faHintText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\nIniciar sessió",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
+    },
+    "serverAddressInputHint": "Direcció del servidor",
+    "@serverAddressInputHint": {
+        "description": "Hint of the text field expecting server address data"
+    },
+    "serverAddressInputInvalidEmpty": "Per favor, introdueix la direcció del servidor",
+    "@serverAddressInputInvalidEmpty": {
+        "description": "Inform user that the server address input field cannot be empty"
+    },
+    "usernameInputHint": "Nom d'Usuari",
+    "@usernameInputHint": {
+        "description": "Hint of the text field expecting username data"
+    },
+    "usernameInputInvalidEmpty": "Per favor, introdueix el teu nom d'usuari",
+    "@usernameInputInvalidEmpty": {
+        "description": "Inform user that the username input field cannot be empty"
+    },
+    "passwordInputHint": "Contrasenya",
+    "@passwordInputHint": {
+        "description": "Hint of the text field expecting password data"
+    },
+    "passwordInputInvalidEmpty": "Per favor, introdueix la teva contrasenya",
+    "@passwordInputInvalidEmpty": {
+        "description": "Inform user that the password input field cannot be empty"
+    },
+    "rootPickerHeaderText": "Selecciona les carpetes a incloure",
+    "@rootPickerHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerSubHeaderText": "Només es mostraran les fotos a aquests directoris. Toca SALTAR per a incloure totes les carpetes",
+    "@rootPickerSubHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "settingsShareFolderDialogTitle": "Troba la carpeta compartida",
+    "@settingsShareFolderDialogTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogDescription": "Aquest ajust correspon al paràmetre share_folder a config.php. Els dos valors han de ser idèntics.\n\nPer favor, troba la mateixa carpeta a la establerta en config.php.",
+    "@settingsShareFolderDialogDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
     }
 }
