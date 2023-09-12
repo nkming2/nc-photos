@@ -61,6 +61,7 @@ class ViewerDetailPane extends StatefulWidget {
     required this.onRemoveFromCollectionPressed,
     required this.onArchivePressed,
     required this.onUnarchivePressed,
+    required this.onDeletePressed,
     this.onSlideshowPressed,
   }) : super(key: key);
 
@@ -76,6 +77,7 @@ class ViewerDetailPane extends StatefulWidget {
   final void Function(BuildContext context) onRemoveFromCollectionPressed;
   final void Function(BuildContext context) onArchivePressed;
   final void Function(BuildContext context) onUnarchivePressed;
+  final void Function(BuildContext context) onDeletePressed;
   final VoidCallback? onSlideshowPressed;
 }
 
@@ -191,6 +193,12 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                       icon: Icons.archive_outlined,
                       label: L10n.global().archiveTooltip,
                       onPressed: () => widget.onArchivePressed(context),
+                    ),
+                  if (widget.fromCollection != null)
+                    _DetailPaneButton(
+                      icon: Icons.delete_outlined,
+                      label: L10n.global().deleteTooltip,
+                      onPressed: () => widget.onDeletePressed(context),
                     ),
                   _DetailPaneButton(
                     icon: Icons.slideshow_outlined,

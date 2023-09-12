@@ -249,11 +249,12 @@ class _ViewerState extends State<Viewer>
           tooltip: L10n.global().downloadTooltip,
           onPressed: _onDownloadPressed,
         ),
-        IconButton(
-          icon: const Icon(Icons.delete_outlined),
-          tooltip: L10n.global().deleteTooltip,
-          onPressed: () => _onDeletePressed(context),
-        ),
+        if (widget.fromCollection == null)
+          IconButton(
+            icon: const Icon(Icons.delete_outlined),
+            tooltip: L10n.global().deleteTooltip,
+            onPressed: () => _onDeletePressed(context),
+          ),
       ],
     );
   }
@@ -332,6 +333,7 @@ class _ViewerState extends State<Viewer>
                                   onArchivePressed: _onArchivePressed,
                                   onUnarchivePressed: _onUnarchivePressed,
                                   onSlideshowPressed: _onSlideshowPressed,
+                                  onDeletePressed: _onDeletePressed,
                                 ),
                               ),
                             );
