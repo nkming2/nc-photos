@@ -27,7 +27,9 @@ class CollectionLocationGroupProvider
   DateTime get lastModified => location.latestDateTime;
 
   @override
-  List<CollectionCapability> get capabilities => [];
+  List<CollectionCapability> get capabilities => [
+        CollectionCapability.deleteItem,
+      ];
 
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;

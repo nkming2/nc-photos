@@ -51,6 +51,7 @@ class CollectionAlbumProvider
         CollectionCapability.sort,
         CollectionCapability.rename,
         CollectionCapability.manualCover,
+        CollectionCapability.deleteItem,
         if (album.provider is AlbumStaticProvider) ...[
           CollectionCapability.manualItem,
           CollectionCapability.manualSort,
@@ -61,6 +62,7 @@ class CollectionAlbumProvider
 
   /// Capabilities when this album is shared to this user by someone else
   List<CollectionCapability> get guestCapabilities => [
+        CollectionCapability.deleteItem,
         if (album.provider is AlbumStaticProvider) ...[
           CollectionCapability.manualItem,
           CollectionCapability.labelItem,

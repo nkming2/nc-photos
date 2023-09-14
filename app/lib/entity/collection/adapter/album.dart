@@ -269,6 +269,9 @@ class CollectionAlbumAdapter implements CollectionAdapter {
   }
 
   @override
+  bool isItemDeletable(CollectionItem item) => isItemRemovable(item);
+
+  @override
   Future<void> remove() {
     if (_provider.album.albumFile?.isOwned(account.userId) == true) {
       return RemoveAlbum(_c)(account, _provider.album);

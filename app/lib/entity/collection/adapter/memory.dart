@@ -47,6 +47,9 @@ class CollectionMemoryAdapter
   }
 
   @override
+  bool isItemDeletable(CollectionItem item) => true;
+
+  @override
   bool isPermitted(CollectionCapability capability) =>
       _provider.capabilities.contains(capability);
 

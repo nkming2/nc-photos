@@ -92,6 +92,8 @@ enum CollectionCapability {
   manualCover,
   // share the collection with other user on the same server
   share,
+  // delete items
+  deleteItem,
 }
 
 /// Provide the actual content of a collection

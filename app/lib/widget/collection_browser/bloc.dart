@@ -255,6 +255,10 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           .whereType<_ActualItem>()
           .map((e) => e.original)
           .any(adapter.isItemRemovable),
+      isSelectionDeletable: ev.items
+          .whereType<_ActualItem>()
+          .map((e) => e.original)
+          .any(adapter.isItemDeletable),
     ));
   }
 
@@ -293,8 +297,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info("$ev");
     final selected = state.selectedItems;
     _clearSelection(emit);
-    final selectedItems =
-        selected.whereType<_ActualItem>().map((e) => e.original).toList();
+    final adapter = CollectionAdapter.of(_c, account, state.collection);
+    final selectedItems = selected
+        .whereType<_ActualItem>()
+        .map((e) => e.original)
+        .where(adapter.isItemRemovable)
+        .toList();
     if (selectedItems.isNotEmpty) {
       unawaited(itemsController.removeItems(selectedItems));
     }
@@ -325,8 +333,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info("$ev");
     final selected = state.selectedItems;
     _clearSelection(emit);
-    final selectedFiles =
-        selected.whereType<_FileItem>().map((e) => e.file).toList();
+    final adapter = CollectionAdapter.of(_c, account, state.collection);
+    final selectedFiles = selected
+        .whereType<_FileItem>()
+        .where((e) => adapter.isItemDeletable(e.original))
+        .map((e) => e.file)
+        .toList();
     if (selectedFiles.isNotEmpty) {
       final count = await Remove(_c)(
         account,

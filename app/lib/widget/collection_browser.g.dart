@@ -22,6 +22,7 @@ abstract class $_StateCopyWithWorker {
       Set<_Item>? selectedItems,
       bool? isSelectionRemovable,
       bool? isSelectionManageableFile,
+      bool? isSelectionDeletable,
       bool? isEditMode,
       bool? isEditBusy,
       String? editName,
@@ -49,6 +50,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic selectedItems,
       dynamic isSelectionRemovable,
       dynamic isSelectionManageableFile,
+      dynamic isSelectionDeletable,
       dynamic isEditMode,
       dynamic isEditBusy,
       dynamic editName = copyWithNull,
@@ -74,6 +76,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             isSelectionRemovable as bool? ?? that.isSelectionRemovable,
         isSelectionManageableFile: isSelectionManageableFile as bool? ??
             that.isSelectionManageableFile,
+        isSelectionDeletable:
+            isSelectionDeletable as bool? ?? that.isSelectionDeletable,
         isEditMode: isEditMode as bool? ?? that.isEditMode,
         isEditBusy: isEditBusy as bool? ?? that.isEditBusy,
         editName:
@@ -139,7 +143,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, importResult: $importResult, error: $error, message: $message}";
+    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isSelectionDeletable: $isSelectionDeletable, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, importResult: $importResult, error: $error, message: $message}";
   }
 }
 

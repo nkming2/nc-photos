@@ -154,6 +154,9 @@ class CollectionNcAlbumAdapter
   bool isItemRemovable(CollectionItem item) => true;
 
   @override
+  bool isItemDeletable(CollectionItem item) => false;
+
+  @override
   Future<void> remove() => RemoveNcAlbum(_c)(account, _provider.album);
 
   @override

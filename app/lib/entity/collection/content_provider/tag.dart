@@ -27,7 +27,9 @@ class CollectionTagProvider
   DateTime get lastModified => clock.now().toUtc();
 
   @override
-  List<CollectionCapability> get capabilities => [];
+  List<CollectionCapability> get capabilities => [
+        CollectionCapability.deleteItem,
+      ];
 
   @override
   CollectionItemSort get itemSort => CollectionItemSort.dateDescending;

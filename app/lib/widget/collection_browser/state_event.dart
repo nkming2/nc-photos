@@ -12,6 +12,7 @@ class _State {
     required this.selectedItems,
     required this.isSelectionRemovable,
     required this.isSelectionManageableFile,
+    required this.isSelectionDeletable,
     required this.isEditMode,
     required this.isEditBusy,
     this.editName,
@@ -40,6 +41,7 @@ class _State {
       selectedItems: const {},
       isSelectionRemovable: true,
       isSelectionManageableFile: true,
+      isSelectionDeletable: true,
       isEditMode: false,
       isEditBusy: false,
       isDragging: false,
@@ -61,6 +63,7 @@ class _State {
   final Set<_Item> selectedItems;
   final bool isSelectionRemovable;
   final bool isSelectionManageableFile;
+  final bool isSelectionDeletable;
 
   final bool isEditMode;
   final bool isEditBusy;

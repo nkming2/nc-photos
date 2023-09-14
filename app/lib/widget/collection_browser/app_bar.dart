@@ -236,10 +236,13 @@ class _SelectionAppBar extends StatelessWidget {
                   value: _SelectionMenuOption.archive,
                   child: Text(L10n.global().archiveTooltip),
                 ),
-                PopupMenuItem(
-                  value: _SelectionMenuOption.delete,
-                  child: Text(L10n.global().deleteTooltip),
-                ),
+                if (context.read<_Bloc>().isCollectionCapabilityPermitted(
+                        CollectionCapability.deleteItem) &&
+                    state.isSelectionDeletable)
+                  PopupMenuItem(
+                    value: _SelectionMenuOption.delete,
+                    child: Text(L10n.global().deleteTooltip),
+                  ),
               ],
             ],
             onSelected: (option) {

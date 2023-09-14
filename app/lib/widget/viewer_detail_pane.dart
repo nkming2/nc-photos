@@ -146,6 +146,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     final timeStr = DateFormat(DateFormat.HOUR_MINUTE,
             Localizations.localeOf(context).languageCode)
         .format(_dateTime);
+    final collectionAdapter = CollectionAdapter.of(KiwiContainer().resolve(),
+        widget.account, widget.fromCollection!.collection);
+    final isShowDelete = widget.fromCollection != null &&
+        collectionAdapter.isPermitted(CollectionCapability.deleteItem) &&
+        collectionAdapter.isItemDeletable(widget.fromCollection!.item);
 
     return Material(
       type: MaterialType.transparency,
@@ -194,7 +199,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                       label: L10n.global().archiveTooltip,
                       onPressed: () => widget.onArchivePressed(context),
                     ),
-                  if (widget.fromCollection != null)
+                  if (isShowDelete)
                     _DetailPaneButton(
                       icon: Icons.delete_outlined,
                       label: L10n.global().deleteTooltip,

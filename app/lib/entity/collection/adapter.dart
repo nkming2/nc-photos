@@ -94,6 +94,8 @@ abstract class CollectionAdapter {
 
   bool isItemRemovable(CollectionItem item);
 
+  bool isItemDeletable(CollectionItem item);
+
   /// Remove this collection
   Future<void> remove();
 
