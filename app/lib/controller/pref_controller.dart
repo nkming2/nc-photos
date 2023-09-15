@@ -234,8 +234,6 @@ class PrefController {
     }
   }
 
-  static const _seedColorDef = 0xFF2196F3;
-
   final DiContainer _c;
   late final _languageController =
       BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
