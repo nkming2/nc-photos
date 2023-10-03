@@ -38,6 +38,7 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_ui/np_ui.dart';
 
 part 'home_search.g.dart';

@@ -1,26 +1,16 @@
 import 'dart:async';
+import 'package:np_common/object_util.dart';
 
 extension ObjectExtension<T> on T {
-  /// Run [fn] with this, and return this
-  T apply(void Function(T obj) fn) {
-    fn(this);
-    return this;
-  }
+  /// Deprecated, use [also]
+  T apply(void Function(T obj) fn) => also(fn);
 
-  /// Run [fn] with this, and return this
-  Future<T> applyFuture(FutureOr<void> Function(T obj) fn) async {
-    await fn(this);
-    return this;
-  }
+  /// Deprecated, use [alsoFuture]
+  Future<T> applyFuture(FutureOr<void> Function(T obj) fn) => alsoFuture(fn);
 
-  /// Run [fn] with this, and return the results of [fn]
-  U run<U>(U Function(T obj) fn) => fn(this);
+  /// Deprecated, use [let]
+  U run<U>(U Function(T obj) fn) => let(fn);
 
-  /// Run [fn] with this, and return the results of [fn]
-  Future<U> runFuture<U>(FutureOr<U> Function(T obj) fn) async {
-    return await fn(this);
-  }
-
-  /// Cast this as U, or null if this is not an object of U
-  U? as<U>() => this is U ? this as U : null;
+  /// Deprecated, use [letFuture]
+  Future<U> runFuture<U>(FutureOr<U> Function(T obj) fn) => letFuture(fn);
 }

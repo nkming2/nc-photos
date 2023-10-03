@@ -7,8 +7,8 @@ import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
+import 'package:np_common/object_util.dart';
 
 /// A square thumbnail widget for a file
 class NetworkRectThumbnail extends StatelessWidget {

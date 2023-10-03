@@ -29,6 +29,7 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 
 part 'archive_browser.g.dart';
 

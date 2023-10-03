@@ -7,6 +7,7 @@ import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/recognize_face.dart';
 import 'package:nc_photos/entity/recognize_face_item.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:np_common/object_util.dart';
 import 'package:to_string/to_string.dart';
 
 part 'recognize.g.dart';

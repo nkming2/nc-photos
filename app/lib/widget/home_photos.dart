@@ -52,6 +52,7 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
