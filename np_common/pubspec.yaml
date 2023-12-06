@@ -18,6 +18,7 @@ dev_dependencies:
   build_runner: ^2.2.1
   np_lints:
     path: ../np_lints
+  test: ^1.21.0
   to_string_build:
     git:
       url: https://gitlab.com/nkming2/dart-to-string
