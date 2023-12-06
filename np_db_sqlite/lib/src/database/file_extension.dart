@@ -250,7 +250,6 @@ extension SqliteDbFileExtension on SqliteDb {
         "isArchived: $isArchived");
     final rowIds = await _accountFileRowIdsOf(
         account, fileIds.map(DbFileKey.byId).toList());
-    assert(rowIds.length == fileIds.length);
     final q = update(accountFiles)
       ..where(
           (t) => t.rowId.isIn(rowIds.values.map((e) => e.accountFileRowId)));
