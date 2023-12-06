@@ -3,8 +3,8 @@ import 'package:test/test.dart';
 
 import 'util.dart';
 
-void main() {
-  resolveCompilationUnit("test/src/drift_table_sort.dart");
+void main() async {
+  await resolveCompilationUnit("test/src/drift_table_sort.dart");
   tearDown(() {
     // Increment this after each test so the next test has it's own package
     _pkgCacheCount++;
