@@ -10,8 +10,10 @@ class _Error {
 
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
-  _Bloc(DiContainer c)
-      : _c = c,
+  _Bloc(
+    DiContainer c, {
+    required this.db,
+  })  : _c = c,
         super(const _State()) {
     on<_ClearCacheDatabase>(_onClearCacheDatabase);
   }
@@ -24,13 +26,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onClearCacheDatabase(
       _ClearCacheDatabase ev, Emitter<_State> emit) async {
     try {
-      await _c.sqliteDb.use((db) async {
-        await db.truncate();
-        final accounts = _c.pref.getAccounts3Or([]);
-        for (final a in accounts) {
-          await db.insertAccountOf(a);
-        }
-      });
+      final accounts = _c.pref.getAccounts3Or([]);
+      await db.clearAndInitWithAccounts(accounts.toDb());
       emit(state.copyWith(lastSuccessful: ev));
     } catch (e, stackTrace) {
       _log.shout("[_onClearCacheDatabase] Uncaught exception", e, stackTrace);
@@ -39,5 +36,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   final DiContainer _c;
+  final NpDb db;
   final _errorStream = StreamController<_Error>.broadcast();
 }

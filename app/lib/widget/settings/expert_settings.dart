@@ -7,13 +7,14 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 import 'package:to_string/to_string.dart';
 
 part 'expert/bloc.dart';
@@ -26,7 +27,10 @@ class ExpertSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _Bloc(KiwiContainer().resolve<DiContainer>()),
+      create: (_) => _Bloc(
+        KiwiContainer().resolve<DiContainer>(),
+        db: context.read(),
+      ),
       child: const _WrappedExpertSettings(),
     );
   }

@@ -1,9 +1,8 @@
-import 'dart:io' as dart;
+import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos_plugin/nc_photos_plugin.dart';
+import 'package:np_db_sqlite/src/database.dart' as sql;
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart' as sql;
@@ -18,7 +17,7 @@ Future<Map<String, dynamic>> getSqliteConnectionArgs() async {
 }
 
 QueryExecutor openSqliteConnectionWithArgs(Map<String, dynamic> args) {
-  final file = dart.File(args["path"]);
+  final file = File(args["path"]);
   return NativeDatabase(
     file,
     // logStatements: true,
@@ -37,12 +36,15 @@ Future<void> applyWorkaroundToOpenSqlite3OnOldAndroidVersions() {
   return sql.applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
 }
 
-Future<dynamic> exportSqliteDb(sql.SqliteDb db) async {
-  final dir = await getApplicationDocumentsDirectory();
-  final file = dart.File(path_lib.join(dir.path, "export.sqlite"));
+/// Export [db] to [dir] and return the exported database file
+///
+/// User must have write access to [dir]. On mobile platforms, this typically
+/// means only internal directories are allowed
+Future<File> exportSqliteDb(sql.SqliteDb db, Directory dir) async {
+  final file = File(path_lib.join(dir.path, "export.sqlite"));
   if (await file.exists()) {
     await file.delete();
   }
   await db.customStatement("VACUUM INTO ?", [file.path]);
-  return MediaStore.copyFileToDownload(file.path);
+  return file;
 }

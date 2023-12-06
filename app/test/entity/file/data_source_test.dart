@@ -1,9 +1,10 @@
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;
@@ -43,11 +44,11 @@ Future<void> _list() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -66,11 +67,11 @@ Future<void> _listSingle() async {
   final account = util.buildAccount();
   final files = (util.FilesBuilder()..addDir("admin")).build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], const []);
   });
@@ -90,11 +91,11 @@ Future<void> _removeFile() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
@@ -117,11 +118,11 @@ Future<void> _removeEmptyDir() async {
         ..addDir("admin/test"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
     await util.insertDirRelation(c.sqliteDb, account, files[1], const []);
@@ -150,11 +151,11 @@ Future<void> _removeDir() async {
         ..addJpeg("admin/test/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
     await util.insertDirRelation(c.sqliteDb, account, files[1], [files[2]]);
@@ -180,11 +181,11 @@ Future<void> _removeDirWithSubDir() async {
         ..addJpeg("admin/test/test2/test3.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
     await util.insertDirRelation(c.sqliteDb, account, files[1], [files[2]]);
@@ -215,11 +216,11 @@ Future<void> _updateFileProperty() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
@@ -257,11 +258,11 @@ Future<void> _updateMetadata() async {
     )),
   );
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
@@ -299,11 +300,11 @@ Future<void> _updateAddMetadata() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });
@@ -345,11 +346,11 @@ Future<void> _updateDeleteMetadata() async {
     )),
   );
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
   });

@@ -6,6 +6,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required DiContainer container,
     required this.accountController,
     required this.prefController,
+    required this.db,
   })  : _c = container,
         super(_State.init(
           accounts: container.pref.getAccounts3Or([]),
@@ -100,9 +101,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _removeAccountFromDb(Account account) async {
     try {
-      await _c.sqliteDb.use((db) async {
-        await db.deleteAccountOf(account);
-      });
+      await db.deleteAccount(account.toDb());
     } catch (e, stackTrace) {
       _log.shout("[_removeAccountFromDb] Failed while removing account from db",
           e, stackTrace);
@@ -112,6 +111,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final DiContainer _c;
   final AccountController accountController;
   final PrefController prefController;
+  final NpDb db;
   late final Account activeAccount = accountController.account;
 
   final _prefLock = Mutex();

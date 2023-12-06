@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/foundation.dart';
@@ -30,19 +29,16 @@ import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/entity/sharee/data_source.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/isolate_util.dart' as sql_isolate;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/tagged_file/data_source.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/touch_manager.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_log/np_log.dart' as np_log;
 import 'package:np_platform_util/np_platform_util.dart';
@@ -64,10 +60,6 @@ Future<void> init(InitIsolateType isolateType) async {
 
   initLog();
   await _initDeviceInfo();
-  initDrift();
-  if (isolateType == InitIsolateType.main) {
-    await _initDriftWorkaround();
-  }
   _initKiwi();
   await _initPref();
   await _initAccountPrefs();
@@ -91,19 +83,6 @@ void initLog() {
     isDebugMode: kDebugMode,
     print: (log) => debugPrint(log, wrapWidth: 1024),
   );
-}
-
-void initDrift() {
-  driftRuntimeOptions.debugPrint = (log) => debugPrint(log, wrapWidth: 1024);
-}
-
-Future<void> _initDriftWorkaround() async {
-  if (getRawPlatform() == NpPlatform.android && AndroidInfo().sdkInt < 24) {
-    _log.info("[_initDriftWorkaround] Workaround Android 6- bug");
-    // see: https://github.com/flutter/flutter/issues/73318 and
-    // https://github.com/simolus3/drift/issues/895
-    await platform.applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
-  }
 }
 
 Future<void> _initPref() async {
@@ -156,15 +135,15 @@ void _initSelfSignedCertManager() {
 Future<void> _initDiContainer(InitIsolateType isolateType) async {
   final c = DiContainer.late();
   c.pref = Pref();
-  c.sqliteDb = await _createDb(isolateType);
+  c.npDb = await _createDb(isolateType);
 
   c.albumRepo = AlbumRepo(AlbumCachedDataSource(c));
   c.albumRepoRemote = AlbumRepo(AlbumRemoteDataSource());
   c.albumRepoLocal = AlbumRepo(AlbumSqliteDbDataSource(c));
   c.albumRepo2 = CachedAlbumRepo2(
-      const AlbumRemoteDataSource2(), AlbumSqliteDbDataSource2(c.sqliteDb));
+      const AlbumRemoteDataSource2(), AlbumSqliteDbDataSource2(c.npDb));
   c.albumRepo2Remote = const BasicAlbumRepo2(AlbumRemoteDataSource2());
-  c.albumRepo2Local = BasicAlbumRepo2(AlbumSqliteDbDataSource2(c.sqliteDb));
+  c.albumRepo2Local = BasicAlbumRepo2(AlbumSqliteDbDataSource2(c.npDb));
   c.fileRepo = FileRepo(FileCachedDataSource(c));
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
@@ -173,25 +152,25 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());
   c.tagRepo = const TagRepo(TagRemoteDataSource());
   c.tagRepoRemote = const TagRepo(TagRemoteDataSource());
-  c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.sqliteDb));
+  c.tagRepoLocal = TagRepo(TagSqliteDbDataSource(c.npDb));
   c.taggedFileRepo = const TaggedFileRepo(TaggedFileRemoteDataSource());
   c.searchRepo = SearchRepo(SearchSqliteDbDataSource(c));
   c.ncAlbumRepo = CachedNcAlbumRepo(
-      const NcAlbumRemoteDataSource(), NcAlbumSqliteDbDataSource(c.sqliteDb));
+      const NcAlbumRemoteDataSource(), NcAlbumSqliteDbDataSource(c.npDb));
   c.ncAlbumRepoRemote = const BasicNcAlbumRepo(NcAlbumRemoteDataSource());
-  c.ncAlbumRepoLocal = BasicNcAlbumRepo(NcAlbumSqliteDbDataSource(c.sqliteDb));
+  c.ncAlbumRepoLocal = BasicNcAlbumRepo(NcAlbumSqliteDbDataSource(c.npDb));
   c.faceRecognitionPersonRepo = const BasicFaceRecognitionPersonRepo(
       FaceRecognitionPersonRemoteDataSource());
   c.faceRecognitionPersonRepoRemote = const BasicFaceRecognitionPersonRepo(
       FaceRecognitionPersonRemoteDataSource());
   c.faceRecognitionPersonRepoLocal = BasicFaceRecognitionPersonRepo(
-      FaceRecognitionPersonSqliteDbDataSource(c.sqliteDb));
+      FaceRecognitionPersonSqliteDbDataSource(c.npDb));
   c.recognizeFaceRepo =
       const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
   c.recognizeFaceRepoRemote =
       const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
   c.recognizeFaceRepoLocal =
-      BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.sqliteDb));
+      BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.npDb));
 
   c.touchManager = TouchManager(c);
 
@@ -207,21 +186,14 @@ void _initVisibilityDetector() {
   VisibilityDetectorController.instance.updateInterval = Duration.zero;
 }
 
-Future<sql.SqliteDb> _createDb(InitIsolateType isolateType) async {
-  switch (isolateType) {
-    case InitIsolateType.main:
-      // use driftIsolate to prevent DB blocking the UI thread
-      if (getRawPlatform() == NpPlatform.web) {
-        // no isolate support on web
-        return sql.SqliteDb();
-      } else {
-        return sql_isolate.createDb();
-      }
-
-    case InitIsolateType.flutterIsolate:
-      // service already runs in an isolate
-      return sql.SqliteDb();
+Future<NpDb> _createDb(InitIsolateType isolateType) async {
+  final npDb = NpDb();
+  if (isolateType == InitIsolateType.main) {
+    await npDb.initMainIsolate(androidSdk: AndroidInfo().sdkInt);
+  } else {
+    await npDb.initBackgroundIsolate(androidSdk: AndroidInfo().sdkInt);
   }
+  return npDb;
 }
 
 final _log = Logger("app_init");

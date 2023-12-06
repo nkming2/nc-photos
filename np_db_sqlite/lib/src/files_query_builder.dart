@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:nc_photos/account.dart' as app;
-import 'package:nc_photos/entity/sqlite/database.dart';
+import 'package:np_db/np_db.dart';
+import 'package:np_db_sqlite/src/database.dart';
+import 'package:np_db_sqlite/src/database_extension.dart';
 import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_string/np_string.dart';
 
@@ -35,18 +36,18 @@ class FilesQueryBuilder {
     _selectExpressions = expressions;
   }
 
-  void setSqlAccount(Account account) {
-    assert(_appAccount == null);
-    _sqlAccount = account;
-  }
-
-  void setAppAccount(app.Account account) {
-    assert(_sqlAccount == null);
-    _appAccount = account;
+  void setAccount(ByAccount account) {
+    if (account.sqlAccount != null) {
+      assert(_dbAccount == null);
+      _sqlAccount = account.sqlAccount;
+    } else {
+      assert(_sqlAccount == null);
+      _dbAccount = account.dbAccount;
+    }
   }
 
   void setAccountless() {
-    assert(_sqlAccount == null && _appAccount == null);
+    assert(_sqlAccount == null && _dbAccount == null);
     _isAccountless = true;
   }
 
@@ -95,7 +96,7 @@ class FilesQueryBuilder {
   }
 
   JoinedSelectStatement build() {
-    if (_sqlAccount == null && _appAccount == null && !_isAccountless) {
+    if (_sqlAccount == null && _dbAccount == null && !_isAccountless) {
       throw StateError("Invalid query: missing account");
     }
     final dynamic select = _queryMode == FilesQueryMode.expression
@@ -104,7 +105,7 @@ class FilesQueryBuilder {
     final query = select.join([
       innerJoin(db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId),
           useColumns: _queryMode == FilesQueryMode.completeFile),
-      if (_appAccount != null) ...[
+      if (_dbAccount != null) ...[
         innerJoin(
             db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account),
             useColumns: false),
@@ -128,11 +129,11 @@ class FilesQueryBuilder {
 
     if (_sqlAccount != null) {
       query.where(db.accountFiles.account.equals(_sqlAccount!.rowId));
-    } else if (_appAccount != null) {
+    } else if (_dbAccount != null) {
       query
-        ..where(db.servers.address.equals(_appAccount!.url))
+        ..where(db.servers.address.equals(_dbAccount!.serverAddress))
         ..where(db.accounts.userId
-            .equals(_appAccount!.userId.toCaseInsensitiveString()));
+            .equals(_dbAccount!.userId.toCaseInsensitiveString()));
     }
 
     if (_byRowId != null) {
@@ -204,7 +205,7 @@ class FilesQueryBuilder {
   Iterable<Expression>? _selectExpressions;
 
   Account? _sqlAccount;
-  app.Account? _appAccount;
+  DbAccount? _dbAccount;
   bool _isAccountless = false;
 
   int? _byRowId;

@@ -1,31 +1,30 @@
-import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/person/builder.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/search_util.dart' as search_util;
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_tagged_file.dart';
 import 'package:nc_photos/use_case/person/list_person_face.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
 
 part 'data_source.g.dart';
 
 @npLog
 class SearchSqliteDbDataSource implements SearchDataSource {
-  SearchSqliteDbDataSource(this._c);
+  const SearchSqliteDbDataSource(this._c);
 
   @override
-  list(Account account, SearchCriteria criteria) async {
+  Future<List<FileDescriptor>> list(
+      Account account, SearchCriteria criteria) async {
     _log.info("[list] $criteria");
     final stopwatch = Stopwatch()..start();
     try {
@@ -50,81 +49,57 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     }
   }
 
-  Future<List<File>> _listByPath(
+  Future<List<FileDescriptor>> _listByPath(
       Account account, SearchCriteria criteria, Set<String> keywords) async {
     try {
-      final dbFiles = await _c.sqliteDb.use((db) async {
-        final query = db.queryFiles().run((q) {
-          q.setQueryMode(sql.FilesQueryMode.completeFile);
-          q.setAppAccount(account);
-          for (final r in account.roots) {
-            if (r.isNotEmpty) {
-              q.byOrRelativePathPattern("$r/%");
-            }
-          }
-          for (final f in criteria.filters) {
-            f.apply(q);
-          }
-          return q.build();
-        });
-        // limit to supported formats only
-        query.where(db.files.contentType.like("image/%") |
-            db.files.contentType.like("video/%"));
-        for (final k in keywords) {
-          query.where(db.accountFiles.relativePath.like("%$k%"));
-        }
-        return await query
-            .map((r) => sql.CompleteFile(
-                  r.readTable(db.files),
-                  r.readTable(db.accountFiles),
-                  r.readTableOrNull(db.images),
-                  r.readTableOrNull(db.imageLocations),
-                  r.readTableOrNull(db.trashes),
-                ))
-            .get();
-      });
-      return await dbFiles.convertToAppFile(account);
+      final args = {
+        #account: account.toDb(),
+        #includeRelativePaths: account.roots,
+        #excludeRelativePaths: [
+          remote_storage_util.remoteStorageDirRelativePath
+        ],
+        #relativePathKeywords: keywords,
+        #mimes: file_util.supportedFormatMimes,
+      };
+      for (final f in criteria.filters) {
+        args.addAll(f.toQueryArgument());
+      }
+      final List<DbFileDescriptor> dbFiles =
+          await Function.apply(_c.npDb.getFileDescriptors, null, args);
+      return dbFiles
+          .map((e) => DbFileDescriptorConverter.fromDb(
+              account.userId.toCaseInsensitiveString(), e))
+          .toList();
     } catch (e, stackTrace) {
       _log.severe("[_listByPath] Failed while _listByPath", e, stackTrace);
       return [];
     }
   }
 
-  Future<List<File>> _listByLocation(
+  Future<List<FileDescriptor>> _listByLocation(
       Account account, SearchCriteria criteria) async {
     // location search requires exact match, for example, searching "united"
     // will NOT return results from US, UK, UAE, etc. Searching by the alpha2
     // code is supported
     try {
-      final dbFiles = await _c.sqliteDb.use((db) async {
-        final query = db.queryFiles().run((q) {
-          q.setQueryMode(sql.FilesQueryMode.completeFile);
-          q.setAppAccount(account);
-          for (final r in account.roots) {
-            if (r.isNotEmpty) {
-              q.byOrRelativePathPattern("$r/%");
-            }
-          }
-          for (final f in criteria.filters) {
-            f.apply(q);
-          }
-          q.byLocation(criteria.input);
-          return q.build();
-        });
-        // limit to supported formats only
-        query.where(db.files.contentType.like("image/%") |
-            db.files.contentType.like("video/%"));
-        return await query
-            .map((r) => sql.CompleteFile(
-                  r.readTable(db.files),
-                  r.readTable(db.accountFiles),
-                  r.readTableOrNull(db.images),
-                  r.readTableOrNull(db.imageLocations),
-                  r.readTableOrNull(db.trashes),
-                ))
-            .get();
-      });
-      return await dbFiles.convertToAppFile(account);
+      final args = {
+        #account: account.toDb(),
+        #includeRelativePaths: account.roots,
+        #excludeRelativePaths: [
+          remote_storage_util.remoteStorageDirRelativePath
+        ],
+        #location: criteria.input,
+        #mimes: file_util.supportedFormatMimes,
+      };
+      for (final f in criteria.filters) {
+        args.addAll(f.toQueryArgument());
+      }
+      final List<DbFileDescriptor> dbFiles =
+          await Function.apply(_c.npDb.getFileDescriptors, null, args);
+      return dbFiles
+          .map((e) => DbFileDescriptorConverter.fromDb(
+              account.userId.toCaseInsensitiveString(), e))
+          .toList();
     } catch (e, stackTrace) {
       _log.severe(
           "[_listByLocation] Failed while _listByLocation", e, stackTrace);
@@ -132,21 +107,19 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     }
   }
 
-  Future<List<File>> _listByTag(
+  Future<List<FileDescriptor>> _listByTag(
       Account account, SearchCriteria criteria) async {
     // tag search requires exact match, for example, searching "super" will NOT
     // return results from "super tag"
     try {
-      final dbTag = await _c.sqliteDb.use((db) async {
-        return await db.tagByDisplayName(
-          appAccount: account,
-          displayName: criteria.input,
-        );
-      });
+      final dbTag = await _c.npDb.getTagByDisplayName(
+        account: account.toDb(),
+        displayName: criteria.input,
+      );
       if (dbTag == null) {
         return [];
       }
-      final tag = SqliteTagConverter.fromSql(dbTag);
+      final tag = DbTagConverter.fromDb(dbTag);
       _log.info("[_listByTag] Found tag: ${tag.displayName}");
       final files = await ListTaggedFile(_c)(account, [tag]);
       return files
@@ -158,21 +131,20 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     }
   }
 
-  Future<List<File>> _listByPerson(
+  Future<List<FileDescriptor>> _listByPerson(
       Account account, SearchCriteria criteria) async {
     // person search requires exact match of any parts, for example, searching
     // "Ada" will return results from "Ada Crook" but NOT "Adabelle"
     try {
-      final dbPersons = await _c.sqliteDb.use((db) async {
-        return await db.faceRecognitionPersonsByName(
-          appAccount: account,
-          name: criteria.input,
-        );
-      });
+      final dbPersons = await _c.npDb.searchFaceRecognitionPersonsByName(
+        account: account.toDb(),
+        name: criteria.input,
+      );
       if (dbPersons.isEmpty) {
         return [];
       }
-      final persons = (await dbPersons.convertToAppFaceRecognitionPerson())
+      final persons = dbPersons
+          .map(DbFaceRecognitionPersonConverter.fromDb)
           .map((p) => PersonBuilder.byFaceRecognitionPerson(account, p))
           .toList();
       _log.info(

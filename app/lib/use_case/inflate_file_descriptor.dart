@@ -5,9 +5,7 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/use_case/find_file.dart';
 
 class InflateFileDescriptor {
-  InflateFileDescriptor(this._c)
-      : assert(require(_c)),
-        assert(FindFile.require(_c));
+  InflateFileDescriptor(this._c) : assert(require(_c));
 
   static bool require(DiContainer c) => true;
 

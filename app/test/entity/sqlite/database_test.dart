@@ -1,7 +1,7 @@
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/object_extension.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../../test_util.dart' as util;
@@ -18,7 +18,6 @@ void main() {
       test("same server", _deleteAccountSameServer);
       test("same server shared file", _deleteAccountSameServerSharedFile);
     });
-    test("cleanUpDanglingFiles", _cleanUpDanglingFiles);
     test("truncate", _truncate);
   });
 }
@@ -29,19 +28,19 @@ void main() {
 Future<void> _insertAccountFirst() async {
   final account = util.buildAccount();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
 
   await c.sqliteDb.use((db) async {
-    await db.insertAccountOf(account);
+    await db.insertAccounts([account.toDb()]);
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 1, server: 1, userId: "admin"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 1, server: 1, userId: "admin"),
       ),
     },
   );
@@ -54,26 +53,26 @@ Future<void> _insertAccountSameServer() async {
   final account = util.buildAccount();
   final user1Account = util.buildAccount(userId: "user1");
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
   });
 
   await c.sqliteDb.use((db) async {
-    await db.insertAccountOf(user1Account);
+    await db.insertAccounts([user1Account.toDb()]);
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 1, server: 1, userId: "admin"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 1, server: 1, userId: "admin"),
       ),
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 2, server: 1, userId: "user1"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 2, server: 1, userId: "user1"),
       ),
     },
   );
@@ -86,22 +85,22 @@ Future<void> _insertAccountSameAccount() async {
   final account = util.buildAccount();
   final account2 = util.buildAccount();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
   });
 
   await c.sqliteDb.use((db) async {
-    await db.insertAccountOf(account2);
+    await db.insertAccounts([account2.toDb()]);
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 1, server: 1, userId: "admin"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 1, server: 1, userId: "admin"),
       ),
     },
   );
@@ -119,16 +118,16 @@ Future<void> _deleteAccount() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
   await c.sqliteDb.use((db) async {
-    await db.deleteAccountOf(account);
+    await db.deleteAccount(account.toDb());
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
@@ -157,12 +156,12 @@ Future<void> _deleteAccountSameServer() async {
         ..addJpeg("user1/test2.jpg", ownerId: "user1"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
 
@@ -172,14 +171,14 @@ Future<void> _deleteAccountSameServer() async {
   });
 
   await c.sqliteDb.use((db) async {
-    await db.deleteAccountOf(account);
+    await db.deleteAccount(account.toDb());
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 2, server: 1, userId: "user1"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 2, server: 1, userId: "user1"),
       ),
     },
   );
@@ -208,12 +207,12 @@ Future<void> _deleteAccountSameServerSharedFile() async {
   user1Files
       .add(files[0].copyWith(path: "remote.php/dav/files/user1/test1.jpg"));
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(c.sqliteDb, account, files[0], [files[1]]);
 
@@ -223,58 +222,20 @@ Future<void> _deleteAccountSameServerSharedFile() async {
   });
 
   await c.sqliteDb.use((db) async {
-    await db.deleteAccountOf(account);
+    await db.deleteAccount(account.toDb());
   });
   expect(
     await util.listSqliteDbServerAccounts(c.sqliteDb),
     {
       const util.SqlAccountWithServer(
-        sql.Server(rowId: 1, address: "http://example.com"),
-        sql.Account(rowId: 2, server: 1, userId: "user1"),
+        compat.Server(rowId: 1, address: "http://example.com"),
+        compat.Account(rowId: 2, server: 1, userId: "user1"),
       ),
     },
   );
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
     {...user1Files},
-  );
-}
-
-/// Clean up Files without an associated entry in AccountFiles
-///
-/// Expect: Dangling files deleted
-Future<void> _cleanUpDanglingFiles() async {
-  final account = util.buildAccount();
-  final files = (util.FilesBuilder()
-        ..addDir("admin")
-        ..addJpeg("admin/test1.jpg"))
-      .build();
-  final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
-  );
-  addTearDown(() => c.sqliteDb.close());
-  await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await util.insertFiles(c.sqliteDb, account, files);
-
-    await c.sqliteDb.applyFuture((db) async {
-      await db.into(db.files).insert(sql.FilesCompanion.insert(
-            server: 1,
-            fileId: files.length,
-          ));
-    });
-  });
-
-  expect(
-    await c.sqliteDb.select(c.sqliteDb.files).map((f) => f.fileId).get(),
-    [0, 1, 2],
-  );
-  await c.sqliteDb.use((db) async {
-    await db.cleanUpDanglingFiles();
-  });
-  expect(
-    await c.sqliteDb.select(c.sqliteDb.files).map((f) => f.fileId).get(),
-    [0, 1],
   );
 }
 
@@ -289,11 +250,11 @@ Future<void> _truncate() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 

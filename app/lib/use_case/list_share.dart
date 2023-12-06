@@ -13,9 +13,7 @@ part 'list_share.g.dart';
 /// List all shares from a given file
 @npLog
 class ListShare {
-  ListShare(this._c)
-      : assert(require(_c)),
-        assert(FindFile.require(_c));
+  ListShare(this._c) : assert(require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.shareRepo);
 

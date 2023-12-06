@@ -98,7 +98,7 @@ class _Service {
     }
     await onCancelSubscription.cancel();
     await onDataSubscription.cancel();
-    await KiwiContainer().resolve<DiContainer>().sqliteDb.close();
+    await KiwiContainer().resolve<DiContainer>().npDb.dispose();
     service.stopBackgroundService();
     _log.info("[call] Service stopped");
   }

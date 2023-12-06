@@ -1,14 +1,14 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
 
@@ -64,22 +64,20 @@ class TagRemoteDataSource implements TagDataSource {
 
 @npLog
 class TagSqliteDbDataSource implements TagDataSource {
-  const TagSqliteDbDataSource(this.sqliteDb);
+  const TagSqliteDbDataSource(this.db);
 
   @override
-  list(Account account) async {
+  Future<List<Tag>> list(Account account) async {
     _log.info("[list] $account");
-    final dbTags = await sqliteDb.use((db) async {
-      return await db.allTags(appAccount: account);
-    });
-    return dbTags.convertToAppTag();
+    final results = await db.getTags(account: account.toDb());
+    return results.map(DbTagConverter.fromDb).toList();
   }
 
   @override
-  listByFile(Account account, File file) async {
+  Future<List<Tag>> listByFile(Account account, File file) async {
     _log.info("[listByFile] ${file.path}");
     throw UnimplementedError();
   }
 
-  final sql.SqliteDb sqliteDb;
+  final NpDb db;
 }

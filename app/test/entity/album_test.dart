@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clock/clock.dart';
 import 'package:intl/intl.dart';
 import 'package:nc_photos/entity/album.dart';
@@ -10,8 +8,8 @@ import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_common/type.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
@@ -1954,10 +1952,6 @@ void _toAppDbJsonShares() {
       },
     ],
   });
-}
-
-String _stripJsonString(String str) {
-  return jsonEncode(jsonDecode(str));
 }
 
 class _NullAlbumUpgraderFactory extends AlbumUpgraderFactory {

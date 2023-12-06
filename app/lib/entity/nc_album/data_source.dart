@@ -1,18 +1,16 @@
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_collection/np_collection.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
 
@@ -152,18 +150,16 @@ class NcAlbumRemoteDataSource implements NcAlbumDataSource {
 
 @npLog
 class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
-  const NcAlbumSqliteDbDataSource(this.sqliteDb);
+  const NcAlbumSqliteDbDataSource(this.npDb);
 
   @override
   Future<List<NcAlbum>> getAlbums(Account account) async {
     _log.info("[getAlbums] account: ${account.userId}");
-    final dbAlbums = await sqliteDb.use((db) async {
-      return await db.ncAlbumsByAccount(account: sql.ByAccount.app(account));
-    });
-    return dbAlbums
-        .map((a) {
+    final results = await npDb.getNcAlbums(account: account.toDb());
+    return results
+        .map((e) {
           try {
-            return SqliteNcAlbumConverter.fromSql(account.userId.toString(), a);
+            return DbNcAlbumConverter.fromDb(account.userId.toString(), e);
           } catch (e, stackTrace) {
             _log.severe(
                 "[getAlbums] Failed while converting DB entry", e, stackTrace);
@@ -177,40 +173,28 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
   @override
   Future<void> create(Account account, NcAlbum album) async {
     _log.info("[create] account: ${account.userId}, album: ${album.path}");
-    await sqliteDb.use((db) async {
-      await db.insertNcAlbum(
-        account: sql.ByAccount.app(account),
-        object: SqliteNcAlbumConverter.toSql(null, album),
-      );
-    });
+    await npDb.addNcAlbum(account: account.toDb(), album: album.toDb());
   }
 
   @override
   Future<void> remove(Account account, NcAlbum album) async {
     _log.info("[remove] account: ${account.userId}, album: ${album.path}");
-    await sqliteDb.use((db) async {
-      await db.deleteNcAlbumByRelativePath(
-        account: sql.ByAccount.app(account),
-        relativePath: album.strippedPath,
-      );
-    });
+    await npDb.deleteNcAlbum(account: account.toDb(), album: album.toDb());
   }
 
   @override
   Future<List<NcAlbumItem>> getItems(Account account, NcAlbum album) async {
     _log.info(
         "[getItems] account: ${account.userId}, album: ${album.strippedPath}");
-    final dbItems = await sqliteDb.use((db) async {
-      return await db.ncAlbumItemsByParentRelativePath(
-        account: sql.ByAccount.app(account),
-        parentRelativePath: album.strippedPath,
-      );
-    });
-    return dbItems
-        .map((i) {
+    final results = await npDb.getNcAlbumItemsByParent(
+      account: account.toDb(),
+      parent: album.toDb(),
+    );
+    return results
+        .map((e) {
           try {
-            return SqliteNcAlbumItemConverter.fromSql(account.userId.toString(),
-                album.strippedPath, album.isOwned, i);
+            return DbNcAlbumItemConverter.fromDb(account.userId.toString(),
+                album.strippedPath, album.isOwned, e);
           } catch (e, stackTrace) {
             _log.severe(
                 "[getItems] Failed while converting DB entry", e, stackTrace);
@@ -223,83 +207,25 @@ class NcAlbumSqliteDbDataSource implements NcAlbumCacheDataSource {
 
   @override
   Future<void> updateAlbumsCache(Account account, List<NcAlbum> remote) async {
-    await sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final existings = (await db.partialNcAlbumsByAccount(
-        account: sql.ByAccount.sql(dbAccount),
-        columns: [db.ncAlbums.rowId, db.ncAlbums.relativePath],
-      ))
-          .whereNotNull()
-          .toList();
-      await db.batch((batch) async {
-        for (final r in remote) {
-          final dbObj = SqliteNcAlbumConverter.toSql(dbAccount, r);
-          final found = existings.indexWhere((e) => e[1] == r.strippedPath);
-          if (found != -1) {
-            // existing record, update it
-            batch.update(
-              db.ncAlbums,
-              dbObj,
-              where: (sql.$NcAlbumsTable t) =>
-                  t.rowId.equals(existings[found][0]),
-            );
-          } else {
-            // insert
-            batch.insert(db.ncAlbums, dbObj);
-          }
-        }
-        for (final e in existings
-            .where((e) => !remote.any((r) => r.strippedPath == e[1]))) {
-          batch.deleteWhere(
-            db.ncAlbums,
-            (sql.$NcAlbumsTable t) => t.rowId.equals(e[0]),
-          );
-        }
-      });
-    });
+    _log.info(
+        "[updateAlbumsCache] account: ${account.userId}, remote: ${remote.map((e) => e.strippedPath)}");
+    await npDb.syncNcAlbums(
+      account: account.toDb(),
+      albums: remote.map(DbNcAlbumConverter.toDb).toList(),
+    );
   }
 
   @override
   Future<void> updateItemsCache(
       Account account, NcAlbum album, List<NcAlbumItem> remote) async {
-    await sqliteDb.use((db) async {
-      final dbAlbum = await db.ncAlbumByRelativePath(
-        account: sql.ByAccount.app(account),
-        relativePath: album.strippedPath,
-      );
-      final existingItems = await db.ncAlbumItemsByParent(
-        parent: dbAlbum!,
-      );
-      final diff = getDiffWith<NcAlbumItem>(
-        existingItems
-            .map((e) => SqliteNcAlbumItemConverter.fromSql(
-                account.userId.raw, album.strippedPath, album.isOwned, e))
-            .sorted(NcAlbumItemExtension.identityComparator),
-        remote.sorted(NcAlbumItemExtension.identityComparator),
-        NcAlbumItemExtension.identityComparator,
-      );
-      if (diff.onlyInA.isNotEmpty || diff.onlyInB.isNotEmpty) {
-        await db.batch((batch) async {
-          for (final item in diff.onlyInB) {
-            // new
-            batch.insert(
-              db.ncAlbumItems,
-              SqliteNcAlbumItemConverter.toSql(dbAlbum, item),
-            );
-          }
-          final rmIds = diff.onlyInA.map((e) => e.fileId).toList();
-          if (rmIds.isNotEmpty) {
-            // removed
-            batch.deleteWhere(
-              db.ncAlbumItems,
-              (sql.$NcAlbumItemsTable t) =>
-                  t.parent.equals(dbAlbum.rowId) & t.fileId.isIn(rmIds),
-            );
-          }
-        });
-      }
-    });
+    _log.info(
+        "[updateItemsCache] account: ${account.userId}, album: ${album.name}, remote: ${remote.map((e) => e.strippedPath)}");
+    await npDb.syncNcAlbumItems(
+      account: account.toDb(),
+      album: album.toDb(),
+      items: remote.map(DbNcAlbumItemConverter.toDb).toList(),
+    );
   }
 
-  final sql.SqliteDb sqliteDb;
+  final NpDb npDb;
 }

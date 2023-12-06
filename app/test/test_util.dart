@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as sql;
 import 'package:drift/native.dart' as sql;
@@ -5,21 +7,30 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db/np_db.dart';
+import 'package:np_db_sqlite/np_db_sqlite.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
+import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_string/np_string.dart';
 import 'package:tuple/tuple.dart';
+
+part 'test_compat_util.dart';
 
 class FilesBuilder {
   FilesBuilder({
@@ -271,8 +282,8 @@ class SqlAccountWithServer with EquatableMixin {
   @override
   get props => [server, account];
 
-  final sql.Server server;
-  final sql.Account account;
+  final compat.Server server;
+  final compat.Account account;
 }
 
 void initLog() {
@@ -436,18 +447,22 @@ Sharee buildSharee({
       shareWith: shareWith,
     );
 
-sql.SqliteDb buildTestDb() {
-  sql.driftRuntimeOptions.debugPrint = _debugPrintSql;
-  return sql.SqliteDb(
-    executor: sql.NativeDatabase.memory(
-      logStatements: true,
+NpDb buildTestDb() {
+  final db = NpDbSqlite();
+  db.initWithDb(
+    db: compat.SqliteDb(
+      executor: sql.NativeDatabase.memory(
+        logStatements: true,
+      ),
     ),
   );
+  sql.driftRuntimeOptions.debugPrint = _debugPrintSql;
+  return db;
 }
 
 Future<void> insertFiles(
-    sql.SqliteDb db, Account account, Iterable<File> files) async {
-  final dbAccount = await db.accountOf(account);
+    compat.SqliteDb db, Account account, Iterable<File> files) async {
+  final dbAccount = await db.accountOf(compat.ByAccount.db(account.toDb()));
   for (final f in files) {
     final sharedQuery = db.selectOnly(db.files).join([
       sql.innerJoin(
@@ -459,7 +474,7 @@ Future<void> insertFiles(
       ..where(db.files.fileId.equals(f.fileId!));
     var rowId = (await sharedQuery.map((r) => r.read(db.files.rowId)).get())
         .firstOrNull;
-    final insert = SqliteFileConverter.toSql(dbAccount, f);
+    final insert = _SqliteFileConverter.toSql(dbAccount, f);
     if (rowId == null) {
       final dbFile = await db.into(db.files).insertReturning(insert.file);
       rowId = dbFile.rowId;
@@ -483,18 +498,18 @@ Future<void> insertFiles(
   }
 }
 
-Future<void> insertDirRelation(
-    sql.SqliteDb db, Account account, File dir, Iterable<File> children) async {
-  final dbAccount = await db.accountOf(account);
-  final dirRowIds = (await db.accountFileRowIdsByFileIds(
-          sql.ByAccount.sql(dbAccount), [dir.fileId!]))
+Future<void> insertDirRelation(compat.SqliteDb db, Account account, File dir,
+    Iterable<File> children) async {
+  final dbAccount = await db.accountOf(compat.ByAccount.db(account.toDb()));
+  final dirRowIds = (await db
+          .accountFileRowIdsByFileIds(_ByAccount.sql(dbAccount), [dir.fileId!]))
       .first;
   final childRowIds = await db.accountFileRowIdsByFileIds(
-      sql.ByAccount.sql(dbAccount), [dir, ...children].map((f) => f.fileId!));
+      _ByAccount.sql(dbAccount), [dir, ...children].map((f) => f.fileId!));
   await db.batch((batch) {
     batch.insertAll(
       db.dirFiles,
-      childRowIds.map((c) => sql.DirFilesCompanion.insert(
+      childRowIds.map((c) => compat.DirFilesCompanion.insert(
             dir: dirRowIds.fileRowId,
             child: c.fileRowId,
           )),
@@ -503,15 +518,15 @@ Future<void> insertDirRelation(
 }
 
 Future<void> insertAlbums(
-    sql.SqliteDb db, Account account, Iterable<Album> albums) async {
-  final dbAccount = await db.accountOf(account);
+    compat.SqliteDb db, Account account, Iterable<Album> albums) async {
+  final dbAccount = await db.accountOf(compat.ByAccount.db(account.toDb()));
   for (final a in albums) {
     final rowIds =
         await db.accountFileRowIdsOf(a.albumFile!, sqlAccount: dbAccount);
     final insert =
-        SqliteAlbumConverter.toSql(a, rowIds.fileRowId, a.albumFile!.etag!);
+        _SqliteAlbumConverter.toSql(a, rowIds.fileRowId, a.albumFile!.etag!);
     final dbAlbum = await db.into(db.albums).insertReturning(insert.album);
-    for (final s in insert.albumShares) {
+    for (final s in insert.shares) {
       await db
           .into(db.albumShares)
           .insert(s.copyWith(album: sql.Value(dbAlbum.rowId)));
@@ -519,7 +534,7 @@ Future<void> insertAlbums(
   }
 }
 
-Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
+Future<Set<File>> listSqliteDbFiles(compat.SqliteDb db) async {
   final query = db.select(db.files).join([
     sql.innerJoin(
         db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
@@ -532,9 +547,9 @@ Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
     sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
   ]);
   return (await query
-          .map((r) => SqliteFileConverter.fromSql(
+          .map((r) => _SqliteFileConverter.fromSql(
                 r.readTable(db.accounts).userId,
-                sql.CompleteFile(
+                compat.CompleteFile(
                   r.readTable(db.files),
                   r.readTable(db.accountFiles),
                   r.readTableOrNull(db.images),
@@ -546,7 +561,7 @@ Future<Set<File>> listSqliteDbFiles(sql.SqliteDb db) async {
       .toSet();
 }
 
-Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
+Future<Map<File, Set<File>>> listSqliteDbDirs(compat.SqliteDb db) async {
   final query = db.select(db.files).join([
     sql.innerJoin(
         db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),
@@ -559,7 +574,7 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
     sql.leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
   ]);
   final fileMap = Map.fromEntries(await query.map((r) {
-    final f = sql.CompleteFile(
+    final f = compat.CompleteFile(
       r.readTable(db.files),
       r.readTable(db.accountFiles),
       r.readTableOrNull(db.images),
@@ -568,7 +583,7 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
     );
     return MapEntry(
       f.file.rowId,
-      SqliteFileConverter.fromSql(r.readTable(db.accounts).userId, f),
+      _SqliteFileConverter.fromSql(r.readTable(db.accounts).userId, f),
     );
   }).get());
 
@@ -581,7 +596,7 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(sql.SqliteDb db) async {
   return result;
 }
 
-Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
+Future<Set<Album>> listSqliteDbAlbums(compat.SqliteDb db) async {
   final albumQuery = db.select(db.albums).join([
     sql.innerJoin(db.files, db.files.rowId.equalsExp(db.albums.file)),
     sql.innerJoin(
@@ -590,9 +605,9 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
         db.accounts, db.accounts.rowId.equalsExp(db.accountFiles.account)),
   ]);
   final albums = await albumQuery.map((r) {
-    final albumFile = SqliteFileConverter.fromSql(
+    final albumFile = _SqliteFileConverter.fromSql(
       r.readTable(db.accounts).userId,
-      sql.CompleteFile(
+      compat.CompleteFile(
         r.readTable(db.files),
         r.readTable(db.accountFiles),
         null,
@@ -602,7 +617,7 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
     );
     return Tuple2(
       r.read(db.albums.rowId)!,
-      SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
+      _SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
     );
   }).get();
 
@@ -627,7 +642,7 @@ Future<Set<Album>> listSqliteDbAlbums(sql.SqliteDb db) async {
 }
 
 Future<Set<SqlAccountWithServer>> listSqliteDbServerAccounts(
-    sql.SqliteDb db) async {
+    compat.SqliteDb db) async {
   final query = db.select(db.servers).join([
     sql.leftOuterJoin(
         db.accounts, db.accounts.server.equalsExp(db.servers.rowId)),

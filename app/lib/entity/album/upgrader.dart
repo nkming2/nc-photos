@@ -1,15 +1,13 @@
-import 'dart:convert';
-
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
 import 'package:tuple/tuple.dart';
 
@@ -17,7 +15,7 @@ part 'upgrader.g.dart';
 
 abstract class AlbumUpgrader {
   JsonObj? doJson(JsonObj json);
-  sql.Album? doDb(sql.Album dbObj);
+  DbAlbum? doDb(DbAlbum dbObj);
 }
 
 /// Upgrade v1 Album to v2
@@ -37,7 +35,7 @@ class AlbumUpgraderV1 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -72,7 +70,7 @@ class AlbumUpgraderV2 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -101,7 +99,7 @@ class AlbumUpgraderV3 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -172,7 +170,7 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -216,7 +214,7 @@ class AlbumUpgraderV5 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   final Account account;
   final File? albumFile;
@@ -239,7 +237,7 @@ class AlbumUpgraderV6 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -259,7 +257,7 @@ class AlbumUpgraderV7 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) => null;
+  DbAlbum? doDb(DbAlbum dbObj) => null;
 
   /// File path for logging only
   final String? logFilePath;
@@ -302,32 +300,30 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
   }
 
   @override
-  sql.Album? doDb(sql.Album dbObj) {
+  DbAlbum? doDb(DbAlbum dbObj) {
     _log.fine("[doDb] Upgrade v8 Album for file: $logFilePath");
     if (dbObj.coverProviderType == "manual") {
-      final content = (jsonDecode(dbObj.coverProviderContent) as Map)
-          .cast<String, dynamic>();
+      final content = dbObj.coverProviderContent;
       final converted = _fileJsonToFileDescriptorJson(
           (content["coverFile"] as Map).cast<String, dynamic>());
       if (converted["fdId"] != null) {
         return dbObj.copyWith(
-          coverProviderContent: jsonEncode({"coverFile": converted}),
+          coverProviderContent: {"coverFile": converted},
         );
       } else {
-        return dbObj.copyWith(coverProviderContent: "{}");
+        return dbObj.copyWith(coverProviderContent: const {});
       }
     } else if (dbObj.coverProviderType == "auto") {
-      final content = (jsonDecode(dbObj.coverProviderContent) as Map)
-          .cast<String, dynamic>();
+      final content = dbObj.coverProviderContent;
       if (content["coverFile"] != null) {
         final converted = _fileJsonToFileDescriptorJson(
             (content["coverFile"] as Map).cast<String, dynamic>());
         if (converted["fdId"] != null) {
           return dbObj.copyWith(
-            coverProviderContent: jsonEncode({"coverFile": converted}),
+            coverProviderContent: {"coverFile": converted},
           );
         } else {
-          return dbObj.copyWith(coverProviderContent: "{}");
+          return dbObj.copyWith(coverProviderContent: const {});
         }
       }
     }

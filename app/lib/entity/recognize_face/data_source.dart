@@ -2,18 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/recognize_face.dart';
 import 'package:nc_photos/entity/recognize_face/repo.dart';
 import 'package:nc_photos/entity/recognize_face_item.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/table.dart';
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_common/type.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
 
@@ -110,20 +109,16 @@ class RecognizeFaceRemoteDataSource implements RecognizeFaceDataSource {
 
 @npLog
 class RecognizeFaceSqliteDbDataSource implements RecognizeFaceDataSource {
-  const RecognizeFaceSqliteDbDataSource(this.sqliteDb);
+  const RecognizeFaceSqliteDbDataSource(this.db);
 
   @override
   Future<List<RecognizeFace>> getFaces(Account account) async {
     _log.info("[getFaces] $account");
-    final dbFaces = await sqliteDb.use((db) async {
-      return await db.allRecognizeFaces(
-        account: sql.ByAccount.app(account),
-      );
-    });
-    return dbFaces
+    final results = await db.getRecognizeFaces(account: account.toDb());
+    return results
         .map((f) {
           try {
-            return SqliteRecognizeFaceConverter.fromSql(f);
+            return DbRecognizeFaceConverter.fromDb(f);
           } catch (e, stackTrace) {
             _log.severe(
                 "[getFaces] Failed while converting DB entry", e, stackTrace);
@@ -138,8 +133,23 @@ class RecognizeFaceSqliteDbDataSource implements RecognizeFaceDataSource {
   Future<List<RecognizeFaceItem>> getItems(
       Account account, RecognizeFace face) async {
     _log.info("[getItems] $face");
-    final results = await getMultiFaceItems(account, [face]);
-    return results[face]!;
+    final results = await db.getRecognizeFaceItemsByFaceLabel(
+      account: account.toDb(),
+      label: face.label,
+    );
+    return results
+        .map((r) {
+          try {
+            return DbRecognizeFaceItemConverter.fromDb(
+                account.userId.toString(), face.label, r);
+          } catch (e, stackTrace) {
+            _log.severe(
+                "[getItems] Failed while converting DB entry", e, stackTrace);
+            return null;
+          }
+        })
+        .whereNotNull()
+        .toList();
   }
 
   @override
@@ -147,42 +157,25 @@ class RecognizeFaceSqliteDbDataSource implements RecognizeFaceDataSource {
     Account account,
     List<RecognizeFace> faces, {
     ErrorWithValueHandler<RecognizeFace>? onError,
-    List<RecognizeFaceItemSort>? orderBy,
-    int? limit,
   }) async {
     _log.info("[getMultiFaceItems] ${faces.toReadableString()}");
-    final dbItems = await sqliteDb.use((db) async {
-      final results = await Future.wait(faces.map((f) async {
-        try {
-          return MapEntry(
-            f,
-            await db.recognizeFaceItemsByParentLabel(
-              account: sql.ByAccount.app(account),
-              label: f.label,
-              orderBy: orderBy?.toOrderingItem(db).toList(),
-              limit: limit,
-            ),
-          );
-        } catch (e, stackTrace) {
-          onError?.call(f, e, stackTrace);
-          return null;
-        }
-      }));
-      return results.whereNotNull().toMap();
-    });
-    return dbItems.entries
-        .map((entry) {
-          final face = entry.key;
+    final results = await db.getRecognizeFaceItemsByFaceLabels(
+      account: account.toDb(),
+      labels: faces.map((e) => e.label).toList(),
+    );
+    return results.entries
+        .map((e) {
           try {
             return MapEntry(
-              face,
-              entry.value
-                  .map((i) => SqliteRecognizeFaceItemConverter.fromSql(
-                      account.userId.raw, face.label, i))
+              faces.firstWhere((f) => f.label == e.key),
+              e.value
+                  .map((f) => DbRecognizeFaceItemConverter.fromDb(
+                      account.userId.toString(), e.key, f))
                   .toList(),
             );
           } catch (e, stackTrace) {
-            onError?.call(face, e, stackTrace);
+            _log.severe("[getMultiFaceItems] Failed while converting DB entry",
+                e, stackTrace);
             return null;
           }
         })
@@ -196,16 +189,30 @@ class RecognizeFaceSqliteDbDataSource implements RecognizeFaceDataSource {
     List<RecognizeFace> faces, {
     ErrorWithValueHandler<RecognizeFace>? onError,
   }) async {
-    final results = await getMultiFaceItems(
-      account,
-      faces,
-      onError: onError,
-      orderBy: [RecognizeFaceItemSort.fileIdDesc],
-      limit: 1,
+    _log.info("[getMultiFaceLastItems] ${faces.toReadableString()}");
+    final results = await db.getLatestRecognizeFaceItemsByFaceLabels(
+      account: account.toDb(),
+      labels: faces.map((e) => e.label).toList(),
     );
-    return (results..removeWhere((key, value) => value.isEmpty))
-        .map((key, value) => MapEntry(key, value.first));
+    return results.entries
+        .map((e) {
+          try {
+            return MapEntry(
+              faces.firstWhere((f) => f.label == e.key),
+              DbRecognizeFaceItemConverter.fromDb(
+                  account.userId.toString(), e.key, e.value),
+            );
+          } catch (e, stackTrace) {
+            _log.severe(
+                "[getMultiFaceLastItems] Failed while converting DB entry",
+                e,
+                stackTrace);
+            return null;
+          }
+        })
+        .whereNotNull()
+        .toMap();
   }
 
-  final sql.SqliteDb sqliteDb;
+  final NpDb db;
 }

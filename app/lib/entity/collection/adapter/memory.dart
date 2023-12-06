@@ -9,7 +9,6 @@ import 'package:nc_photos/entity/collection_item/basic_item.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/use_case/list_location_file.dart';
 
 class CollectionMemoryAdapter
     with
@@ -18,10 +17,7 @@ class CollectionMemoryAdapter
         CollectionAdapterUnshareableTag
     implements CollectionAdapter {
   CollectionMemoryAdapter(this._c, this.account, this.collection)
-      : assert(require(_c)),
-        _provider = collection.contentProvider as CollectionMemoryProvider;
-
-  static bool require(DiContainer c) => ListLocationFile.require(c);
+      : _provider = collection.contentProvider as CollectionMemoryProvider;
 
   @override
   Stream<List<CollectionItem>> listItem() async* {

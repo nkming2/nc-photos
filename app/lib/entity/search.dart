@@ -1,7 +1,7 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:np_collection/np_collection.dart';
 import 'package:to_string/to_string.dart';
 
@@ -29,7 +29,7 @@ class SearchCriteria {
 }
 
 abstract class SearchFilter {
-  void apply(sql.FilesQueryBuilder query);
+  Map<Symbol, Object> toQueryArgument();
   bool isSatisfy(File file);
 }
 
@@ -38,25 +38,17 @@ enum SearchFileType {
   video,
 }
 
-extension on SearchFileType {
-  String toSqlPattern() {
-    switch (this) {
-      case SearchFileType.image:
-        return "image/%";
-
-      case SearchFileType.video:
-        return "video/%";
-    }
-  }
-}
-
 @toString
 class SearchFileTypeFilter implements SearchFilter {
   const SearchFileTypeFilter(this.type);
 
   @override
-  apply(sql.FilesQueryBuilder query) {
-    query.byMimePattern(type.toSqlPattern());
+  Map<Symbol, Object> toQueryArgument() {
+    if (type == SearchFileType.image) {
+      return {#mimes: file_util.supportedImageFormatMimes};
+    } else {
+      return {#mimes: file_util.supportedVideoFormatMimes};
+    }
   }
 
   @override
@@ -81,8 +73,8 @@ class SearchFavoriteFilter implements SearchFilter {
   const SearchFavoriteFilter(this.value);
 
   @override
-  apply(sql.FilesQueryBuilder query) {
-    query.byFavorite(value);
+  Map<Symbol, Object> toQueryArgument() {
+    return {#isFavorite: value};
   }
 
   @override
@@ -97,7 +89,7 @@ class SearchFavoriteFilter implements SearchFilter {
 class SearchRepo {
   const SearchRepo(this.dataSrc);
 
-  Future<List<File>> list(Account account, SearchCriteria criteria) =>
+  Future<List<FileDescriptor>> list(Account account, SearchCriteria criteria) =>
       dataSrc.list(account, criteria);
 
   final SearchDataSource dataSrc;
@@ -105,5 +97,5 @@ class SearchRepo {
 
 abstract class SearchDataSource {
   /// List all results from a given search criteria
-  Future<List<File>> list(Account account, SearchCriteria criteria);
+  Future<List<FileDescriptor>> list(Account account, SearchCriteria criteria);
 }

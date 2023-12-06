@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db_sqlite/src/database.dart';
 
 part 'table.g.dart';
 
@@ -16,7 +16,7 @@ class Accounts extends Table {
   TextColumn get userId => text()();
 
   @override
-  get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {server, userId},
       ];
 }
@@ -39,7 +39,7 @@ class Files extends Table {
   TextColumn get ownerDisplayName => text().nullable()();
 
   @override
-  get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {server, fileId},
       ];
 }
@@ -62,7 +62,7 @@ class AccountFiles extends Table {
       dateTime().map(const SqliteDateTimeConverter())();
 
   @override
-  get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {account, file},
       ];
 }
@@ -85,7 +85,7 @@ class Images extends Table {
       dateTime().map(const SqliteDateTimeConverter()).nullable()();
 
   @override
-  get primaryKey => {accountFile};
+  Set<Column> get primaryKey => {accountFile};
 }
 
 /// Estimated locations for images
@@ -101,7 +101,7 @@ class ImageLocations extends Table {
   TextColumn get admin2 => text().nullable()();
 
   @override
-  get primaryKey => {accountFile};
+  Set<Column> get primaryKey => {accountFile};
 }
 
 /// A file inside trashbin
@@ -115,7 +115,7 @@ class Trashes extends Table {
       dateTime().map(const SqliteDateTimeConverter())();
 
   @override
-  get primaryKey => {file};
+  Set<Column> get primaryKey => {file};
 }
 
 /// A file located under another dir (dir is also a file)
@@ -126,7 +126,7 @@ class DirFiles extends Table {
       integer().references(Files, #rowId, onDelete: KeyAction.cascade)();
 
   @override
-  get primaryKey => {dir, child};
+  Set<Column> get primaryKey => {dir, child};
 }
 
 class NcAlbums extends Table {
@@ -145,7 +145,7 @@ class NcAlbums extends Table {
   BoolColumn get isOwned => boolean()();
 
   @override
-  List<Set<Column>>? get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {account, relativePath},
       ];
 }
@@ -167,7 +167,7 @@ class NcAlbumItems extends Table {
   IntColumn get fileMetadataHeight => integer().nullable()();
 
   @override
-  List<Set<Column>>? get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {parent, fileId},
       ];
 }
@@ -206,7 +206,7 @@ class AlbumShares extends Table {
       dateTime().map(const SqliteDateTimeConverter())();
 
   @override
-  get primaryKey => {album, userId};
+  Set<Column> get primaryKey => {album, userId};
 }
 
 class Tags extends Table {
@@ -219,7 +219,7 @@ class Tags extends Table {
   BoolColumn get userAssignable => boolean().nullable()();
 
   @override
-  get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {server, tagId},
       ];
 }
@@ -233,7 +233,7 @@ class FaceRecognitionPersons extends Table {
   IntColumn get count => integer()();
 
   @override
-  get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {account, name},
       ];
 }
@@ -245,7 +245,7 @@ class RecognizeFaces extends Table {
   TextColumn get label => text()();
 
   @override
-  List<Set<Column>>? get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {account, label},
       ];
 }
@@ -270,7 +270,7 @@ class RecognizeFaceItems extends Table {
   TextColumn get faceDetections => text().nullable()();
 
   @override
-  List<Set<Column>>? get uniqueKeys => [
+  List<Set<Column>> get uniqueKeys => [
         {parent, fileId},
       ];
 }

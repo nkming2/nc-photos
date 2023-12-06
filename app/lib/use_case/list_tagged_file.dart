@@ -12,9 +12,7 @@ part 'list_tagged_file.g.dart';
 
 @npLog
 class ListTaggedFile {
-  ListTaggedFile(this._c)
-      : assert(require(_c)),
-        assert(FindFile.require(_c));
+  ListTaggedFile(this._c) : assert(require(_c));
 
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.taggedFileRepo);

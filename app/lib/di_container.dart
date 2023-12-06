@@ -10,11 +10,11 @@ import 'package:nc_photos/entity/recognize_face/repo.dart';
 import 'package:nc_photos/entity/search.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/touch_manager.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db/np_db.dart';
 
 enum DiType {
   albumRepo,
@@ -45,8 +45,8 @@ enum DiType {
   recognizeFaceRepoRemote,
   recognizeFaceRepoLocal,
   pref,
-  sqliteDb,
   touchManager,
+  npDb,
 }
 
 class DiContainer {
@@ -79,8 +79,8 @@ class DiContainer {
     RecognizeFaceRepo? recognizeFaceRepoRemote,
     RecognizeFaceRepo? recognizeFaceRepoLocal,
     Pref? pref,
-    sql.SqliteDb? sqliteDb,
     TouchManager? touchManager,
+    NpDb? npDb,
   })  : _albumRepo = albumRepo,
         _albumRepoRemote = albumRepoRemote,
         _albumRepoLocal = albumRepoLocal,
@@ -109,8 +109,8 @@ class DiContainer {
         _recognizeFaceRepoRemote = recognizeFaceRepoRemote,
         _recognizeFaceRepoLocal = recognizeFaceRepoLocal,
         _pref = pref,
-        _sqliteDb = sqliteDb,
-        _touchManager = touchManager;
+        _touchManager = touchManager,
+        _npDb = npDb;
 
   DiContainer.late();
 
@@ -172,10 +172,10 @@ class DiContainer {
         return contianer._recognizeFaceRepoLocal != null;
       case DiType.pref:
         return contianer._pref != null;
-      case DiType.sqliteDb:
-        return contianer._sqliteDb != null;
       case DiType.touchManager:
         return contianer._touchManager != null;
+      case DiType.npDb:
+        return contianer._npDb != null;
     }
   }
 
@@ -194,8 +194,8 @@ class DiContainer {
     OrNull<FaceRecognitionPersonRepo>? faceRecognitionPersonRepo,
     OrNull<RecognizeFaceRepo>? recognizeFaceRepo,
     OrNull<Pref>? pref,
-    OrNull<sql.SqliteDb>? sqliteDb,
     OrNull<TouchManager>? touchManager,
+    OrNull<NpDb>? npDb,
   }) {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
@@ -217,8 +217,8 @@ class DiContainer {
           ? _recognizeFaceRepo
           : recognizeFaceRepo.obj,
       pref: pref == null ? _pref : pref.obj,
-      sqliteDb: sqliteDb == null ? _sqliteDb : sqliteDb.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
+      npDb: npDb == null ? _npDb : npDb.obj,
     );
   }
 
@@ -253,9 +253,9 @@ class DiContainer {
   RecognizeFaceRepo get recognizeFaceRepoRemote => _recognizeFaceRepoRemote!;
   RecognizeFaceRepo get recognizeFaceRepoLocal => _recognizeFaceRepoLocal!;
 
-  sql.SqliteDb get sqliteDb => _sqliteDb!;
   Pref get pref => _pref!;
   TouchManager get touchManager => _touchManager!;
+  NpDb get npDb => _npDb!;
 
   set albumRepo(AlbumRepo v) {
     assert(_albumRepo == null);
@@ -392,11 +392,6 @@ class DiContainer {
     _recognizeFaceRepoLocal = v;
   }
 
-  set sqliteDb(sql.SqliteDb v) {
-    assert(_sqliteDb == null);
-    _sqliteDb = v;
-  }
-
   set pref(Pref v) {
     assert(_pref == null);
     _pref = v;
@@ -405,6 +400,11 @@ class DiContainer {
   set touchManager(TouchManager v) {
     assert(_touchManager == null);
     _touchManager = v;
+  }
+
+  set npDb(NpDb v) {
+    assert(_npDb == null);
+    _npDb = v;
   }
 
   AlbumRepo? _albumRepo;
@@ -438,9 +438,9 @@ class DiContainer {
   RecognizeFaceRepo? _recognizeFaceRepoRemote;
   RecognizeFaceRepo? _recognizeFaceRepoLocal;
 
-  sql.SqliteDb? _sqliteDb;
   Pref? _pref;
   TouchManager? _touchManager;
+  NpDb? _npDb;
 }
 
 extension DiContainerExtension on DiContainer {

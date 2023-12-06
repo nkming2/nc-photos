@@ -10,7 +10,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/search.dart';
@@ -509,7 +508,7 @@ class _HomeSearchState extends State<HomeSearch>
     );
   }
 
-  void _transformItems(List<File> files) {
+  void _transformItems(List<FileDescriptor> files) {
     _buildItemQueue.addJob(
       PhotoListItemBuilderArguments(
         widget.account,

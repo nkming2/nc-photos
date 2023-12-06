@@ -1,26 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/account.dart' as app;
-import 'package:nc_photos/entity/file.dart' as app;
-import 'package:nc_photos/entity/file_descriptor.dart' as app;
-import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart';
-import 'package:nc_photos/entity/sqlite/isolate_util.dart';
-import 'package:nc_photos/entity/sqlite/table.dart';
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
-import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
-import 'package:nc_photos/object_extension.dart';
-import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_collection/np_collection.dart';
-import 'package:np_platform_lock/np_platform_lock.dart';
-import 'package:np_platform_util/np_platform_util.dart';
+import 'package:np_db_sqlite/src/table.dart';
+import 'package:np_db_sqlite/src/util.dart';
 
 part 'database.g.dart';
-part 'database/nc_album_extension.dart';
-part 'database_extension.dart';
 
 // remember to also update the truncate method after adding a new table
 @npLog
@@ -47,7 +31,10 @@ part 'database_extension.dart';
 class SqliteDb extends _$SqliteDb {
   SqliteDb({
     QueryExecutor? executor,
-  }) : super(executor ?? platform.openSqliteConnection());
+  }) : super(executor ?? openSqliteConnection());
+
+  // For compatibility only
+  static late final SqliteDb inst;
 
   @override
   get schemaVersion => 7;

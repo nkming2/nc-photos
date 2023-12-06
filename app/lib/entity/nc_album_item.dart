@@ -64,9 +64,6 @@ extension NcAlbumItemExtension on NcAlbumItem {
 
   int get identityHashCode => fileId.hashCode;
 
-  static int identityComparator(NcAlbumItem a, NcAlbumItem b) =>
-      a.fileId.compareTo(b.fileId);
-
   File toFile() {
     Metadata? metadata;
     if (fileMetadataWidth != null && fileMetadataHeight != null) {

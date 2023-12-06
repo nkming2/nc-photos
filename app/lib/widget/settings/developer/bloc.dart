@@ -40,15 +40,13 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onVacuumDb(_VacuumDb ev, Emitter<_State> emit) async {
     _log.info(ev);
-    await _c.sqliteDb.useNoTransaction((db) async {
-      await db.customStatement("VACUUM;");
-    });
+    await _c.npDb.sqlVacuum();
     emit(state.copyWith(message: StateMessage("Finished successfully")));
   }
 
   Future<void> _onExportDb(_ExportDb ev, Emitter<_State> emit) async {
     _log.info(ev);
-    await platform.exportSqliteDb(_c.sqliteDb);
+    await _c.npDb.export(await getApplicationDocumentsDirectory());
     emit(state.copyWith(message: StateMessage("Finished successfully")));
   }
 

@@ -3,12 +3,8 @@ import 'dart:isolate';
 import 'package:drift/drift.dart';
 import 'package:drift/isolate.dart';
 import 'package:flutter/foundation.dart';
-import 'package:kiwi/kiwi.dart';
-import 'package:nc_photos/app_init.dart' as app_init;
-import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite/database.dart';
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
+import 'package:np_db_sqlite/src/database.dart';
+import 'package:np_db_sqlite/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 
 typedef ComputeWithDbCallback<T, U> = Future<U> Function(
@@ -25,15 +21,13 @@ Future<SqliteDb> createDb() async {
 }
 
 Future<U> computeWithDb<T, U>(
-    ComputeWithDbCallback<T, U> callback, T args) async {
+    ComputeWithDbCallback<T, U> callback, T args, SqliteDb fallbackDb) async {
   if (getRawPlatform() == NpPlatform.web) {
-    final c = KiwiContainer().resolve<DiContainer>();
-    return await callback(c.sqliteDb, args);
+    return await callback(fallbackDb, args);
   } else {
     return await compute(
       _computeWithDbImpl<T, U>,
-      _ComputeWithDbMessage(
-          await platform.getSqliteConnectionArgs(), callback, args),
+      _ComputeWithDbMessage(await getSqliteConnectionArgs(), callback, args),
     );
   }
 }
@@ -55,7 +49,7 @@ class _ComputeWithDbMessage<T, U> {
 }
 
 Future<DriftIsolate> _createDriftIsolate() async {
-  final args = await platform.getSqliteConnectionArgs();
+  final args = await getSqliteConnectionArgs();
   final receivePort = ReceivePort();
   await Isolate.spawn(
     _startBackground,
@@ -66,12 +60,11 @@ Future<DriftIsolate> _createDriftIsolate() async {
 }
 
 @pragma("vm:entry-point")
-void _startBackground(_IsolateStartRequest request) {
-  app_init.initDrift();
-
+Future<void> _startBackground(_IsolateStartRequest request) async {
+  initDrift();
   // this is the entry point from the background isolate! Let's create
   // the database from the path we received
-  final executor = platform.openSqliteConnectionWithArgs(request.platformArgs);
+  final executor = openSqliteConnectionWithArgs(request.platformArgs);
   // we're using DriftIsolate.inCurrent here as this method already runs on a
   // background isolate. If we used DriftIsolate.spawn, a third isolate would be
   // started which is not what we want!
@@ -85,13 +78,11 @@ void _startBackground(_IsolateStartRequest request) {
 }
 
 Future<U> _computeWithDbImpl<T, U>(_ComputeWithDbMessage<T, U> message) async {
-  app_init.initDrift();
-
+  initDrift();
   // we don't use driftIsolate because opening a DB normally is found to perform
   // better
   final sqliteDb = SqliteDb(
-    executor:
-        platform.openSqliteConnectionWithArgs(message.sqliteConnectionArgs),
+    executor: openSqliteConnectionWithArgs(message.sqliteConnectionArgs),
   );
   try {
     return await message.callback(sqliteDb, message.args);

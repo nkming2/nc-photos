@@ -36,8 +36,7 @@ class CollectionNcAlbumAdapter
       : assert(require(_c)),
         _provider = collection.contentProvider as CollectionNcAlbumProvider;
 
-  static bool require(DiContainer c) =>
-      ListNcAlbumItem.require(c) && FindFileDescriptor.require(c);
+  static bool require(DiContainer c) => ListNcAlbumItem.require(c);
 
   @override
   Stream<List<CollectionItem>> listItem() {
