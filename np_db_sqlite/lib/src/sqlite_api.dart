@@ -309,14 +309,14 @@ class NpDbSqlite implements NpDb {
   @override
   Future<void> syncDirFiles({
     required DbAccount account,
-    required int dirFileId,
+    required DbFileKey dirFile,
     required List<DbFile> files,
   }) async {
     final sqlFiles = await files.toSql();
     await _db.use((db) async {
       await db.syncDirFiles(
         account: ByAccount.db(account),
-        dirFileId: dirFileId,
+        dirFile: dirFile,
         objs: sqlFiles,
       );
     });

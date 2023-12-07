@@ -214,7 +214,7 @@ abstract class NpDb {
   /// Add or replace files in db
   Future<void> syncDirFiles({
     required DbAccount account,
-    required int dirFileId,
+    required DbFileKey dirFile,
     required List<DbFile> files,
   });
 

@@ -261,7 +261,7 @@ extension SqliteDbFileExtension on SqliteDb {
 
   Future<void> syncDirFiles({
     required ByAccount account,
-    required int dirFileId,
+    required DbFileKey dirFile,
     required List<CompleteFileCompanion> objs,
   }) async {
     _log.info("[syncDirFiles] files: [length: ${objs.length}]");
@@ -286,6 +286,11 @@ extension SqliteDbFileExtension on SqliteDb {
       idMap.addAll(insertMap);
     }
 
+    final dirFileId = dirFile.fileId ??
+        await _queryFileIdByRelativePath(
+          account: ByAccount.sql(sqlAccount),
+          relativePath: dirFile.relativePath!,
+        ).notNull();
     final dirRowId = idMap[dirFileId];
     if (dirRowId == null) {
       _log.severe("[syncDirFiles] Dir not inserted");
@@ -547,6 +552,26 @@ extension SqliteDbFileExtension on SqliteDb {
 
     // remove dir in DirFiles
     await (delete(dirFiles)..where((t) => t.dir.equals(rowId.fileRowId))).go();
+  }
+
+  Future<int?> _queryFileIdByRelativePath({
+    required ByAccount account,
+    required String relativePath,
+  }) async {
+    _log.info("[_queryFileIdByRelativePath] relativePath: $relativePath");
+    final query = _queryFiles().let((q) {
+      q
+        ..setQueryMode(
+          FilesQueryMode.expression,
+          expressions: [
+            files.fileId,
+          ],
+        )
+        ..setAccount(account)
+        ..byRelativePath(relativePath);
+      return q.build()..limit(1);
+    });
+    return query.map((r) => r.read(files.fileId)!).getSingleOrNull();
   }
 
   /// Update Db files

@@ -92,7 +92,7 @@ class FileSqliteCacheUpdater {
     try {
       await _c.npDb.syncDirFiles(
         account: account.toDb(),
-        dirFileId: dir.fileId!,
+        dirFile: dir.toDbKey(),
         files: remote.map((e) => e.toDb()).toList(),
       );
     } finally {
