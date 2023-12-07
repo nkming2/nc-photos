@@ -51,8 +51,11 @@ class ByAccount {
 }
 
 class AccountFileRowIds {
-  const AccountFileRowIds(
-      this.accountFileRowId, this.accountRowId, this.fileRowId);
+  const AccountFileRowIds({
+    required this.accountFileRowId,
+    required this.accountRowId,
+    required this.fileRowId,
+  });
 
   final int accountFileRowId;
   final int accountRowId;
@@ -173,9 +176,9 @@ extension SqliteDbExtension on SqliteDb {
     });
     return query
         .map((r) => AccountFileRowIds(
-              r.read(accountFiles.rowId)!,
-              r.read(accountFiles.account)!,
-              r.read(accountFiles.file)!,
+              accountFileRowId: r.read(accountFiles.rowId)!,
+              accountRowId: r.read(accountFiles.account)!,
+              fileRowId: r.read(accountFiles.file)!,
             ))
         .getSingleOrNull();
   }
@@ -206,9 +209,9 @@ extension SqliteDbExtension on SqliteDb {
         .map((r) => MapEntry(
               r.read(files.fileId)!,
               AccountFileRowIds(
-                r.read(accountFiles.rowId)!,
-                r.read(accountFiles.account)!,
-                r.read(accountFiles.file)!,
+                accountFileRowId: r.read(accountFiles.rowId)!,
+                accountRowId: r.read(accountFiles.account)!,
+                fileRowId: r.read(accountFiles.file)!,
               ),
             ))
         .get()
