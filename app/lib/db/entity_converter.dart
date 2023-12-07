@@ -213,7 +213,7 @@ abstract class DbMetadataConverter {
       fileEtag: src.fileEtag,
       imageWidth: src.width,
       imageHeight: src.height,
-      exif: src.exif?.let(Exif.new),
+      exif: src.exif?.let(Exif.fromJson),
     );
   }
 
