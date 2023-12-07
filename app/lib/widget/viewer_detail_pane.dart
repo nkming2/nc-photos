@@ -146,11 +146,16 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     final timeStr = DateFormat(DateFormat.HOUR_MINUTE,
             Localizations.localeOf(context).languageCode)
         .format(_dateTime);
-    final collectionAdapter = CollectionAdapter.of(KiwiContainer().resolve(),
-        widget.account, widget.fromCollection!.collection);
-    final isShowDelete = widget.fromCollection != null &&
-        collectionAdapter.isPermitted(CollectionCapability.deleteItem) &&
-        collectionAdapter.isItemDeletable(widget.fromCollection!.item);
+    final bool isShowDelete;
+    if (widget.fromCollection != null) {
+      final collectionAdapter = CollectionAdapter.of(KiwiContainer().resolve(),
+          widget.account, widget.fromCollection!.collection);
+      isShowDelete =
+          collectionAdapter.isPermitted(CollectionCapability.deleteItem) &&
+              collectionAdapter.isItemDeletable(widget.fromCollection!.item);
+    } else {
+      isShowDelete = false;
+    }
 
     return Material(
       type: MaterialType.transparency,
