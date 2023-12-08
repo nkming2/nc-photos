@@ -777,6 +777,10 @@ class NpDbSqlite implements NpDb {
         );
         result = true;
       }
+      sqlObjs.addAll(await db.queryRecognizeFaces(
+        account: ByAccount.sql(sqlAccount),
+        labels: inserts.map((e) => e.label).toList(),
+      ));
 
       for (final d in data.entries) {
         try {

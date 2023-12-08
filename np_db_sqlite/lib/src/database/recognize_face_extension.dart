@@ -4,11 +4,15 @@ extension SqliteDbRecognizeFaceExtension on SqliteDb {
   /// Return all faces provided by Recognize
   Future<List<RecognizeFace>> queryRecognizeFaces({
     required ByAccount account,
+    List<String>? labels,
   }) {
     _log.info("[queryRecognizeFaces]");
     if (account.sqlAccount != null) {
       final query = select(recognizeFaces)
         ..where((t) => t.account.equals(account.sqlAccount!.rowId));
+      if (labels != null) {
+        query.where((t) => t.label.isIn(labels));
+      }
       return query.get();
     } else {
       final query = select(recognizeFaces).join([
@@ -20,6 +24,9 @@ extension SqliteDbRecognizeFaceExtension on SqliteDb {
         ..where(servers.address.equals(account.dbAccount!.serverAddress))
         ..where(accounts.userId
             .equals(account.dbAccount!.userId.toCaseInsensitiveString()));
+      if (labels != null) {
+        query.where(recognizeFaces.label.isIn(labels));
+      }
       return query.map((r) => r.readTable(recognizeFaces)).get();
     }
   }
