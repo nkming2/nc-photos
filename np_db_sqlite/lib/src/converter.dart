@@ -398,7 +398,7 @@ abstract class RecognizeFaceItemConverter {
       isFavorite: Value(src.isFavorite),
       fileMetadataWidth: Value(src.fileMetadataWidth),
       fileMetadataHeight: Value(src.fileMetadataHeight),
-      faceDetections: Value(src.faceDetections?.let(jsonEncode)),
+      faceDetections: Value(src.faceDetections),
     );
   }
 }
