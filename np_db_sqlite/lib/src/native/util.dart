@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:logging/logging.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:np_db_sqlite/src/database.dart' as sql;
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart' as sql;
+
+part 'util.g.dart';
 
 Future<Map<String, dynamic>> getSqliteConnectionArgs() async {
   // put the database file, called db.sqlite here, into the documents folder
@@ -42,9 +46,14 @@ Future<void> applyWorkaroundToOpenSqlite3OnOldAndroidVersions() {
 /// means only internal directories are allowed
 Future<File> exportSqliteDb(sql.SqliteDb db, Directory dir) async {
   final file = File(path_lib.join(dir.path, "export.sqlite"));
+  _$__NpLog.log.fine("[exportSqliteDb] path: ${file.absolute}");
   if (await file.exists()) {
     await file.delete();
   }
   await db.customStatement("VACUUM INTO ?", [file.path]);
   return file;
 }
+
+@npLog
+// ignore: camel_case_types
+class __ {}
