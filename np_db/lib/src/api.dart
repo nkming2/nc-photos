@@ -275,7 +275,9 @@ abstract class NpDb {
     List<int>? fileIds,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
+    List<String>? relativePathKeywords,
     String? location,
+    bool? isFavorite,
     List<String>? mimes,
     int? limit,
   });

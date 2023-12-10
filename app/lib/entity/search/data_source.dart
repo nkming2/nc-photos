@@ -54,11 +54,11 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     try {
       final args = {
         #account: account.toDb(),
-        #includeRelativePaths: account.roots,
-        #excludeRelativePaths: [
+        #includeRelativeRoots: account.roots,
+        #excludeRelativeRoots: [
           remote_storage_util.remoteStorageDirRelativePath
         ],
-        #relativePathKeywords: keywords,
+        #relativePathKeywords: keywords.toList(),
         #mimes: file_util.supportedFormatMimes,
       };
       for (final f in criteria.filters) {
@@ -84,8 +84,8 @@ class SearchSqliteDbDataSource implements SearchDataSource {
     try {
       final args = {
         #account: account.toDb(),
-        #includeRelativePaths: account.roots,
-        #excludeRelativePaths: [
+        #includeRelativeRoots: account.roots,
+        #excludeRelativeRoots: [
           remote_storage_util.remoteStorageDirRelativePath
         ],
         #location: criteria.input,

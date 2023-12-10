@@ -439,7 +439,9 @@ class NpDbSqlite implements NpDb {
     List<int>? fileIds,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
+    List<String>? relativePathKeywords,
     String? location,
+    bool? isFavorite,
     List<String>? mimes,
     int? limit,
   }) async {
@@ -449,7 +451,9 @@ class NpDbSqlite implements NpDb {
         fileIds: fileIds,
         includeRelativeRoots: includeRelativeRoots,
         excludeRelativeRoots: excludeRelativeRoots,
+        relativePathKeywords: relativePathKeywords,
         location: location,
+        isFavorite: isFavorite,
         mimes: mimes,
         limit: limit,
       );
