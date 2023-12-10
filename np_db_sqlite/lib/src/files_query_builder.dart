@@ -118,10 +118,11 @@ class FilesQueryBuilder {
       if (_queryMode == FilesQueryMode.completeFile) ...[
         leftOuterJoin(
             db.images, db.images.accountFile.equalsExp(db.accountFiles.rowId)),
-        leftOuterJoin(db.imageLocations,
-            db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
         leftOuterJoin(db.trashes, db.trashes.file.equalsExp(db.files.rowId)),
       ],
+      if (_queryMode == FilesQueryMode.completeFile || _byLocation != null)
+        leftOuterJoin(db.imageLocations,
+            db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
     ]) as JoinedSelectStatement;
     if (_queryMode == FilesQueryMode.expression) {
       query.addColumns(_selectExpressions!);
