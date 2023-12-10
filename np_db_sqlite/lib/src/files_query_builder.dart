@@ -170,7 +170,8 @@ class FilesQueryBuilder {
         query.where(db.accountFiles.isFavorite.equals(true));
       } else {
         // null are treated as false
-        query.where(db.accountFiles.isFavorite.equals(true).not());
+        query.where(db.accountFiles.isFavorite.equals(false) |
+            db.accountFiles.isFavorite.isNull());
       }
     }
     if (_byDirRowId != null) {
