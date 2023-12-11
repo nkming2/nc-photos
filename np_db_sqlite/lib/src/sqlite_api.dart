@@ -26,10 +26,10 @@ class NpDbSqlite implements NpDb {
 
   @override
   Future<void> initMainIsolate({
-    required int androidSdk,
+    required int? androidSdk,
   }) async {
     initDrift();
-    if (getRawPlatform() == NpPlatform.android && androidSdk < 24) {
+    if (getRawPlatform() == NpPlatform.android && androidSdk! < 24) {
       _log.info("[initMainIsolate] Workaround Android 6- bug");
       // see: https://github.com/flutter/flutter/issues/73318 and
       // https://github.com/simolus3/drift/issues/895
@@ -47,7 +47,7 @@ class NpDbSqlite implements NpDb {
 
   @override
   Future<void> initBackgroundIsolate({
-    required int androidSdk,
+    required int? androidSdk,
   }) async {
     initDrift();
     // service already runs in an isolate

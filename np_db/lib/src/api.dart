@@ -100,12 +100,22 @@ class DbLocationGroupResult {
 abstract class NpDb {
   factory NpDb() => NpDbSqlite();
 
+  /// Initialize the db for the main isolate
+  ///
+  /// If running on android, you must pass the current SDK int to [androidSdk].
+  /// If running on other platforms, this value will be ignored, you can pass
+  /// null in such case
   Future<void> initMainIsolate({
-    required int androidSdk,
+    required int? androidSdk,
   });
 
+  /// Initialize the db for a background isolate
+  ///
+  /// If running on android, you must pass the current SDK int to [androidSdk].
+  /// If running on other platforms, this value will be ignored, you can pass
+  /// null in such case
   Future<void> initBackgroundIsolate({
-    required int androidSdk,
+    required int? androidSdk,
   });
 
   /// Dispose the db

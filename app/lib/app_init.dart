@@ -188,10 +188,12 @@ void _initVisibilityDetector() {
 
 Future<NpDb> _createDb(InitIsolateType isolateType) async {
   final npDb = NpDb();
+  final androidSdk =
+      getRawPlatform() == NpPlatform.android ? AndroidInfo().sdkInt : null;
   if (isolateType == InitIsolateType.main) {
-    await npDb.initMainIsolate(androidSdk: AndroidInfo().sdkInt);
+    await npDb.initMainIsolate(androidSdk: androidSdk);
   } else {
-    await npDb.initBackgroundIsolate(androidSdk: AndroidInfo().sdkInt);
+    await npDb.initBackgroundIsolate(androidSdk: androidSdk);
   }
   return npDb;
 }
