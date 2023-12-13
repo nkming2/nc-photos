@@ -114,7 +114,8 @@ class SearchLandingBloc
   }
 
   Future<List<Person>> _queryPeople(SearchLandingBlocQuery ev) =>
-      ListPerson(_c.withLocalRepo())(ev.account, ev.accountPrefController.raw)
+      ListPerson(_c.withLocalRepo())(
+              ev.account, ev.accountPrefController.personProvider.value)
           .last;
 
   Future<LocationGroupResult> _queryLocations(SearchLandingBlocQuery ev) =>

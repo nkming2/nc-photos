@@ -54,8 +54,6 @@ class AccountPrefController {
         value: value,
       );
 
-  AccountPref get raw => _accountPref;
-
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(AccountPref pref, T value) setter,

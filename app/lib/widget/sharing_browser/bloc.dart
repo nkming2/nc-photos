@@ -70,7 +70,7 @@ class _Bloc extends Bloc<_Event, _State> {
         );
     try {
       return await ImportPotentialSharedAlbum(c)(
-          account, accountPrefController.raw);
+          account, accountPrefController.shareFolder.value);
     } catch (e, stackTrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

@@ -3,7 +3,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/list_potential_shared_album.dart';
 import 'package:nc_photos/use_case/move.dart';
@@ -22,11 +21,11 @@ class ImportPotentialSharedAlbum {
       DiContainer.has(c, DiType.albumRepo) &&
       DiContainer.has(c, DiType.fileRepo);
 
-  Future<List<Album>> call(Account account, AccountPref accountPref) async {
+  Future<List<Album>> call(Account account, String shareFolder) async {
     _log.info("[call] $account");
     final products = <Album>[];
     final files =
-        await ListPotentialSharedAlbum(_c.fileRepo)(account, accountPref);
+        await ListPotentialSharedAlbum(_c.fileRepo)(account, shareFolder);
     for (final f in files) {
       // check if the file is actually an album
       try {

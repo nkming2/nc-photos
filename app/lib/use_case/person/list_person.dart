@@ -5,7 +5,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/person/builder.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/face_recognition_person/list_face_recognition_person.dart';
 import 'package:nc_photos/use_case/recognize_face/list_recognize_face.dart';
 import 'package:nc_photos/use_case/recognize_face/list_recognize_face_item.dart';
@@ -17,9 +16,7 @@ part 'list_person.g.dart';
 class ListPerson {
   const ListPerson(this._c);
 
-  Stream<List<Person>> call(Account account, AccountPref accountPref) async* {
-    final provider =
-        PersonProvider.fromValue(accountPref.getPersonProviderOr());
+  Stream<List<Person>> call(Account account, PersonProvider provider) async* {
     _log.info("[call] Current provider: $provider");
     switch (provider) {
       case PersonProvider.none:

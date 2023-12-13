@@ -4,7 +4,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/ls.dart';
 import 'package:np_codegen/np_codegen.dart';
 
@@ -17,12 +16,12 @@ part 'list_potential_shared_album.g.dart';
 class ListPotentialSharedAlbum {
   ListPotentialSharedAlbum(this.fileRepo);
 
-  Future<List<File>> call(Account account, AccountPref accountPref) async {
+  Future<List<File>> call(Account account, String shareFolder) async {
     final results = <File>[];
     final ls = await Ls(fileRepo)(
       account,
       File(
-        path: file_util.unstripPath(account, accountPref.getShareFolderOr()),
+        path: file_util.unstripPath(account, shareFolder),
       ),
     );
     for (final f in ls) {

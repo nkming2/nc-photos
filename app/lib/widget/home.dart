@@ -185,7 +185,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
     try {
       return await ImportPotentialSharedAlbum(c)(
-          widget.account, AccountPref.of(widget.account));
+        widget.account,
+        context
+            .read<AccountController>()
+            .accountPrefController
+            .shareFolder
+            .value,
+      );
     } catch (e, stacktrace) {
       _log.shout(
           "[_importPotentialSharedAlbum] Failed while ImportPotentialSharedAlbum",

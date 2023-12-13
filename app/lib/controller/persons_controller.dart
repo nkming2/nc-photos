@@ -62,7 +62,9 @@ class PersonsController {
     var lastData = _personStreamContorller.value.copyWith(hasNext: true);
     _personStreamContorller.add(lastData);
     final completer = Completer();
-    ListPerson(_c.withLocalRepo())(account, accountPrefController.raw).listen(
+    ListPerson(_c.withLocalRepo())(
+            account, accountPrefController.personProvider.value)
+        .listen(
       (results) {
         lastData = PersonStreamEvent(
           data: results,

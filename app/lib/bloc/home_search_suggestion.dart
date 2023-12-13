@@ -218,8 +218,9 @@ class HomeSearchSuggestionBloc
       _log.warning("[_onEventPreloadData] Failed while ListTag", e);
     }
     try {
-      final persons =
-          await ListPerson(_c)(account, accountPrefController.raw).last;
+      final persons = await ListPerson(_c)(
+              account, accountPrefController.personProvider.value)
+          .last;
       product.addAll(persons.map((t) => _PersonSearcheable(t)));
       _log.info("[_onEventPreloadData] Loaded ${persons.length} people");
     } catch (e) {
