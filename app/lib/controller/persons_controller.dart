@@ -32,9 +32,17 @@ class PersonsController {
     this._c, {
     required this.account,
     required this.accountPrefController,
-  });
+  }) {
+    _subscriptions
+        .add(accountPrefController.personProvider.distinct().listen((event) {
+      reload();
+    }));
+  }
 
   void dispose() {
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     _personStreamContorller.close();
   }
 
@@ -82,6 +90,8 @@ class PersonsController {
   final DiContainer _c;
   final Account account;
   final AccountPrefController accountPrefController;
+
+  final _subscriptions = <StreamSubscription>[];
 
   var _isPersonStreamInited = false;
   final _personStreamContorller = BehaviorSubject.seeded(
