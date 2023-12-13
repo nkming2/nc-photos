@@ -196,6 +196,7 @@ class _WrappedAppState extends State<_WrappedApp>
         EnhancementSettings.routeName: EnhancementSettings.buildRoute,
         Settings.routeName: Settings.buildRoute,
         SharingBrowser.routeName: SharingBrowser.buildRoute,
+        PlacesBrowser.routeName: PlacesBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -220,7 +221,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleLocalFileViewerRoute(settings);
     route ??= _handleImageEditorRoute(settings);
     route ??= _handleChangelogRoute(settings);
-    route ??= _handlePlacesBrowserRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
@@ -485,19 +485,6 @@ class _WrappedAppState extends State<_WrappedApp>
       }
     } catch (e) {
       _log.severe("[_handleChangelogRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handlePlacesBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == PlacesBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as PlacesBrowserArguments;
-        return PlacesBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe("[_handlePlacesBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

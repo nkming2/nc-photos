@@ -3,6 +3,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
+import 'package:nc_photos/controller/places_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/controller/session_controller.dart';
 import 'package:nc_photos/controller/sharings_controller.dart';
@@ -67,6 +68,12 @@ class AccountController {
         account: _account!,
       );
 
+  PlacesController get placesController =>
+      _placesController ??= PlacesController(
+        KiwiContainer().resolve<DiContainer>(),
+        account: _account!,
+      );
+
   Account? _account;
   CollectionsController? _collectionsController;
   ServerController? _serverController;
@@ -75,4 +82,5 @@ class AccountController {
   SyncController? _syncController;
   SessionController? _sessionController;
   SharingsController? _sharingsController;
+  PlacesController? _placesController;
 }

@@ -194,8 +194,7 @@ class _SearchLandingState extends State<SearchLanding> {
             ? null
             : TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PlacesBrowser.routeName,
-                      arguments: PlacesBrowserArguments(widget.account));
+                  Navigator.of(context).pushNamed(PlacesBrowser.routeName);
                 },
                 child: Text(L10n.global().showAllButtonLabel),
               ),
