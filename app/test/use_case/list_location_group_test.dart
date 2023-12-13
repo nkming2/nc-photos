@@ -1,7 +1,8 @@
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;
@@ -23,11 +24,11 @@ void main() {
 Future<void> _empty() async {
   final account = util.buildAccount();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
   });
 
   final result = await ListLocationGroup(c)(account);
@@ -48,11 +49,11 @@ Future<void> _noLocation() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -90,11 +91,11 @@ Future<void> _nFile1Location() async {
             )))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -153,11 +154,11 @@ Future<void> _nFileNLocation() async {
             )))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -221,14 +222,21 @@ Future<void> _multipleRoots() async {
               latitude: 1.2,
               longitude: 3.4,
               countryCode: "AD",
+            ))
+        ..addJpeg("admin/test3/test5.jpg",
+            location: const ImageLocation(
+              name: "Some place",
+              latitude: 1.2,
+              longitude: 3.4,
+              countryCode: "AD",
             )))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 

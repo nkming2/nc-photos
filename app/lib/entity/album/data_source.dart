@@ -6,11 +6,11 @@ import 'package:nc_photos/entity/album/data_source2.dart';
 import 'package:nc_photos/entity/album/repo2.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
 
@@ -90,7 +90,7 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
     _log.info(
         "[getAll] ${albumFiles.map((f) => f.filename).toReadableString()}");
     final failed = <String, Map>{};
-    final albums = await AlbumSqliteDbDataSource2(_c.sqliteDb).getAlbums(
+    final albums = await AlbumSqliteDbDataSource2(_c.npDb).getAlbums(
       account,
       albumFiles,
       onError: (v, error, stackTrace) {
@@ -119,13 +119,13 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
   @override
   create(Account account, Album album) async {
     _log.info("[create]");
-    return AlbumSqliteDbDataSource2(_c.sqliteDb).create(account, album);
+    return AlbumSqliteDbDataSource2(_c.npDb).create(account, album);
   }
 
   @override
   update(Account account, Album album) async {
     _log.info("[update] ${album.albumFile!.path}");
-    return AlbumSqliteDbDataSource2(_c.sqliteDb).update(account, album);
+    return AlbumSqliteDbDataSource2(_c.npDb).update(account, album);
   }
 
   final DiContainer _c;
@@ -134,7 +134,7 @@ class AlbumSqliteDbDataSource implements AlbumDataSource {
 /// Backward compatibility only, use [CachedAlbumRepo2] instead
 @npLog
 class AlbumCachedDataSource implements AlbumDataSource {
-  AlbumCachedDataSource(DiContainer c) : sqliteDb = c.sqliteDb;
+  AlbumCachedDataSource(DiContainer c) : npDb = c.npDb;
 
   @override
   get(Account account, File albumFile) async {
@@ -146,7 +146,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
   getAll(Account account, List<File> albumFiles) async* {
     final repo = CachedAlbumRepo2(
       const AlbumRemoteDataSource2(),
-      AlbumSqliteDbDataSource2(sqliteDb),
+      AlbumSqliteDbDataSource2(npDb),
     );
     final albums = await repo.getAlbums(account, albumFiles).last;
     for (final a in albums) {
@@ -158,7 +158,7 @@ class AlbumCachedDataSource implements AlbumDataSource {
   update(Account account, Album album) {
     return CachedAlbumRepo2(
       const AlbumRemoteDataSource2(),
-      AlbumSqliteDbDataSource2(sqliteDb),
+      AlbumSqliteDbDataSource2(npDb),
     ).update(account, album);
   }
 
@@ -166,9 +166,9 @@ class AlbumCachedDataSource implements AlbumDataSource {
   create(Account account, Album album) {
     return CachedAlbumRepo2(
       const AlbumRemoteDataSource2(),
-      AlbumSqliteDbDataSource2(sqliteDb),
+      AlbumSqliteDbDataSource2(npDb),
     ).create(account, album);
   }
 
-  final sql.SqliteDb sqliteDb;
+  final NpDb npDb;
 }

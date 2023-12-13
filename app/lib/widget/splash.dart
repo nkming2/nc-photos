@@ -6,9 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
@@ -20,6 +20,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_platform_permission/np_platform_permission.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
@@ -206,7 +207,7 @@ class _SplashState extends State<Splash> {
     try {
       _log.info("[_upgrade46] insertDbAccounts");
       final c = KiwiContainer().resolve<DiContainer>();
-      await CompatV46.insertDbAccounts(Pref(), c.sqliteDb);
+      await CompatV46.insertDbAccounts(c.pref, context.read());
     } catch (e, stackTrace) {
       _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
       unawaited(Pref().setAccounts3(null));
@@ -235,7 +236,7 @@ class _SplashState extends State<Splash> {
     try {
       _log.info("[_upgrade55] migrate DB");
       await CompatV55.migrateDb(
-        c.sqliteDb,
+        c.npDb,
         onProgress: (current, count) {
           _upgradeCubit.setState(
             L10n.global().migrateDatabaseProcessingNotification,
@@ -246,13 +247,8 @@ class _SplashState extends State<Splash> {
       );
     } catch (e, stackTrace) {
       _log.shout("[_upgrade55] Failed while migrateDb", e, stackTrace);
-      await c.sqliteDb.use((db) async {
-        await db.truncate();
-        final accounts = Pref().getAccounts3Or([]);
-        for (final a in accounts) {
-          await db.insertAccountOf(a);
-        }
-      });
+      final accounts = Pref().getAccounts3Or([]);
+      await context.read<NpDb>().clearAndInitWithAccounts(accounts.toDb());
     }
     _upgradeCubit.setIntermediate();
   }

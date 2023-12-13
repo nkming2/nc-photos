@@ -1,3 +1,4 @@
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -6,9 +7,9 @@ import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
@@ -43,11 +44,11 @@ Future<void> _dbGet() async {
     (util.AlbumBuilder.ofId(albumId: 1)).build(),
   ];
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(
         c.sqliteDb, account, albums.map((a) => a.albumFile!));
     await util.insertAlbums(c.sqliteDb, account, albums);
@@ -66,11 +67,11 @@ Future<void> _dbGetNa() async {
     (util.AlbumBuilder.ofId(albumId: 0)).build(),
   ];
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
   });
 
   final src = AlbumSqliteDbDataSource(c);
@@ -91,11 +92,11 @@ Future<void> _dbGetAll() async {
     (util.AlbumBuilder.ofId(albumId: 2)).build(),
   ];
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(
         c.sqliteDb, account, albums.map((a) => a.albumFile!));
     await util.insertAlbums(c.sqliteDb, account, albums);
@@ -120,11 +121,11 @@ Future<void> _dbGetAllNa() async {
     (util.AlbumBuilder.ofId(albumId: 2)).build(),
   ];
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, [albums[0].albumFile!]);
     await util.insertAlbums(c.sqliteDb, account, [albums[0]]);
   });
@@ -154,11 +155,11 @@ Future<void> _dbUpdateExisting() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(
         c.sqliteDb, account, albums.map((a) => a.albumFile!));
     await util.insertAlbums(c.sqliteDb, account, albums);
@@ -202,11 +203,11 @@ Future<void> _dbUpdateNew() async {
   ];
   final newAlbum = (util.AlbumBuilder.ofId(albumId: 1)).build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account,
         [...albums.map((a) => a.albumFile!), newAlbum.albumFile!]);
     await util.insertAlbums(c.sqliteDb, account, albums);
@@ -234,11 +235,11 @@ Future<void> _dbUpdateShares() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(
         c.sqliteDb, account, albums.map((a) => a.albumFile!));
     await util.insertAlbums(c.sqliteDb, account, albums);
@@ -296,11 +297,11 @@ Future<void> _dbUpdateDeleteShares() async {
         ..addJpeg("admin/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(
         c.sqliteDb, account, albums.map((a) => a.albumFile!));
     await util.insertAlbums(c.sqliteDb, account, albums);

@@ -1,5 +1,6 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
@@ -7,9 +8,9 @@ import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -46,12 +47,12 @@ Future<void> _removeFile() async {
     albumRepo: MockAlbumMemoryRepo(),
     fileRepo: MockFileMemoryRepo(files),
     shareRepo: MockShareMemoryRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -72,12 +73,12 @@ Future<void> _removeFileNoCleanUp() async {
     albumRepo: MockAlbumMemoryRepo(),
     fileRepo: MockFileMemoryRepo(files),
     shareRepo: MockShareMemoryRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -98,12 +99,12 @@ Future<void> _removeAlbumFile() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
     shareRepo: MockShareMemoryRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -142,12 +143,12 @@ Future<void> _removeAlbumFileNoCleanUp() async {
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
     shareRepo: MockShareMemoryRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -195,12 +196,12 @@ Future<void> _removeSharedAlbumFile() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -262,13 +263,13 @@ Future<void> _removeSharedAlbumSharedFile() async {
           id: "2", file: user1Files[0], uidOwner: "user1", shareWith: "admin"),
       util.buildShare(id: "3", file: files[0], shareWith: "user2"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
 
     await util.insertFiles(c.sqliteDb, user1Account, user1Files);
@@ -330,12 +331,12 @@ Future<void> _removeSharedAlbumResyncedFile() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 

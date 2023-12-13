@@ -6421,5 +6421,5 @@ extension _$SqliteDbNpLog on SqliteDb {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("entity.sqlite.database.SqliteDb");
+  static final log = Logger("src.database.SqliteDb");
 }

@@ -122,7 +122,6 @@ class ScanAccountDirBloc
   ScanAccountDirBloc._(this.account) : super(const ScanAccountDirBlocInit()) {
     final c = KiwiContainer().resolve<DiContainer>();
     assert(require(c));
-    assert(ScanDirOffline.require(c));
     _c = c;
 
     _fileRemovedEventListener.begin();
@@ -437,10 +436,13 @@ class ScanAccountDirBloc
   }
 
   /// Query a small amount of files to give an illusion of quick startup
-  Future<List<File>> _queryOfflineMini(ScanAccountDirBlocQueryBase ev) async {
+  Future<List<FileDescriptor>> _queryOfflineMini(
+      ScanAccountDirBlocQueryBase ev) async {
     return await ScanDirOfflineMini(_c)(
       account,
-      account.roots.map((r) => File(path: file_util.unstripPath(account, r))),
+      account.roots
+          .map((r) => File(path: file_util.unstripPath(account, r)))
+          .toList(),
       scanMiniCount,
       isOnlySupportedFormat: true,
     );

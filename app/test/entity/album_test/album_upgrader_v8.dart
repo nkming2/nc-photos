@@ -345,17 +345,16 @@ void _upgradeV8JsonAutoNoFileId() {
 }
 
 void _upgradeV8DbNonManualCover() {
-  final dbObj = sql.Album(
-    rowId: 1,
-    file: 1,
+  final dbObj = DbAlbum(
+    fileId: 1,
     fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
     version: 8,
     lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
     name: "test1",
     providerType: "static",
-    providerContent: """{"items": []}""",
+    providerContent: {"items": []},
     coverProviderType: "memory",
-    coverProviderContent: _stripJsonString("""{
+    coverProviderContent: {
       "coverFile": {
         "fdPath": "remote.php/dav/files/admin/test1.jpg",
         "fdId": 1,
@@ -364,23 +363,23 @@ void _upgradeV8DbNonManualCover() {
         "fdIsFavorite": false,
         "fdDateTime": "2020-01-02T03:04:05.678901Z"
       }
-    }"""),
+    },
     sortProviderType: "null",
-    sortProviderContent: "{}",
+    sortProviderContent: {},
+    shares: [],
   );
   expect(
     const AlbumUpgraderV8().doDb(dbObj),
-    sql.Album(
-      rowId: 1,
-      file: 1,
+    DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "memory",
-      coverProviderContent: _stripJsonString("""{
+      coverProviderContent: {
         "coverFile": {
           "fdPath": "remote.php/dav/files/admin/test1.jpg",
           "fdId": 1,
@@ -389,47 +388,47 @@ void _upgradeV8DbNonManualCover() {
           "fdIsFavorite": false,
           "fdDateTime": "2020-01-02T03:04:05.678901Z"
         }
-      }"""),
+      },
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     ),
   );
 }
 
 void _upgradeV8DbManualNow() {
   withClock(Clock.fixed(DateTime.utc(2020, 1, 2, 3, 4, 5)), () {
-    final dbObj = sql.Album(
-      rowId: 1,
-      file: 1,
+    final dbObj = DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "manual",
-      coverProviderContent: _stripJsonString("""{
+      coverProviderContent: {
         "coverFile": {
           "path": "remote.php/dav/files/admin/test1.jpg",
           "fileId": 1
         }
-      }"""),
+      },
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     );
     expect(
       const AlbumUpgraderV8().doDb(dbObj),
-      sql.Album(
-        rowId: 1,
-        file: 1,
+      DbAlbum(
+        fileId: 1,
         fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
         version: 8,
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test1",
         providerType: "static",
-        providerContent: """{"items": []}""",
+        providerContent: {"items": []},
         coverProviderType: "manual",
-        coverProviderContent: _stripJsonString("""{
+        coverProviderContent: {
           "coverFile": {
             "fdPath": "remote.php/dav/files/admin/test1.jpg",
             "fdId": 1,
@@ -438,137 +437,135 @@ void _upgradeV8DbManualNow() {
             "fdIsFavorite": false,
             "fdDateTime": "2020-01-02T03:04:05.000Z"
           }
-        }"""),
+        },
         sortProviderType: "null",
-        sortProviderContent: "{}",
+        sortProviderContent: {},
+        shares: [],
       ),
     );
   });
 }
 
 void _upgradeV8DbManualExifTime() {
-  final dbObj = sql.Album(
-    rowId: 1,
-    file: 1,
+  final dbObj = DbAlbum(
+    fileId: 1,
     fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
     version: 8,
     lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
     name: "test1",
     providerType: "static",
-    providerContent: """{"items": []}""",
+    providerContent: {"items": []},
     coverProviderType: "manual",
-    coverProviderContent: _stripJsonString("""{
+    coverProviderContent: {
       "coverFile": {
         "path": "remote.php/dav/files/admin/test1.jpg",
         "fileId": 1,
         "metadata": {
-          "exif": {
-            "DateTimeOriginal": "2020:01:02 03:04:05"
-          }
+          "exif": {"DateTimeOriginal": "2020:01:02 03:04:05"}
         }
       }
-    }"""),
+    },
     sortProviderType: "null",
-    sortProviderContent: "{}",
+    sortProviderContent: {},
+    shares: [],
   );
   // dart does not provide a way to mock timezone
   final dateTime = DateTime(2020, 1, 2, 3, 4, 5).toUtc().toIso8601String();
   expect(
     const AlbumUpgraderV8().doDb(dbObj),
-    sql.Album(
-      rowId: 1,
-      file: 1,
+    DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "manual",
-      coverProviderContent: _stripJsonString("""{
+      coverProviderContent: {
         "coverFile": {
           "fdPath": "remote.php/dav/files/admin/test1.jpg",
           "fdId": 1,
           "fdMime": null,
           "fdIsArchived": false,
           "fdIsFavorite": false,
-          "fdDateTime": "$dateTime"
+          "fdDateTime": dateTime,
         }
-      }"""),
+      },
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     ),
   );
 }
 
 void _upgradeV8DbAutoNull() {
-  final dbObj = sql.Album(
-    rowId: 1,
-    file: 1,
+  final dbObj = DbAlbum(
+    fileId: 1,
     fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
     version: 8,
     lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
     name: "test1",
     providerType: "static",
-    providerContent: """{"items": []}""",
+    providerContent: {"items": []},
     coverProviderType: "auto",
-    coverProviderContent: "{}",
+    coverProviderContent: {},
     sortProviderType: "null",
-    sortProviderContent: "{}",
+    sortProviderContent: {},
+    shares: [],
   );
   expect(
     const AlbumUpgraderV8().doDb(dbObj),
-    sql.Album(
-      rowId: 1,
-      file: 1,
+    DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "auto",
-      coverProviderContent: "{}",
+      coverProviderContent: {},
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     ),
   );
 }
 
 void _upgradeV8DbAutoLastModified() {
-  final dbObj = sql.Album(
-    rowId: 1,
-    file: 1,
+  final dbObj = DbAlbum(
+    fileId: 1,
     fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
     version: 8,
     lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
     name: "test1",
     providerType: "static",
-    providerContent: """{"items": []}""",
+    providerContent: {"items": []},
     coverProviderType: "auto",
-    coverProviderContent: _stripJsonString("""{
+    coverProviderContent: {
       "coverFile": {
         "path": "remote.php/dav/files/admin/test1.jpg",
         "fileId": 1,
         "lastModified": "2020-01-02T03:04:05.000Z"
       }
-    }"""),
+    },
     sortProviderType: "null",
-    sortProviderContent: "{}",
+    sortProviderContent: {},
+    shares: [],
   );
   expect(
     const AlbumUpgraderV8().doDb(dbObj),
-    sql.Album(
-      rowId: 1,
-      file: 1,
+    DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "auto",
-      coverProviderContent: _stripJsonString("""{
+      coverProviderContent: {
         "coverFile": {
           "fdPath": "remote.php/dav/files/admin/test1.jpg",
           "fdId": 1,
@@ -577,48 +574,49 @@ void _upgradeV8DbAutoLastModified() {
           "fdIsFavorite": false,
           "fdDateTime": "2020-01-02T03:04:05.000Z"
         }
-      }"""),
+      },
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     ),
   );
 }
 
 void _upgradeV8DbAutoNoFileId() {
-  final dbObj = sql.Album(
-    rowId: 1,
-    file: 1,
+  final dbObj = DbAlbum(
+    fileId: 1,
     fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
     version: 8,
     lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
     name: "test1",
     providerType: "static",
-    providerContent: """{"items": []}""",
+    providerContent: {"items": []},
     coverProviderType: "auto",
-    coverProviderContent: _stripJsonString("""{
+    coverProviderContent: {
       "coverFile": {
         "path": "remote.php/dav/files/admin/test1.jpg",
         "lastModified": "2020-01-02T03:04:05.000Z"
       }
-    }"""),
+    },
     sortProviderType: "null",
-    sortProviderContent: "{}",
+    sortProviderContent: {},
+    shares: [],
   );
   expect(
     const AlbumUpgraderV8().doDb(dbObj),
-    sql.Album(
-      rowId: 1,
-      file: 1,
+    DbAlbum(
+      fileId: 1,
       fileEtag: "8a3e0799b6f0711c23cc2d93950eceb5",
       version: 8,
       lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
       name: "test1",
       providerType: "static",
-      providerContent: """{"items": []}""",
+      providerContent: {"items": []},
       coverProviderType: "auto",
-      coverProviderContent: "{}",
+      coverProviderContent: {},
       sortProviderType: "null",
-      sortProviderContent: "{}",
+      sortProviderContent: {},
+      shares: [],
     ),
   );
 }

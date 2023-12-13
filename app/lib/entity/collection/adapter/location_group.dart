@@ -17,11 +17,8 @@ class CollectionLocationGroupAdapter
         CollectionAdapterUnshareableTag
     implements CollectionAdapter {
   CollectionLocationGroupAdapter(this._c, this.account, this.collection)
-      : assert(require(_c)),
-        _provider =
+      : _provider =
             collection.contentProvider as CollectionLocationGroupProvider;
-
-  static bool require(DiContainer c) => ListLocationFile.require(c);
 
   @override
   Stream<List<CollectionItem>> listItem() async* {

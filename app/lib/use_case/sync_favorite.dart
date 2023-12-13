@@ -11,9 +11,7 @@ part 'sync_favorite.g.dart';
 
 @npLog
 class SyncFavorite {
-  SyncFavorite(this._c)
-      : assert(require(_c)),
-        assert(CacheFavorite.require(_c));
+  SyncFavorite(this._c) : assert(require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.favoriteRepo);
 

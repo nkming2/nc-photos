@@ -58,7 +58,7 @@ abstract class SearchBlocState {
 
   final Account? account;
   final SearchCriteria criteria;
-  final List<File> items;
+  final List<FileDescriptor> items;
 }
 
 class SearchBlocInit extends SearchBlocState {
@@ -67,20 +67,20 @@ class SearchBlocInit extends SearchBlocState {
 
 class SearchBlocLoading extends SearchBlocState {
   const SearchBlocLoading(
-      Account? account, SearchCriteria criteria, List<File> items)
+      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
       : super(account, criteria, items);
 }
 
 class SearchBlocSuccess extends SearchBlocState {
   const SearchBlocSuccess(
-      Account? account, SearchCriteria criteria, List<File> items)
+      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
       : super(account, criteria, items);
 }
 
 @toString
 class SearchBlocFailure extends SearchBlocState {
   const SearchBlocFailure(Account? account, SearchCriteria criteria,
-      List<File> items, this.exception)
+      List<FileDescriptor> items, this.exception)
       : super(account, criteria, items);
 
   @override
@@ -93,7 +93,7 @@ class SearchBlocFailure extends SearchBlocState {
 /// may have been changed externally
 class SearchBlocInconsistent extends SearchBlocState {
   const SearchBlocInconsistent(
-      Account? account, SearchCriteria criteria, List<File> items)
+      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
       : super(account, criteria, items);
 }
 
@@ -196,7 +196,7 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
     }
   }
 
-  Future<List<File>> _query(SearchBlocQuery ev) =>
+  Future<List<FileDescriptor>> _query(SearchBlocQuery ev) =>
       Search(_c)(ev.account, ev.criteria);
 
   bool _isFileOfInterest(FileDescriptor file) {

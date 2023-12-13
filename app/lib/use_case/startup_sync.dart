@@ -24,8 +24,7 @@ part 'startup_sync.g.dart';
 class StartupSync {
   StartupSync(this._c) : assert(require(_c));
 
-  static bool require(DiContainer c) =>
-      SyncFavorite.require(c) && SyncTag.require(c);
+  static bool require(DiContainer c) => SyncFavorite.require(c);
 
   /// Sync in a background isolate
   static Future<SyncResult> runInIsolate(

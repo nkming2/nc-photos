@@ -1,10 +1,11 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/album/remove_album.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -36,7 +37,7 @@ Future<void> _removeAlbum() async {
     albumRepo: MockAlbumMemoryRepo([album1, album2]),
     fileRepo: MockFileMemoryRepo([albumFile1, albumFile2]),
     shareRepo: MockShareRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
   );
   addTearDown(() => c.sqliteDb.close());
@@ -67,7 +68,7 @@ Future<void> _removeSharedAlbum() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
@@ -109,7 +110,7 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
       util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
@@ -150,15 +151,15 @@ Future<void> _removeSharedAlbumResyncedFile() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider({
       "isLabEnableSharedAlbum": true,
     })),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
 
     await util.insertFiles(c.sqliteDb, user1Account, user1Files);

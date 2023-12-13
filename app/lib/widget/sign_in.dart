@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kiwi/kiwi.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/connect.dart';
@@ -17,6 +16,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
 
 part 'sign_in.g.dart';
@@ -174,10 +174,7 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _persistAccount(Account account) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    await c.sqliteDb.use((db) async {
-      await db.insertAccountOf(account);
-    });
+    await context.read<NpDb>().addAccounts([account.toDb()]);
     // only signing in with app password would trigger distinct
     final accounts = (Pref().getAccounts3Or([])..add(account)).distinct();
     try {

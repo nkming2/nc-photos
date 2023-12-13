@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/throttler.dart';
-import 'package:nc_photos/use_case/list_location_file.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
@@ -90,7 +89,6 @@ class ListLocationBloc
     extends Bloc<ListLocationBlocEvent, ListLocationBlocState> {
   ListLocationBloc(this._c)
       : assert(require(_c)),
-        assert(ListLocationFile.require(_c)),
         super(ListLocationBlocInit()) {
     _fileRemovedEventListener.begin();
 

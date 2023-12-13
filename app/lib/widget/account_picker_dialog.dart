@@ -15,10 +15,10 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/server_status.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
@@ -32,6 +32,7 @@ import 'package:nc_photos/widget/settings.dart';
 import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:nc_photos/widget/sign_in.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 import 'package:to_string/to_string.dart';
 
 part 'account_picker_dialog.g.dart';
@@ -51,6 +52,7 @@ class AccountPickerDialog extends StatelessWidget {
         container: KiwiContainer().resolve(),
         accountController: context.read(),
         prefController: context.read(),
+        db: context.read(),
       ),
       child: const _WrappedAccountPickerDialog(),
     );

@@ -36,7 +36,7 @@ Future<void> _unshareWithoutFile() async {
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: albumFile, shareWith: "user2"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
 
@@ -75,7 +75,7 @@ Future<void> _unshareWithFile() async {
       util.buildShare(id: "2", file: file1, shareWith: "user1"),
       util.buildShare(id: "3", file: file1, shareWith: "user2"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
 
@@ -125,7 +125,7 @@ Future<void> _unshareWithFileNotOwned() async {
       util.buildShare(
           id: "5", uidOwner: "user2", file: files[1], shareWith: "user1"),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
 

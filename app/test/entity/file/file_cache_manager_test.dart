@@ -1,10 +1,11 @@
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:np_math/np_math.dart';
 import 'package:test/test.dart';
 
@@ -53,11 +54,11 @@ Future<void> _loaderNoCache() async {
       .build();
   final c = DiContainer(
     fileRepo: MockFileMemoryRepo(files),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
   });
 
   final cacheSrc = FileSqliteDbDataSource(c);
@@ -80,7 +81,7 @@ Future<void> _loaderOutdatedCache() async {
       .build();
   final c = DiContainer(
     fileRepo: MockFileMemoryRepo(files),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   final dbFiles = [
@@ -88,7 +89,7 @@ Future<void> _loaderOutdatedCache() async {
     ...files.slice(1),
   ];
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, dbFiles);
     await util.insertDirRelation(
         c.sqliteDb, account, dbFiles[0], dbFiles.slice(1, 3));
@@ -119,11 +120,11 @@ Future<void> _loaderQueryRemoteSameEtag() async {
       .build();
   final c = DiContainer(
     fileRepo: MockFileMemoryRepo(files),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -155,7 +156,7 @@ Future<void> _loaderQueryRemoteDiffEtag() async {
       .build();
   final c = DiContainer(
     fileRepo: MockFileMemoryRepo(files),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   final dbFiles = [
@@ -163,7 +164,7 @@ Future<void> _loaderQueryRemoteDiffEtag() async {
     ...files.slice(1),
   ];
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, dbFiles);
     await util.insertDirRelation(
         c.sqliteDb, account, dbFiles[0], dbFiles.slice(1, 3));
@@ -193,11 +194,11 @@ Future<void> _updaterIdentical() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -228,11 +229,11 @@ Future<void> _updaterNewFile() async {
       .build()
       .first;
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -259,11 +260,11 @@ Future<void> _updaterDeleteFile() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -293,11 +294,11 @@ Future<void> _updaterDeleteDir() async {
         ..addJpeg("admin/test/test2.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -331,11 +332,11 @@ Future<void> _updaterUpdateFile() async {
       .build();
   final newFile = files[1].copyWith(contentLength: 654);
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -369,12 +370,12 @@ Future<void> _updaterNewSharedFile() async {
   user1Files
       .add(files[1].copyWith(path: "remote.php/dav/files/user1/test1.jpg"));
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -406,12 +407,12 @@ Future<void> _updaterNewSharedDir() async {
   user1Files.add(
       files[3].copyWith(path: "remote.php/dav/files/user1/share/test2.jpg"));
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -444,12 +445,12 @@ Future<void> _updaterDeleteSharedFile() async {
   user1Files
       .add(files[1].copyWith(path: "remote.php/dav/files/user1/test1.jpg"));
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -487,12 +488,12 @@ Future<void> _updaterDeleteSharedDir() async {
   user1Files.add(
       files[3].copyWith(path: "remote.php/dav/files/user1/share/test2.jpg"));
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
-    await c.sqliteDb.insertAccountOf(user1Account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
+    await c.sqliteDb.insertAccounts([user1Account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -529,11 +530,11 @@ Future<void> _updaterTooManyFiles() async {
   }
   final newFiles = newFilesBuilder.build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -558,11 +559,11 @@ Future<void> _updaterMovedFileToFront() async {
         ..addJpeg("admin/test2/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -605,11 +606,11 @@ Future<void> _updaterMovedFileToBehind() async {
         ..addJpeg("admin/test1/test1.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util.insertDirRelation(
         c.sqliteDb, account, files[0], files.slice(1, 3));
@@ -654,11 +655,11 @@ Future<void> _emptier() async {
         ..addJpeg("admin/testB/test2.jpg"))
       .build();
   final c = DiContainer(
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
     await util
         .insertDirRelation(c.sqliteDb, account, files[0], [files[1], files[3]]);

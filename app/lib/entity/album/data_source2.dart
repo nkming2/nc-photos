@@ -3,26 +3,26 @@ import 'dart:math';
 
 import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart' as sql;
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/repo2.dart';
 import 'package:nc_photos/entity/album/upgrader.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source2.g.dart';
 
@@ -113,7 +113,7 @@ class AlbumRemoteDataSource2 implements AlbumDataSource2 {
 
 @npLog
 class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
-  const AlbumSqliteDbDataSource2(this.sqliteDb);
+  const AlbumSqliteDbDataSource2(this.npDb);
 
   @override
   Future<List<Album>> getAlbums(
@@ -121,73 +121,38 @@ class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
     List<File> albumFiles, {
     ErrorWithValueHandler<File>? onError,
   }) async {
-    late final List<sql.CompleteFile> dbFiles;
-    late final List<sql.AlbumWithShare> albumWithShares;
-    await sqliteDb.use((db) async {
-      dbFiles = await db.completeFilesByFileIds(
-        albumFiles.map((f) => f.fileId!),
-        appAccount: account,
-      );
-      final query = db.select(db.albums).join([
-        sql.leftOuterJoin(
-            db.albumShares, db.albumShares.album.equalsExp(db.albums.rowId)),
-      ])
-        ..where(db.albums.file.isIn(dbFiles.map((f) => f.file.rowId)));
-      albumWithShares = await query
-          .map((r) => sql.AlbumWithShare(
-              r.readTable(db.albums), r.readTableOrNull(db.albumShares)))
-          .get();
-    });
-
-    // group entries together
-    final fileRowIdMap = <int, sql.CompleteFile>{};
-    for (var f in dbFiles) {
-      fileRowIdMap[f.file.rowId] = f;
-    }
-    final fileIdMap = <int, Map>{};
-    for (final s in albumWithShares) {
-      final f = fileRowIdMap[s.album.file];
-      if (f == null) {
-        _log.severe(
-            "[getAlbums] File missing for album (rowId: ${s.album.rowId}");
-      } else {
-        fileIdMap[f.file.fileId] ??= {
-          "file": f,
-          "album": s.album,
-        };
-        if (s.share != null) {
-          (fileIdMap[f.file.fileId]!["shares"] ??= <sql.AlbumShare>[])
-              .add(s.share!);
-        }
-      }
-    }
-
-    // sort as the input list
+    final albums = await npDb.getAlbumsByAlbumFileIds(
+      account: account.toDb(),
+      fileIds: albumFiles.map((e) => e.fileId!).toList(),
+    );
+    final files = await npDb.getFilesByFileIds(
+      account: account.toDb(),
+      fileIds: albums.map((e) => e.fileId).toList(),
+    );
+    final albumMap = albums.map((e) => MapEntry(e.fileId, e)).toMap();
+    final fileMap = files.map((e) => MapEntry(e.fileId, e)).toMap();
     return albumFiles
         .map((f) {
-          final item = fileIdMap[f.fileId];
-          if (item == null) {
+          var dbAlbum = albumMap[f.fileId];
+          final dbFile = fileMap[f.fileId];
+          if (dbAlbum == null || dbFile == null) {
             // cache not found
             onError?.call(
                 f, const CacheNotFoundException(), StackTrace.current);
             return null;
-          } else {
-            try {
-              final queriedFile = sql.SqliteFileConverter.fromSql(
-                  account.userId.toString(), item["file"]);
-              var dbAlbum = item["album"] as sql.Album;
-              if (dbAlbum.version < 9) {
-                dbAlbum = AlbumUpgraderV8(logFilePath: queriedFile.path)
-                    .doDb(dbAlbum)!;
-              }
-              return sql.SqliteAlbumConverter.fromSql(
-                  dbAlbum, queriedFile, item["shares"] ?? []);
-            } catch (e, stackTrace) {
-              _log.severe("[getAlbums] Failed while converting DB entry", e,
-                  stackTrace);
-              onError?.call(f, e, stackTrace);
-              return null;
+          }
+          try {
+            final file =
+                DbFileConverter.fromDb(account.userId.toString(), dbFile);
+            if (dbAlbum.version < 9) {
+              dbAlbum = AlbumUpgraderV8(logFilePath: file.path).doDb(dbAlbum)!;
             }
+            return DbAlbumConverter.fromDb(file, dbAlbum);
+          } catch (e, stackTrace) {
+            _log.severe(
+                "[getAlbums] Failed while converting DB entry", e, stackTrace);
+            onError?.call(f, e, stackTrace);
+            return null;
           }
         })
         .whereNotNull()
@@ -203,50 +168,12 @@ class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
   @override
   Future<void> update(Account account, Album album) async {
     _log.info("[update] ${album.albumFile!.path}");
-    await sqliteDb.use((db) async {
-      final rowIds =
-          await db.accountFileRowIdsOf(album.albumFile!, appAccount: account);
-      final insert = sql.SqliteAlbumConverter.toSql(
-          album, rowIds.fileRowId, album.albumFile!.etag!);
-      var rowId = await _updateCache(db, rowIds.fileRowId, insert.album);
-      if (rowId == null) {
-        // new album, need insert
-        _log.info("[update] Insert new album");
-        final insertedAlbum =
-            await db.into(db.albums).insertReturning(insert.album);
-        rowId = insertedAlbum.rowId;
-      } else {
-        await (db.delete(db.albumShares)..where((t) => t.album.equals(rowId!)))
-            .go();
-      }
-      if (insert.albumShares.isNotEmpty) {
-        await db.batch((batch) {
-          batch.insertAll(
-            db.albumShares,
-            insert.albumShares.map((s) => s.copyWith(album: sql.Value(rowId!))),
-          );
-        });
-      }
-    });
+    await npDb.syncAlbum(
+      account: account.toDb(),
+      albumFile: DbFileConverter.toDb(album.albumFile!),
+      album: DbAlbumConverter.toDb(album),
+    );
   }
 
-  Future<int?> _updateCache(
-      sql.SqliteDb db, int dbFileRowId, sql.AlbumsCompanion dbAlbum) async {
-    final rowIdQuery = db.selectOnly(db.albums)
-      ..addColumns([db.albums.rowId])
-      ..where(db.albums.file.equals(dbFileRowId))
-      ..limit(1);
-    final rowId =
-        await rowIdQuery.map((r) => r.read(db.albums.rowId)!).getSingleOrNull();
-    if (rowId == null) {
-      // new album
-      return null;
-    }
-
-    await (db.update(db.albums)..where((t) => t.rowId.equals(rowId)))
-        .write(dbAlbum);
-    return rowId;
-  }
-
-  final sql.SqliteDb sqliteDb;
+  final NpDb npDb;
 }

@@ -1,20 +1,13 @@
-import 'package:collection/collection.dart';
-import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_collection/np_collection.dart';
 
 part 'file_cache_manager.g.dart';
 
@@ -88,9 +81,7 @@ class FileCacheLoader {
 
 @npLog
 class FileSqliteCacheUpdater {
-  FileSqliteCacheUpdater(this._c) : assert(require(_c));
-
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+  const FileSqliteCacheUpdater(this._c);
 
   Future<void> call(
     Account account,
@@ -99,335 +90,50 @@ class FileSqliteCacheUpdater {
   }) async {
     final s = Stopwatch()..start();
     try {
-      await _cacheRemote(account, dir, remote);
+      await _c.npDb.syncDirFiles(
+        account: account.toDb(),
+        dirFile: dir.toDbKey(),
+        files: remote.map((e) => e.toDb()).toList(),
+      );
     } finally {
       _log.info("[call] Elapsed time: ${s.elapsedMilliseconds}ms");
     }
   }
 
   Future<void> updateSingle(Account account, File remoteFile) async {
-    final sqlFile = SqliteFileConverter.toSql(null, remoteFile);
-    await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final inserts =
-          await _updateCache(db, dbAccount, [sqlFile], [remoteFile], null);
-      if (inserts.isNotEmpty) {
-        await _insertCache(db, dbAccount, inserts, null);
-      }
-    });
-  }
-
-  Future<void> _cacheRemote(
-      Account account, File dir, List<File> remote) async {
-    final sqlFiles = await remote.convertToFileCompanion(null);
-    await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final inserts = await _updateCache(db, dbAccount, sqlFiles, remote, dir);
-      if (inserts.isNotEmpty) {
-        await _insertCache(db, dbAccount, inserts, dir);
-      }
-      if (_dirRowId == null) {
-        _log.severe("[_cacheRemote] Dir not inserted");
-        throw StateError("Row ID for dir is null");
-      }
-
-      final dirFileQuery = db.select(db.dirFiles)
-        ..where((t) => t.dir.equals(_dirRowId!))
-        ..orderBy([(t) => sql.OrderingTerm.asc(t.child)]);
-      final dirFiles = await dirFileQuery.get();
-      final diff = getDiff(dirFiles.map((e) => e.child),
-          _childRowIds.sorted(Comparable.compare));
-      if (diff.onlyInB.isNotEmpty) {
-        await db.batch((batch) {
-          // insert new children
-          batch.insertAll(db.dirFiles,
-              diff.onlyInB.map((k) => sql.DirFile(dir: _dirRowId!, child: k)));
-        });
-      }
-      if (diff.onlyInA.isNotEmpty) {
-        // remove entries from the DirFiles table first
-        await diff.onlyInA.withPartitionNoReturn((sublist) async {
-          final deleteQuery = db.delete(db.dirFiles)
-            ..where((t) => t.child.isIn(sublist))
-            ..where((t) =>
-                t.dir.equals(_dirRowId!) | t.dir.equalsExp(db.dirFiles.child));
-          await deleteQuery.go();
-        }, sql.maxByFileIdsSize);
-
-        // select files having another dir parent under this account (i.e.,
-        // moved files)
-        final moved = await diff.onlyInA.withPartition((sublist) async {
-          final query = db.selectOnly(db.dirFiles).join([
-            sql.innerJoin(db.accountFiles,
-                db.accountFiles.file.equalsExp(db.dirFiles.dir)),
-          ]);
-          query
-            ..addColumns([db.dirFiles.child])
-            ..where(db.accountFiles.account.equals(dbAccount.rowId))
-            ..where(db.dirFiles.child.isIn(sublist));
-          return query.map((r) => r.read(db.dirFiles.child)!).get();
-        }, sql.maxByFileIdsSize);
-        final removed = diff.onlyInA.where((e) => !moved.contains(e)).toList();
-        if (removed.isNotEmpty) {
-          // delete obsolete children
-          await _removeSqliteFiles(db, dbAccount, removed);
-          await db.cleanUpDanglingFiles();
-        }
-      }
-    });
-  }
-
-  /// Update Db files in [sqlFiles]
-  ///
-  /// Return a list of DB files that are not yet inserted to the DB (thus not
-  /// possible to update)
-  Future<List<sql.CompleteFileCompanion>> _updateCache(
-    sql.SqliteDb db,
-    sql.Account dbAccount,
-    Iterable<sql.CompleteFileCompanion> sqlFiles,
-    Iterable<File> remoteFiles,
-    File? dir,
-  ) async {
-    // query list of rowIds for files in [remoteFiles]
-    final rowIds = await db.accountFileRowIdsByFileIds(
-        sql.ByAccount.sql(dbAccount), remoteFiles.map((f) => f.fileId!));
-    final rowIdsMap = Map.fromEntries(rowIds.map((e) => MapEntry(e.fileId, e)));
-
-    final inserts = <sql.CompleteFileCompanion>[];
-    // for updates, we use batch to speed up the process
-    await db.batch((batch) {
-      for (final f in sqlFiles) {
-        final isSupportedImageFormat =
-            file_util.isSupportedImageMime(f.file.contentType.value ?? "");
-        final thisRowIds = rowIdsMap[f.file.fileId.value];
-        if (thisRowIds != null) {
-          // updates
-          batch.update(
-            db.files,
-            f.file,
-            where: (sql.$FilesTable t) => t.rowId.equals(thisRowIds.fileRowId),
-          );
-          batch.update(
-            db.accountFiles,
-            f.accountFile,
-            where: (sql.$AccountFilesTable t) =>
-                t.rowId.equals(thisRowIds.accountFileRowId),
-          );
-          if (f.image != null) {
-            batch.update(
-              db.images,
-              f.image!,
-              where: (sql.$ImagesTable t) =>
-                  t.accountFile.equals(thisRowIds.accountFileRowId),
-            );
-          } else {
-            if (isSupportedImageFormat) {
-              batch.deleteWhere(
-                db.images,
-                (sql.$ImagesTable t) =>
-                    t.accountFile.equals(thisRowIds.accountFileRowId),
-              );
-            }
-          }
-          if (f.imageLocation != null) {
-            batch.update(
-              db.imageLocations,
-              f.imageLocation!,
-              where: (sql.$ImageLocationsTable t) =>
-                  t.accountFile.equals(thisRowIds.accountFileRowId),
-            );
-          } else {
-            if (isSupportedImageFormat) {
-              batch.deleteWhere(
-                db.imageLocations,
-                (sql.$ImageLocationsTable t) =>
-                    t.accountFile.equals(thisRowIds.accountFileRowId),
-              );
-            }
-          }
-          if (f.trash != null) {
-            batch.update(
-              db.trashes,
-              f.trash!,
-              where: (sql.$TrashesTable t) =>
-                  t.file.equals(thisRowIds.fileRowId),
-            );
-          } else {
-            batch.deleteWhere(
-              db.trashes,
-              (sql.$TrashesTable t) => t.file.equals(thisRowIds.fileRowId),
-            );
-          }
-          _onRowCached(thisRowIds.fileRowId, f, dir);
-        } else {
-          // inserts, do it later
-          inserts.add(f);
-        }
-      }
-    });
-    _log.info(
-        "[_updateCache] Updated ${sqlFiles.length - inserts.length} files");
-    return inserts;
-  }
-
-  Future<void> _insertCache(sql.SqliteDb db, sql.Account dbAccount,
-      List<sql.CompleteFileCompanion> sqlFiles, File? dir) async {
-    _log.info("[_insertCache] Insert ${sqlFiles.length} files");
-    // check if the files exist in the db in other accounts
-    final entries =
-        await sqlFiles.map((f) => f.file.fileId.value).withPartition((sublist) {
-      final query = db.queryFiles().run((q) {
-        q
-          ..setQueryMode(
-            sql.FilesQueryMode.expression,
-            expressions: [db.files.rowId, db.files.fileId],
-          )
-          ..setAccountless()
-          ..byServerRowId(dbAccount.server)
-          ..byFileIds(sublist);
-        return q.build();
-      });
-      return query
-          .map((r) =>
-              MapEntry(r.read(db.files.fileId)!, r.read(db.files.rowId)!))
-          .get();
-    }, sql.maxByFileIdsSize);
-    final fileRowIdMap = Map.fromEntries(entries);
-
-    await Future.wait(sqlFiles.map((f) async {
-      var rowId = fileRowIdMap[f.file.fileId.value];
-      if (rowId != null) {
-        // shared file that exists in other accounts
-      } else {
-        final dbFile = await db.into(db.files).insertReturning(
-              f.file.copyWith(server: sql.Value(dbAccount.server)),
-            );
-        rowId = dbFile.rowId;
-      }
-      final dbAccountFile =
-          await db.into(db.accountFiles).insertReturning(f.accountFile.copyWith(
-                account: sql.Value(dbAccount.rowId),
-                file: sql.Value(rowId),
-              ));
-      if (f.image != null) {
-        await db.into(db.images).insert(
-            f.image!.copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
-      }
-      if (f.imageLocation != null) {
-        await db.into(db.imageLocations).insert(f.imageLocation!
-            .copyWith(accountFile: sql.Value(dbAccountFile.rowId)));
-      }
-      if (f.trash != null) {
-        await db
-            .into(db.trashes)
-            .insert(f.trash!.copyWith(file: sql.Value(rowId)));
-      }
-      _onRowCached(rowId, f, dir);
-    }));
-  }
-
-  void _onRowCached(int rowId, sql.CompleteFileCompanion dbFile, File? dir) {
-    if (dir != null) {
-      if (_compareIdentity(dbFile, dir)) {
-        _dirRowId = rowId;
-      }
-    }
-    _childRowIds.add(rowId);
-  }
-
-  bool _compareIdentity(sql.CompleteFileCompanion dbFile, File appFile) {
-    if (appFile.fileId != null) {
-      return appFile.fileId == dbFile.file.fileId.value;
-    } else {
-      return appFile.strippedPathWithEmpty ==
-          dbFile.accountFile.relativePath.value;
-    }
+    await _c.npDb.syncFile(
+      account: account.toDb(),
+      file: remoteFile.toDb(),
+    );
   }
 
   final DiContainer _c;
-
-  int? _dirRowId;
-  final _childRowIds = <int>[];
 }
 
 class FileSqliteCacheRemover {
-  FileSqliteCacheRemover(this._c) : assert(require(_c));
-
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+  const FileSqliteCacheRemover(this._c);
 
   /// Remove a file/dir from cache
   Future<void> call(Account account, FileDescriptor f) async {
-    await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final rowIds = await db.accountFileRowIdsOf(f, sqlAccount: dbAccount);
-      await _removeSqliteFiles(db, dbAccount, [rowIds.fileRowId]);
-      await db.cleanUpDanglingFiles();
-    });
+    await _c.npDb.deleteFile(
+      account: account.toDb(),
+      file: f.toDbKey(),
+    );
   }
 
   final DiContainer _c;
 }
 
 class FileSqliteCacheEmptier {
-  FileSqliteCacheEmptier(this._c) : assert(require(_c));
-
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+  const FileSqliteCacheEmptier(this._c);
 
   /// Empty a dir from cache
   Future<void> call(Account account, File dir) async {
-    await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final rowIds = await db.accountFileRowIdsOf(dir, sqlAccount: dbAccount);
-
-      // remove children
-      final childIdsQuery = db.selectOnly(db.dirFiles)
-        ..addColumns([db.dirFiles.child])
-        ..where(db.dirFiles.dir.equals(rowIds.fileRowId));
-      final childIds =
-          await childIdsQuery.map((r) => r.read(db.dirFiles.child)!).get();
-      childIds.removeWhere((id) => id == rowIds.fileRowId);
-      if (childIds.isNotEmpty) {
-        await _removeSqliteFiles(db, dbAccount, childIds);
-        await db.cleanUpDanglingFiles();
-      }
-
-      // remove dir in DirFiles
-      await (db.delete(db.dirFiles)
-            ..where((t) => t.dir.equals(rowIds.fileRowId)))
-          .go();
-    });
+    await _c.npDb.truncateDir(
+      account: account.toDb(),
+      dir: dir.toDbKey(),
+    );
   }
 
   final DiContainer _c;
-}
-
-/// Remove a files from the cache db
-///
-/// If a file is a dir, its children will also be recursively removed
-Future<void> _removeSqliteFiles(
-    sql.SqliteDb db, sql.Account dbAccount, List<int> fileRowIds) async {
-  // query list of children, in case some of the files are dirs
-  final childRowIds = await fileRowIds.withPartition((sublist) {
-    final childQuery = db.selectOnly(db.dirFiles)
-      ..addColumns([db.dirFiles.child])
-      ..where(db.dirFiles.dir.isIn(sublist));
-    return childQuery.map((r) => r.read(db.dirFiles.child)!).get();
-  }, sql.maxByFileIdsSize);
-  childRowIds.removeWhere((id) => fileRowIds.contains(id));
-
-  // remove the files in AccountFiles table. We are not removing in Files table
-  // because a file could be associated with multiple accounts
-  await fileRowIds.withPartitionNoReturn((sublist) async {
-    await (db.delete(db.accountFiles)
-          ..where(
-              (t) => t.account.equals(dbAccount.rowId) & t.file.isIn(sublist)))
-        .go();
-  }, sql.maxByFileIdsSize);
-
-  if (childRowIds.isNotEmpty) {
-    // remove children recursively
-    return _removeSqliteFiles(db, dbAccount, childRowIds);
-  } else {
-    return;
-  }
 }

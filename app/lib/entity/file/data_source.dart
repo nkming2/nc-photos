@@ -1,26 +1,26 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:drift/drift.dart' as sql;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/compat/v32.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_datetime/np_datetime.dart';
+import 'package:np_db/np_db.dart';
 import 'package:path/path.dart' as path_lib;
 
 part 'data_source.g.dart';
@@ -363,23 +363,22 @@ class FileWebdavDataSource implements FileDataSource {
 
 @npLog
 class FileSqliteDbDataSource implements FileDataSource {
-  FileSqliteDbDataSource(this._c);
+  const FileSqliteDbDataSource(this._c);
 
   @override
-  list(Account account, File dir) async {
+  Future<List<File>> list(Account account, File dir) async {
     _log.info("[list] ${dir.path}");
-    final dbFiles = await _c.sqliteDb.use((db) async {
-      final dbAccount = await db.accountOf(account);
-      final sql.File dbDir;
-      try {
-        dbDir = await db.fileOf(dir, sqlAccount: dbAccount);
-      } catch (_) {
-        throw CacheNotFoundException("No entry: ${dir.path}");
-      }
-      return await db.completeFilesByDirRowId(dbDir.rowId,
-          sqlAccount: dbAccount);
-    });
-    final results = (await dbFiles.convertToAppFile(account))
+    final List<DbFile> dbFiles;
+    try {
+      dbFiles = await _c.npDb.getFilesByDirKey(
+        account: account.toDb(),
+        dir: dir.toDbKey(),
+      );
+    } on DbNotFoundException catch (_) {
+      throw CacheNotFoundException("No entry: ${dir.path}");
+    }
+    final results = dbFiles
+        .map((f) => DbFileConverter.fromDb(account.userId.toString(), f))
         .where((f) => _validateFile(f))
         .toList();
     _log.fine("[list] Queried ${results.length} files");
@@ -405,33 +404,17 @@ class FileSqliteDbDataSource implements FileDataSource {
   Future<List<File>> listByDate(
       Account account, int fromEpochMs, int toEpochMs) async {
     _log.info("[listByDate] [$fromEpochMs, $toEpochMs]");
-    final dbFiles = await _c.sqliteDb.use((db) async {
-      final query = db.queryFiles().run((q) {
-        q.setQueryMode(sql.FilesQueryMode.completeFile);
-        q.setAppAccount(account);
-        for (final r in account.roots) {
-          if (r.isNotEmpty) {
-            q.byOrRelativePathPattern("$r/%");
-          }
-        }
-        return q.build();
-      });
-      final dateTime = db.accountFiles.bestDateTime.unixepoch;
-      query
-        ..where(dateTime.isBetweenValues(
-            fromEpochMs ~/ 1000, (toEpochMs ~/ 1000) - 1))
-        ..orderBy([sql.OrderingTerm.desc(dateTime)]);
-      return await query
-          .map((r) => sql.CompleteFile(
-                r.readTable(db.files),
-                r.readTable(db.accountFiles),
-                r.readTableOrNull(db.images),
-                r.readTableOrNull(db.imageLocations),
-                r.readTableOrNull(db.trashes),
-              ))
-          .get();
-    });
-    return await dbFiles.convertToAppFile(account);
+    final results = await _c.npDb.getFilesByTimeRange(
+      account: account.toDb(),
+      dirRoots: account.roots,
+      range: TimeRange(
+        from: DateTime.fromMillisecondsSinceEpoch(fromEpochMs),
+        to: DateTime.fromMillisecondsSinceEpoch(toEpochMs),
+      ),
+    );
+    return results
+        .map((e) => DbFileConverter.fromDb(account.userId.toString(), e))
+        .toList();
   }
 
   @override
@@ -453,7 +436,7 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  updateProperty(
+  Future<void> updateProperty(
     Account account,
     File f, {
     OrNull<Metadata>? metadata,
@@ -463,79 +446,26 @@ class FileSqliteDbDataSource implements FileDataSource {
     OrNull<ImageLocation>? location,
   }) async {
     _log.info("[updateProperty] ${f.path}");
-    await _c.sqliteDb.use((db) async {
-      final rowIds = await db.accountFileRowIdsOf(f, appAccount: account);
-      if (isArchived != null ||
-          overrideDateTime != null ||
-          favorite != null ||
-          metadata != null) {
-        final update = sql.AccountFilesCompanion(
-          isArchived: isArchived == null
-              ? const sql.Value.absent()
-              : sql.Value(isArchived.obj),
-          overrideDateTime: overrideDateTime == null
-              ? const sql.Value.absent()
-              : sql.Value(overrideDateTime.obj),
-          isFavorite:
-              favorite == null ? const sql.Value.absent() : sql.Value(favorite),
-          bestDateTime: overrideDateTime == null && metadata == null
-              ? const sql.Value.absent()
-              : sql.Value(file_util.getBestDateTime(
-                  overrideDateTime: overrideDateTime == null
-                      ? f.overrideDateTime
-                      : overrideDateTime.obj,
-                  dateTimeOriginal: metadata == null
-                      ? f.metadata?.exif?.dateTimeOriginal
-                      : metadata.obj?.exif?.dateTimeOriginal,
-                  lastModified: f.lastModified,
-                )),
-        );
-        await (db.update(db.accountFiles)
-              ..where((t) => t.rowId.equals(rowIds.accountFileRowId)))
-            .write(update);
-      }
-      if (metadata != null) {
-        if (metadata.obj == null) {
-          await (db.delete(db.images)
-                ..where((t) => t.accountFile.equals(rowIds.accountFileRowId)))
-              .go();
-        } else {
-          await db
-              .into(db.images)
-              .insertOnConflictUpdate(sql.ImagesCompanion.insert(
-                accountFile: sql.Value(rowIds.accountFileRowId),
-                lastUpdated: metadata.obj!.lastUpdated,
-                fileEtag: sql.Value(metadata.obj!.fileEtag),
-                width: sql.Value(metadata.obj!.imageWidth),
-                height: sql.Value(metadata.obj!.imageHeight),
-                exifRaw: sql.Value(
-                    metadata.obj!.exif?.toJson().run((j) => jsonEncode(j))),
-                dateTimeOriginal:
-                    sql.Value(metadata.obj!.exif?.dateTimeOriginal),
-              ));
-        }
-      }
-      if (location != null) {
-        if (location.obj == null) {
-          await (db.delete(db.imageLocations)
-                ..where((t) => t.accountFile.equals(rowIds.accountFileRowId)))
-              .go();
-        } else {
-          await db
-              .into(db.imageLocations)
-              .insertOnConflictUpdate(sql.ImageLocationsCompanion.insert(
-                accountFile: sql.Value(rowIds.accountFileRowId),
-                version: location.obj!.version,
-                name: sql.Value(location.obj!.name),
-                latitude: sql.Value(location.obj!.latitude),
-                longitude: sql.Value(location.obj!.longitude),
-                countryCode: sql.Value(location.obj!.countryCode),
-                admin1: sql.Value(location.obj!.admin1),
-                admin2: sql.Value(location.obj!.admin2),
-              ));
-        }
-      }
-    });
+    await _c.npDb.updateFileByFileId(
+      account: account.toDb(),
+      fileId: f.fileId!,
+      isFavorite: favorite?.let(OrNull.new),
+      isArchived: isArchived,
+      overrideDateTime: overrideDateTime,
+      bestDateTime: overrideDateTime == null && metadata == null
+          ? null
+          : file_util.getBestDateTime(
+              overrideDateTime: overrideDateTime == null
+                  ? f.overrideDateTime
+                  : overrideDateTime.obj,
+              dateTimeOriginal: metadata == null
+                  ? f.metadata?.exif?.dateTimeOriginal
+                  : metadata.obj?.exif?.dateTimeOriginal,
+              lastModified: f.lastModified,
+            ),
+      imageData: metadata?.let((e) => OrNull(e.obj?.toDb())),
+      location: location?.let((e) => OrNull(e.obj?.toDb())),
+    );
   }
 
   @override
@@ -554,15 +484,13 @@ class FileSqliteDbDataSource implements FileDataSource {
     File f,
     String destination, {
     bool? shouldOverwrite,
-  }) async {
+  }) {
     _log.info("[move] ${f.path} to $destination");
-    await _c.sqliteDb.use((db) async {
-      await db.moveFileByFileId(
-        sql.ByAccount.app(account),
-        f.fileId!,
-        File(path: destination).strippedPathWithEmpty,
-      );
-    });
+    return _c.npDb.updateFileByFileId(
+      account: account.toDb(),
+      fileId: f.fileId!,
+      relativePath: File(path: destination).strippedPathWithEmpty,
+    );
   }
 
   @override
@@ -603,7 +531,7 @@ class FileCachedDataSource implements FileDataSource {
   }) : _sqliteDbSrc = FileSqliteDbDataSource(_c);
 
   @override
-  list(Account account, File dir) async {
+  Future<List<File>> list(Account account, File dir) async {
     final cacheLoader = FileCacheLoader(
       _c,
       cacheSrc: _sqliteDbSrc,

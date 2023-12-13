@@ -7,17 +7,15 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite/database.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/mobile/platform.dart'
-    if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_platform_util/np_platform_util.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:to_string/to_string.dart';
 
 part 'developer/bloc.dart';

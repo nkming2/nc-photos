@@ -1,8 +1,8 @@
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 
@@ -10,9 +10,7 @@ part 'find_file_descriptor.g.dart';
 
 @npLog
 class FindFileDescriptor {
-  FindFileDescriptor(this._c) : assert(require(_c));
-
-  static bool require(DiContainer c) => DiContainer.has(c, DiType.sqliteDb);
+  const FindFileDescriptor(this._c);
 
   /// Find list of files in the DB by [fileIds]
   ///
@@ -24,11 +22,14 @@ class FindFileDescriptor {
     void Function(int fileId)? onFileNotFound,
   }) async {
     _log.info("[call] fileIds: ${fileIds.toReadableString()}");
-    final dbFiles = await _c.sqliteDb.use((db) async {
-      return await db.fileDescriptorsByFileIds(
-          sql.ByAccount.app(account), fileIds);
-    });
-    final files = dbFiles.convertToAppFileDescriptor(account);
+    final dbResults = await _c.npDb.getFileDescriptors(
+      account: account.toDb(),
+      fileIds: fileIds,
+    );
+    final files = dbResults
+        .map((e) =>
+            DbFileDescriptorConverter.fromDb(account.userId.toString(), e))
+        .toList();
     final fileMap = <int, FileDescriptor>{};
     for (final f in files) {
       fileMap[f.fdId] = f;

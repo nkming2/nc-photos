@@ -2,15 +2,15 @@ import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/entity_converter.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/face_recognition_face.dart';
 import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/face_recognition_person/repo.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/type_converter.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
 
@@ -66,18 +66,16 @@ class FaceRecognitionPersonRemoteDataSource
 @npLog
 class FaceRecognitionPersonSqliteDbDataSource
     implements FaceRecognitionPersonDataSource {
-  const FaceRecognitionPersonSqliteDbDataSource(this.sqliteDb);
+  const FaceRecognitionPersonSqliteDbDataSource(this.db);
 
   @override
   Future<List<FaceRecognitionPerson>> getPersons(Account account) async {
     _log.info("[getPersons] $account");
-    final dbPersons = await sqliteDb.use((db) async {
-      return await db.allFaceRecognitionPersons(account: sql.ByAccount.app(account));
-    });
-    return dbPersons
+    final results = await db.getFaceRecognitionPersons(account: account.toDb());
+    return results
         .map((p) {
           try {
-            return SqliteFaceRecognitionPersonConverter.fromSql(p);
+            return DbFaceRecognitionPersonConverter.fromDb(p);
           } catch (e, stackTrace) {
             _log.severe(
                 "[getPersons] Failed while converting DB entry", e, stackTrace);
@@ -97,5 +95,5 @@ class FaceRecognitionPersonSqliteDbDataSource
         .getFaces(account, person);
   }
 
-  final sql.SqliteDb sqliteDb;
+  final NpDb db;
 }

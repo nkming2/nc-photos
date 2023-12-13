@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      to_string_build:
+        options:
+          formatStringNameMapping:
+            double: "${$?.toStringAsFixed(3)}"
+            List: "[length: ${$?.length}]"
+            File: "${$?.path}"
+            FileDescriptor: "${$?.fdPath}"
+          useEnumName: true

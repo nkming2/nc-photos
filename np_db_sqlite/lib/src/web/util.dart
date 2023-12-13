@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/wasm.dart';
 import 'package:http/http.dart' as http;
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:np_db_sqlite/src/database.dart';
 import 'package:sqlite3/wasm.dart';
 
 Future<Map<String, dynamic>> getSqliteConnectionArgs() async => {};
@@ -32,9 +34,9 @@ QueryExecutor openSqliteConnection() {
 }
 
 Future<void> applyWorkaroundToOpenSqlite3OnOldAndroidVersions() async {
-  // not supported on web
+  // unnecessary on web
 }
 
-Future<dynamic> exportSqliteDb(sql.SqliteDb db) async {
+Future<File> exportSqliteDb(SqliteDb db, Directory dir) async {
   throw UnimplementedError();
 }

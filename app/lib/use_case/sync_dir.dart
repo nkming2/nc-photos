@@ -1,14 +1,12 @@
 import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
-import 'package:nc_photos/entity/sqlite/files_query_builder.dart' as sql;
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls_single_file.dart';
@@ -23,7 +21,6 @@ class SyncDir {
 
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.fileRepoRemote) &&
-      DiContainer.has(c, DiType.sqliteDb) &&
       DiContainer.has(c, DiType.touchManager);
 
   /// Sync local SQLite DB with remote content
@@ -118,25 +115,10 @@ class SyncDir {
   Future<Map<int, String>> _queryAllDirEtags(
       Account account, String dirPath) async {
     final dir = File(path: dirPath);
-    return await _c.sqliteDb.use((db) async {
-      final query = db.queryFiles().run((q) {
-        q
-          ..setQueryMode(sql.FilesQueryMode.expression,
-              expressions: [db.files.fileId, db.files.etag])
-          ..setAppAccount(account);
-        if (dir.strippedPathWithEmpty.isNotEmpty) {
-          q
-            ..byOrRelativePath(dir.strippedPathWithEmpty)
-            ..byOrRelativePathPattern("${dir.strippedPathWithEmpty}/%");
-        }
-        return q.build();
-      });
-      query.where(db.files.isCollection.equals(true));
-      return Map.fromEntries(await query
-          .map(
-              (r) => MapEntry(r.read(db.files.fileId)!, r.read(db.files.etag)!))
-          .get());
-    });
+    return _c.npDb.getDirFileIdToEtagByLikeRelativePath(
+      account: account.toDb(),
+      relativePath: dir.strippedPathWithEmpty,
+    );
   }
 
   final DiContainer _c;

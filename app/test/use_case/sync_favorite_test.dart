@@ -1,10 +1,11 @@
 import 'package:drift/drift.dart' as sql;
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/favorite.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/use_case/sync_favorite.dart';
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
 
 import '../mock_type.dart';
@@ -36,11 +37,11 @@ Future<void> _new() async {
       const Favorite(fileId: 103),
       const Favorite(fileId: 104),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -66,11 +67,11 @@ Future<void> _remove() async {
       const Favorite(fileId: 103),
       const Favorite(fileId: 104),
     ]),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   await c.sqliteDb.transaction(() async {
-    await c.sqliteDb.insertAccountOf(account);
+    await c.sqliteDb.insertAccounts([account.toDb()]);
     await util.insertFiles(c.sqliteDb, account, files);
   });
 
@@ -81,7 +82,7 @@ Future<void> _remove() async {
   );
 }
 
-Future<Set<int>> _listSqliteDbFavoriteFileIds(sql.SqliteDb db) async {
+Future<Set<int>> _listSqliteDbFavoriteFileIds(compat.SqliteDb db) async {
   final query = db.selectOnly(db.files).join([
     sql.innerJoin(
         db.accountFiles, db.accountFiles.file.equalsExp(db.files.rowId)),

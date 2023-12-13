@@ -15,12 +15,13 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/progress.dart';
 import 'package:nc_photos/bloc/scan_account_dir.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
@@ -534,12 +535,12 @@ class _HomePhotosState extends State<HomePhotos>
                 .value)) {
       try {
         final c = KiwiContainer().resolve<DiContainer>();
-        final missingMetadataCount = await c.sqliteDb.use((db) async {
-          return await db.countMissingMetadataByFileIds(
-            appAccount: widget.account,
-            fileIds: _backingFiles.map((e) => e.fdId).toList(),
-          );
-        });
+        final missingMetadataCount =
+            await c.npDb.countFilesByFileIdsMissingMetadata(
+          account: widget.account.toDb(),
+          fileIds: _backingFiles.map((e) => e.fdId).toList(),
+          mimes: file_util.supportedImageFormatMimes,
+        );
         _log.info(
             "[_tryStartMetadataTask] Missing count: $missingMetadataCount");
         if (missingMetadataCount > 0) {

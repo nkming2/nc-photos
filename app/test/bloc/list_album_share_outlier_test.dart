@@ -1,7 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/sqlite/database.dart' as sql;
+import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:np_string/np_string.dart';
 import 'package:test/test.dart';
 
@@ -56,7 +57,7 @@ void _initialState() {
   final c = DiContainer(
     shareRepo: MockShareRepo(),
     shareeRepo: MockShareeRepo(),
-    sqliteDb: util.buildTestDb(),
+    npDb: util.buildTestDb(),
   );
   addTearDown(() => c.sqliteDb.close());
   final bloc = ListAlbumShareOutlierBloc(c);
@@ -85,10 +86,10 @@ void _testQueryUnsharedAlbumExtraShare(String description) {
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -128,7 +129,7 @@ void _testQueryUnsharedAlbumExtraJsonShare(String description) {
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
     },
     tearDown: () => c.sqliteDb.close(),
@@ -172,10 +173,10 @@ void _testQuerySharedAlbumMissingShare(String description) {
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -226,10 +227,10 @@ void _testQuerySharedAlbumMissingManagedShareOtherAdded(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -286,11 +287,11 @@ void _testQuerySharedAlbumMissingManagedShareOtherReshared(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
-        await c.sqliteDb.insertAccountOf(user1Account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
+        await c.sqliteDb.insertAccounts([user1Account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
         await util.insertFiles(c.sqliteDb, user1Account, user1Files);
       });
@@ -339,10 +340,10 @@ void _testQuerySharedAlbumMissingUnmanagedShareOtherAdded(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -374,7 +375,7 @@ void _testQuerySharedAlbumMissingJsonShare(String description) {
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
     },
     tearDown: () => c.sqliteDb.close(),
@@ -421,10 +422,10 @@ void _testQuerySharedAlbumExtraShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -479,11 +480,11 @@ void _testQuerySharedAlbumExtraShareOtherAdded(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
-        await c.sqliteDb.insertAccountOf(user1Account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
+        await c.sqliteDb.insertAccounts([user1Account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
         await util.insertFiles(c.sqliteDb, user1Account, user1Files);
       });
@@ -545,11 +546,11 @@ void _testQuerySharedAlbumExtraUnmanagedShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
-        await c.sqliteDb.insertAccountOf(user1Account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
+        await c.sqliteDb.insertAccounts([user1Account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
         await util.insertFiles(c.sqliteDb, user1Account, user1Files);
       });
@@ -587,7 +588,7 @@ void _testQuerySharedAlbumExtraJsonShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
     },
     tearDown: () => c.sqliteDb.close(),
@@ -632,10 +633,10 @@ void _testQuerySharedAlbumNotOwnedMissingShareToOwner(String description) {
         shareeRepo: MockShareeMemoryRepo([
           util.buildSharee(shareWith: "user1".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -686,10 +687,10 @@ void _testQuerySharedAlbumNotOwnedMissingManagedShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -738,10 +739,10 @@ void _testQuerySharedAlbumNotOwnedMissingUnmanagedShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -781,7 +782,7 @@ void _testQuerySharedAlbumNotOwnedMissingJsonShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
     },
     tearDown: () => c.sqliteDb.close(),
@@ -825,10 +826,10 @@ void _testQuerySharedAlbumNotOwnedExtraManagedShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -878,10 +879,10 @@ void _testQuerySharedAlbumNotOwnedExtraUnmanagedShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
       await c.sqliteDb.transaction(() async {
-        await c.sqliteDb.insertAccountOf(account);
+        await c.sqliteDb.insertAccounts([account.toDb()]);
         await util.insertFiles(c.sqliteDb, account, files);
       });
     },
@@ -926,7 +927,7 @@ void _testQuerySharedAlbumNotOwnedExtraJsonShare(String description) {
           util.buildSharee(shareWith: "user1".toCi()),
           util.buildSharee(shareWith: "user2".toCi()),
         ]),
-        sqliteDb: util.buildTestDb(),
+        npDb: util.buildTestDb(),
       );
     },
     tearDown: () => c.sqliteDb.close(),

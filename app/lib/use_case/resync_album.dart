@@ -14,9 +14,7 @@ part 'resync_album.g.dart';
 /// Resync files inside an album with the file db
 @npLog
 class ResyncAlbum {
-  ResyncAlbum(this._c)
-      : assert(require(_c)),
-        assert(FindFile.require(_c));
+  ResyncAlbum(this._c) : assert(require(_c));
 
   static bool require(DiContainer c) => true;
 
