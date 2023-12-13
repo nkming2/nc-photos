@@ -88,6 +88,13 @@ extension _$_LoadPersonsToString on _LoadPersons {
   }
 }
 
+extension _$_ReloadToString on _Reload {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_Reload {}";
+  }
+}
+
 extension _$_TransformItemsToString on _TransformItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

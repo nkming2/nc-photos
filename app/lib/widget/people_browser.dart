@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
@@ -95,30 +97,37 @@ class _WrappedPeopleBrowserState extends State<_WrappedPeopleBrowser>
       child: Scaffold(
         body: Stack(
           children: [
-            CustomScrollView(
-              slivers: [
-                const _AppBar(),
-                SliverToBoxAdapter(
-                  child: _BlocBuilder(
-                    buildWhen: (previous, current) =>
-                        previous.isLoading != current.isLoading,
-                    builder: (context, state) => state.isLoading
-                        ? const LinearProgressIndicator()
-                        : const SizedBox(height: 4),
+            RefreshIndicator(
+              onRefresh: () async {
+                _bloc.add(const _Reload());
+                await _bloc.stream.first;
+              },
+              child: CustomScrollView(
+                slivers: [
+                  const _AppBar(),
+                  SliverToBoxAdapter(
+                    child: _BlocBuilder(
+                      buildWhen: (previous, current) =>
+                          previous.isLoading != current.isLoading,
+                      builder: (context, state) => state.isLoading
+                          ? const LinearProgressIndicator()
+                          : const SizedBox(height: 4),
+                    ),
                   ),
-                ),
-                _ContentList(
-                  onTap: (_, item) {
-                    Navigator.pushNamed(
-                      context,
-                      CollectionBrowser.routeName,
-                      arguments: CollectionBrowserArguments(
-                        CollectionBuilder.byPerson(_bloc.account, item.person),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                  _ContentList(
+                    onTap: (_, item) {
+                      Navigator.pushNamed(
+                        context,
+                        CollectionBrowser.routeName,
+                        arguments: CollectionBrowserArguments(
+                          CollectionBuilder.byPerson(
+                              _bloc.account, item.person),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

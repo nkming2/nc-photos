@@ -37,6 +37,14 @@ class _LoadPersons implements _Event {
   String toString() => _$toString();
 }
 
+@toString
+class _Reload implements _Event {
+  const _Reload();
+
+  @override
+  String toString() => _$toString();
+}
+
 /// Transform the [Person] list (e.g., filtering, sorting, etc)
 @toString
 class _TransformItems implements _Event {

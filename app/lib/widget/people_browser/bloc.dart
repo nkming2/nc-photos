@@ -7,6 +7,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.personsController,
   }) : super(_State.init()) {
     on<_LoadPersons>(_onLoad);
+    on<_Reload>(_onReload);
     on<_TransformItems>(_onTransformItems);
   }
 
@@ -29,6 +30,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         );
       },
     );
+  }
+
+  void _onReload(_Reload ev, Emitter<_State> emit) {
+    _log.info(ev);
+    unawaited(personsController.reload());
   }
 
   Future<void> _onTransformItems(
