@@ -1,49 +1,46 @@
 part of '../search_landing.dart';
 
-class _LandingPersonItem {
-  _LandingPersonItem({
-    required this.account,
-    required this.person,
-    this.onTap,
-  })  : name = person.name,
-        faceUrl = person.getCoverUrl(
-          k.photoLargeSize,
-          k.photoLargeSize,
-          isKeepAspectRatio: true,
-        );
-
-  Widget buildWidget(BuildContext context) => _LandingPersonWidget(
-        account: account,
-        person: person,
-        label: name,
-        coverUrl: faceUrl,
-        onTap: onTap,
+@npLog
+class _PersonItem {
+  _PersonItem(this.person) {
+    try {
+      _coverUrl = person.getCoverUrl(
+        k.photoLargeSize,
+        k.photoLargeSize,
+        isKeepAspectRatio: true,
       );
+    } catch (e, stackTrace) {
+      _log.warning("[_PersonItem] Failed while getCoverUrl", e, stackTrace);
+    }
+  }
 
-  final Account account;
+  String get name => person.name;
+  String? get coverUrl => _coverUrl;
+
   final Person person;
-  final String name;
-  final String? faceUrl;
-  final VoidCallback? onTap;
+
+  String? _coverUrl;
 }
 
-class _LandingLocationItem {
-  const _LandingLocationItem({
-    required this.account,
-    required this.name,
-    required this.thumbUrl,
-    this.onTap,
-  });
+@npLog
+class _PlaceItem {
+  _PlaceItem({
+    required Account account,
+    required this.place,
+  }) {
+    try {
+      _coverUrl =
+          NetworkRectThumbnail.imageUrlForFileId(account, place.latestFileId);
+    } catch (e, stackTrace) {
+      _log.warning(
+          "[_PlaceItem] Failed while imageUrlForFileId", e, stackTrace);
+    }
+  }
 
-  Widget buildWidget(BuildContext context) => _LandingLocationWidget(
-        account: account,
-        label: name,
-        coverUrl: thumbUrl,
-        onTap: onTap,
-      );
+  String get name => place.place;
+  String? get coverUrl => _coverUrl;
 
-  final Account account;
-  final String name;
-  final String thumbUrl;
-  final VoidCallback? onTap;
+  final LocationGroup place;
+
+  String? _coverUrl;
 }

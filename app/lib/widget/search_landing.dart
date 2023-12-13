@@ -1,20 +1,25 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/search_landing.dart';
+import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
-import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/controller/persons_controller.dart';
+import 'package:nc_photos/controller/places_controller.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
@@ -25,417 +30,348 @@ import 'package:nc_photos/widget/person_thumbnail.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/settings/account_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:to_string/to_string.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 part 'search_landing.g.dart';
+part 'search_landing/bloc.dart';
+part 'search_landing/state_event.dart';
 part 'search_landing/type.dart';
 part 'search_landing/view.dart';
 
-class SearchLanding extends StatefulWidget {
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+
+class SearchLanding extends StatelessWidget {
   const SearchLanding({
-    Key? key,
-    required this.account,
+    super.key,
     this.onFavoritePressed,
     this.onVideoPressed,
-  }) : super(key: key);
+  });
 
   @override
-  createState() => _SearchLandingState();
+  Widget build(BuildContext context) {
+    final accountController = context.read<AccountController>();
+    return BlocProvider(
+      create: (_) => _Bloc(
+        account: accountController.account,
+        personsController: accountController.personsController,
+        placesController: accountController.placesController,
+      ),
+      child: _WrappedSearchLanding(
+        onFavoritePressed: onFavoritePressed,
+        onVideoPressed: onVideoPressed,
+      ),
+    );
+  }
 
-  final Account account;
+  final VoidCallback? onFavoritePressed;
+  final VoidCallback? onVideoPressed;
+}
+
+class _WrappedSearchLanding extends StatefulWidget {
+  const _WrappedSearchLanding({
+    this.onFavoritePressed,
+    this.onVideoPressed,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _WrappedSearchLandingState();
+
   final VoidCallback? onFavoritePressed;
   final VoidCallback? onVideoPressed;
 }
 
 @npLog
-class _SearchLandingState extends State<SearchLanding> {
+class _WrappedSearchLandingState extends State<_WrappedSearchLanding> {
   @override
-  initState() {
+  void initState() {
     super.initState();
-    _initBloc();
+    _bloc
+      ..add(const _LoadPersons())
+      ..add(const _LoadPlaces());
   }
 
   @override
-  build(BuildContext context) {
-    return BlocListener<SearchLandingBloc, SearchLandingBlocState>(
-      bloc: _bloc,
-      listener: (context, state) => _onStateChange(context, state),
-      child: BlocBuilder<SearchLandingBloc, SearchLandingBlocState>(
-        bloc: _bloc,
-        builder: (context, state) => _buildContent(context, state),
+  Widget build(BuildContext context) {
+    return VisibilityDetector(
+      key: _key,
+      onVisibilityChanged: (info) {
+        final isVisible = info.visibleFraction >= 0.2;
+        if (isVisible != _isVisible) {
+          if (mounted) {
+            setState(() {
+              _isVisible = isVisible;
+            });
+          }
+        }
+      },
+      child: MultiBlocListener(
+        listeners: [
+          _BlocListener(
+            listenWhen: (previous, current) =>
+                previous.persons != current.persons,
+            listener: (context, state) {
+              _bloc.add(_TransformPersonItems(state.persons));
+            },
+          ),
+          _BlocListener(
+            listenWhen: (previous, current) =>
+                previous.places != current.places,
+            listener: (context, state) {
+              _bloc.add(_TransformPlaceItems(state.places));
+            },
+          ),
+          _BlocListener(
+            listenWhen: (previous, current) => previous.error != current.error,
+            listener: (context, state) {
+              if (state.error != null && _isVisible == true) {
+                if (state.error is ApiException) {
+                  final e = state.error as ApiException;
+                  if (e.response.statusCode == 404) {
+                    // face recognition app probably not installed, ignore
+                    return;
+                  }
+                }
+                SnackBarManager().showSnackBar(SnackBar(
+                  content:
+                      Text(exception_util.toUserString(state.error!.error)),
+                  duration: k.snackBarDurationNormal,
+                ));
+              }
+            },
+          ),
+        ],
+        child: Column(
+          children: [
+            ValueStreamBuilder<PersonProvider>(
+              stream: context
+                  .read<AccountController>()
+                  .accountPrefController
+                  .personProvider,
+              builder: (context, snapshot) {
+                if (snapshot.requireData == PersonProvider.none) {
+                  return const SizedBox.shrink();
+                } else {
+                  return const _PeopleSection();
+                }
+              },
+            ),
+            const _PlaceSection(),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              title: Text(L10n.global().categoriesLabel),
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              leading: const Icon(Icons.star_border),
+              title: Text(L10n.global().collectionFavoritesLabel),
+              onTap: widget.onFavoritePressed,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Divider(height: 1),
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              leading: const Icon(Icons.ondemand_video_outlined),
+              title: Text(L10n.global().searchLandingCategoryVideosLabel),
+              onTap: widget.onVideoPressed,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _initBloc() {
-    if (_bloc.state is SearchLandingBlocInit) {
-      _log.info("[_initBloc] Initialize bloc");
-      _reqQuery();
-    } else {
-      // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _onStateChange(context, _bloc.state);
-          });
-        }
-      });
-    }
-  }
+  late final _bloc = context.read<_Bloc>();
 
-  Widget _buildContent(BuildContext context, SearchLandingBlocState state) {
+  final _key = GlobalKey();
+  bool? _isVisible;
+}
+
+class _PeopleSection extends StatelessWidget {
+  const _PeopleSection();
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        if (context
-                .read<AccountController>()
-                .accountPrefController
-                .personProvider
-                .value !=
-            PersonProvider.none)
-          ..._buildPeopleSection(context, state),
-        ..._buildLocationSection(context, state),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          title: Text(L10n.global().categoriesLabel),
+          title: Text(L10n.global().collectionPeopleLabel),
+          trailing: _BlocBuilder(
+            buildWhen: (previous, current) =>
+                previous.transformedPersonItems !=
+                current.transformedPersonItems,
+            builder: (context, state) => state.transformedPersonItems.isEmpty
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                            AccountSettings.routeName,
+                            arguments: const AccountSettingsArguments(
+                              highlight: AccountSettingsOption.personProvider,
+                            ),
+                          );
+                        },
+                        tooltip: L10n.global().accountSettingsTooltip,
+                        icon: const Icon(Icons.settings_outlined),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          launch(help_util.peopleUrl);
+                        },
+                        tooltip: L10n.global().helpTooltip,
+                        icon: const Icon(Icons.help_outline),
+                      ),
+                    ],
+                  )
+                : TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(PeopleBrowser.routeName);
+                    },
+                    child: Text(L10n.global().showAllButtonLabel),
+                  ),
+          ),
         ),
-        ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          leading: const Icon(Icons.star_border),
-          title: Text(L10n.global().collectionFavoritesLabel),
-          onTap: _onFavoritePressed,
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Divider(height: 1),
-        ),
-        ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          leading: const Icon(Icons.ondemand_video_outlined),
-          title: Text(L10n.global().searchLandingCategoryVideosLabel),
-          onTap: _onVideoPressed,
+        _BlocBuilder(
+          buildWhen: (previous, current) =>
+              previous.isPersonsLoading != current.isPersonsLoading ||
+              previous.transformedPersonItems != current.transformedPersonItems,
+          builder: (context, state) {
+            if (state.isPersonsLoading) {
+              return const SizedBox(
+                height: 48,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else {
+              if (state.transformedPersonItems.isEmpty) {
+                return SizedBox(
+                  height: 48,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Center(
+                      child:
+                          Text(L10n.global().searchLandingPeopleListEmptyText2),
+                    ),
+                  ),
+                );
+              } else {
+                return SizedBox(
+                  height: 128,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.transformedPersonItems.length,
+                    itemBuilder: (context, i) {
+                      final item = state.transformedPersonItems[i];
+                      return _PersonItemView(
+                        account: context.read<_Bloc>().account,
+                        item: item,
+                        onTap: () => _onItemTap(context, item.person),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+          },
         ),
       ],
     );
   }
 
-  List<Widget> _buildPeopleSection(
-      BuildContext context, SearchLandingBlocState state) {
-    final isNoResult = (state is SearchLandingBlocSuccess ||
-            state is SearchLandingBlocFailure) &&
-        _personItems.isEmpty;
-    return [
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        title: Text(L10n.global().collectionPeopleLabel),
-        trailing: isNoResult
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        AccountSettings.routeName,
-                        arguments: const AccountSettingsArguments(
-                          highlight: AccountSettingsOption.personProvider,
-                        ),
-                      );
-                    },
-                    tooltip: L10n.global().accountSettingsTooltip,
-                    icon: const Icon(Icons.settings_outlined),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      launch(help_util.peopleUrl);
-                    },
-                    tooltip: L10n.global().helpTooltip,
-                    icon: const Icon(Icons.help_outline),
-                  ),
-                ],
-              )
-            : TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(PeopleBrowser.routeName);
-                },
-                child: Text(L10n.global().showAllButtonLabel),
-              ),
-      ),
-      if (isNoResult)
-        SizedBox(
-          height: 48,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Center(
-              child: Text(L10n.global().searchLandingPeopleListEmptyText2),
-            ),
-          ),
-        )
-      else
-        SizedBox(
-          height: 128,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: _personItems.length,
-            itemBuilder: (context, i) => _personItems[i].buildWidget(context),
-          ),
-        ),
-    ];
-  }
-
-  List<Widget> _buildLocationSection(
-      BuildContext context, SearchLandingBlocState state) {
-    final isNoResult = (state is SearchLandingBlocSuccess ||
-            state is SearchLandingBlocFailure) &&
-        _locationItems.isEmpty;
-    return [
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        title: Text(L10n.global().collectionPlacesLabel),
-        trailing: isNoResult
-            ? null
-            : TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(PlacesBrowser.routeName);
-                },
-                child: Text(L10n.global().showAllButtonLabel),
-              ),
-      ),
-      if (isNoResult)
-        SizedBox(
-          height: 48,
-          child: Center(
-            child: Text(L10n.global().listNoResultsText),
-          ),
-        )
-      else
-        SizedBox(
-          height: 128,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: _locationItems.length,
-            itemBuilder: (context, i) => _locationItems[i].buildWidget(context),
-          ),
-        ),
-    ];
-  }
-
-  void _onStateChange(BuildContext context, SearchLandingBlocState state) {
-    if (state is SearchLandingBlocInit) {
-      _personItems = [];
-      _locationItems = [];
-    } else if (state is SearchLandingBlocSuccess ||
-        state is SearchLandingBlocLoading) {
-      _transformItems(state.persons, state.locations);
-    } else if (state is SearchLandingBlocFailure) {
-      _transformItems(state.persons, state.locations);
-      try {
-        final e = state.exception as ApiException;
-        if (e.response.statusCode == 404) {
-          // face recognition app probably not installed, ignore
-          return;
-        }
-      } catch (_) {}
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  void _onFavoritePressed() {
-    widget.onFavoritePressed?.call();
-  }
-
-  void _onVideoPressed() {
-    widget.onVideoPressed?.call();
-  }
-
-  void _onPersonItemTap(Person person) {
+  void _onItemTap(BuildContext context, Person person) {
     Navigator.pushNamed(
       context,
       CollectionBrowser.routeName,
       arguments: CollectionBrowserArguments(
-        CollectionBuilder.byPerson(widget.account, person),
+        CollectionBuilder.byPerson(context.read<_Bloc>().account, person),
       ),
     );
   }
+}
 
-  void _onLocationItemTap(LocationGroup location) {
+class _PlaceSection extends StatelessWidget {
+  const _PlaceSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          title: Text(L10n.global().collectionPlacesLabel),
+          trailing: _BlocBuilder(
+            buildWhen: (previous, current) =>
+                previous.transformedPlaceItems != current.transformedPlaceItems,
+            builder: (context, state) => state.transformedPlaceItems.isEmpty
+                ? const SizedBox.shrink()
+                : TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(PlacesBrowser.routeName);
+                    },
+                    child: Text(L10n.global().showAllButtonLabel),
+                  ),
+          ),
+        ),
+        _BlocBuilder(
+          buildWhen: (previous, current) =>
+              previous.isPlacesLoading != current.isPlacesLoading ||
+              previous.transformedPlaceItems != current.transformedPlaceItems,
+          builder: (context, state) {
+            if (state.isPlacesLoading) {
+              return const SizedBox(
+                height: 48,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            } else {
+              if (state.transformedPlaceItems.isEmpty) {
+                return SizedBox(
+                  height: 48,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Center(
+                      child: Text(L10n.global().listNoResultsText),
+                    ),
+                  ),
+                );
+              } else {
+                return SizedBox(
+                  height: 128,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.transformedPlaceItems.length,
+                    itemBuilder: (context, i) {
+                      final item = state.transformedPlaceItems[i];
+                      return _PlaceItemView(
+                        account: context.read<_Bloc>().account,
+                        item: item,
+                        onTap: () => _onItemTap(context, item.place),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  void _onItemTap(BuildContext context, LocationGroup place) {
     Navigator.of(context).pushNamed(
       CollectionBrowser.routeName,
       arguments: CollectionBrowserArguments(
-        CollectionBuilder.byLocationGroup(widget.account, location),
+        CollectionBuilder.byLocationGroup(context.read<_Bloc>().account, place),
       ),
     );
   }
-
-  void _transformItems(List<Person> persons, LocationGroupResult locations) {
-    _transformPersons(persons);
-    _transformLocations(locations);
-  }
-
-  void _transformPersons(List<Person> persons) {
-    _personItems = persons
-        .sorted((a, b) {
-          final countCompare = (b.count ?? 0).compareTo(a.count ?? 0);
-          if (countCompare == 0) {
-            return a.name.compareTo(b.name);
-          } else {
-            return countCompare;
-          }
-        })
-        .take(10)
-        .map((e) => _LandingPersonItem(
-              account: widget.account,
-              person: e,
-              onTap: () => _onPersonItemTap(e),
-            ))
-        .toList();
-  }
-
-  void _transformLocations(LocationGroupResult locations) {
-    _locationItems = locations.name
-        .sorted((a, b) {
-          final compare = b.count.compareTo(a.count);
-          if (compare == 0) {
-            return a.place.compareTo(b.place);
-          } else {
-            return compare;
-          }
-        })
-        .take(10)
-        .map((e) => _LandingLocationItem(
-              account: widget.account,
-              name: e.place,
-              thumbUrl: NetworkRectThumbnail.imageUrlForFileId(
-                  widget.account, e.latestFileId),
-              onTap: () => _onLocationItemTap(e),
-            ))
-        .toList();
-  }
-
-  void _reqQuery() {
-    _bloc.add(SearchLandingBlocQuery(widget.account, _accountPrefController));
-  }
-
-  late final _bloc = SearchLandingBloc(KiwiContainer().resolve<DiContainer>());
-  late final _accountPrefController =
-      context.read<AccountController>().accountPrefController;
-
-  var _personItems = <_LandingPersonItem>[];
-  var _locationItems = <_LandingLocationItem>[];
-}
-
-class _LandingPersonWidget extends StatelessWidget {
-  const _LandingPersonWidget({
-    required this.account,
-    required this.person,
-    required this.label,
-    required this.coverUrl,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final content = Padding(
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(72 / 2),
-              child: PersonThumbnail(
-                dimension: 72,
-                account: account,
-                person: person,
-                coverUrl: coverUrl,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(child: _Label(label: label)),
-        ],
-      ),
-    );
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        child: content,
-      );
-    } else {
-      return content;
-    }
-  }
-
-  final Account account;
-  final Person person;
-  final String label;
-  final String? coverUrl;
-  final VoidCallback? onTap;
-}
-
-class _LandingLocationWidget extends StatelessWidget {
-  const _LandingLocationWidget({
-    required this.account,
-    required this.label,
-    required this.coverUrl,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final content = Padding(
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Center(
-            child: _LocationCoverImage(
-              dimension: 72,
-              account: account,
-              coverUrl: coverUrl,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(child: _Label(label: label)),
-        ],
-      ),
-    );
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        child: content,
-      );
-    } else {
-      return content;
-    }
-  }
-
-  final Account account;
-  final String label;
-  final String? coverUrl;
-  final VoidCallback? onTap;
-}
-
-class _Label extends StatelessWidget {
-  const _Label({
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 88,
-      child: Text(
-        label + "\n",
-        style: Theme.of(context).textTheme.bodyMedium,
-        textAlign: TextAlign.center,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
-  final String label;
 }

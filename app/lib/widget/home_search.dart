@@ -132,7 +132,6 @@ class _HomeSearchState extends State<HomeSearch>
                         if (_isShowLanding(state))
                           SliverToBoxAdapter(
                             child: SearchLanding(
-                              account: widget.account,
                               onFavoritePressed: _onLandingFavoritePressed,
                               onVideoPressed: _onLandingVideoPressed,
                             ),
