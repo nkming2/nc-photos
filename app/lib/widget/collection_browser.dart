@@ -50,6 +50,7 @@ import 'package:nc_photos/widget/draggable_item_list.dart';
 import 'package:nc_photos/widget/export_collection_dialog.dart';
 import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/file_sharer_dialog.dart';
+import 'package:nc_photos/widget/finger_listener.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
@@ -59,11 +60,11 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/share_collection_dialog.dart';
 import 'package:nc_photos/widget/shared_album_info_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
+import 'package:nc_photos/widget/sliver_visualized_scale.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_ui/np_ui.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import 'package:to_string/to_string.dart';
 
 part 'collection_browser.g.dart';
@@ -240,21 +241,11 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Listener(
+              FingerListener(
                 onPointerMove: (event) => _onPointerMove(context, event),
-                onPointerDown: (_) {
+                onFingerChanged: (finger) {
                   setState(() {
-                    ++_finger;
-                  });
-                },
-                onPointerUp: (_) {
-                  setState(() {
-                    --_finger;
-                  });
-                },
-                onPointerCancel: (_) {
-                  setState(() {
-                    --_finger;
+                    _finger = finger;
                   });
                 },
                 child: GestureDetector(
@@ -303,21 +294,10 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                             previous.scale != current.scale,
                         builder: (context, state) {
                           if (!state.isEditMode) {
-                            return SliverStack(
-                              children: [
-                                SliverOpacity(
-                                  opacity: state.scale == null
-                                      ? 1
-                                      : _scaleToCurrentOpacity(state.scale!),
-                                  sliver: const _ContentList(),
-                                ),
-                                if (state.scale != null)
-                                  SliverOpacity(
-                                    opacity: 1 -
-                                        _scaleToCurrentOpacity(state.scale!),
-                                    sliver: const _ScalingList(),
-                                  ),
-                              ],
+                            return SliverTransitionedScale(
+                              scale: state.scale,
+                              baseSliver: const _ContentList(),
+                              overlaySliver: const _ScalingList(),
                             );
                           } else {
                             if (context
@@ -408,22 +388,6 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
         builder: (_) => const SharedAlbumInfoDialog(),
         barrierDismissible: false,
       );
-    }
-  }
-
-  static double _scaleToCurrentOpacity(double scale) {
-    if (scale < 1) {
-      if (scale <= .3) {
-        return 0;
-      } else {
-        return ((scale - .3) / .7).clamp(0, 1);
-      }
-    } else {
-      if (scale >= 1.9) {
-        return 0;
-      } else {
-        return (1 - (scale - 1) / .9).clamp(0, 1);
-      }
     }
   }
 
