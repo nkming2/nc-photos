@@ -27,6 +27,8 @@ class AccountController {
     _sessionController = null;
     _sharingsController?.dispose();
     _sharingsController = null;
+    _placesController?.dispose();
+    _placesController = null;
   }
 
   Account get account => _account!;
