@@ -88,16 +88,32 @@ extension $_PreviewStateCopyWith on _PreviewState {
 }
 
 abstract class $_FileStateCopyWithWorker {
-  _FileState call({int? index, int? count});
+  _FileState call(
+      {int? index,
+      double? progress,
+      int? count,
+      Download? download,
+      bool? shouldRun});
 }
 
 class _$_FileStateCopyWithWorkerImpl implements $_FileStateCopyWithWorker {
   _$_FileStateCopyWithWorkerImpl(this.that);
 
   @override
-  _FileState call({dynamic index, dynamic count}) {
+  _FileState call(
+      {dynamic index,
+      dynamic progress = copyWithNull,
+      dynamic count,
+      dynamic download = copyWithNull,
+      dynamic shouldRun}) {
     return _FileState(
-        index: index as int? ?? that.index, count: count as int? ?? that.count);
+        index: index as int? ?? that.index,
+        progress:
+            progress == copyWithNull ? that.progress : progress as double?,
+        count: count as int? ?? that.count,
+        download:
+            download == copyWithNull ? that.download : download as Download?,
+        shouldRun: shouldRun as bool? ?? that.shouldRun);
   }
 
   final _FileState that;
@@ -165,7 +181,7 @@ extension _$_PreviewStateToString on _PreviewState {
 extension _$_FileStateToString on _FileState {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_FileState {index: $index, count: $count}";
+    return "_FileState {index: $index, progress: ${progress == null ? null : "${progress!.toStringAsFixed(3)}"}, count: $count, download: $download, shouldRun: $shouldRun}";
   }
 }
 
@@ -194,6 +210,13 @@ extension _$_SetResultToString on _SetResult {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetResult {result: $result}";
+  }
+}
+
+extension _$_CancelFileDownloadToString on _CancelFileDownload {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_CancelFileDownload {}";
   }
 }
 

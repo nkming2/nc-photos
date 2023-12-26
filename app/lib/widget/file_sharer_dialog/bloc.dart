@@ -12,12 +12,27 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetResult>(_onSetResult);
     on<_SetPublicLinkDetails>(_onSetPublicLinkDetails);
     on<_SetPasswordLinkDetails>(_onSetPasswordLinkDetails);
+    on<_CancelFileDownload>(_onCancelFileDownload);
 
     on<_SetError>(_onSetError);
   }
 
   @override
   String get tag => _log.fullName;
+
+  @override
+  bool Function(dynamic, dynamic)? get shouldLog => (currentState, nextState) {
+        currentState = currentState as _State;
+        nextState = nextState as _State;
+        if (identical(currentState.fileState, nextState.fileState)) {
+          return true;
+        }
+        // don't log download progress
+        if (currentState.fileState?.progress != nextState.fileState?.progress) {
+          return false;
+        }
+        return true;
+      };
 
   @override
   void onError(Object error, StackTrace stackTrace) {
@@ -33,7 +48,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   Future<void> _onSetMethod(_SetMethod ev, Emitter<_State> emit) async {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(method: ev.method));
     switch (ev.method) {
       case ShareMethod.file:
@@ -48,20 +63,28 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onSetResult(_SetResult ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(result: ev.result));
   }
 
   Future<void> _onSetPublicLinkDetails(
       _SetPublicLinkDetails ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     return _doShareLink(emit, albumName: ev.albumName, password: null);
   }
 
   Future<void> _onSetPasswordLinkDetails(
       _SetPasswordLinkDetails ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     return _doShareLink(emit, albumName: ev.albumName, password: ev.password);
+  }
+
+  void _onCancelFileDownload(_CancelFileDownload ev, Emitter<_State> emit) {
+    _log.info(ev);
+    state.fileState?.download?.cancel();
+    emit(state.copyWith(
+      fileState: state.fileState?.copyWith(shouldRun: false),
+    ));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
@@ -72,20 +95,43 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _doShareFile(Emitter<_State> emit) async {
     assert(getRawPlatform() == NpPlatform.android);
     emit(state.copyWith(
-      previewState: _PreviewState(index: 0, count: files.length),
+      fileState: _FileState.init(count: files.length),
     ));
     final results = <Tuple2<FileDescriptor, dynamic>>[];
     for (final pair in files.withIndex()) {
       final i = pair.item1, f = pair.item2;
       emit(state.copyWith(
-        previewState: state.previewState?.copyWith(index: i),
+        fileState: state.fileState?.copyWith(
+          index: i,
+          progress: null,
+        ),
       ));
       try {
-        final uri = await DownloadFile()(account, f, shouldNotify: false);
-        results.add(Tuple2(f, uri));
+        final download = DownloadFile().build(
+          account,
+          f,
+          shouldNotify: false,
+          onProgress: (progress) {
+            emit(state.copyWith(
+              fileState: state.fileState?.copyWith(progress: progress),
+            ));
+          },
+        );
+        emit(state.copyWith(
+          fileState: state.fileState?.copyWith(download: download),
+        ));
+        final result = await download();
+        if (state.fileState?.shouldRun == false) {
+          throw const JobCanceledException();
+        }
+        results.add(Tuple2(f, result));
       } on PermissionException catch (e, stackTrace) {
         _log.warning("[_doShareFile] Permission not granted");
         emit(state.copyWith(error: ExceptionEvent(e, stackTrace)));
+        emit(state.copyWith(result: false));
+        return;
+      } on JobCanceledException catch (_) {
+        _log.info("[_doShareFile] Job canceled");
         emit(state.copyWith(result: false));
         return;
       } catch (e, stackTrace) {

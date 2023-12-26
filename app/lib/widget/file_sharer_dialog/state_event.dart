@@ -51,14 +51,31 @@ class _PreviewState {
 class _FileState {
   const _FileState({
     required this.index,
+    required this.progress,
     required this.count,
+    required this.download,
+    required this.shouldRun,
   });
+
+  factory _FileState.init({
+    required int count,
+  }) =>
+      _FileState(
+        index: 0,
+        progress: null,
+        count: count,
+        download: null,
+        shouldRun: true,
+      );
 
   @override
   String toString() => _$toString();
 
   final int index;
+  final double? progress;
   final int count;
+  final Download? download;
+  final bool shouldRun;
 }
 
 @toString
@@ -106,6 +123,14 @@ class _SetResult implements _Event {
   String toString() => _$toString();
 
   final bool result;
+}
+
+@toString
+class _CancelFileDownload implements _Event {
+  const _CancelFileDownload();
+
+  @override
+  String toString() => _$toString();
 }
 
 /// Set the details needed to share files as public link

@@ -15,10 +15,12 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
+import 'package:nc_photos/platform/download.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/toast.dart';
 import 'package:nc_photos/use_case/copy.dart';
@@ -27,6 +29,7 @@ import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/download_file.dart';
 import 'package:nc_photos/use_case/download_preview.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
+import 'package:nc_photos/widget/download_progress_dialog.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';
 import 'package:nc_photos/widget/share_link_multiple_files_dialog.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
@@ -41,8 +44,6 @@ part 'file_sharer_dialog.g.dart';
 part 'file_sharer_dialog/bloc.dart';
 part 'file_sharer_dialog/state_event.dart';
 part 'file_sharer_dialog/type.dart';
-
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 
 /// Dialog to let user share files with different options
 ///
@@ -78,7 +79,7 @@ class _WrappedFileSharerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null) {
@@ -98,7 +99,7 @@ class _WrappedFileSharerDialog extends StatelessWidget {
             }
           },
         ),
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) =>
               previous.message != current.message,
           listener: (context, state) {
@@ -111,7 +112,7 @@ class _WrappedFileSharerDialog extends StatelessWidget {
             }
           },
         ),
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) => previous.result != current.result,
           listener: (context, state) {
             if (state.result != null) {
@@ -146,10 +147,8 @@ class _ShareMethodDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSupportPerview = context
-        .read<_Bloc>()
-        .files
-        .any((f) => file_util.isSupportedImageFormat(f));
+    final isSupportPerview =
+        context.bloc.files.any((f) => file_util.isSupportedImageFormat(f));
     return SimpleDialog(
       title: Text(L10n.global().shareMethodDialogTitle),
       children: [
@@ -161,9 +160,7 @@ class _ShareMethodDialog extends StatelessWidget {
                 subtitle: Text(L10n.global().shareMethodPreviewDescription),
               ),
               onPressed: () {
-                context
-                    .read<_Bloc>()
-                    .add(const _SetMethod(ShareMethod.preview));
+                context.addEvent(const _SetMethod(ShareMethod.preview));
               },
             ),
           SimpleDialogOption(
@@ -172,7 +169,7 @@ class _ShareMethodDialog extends StatelessWidget {
               subtitle: Text(L10n.global().shareMethodOriginalFileDescription),
             ),
             onPressed: () {
-              context.read<_Bloc>().add(const _SetMethod(ShareMethod.file));
+              context.addEvent(const _SetMethod(ShareMethod.file));
             },
           ),
         ],
@@ -182,7 +179,7 @@ class _ShareMethodDialog extends StatelessWidget {
             subtitle: Text(L10n.global().shareMethodPublicLinkDescription),
           ),
           onPressed: () {
-            context.read<_Bloc>().add(const _SetMethod(ShareMethod.publicLink));
+            context.addEvent(const _SetMethod(ShareMethod.publicLink));
           },
         ),
         SimpleDialogOption(
@@ -191,9 +188,7 @@ class _ShareMethodDialog extends StatelessWidget {
             subtitle: Text(L10n.global().shareMethodPasswordLinkDescription),
           ),
           onPressed: () {
-            context
-                .read<_Bloc>()
-                .add(const _SetMethod(ShareMethod.passwordLink));
+            context.addEvent(const _SetMethod(ShareMethod.passwordLink));
           },
         ),
       ],
@@ -206,18 +201,24 @@ class _ShareFileDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) =>
-          previous.previewState?.index != current.previewState?.index ||
-          previous.previewState?.count != current.previewState?.count,
-      builder: (context, state) {
-        final text = state.previewState?.index != null &&
-                state.previewState?.count != null
-            ? " (${state.previewState!.index}/${state.previewState!.count})"
-            : "";
-        return ProcessingDialog(
-          text: L10n.global().shareDownloadingDialogContent + text,
-        );
+    return _BlocSelector<_FileState?>(
+      selector: (state) => state.fileState,
+      builder: (context, fileState) {
+        if (fileState != null) {
+          return DownloadProgressDialog(
+            max: fileState.count,
+            current: fileState.index,
+            progress: fileState.progress,
+            label: context.bloc.files[fileState.index].filename,
+            onCancel: () {
+              context.addEvent(const _CancelFileDownload());
+            },
+          );
+        } else {
+          return ProcessingDialog(
+            text: L10n.global().genericProcessingDialogContent,
+          );
+        }
       },
     );
   }
@@ -288,7 +289,7 @@ class _SharePublicLinkDialogState extends State<_SharePublicLinkDialog> {
     }
   }
 
-  late final _bloc = context.read<_Bloc>();
+  late final _bloc = context.bloc;
 }
 
 class _SharePasswordLinkDialog extends StatefulWidget {
@@ -368,5 +369,15 @@ class _SharePasswordLinkDialogState extends State<_SharePasswordLinkDialog> {
     }
   }
 
-  late final _bloc = context.read<_Bloc>();
+  late final _bloc = context.bloc;
+}
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  // _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
 }

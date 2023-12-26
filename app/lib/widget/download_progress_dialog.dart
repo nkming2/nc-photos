@@ -27,7 +27,7 @@ class DownloadProgressDialog extends StatelessWidget {
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Text(
-                "$current/$max",
+                "${current + 1}/$max",
                 style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
