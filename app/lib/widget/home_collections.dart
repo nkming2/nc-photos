@@ -46,11 +46,11 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
 part 'home_collections.g.dart';
+part 'home_collections/app_bar.dart';
 part 'home_collections/bloc.dart';
 part 'home_collections/state_event.dart';
 part 'home_collections/type.dart';
-
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+part 'home_collections/view.dart';
 
 /// Show and manage a list of [Collection]s
 class HomeCollections extends StatelessWidget {
@@ -91,14 +91,14 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) =>
               previous.collections != current.collections,
           listener: (context, state) {
             _bloc.add(_TransformItems(state.collections));
           },
         ),
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null && isPageVisible()) {
@@ -109,7 +109,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
             }
           },
         ),
-        BlocListener<_Bloc, _State>(
+        _BlocListener(
           listenWhen: (previous, current) =>
               previous.removeError != current.removeError,
           listener: (context, state) {
@@ -266,336 +266,12 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
   late final _Bloc _bloc = context.read();
 }
 
-class _AppBar extends StatelessWidget {
-  const _AppBar();
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
-  @override
-  Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
-      builder: (context, state) => HomeSliverAppBar(
-        account: context.read<_Bloc>().account,
-        isShowProgressIcon: state.isLoading,
-        menuActions: [
-          PopupMenuItem(
-            value: _menuValueSort,
-            child: Text(L10n.global().sortTooltip),
-          ),
-          PopupMenuItem(
-            value: _menuValueImport,
-            child: Text(L10n.global().importFoldersTooltip),
-          ),
-        ],
-        onSelectedMenuActions: (option) {
-          switch (option) {
-            case _menuValueSort:
-              _onSortPressed(context);
-              break;
-
-            case _menuValueImport:
-              _onImportPressed(context);
-              break;
-          }
-        },
-      ),
-    );
-  }
-
-  Future<void> _onSortPressed(BuildContext context) async {
-    final sort = context.read<_Bloc>().state.sort;
-    final result = await showDialog<collection_util.CollectionSort>(
-      context: context,
-      builder: (context) => FancyOptionPicker(
-        title: Text(L10n.global().sortOptionDialogTitle),
-        items: [
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionTimeDescendingLabel,
-            isSelected: sort == collection_util.CollectionSort.dateDescending,
-            onSelect: () {
-              Navigator.of(context)
-                  .pop(collection_util.CollectionSort.dateDescending);
-            },
-          ),
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionTimeAscendingLabel,
-            isSelected: sort == collection_util.CollectionSort.dateAscending,
-            onSelect: () {
-              Navigator.of(context)
-                  .pop(collection_util.CollectionSort.dateAscending);
-            },
-          ),
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionAlbumNameLabel,
-            isSelected: sort == collection_util.CollectionSort.nameAscending,
-            onSelect: () {
-              Navigator.of(context)
-                  .pop(collection_util.CollectionSort.nameAscending);
-            },
-          ),
-          FancyOptionPickerItem(
-            label: L10n.global().sortOptionAlbumNameDescendingLabel,
-            isSelected: sort == collection_util.CollectionSort.nameDescending,
-            onSelect: () {
-              Navigator.of(context)
-                  .pop(collection_util.CollectionSort.nameDescending);
-            },
-          ),
-        ],
-      ),
-    );
-    if (result == null) {
-      return;
-    }
-    context.read<_Bloc>().add(_SetCollectionSort(result));
-  }
-
-  void _onImportPressed(BuildContext context) {
-    Navigator.of(context).pushNamed(AlbumImporter.routeName,
-        arguments: AlbumImporterArguments(context.read<_Bloc>().account));
-  }
-
-  static const _menuValueImport = 0;
-  static const _menuValueSort = 1;
-}
-
-@npLog
-class _SelectionAppBar extends StatelessWidget {
-  const _SelectionAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) =>
-          previous.selectedItems != current.selectedItems,
-      builder: (context, state) => SelectionAppBar(
-        count: state.selectedItems.length,
-        onClosePressed: () {
-          context.read<_Bloc>().add(const _SetSelectedItems(items: {}));
-        },
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: L10n.global().deleteTooltip,
-            onPressed: () {
-              context.read<_Bloc>().add(const _RemoveSelectedItems());
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ButtonGrid extends StatelessWidget {
-  const _ButtonGrid({
-    required this.account,
-    required this.isEnabled,
-    this.onSharingPressed,
-    this.onEnhancedPhotosPressed,
-    this.onArchivePressed,
-    this.onTrashbinPressed,
-    this.onNewCollectionPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // needed to workaround a scrolling bug when there are more than one
-    // SliverStaggeredGrids in a CustomScrollView
-    // see: https://github.com/letsar/flutter_staggered_grid_view/issues/98 and
-    // https://github.com/letsar/flutter_staggered_grid_view/issues/265
-    return SliverToBoxAdapter(
-      child: StaggeredGridView.extent(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(0),
-        maxCrossAxisExtent: 256,
-        staggeredTiles: List.filled(5, const StaggeredTile.fit(1)),
-        children: [
-          _ButtonGridItemView(
-            icon: Icons.share_outlined,
-            label: L10n.global().collectionSharingLabel,
-            isShowIndicator: AccountPref.of(account).hasNewSharedAlbumOr(),
-            isEnabled: isEnabled,
-            onTap: () {
-              onSharingPressed?.call();
-            },
-          ),
-          if (features.isSupportEnhancement)
-            _ButtonGridItemView(
-              icon: Icons.auto_fix_high_outlined,
-              label: L10n.global().collectionEditedPhotosLabel,
-              isEnabled: isEnabled,
-              onTap: () {
-                onEnhancedPhotosPressed?.call();
-              },
-            ),
-          _ButtonGridItemView(
-            icon: Icons.archive_outlined,
-            label: L10n.global().albumArchiveLabel,
-            isEnabled: isEnabled,
-            onTap: () {
-              onArchivePressed?.call();
-            },
-          ),
-          _ButtonGridItemView(
-            icon: Icons.delete_outlined,
-            label: L10n.global().albumTrashLabel,
-            isEnabled: isEnabled,
-            onTap: () {
-              onTrashbinPressed?.call();
-            },
-          ),
-          _ButtonGridItemView(
-            icon: Icons.add,
-            label: L10n.global().createCollectionTooltip,
-            isEnabled: isEnabled,
-            onTap: () {
-              onNewCollectionPressed?.call();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  final Account account;
-  final bool isEnabled;
-  final VoidCallback? onSharingPressed;
-  final VoidCallback? onEnhancedPhotosPressed;
-  final VoidCallback? onArchivePressed;
-  final VoidCallback? onTrashbinPressed;
-  final VoidCallback? onNewCollectionPressed;
-}
-
-class _ButtonGridItemView extends StatelessWidget {
-  const _ButtonGridItemView({
-    required this.icon,
-    required this.label,
-    this.isShowIndicator = false,
-    required this.isEnabled,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: ActionChip(
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        labelPadding: const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
-        // specify icon size explicitly to workaround size flickering during
-        // theme transition
-        avatar: Icon(icon, size: 18),
-        label: Row(
-          children: [
-            Expanded(
-              child: Text(label),
-            ),
-            if (isShowIndicator)
-              Icon(
-                Icons.circle,
-                color: Theme.of(context).colorScheme.tertiary,
-                size: 8,
-              ),
-          ],
-        ),
-        onPressed: isEnabled ? onTap : null,
-      ),
-    );
-  }
-
-  final IconData icon;
-  final String label;
-  final bool isShowIndicator;
-  final bool isEnabled;
-  final VoidCallback? onTap;
-}
-
-class _ItemView extends StatelessWidget {
-  const _ItemView({
-    required this.account,
-    required this.item,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget? icon;
-    switch (item.itemType) {
-      case _ItemType.ncAlbum:
-        icon = const Icon(Icons.cloud);
-        break;
-      case _ItemType.album:
-        icon = null;
-        break;
-      case _ItemType.tagAlbum:
-        icon = const Icon(Icons.local_offer);
-        break;
-      case _ItemType.dirAlbum:
-        icon = const Icon(Icons.folder);
-        break;
-    }
-    String subtitle = "";
-    if (item.isShared) {
-      subtitle = "${L10n.global().albumSharedLabel} | ";
-    }
-    subtitle += item.subtitle ?? "";
-    return CollectionGridItem(
-      cover: _CollectionCover(
-        account: account,
-        url: item.coverUrl,
-      ),
-      title: item.name,
-      subtitle: subtitle,
-      icon: icon,
-    );
-  }
-
-  final Account account;
-  final _Item item;
-}
-
-class _CollectionCover extends StatelessWidget {
-  const _CollectionCover({
-    required this.account,
-    required this.url,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        color: Theme.of(context).listPlaceholderBackgroundColor,
-        constraints: const BoxConstraints.expand(),
-        child: url != null
-            ? FittedBox(
-                clipBehavior: Clip.hardEdge,
-                fit: BoxFit.cover,
-                child: CachedNetworkImage(
-                  cacheManager: CoverCacheManager.inst,
-                  imageUrl: url!,
-                  httpHeaders: {
-                    "Authorization":
-                        AuthUtil.fromAccount(account).toHeaderValue(),
-                  },
-                  fadeInDuration: const Duration(),
-                  filterQuality: FilterQuality.high,
-                  errorWidget: (context, url, error) {
-                    // just leave it empty
-                    return Container();
-                  },
-                  imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-                ),
-              )
-            : Icon(
-                Icons.panorama,
-                color: Theme.of(context).listPlaceholderForegroundColor,
-                size: 88,
-              ),
-      ),
-    );
-  }
-
-  final Account account;
-  final String? url;
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
 }

@@ -72,8 +72,7 @@ part 'collection_browser/app_bar.dart';
 part 'collection_browser/bloc.dart';
 part 'collection_browser/state_event.dart';
 part 'collection_browser/type.dart';
-
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+part 'collection_browser/view.dart';
 
 class CollectionBrowserArguments {
   const CollectionBrowserArguments(this.collection);
@@ -160,7 +159,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
       child: Scaffold(
         body: MultiBlocListener(
           listeners: [
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.items != current.items,
               listener: (context, state) {
@@ -169,7 +168,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 ));
               },
             ),
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.editItems != current.editItems,
               listener: (context, state) {
@@ -180,7 +179,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 }
               },
             ),
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.importResult != current.importResult,
               listener: (context, state) {
@@ -192,7 +191,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 }
               },
             ),
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.isEditMode != current.isEditMode,
               listener: (context, state) {
@@ -212,7 +211,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 }
               },
             ),
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.error != current.error,
               listener: (context, state) {
@@ -225,7 +224,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 }
               },
             ),
-            BlocListener<_Bloc, _State>(
+            _BlocListener(
               listenWhen: (previous, current) =>
                   previous.message != current.message,
               listener: (context, state) {
@@ -300,10 +299,8 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                               overlaySliver: const _ScalingList(),
                             );
                           } else {
-                            if (context
-                                .read<_Bloc>()
-                                .isCollectionCapabilityPermitted(
-                                    CollectionCapability.manualSort)) {
+                            if (context.bloc.isCollectionCapabilityPermitted(
+                                CollectionCapability.manualSort)) {
                               return const _EditContentList();
                             } else {
                               return const _UnmodifiableEditContentList();
@@ -338,8 +335,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
   }
 
   void _onPointerMove(BuildContext context, PointerMoveEvent event) {
-    final bloc = context.read<_Bloc>();
-    if (!bloc.state.isDragging) {
+    if (!context.state.isDragging) {
       return;
     }
     if (event.position.dy >= MediaQuery.of(context).size.height - 100) {
@@ -391,197 +387,18 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
     }
   }
 
-  late final _bloc = context.read<_Bloc>();
+  late final _bloc = context.bloc;
   final _scrollController = ScrollController();
   bool? _isDragScrollingDown;
-  int _finger = 0;
+  var _finger = 0;
 }
 
-class _ContentList extends StatelessWidget {
-  const _ContentList();
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
-  @override
-  Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) => previous.zoom != current.zoom,
-      builder: (context, state) => _ContentListBody(
-        maxCrossAxisExtent: photo_list_util.getThumbSize(state.zoom).toDouble(),
-      ),
-    );
-  }
-}
-
-class _ScalingList extends StatelessWidget {
-  const _ScalingList();
-
-  @override
-  Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) => previous.scale != current.scale,
-      builder: (context, state) {
-        if (state.scale == null) {
-          return const SizedBox.shrink();
-        }
-        int nextZoom;
-        if (state.scale! > 1) {
-          nextZoom = state.zoom + 1;
-        } else {
-          nextZoom = state.zoom - 1;
-        }
-        nextZoom = nextZoom.clamp(-1, 2);
-        return _ContentListBody(
-          maxCrossAxisExtent: photo_list_util.getThumbSize(nextZoom).toDouble(),
-        );
-      },
-    );
-  }
-}
-
-class _ContentListBody extends StatelessWidget {
-  const _ContentListBody({
-    required this.maxCrossAxisExtent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = context.read<_Bloc>();
-    return _BlocBuilder(
-      buildWhen: (previous, current) =>
-          previous.collection != current.collection ||
-          previous.transformedItems != current.transformedItems ||
-          previous.selectedItems != current.selectedItems,
-      builder: (context, state) => SelectableItemList<_Item>(
-        maxCrossAxisExtent: maxCrossAxisExtent,
-        items: state.transformedItems,
-        itemBuilder: (context, _, item) => item.buildWidget(context),
-        staggeredTileBuilder: (_, item) => item.staggeredTile,
-        selectedItems: state.selectedItems,
-        onSelectionChange: (_, selected) {
-          bloc.add(_SetSelectedItems(items: selected.cast()));
-        },
-        onItemTap: (context, index, _) {
-          if (state.transformedItems[index] is! _FileItem) {
-            return;
-          }
-          final actualIndex = index -
-              state.transformedItems
-                  .sublist(0, index)
-                  .where((e) => e is! _FileItem)
-                  .length;
-          Navigator.of(context).pushNamed(
-            Viewer.routeName,
-            arguments: ViewerArguments(
-              bloc.account,
-              state.transformedItems
-                  .whereType<_FileItem>()
-                  .map((e) => e.file)
-                  .toList(),
-              actualIndex,
-              fromCollection: ViewerCollectionData(
-                state.collection,
-                state.transformedItems
-                    .whereType<_ActualItem>()
-                    .map((e) => e.original)
-                    .toList(),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  final double maxCrossAxisExtent;
-}
-
-class _EditContentList extends StatelessWidget {
-  const _EditContentList();
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<int>(
-      stream: context.read<PrefController>().albumBrowserZoomLevel,
-      initialData: context.read<PrefController>().albumBrowserZoomLevel.value,
-      builder: (_, zoomLevel) {
-        if (zoomLevel.hasError) {
-          context.read<_Bloc>().add(
-              _SetMessage(L10n.global().writePreferenceFailureNotification));
-        }
-        return _BlocBuilder(
-          buildWhen: (previous, current) =>
-              previous.editTransformedItems != current.editTransformedItems,
-          builder: (context, state) {
-            if (context.read<_Bloc>().isCollectionCapabilityPermitted(
-                CollectionCapability.manualSort)) {
-              return DraggableItemList<_Item>(
-                maxCrossAxisExtent: photo_list_util
-                    .getThumbSize(zoomLevel.requireData)
-                    .toDouble(),
-                items: state.editTransformedItems ?? state.transformedItems,
-                itemBuilder: (context, _, item) => item.buildWidget(context),
-                itemDragFeedbackBuilder: (context, _, item) =>
-                    item.buildDragFeedbackWidget(context),
-                staggeredTileBuilder: (_, item) => item.staggeredTile,
-                onDragResult: (results) {
-                  context.read<_Bloc>().add(_EditManualSort(results));
-                },
-                onDraggingChanged: (value) {
-                  context.read<_Bloc>().add(_SetDragging(value));
-                },
-              );
-            } else {
-              return SelectableItemList<_Item>(
-                maxCrossAxisExtent: photo_list_util
-                    .getThumbSize(zoomLevel.requireData)
-                    .toDouble(),
-                items: state.editTransformedItems ?? state.transformedItems,
-                itemBuilder: (context, _, item) => item.buildWidget(context),
-                staggeredTileBuilder: (_, item) => item.staggeredTile,
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-}
-
-/// Unmodifiable content list under edit mode
-class _UnmodifiableEditContentList extends StatelessWidget {
-  const _UnmodifiableEditContentList();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverIgnorePointer(
-      ignoring: true,
-      sliver: SliverOpacity(
-        opacity: .25,
-        sliver: StreamBuilder<int>(
-          stream: context.read<PrefController>().albumBrowserZoomLevel,
-          initialData:
-              context.read<PrefController>().albumBrowserZoomLevel.value,
-          builder: (_, zoomLevel) {
-            if (zoomLevel.hasError) {
-              context.read<_Bloc>().add(_SetMessage(
-                  L10n.global().writePreferenceFailureNotification));
-            }
-            return _BlocBuilder(
-              buildWhen: (previous, current) =>
-                  previous.editTransformedItems != current.editTransformedItems,
-              builder: (context, state) {
-                return SelectableItemList<_Item>(
-                  maxCrossAxisExtent: photo_list_util
-                      .getThumbSize(zoomLevel.requireData)
-                      .toDouble(),
-                  items: state.editTransformedItems ?? state.transformedItems,
-                  itemBuilder: (context, _, item) => item.buildWidget(context),
-                  staggeredTileBuilder: (_, item) => item.staggeredTile,
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
 }

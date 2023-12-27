@@ -11,8 +11,8 @@ class _AppBar extends StatelessWidget {
           previous.items != current.items ||
           previous.collection != current.collection,
       builder: (context, state) {
-        final bloc = context.read<_Bloc>();
-        final adapter = CollectionAdapter.of(c, bloc.account, state.collection);
+        final adapter =
+            CollectionAdapter.of(c, context.bloc.account, state.collection);
         final canRename = adapter.isPermitted(CollectionCapability.rename);
         final canManualCover =
             adapter.isPermitted(CollectionCapability.manualCover);
@@ -69,7 +69,8 @@ class _AppBar extends StatelessWidget {
                   ],
                   if (state.collection.contentProvider
                           is CollectionAlbumProvider &&
-                      CollectionAdapter.of(c, bloc.account, state.collection)
+                      CollectionAdapter.of(
+                              c, context.bloc.account, state.collection)
                           .isPermitted(CollectionCapability.share))
                     PopupMenuItem(
                       value: _MenuOption.albumFixShare,
