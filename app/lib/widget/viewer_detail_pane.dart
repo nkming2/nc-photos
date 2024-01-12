@@ -480,7 +480,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         return;
       }
       try {
-        await UpdateProperty(_c.fileRepo)
+        await UpdateProperty(_c)
             .updateOverrideDateTime(widget.account, _file!, value);
         if (mounted) {
           setState(() {

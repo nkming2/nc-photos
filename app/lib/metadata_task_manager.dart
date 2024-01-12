@@ -37,8 +37,8 @@ class MetadataTask {
       for (final r in account.roots) {
         final dir = File(path: file_util.unstripPath(account, r));
         hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
-        final op = UpdateMissingMetadata(_c.fileRepo,
-            const _UpdateMissingMetadataConfigProvider(), geocoder);
+        final op = UpdateMissingMetadata(
+            _c, const _UpdateMissingMetadataConfigProvider(), geocoder);
         await for (final _ in op(account, dir)) {
           if (!Pref().isEnableExifOr()) {
             _log.info("[call] EXIF disabled, task ending immaturely");
@@ -48,8 +48,8 @@ class MetadataTask {
         }
       }
       if (!hasScanShareFolder) {
-        final op = UpdateMissingMetadata(_c.fileRepo,
-            const _UpdateMissingMetadataConfigProvider(), geocoder);
+        final op = UpdateMissingMetadata(
+            _c, const _UpdateMissingMetadataConfigProvider(), geocoder);
         await for (final _ in op(
           account,
           shareFolder,

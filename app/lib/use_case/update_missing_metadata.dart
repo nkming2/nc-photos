@@ -4,6 +4,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
@@ -26,7 +27,7 @@ abstract class UpdateMissingMetadataConfigProvider {
 
 @npLog
 class UpdateMissingMetadata {
-  UpdateMissingMetadata(this.fileRepo, this.configProvider, this.geocoder);
+  UpdateMissingMetadata(this._c, this.configProvider, this.geocoder);
 
   /// Update metadata for all files that support one under a dir
   ///
@@ -44,7 +45,7 @@ class UpdateMissingMetadata {
     bool isRecursive = true,
     bool Function(File file)? filter,
   }) async* {
-    final dataStream = ScanMissingMetadata(fileRepo)(
+    final dataStream = ScanMissingMetadata(_c.fileRepo)(
       account,
       root,
       isRecursive: isRecursive,
@@ -78,7 +79,7 @@ class UpdateMissingMetadata {
             return;
           }
           _log.fine("[call] Updating metadata for ${file.path}");
-          final binary = await GetFileBinary(fileRepo)(account, file);
+          final binary = await GetFileBinary(_c.fileRepo)(account, file);
           final metadata =
               (await LoadMetadata().loadRemote(account, file, binary)).copyWith(
             fileEtag: file.etag,
@@ -111,7 +112,7 @@ class UpdateMissingMetadata {
         }
 
         if (metadataUpdate != null || locationUpdate != null) {
-          await UpdateProperty(fileRepo)(
+          await UpdateProperty(_c)(
             account,
             file,
             metadata: metadataUpdate,
@@ -164,7 +165,7 @@ class UpdateMissingMetadata {
     }
   }
 
-  final FileRepo fileRepo;
+  final DiContainer _c;
   final UpdateMissingMetadataConfigProvider configProvider;
   final ReverseGeocoder geocoder;
 

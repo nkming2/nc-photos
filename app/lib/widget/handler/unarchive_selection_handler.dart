@@ -30,8 +30,7 @@ class UnarchiveSelectionHandler {
     return await NotifiedListAction<File>(
       list: selectedFiles,
       action: (file) async {
-        await UpdateProperty(_c.fileRepo)
-            .updateIsArchived(account, file, false);
+        await UpdateProperty(_c).updateIsArchived(account, file, false);
       },
       processingText: shouldShowProcessingText
           ? L10n.global()

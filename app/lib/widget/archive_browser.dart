@@ -242,7 +242,7 @@ class _ArchiveBrowserState extends State<ArchiveBrowser>
     final failures = <File>[];
     for (final f in selectedFiles) {
       try {
-        await UpdateProperty(c.fileRepo)
+        await UpdateProperty(c)
             .updateIsArchived(widget.account, f, false);
       } catch (e, stacktrace) {
         _log.shout(

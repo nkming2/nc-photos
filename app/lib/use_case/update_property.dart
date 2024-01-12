@@ -2,7 +2,9 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
@@ -11,11 +13,11 @@ part 'update_property.g.dart';
 
 @npLog
 class UpdateProperty {
-  UpdateProperty(this.fileRepo);
+  const UpdateProperty(this._c);
 
   Future<void> call(
     Account account,
-    File file, {
+    FileDescriptor file, {
     OrNull<Metadata>? metadata,
     OrNull<bool>? isArchived,
     OrNull<DateTime>? overrideDateTime,
@@ -32,11 +34,7 @@ class UpdateProperty {
       return;
     }
 
-    if (metadata?.obj != null && metadata!.obj!.fileEtag != file.etag) {
-      _log.warning(
-          "[call] Metadata fileEtag mismatch with actual file's (metadata: ${metadata.obj!.fileEtag}, file: ${file.etag})");
-    }
-    await fileRepo.updateProperty(
+    await _c.fileRepo2.updateProperty(
       account,
       file,
       metadata: metadata,
@@ -46,6 +44,27 @@ class UpdateProperty {
       location: location,
     );
 
+    _notify(
+      account,
+      file,
+      metadata: metadata,
+      isArchived: isArchived,
+      overrideDateTime: overrideDateTime,
+      favorite: favorite,
+      location: location,
+    );
+  }
+
+  @Deprecated("legacy")
+  void _notify(
+    Account account,
+    FileDescriptor file, {
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
+    OrNull<ImageLocation>? location,
+  }) {
     int properties = 0;
     if (metadata != null) {
       properties |= FilePropertyUpdatedEvent.propMetadata;
@@ -68,7 +87,7 @@ class UpdateProperty {
         .fire(FilePropertyUpdatedEvent(account, file, properties));
   }
 
-  final FileRepo fileRepo;
+  final DiContainer _c;
 }
 
 extension UpdatePropertyExtension on UpdateProperty {

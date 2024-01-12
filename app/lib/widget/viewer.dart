@@ -546,7 +546,7 @@ class _ViewerState extends State<Viewer>
     _pageStates[index]!.isProcessingFavorite = true;
     try {
       await NotifiedAction(
-        () => UpdateProperty(c.fileRepo)(
+        () => UpdateProperty(c)(
           widget.account,
           file,
           favorite: true,
@@ -580,7 +580,7 @@ class _ViewerState extends State<Viewer>
     _pageStates[index]!.isProcessingFavorite = true;
     try {
       await NotifiedAction(
-        () => UpdateProperty(c.fileRepo)(
+        () => UpdateProperty(c)(
           widget.account,
           file,
           favorite: false,

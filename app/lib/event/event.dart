@@ -49,7 +49,7 @@ class FilePropertyUpdatedEvent {
   FilePropertyUpdatedEvent(this.account, this.file, this.properties);
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final int properties;
 
   // Bit masks for properties field
