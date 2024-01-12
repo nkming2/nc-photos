@@ -161,9 +161,8 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                                 const EnhancedPhotoBrowserArguments(null));
                       },
                       onArchivePressed: () {
-                        Navigator.of(context).pushNamed(
-                            ArchiveBrowser.routeName,
-                            arguments: ArchiveBrowserArguments(_bloc.account));
+                        Navigator.of(context)
+                            .pushNamed(ArchiveBrowser.routeName);
                       },
                       onTrashbinPressed: () {
                         Navigator.of(context).pushNamed(
