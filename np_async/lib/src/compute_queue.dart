@@ -19,12 +19,13 @@ class ComputeQueue<T, U> {
   Future<void> _startProcessing() async {
     while (_queue.isNotEmpty) {
       final ev = _queue.first;
+      final U result;
       try {
-        final result = await compute(ev.callback, ev.message);
-        ev.onResult(result);
+        result = await compute(ev.callback, ev.message);
       } finally {
         _queue.removeFirst();
       }
+      ev.onResult(result);
     }
   }
 
