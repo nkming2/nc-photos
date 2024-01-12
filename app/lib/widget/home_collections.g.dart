@@ -96,7 +96,7 @@ extension _$_ItemNpLog on _Item {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: $selectedItems, error: $error, removeError: $removeError}";
+    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, error: $error, removeError: $removeError}";
   }
 }
 
@@ -124,7 +124,7 @@ extension _$_TransformItemsToString on _TransformItems {
 extension _$_SetSelectedItemsToString on _SetSelectedItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_SetSelectedItems {items: $items}";
+    return "_SetSelectedItems {items: {length: ${items.length}}}";
   }
 }
 

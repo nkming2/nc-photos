@@ -6,6 +6,7 @@ targets:
           formatStringNameMapping:
             double: "${$?.toStringAsFixed(3)}"
             List: "[length: ${$?.length}]"
+            Set: "{length: ${$?.length}}"
             File: "${$?.path}"
             FileDescriptor: "${$?.fdPath}"
           useEnumName: true
