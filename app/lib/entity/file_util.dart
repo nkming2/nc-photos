@@ -49,11 +49,17 @@ bool isNcAlbumFile(Account account, FileDescriptor file) =>
 bool isUnderDir(FileDescriptor file, FileDescriptor dir) =>
     file.fdPath.startsWith("${dir.fdPath}/");
 
+bool isUnderDirPath(String filePath, String dirPath) =>
+    filePath.startsWith("$dirPath/");
+
 /// Return if [file] is [dir] or located under [dir]
 ///
 /// See [isUnderDir]
 bool isOrUnderDir(FileDescriptor file, FileDescriptor dir) =>
     file.fdPath == dir.fdPath || isUnderDir(file, dir);
+
+bool isOrUnderDirPath(String filePath, String dirPath) =>
+    filePath == dirPath || isUnderDirPath(filePath, dirPath);
 
 /// Convert a stripped path to a full path
 ///

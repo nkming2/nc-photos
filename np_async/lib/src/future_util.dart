@@ -6,6 +6,10 @@ extension FutureNotNullExtension<T> on Future<T?> {
   Future<T> notNull() async => (await this)!;
 }
 
+extension FutureCollectionExtension<T> on Future<Iterable<T>> {
+  Future<T> get first async => (await this).first;
+}
+
 Future<List<T>> waitOr<T>(
   Iterable<Future<T>> futures,
   T Function(Object error, StackTrace? stackTrace) onError,

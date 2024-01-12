@@ -420,7 +420,7 @@ class FileSqliteDbDataSource implements FileDataSource {
   @override
   remove(Account account, FileDescriptor f) {
     _log.info("[remove] ${f.fdPath}");
-    return FileSqliteCacheRemover(_c)(account, f);
+    return _c.fileRepo2.remove(account, f);
   }
 
   @override
