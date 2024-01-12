@@ -55,31 +55,28 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetMessage>(_onSetMessage);
 
     if (!_isAdHocCollection) {
-      _collectionControllerSubscription =
-          collectionsController.stream.listen((event) {
+      _subscriptions.add(collectionsController.stream.listen((event) {
         final c = event.data
             .firstWhere((d) => state.collection.compareIdentity(d.collection));
         if (!identical(c, state.collection)) {
           add(_UpdateCollection(c.collection));
         }
-      });
+      }));
     } else {
       _log.info("[_Bloc] Ad hoc collection");
     }
-    _itemsControllerSubscription = itemsController.stream.listen(
-      (_) {},
-      onError: (e, stackTrace) {
-        add(_SetError(e, stackTrace));
-      },
-    );
   }
 
   @override
   Future<void> close() {
-    _collectionControllerSubscription?.cancel();
-    _itemsControllerSubscription?.cancel();
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     return super.close();
   }
+
+  @override
+  String get tag => _log.fullName;
 
   @override
   bool Function(dynamic, dynamic)? get shouldLog => (currentState, nextState) {
@@ -105,37 +102,38 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onUpdateCollection(_UpdateCollection ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(collection: ev.collection));
     _updateCover(emit);
   }
 
-  Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) {
-    _log.info("$ev");
+  Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) async {
+    _log.info(ev);
     return emit.forEach<CollectionItemStreamData>(
-      itemsController.stream.handleError((e, stackTrace) {
+      itemsController.stream,
+      onData: (data) => state.copyWith(
+        items: data.items,
+        isLoading: data.hasNext,
+      ),
+      onError: (e, stackTrace) {
         _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
         return state.copyWith(
           isLoading: false,
           error: ExceptionEvent(e, stackTrace),
         );
-      }),
-      onData: (data) => state.copyWith(
-        items: data.items,
-        isLoading: data.hasNext,
-      ),
+      },
     );
   }
 
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final result = _transformItems(ev.items, state.collection.itemSort);
     emit(state.copyWith(transformedItems: result.transformed));
     _updateCover(emit);
   }
 
   void _onDownload(_Download ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     if (state.items.isNotEmpty) {
       unawaited(DownloadHandler(_c).downloadFiles(
         account,
@@ -156,17 +154,17 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onBeginEdit(_BeginEdit ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(isEditMode: true));
   }
 
   void _onEditName(_EditName ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(editName: ev.name));
   }
 
   void _onAddLabelToCollection(_AddLabelToCollection ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     assert(isCollectionCapabilityPermitted(CollectionCapability.labelItem));
     emit(state.copyWith(
       editItems: [
@@ -177,7 +175,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onEditSort(_EditSort ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final result = _transformItems(state.editItems ?? state.items, ev.sort);
     emit(state.copyWith(
       editSort: ev.sort,
@@ -186,7 +184,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onEditManualSort(_EditManualSort ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     assert(isCollectionCapabilityPermitted(CollectionCapability.manualSort));
     emit(state.copyWith(
       editSort: CollectionItemSort.manual,
@@ -197,14 +195,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onTransformEditItems(_TransformEditItems ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final result =
         _transformItems(ev.items, state.editSort ?? state.collection.itemSort);
     emit(state.copyWith(editTransformedItems: result.transformed));
   }
 
   Future<void> _onDoneEdit(_DoneEdit ev, Emitter<_State> emit) async {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(isEditBusy: true));
     try {
       await collectionsController.edit(
@@ -231,7 +229,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onCancelEdit(_CancelEdit ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(
       isEditMode: false,
       editName: null,
@@ -242,12 +240,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onUnsetCover(_UnsetCover ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     collectionsController.edit(state.collection, cover: const OrNull(null));
   }
 
   void _onSetSelectedItems(_SetSelectedItems ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final adapter = CollectionAdapter.of(_c, account, state.collection);
     emit(state.copyWith(
       selectedItems: ev.items,
@@ -264,7 +262,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onDownloadSelectedItems(
       _DownloadSelectedItems ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
     final selectedFiles =
@@ -276,7 +274,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onAddSelectedItemsToCollection(
       _AddSelectedItemsToCollection ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
     final selectedFiles =
@@ -294,7 +292,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onRemoveSelectedItemsFromCollection(
       _RemoveSelectedItemsFromCollection ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
     final adapter = CollectionAdapter.of(_c, account, state.collection);
@@ -310,7 +308,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onArchiveSelectedItems(
       _ArchiveSelectedItems ev, Emitter<_State> emit) async {
-    _log.info("$ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
     final selectedFds =
@@ -330,7 +328,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onDeleteSelectedItems(
       _DeleteSelectedItems ev, Emitter<_State> emit) async {
-    _log.info("$ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
     final adapter = CollectionAdapter.of(_c, account, state.collection);
@@ -361,7 +359,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onSetDragging(_SetDragging ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(isDragging: ev.flag));
   }
 
@@ -395,12 +393,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
   }
 
   void _onSetMessage(_SetMessage ev, Emitter<_State> emit) {
-    _log.info("$ev");
+    _log.info(ev);
     emit(state.copyWith(message: ev.message));
   }
 
@@ -532,8 +530,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   /// not returned from the collection controller but rather created temporarily
   final bool _isAdHocCollection;
 
-  StreamSubscription? _collectionControllerSubscription;
-  StreamSubscription? _itemsControllerSubscription;
+  final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;
 }
 
