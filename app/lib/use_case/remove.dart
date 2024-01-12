@@ -24,15 +24,7 @@ part 'remove.g.dart';
 
 @npLog
 class Remove {
-  Remove(this._c)
-      : assert(require(_c)),
-        assert(ListAlbum.require(_c)),
-        assert(ListShare.require(_c)),
-        assert(RemoveFromAlbum.require(_c));
-
-  static bool require(DiContainer c) =>
-      DiContainer.has(c, DiType.fileRepo) &&
-      DiContainer.has(c, DiType.shareRepo);
+  const Remove(this._c);
 
   /// Remove list of [files] and return the removed count
   Future<int> call(
@@ -52,7 +44,7 @@ class Remove {
       final i = pair.item1;
       final f = pair.item2;
       try {
-        await _c.fileRepo.remove(account, f);
+        await _c.fileRepo2.remove(account, f);
         ++count;
         KiwiContainer().resolve<EventBus>().fire(FileRemovedEvent(account, f));
       } catch (e, stackTrace) {

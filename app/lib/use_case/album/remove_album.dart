@@ -20,7 +20,6 @@ class RemoveAlbum {
   RemoveAlbum(this._c)
       : assert(require(_c)),
         assert(ListShare.require(_c)),
-        assert(Remove.require(_c)),
         assert(UnshareFileFromAlbum.require(_c));
 
   static bool require(DiContainer c) =>

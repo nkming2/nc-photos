@@ -110,20 +110,6 @@ class FileSqliteCacheUpdater {
   final DiContainer _c;
 }
 
-class FileSqliteCacheRemover {
-  const FileSqliteCacheRemover(this._c);
-
-  /// Remove a file/dir from cache
-  Future<void> call(Account account, FileDescriptor f) async {
-    await _c.npDb.deleteFile(
-      account: account.toDb(),
-      file: f.toDbKey(),
-    );
-  }
-
-  final DiContainer _c;
-}
-
 class FileSqliteCacheEmptier {
   const FileSqliteCacheEmptier(this._c);
 
