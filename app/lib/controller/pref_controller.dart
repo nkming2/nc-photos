@@ -27,6 +27,15 @@ class PrefController {
         value: value,
       );
 
+  ValueStream<int> get homePhotosZoomLevel =>
+      _homePhotosZoomLevelController.stream;
+
+  Future<void> setHomePhotosZoomLevel(int value) => _set<int>(
+        controller: _homePhotosZoomLevelController,
+        setter: (pref, value) => pref.setHomePhotosZoomLevel(value),
+        value: value,
+      );
+
   ValueStream<int> get albumBrowserZoomLevel =>
       _albumBrowserZoomLevelController.stream;
 
@@ -237,6 +246,8 @@ class PrefController {
   final DiContainer _c;
   late final _languageController =
       BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
+  late final _homePhotosZoomLevelController =
+      BehaviorSubject.seeded(_c.pref.getHomePhotosZoomLevelOr(0));
   late final _albumBrowserZoomLevelController =
       BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
   late final _homeAlbumsSortController =
