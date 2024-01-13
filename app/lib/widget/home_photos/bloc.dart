@@ -37,6 +37,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
     on<_SetSortByName>(_onSetSortByName);
+    on<_SetMemoriesRange>(_onSetMemoriesRange);
 
     on<_SetError>(_onSetError);
 
@@ -46,6 +47,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }));
     _subscriptions.add(prefController.isPhotosTabSortByName.listen((event) {
       add(_SetSortByName(event));
+    }));
+    _subscriptions.add(prefController.memoriesRange.listen((event) {
+      add(_SetMemoriesRange(event));
     }));
   }
 
@@ -259,6 +263,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onSetSortByName(_SetSortByName ev, Emitter<_State> emit) {
+    _log.info(ev);
+    _transformItems(state.files);
+  }
+
+  void _onSetMemoriesRange(_SetMemoriesRange ev, Emitter<_State> emit) {
     _log.info(ev);
     _transformItems(state.files);
   }

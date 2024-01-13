@@ -229,6 +229,16 @@ class _SetSortByName implements _Event {
 }
 
 @toString
+class _SetMemoriesRange implements _Event {
+  const _SetMemoriesRange(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final int value;
+}
+
+@toString
 class _SetError implements _Event {
   const _SetError(this.error, [this.stackTrace]);
 
