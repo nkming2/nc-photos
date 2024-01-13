@@ -162,7 +162,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       if (index == 0) {
         KiwiContainer()
             .resolve<EventBus>()
-            .fire(const HomePhotosBackToTopEvent());
+            .fire(const HomePhotos2BackToTopEvent());
       }
       return;
     }

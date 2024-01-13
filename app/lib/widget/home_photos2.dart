@@ -24,6 +24,7 @@ import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
@@ -60,6 +61,10 @@ part 'home_photos/state_event.dart';
 part 'home_photos/type.dart';
 part 'home_photos/view.dart';
 part 'home_photos2.g.dart';
+
+class HomePhotos2BackToTopEvent {
+  const HomePhotos2BackToTopEvent();
+}
 
 class HomePhotos2 extends StatelessWidget {
   const HomePhotos2({super.key});
@@ -222,6 +227,18 @@ class _Body extends StatefulWidget {
 @npLog
 class _BodyState extends State<_Body> {
   @override
+  void initState() {
+    super.initState();
+    _onBackToTopListener.begin();
+  }
+
+  @override
+  void dispose() {
+    _onBackToTopListener.end();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FingerListener(
       onFingerChanged: (finger) {
@@ -345,6 +362,10 @@ class _BodyState extends State<_Body> {
     );
   }
 
+  void _onBackToTop(HomePhotos2BackToTopEvent ev) {
+    _scrollController.jumpTo(0);
+  }
+
   /// Return the estimated scroll extent of the custom scroll view, or null
   double? _getScrollViewExtent({
     required BuildContext context,
@@ -388,6 +409,9 @@ class _BodyState extends State<_Body> {
 
   final _scrollController = ScrollController();
   var _finger = 0;
+
+  late final _onBackToTopListener =
+      AppEventListener<HomePhotos2BackToTopEvent>(_onBackToTop);
 }
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
