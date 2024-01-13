@@ -142,8 +142,7 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
         ],
         child: _BlocSelector<bool>(
           selector: (state) =>
-              state.files.isEmpty &&
-              state.syncProgress != null,
+              state.files.isEmpty && state.syncProgress != null,
           builder: (context, isInitialSyncing) {
             if (isInitialSyncing) {
               return const _InitialSyncBody();
@@ -276,7 +275,13 @@ class _BodyState extends State<_Body> {
                       child: RefreshIndicator(
                         onRefresh: () async {
                           _bloc.add(const _Reload());
-                          await _bloc.stream.first;
+                          var hasNotNull = false;
+                          await _bloc.stream.firstWhere((s) {
+                            if (s.syncProgress != null) {
+                              hasNotNull = true;
+                            }
+                            return hasNotNull && s.syncProgress == null;
+                          });
                         },
                         child: CustomScrollView(
                           controller: _scrollController,

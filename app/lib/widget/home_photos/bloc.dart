@@ -104,6 +104,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onReload(_Reload ev, Emitter<_State> emit) {
     _log.info(ev);
+    emit(state.copyWith(syncProgress: const Progress(0)));
     _syncRemote();
   }
 
@@ -289,7 +290,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       if (!isClosed) {
         add(const _SetSyncProgress(null));
       }
-      _log.info("[_syncRemote] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
+      _log.info(
+          "[_syncRemote] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
     });
   }
 
