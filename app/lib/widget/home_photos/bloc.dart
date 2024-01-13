@@ -36,12 +36,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetScale>(_onSetScale);
 
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
+    on<_SetSortByName>(_onSetSortByName);
 
     on<_SetError>(_onSetError);
 
     _subscriptions
         .add(accountPrefController.isEnableMemoryAlbum.listen((event) {
       add(_SetEnableMemoryCollection(event));
+    }));
+    _subscriptions.add(prefController.isPhotosTabSortByName.listen((event) {
+      add(_SetSortByName(event));
     }));
   }
 
@@ -254,6 +258,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(isEnableMemoryCollection: ev.value));
   }
 
+  void _onSetSortByName(_SetSortByName ev, Emitter<_State> emit) {
+    _log.info(ev);
+    _transformItems(state.files);
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -265,6 +274,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       _ItemTransformerArgument(
         account: account,
         files: files,
+        sort: prefController.isPhotosTabSortByName.value
+            ? _ItemSort.filename
+            : _ItemSort.dateTime,
         memoriesDayRange: prefController.memoriesRange.value,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
@@ -314,17 +326,31 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 }
 
 _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
-  final sortedFiles = arg.files
-      .where((f) => f.fdIsArchived != true)
-      .sorted(compareFileDescriptorDateTimeDescending);
-  final dateHelper = photo_list_util.DateGroupHelper(isMonthOnly: false);
+  final int Function(FileDescriptor, FileDescriptor) sorter;
+  switch (arg.sort) {
+    case _ItemSort.filename:
+      sorter = (a, b) => a.fdPath.compareTo(b.fdPath);
+      break;
+    case _ItemSort.dateTime:
+    default:
+      sorter = compareFileDescriptorDateTimeDescending;
+      break;
+  }
 
+  final sortedFiles =
+      arg.files.where((f) => f.fdIsArchived != true).sorted(sorter);
+  final dateHelper = arg.sort == _ItemSort.dateTime
+      ? photo_list_util.DateGroupHelper(isMonthOnly: false)
+      : null;
   final today = clock.now();
-  final memoryCollectionHelper = photo_list_util.MemoryCollectionHelper(
-    arg.account,
-    today: today,
-    dayRange: arg.memoriesDayRange,
-  );
+  final memoryCollectionHelper = arg.sort == _ItemSort.dateTime
+      ? photo_list_util.MemoryCollectionHelper(
+          arg.account,
+          today: today,
+          dayRange: arg.memoriesDayRange,
+        )
+      : null;
+
   final transformed = <_Item>[];
   for (int i = 0; i < sortedFiles.length; ++i) {
     final file = sortedFiles[i];
@@ -332,18 +358,18 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
     if (item == null) {
       continue;
     }
-    final date = dateHelper.onFile(file);
+    final date = dateHelper?.onFile(file);
     if (date != null) {
       transformed.add(_DateItem(date: date));
     }
     transformed.add(item);
-    memoryCollectionHelper.addFile(file);
+    memoryCollectionHelper?.addFile(file);
   }
   final memoryCollections = memoryCollectionHelper
-      .build((year) => L10n.of(arg.locale).memoryAlbumName(today.year - year));
+      ?.build((year) => L10n.of(arg.locale).memoryAlbumName(today.year - year));
   return _ItemTransformerResult(
     items: transformed,
-    memoryCollections: memoryCollections,
+    memoryCollections: memoryCollections ?? [],
   );
 }
 

@@ -219,6 +219,16 @@ class _SetEnableMemoryCollection implements _Event {
 }
 
 @toString
+class _SetSortByName implements _Event {
+  const _SetSortByName(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final bool value;
+}
+
+@toString
 class _SetError implements _Event {
   const _SetError(this.error, [this.stackTrace]);
 

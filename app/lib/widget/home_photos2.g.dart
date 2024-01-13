@@ -259,6 +259,13 @@ extension _$_SetEnableMemoryCollectionToString on _SetEnableMemoryCollection {
   }
 }
 
+extension _$_SetSortByNameToString on _SetSortByName {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetSortByName {value: $value}";
+  }
+}
+
 extension _$_SetErrorToString on _SetError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

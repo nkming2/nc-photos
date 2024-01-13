@@ -94,16 +94,20 @@ class _DateItem extends _Item {
   final DateTime date;
 }
 
+enum _ItemSort { dateTime, filename }
+
 class _ItemTransformerArgument {
   const _ItemTransformerArgument({
     required this.account,
     required this.files,
+    required this.sort,
     required this.memoriesDayRange,
     required this.locale,
   });
 
   final Account account;
   final List<FileDescriptor> files;
+  final _ItemSort sort;
   final int memoriesDayRange;
   final Locale locale;
 }
