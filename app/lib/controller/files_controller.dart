@@ -10,9 +10,11 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/file/list_file.dart';
 import 'package:nc_photos/use_case/remove.dart';
+import 'package:nc_photos/use_case/sync_dir.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/lazy.dart';
@@ -54,27 +56,52 @@ class FilesController {
   ValueStream<FilesStreamEvent> get stream {
     if (!_isDataStreamInited) {
       _isDataStreamInited = true;
-      unawaited(_load());
+      _load();
     }
     return _dataStreamController.stream;
   }
 
-  Future<void> reload() async {
-    var results = <FileDescriptor>[];
-    final completer = Completer();
-    ListFile(_c)(
-      account,
-      file_util.unstripPath(account, accountPrefController.shareFolder.value),
-    ).listen(
-      (ev) {
-        results = ev;
-      },
-      onError: _dataStreamController.addError,
-      onDone: () => completer.complete(),
-    );
-    await completer.future;
-    _dataStreamController
-        .add(_convertListResultsToEvent(results, hasNext: false));
+  Future<void> syncRemote({
+    void Function(Progress progress)? onProgressUpdate,
+  }) async {
+    if (_isSyncing) {
+      _log.fine("[syncRemote] Skipped as another sync running");
+      return;
+    }
+    _isSyncing = true;
+    try {
+      final shareDir = File(
+        path: file_util.unstripPath(
+            account, accountPrefController.shareFolder.value),
+      );
+      var isShareDirIncluded = false;
+
+      _c.touchManager.clearTouchCache();
+      final progress = IntProgress(account.roots.length);
+      for (final r in account.roots) {
+        final dirPath = file_util.unstripPath(account, r);
+        await SyncDir(_c)(
+          account,
+          dirPath,
+          onProgressUpdate: (value) {
+            final merged = progress.progress + progress.step * value.progress;
+            onProgressUpdate?.call(Progress(merged, value.text));
+          },
+        );
+        isShareDirIncluded |=
+            file_util.isOrUnderDirPath(shareDir.path, dirPath);
+        progress.next();
+      }
+
+      if (!isShareDirIncluded) {
+        _log.info("[syncRemote] Explicitly scanning share folder");
+        await SyncDir(_c)(account, shareDir.path, isRecursive: false);
+      }
+      // load the synced content to stream
+      unawaited(_reload());
+    } finally {
+      _isSyncing = false;
+    }
   }
 
   /// Update files property and return number of files updated
@@ -227,6 +254,24 @@ class FilesController {
     _dataStreamController.add(lastData.copyWith(hasNext: false));
   }
 
+  Future<void> _reload() async {
+    var results = <FileDescriptor>[];
+    final completer = Completer();
+    ListFile(_c)(
+      account,
+      file_util.unstripPath(account, accountPrefController.shareFolder.value),
+    ).listen(
+      (ev) {
+        results = ev;
+      },
+      onError: _dataStreamController.addError,
+      onDone: () => completer.complete(),
+    );
+    await completer.future;
+    _dataStreamController
+        .add(_convertListResultsToEvent(results, hasNext: false));
+  }
+
   _FilesStreamEvent _convertListResultsToEvent(
     List<FileDescriptor> results, {
     required bool hasNext,
@@ -252,6 +297,7 @@ class FilesController {
   );
 
   final _mutex = Mutex();
+  var _isSyncing = false;
 }
 
 @toString

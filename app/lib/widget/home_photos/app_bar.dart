@@ -5,11 +5,11 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocBuilder(
-      buildWhen: (previous, current) => previous.isLoading != current.isLoading,
-      builder: (context, state) => HomeSliverAppBar(
+    return _BlocSelector<bool>(
+      selector: (state) => state.isLoading || state.syncProgress != null,
+      builder: (context, isProcessing) => HomeSliverAppBar(
         account: context.bloc.account,
-        isShowProgressIcon: state.isLoading,
+        isShowProgressIcon: isProcessing,
       ),
     );
   }

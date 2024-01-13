@@ -29,6 +29,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
@@ -139,123 +140,200 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
             },
           ),
         ],
-        child: FingerListener(
-          onFingerChanged: (finger) {
-            setState(() {
-              _finger = finger;
-            });
+        child: _BlocSelector<bool>(
+          selector: (state) =>
+              state.files.isEmpty &&
+              state.syncProgress != null,
+          builder: (context, isInitialSyncing) {
+            if (isInitialSyncing) {
+              return const _InitialSyncBody();
+            } else {
+              return const _Body();
+            }
           },
-          child: GestureDetector(
-            onScaleStart: (_) {
-              _bloc.add(const _StartScaling());
-            },
-            onScaleUpdate: (details) {
-              _bloc.add(_SetScale(details.scale));
-            },
-            onScaleEnd: (_) {
-              _bloc.add(const _EndScaling());
-            },
-            child: LayoutBuilder(
-              builder: (context, constraints) => _BlocBuilder(
-                buildWhen: (previous, current) =>
-                    previous.contentListMaxExtent !=
-                        current.contentListMaxExtent ||
-                    (previous.isEnableMemoryCollection &&
-                            previous.memoryCollections.isNotEmpty) !=
-                        (current.isEnableMemoryCollection &&
-                            current.memoryCollections.isNotEmpty),
-                builder: (context, state) {
-                  final scrollExtent = _getScrollViewExtent(
-                    context: context,
-                    constraints: constraints,
-                    hasMemoryCollection: state.isEnableMemoryCollection &&
-                        state.memoryCollections.isNotEmpty,
-                    contentListMaxExtent: state.contentListMaxExtent,
-                  );
-                  return Stack(
-                    children: [
-                      DraggableScrollbar.semicircle(
-                        controller: _scrollController,
-                        overrideMaxScrollExtent: scrollExtent,
-                        // status bar + app bar
-                        topOffset: _getAppBarExtent(context),
-                        bottomOffset:
-                            AppDimension.of(context).homeBottomAppBarHeight,
-                        labelTextBuilder: (_) => const _ScrollLabel(),
-                        labelPadding:
-                            const EdgeInsets.symmetric(horizontal: 40),
-                        backgroundColor: Theme.of(context).elevate(
-                            Theme.of(context).colorScheme.inverseSurface, 3),
-                        heightScrollThumb: 60,
-                        child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context)
-                              .copyWith(scrollbars: false),
-                          child: RefreshIndicator(
-                            onRefresh: () async {
-                              _bloc.add(const _Reload());
-                              await _bloc.stream.first;
-                            },
-                            child: CustomScrollView(
-                              controller: _scrollController,
-                              physics: _finger >= 2
-                                  ? const NeverScrollableScrollPhysics()
-                                  : null,
-                              slivers: [
-                                _BlocSelector<bool>(
-                                  selector: (state) =>
-                                      state.selectedItems.isEmpty,
-                                  builder: (context, isEmpty) => isEmpty
-                                      ? const _AppBar()
-                                      : const _SelectionAppBar(),
-                                ),
-                                _BlocBuilder(
-                                  buildWhen: (previous, current) =>
-                                      (previous.isEnableMemoryCollection &&
-                                          previous
-                                              .memoryCollections.isNotEmpty) !=
-                                      (current.isEnableMemoryCollection &&
-                                          current.memoryCollections.isNotEmpty),
-                                  builder: (context, state) {
-                                    if (state.isEnableMemoryCollection &&
-                                        state.memoryCollections.isNotEmpty) {
-                                      return const _MemoryCollectionList();
-                                    } else {
-                                      return const SliverToBoxAdapter();
-                                    }
-                                  },
-                                ),
-                                _BlocSelector<double?>(
-                                  selector: (state) => state.scale,
-                                  builder: (context, scale) =>
-                                      SliverTransitionedScale(
-                                    scale: scale,
-                                    baseSliver: const _ContentList(),
-                                    overlaySliver: const _ScalingList(),
-                                  ),
-                                ),
-                                SliverToBoxAdapter(
-                                  child: SizedBox(
-                                    height: AppDimension.of(context)
-                                        .homeBottomAppBarHeight,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+        ),
+      ),
+    );
+  }
+
+  late final _bloc = context.bloc;
+
+  final _key = GlobalKey();
+  bool? _isVisible;
+}
+
+class _InitialSyncBody extends StatelessWidget {
+  const _InitialSyncBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        const _AppBar(),
+        _BlocSelector<Progress?>(
+          selector: (state) => state.syncProgress,
+          builder: (context, syncProgress) {
+            return SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 56, 16, 0),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: Theme.of(context).widthLimitedContentMaxWidth,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          L10n.global().initialSyncMessage,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: NavigationBarBlurFilter(
-                          height:
-                              AppDimension.of(context).homeBottomAppBarHeight,
+                        const SizedBox(height: 8),
+                        LinearProgressIndicator(
+                          value: (syncProgress?.progress ?? 0) == 0
+                              ? null
+                              : syncProgress!.progress,
                         ),
-                      ),
-                    ],
-                  );
-                },
+                        const SizedBox(height: 8),
+                        Text(
+                          syncProgress?.text ?? "",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _Body extends StatefulWidget {
+  const _Body();
+
+  @override
+  State<StatefulWidget> createState() => _BodyState();
+}
+
+@npLog
+class _BodyState extends State<_Body> {
+  @override
+  Widget build(BuildContext context) {
+    return FingerListener(
+      onFingerChanged: (finger) {
+        setState(() {
+          _finger = finger;
+        });
+      },
+      child: GestureDetector(
+        onScaleStart: (_) {
+          _bloc.add(const _StartScaling());
+        },
+        onScaleUpdate: (details) {
+          _bloc.add(_SetScale(details.scale));
+        },
+        onScaleEnd: (_) {
+          _bloc.add(const _EndScaling());
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) => _BlocBuilder(
+            buildWhen: (previous, current) =>
+                previous.contentListMaxExtent != current.contentListMaxExtent ||
+                (previous.isEnableMemoryCollection &&
+                        previous.memoryCollections.isNotEmpty) !=
+                    (current.isEnableMemoryCollection &&
+                        current.memoryCollections.isNotEmpty),
+            builder: (context, state) {
+              final scrollExtent = _getScrollViewExtent(
+                context: context,
+                constraints: constraints,
+                hasMemoryCollection: state.isEnableMemoryCollection &&
+                    state.memoryCollections.isNotEmpty,
+                contentListMaxExtent: state.contentListMaxExtent,
+              );
+              return Stack(
+                children: [
+                  DraggableScrollbar.semicircle(
+                    controller: _scrollController,
+                    overrideMaxScrollExtent: scrollExtent,
+                    // status bar + app bar
+                    topOffset: _getAppBarExtent(context),
+                    bottomOffset:
+                        AppDimension.of(context).homeBottomAppBarHeight,
+                    labelTextBuilder: (_) => const _ScrollLabel(),
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 40),
+                    backgroundColor: Theme.of(context).elevate(
+                        Theme.of(context).colorScheme.inverseSurface, 3),
+                    heightScrollThumb: 60,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context)
+                          .copyWith(scrollbars: false),
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          _bloc.add(const _Reload());
+                          await _bloc.stream.first;
+                        },
+                        child: CustomScrollView(
+                          controller: _scrollController,
+                          physics: _finger >= 2
+                              ? const NeverScrollableScrollPhysics()
+                              : null,
+                          slivers: [
+                            _BlocSelector<bool>(
+                              selector: (state) => state.selectedItems.isEmpty,
+                              builder: (context, isEmpty) => isEmpty
+                                  ? const _AppBar()
+                                  : const _SelectionAppBar(),
+                            ),
+                            _BlocBuilder(
+                              buildWhen: (previous, current) =>
+                                  (previous.isEnableMemoryCollection &&
+                                      previous.memoryCollections.isNotEmpty) !=
+                                  (current.isEnableMemoryCollection &&
+                                      current.memoryCollections.isNotEmpty),
+                              builder: (context, state) {
+                                if (state.isEnableMemoryCollection &&
+                                    state.memoryCollections.isNotEmpty) {
+                                  return const _MemoryCollectionList();
+                                } else {
+                                  return const SliverToBoxAdapter();
+                                }
+                              },
+                            ),
+                            _BlocSelector<double?>(
+                              selector: (state) => state.scale,
+                              builder: (context, scale) =>
+                                  SliverTransitionedScale(
+                                scale: scale,
+                                baseSliver: const _ContentList(),
+                                overlaySliver: const _ScalingList(),
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: SizedBox(
+                                height: AppDimension.of(context)
+                                    .homeBottomAppBarHeight,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: NavigationBarBlurFilter(
+                      height: AppDimension.of(context).homeBottomAppBarHeight,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -303,9 +381,7 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
 
   late final _bloc = context.bloc;
 
-  final _key = GlobalKey();
   final _scrollController = ScrollController();
-  bool? _isVisible;
   var _finger = 0;
 }
 

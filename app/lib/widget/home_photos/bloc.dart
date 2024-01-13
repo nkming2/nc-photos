@@ -29,6 +29,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_RemoveVisibleItem>(_onRemoveVisibleItem);
 
     on<_SetContentListMaxExtent>(_onSetContentListMaxExtent);
+    on<_SetSyncProgress>(_onSetSyncProgress);
 
     on<_StartScaling>(_onStartScaling);
     on<_EndScaling>(_onEndScaling);
@@ -60,7 +61,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         currentState = currentState as _State;
         nextState = nextState as _State;
         return currentState.scale == nextState.scale &&
-            currentState.visibleItems == nextState.visibleItems;
+            currentState.visibleItems == nextState.visibleItems &&
+            currentState.syncProgress == nextState.syncProgress;
       };
 
   @override
@@ -80,10 +82,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     return emit.forEach<FilesStreamEvent>(
       controller.stream,
-      onData: (data) => state.copyWith(
-        files: data.data,
-        isLoading: data.hasNext || _itemTransformerQueue.isProcessing,
-      ),
+      onData: (data) {
+        if (_isInitialLoad && !data.hasNext) {
+          _isInitialLoad = false;
+          _syncRemote();
+        }
+        return state.copyWith(
+          files: data.data,
+          isLoading: data.hasNext || _itemTransformerQueue.isProcessing,
+        );
+      },
       onError: (e, stackTrace) {
         _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
         return state.copyWith(
@@ -96,7 +104,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onReload(_Reload ev, Emitter<_State> emit) {
     _log.info(ev);
-    unawaited(controller.reload());
+    _syncRemote();
   }
 
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {
@@ -204,6 +212,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(contentListMaxExtent: ev.value));
   }
 
+  void _onSetSyncProgress(_SetSyncProgress ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(syncProgress: ev.progress));
+  }
+
   void _onStartScaling(_StartScaling ev, Emitter<_State> emit) {
     _log.info(ev);
   }
@@ -264,6 +277,22 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
   }
 
+  void _syncRemote() {
+    final stopwatch = Stopwatch()..start();
+    controller.syncRemote(
+      onProgressUpdate: (progress) {
+        if (!isClosed) {
+          add(_SetSyncProgress(progress));
+        }
+      },
+    ).whenComplete(() {
+      if (!isClosed) {
+        add(const _SetSyncProgress(null));
+      }
+      _log.info("[_syncRemote] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
+    });
+  }
+
   void _clearSelection(Emitter<_State> emit) {
     emit(state.copyWith(selectedItems: const {}));
   }
@@ -279,6 +308,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       ComputeQueue<_ItemTransformerArgument, _ItemTransformerResult>();
   final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;
+  var _isInitialLoad = true;
 }
 
 _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {

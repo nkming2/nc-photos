@@ -12,6 +12,7 @@ class _State {
     required this.isEnableMemoryCollection,
     required this.memoryCollections,
     this.contentListMaxExtent,
+    this.syncProgress,
     required this.zoom,
     this.scale,
     this.error,
@@ -45,6 +46,7 @@ class _State {
   final List<Collection> memoryCollections;
 
   final double? contentListMaxExtent;
+  final Progress? syncProgress;
 
   final int zoom;
   final double? scale;
@@ -168,6 +170,16 @@ class _SetContentListMaxExtent implements _Event {
   String toString() => _$toString();
 
   final double? value;
+}
+
+@toString
+class _SetSyncProgress implements _Event {
+  const _SetSyncProgress(this.progress);
+
+  @override
+  String toString() => _$toString();
+
+  final Progress? progress;
 }
 
 @toString

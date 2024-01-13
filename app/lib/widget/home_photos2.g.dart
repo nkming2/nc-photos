@@ -22,6 +22,7 @@ abstract class $_StateCopyWithWorker {
       bool? isEnableMemoryCollection,
       List<Collection>? memoryCollections,
       double? contentListMaxExtent,
+      Progress? syncProgress,
       int? zoom,
       double? scale,
       ExceptionEvent? error});
@@ -40,6 +41,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic isEnableMemoryCollection,
       dynamic memoryCollections,
       dynamic contentListMaxExtent = copyWithNull,
+      dynamic syncProgress = copyWithNull,
       dynamic zoom,
       dynamic scale = copyWithNull,
       dynamic error = copyWithNull}) {
@@ -57,6 +59,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         contentListMaxExtent: contentListMaxExtent == copyWithNull
             ? that.contentListMaxExtent
             : contentListMaxExtent as double?,
+        syncProgress: syncProgress == copyWithNull
+            ? that.syncProgress
+            : syncProgress as Progress?,
         zoom: zoom as int? ?? that.zoom,
         scale: scale == copyWithNull ? that.scale : scale as double?,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
@@ -79,6 +84,13 @@ extension _$_WrappedHomePhotosStateNpLog on _WrappedHomePhotosState {
   Logger get _log => log;
 
   static final log = Logger("widget.home_photos2._WrappedHomePhotosState");
+}
+
+extension _$_BodyStateNpLog on _BodyState {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.home_photos2._BodyState");
 }
 
 extension _$__NpLog on __ {
@@ -123,7 +135,7 @@ extension _$_ContentListBodyNpLog on _ContentListBody {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, visibleItems: {length: ${visibleItems.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, error: $error}";
+    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, visibleItems: {length: ${visibleItems.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, syncProgress: $syncProgress, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, error: $error}";
   }
 }
 
@@ -209,6 +221,13 @@ extension _$_SetContentListMaxExtentToString on _SetContentListMaxExtent {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetContentListMaxExtent {value: ${value == null ? null : "${value!.toStringAsFixed(3)}"}}";
+  }
+}
+
+extension _$_SetSyncProgressToString on _SetSyncProgress {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetSyncProgress {progress: $progress}";
   }
 }
 
