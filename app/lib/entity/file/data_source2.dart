@@ -104,8 +104,11 @@ class FileNpDbDataSource implements FileDataSource2 {
   Stream<List<FileDescriptor>> getFileDescriptors(
       Account account, String shareDirPath) async* {
     _log.info("[getFileDescriptors] $account");
+    final stopwatch = Stopwatch()..start();
     yield await _getPartialFileDescriptors(account);
     yield await _getCompleteFileDescriptors(account, shareDirPath);
+    _log.info(
+        "[getFileDescriptors] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
   }
 
   @override
