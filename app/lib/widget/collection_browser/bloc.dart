@@ -7,6 +7,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.account,
     required this.prefController,
     required this.collectionsController,
+    required this.filesController,
     required Collection collection,
   })  : _c = container,
         _isAdHocCollection = !collectionsController.stream.value.data
@@ -109,20 +110,40 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) async {
     _log.info(ev);
-    return emit.forEach<CollectionItemStreamData>(
-      itemsController.stream,
-      onData: (data) => state.copyWith(
-        items: data.items,
-        isLoading: data.hasNext,
+    await Future.wait([
+      emit.forEach<CollectionItemStreamData>(
+        itemsController.stream,
+        onData: (data) => state.copyWith(
+          items: _filterItems(data.items, state.itemsWhitelist),
+          rawItems: data.items,
+          isLoading: data.hasNext,
+        ),
+        onError: (e, stackTrace) {
+          _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
+          return state.copyWith(
+            isLoading: false,
+            error: ExceptionEvent(e, stackTrace),
+          );
+        },
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-        return state.copyWith(
-          isLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+      emit.forEach<FilesStreamEvent>(
+        filesController.stream,
+        onData: (data) {
+          final whitelist = HashSet.of(data.dataMap.keys);
+          return state.copyWith(
+            items: _filterItems(state.rawItems, whitelist),
+            itemsWhitelist: whitelist,
+          );
+        },
+        onError: (e, stackTrace) {
+          _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
+          return state.copyWith(
+            isLoading: false,
+            error: ExceptionEvent(e, stackTrace),
+          );
+        },
+      ),
+    ]);
   }
 
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {
@@ -306,23 +327,18 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
   }
 
-  Future<void> _onArchiveSelectedItems(
-      _ArchiveSelectedItems ev, Emitter<_State> emit) async {
+  void _onArchiveSelectedItems(_ArchiveSelectedItems ev, Emitter<_State> emit) {
     _log.info(ev);
     final selected = state.selectedItems;
     _clearSelection(emit);
-    final selectedFds =
+    final selectedFiles =
         selected.whereType<_FileItem>().map((e) => e.file).toList();
-    if (selectedFds.isNotEmpty) {
-      final selectedFiles =
-          await InflateFileDescriptor(_c)(account, selectedFds);
-      final count = await ArchiveFile(_c)(account, selectedFiles);
-      if (count != selectedFiles.length) {
-        emit(state.copyWith(
-          message: L10n.global()
-              .archiveSelectedFailureNotification(selectedFiles.length - count),
-        ));
-      }
+    if (selectedFiles.isNotEmpty) {
+      filesController.updateProperty(
+        selectedFiles,
+        isArchived: const OrNull(true),
+        errorBuilder: (fileIds) => _ArchiveFailedError(fileIds.length),
+      );
     }
   }
 
@@ -332,29 +348,25 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     final selected = state.selectedItems;
     _clearSelection(emit);
     final adapter = CollectionAdapter.of(_c, account, state.collection);
+    final selectedItems = selected
+        .whereType<_ActualItem>()
+        .map((e) => e.original)
+        .where(adapter.isItemRemovable)
+        .toList();
     final selectedFiles = selected
         .whereType<_FileItem>()
         .where((e) => adapter.isItemDeletable(e.original))
         .map((e) => e.file)
         .toList();
     if (selectedFiles.isNotEmpty) {
-      final count = await Remove(_c)(
-        account,
+      await filesController.remove(
         selectedFiles,
-        onError: (_, f, e, stackTrace) {
-          _log.severe(
-            "[_onDeleteSelectedItems] Failed while Remove: ${logFilename(f.strippedPath)}",
-            e,
-            stackTrace,
-          );
+        errorBuilder: (fileIds) {
+          return _RemoveFailedError(fileIds.length);
         },
       );
-      if (count != selectedFiles.length) {
-        emit(state.copyWith(
-          message: L10n.global()
-              .deleteSelectedFailureNotification(selectedFiles.length - count),
-        ));
-      }
+      // deleting files will also remove them from the collection
+      unawaited(itemsController.removeItems(selectedItems));
     }
   }
 
@@ -488,6 +500,20 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
   }
 
+  List<CollectionItem> _filterItems(
+      List<CollectionItem> rawItems, Set<int>? whitelist) {
+    if (whitelist == null) {
+      return rawItems;
+    }
+    return rawItems.where((e) {
+      if (e is CollectionFileItem) {
+        return whitelist.contains(e.file.fdId);
+      } else {
+        return true;
+      }
+    }).toList();
+  }
+
   String? _getCoverUrlByItems() {
     try {
       final firstFile =
@@ -524,6 +550,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final Account account;
   final PrefController prefController;
   final CollectionsController collectionsController;
+  final FilesController filesController;
   late final CollectionItemsController itemsController;
 
   /// Specify if the supplied [collection] is an "inline" one, which means it's

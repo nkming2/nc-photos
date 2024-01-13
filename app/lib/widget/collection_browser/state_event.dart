@@ -7,6 +7,8 @@ class _State {
     required this.collection,
     this.coverUrl,
     required this.items,
+    required this.rawItems,
+    this.itemsWhitelist,
     required this.isLoading,
     required this.transformedItems,
     required this.selectedItems,
@@ -36,6 +38,7 @@ class _State {
       collection: collection,
       coverUrl: coverUrl,
       items: const [],
+      rawItems: const [],
       isLoading: false,
       transformedItems: const [],
       selectedItems: const {},
@@ -57,6 +60,8 @@ class _State {
   final Collection collection;
   final String? coverUrl;
   final List<CollectionItem> items;
+  final List<CollectionItem> rawItems;
+  final Set<int>? itemsWhitelist;
   final bool isLoading;
   final List<_Item> transformedItems;
 
