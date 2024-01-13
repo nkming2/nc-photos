@@ -76,6 +76,7 @@ class _VideoItem extends _FileItem {
 class _DateItem extends _Item {
   const _DateItem({
     required this.date,
+    required this.isMonthOnly,
   });
 
   @override
@@ -88,10 +89,12 @@ class _DateItem extends _Item {
   Widget buildWidget(BuildContext context) {
     return PhotoListDate(
       date: date,
+      isMonthOnly: isMonthOnly,
     );
   }
 
   final DateTime date;
+  final bool isMonthOnly;
 }
 
 enum _ItemSort { dateTime, filename }
@@ -101,6 +104,7 @@ class _ItemTransformerArgument {
     required this.account,
     required this.files,
     required this.sort,
+    required this.isGroupByDay,
     required this.memoriesDayRange,
     required this.locale,
   });
@@ -108,6 +112,7 @@ class _ItemTransformerArgument {
   final Account account;
   final List<FileDescriptor> files;
   final _ItemSort sort;
+  final bool isGroupByDay;
   final int memoriesDayRange;
   final Locale locale;
 }

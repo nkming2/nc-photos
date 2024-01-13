@@ -38,6 +38,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
     on<_SetSortByName>(_onSetSortByName);
     on<_SetMemoriesRange>(_onSetMemoriesRange);
+    on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
 
     on<_SetError>(_onSetError);
 
@@ -236,18 +237,22 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       return;
     }
     final int newZoom;
+    final currZoom = state.zoom;
     if (state.scale! >= 1.25) {
       // scale up
-      newZoom = (state.zoom + 1).clamp(-1, 2);
+      newZoom = (currZoom + 1).clamp(-1, 2);
     } else if (state.scale! <= 0.75) {
-      newZoom = (state.zoom - 1).clamp(-1, 2);
+      newZoom = (currZoom - 1).clamp(-1, 2);
     } else {
-      newZoom = state.zoom;
+      newZoom = currZoom;
     }
     emit(state.copyWith(
       zoom: newZoom,
       scale: null,
     ));
+    if ((currZoom >= 0) != (newZoom >= 0)) {
+      add(const _UpdateDateTimeGroup());
+    }
     unawaited(prefController.setHomePhotosZoomLevel(newZoom));
   }
 
@@ -272,6 +277,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _transformItems(state.files);
   }
 
+  void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {
+    _log.info(ev);
+    _transformItems(state.files);
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -286,6 +296,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         sort: prefController.isPhotosTabSortByName.value
             ? _ItemSort.filename
             : _ItemSort.dateTime,
+        isGroupByDay: prefController.homePhotosZoomLevel.value >= 0,
         memoriesDayRange: prefController.memoriesRange.value,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
@@ -349,7 +360,7 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
   final sortedFiles =
       arg.files.where((f) => f.fdIsArchived != true).sorted(sorter);
   final dateHelper = arg.sort == _ItemSort.dateTime
-      ? photo_list_util.DateGroupHelper(isMonthOnly: false)
+      ? photo_list_util.DateGroupHelper(isMonthOnly: !arg.isGroupByDay)
       : null;
   final today = clock.now();
   final memoryCollectionHelper = arg.sort == _ItemSort.dateTime
@@ -369,7 +380,7 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
     }
     final date = dateHelper?.onFile(file);
     if (date != null) {
-      transformed.add(_DateItem(date: date));
+      transformed.add(_DateItem(date: date, isMonthOnly: !arg.isGroupByDay));
     }
     transformed.add(item);
     memoryCollectionHelper?.addFile(file);

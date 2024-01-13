@@ -239,6 +239,14 @@ class _SetMemoriesRange implements _Event {
 }
 
 @toString
+class _UpdateDateTimeGroup implements _Event {
+  const _UpdateDateTimeGroup();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
 class _SetError implements _Event {
   const _SetError(this.error, [this.stackTrace]);
 
