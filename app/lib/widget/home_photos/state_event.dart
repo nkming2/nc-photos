@@ -239,6 +239,16 @@ class _SetMemoriesRange implements _Event {
 }
 
 @toString
+class _SetEnableExif implements _Event {
+  const _SetEnableExif(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final bool value;
+}
+
+@toString
 class _UpdateDateTimeGroup implements _Event {
   const _UpdateDateTimeGroup();
 

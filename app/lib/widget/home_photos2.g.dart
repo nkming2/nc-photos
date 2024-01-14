@@ -273,6 +273,13 @@ extension _$_SetMemoriesRangeToString on _SetMemoriesRange {
   }
 }
 
+extension _$_SetEnableExifToString on _SetEnableExif {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetEnableExif {value: $value}";
+  }
+}
+
 extension _$_UpdateDateTimeGroupToString on _UpdateDateTimeGroup {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
