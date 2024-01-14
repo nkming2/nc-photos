@@ -57,6 +57,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _subscriptions.add(prefController.isEnableExif.listen((event) {
       add(_SetEnableExif(event));
     }));
+
+    _nativeFileExifUpdatedListener?.begin();
   }
 
   @override
@@ -64,6 +66,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     for (final s in _subscriptions) {
       s.cancel();
     }
+    _nativeFileExifUpdatedListener?.end();
     return super.close();
   }
 
@@ -302,6 +305,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
   }
 
+  void _onNativeFileExifUpdated(FileExifUpdatedEvent ev) {
+    _log.info(ev);
+    _refreshThrottler.trigger(
+      maxResponceTime: const Duration(seconds: 3),
+      maxPendingCount: 10,
+    );
+  }
+
   Future _transformItems(List<FileDescriptor> files) async {
     _log.info("[_transformItems] Queue ${files.length} items");
     _itemTransformerQueue.addJob(
@@ -389,6 +400,18 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;
   var _isInitialLoad = true;
+
+  // Listen to updates from background isolates as the memories are not shared
+  late final _nativeFileExifUpdatedListener =
+      getRawPlatform() == NpPlatform.android
+          ? NativeEventListener<FileExifUpdatedEvent>(_onNativeFileExifUpdated)
+          : null;
+  late final _refreshThrottler = Throttler(
+    onTriggered: (_) {
+      add(const _Reload());
+    },
+    logTag: _log.name,
+  );
 }
 
 _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {

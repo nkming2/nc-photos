@@ -3,7 +3,10 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/stream_extension.dart';
+import 'package:np_codegen/np_codegen.dart';
 import 'package:np_platform_message_relay/np_platform_message_relay.dart';
+
+part 'native_event.g.dart';
 
 class NativeEventListener<T> {
   NativeEventListener(this.listener);
@@ -43,6 +46,7 @@ class NativeEventListener<T> {
       Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
 }
 
+@npLog
 class FileExifUpdatedEvent {
   const FileExifUpdatedEvent(this.fileIds);
 
