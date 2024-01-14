@@ -1428,5 +1428,40 @@
     "errorNoStoragePermission": "Tallennustilan käyttölupa vaaditaan",
     "@errorNoStoragePermission": {
         "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Tiedoston metatiedot",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsPersonProviderTitle": "Henkilön tarjoaja",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsSeedColorSystemColorDescription": "Käytä järjestelmän oletusarvoa",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "KÄYTÄ JÄRJESTELMÄN OLETUSARVOA",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Valitse \"asetukset\" vaihtaaksesi tarjoajaa tai paina \"apua\" saadaksesi lisää tietoa",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Tiliasetukset",
+    "contributorsTooltip": "Avustajat",
+    "setAsTooltip": "Aseta",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Olet aikeissa uloskirjautua palvelimelta  {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
     }
 }

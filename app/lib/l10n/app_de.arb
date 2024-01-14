@@ -1,6 +1,6 @@
 {
     "appTitle": "Fotos",
-    "translator": "Andreas\nPhilProg\nSebastian\nOdious",
+    "translator": "Andreas\nPhilProg\nshagn\nOdious",
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
@@ -969,9 +969,17 @@
             }
         }
     },
-    "homeFolderNotFoundDialogTitle": "Home-Ordner nicht gefunden",
+    "homeFolderNotFoundDialogTitle": "Home-Verzeichnis nicht gefunden",
     "@homeFolderNotFoundDialogTitle": {
         "description": "The app failed to scan the user's home folder on signing in"
+    },
+    "homeFolderNotFoundDialogContent": "Bitte korrigieren Sie die unten angezeigte WebDAV-URL. Sie finden die URL in der Nextcloud-Weboberfläche.",
+    "@homeFolderNotFoundDialogContent": {
+        "description": "Ask the user to provide us the correct WebDAV URL"
+    },
+    "homeFolderInputInvalidEmpty": "Bitte geben Sie den Namen Ihres Home-Verzeichnis ein",
+    "@homeFolderInputInvalidEmpty": {
+        "description": "Home folder can't be left empty"
     },
     "createCollectionTooltip": "Neues Album",
     "@createCollectionTooltip": {
@@ -1061,6 +1069,14 @@
         "description": "Blur the background of a photo"
     },
     "enhancePortraitBlurDescription": "Machen Sie den Hintergrund Ihrer Fotos unscharf, am besten geeignet für Porträts",
+    "enhancePortraitBlurParamBlurLabel": "Unschärfe",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Superauflösung (4x)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
     "enhanceSuperResolution4xDescription": "Vergrößern Sie Ihre Fotos auf das 4-fache der ursprünglichen Auflösung (siehe Hilfe für Details wie die maximale Auflösung hier verwendet wird)",
     "enhanceStyleTransferTitle": "Stilübertragung",
     "@enhanceStyleTransferTitle": {

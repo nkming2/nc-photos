@@ -178,6 +178,10 @@
     "@nameInputHint": {
         "description": "Hint of the text field expecting name data"
     },
+    "nameInputInvalidEmpty": "Je vyžadován název",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
     "skipButtonLabel": "PŘESKOČIT",
     "@skipButtonLabel": {
         "description": "Label of the skip button"
@@ -415,6 +419,10 @@
     "settingsVersionTitle": "Verze",
     "@settingsVersionTitle": {
         "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Server",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
     },
     "settingsSourceCodeTitle": "Zdrojový kód",
     "@settingsSourceCodeTitle": {
@@ -1362,6 +1370,33 @@
     "@loopTooltip": {
         "description": "Enable or disable loop in the video player"
     },
+    "createCollectionFailureNotification": "Nepodařilo se vytvořit sbírku",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Přidat do sbírky",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Nepodařilo se přidat do sbírky",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Nepodařilo se nastavit obal sbírky",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Export",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Exportovat sbírku",
+    "createCollectionDialogNextcloudAlbumLabel": "Album Nextcloud",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "Serverové album, vyžaduje Nextcloud 25 nebo novější",
+    "removeCollectionsFailedNotification": "Nepodařilo se odebrat některé sbírky",
     "errorUnauthenticated": "Neověřený přístup. Pokud problém přetrvává, přihlaste se znovu",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
@@ -1393,5 +1428,40 @@
     "errorNoStoragePermission": "Chybějící oprávnění k přístupu k úložišti",
     "@errorNoStoragePermission": {
         "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Metadata souboru",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsPersonProviderTitle": "Poskytovatel osob",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsSeedColorSystemColorDescription": "Použít systémovou barvu",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "POUŽÍT SYSTÉMOVOU BARVU",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Otevřete nastavení pro přepnutí poskytovatele nebo si otevřete nápovědu pro více informací",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Nastavení účtu",
+    "contributorsTooltip": "Přispěvatelé",
+    "setAsTooltip": "Nastavit jako",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Chystáte se odhlásit ze serveru {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
     }
 }
