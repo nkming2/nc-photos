@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/files_controller.dart';
+import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/use_case/startup_sync.dart';
 
@@ -15,14 +17,19 @@ class SyncController {
     _isDisposed = true;
   }
 
-  Future<void> requestSync(
-      Account account, PersonProvider personProvider) async {
+  Future<void> requestSync({
+    required Account account,
+    required FilesController filesController,
+    required PersonsController personsController,
+    required PersonProvider personProvider,
+  }) async {
     if (_isDisposed) {
       return;
     }
     if (_syncCompleter == null) {
       _syncCompleter = Completer();
-      final result = await StartupSync.runInIsolate(account, personProvider);
+      final result = await StartupSync.runInIsolate(
+          account, filesController, personsController, personProvider);
       if (!_isDisposed && result.isSyncPersonUpdated) {
         onPeopleUpdated?.call();
       }
@@ -32,15 +39,23 @@ class SyncController {
     }
   }
 
-  Future<void> requestResync(
-      Account account, PersonProvider personProvider) async {
+  Future<void> requestResync({
+    required Account account,
+    required FilesController filesController,
+    required PersonsController personsController,
+    required PersonProvider personProvider,
+  }) async {
     if (_syncCompleter?.isCompleted == true) {
       _syncCompleter = null;
-      return requestSync(account, personProvider);
     } else {
       // already syncing
-      return requestSync(account, personProvider);
     }
+    return requestSync(
+      account: account,
+      filesController: filesController,
+      personsController: personsController,
+      personProvider: personProvider,
+    );
   }
 
   final Account account;

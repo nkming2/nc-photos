@@ -109,8 +109,12 @@ class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
     if (_bloc.state.shouldResync &&
         _bloc.state.personProvider != PersonProvider.none) {
       _log.fine("[dispose] Requesting to resync account");
-      _accountController.syncController
-          .requestResync(_bloc.state.account, _bloc.state.personProvider);
+      _accountController.syncController.requestResync(
+        account: _bloc.state.account,
+        filesController: context.read(),
+        personsController: context.read(),
+        personProvider: _bloc.state.personProvider,
+      );
     }
     _animationController.dispose();
     super.dispose();

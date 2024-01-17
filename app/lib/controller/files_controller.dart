@@ -13,6 +13,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/file/list_file.dart';
+import 'package:nc_photos/use_case/find_file_descriptor.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
 import 'package:nc_photos/use_case/update_property.dart';
@@ -20,6 +21,7 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/lazy.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_db/np_db.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:to_string/to_string.dart';
 
@@ -230,6 +232,69 @@ class FilesController {
       _dataStreamController
           .addWithValue((value) => value.copyWith(files: next));
       errorBuilder(failures)?.let(_dataStreamController.addError);
+    }
+  }
+
+  Future<void> applySyncResult({
+    DbSyncIdResult? favorites,
+    List<int>? fileExifs,
+  }) async {
+    if (favorites?.isNotEmpty != true && fileExifs?.isNotEmpty != true) {
+      return;
+    }
+
+    // do async ops first
+    final fileExifFiles =
+        await fileExifs?.letFuture((e) async => await FindFileDescriptor(_c)(
+              account,
+              e,
+              onFileNotFound: (id) {
+                _log.warning("[applySyncResult] File id not found: $id");
+              },
+            ));
+
+    final next = LinkedHashMap.of(_dataStreamController.value.files);
+    if (favorites != null && favorites.isNotEmpty) {
+      _applySyncFavoriteResult(next, favorites);
+    }
+    if (fileExifFiles != null && fileExifFiles.isNotEmpty) {
+      _applySyncFileExifResult(next, fileExifFiles);
+    }
+    _dataStreamController.addWithValue((value) => value.copyWith(files: next));
+  }
+
+  void _applySyncFavoriteResult(
+      Map<int, FileDescriptor> next, DbSyncIdResult result) {
+    for (final id in result.insert) {
+      final f = next[id];
+      if (f == null) {
+        _log.warning("[_applySyncFavoriteResult] File id not found: $id");
+        continue;
+      }
+      if (f is File) {
+        next[id] = f.copyWith(isFavorite: true);
+      } else {
+        next[id] = f.copyWith(fdIsFavorite: true);
+      }
+    }
+    for (final id in result.delete) {
+      final f = next[id];
+      if (f == null) {
+        _log.warning("[_applySyncFavoriteResult] File id not found: $id");
+        continue;
+      }
+      if (f is File) {
+        next[id] = f.copyWith(isFavorite: false);
+      } else {
+        next[id] = f.copyWith(fdIsFavorite: false);
+      }
+    }
+  }
+
+  void _applySyncFileExifResult(
+      Map<int, FileDescriptor> next, List<FileDescriptor> results) {
+    for (final f in results) {
+      next[f.fdId] = f;
     }
   }
 

@@ -10,6 +10,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.accountPrefController,
     required this.collectionsController,
     required this.sessionController,
+    required this.syncController,
+    required this.personsController,
   }) : super(_State.init(
           zoom: prefController.homePhotosZoomLevel.value,
           isEnableMemoryCollection:
@@ -142,6 +144,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       memoryCollections: ev.memoryCollections,
       isLoading: _itemTransformerQueue.isProcessing,
     ));
+    syncController.requestSync(
+      account: account,
+      filesController: controller,
+      personsController: personsController,
+      personProvider: accountPrefController.personProvider.value,
+    );
     _tryStartMetadataTask();
   }
 
@@ -403,6 +411,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final AccountPrefController accountPrefController;
   final CollectionsController collectionsController;
   final SessionController sessionController;
+  final SyncController syncController;
+  final PersonsController personsController;
 
   final _itemTransformerQueue =
       ComputeQueue<_ItemTransformerArgument, _ItemTransformerResult>();

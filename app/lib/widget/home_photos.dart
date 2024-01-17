@@ -609,7 +609,11 @@ class _HomePhotosState extends State<HomePhotos>
             if (isPostSuccess) {
               _isScrollbarVisible = true;
               context.read<AccountController>().syncController.requestSync(
-                  widget.account, _accountPrefController.personProvider.value);
+                    account: widget.account,
+                    filesController: context.read(),
+                    personsController: context.read(),
+                    personProvider: _accountPrefController.personProvider.value,
+                  );
               _tryStartMetadataTask(context);
             }
           });
