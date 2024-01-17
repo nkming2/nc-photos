@@ -10,10 +10,12 @@ import 'package:nc_photos/controller/session_controller.dart';
 import 'package:nc_photos/controller/sharings_controller.dart';
 import 'package:nc_photos/controller/sync_controller.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/event/native_event_relay.dart';
 
 class AccountController {
   void setCurrentAccount(Account account) {
     _account = account;
+
     _collectionsController?.dispose();
     _collectionsController = null;
     _serverController?.dispose();
@@ -32,6 +34,9 @@ class AccountController {
     _placesController = null;
     _filesController?.dispose();
     _filesController = null;
+
+    _nativeEventRelay?.dispose();
+    _nativeEventRelay = NativeEventRelay(filesController: filesController);
   }
 
   Account get account => _account!;
@@ -87,6 +92,7 @@ class AccountController {
       );
 
   Account? _account;
+
   CollectionsController? _collectionsController;
   ServerController? _serverController;
   AccountPrefController? _accountPrefController;
@@ -96,4 +102,6 @@ class AccountController {
   SharingsController? _sharingsController;
   PlacesController? _placesController;
   FilesController? _filesController;
+
+  NativeEventRelay? _nativeEventRelay;
 }
