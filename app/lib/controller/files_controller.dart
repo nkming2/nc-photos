@@ -166,7 +166,9 @@ class FilesController {
           location: location,
         );
       } catch (e, stackTrace) {
-        _log.severe("Failed while UpdateProperty: ${logFilename(f.fdPath)}", e,
+        _log.severe(
+            "[updateProperty] Failed while UpdateProperty: ${logFilename(f.fdPath)}",
+            e,
             stackTrace);
         failures.add(f.fdId);
         outdated.remove(f.fdId);
@@ -198,7 +200,7 @@ class FilesController {
       for (final f in files) {
         final original = next.remove(f.fdId);
         if (original == null) {
-          _log.warning("[updateProperty] File not found: $f");
+          _log.warning("[remove] File not found: $f");
           continue;
         }
         backups[f.fdId] = original;
@@ -212,13 +214,15 @@ class FilesController {
         account,
         files,
         onError: (index, value, error, stackTrace) {
-          _log.severe("Failed while Remove: ${logFilename(value.fdPath)}",
-              error, stackTrace);
+          _log.severe(
+              "[remove] Failed while Remove: ${logFilename(value.fdPath)}",
+              error,
+              stackTrace);
           failures.add(value.fdId);
         },
       );
     } catch (e, stackTrace) {
-      _log.severe("Failed while Remove", e, stackTrace);
+      _log.severe("[remove] Failed while Remove", e, stackTrace);
       failures.addAll(files.map((e) => e.fdId));
     }
     if (failures.isNotEmpty) {
