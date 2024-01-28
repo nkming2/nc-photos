@@ -22,14 +22,11 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/notified_action.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
-import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
-import 'package:nc_photos/use_case/update_property.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
@@ -537,32 +534,31 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final fd = _streamFilesView[_viewerController.currentPage];
-    final c = KiwiContainer().resolve<DiContainer>();
-    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = true;
     });
     _pageStates[index]!.isProcessingFavorite = true;
+    final fd = _streamFilesView[_viewerController.currentPage];
     try {
-      await NotifiedAction(
-        () => UpdateProperty(c)(
-          widget.account,
-          file,
-          favorite: true,
-        ),
-        null,
-        L10n.global().favoriteSuccessNotification,
-        failureText: L10n.global().favoriteFailureNotification,
-      )();
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_onFavoritePressed] Failed while UpdateProperty", e, stackTrace);
-      setState(() {
-        _pageStates[index]!.favoriteOverride = false;
-      });
+      await context.read<AccountController>().filesController.updateProperty(
+        [fd],
+        isFavorite: true,
+        errorBuilder: (fileIds) {
+          if (mounted) {
+            SnackBarManager().showSnackBar(SnackBar(
+              content: Text(L10n.global().unfavoriteFailureNotification),
+              duration: k.snackBarDurationNormal,
+            ));
+            setState(() {
+              _pageStates[index]!.favoriteOverride = false;
+            });
+          }
+          return null;
+        },
+      );
+    } finally {
+      _pageStates[index]!.isProcessingFavorite = false;
     }
-    _pageStates[index]!.isProcessingFavorite = false;
   }
 
   Future<void> _onUnfavoritePressed(int index) async {
@@ -571,32 +567,31 @@ class _ViewerState extends State<Viewer>
       return;
     }
 
-    final fd = _streamFilesView[_viewerController.currentPage];
-    final c = KiwiContainer().resolve<DiContainer>();
-    final file = (await InflateFileDescriptor(c)(widget.account, [fd])).first;
     setState(() {
       _pageStates[index]!.favoriteOverride = false;
     });
     _pageStates[index]!.isProcessingFavorite = true;
+    final fd = _streamFilesView[_viewerController.currentPage];
     try {
-      await NotifiedAction(
-        () => UpdateProperty(c)(
-          widget.account,
-          file,
-          favorite: false,
-        ),
-        null,
-        L10n.global().unfavoriteSuccessNotification,
-        failureText: L10n.global().unfavoriteFailureNotification,
-      )();
-    } catch (e, stackTrace) {
-      _log.shout(
-          "[_onUnfavoritePressed] Failed while UpdateProperty", e, stackTrace);
-      setState(() {
-        _pageStates[index]!.favoriteOverride = true;
-      });
+      await context.read<AccountController>().filesController.updateProperty(
+        [fd],
+        isFavorite: false,
+        errorBuilder: (fileIds) {
+          if (mounted) {
+            SnackBarManager().showSnackBar(SnackBar(
+              content: Text(L10n.global().unfavoriteFailureNotification),
+              duration: k.snackBarDurationNormal,
+            ));
+            setState(() {
+              _pageStates[index]!.favoriteOverride = true;
+            });
+          }
+          return null;
+        },
+      );
+    } finally {
+      _pageStates[index]!.isProcessingFavorite = false;
     }
-    _pageStates[index]!.isProcessingFavorite = false;
   }
 
   void _onDetailsPressed() {
