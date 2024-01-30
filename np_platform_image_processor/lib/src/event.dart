@@ -1,3 +1,7 @@
+import 'package:to_string/to_string.dart';
+
+part 'event.g.dart';
+
 abstract class ImageProcessorEvent {
   static ImageProcessorEvent fromNativeEvent(dynamic ev) {
     final id = ev["event"];
@@ -10,6 +14,7 @@ abstract class ImageProcessorEvent {
   }
 }
 
+@toString
 class ImageProcessorUploadSuccessEvent implements ImageProcessorEvent {
   const ImageProcessorUploadSuccessEvent._();
 
@@ -17,6 +22,9 @@ class ImageProcessorUploadSuccessEvent implements ImageProcessorEvent {
     assert(ev.event == _id);
     return const ImageProcessorUploadSuccessEvent._();
   }
+
+  @override
+  String toString() => _$toString();
 
   static const _id = "ImageProcessorUploadSuccessEvent";
 }

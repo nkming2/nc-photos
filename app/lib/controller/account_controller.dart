@@ -44,7 +44,10 @@ class AccountController {
     _metadataController?.dispose();
     _metadataController = null;
     _nativeEventRelay?.dispose();
-    _nativeEventRelay = NativeEventRelay(filesController: filesController);
+    _nativeEventRelay = NativeEventRelay(
+      filesController: filesController,
+      metadataController: metadataController,
+    );
   }
 
   Account get account => _account!;
