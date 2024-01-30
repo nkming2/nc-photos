@@ -19,7 +19,6 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_collections.dart';
-import 'package:nc_photos/widget/home_photos.dart';
 import 'package:nc_photos/widget/home_photos2.dart';
 import 'package:nc_photos/widget/home_search.dart';
 import 'package:np_codegen/np_codegen.dart';
