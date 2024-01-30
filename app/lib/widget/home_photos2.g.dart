@@ -146,10 +146,10 @@ extension _$_LoadItemsToString on _LoadItems {
   }
 }
 
-extension _$_ReloadToString on _Reload {
+extension _$_RequestRefreshToString on _RequestRefresh {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_Reload {}";
+    return "_RequestRefresh {}";
   }
 }
 
@@ -270,13 +270,6 @@ extension _$_SetMemoriesRangeToString on _SetMemoriesRange {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetMemoriesRange {value: $value}";
-  }
-}
-
-extension _$_SetEnableExifToString on _SetEnableExif {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetEnableExif {value: $value}";
   }
 }
 

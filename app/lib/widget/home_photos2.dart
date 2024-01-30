@@ -18,11 +18,10 @@ import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/files_controller.dart';
+import 'package:nc_photos/controller/metadata_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
-import 'package:nc_photos/controller/session_controller.dart';
 import 'package:nc_photos/controller/sync_controller.dart';
-import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -35,7 +34,6 @@ import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/progress_util.dart';
-import 'package:nc_photos/service.dart' as service;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
@@ -85,9 +83,9 @@ class HomePhotos2 extends StatelessWidget {
         prefController: context.read(),
         accountPrefController: accountController.accountPrefController,
         collectionsController: accountController.collectionsController,
-        sessionController: accountController.sessionController,
         syncController: accountController.syncController,
         personsController: accountController.personsController,
+        metadataController: accountController.metadataController,
       ),
       child: const _WrappedHomePhotos(),
     );
@@ -299,7 +297,7 @@ class _BodyState extends State<_Body> {
                           .copyWith(scrollbars: false),
                       child: RefreshIndicator(
                         onRefresh: () async {
-                          _bloc.add(const _Reload());
+                          _bloc.add(const _RequestRefresh());
                           var hasNotNull = false;
                           await _bloc.stream.firstWhere((s) {
                             if (s.syncProgress != null) {

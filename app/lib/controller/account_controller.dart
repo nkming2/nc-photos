@@ -3,8 +3,10 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/files_controller.dart';
+import 'package:nc_photos/controller/metadata_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/controller/places_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/controller/session_controller.dart';
 import 'package:nc_photos/controller/sharings_controller.dart';
@@ -13,6 +15,10 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/event/native_event_relay.dart';
 
 class AccountController {
+  AccountController({
+    required this.prefController,
+  });
+
   void setCurrentAccount(Account account) {
     _account = account;
 
@@ -35,6 +41,8 @@ class AccountController {
     _filesController?.dispose();
     _filesController = null;
 
+    _metadataController?.dispose();
+    _metadataController = null;
     _nativeEventRelay?.dispose();
     _nativeEventRelay = NativeEventRelay(filesController: filesController);
   }
@@ -84,12 +92,21 @@ class AccountController {
         account: _account!,
       );
 
-  FilesController get filesController =>
-      _filesController ??= FilesController(
+  FilesController get filesController => _filesController ??= FilesController(
         KiwiContainer().resolve<DiContainer>(),
         account: _account!,
         accountPrefController: accountPrefController,
       );
+
+  MetadataController get metadataController =>
+      _metadataController ??= MetadataController(
+        KiwiContainer().resolve(),
+        account: account,
+        filesController: filesController,
+        prefController: prefController,
+      );
+
+  PrefController prefController;
 
   Account? _account;
 
@@ -103,5 +120,6 @@ class AccountController {
   PlacesController? _placesController;
   FilesController? _filesController;
 
+  MetadataController? _metadataController;
   NativeEventRelay? _nativeEventRelay;
 }

@@ -9,9 +9,11 @@ class SessionController {
     _hasFiredMetadataTaskController.close();
   }
 
+  @Deprecated("Use MetadataController")
   ValueStream<bool> get hasFiredMetadataTask =>
       _hasFiredMetadataTaskController.stream;
 
+  @Deprecated("Use MetadataController")
   void setFiredMetadataTask(bool value) {
     _hasFiredMetadataTaskController.add(value);
   }

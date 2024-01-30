@@ -9,16 +9,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.prefController,
     required this.accountPrefController,
     required this.collectionsController,
-    required this.sessionController,
     required this.syncController,
     required this.personsController,
+    required this.metadataController,
   }) : super(_State.init(
           zoom: prefController.homePhotosZoomLevel.value,
           isEnableMemoryCollection:
               accountPrefController.isEnableMemoryAlbum.value,
         )) {
     on<_LoadItems>(_onLoad);
-    on<_Reload>(_onReload);
+    on<_RequestRefresh>(_onRequestRefresh);
     on<_TransformItems>(_onTransformItems);
     on<_OnItemTransformed>(_onOnItemTransformed);
 
@@ -41,7 +41,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
     on<_SetSortByName>(_onSetSortByName);
     on<_SetMemoriesRange>(_onSetMemoriesRange);
-    on<_SetEnableExif>(_onSetEnableExif);
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
 
     on<_SetError>(_onSetError);
@@ -55,9 +54,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }));
     _subscriptions.add(prefController.memoriesRange.listen((event) {
       add(_SetMemoriesRange(event));
-    }));
-    _subscriptions.add(prefController.isEnableExif.listen((event) {
-      add(_SetEnableExif(event));
     }));
   }
 
@@ -118,10 +114,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
   }
 
-  void _onReload(_Reload ev, Emitter<_State> emit) {
+  void _onRequestRefresh(_RequestRefresh ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(syncProgress: const Progress(0)));
     _syncRemote();
+    metadataController.scheduleNext();
   }
 
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {
@@ -143,7 +140,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       personsController: personsController,
       personProvider: accountPrefController.personProvider.value,
     );
-    _tryStartMetadataTask();
   }
 
   void _onSetSelectedItems(_SetSelectedItems ev, Emitter<_State> emit) {
@@ -291,15 +287,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _transformItems(state.files);
   }
 
-  void _onSetEnableExif(_SetEnableExif ev, Emitter<_State> emit) {
-    _log.info(ev);
-    if (ev.value) {
-      _tryStartMetadataTask(ignoreFired: true);
-    } else {
-      _stopMetadataTask();
-    }
-  }
-
   void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {
     _log.info(ev);
     _transformItems(state.files);
@@ -354,45 +341,15 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(selectedItems: const {}));
   }
 
-  Future<void> _tryStartMetadataTask({
-    bool ignoreFired = false,
-  }) async {
-    if (state.files.isNotEmpty &&
-        prefController.isEnableExif.value &&
-        (ignoreFired || !sessionController.hasFiredMetadataTask.value)) {
-      sessionController.setFiredMetadataTask(true);
-      try {
-        final missingMetadataCount =
-            await _c.npDb.countFilesByFileIdsMissingMetadata(
-          account: account.toDb(),
-          fileIds: state.files.map((e) => e.fdId).toList(),
-          mimes: file_util.supportedImageFormatMimes,
-        );
-        _log.info(
-            "[_tryStartMetadataTask] Missing count: $missingMetadataCount");
-        if (missingMetadataCount > 0) {
-          unawaited(service.startService());
-        }
-      } catch (e, stackTrace) {
-        _log.shout("[_tryStartMetadataTask] Failed starting metadata task", e,
-            stackTrace);
-      }
-    }
-  }
-
-  void _stopMetadataTask() {
-    service.stopService();
-  }
-
   final DiContainer _c;
   final Account account;
   final FilesController controller;
   final PrefController prefController;
   final AccountPrefController accountPrefController;
   final CollectionsController collectionsController;
-  final SessionController sessionController;
   final SyncController syncController;
   final PersonsController personsController;
+  final MetadataController metadataController;
 
   final _itemTransformerQueue =
       ComputeQueue<_ItemTransformerArgument, _ItemTransformerResult>();

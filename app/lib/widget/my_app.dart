@@ -70,10 +70,12 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (_) => AccountController(),
+          create: (_) => PrefController(_c),
         ),
         RepositoryProvider(
-          create: (_) => PrefController(_c),
+          create: (context) => AccountController(
+            prefController: context.read(),
+          ),
         ),
         RepositoryProvider<NpDb>(
           create: (_) => _c.npDb,

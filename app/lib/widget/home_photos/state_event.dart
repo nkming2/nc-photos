@@ -65,9 +65,11 @@ class _LoadItems implements _Event {
   String toString() => _$toString();
 }
 
+/// User explicitly requested to refresh the data, e.g., performed the
+/// pull-to-refresh action
 @toString
-class _Reload implements _Event {
-  const _Reload();
+class _RequestRefresh implements _Event {
+  const _RequestRefresh();
 
   @override
   String toString() => _$toString();
@@ -236,16 +238,6 @@ class _SetMemoriesRange implements _Event {
   String toString() => _$toString();
 
   final int value;
-}
-
-@toString
-class _SetEnableExif implements _Event {
-  const _SetEnableExif(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final bool value;
 }
 
 @toString
