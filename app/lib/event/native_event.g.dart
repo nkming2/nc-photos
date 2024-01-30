@@ -3,12 +3,12 @@
 part of 'native_event.dart';
 
 // **************************************************************************
-// NpLogGenerator
+// ToStringGenerator
 // **************************************************************************
 
-extension _$FileExifUpdatedEventNpLog on FileExifUpdatedEvent {
-  // ignore: unused_element
-  Logger get _log => log;
-
-  static final log = Logger("event.native_event.FileExifUpdatedEvent");
+extension _$FileExifUpdatedEventToString on FileExifUpdatedEvent {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "FileExifUpdatedEvent {fileIds: [length: ${fileIds.length}]}";
+  }
 }

@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/stream_extension.dart';
-import 'package:np_codegen/np_codegen.dart';
 import 'package:np_platform_message_relay/np_platform_message_relay.dart';
+import 'package:to_string/to_string.dart';
 
 part 'native_event.g.dart';
 
@@ -47,7 +47,7 @@ class NativeEventListener<T> {
       Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
 }
 
-@npLog
+@toString
 class FileExifUpdatedEvent {
   const FileExifUpdatedEvent(this.fileIds);
 
@@ -64,6 +64,9 @@ class FileExifUpdatedEvent {
           "fileIds": fileIds,
         }),
       );
+
+  @override
+  String toString() => _$toString();
 
   static const id = "FileExifUpdatedEvent";
 

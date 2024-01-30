@@ -32,6 +32,7 @@ class NativeEventRelay {
   }
 
   void _onFileExifUpdatedEvent(FileExifUpdatedEvent ev) {
+    _log.info(ev);
     filesController.applySyncResult(fileExifs: ev.fileIds);
   }
 
