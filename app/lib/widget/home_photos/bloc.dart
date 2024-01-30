@@ -43,7 +43,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetMemoriesRange>(_onSetMemoriesRange);
     on<_SetEnableExif>(_onSetEnableExif);
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
-    on<_SetShareFolder>(_onSetShareFolder);
 
     on<_SetError>(_onSetError);
 
@@ -59,9 +58,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }));
     _subscriptions.add(prefController.isEnableExif.listen((event) {
       add(_SetEnableExif(event));
-    }));
-    _subscriptions.add(accountPrefController.shareFolder.listen((event) {
-      add(_SetShareFolder(event));
     }));
   }
 
@@ -307,11 +303,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {
     _log.info(ev);
     _transformItems(state.files);
-  }
-
-  void _onSetShareFolder(_SetShareFolder ev, Emitter<_State> emit) {
-    _log.info(ev);
-    add(const _Reload());
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

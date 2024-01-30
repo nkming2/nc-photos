@@ -280,13 +280,6 @@ extension _$_SetEnableExifToString on _SetEnableExif {
   }
 }
 
-extension _$_SetShareFolderToString on _SetShareFolder {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetShareFolder {value: $value}";
-  }
-}
-
 extension _$_UpdateDateTimeGroupToString on _UpdateDateTimeGroup {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

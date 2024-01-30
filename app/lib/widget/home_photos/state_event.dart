@@ -249,16 +249,6 @@ class _SetEnableExif implements _Event {
 }
 
 @toString
-class _SetShareFolder implements _Event {
-  const _SetShareFolder(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final String value;
-}
-
-@toString
 class _UpdateDateTimeGroup implements _Event {
   const _UpdateDateTimeGroup();
 

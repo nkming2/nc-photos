@@ -42,9 +42,19 @@ class FilesController {
     this._c, {
     required this.account,
     required this.accountPrefController,
-  });
+  }) {
+    _subscriptions.add(accountPrefController.shareFolder.listen((event) {
+      // sync remote if share folder is modified
+      if (_isDataStreamInited) {
+        syncRemote();
+      }
+    }));
+  }
 
   void dispose() {
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     _dataStreamController.close();
   }
 
@@ -367,6 +377,7 @@ class FilesController {
 
   final _mutex = Mutex();
   var _isSyncing = false;
+  final _subscriptions = <StreamSubscription>[];
 }
 
 @toString
