@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
@@ -11,7 +10,6 @@ import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/use_case/person/sync_person.dart';
 import 'package:nc_photos/use_case/sync_favorite.dart';
 import 'package:nc_photos/use_case/sync_tag.dart';
@@ -96,9 +94,6 @@ class StartupSync {
     _$StartupSyncNpLog.log.info('[_broadcastResult] $result');
     if (result.syncFavoriteResult != null) {
       filesController.applySyncResult(favorites: result.syncFavoriteResult!);
-      // legacy
-      final eventBus = KiwiContainer().resolve<EventBus>();
-      eventBus.fire(FavoriteResyncedEvent(account));
     }
     if (result.isSyncPersonUpdated) {
       personsController.reload();

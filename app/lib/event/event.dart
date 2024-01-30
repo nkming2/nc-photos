@@ -89,6 +89,7 @@ class ShareRemovedEvent {
   final Share share;
 }
 
+@Deprecated("not fired anymore, to be removed")
 class FavoriteResyncedEvent {
   const FavoriteResyncedEvent(this.account);
 
