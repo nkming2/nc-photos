@@ -37,6 +37,7 @@ class AppEventListener<T> {
   final _log = Logger("event.event.AppEventListener<${T.runtimeType}>");
 }
 
+@Deprecated("not fired anymore, to be removed")
 class AccountPrefUpdatedEvent {
   const AccountPrefUpdatedEvent(this.pref, this.key, this.value);
 
@@ -116,6 +117,7 @@ class MetadataTaskStateChangedEvent {
   final MetadataTaskState state;
 }
 
+@Deprecated("not fired anymore, to be removed")
 class PrefUpdatedEvent {
   PrefUpdatedEvent(this.key, this.value);
 
