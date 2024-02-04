@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/search.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -492,7 +493,6 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -500,7 +500,9 @@ class _HomeSearchState extends State<HomeSearch>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler(c)(
+    await RemoveSelectionHandler(
+      filesController: context.read<AccountController>().filesController,
+    )(
       account: widget.account,
       selection: selectedFiles,
       isMoveToTrash: true,

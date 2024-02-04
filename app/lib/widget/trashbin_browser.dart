@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/ls_trashbin.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -384,8 +385,9 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
   }
 
   Future<void> _deleteFiles(List<FileDescriptor> files) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    await RemoveSelectionHandler(c)(
+    await RemoveSelectionHandler(
+      filesController: context.read<AccountController>().filesController,
+    )(
       account: widget.account,
       selection: files,
       shouldCleanupAlbum: false,

@@ -646,15 +646,15 @@ class _ViewerState extends State<Viewer>
 
   void _onDeletePressed(BuildContext context) {
     final index = _viewerController.currentPage;
-    final c = KiwiContainer().resolve<DiContainer>();
     final file = _streamFilesView[index];
     _log.info("[_onDeletePressed] Removing file: ${file.fdPath}");
-    unawaited(RemoveSelectionHandler(c)(
+    unawaited(RemoveSelectionHandler(
+      filesController: context.read<AccountController>().filesController,
+    )(
       account: widget.account,
       selection: [file],
       isRemoveOpened: true,
       isMoveToTrash: true,
-      shouldShowProcessingText: false,
     ));
     _removeCurrentItemFromStream(context, index);
   }

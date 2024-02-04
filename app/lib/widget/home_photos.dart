@@ -472,7 +472,6 @@ class _HomePhotosState extends State<HomePhotos>
   }
 
   Future<void> _onSelectionDeletePressed(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -480,7 +479,9 @@ class _HomePhotosState extends State<HomePhotos>
     setState(() {
       clearSelectedItems();
     });
-    await RemoveSelectionHandler(c)(
+    await RemoveSelectionHandler(
+      filesController: context.read<AccountController>().filesController,
+    )(
       account: widget.account,
       selection: selectedFiles,
       isMoveToTrash: true,
