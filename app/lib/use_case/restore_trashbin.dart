@@ -15,7 +15,8 @@ class RestoreTrashbin {
   static bool require(DiContainer c) => true;
 
   Future<void> call(Account account, File file) async {
-    await Move(_c)(
+    // we don't cache the trashbin
+    await Move(_c.withRemoteRepo())(
       account,
       file,
       "remote.php/dav/trashbin/${account.userId}/restore/${file.filename}",
