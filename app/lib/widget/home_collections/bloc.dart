@@ -48,7 +48,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   Future<void> _onLoad(_LoadCollections ev, Emitter<_State> emit) async {
-    _log.info("[_onLoad] $ev");
+    _log.info(ev);
     return emit.forEach<CollectionStreamEvent>(
       controller.stream,
       onData: (data) => state.copyWith(
@@ -66,31 +66,31 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onReload(_ReloadCollections ev, Emitter<_State> emit) {
-    _log.info("[_onReload] $ev");
+    _log.info(ev);
     unawaited(controller.reload());
   }
 
   Future<void> _onTransformItems(
       _TransformItems ev, Emitter<_State> emit) async {
-    _log.info("[_onTransformItems] $ev");
+    _log.info(ev);
     final transformed = _transformCollections(ev.collections, state.sort);
     emit(state.copyWith(transformedItems: transformed));
   }
 
   void _onSetSelectedItems(_SetSelectedItems ev, Emitter<_State> emit) {
-    _log.info("[_onSetSelectedItems] $ev");
+    _log.info(ev);
     emit(state.copyWith(selectedItems: ev.items));
   }
 
   void _onRemoveSelectedItems(_RemoveSelectedItems ev, Emitter<_State> emit) {
-    _log.info("[_onDeleteSelectedItems] $ev");
+    _log.info(ev);
     final selected = state.selectedItems;
     emit(state.copyWith(selectedItems: const {}));
     controller.remove(selected.map((e) => e.collection).toList());
   }
 
   void _onUpdateCollectionSort(_UpdateCollectionSort ev, Emitter<_State> emit) {
-    _log.info("[_onUpdateCollectionSort] $ev");
+    _log.info(ev);
     if (ev.sort != state.sort) {
       final transformed = _transformCollections(state.collections, ev.sort);
       emit(state.copyWith(
@@ -101,7 +101,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   void _onSetCollectionSort(_SetCollectionSort ev, Emitter<_State> emit) {
-    _log.info("[_onSetCollectionSort] $ev");
+    _log.info(ev);
     prefController.setHomeAlbumsSort(ev.sort.index);
   }
 
