@@ -56,6 +56,7 @@ class Remove {
     return count;
   }
 
+  // TODO: move to CollectionsController
   Future<void> _cleanUpAlbums(
       Account account, List<FileDescriptor> removes) async {
     final albums = await ListAlbum(_c)(account).whereType<Album>().toList();

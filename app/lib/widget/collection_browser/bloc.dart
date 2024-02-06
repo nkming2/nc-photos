@@ -425,6 +425,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       );
       itemsController = CollectionItemsController(
         _c,
+        filesController: filesController,
         account: account,
         collection: collection,
         onCollectionUpdated: (_) {},

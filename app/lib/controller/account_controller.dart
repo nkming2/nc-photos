@@ -55,6 +55,7 @@ class AccountController {
   CollectionsController get collectionsController =>
       _collectionsController ??= CollectionsController(
         KiwiContainer().resolve<DiContainer>(),
+        filesController: filesController,
         account: _account!,
         serverController: serverController,
       );
