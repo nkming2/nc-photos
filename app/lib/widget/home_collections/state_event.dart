@@ -9,6 +9,7 @@ class _State {
     required this.isLoading,
     required this.transformedItems,
     required this.selectedItems,
+    required this.itemCounts,
     this.error,
     required this.removeError,
   });
@@ -20,6 +21,7 @@ class _State {
       isLoading: false,
       transformedItems: [],
       selectedItems: {},
+      itemCounts: {},
       removeError: null,
     );
   }
@@ -32,6 +34,7 @@ class _State {
   final bool isLoading;
   final List<_Item> transformedItems;
   final Set<_Item> selectedItems;
+  final Map<String, int> itemCounts;
 
   final ExceptionEvent? error;
   final ExceptionEvent? removeError;
@@ -110,6 +113,17 @@ class _SetCollectionSort implements _Event {
   String toString() => _$toString();
 
   final collection_util.CollectionSort sort;
+}
+
+@toString
+class _SetItemCount implements _Event {
+  const _SetItemCount(this.collection, this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Collection collection;
+  final int value;
 }
 
 @toString

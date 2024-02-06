@@ -129,6 +129,7 @@ class _ItemView extends StatelessWidget {
   const _ItemView({
     required this.account,
     required this.item,
+    this.collectionItemCountOverride,
   });
 
   @override
@@ -152,7 +153,8 @@ class _ItemView extends StatelessWidget {
     if (item.isShared) {
       subtitle = "${L10n.global().albumSharedLabel} | ";
     }
-    subtitle += item.subtitle ?? "";
+    subtitle +=
+        item.getSubtitle(itemCountOverride: collectionItemCountOverride) ?? "";
     return CollectionGridItem(
       cover: _CollectionCover(
         account: account,
@@ -166,6 +168,7 @@ class _ItemView extends StatelessWidget {
 
   final Account account;
   final _Item item;
+  final int? collectionItemCountOverride;
 }
 
 class _CollectionCover extends StatelessWidget {

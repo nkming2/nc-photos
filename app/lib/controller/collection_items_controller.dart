@@ -51,6 +51,13 @@ class CollectionItemsController {
     required this.collection,
     required this.onCollectionUpdated,
   }) {
+    _countStreamController = BehaviorSubject.seeded(collection.count);
+    _subscriptions.add(_dataStreamController.stream.listen((event) {
+      if (!event.hasNext) {
+        _countStreamController.add(event.items.length);
+      }
+    }));
+
     _subscriptions.add(filesController.stream.listen(_onFilesEvent));
   }
 
@@ -81,6 +88,8 @@ class CollectionItemsController {
 
   /// Peek the stream and return the current value
   CollectionItemStreamData peekStream() => _dataStreamController.stream.value;
+
+  ValueStream<int?> get countStream => _countStreamController.stream;
 
   /// Add list of [files] to [collection]
   Future<void> addFiles(List<FileDescriptor> files) async {
@@ -346,6 +355,7 @@ class CollectionItemsController {
       hasNext: true,
     ),
   );
+  late final BehaviorSubject<int?> _countStreamController;
 
   final _mutex = Mutex();
   final _subscriptions = <StreamSubscription>[];

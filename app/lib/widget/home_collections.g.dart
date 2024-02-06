@@ -19,6 +19,7 @@ abstract class $_StateCopyWithWorker {
       bool? isLoading,
       List<_Item>? transformedItems,
       Set<_Item>? selectedItems,
+      Map<String, int>? itemCounts,
       ExceptionEvent? error,
       ExceptionEvent? removeError});
 }
@@ -33,6 +34,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic isLoading,
       dynamic transformedItems,
       dynamic selectedItems,
+      dynamic itemCounts,
       dynamic error = copyWithNull,
       dynamic removeError = copyWithNull}) {
     return _State(
@@ -42,6 +44,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         transformedItems:
             transformedItems as List<_Item>? ?? that.transformedItems,
         selectedItems: selectedItems as Set<_Item>? ?? that.selectedItems,
+        itemCounts: itemCounts as Map<String, int>? ?? that.itemCounts,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?,
         removeError: removeError == copyWithNull
             ? that.removeError
@@ -96,7 +99,7 @@ extension _$_ItemNpLog on _Item {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, error: $error, removeError: $removeError}";
+    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, itemCounts: $itemCounts, error: $error, removeError: $removeError}";
   }
 }
 
@@ -146,6 +149,13 @@ extension _$_SetCollectionSortToString on _SetCollectionSort {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetCollectionSort {sort: ${sort.name}}";
+  }
+}
+
+extension _$_SetItemCountToString on _SetItemCount {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetItemCount {collection: $collection, value: $value}";
   }
 }
 

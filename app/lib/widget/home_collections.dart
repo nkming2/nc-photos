@@ -191,9 +191,14 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       items: state.transformedItems,
                       itemBuilder: (_, __, metadata) {
                         final item = metadata as _Item;
-                        return _ItemView(
-                          account: _bloc.account,
-                          item: item,
+                        return _BlocSelector<int?>(
+                          selector: (state) =>
+                              state.itemCounts[item.collection.id],
+                          builder: (context, itemCount) => _ItemView(
+                            account: _bloc.account,
+                            item: item,
+                            collectionItemCountOverride: itemCount,
+                          ),
                         );
                       },
                       staggeredTileBuilder: (_, __) =>
@@ -267,7 +272,8 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
-// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+// typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();
