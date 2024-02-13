@@ -501,18 +501,24 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
   }
 
+  /// Remove file items not recognized by the app
   List<CollectionItem> _filterItems(
       List<CollectionItem> rawItems, Set<int>? whitelist) {
     if (whitelist == null) {
       return rawItems;
     }
-    return rawItems.where((e) {
+    final results = rawItems.where((e) {
       if (e is CollectionFileItem) {
         return whitelist.contains(e.file.fdId);
       } else {
         return true;
       }
     }).toList();
+    if (rawItems.length != results.length) {
+      _log.fine(
+          "[_filterItems] ${rawItems.length - results.length} items filtered out");
+    }
+    return results;
   }
 
   String? _getCoverUrlByItems() {

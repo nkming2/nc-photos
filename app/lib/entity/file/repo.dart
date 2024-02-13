@@ -10,6 +10,8 @@ part 'repo.g.dart';
 abstract class FileRepo2 {
   /// Query all files belonging to [account]
   ///
+  /// Returned files are sorted by time in descending order
+  ///
   /// Normally the stream should complete with only a single event, but some
   /// implementation might want to return multiple set of values, say one set of
   /// cached value and later another set of updated value from a remote source.
@@ -127,6 +129,8 @@ class CachedFileRepo implements FileRepo2 {
 
 abstract class FileDataSource2 {
   /// Query all files belonging to [account]
+  ///
+  /// Returned files are sorted by time in descending order
   Stream<List<FileDescriptor>> getFileDescriptors(
       Account account, String shareDirPath);
 
