@@ -1,11 +1,12 @@
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 
 class CreateUserShare {
   const CreateUserShare(this.shareRepo);
 
-  Future<Share> call(Account account, File file, String shareWith) =>
+  Future<Share> call(Account account, FileDescriptor file, String shareWith) =>
       shareRepo.create(account, file, shareWith);
 
   final ShareRepo shareRepo;

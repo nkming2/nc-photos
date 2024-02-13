@@ -18,12 +18,12 @@ part 'data_source.g.dart';
 @npLog
 class ShareRemoteDataSource implements ShareDataSource {
   @override
-  list(
+  Future<List<Share>> list(
     Account account,
-    File file, {
+    FileDescriptor file, {
     bool? isIncludeReshare,
   }) async {
-    _log.info("[list] ${file.path}");
+    _log.info("[list] ${file.fdPath}");
     final response =
         await ApiUtil.fromAccount(account).ocs().filesSharing().shares().get(
               path: file.strippedPath,
@@ -73,8 +73,9 @@ class ShareRemoteDataSource implements ShareDataSource {
   }
 
   @override
-  create(Account account, File file, String shareWith) async {
-    _log.info("[create] Share '${file.path}' with '$shareWith'");
+  Future<Share> create(
+      Account account, FileDescriptor file, String shareWith) async {
+    _log.info("[create] Share '${file.fdPath}' with '$shareWith'");
     final response =
         await ApiUtil.fromAccount(account).ocs().filesSharing().shares().post(
               path: file.strippedPath,

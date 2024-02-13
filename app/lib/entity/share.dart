@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
@@ -150,7 +151,7 @@ class ShareRepo {
   /// See [ShareDataSource.list]
   Future<List<Share>> list(
     Account account,
-    File file, {
+    FileDescriptor file, {
     bool? isIncludeReshare,
   }) =>
       dataSrc.list(account, file, isIncludeReshare: isIncludeReshare);
@@ -171,7 +172,8 @@ class ShareRepo {
       dataSrc.reverseListAll(account);
 
   /// See [ShareDataSource.create]
-  Future<Share> create(Account account, File file, String shareWith) =>
+  Future<Share> create(
+          Account account, FileDescriptor file, String shareWith) =>
       dataSrc.create(account, file, shareWith);
 
   /// See [ShareDataSource.createLink]
@@ -193,7 +195,7 @@ abstract class ShareDataSource {
   /// List all shares from a given file
   Future<List<Share>> list(
     Account account,
-    File file, {
+    FileDescriptor file, {
     bool? isIncludeReshare,
   });
 
@@ -210,7 +212,7 @@ abstract class ShareDataSource {
   Future<List<Share>> reverseListAll(Account account);
 
   /// Share a file/folder with a user
-  Future<Share> create(Account account, File file, String shareWith);
+  Future<Share> create(Account account, FileDescriptor file, String shareWith);
 
   /// Share a file/folder with a share link
   ///
