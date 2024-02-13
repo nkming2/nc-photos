@@ -208,8 +208,10 @@ class FileNpDbDataSource implements FileDataSource2 {
           account: account.toDb(),
           dir: File(path: shareDirPath).toDbKey(),
         );
-        results.addAll(shareDirResults.map((e) => DbFileConverter.fromDb(
-            account.userId.toCaseInsensitiveString(), e)));
+        results.addAll(shareDirResults.where((f) => f.isCollection != true).map(
+            (e) => DbFileConverter.fromDb(
+                    account.userId.toCaseInsensitiveString(), e)
+                .toDescriptor()));
       } on DbNotFoundException catch (_) {
         // normal when there's no cache
       } catch (e, stackTrace) {
