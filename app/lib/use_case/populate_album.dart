@@ -55,6 +55,7 @@ class PopulateAlbum {
               addedBy: account.userId,
               addedAt: clock.now(),
               file: f,
+              ownerId: f.ownerId ?? account.userId,
             )));
       }
     }
@@ -72,6 +73,7 @@ class PopulateAlbum {
           addedBy: account.userId,
           addedAt: clock.now(),
           file: f,
+          ownerId: f.ownerId ?? account.userId,
         )));
     return products;
   }

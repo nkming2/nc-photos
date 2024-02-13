@@ -45,8 +45,8 @@ class UpdateAutoAlbumCover {
       final coverFile = sortedItems
           .whereType<AlbumFileItem>()
           .map((e) => e.file)
-          .where((element) => file_util.isSupportedFormat(element))
-          .firstWhere((element) => element.hasPreview ?? false);
+          .where(file_util.isSupportedFormat)
+          .first;
       // cache the result for later use
       if ((album.coverProvider as AlbumAutoCoverProvider)
               .coverFile

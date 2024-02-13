@@ -350,6 +350,64 @@ class AlbumUpgraderV8 implements AlbumUpgrader {
   final String? logFilePath;
 }
 
+/// Upgrade v9 Album to v10
+///
+/// In v10, file items are now stored as FileDescriptor instead of File
+@npLog
+class AlbumUpgraderV9 implements AlbumUpgrader {
+  const AlbumUpgraderV9({
+    required this.account,
+    this.logFilePath,
+  });
+
+  @override
+  JsonObj? doJson(JsonObj json) {
+    _log.fine("[doJson] Upgrade v9 Album for file: $logFilePath");
+    final result = JsonObj.from(json);
+    if (result["provider"]["type"] != "static") {
+      return result;
+    }
+    for (final item in (result["provider"]["content"]["items"] as List)) {
+      if (item["type"] != "file") {
+        continue;
+      }
+      final originalFile =
+          (item["content"]["file"] as Map).cast<String, dynamic>();
+      item["content"]["file"] =
+          AlbumUpgraderV8._fileJsonToFileDescriptorJson(originalFile);
+      item["content"]["ownerId"] =
+          originalFile["ownerId"] ?? account.userId.raw;
+    }
+    return result;
+  }
+
+  @override
+  DbAlbum? doDb(DbAlbum dbObj) {
+    _log.fine("[doDb] Upgrade v9 Album for file: $logFilePath");
+    if (dbObj.providerType != "static") {
+      return dbObj;
+    }
+    final content = Map.of(dbObj.providerContent);
+    for (final item in content["items"] as List) {
+      if (item["type"] != "file") {
+        continue;
+      }
+      final originalFile =
+          (item["content"]["file"] as Map).cast<String, dynamic>();
+      item["content"]["file"] =
+          AlbumUpgraderV8._fileJsonToFileDescriptorJson(originalFile);
+      item["content"]["ownerId"] =
+          originalFile["ownerId"] ?? account.userId.raw;
+    }
+    return dbObj.copyWith(providerContent: content);
+  }
+
+  final Account account;
+
+  /// File path for logging only
+  final String? logFilePath;
+}
+
 abstract class AlbumUpgraderFactory {
   const AlbumUpgraderFactory();
 
@@ -361,6 +419,7 @@ abstract class AlbumUpgraderFactory {
   AlbumUpgraderV6? buildV6();
   AlbumUpgraderV7? buildV7();
   AlbumUpgraderV8? buildV8();
+  AlbumUpgraderV9? buildV9();
 }
 
 class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
@@ -371,32 +430,38 @@ class DefaultAlbumUpgraderFactory extends AlbumUpgraderFactory {
   });
 
   @override
-  buildV1() => AlbumUpgraderV1(logFilePath: logFilePath);
+  AlbumUpgraderV1 buildV1() => AlbumUpgraderV1(logFilePath: logFilePath);
 
   @override
-  buildV2() => AlbumUpgraderV2(logFilePath: logFilePath);
+  AlbumUpgraderV2 buildV2() => AlbumUpgraderV2(logFilePath: logFilePath);
 
   @override
-  buildV3() => AlbumUpgraderV3(logFilePath: logFilePath);
+  AlbumUpgraderV3 buildV3() => AlbumUpgraderV3(logFilePath: logFilePath);
 
   @override
-  buildV4() => AlbumUpgraderV4(logFilePath: logFilePath);
+  AlbumUpgraderV4 buildV4() => AlbumUpgraderV4(logFilePath: logFilePath);
 
   @override
-  buildV5() => AlbumUpgraderV5(
+  AlbumUpgraderV5 buildV5() => AlbumUpgraderV5(
         account,
         albumFile: albumFile,
         logFilePath: logFilePath,
       );
 
   @override
-  buildV6() => AlbumUpgraderV6(logFilePath: logFilePath);
+  AlbumUpgraderV6 buildV6() => AlbumUpgraderV6(logFilePath: logFilePath);
 
   @override
-  buildV7() => AlbumUpgraderV7(logFilePath: logFilePath);
+  AlbumUpgraderV7 buildV7() => AlbumUpgraderV7(logFilePath: logFilePath);
 
   @override
-  AlbumUpgraderV8? buildV8() => AlbumUpgraderV8(logFilePath: logFilePath);
+  AlbumUpgraderV8 buildV8() => AlbumUpgraderV8(logFilePath: logFilePath);
+
+  @override
+  AlbumUpgraderV9 buildV9() => AlbumUpgraderV9(
+        account: account,
+        logFilePath: logFilePath,
+      );
 
   final Account account;
   final File? albumFile;

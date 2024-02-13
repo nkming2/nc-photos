@@ -21,7 +21,6 @@ part 'unshare_album_with_user.g.dart';
 class UnshareAlbumWithUser {
   UnshareAlbumWithUser(this._c)
       : assert(require(_c)),
-        assert(ListShare.require(_c)),
         assert(UnshareFileFromAlbum.require(_c));
 
   static bool require(DiContainer c) =>

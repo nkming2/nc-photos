@@ -101,6 +101,13 @@ class Album with EquatableMixin {
         return null;
       }
     }
+    if (jsonVersion < 10) {
+      result = upgraderFactory?.buildV9()?.doJson(result);
+      if (result == null) {
+        _log.info("[fromJson] Version $jsonVersion not compatible");
+        return null;
+      }
+    }
     if (jsonVersion > version) {
       _log.warning(
           "[fromJson] Reading album with newer version: $jsonVersion > $version");
@@ -224,7 +231,7 @@ class Album with EquatableMixin {
   final int savedVersion;
 
   /// versioning of this class, use to upgrade old persisted album
-  static const version = 9;
+  static const version = 10;
 
   static final _log = _$AlbumNpLog.log;
 }

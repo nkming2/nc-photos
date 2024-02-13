@@ -21,7 +21,7 @@ extension _$ListAlbumShareOutlierBlocNpLog on ListAlbumShareOutlierBloc {
 extension _$ListAlbumShareOutlierItemToString on ListAlbumShareOutlierItem {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "ListAlbumShareOutlierItem {file: ${file.path}, shareItems: ${shareItems.toReadableString()}}";
+    return "ListAlbumShareOutlierItem {file: ${file.fdPath}, shareItems: ${shareItems.toReadableString()}}";
   }
 }
 

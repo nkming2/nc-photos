@@ -201,8 +201,7 @@ class AlbumBuilder {
   Album build() {
     final latestFileItem = items
         .whereType<AlbumFileItem>()
-        .stableSorted(
-            (a, b) => a.file.lastModified!.compareTo(b.file.lastModified!))
+        .stableSorted((a, b) => a.file.fdDateTime.compareTo(b.file.fdDateTime))
         .reversed
         .firstOrNull;
     return Album(
@@ -210,7 +209,7 @@ class AlbumBuilder {
       name: name,
       provider: AlbumStaticProvider(
         items: items,
-        latestItemTime: latestFileItem?.file.lastModified,
+        latestItemTime: latestFileItem?.file.fdDateTime,
       ),
       coverProvider: cover == null
           ? AlbumAutoCoverProvider(coverFile: latestFileItem?.file)
@@ -233,15 +232,17 @@ class AlbumBuilder {
   /// If [isCover] is true, the coverProvider of the album will become
   /// [AlbumManualCoverProvider]
   void addFileItem(
-    File file, {
+    FileDescriptor file, {
     String addedBy = "admin",
     DateTime? addedAt,
     bool isCover = false,
+    String? ownerId,
   }) {
     final fileItem = AlbumFileItem(
       file: file,
       addedBy: addedBy.toCi(),
-      addedAt: addedAt ?? file.lastModified!,
+      addedAt: addedAt ?? file.fdDateTime,
+      ownerId: ownerId?.toCi() ?? file.as<File>()?.ownerId ?? addedBy.toCi(),
     );
     items.add(fileItem);
     if (isCover) {
@@ -272,7 +273,7 @@ class AlbumBuilder {
   final String ownerId;
 
   final items = <AlbumItem>[];
-  File? cover;
+  FileDescriptor? cover;
   final shares = <AlbumShare>[];
 }
 

@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/use_case/album/remove_from_album.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
@@ -45,7 +46,8 @@ Future<void> _removeLastFile() async {
   final account = util.buildAccount();
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
-  final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
+  final album =
+      (util.AlbumBuilder()..addFileItem(files[0].toDescriptor())).build();
   final file1 = files[0];
   final fileItem1 = util.AlbumBuilder.fileItemsOf(album)[0];
   final albumFile = album.albumFile!;
@@ -94,9 +96,9 @@ Future<void> _remove1OfNFiles() async {
         ..addJpeg("admin/test3.jpg"))
       .build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0])
-        ..addFileItem(files[1])
-        ..addFileItem(files[2]))
+        ..addFileItem(files[0].toDescriptor())
+        ..addFileItem(files[1].toDescriptor())
+        ..addFileItem(files[2].toDescriptor()))
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
@@ -126,10 +128,12 @@ Future<void> _remove1OfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1].minimize(), fileItems[2].minimize()],
+          items: [fileItems[1], fileItems[2]],
           latestItemTime: files[2].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
+        coverProvider: AlbumAutoCoverProvider(
+          coverFile: files[2].toDescriptor(),
+        ),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -151,9 +155,9 @@ Future<void> _removeLatestOfNFiles() async {
             lastModified: DateTime.utc(2020, 1, 2, 3, 4, 6)))
       .build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0])
-        ..addFileItem(files[1])
-        ..addFileItem(files[2]))
+        ..addFileItem(files[0].toDescriptor())
+        ..addFileItem(files[1].toDescriptor())
+        ..addFileItem(files[2].toDescriptor()))
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
@@ -183,10 +187,12 @@ Future<void> _removeLatestOfNFiles() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1].minimize(), fileItems[2].minimize()],
+          items: [fileItems[1], fileItems[2]],
           latestItemTime: files[1].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: files[1]),
+        coverProvider: AlbumAutoCoverProvider(
+          coverFile: files[1].toDescriptor(),
+        ),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -205,9 +211,9 @@ Future<void> _removeManualCoverFile() async {
         ..addJpeg("admin/test3.jpg"))
       .build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0], isCover: true)
-        ..addFileItem(files[1])
-        ..addFileItem(files[2]))
+        ..addFileItem(files[0].toDescriptor(), isCover: true)
+        ..addFileItem(files[1].toDescriptor())
+        ..addFileItem(files[2].toDescriptor()))
       .build();
   final fileItems = util.AlbumBuilder.fileItemsOf(album);
   final albumFile = album.albumFile!;
@@ -237,10 +243,12 @@ Future<void> _removeManualCoverFile() async {
         lastUpdated: DateTime.utc(2020, 1, 2, 3, 4, 5),
         name: "test",
         provider: AlbumStaticProvider(
-          items: [fileItems[1].minimize(), fileItems[2].minimize()],
+          items: [fileItems[1], fileItems[2]],
           latestItemTime: files[2].lastModified,
         ),
-        coverProvider: AlbumAutoCoverProvider(coverFile: files[2]),
+        coverProvider: AlbumAutoCoverProvider(
+          coverFile: files[2].toDescriptor(),
+        ),
         sortProvider: const AlbumNullSortProvider(),
         albumFile: albumFile,
       ),
@@ -256,7 +264,7 @@ Future<void> _removeFromSharedAlbumOwned() async {
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("user1"))
       .build();
   final file1 = files[0];
@@ -297,7 +305,7 @@ Future<void> _removeFromSharedAlbumOwnedWithOtherShare() async {
         ..addJpeg("user1/test1.jpg", ownerId: "user1"))
       .build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0], addedBy: "user1")
+        ..addFileItem(files[0].toDescriptor(), addedBy: "user1")
         ..addShare("user1")
         ..addShare("user2"))
       .build();
@@ -349,7 +357,7 @@ Future<void> _removeFromSharedAlbumOwnedLeaveExtraShare() async {
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder()
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("user1"))
       .build();
   final file1 = files[0];
@@ -392,12 +400,12 @@ Future<void> _removeFromSharedAlbumOwnedFileInOtherAlbum() async {
   final files =
       (util.FilesBuilder(initialFileId: 2)..addJpeg("admin/test1.jpg")).build();
   final album1 = (util.AlbumBuilder()
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("user1")
         ..addShare("user2"))
       .build();
   final album2 = (util.AlbumBuilder.ofId(albumId: 1)
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("user1"))
       .build();
   final album1fileItems = util.AlbumBuilder.fileItemsOf(album1);
@@ -440,7 +448,7 @@ Future<void> _removeFromSharedAlbumNotOwned() async {
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder(ownerId: "user1")
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("admin")
         ..addShare("user2"))
       .build();
@@ -489,7 +497,7 @@ Future<void> _removeFromSharedAlbumNotOwnedWithOwnerShare() async {
   final files =
       (util.FilesBuilder(initialFileId: 1)..addJpeg("admin/test1.jpg")).build();
   final album = (util.AlbumBuilder(ownerId: "user1")
-        ..addFileItem(files[0])
+        ..addFileItem(files[0].toDescriptor())
         ..addShare("admin")
         ..addShare("user2"))
       .build();

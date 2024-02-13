@@ -7,7 +7,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/stream_extension.dart';
@@ -61,7 +60,7 @@ class Remove {
       Account account, List<FileDescriptor> removes) async {
     final albums = await ListAlbum(_c)(account).whereType<Album>().toList();
     // figure out which files need to be unshared with whom
-    final unshares = <FileServerIdentityComparator, Set<CiString>>{};
+    final unshares = <FileDescriptorServerIdentityComparator, Set<CiString>>{};
     // clean up only make sense for static albums
     for (final a in albums.where((a) => a.provider is AlbumStaticProvider)) {
       try {
@@ -69,22 +68,21 @@ class Remove {
         final itemsToRemove = provider.items
             .whereType<AlbumFileItem>()
             .where((i) =>
-                (i.file.isOwned(account.userId) ||
-                    i.addedBy == account.userId) &&
+                (i.ownerId == account.userId || i.addedBy == account.userId) &&
                 removes.any((r) => r.compareServerIdentity(i.file)))
             .toList();
         if (itemsToRemove.isEmpty) {
           continue;
         }
         for (final i in itemsToRemove) {
-          final key = FileServerIdentityComparator(i.file);
+          final key = FileDescriptorServerIdentityComparator(i.file);
           final value = (a.shares?.map((s) => s.userId).toList() ?? [])
             ..add(a.albumFile!.ownerId!)
             ..remove(account.userId);
           (unshares[key] ??= <CiString>{}).addAll(value);
         }
         _log.fine(
-            "[_cleanUpAlbums] Removing from album '${a.name}': ${itemsToRemove.map((e) => e.file.path).toReadableString()}");
+            "[_cleanUpAlbums] Removing from album '${a.name}': ${itemsToRemove.map((e) => e.file.fdPath).toReadableString()}");
         // skip unsharing as we'll handle it ourselves
         await RemoveFromAlbum(_c)(account, a, itemsToRemove,
             shouldUnshare: false);

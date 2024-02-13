@@ -57,13 +57,13 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
   ]) : albums = initialData.map((a) => a.copyWith()).toList();
 
   @override
-  get(Account account, File albumFile) async {
+  Future<Album> get(Account account, File albumFile) async {
     return albums.firstWhere((element) =>
         element.albumFile?.compareServerIdentity(albumFile) == true);
   }
 
   @override
-  getAll(Account account, List<File> albumFiles) async* {
+  Stream<dynamic> getAll(Account account, List<File> albumFiles) async* {
     final results = await waitOr(
       albumFiles.map((f) => get(account, f)),
       (error, stackTrace) => ExceptionEvent(error, stackTrace),
@@ -74,7 +74,7 @@ class MockAlbumMemoryRepo extends MockAlbumRepo {
   }
 
   @override
-  update(Account account, Album album) async {
+  Future<void> update(Account account, Album album) async {
     final i = albums.indexWhere((element) =>
         element.albumFile?.compareServerIdentity(album.albumFile!) == true);
     albums[i] = album;
@@ -373,7 +373,7 @@ class MockFileMemoryRepo2 extends BasicFileRepo {
 /// Mock of [ShareRepo] where all methods will throw UnimplementedError
 class MockShareRepo implements ShareRepo {
   @override
-  Future<Share> create(Account account, File file, String shareWith) {
+  Future<Share> create(Account account, FileDescriptor file, String shareWith) {
     throw UnimplementedError();
   }
 
@@ -393,7 +393,7 @@ class MockShareRepo implements ShareRepo {
   @override
   Future<List<Share>> list(
     Account account,
-    File file, {
+    FileDescriptor file, {
     bool? isIncludeReshare,
   }) {
     throw UnimplementedError();
@@ -429,13 +429,13 @@ class MockShareMemoryRepo extends MockShareRepo {
   }
 
   @override
-  list(
+  Future<List<Share>> list(
     Account account,
-    File file, {
+    FileDescriptor file, {
     bool? isIncludeReshare,
   }) async {
     return shares.where((s) {
-      if (s.itemSource != file.fileId) {
+      if (s.itemSource != file.fdId) {
         return false;
       } else if (isIncludeReshare == true || s.uidOwner == account.userId) {
         return true;
@@ -446,18 +446,19 @@ class MockShareMemoryRepo extends MockShareRepo {
   }
 
   @override
-  create(Account account, File file, String shareWith) async {
+  Future<Share> create(
+      Account account, FileDescriptor file, String shareWith) async {
     final share = Share(
       id: (_id++).toString(),
       shareType: ShareType.user,
       stime: DateTime.utc(2020, 1, 2, 3, 4, 5),
       uidOwner: account.userId,
       displaynameOwner: account.username2,
-      uidFileOwner: file.ownerId!,
+      uidFileOwner: account.userId,
       path: file.strippedPath,
       itemType: ShareItemType.file,
-      mimeType: file.contentType ?? "",
-      itemSource: file.fileId!,
+      mimeType: file.fdMime ?? "",
+      itemSource: file.fdId,
       shareWith: shareWith.toCi(),
       shareWithDisplayName: shareWith,
     );

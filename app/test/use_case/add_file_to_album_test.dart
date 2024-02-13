@@ -76,14 +76,13 @@ Future<void> _addFile() async {
               AlbumFileItem(
                 addedBy: "admin".toCi(),
                 addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-                file: file,
-              ).minimize(),
+                file: file.toDescriptor(),
+                ownerId: "admin".toCi(),
+              ),
             ],
             latestItemTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
           ),
-          coverProvider: AlbumAutoCoverProvider(
-            coverFile: file,
-          ),
+          coverProvider: AlbumAutoCoverProvider(coverFile: file.toDescriptor()),
           sortProvider: const AlbumNullSortProvider(),
           albumFile: albumFile,
         ),
@@ -104,13 +103,13 @@ Future<void> _addExistingFile() async {
             lastModified: DateTime.utc(2019, 1, 2, 3, 4, 5),
           ))
         .build();
+    final oldFile = files[0].toDescriptor();
     final album = (util.AlbumBuilder()
           ..addFileItem(
-            files[0],
+            oldFile,
             addedAt: clock.now().toUtc(),
           ))
         .build();
-    final oldFile = files[0];
     final newFile = files[0].copyWith();
     final albumFile = album.albumFile!;
     final c = DiContainer(
@@ -142,12 +141,15 @@ Future<void> _addExistingFile() async {
               AlbumFileItem(
                 addedBy: "admin".toCi(),
                 addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-                file: files[0],
+                file: files[0].toDescriptor(),
+                ownerId: "admin".toCi(),
               ),
             ],
             latestItemTime: DateTime.utc(2019, 1, 2, 3, 4, 5),
           ),
-          coverProvider: AlbumAutoCoverProvider(coverFile: files[0]),
+          coverProvider: AlbumAutoCoverProvider(
+            coverFile: files[0].toDescriptor(),
+          ),
           sortProvider: const AlbumNullSortProvider(),
           albumFile: albumFile,
         ),
@@ -156,23 +158,27 @@ Future<void> _addExistingFile() async {
     // when there's a conflict, it's guaranteed that the original file in the
     // album is kept and the incoming file dropped
     expect(
-        identical(
-            AlbumStaticProvider.of(c.albumMemoryRepo.albums[0])
-                .items
-                .whereType<AlbumFileItem>()
-                .first
-                .file,
-            oldFile),
-        true);
+      identical(
+        AlbumStaticProvider.of(c.albumMemoryRepo.albums[0])
+            .items
+            .whereType<AlbumFileItem>()
+            .first
+            .file,
+        oldFile,
+      ),
+      true,
+    );
     expect(
-        identical(
-            AlbumStaticProvider.of(c.albumMemoryRepo.albums[0])
-                .items
-                .whereType<AlbumFileItem>()
-                .first
-                .file,
-            newFile),
-        false);
+      identical(
+        AlbumStaticProvider.of(c.albumMemoryRepo.albums[0])
+            .items
+            .whereType<AlbumFileItem>()
+            .first
+            .file,
+        newFile,
+      ),
+      false,
+    );
   });
 }
 
@@ -189,7 +195,8 @@ Future<void> _addExistingSharedFile() async {
     final user1Files = [
       files[0].copyWith(path: "remote.php/dav/files/user1/test1.jpg")
     ];
-    final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
+    final album =
+        (util.AlbumBuilder()..addFileItem(files[0].toDescriptor())).build();
     final albumFile = album.albumFile!;
     final c = DiContainer(
       fileRepo: MockFileMemoryRepo(),
@@ -222,12 +229,15 @@ Future<void> _addExistingSharedFile() async {
               AlbumFileItem(
                 addedBy: "admin".toCi(),
                 addedAt: DateTime.utc(2020, 1, 2, 3, 4, 5),
-                file: files[0],
+                file: files[0].toDescriptor(),
+                ownerId: "admin".toCi(),
               ),
             ],
             latestItemTime: DateTime.utc(2020, 1, 2, 3, 4, 5),
           ),
-          coverProvider: AlbumAutoCoverProvider(coverFile: files[0]),
+          coverProvider: AlbumAutoCoverProvider(
+            coverFile: files[0].toDescriptor(),
+          ),
           sortProvider: const AlbumNullSortProvider(),
           albumFile: albumFile,
         ),

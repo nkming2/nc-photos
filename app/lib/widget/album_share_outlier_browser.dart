@@ -7,7 +7,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_album_share_outlier.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
@@ -190,7 +189,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   Widget _buildMissingShareeItem(
       BuildContext context, _MissingShareeItem item) {
     final Widget trailing;
-    switch (_getItemStatus(item.file.path, item.shareWith)) {
+    switch (_getItemStatus(item.file.fdPath, item.shareWith)) {
       case null:
         trailing = _buildFixButton(
           onPressed: () {
@@ -223,7 +222,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
 
   Widget _buildExtraShareItem(BuildContext context, _ExtraShareItem item) {
     final Widget trailing;
-    switch (_getItemStatus(item.file.path, item.share.shareWith!)) {
+    switch (_getItemStatus(item.file.fdPath, item.share.shareWith!)) {
       case null:
         trailing = _buildFixButton(
           onPressed: () {
@@ -254,7 +253,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     );
   }
 
-  Widget _buildFileThumbnail(File file) {
+  Widget _buildFileThumbnail(FileDescriptor file) {
     if (file_util.isAlbumFile(widget.account, file)) {
       return const SizedBox.square(
         dimension: 56,
@@ -270,8 +269,8 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     }
   }
 
-  String _buildFilename(File file) {
-    if (widget.album.albumFile?.path.equalsIgnoreCase(file.path) == true) {
+  String _buildFilename(FileDescriptor file) {
+    if (widget.album.albumFile?.path.equalsIgnoreCase(file.fdPath) == true) {
       return widget.album.name;
     } else {
       return file.filename;
@@ -326,9 +325,9 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     // select only items that are not fixed/being fixed
     final items = _items.where((i) {
       if (i is _MissingShareeItem) {
-        return _getItemStatus(i.file.path, i.shareWith) == null;
+        return _getItemStatus(i.file.fdPath, i.shareWith) == null;
       } else if (i is _ExtraShareItem) {
-        return _getItemStatus(i.file.path, i.share.shareWith!) == null;
+        return _getItemStatus(i.file.fdPath, i.share.shareWith!) == null;
       } else {
         // ?
         return false;
@@ -337,10 +336,10 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     setState(() {
       for (final i in items) {
         if (i is _MissingShareeItem) {
-          _setItemStatus(i.file.path, i.shareWith, _ItemStatus.processing);
+          _setItemStatus(i.file.fdPath, i.shareWith, _ItemStatus.processing);
         } else if (i is _ExtraShareItem) {
           _setItemStatus(
-              i.file.path, i.share.shareWith!, _ItemStatus.processing);
+              i.file.fdPath, i.share.shareWith!, _ItemStatus.processing);
         }
       }
     });
@@ -372,14 +371,14 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
   Future<void> _fixMissingSharee(_MissingShareeItem item) async {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     setState(() {
-      _setItemStatus(item.file.path, item.shareWith, _ItemStatus.processing);
+      _setItemStatus(item.file.fdPath, item.shareWith, _ItemStatus.processing);
     });
     try {
       await CreateUserShare(shareRepo)(
           widget.account, item.file, item.shareWith.raw);
       if (mounted) {
         setState(() {
-          _setItemStatus(item.file.path, item.shareWith, _ItemStatus.fixed);
+          _setItemStatus(item.file.fdPath, item.shareWith, _ItemStatus.fixed);
         });
       }
     } catch (e, stackTrace) {
@@ -391,7 +390,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       ));
       if (mounted) {
         setState(() {
-          _removeItemStatus(item.file.path, item.shareWith);
+          _removeItemStatus(item.file.fdPath, item.shareWith);
         });
       }
     }
@@ -401,14 +400,14 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     final shareRepo = ShareRepo(ShareRemoteDataSource());
     setState(() {
       _setItemStatus(
-          item.file.path, item.share.shareWith!, _ItemStatus.processing);
+          item.file.fdPath, item.share.shareWith!, _ItemStatus.processing);
     });
     try {
       await RemoveShare(shareRepo)(widget.account, item.share);
       if (mounted) {
         setState(() {
           _setItemStatus(
-              item.file.path, item.share.shareWith!, _ItemStatus.fixed);
+              item.file.fdPath, item.share.shareWith!, _ItemStatus.fixed);
         });
       }
     } catch (e, stackTrace) {
@@ -419,7 +418,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       ));
       if (mounted) {
         setState(() {
-          _removeItemStatus(item.file.path, item.share.shareWith!);
+          _removeItemStatus(item.file.fdPath, item.share.shareWith!);
         });
       }
     }
@@ -466,7 +465,7 @@ abstract class _ListItem {
 class _ExtraShareItem extends _ListItem {
   const _ExtraShareItem(this.file, this.share);
 
-  final File file;
+  final FileDescriptor file;
   final Share share;
 }
 
@@ -474,7 +473,7 @@ class _MissingShareeItem extends _ListItem {
   const _MissingShareeItem(
       this.file, this.shareWith, this.shareWithDisplayName);
 
-  final File file;
+  final FileDescriptor file;
   final CiString shareWith;
   final String? shareWithDisplayName;
 }

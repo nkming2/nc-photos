@@ -27,7 +27,7 @@ extension _$AlbumItemToString on AlbumItem {
 extension _$AlbumFileItemToString on AlbumFileItem {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumFileItem {addedBy: $addedBy, addedAt: $addedAt, file: ${file.path}}";
+    return "AlbumFileItem {addedBy: $addedBy, addedAt: $addedAt, file: ${file.fdPath}, ownerId: $ownerId}";
   }
 }
 

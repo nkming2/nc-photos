@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/use_case/album/share_album_with_user.dart';
@@ -97,37 +98,30 @@ Future<void> _shareWithFile() async {
 /// Expect: share (admin -> user1) added to album's shares list;
 /// new shares (admin -> user1) are created for the album json
 Future<void> _shareWithFileOwnedByUser() async {
-  final account = util.buildAccount();
-  final files = (util.FilesBuilder(initialFileId: 1)
-        ..addJpeg("admin/test1.jpg", ownerId: "user1"))
-      .build();
-  final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
-  final albumFile = album.albumFile!;
-  final albumRepo = MockAlbumMemoryRepo([album]);
-  final shareRepo = MockShareMemoryRepo();
+  await withClock(Clock.fixed(DateTime.utc(2020, 1, 2, 3, 4, 5)), () async {
+    final account = util.buildAccount();
+    final files = (util.FilesBuilder(initialFileId: 1)
+          ..addJpeg("admin/test1.jpg", ownerId: "user1"))
+        .build();
+    final album = (util.AlbumBuilder()..addFileItem(files[0])).build();
+    final albumFile = album.albumFile!;
+    final albumRepo = MockAlbumMemoryRepo([album]);
+    final shareRepo = MockShareMemoryRepo();
 
-  await ShareAlbumWithUser(shareRepo, albumRepo)(
-    account,
-    albumRepo.findAlbumByPath(albumFile.path),
-    util.buildSharee(shareWith: "user1".toCi()),
-  );
-  expect(
-    albumRepo
-        .findAlbumByPath(albumFile.path)
-        .shares
-        ?.map((s) => s.copyWith(
-              // we need to set a known value to sharedAt
-              sharedAt: OrNull(DateTime.utc(2020, 1, 2, 3, 4, 5)),
-            ))
-        .toList(),
-    [util.buildAlbumShare(userId: "user1")],
-  );
-  expect(
-    shareRepo.shares,
-    [
-      util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
-    ],
-  );
+    await ShareAlbumWithUser(shareRepo, albumRepo)(
+      account,
+      albumRepo.findAlbumByPath(albumFile.path),
+      util.buildSharee(shareWith: "user1".toCi()),
+    );
+    expect(
+      albumRepo.findAlbumByPath(albumFile.path).shares?.toList(),
+      [util.buildAlbumShare(userId: "user1")],
+    );
+    expect(
+      shareRepo.shares,
+      [util.buildShare(id: "0", file: albumFile, shareWith: "user1")],
+    );
+  });
 }
 
 /// Share a shared album (admin -> user1) with a user (user2)
