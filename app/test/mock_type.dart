@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
@@ -303,6 +304,72 @@ class MockFileMemoryRepo extends FileRepo {
   }
 }
 
+class MockFileDataSource2 implements FileDataSource2 {
+  @override
+  Stream<List<FileDescriptor>> getFileDescriptors(
+      Account account, String shareDirPath) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> remove(Account account, FileDescriptor f) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateProperty(
+    Account account,
+    FileDescriptor f, {
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? favorite,
+    OrNull<ImageLocation>? location,
+  }) {
+    throw UnimplementedError();
+  }
+}
+
+class MockFileMemoryDataSource2 extends MockFileDataSource2 {
+  MockFileMemoryDataSource2([
+    List<FileDescriptor> initialData = const [],
+  ]) : files = initialData.map((f) => f.copyWith()).toList();
+
+  @override
+  Stream<List<FileDescriptor>> getFileDescriptors(
+      Account account, String shareDirPath) async* {
+    yield files.where((f) {
+      if (account.roots.any((r) => file_util.isOrUnderDirPath(
+          f.fdPath, file_util.unstripPath(account, r)))) {
+        return true;
+      } else if (file_util.isOrUnderDirPath(
+          f.fdPath, file_util.unstripPath(account, shareDirPath))) {
+        return true;
+      } else {
+        return false;
+      }
+    }).toList();
+  }
+
+  @override
+  Future<void> remove(Account account, FileDescriptor file) async {
+    files.removeWhere((f) => f.compareServerIdentity(file));
+  }
+
+  final List<FileDescriptor> files;
+}
+
+/// [FileRepo2] mock that support some ops with an internal List
+class MockFileMemoryRepo2 extends BasicFileRepo {
+  MockFileMemoryRepo2([
+    List<FileDescriptor> initialData = const [],
+  ]) : super(MockFileMemoryDataSource2(initialData));
+
+  List<FileDescriptor> get files {
+    return (dataSrc as MockFileMemoryDataSource2).files;
+  }
+}
+
 /// Mock of [ShareRepo] where all methods will throw UnimplementedError
 class MockShareRepo implements ShareRepo {
   @override
@@ -489,6 +556,7 @@ class MockFaceRecognitionPersonMemoryRepo
 extension MockDiContainerExtension on DiContainer {
   MockAlbumMemoryRepo get albumMemoryRepo => albumRepo as MockAlbumMemoryRepo;
   MockFileMemoryRepo get fileMemoryRepo => fileRepo as MockFileMemoryRepo;
+  MockFileMemoryRepo2 get fileMemoryRepo2 => fileRepo2 as MockFileMemoryRepo2;
   MockShareMemoryRepo get shareMemoryRepo => shareRepo as MockShareMemoryRepo;
   MockShareeMemoryRepo get shareeMemoryRepo =>
       shareeRepo as MockShareeMemoryRepo;

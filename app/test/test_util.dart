@@ -317,7 +317,7 @@ void initLog() {
 }
 
 Account buildAccount({
-  String id = "123456-000000",
+  String? id,
   String scheme = "http",
   String address = "example.com",
   String userId = "admin",
@@ -326,7 +326,7 @@ Account buildAccount({
   List<String> roots = const [""],
 }) =>
     Account(
-      id: id,
+      id: id ?? "$userId-000000",
       scheme: scheme,
       address: address,
       userId: userId.toCi(),
