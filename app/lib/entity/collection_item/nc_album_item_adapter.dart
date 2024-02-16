@@ -10,6 +10,13 @@ class CollectionFileItemNcAlbumItemAdapter extends CollectionFileItem {
   const CollectionFileItemNcAlbumItemAdapter(this.item, [this.localFile]);
 
   @override
+  CollectionFileItemNcAlbumItemAdapter copyWith({
+    FileDescriptor? file,
+  }) {
+    return CollectionFileItemNcAlbumItemAdapter(item, file ?? this.file);
+  }
+
+  @override
   String toString() => _$toString();
 
   @override

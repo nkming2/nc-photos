@@ -1,3 +1,4 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -73,6 +74,7 @@ abstract class AlbumItem with EquatableMixin {
   static final _log = _$AlbumItemNpLog.log;
 }
 
+@genCopyWith
 @toString
 class AlbumFileItem extends AlbumItem {
   AlbumFileItem({
@@ -109,20 +111,6 @@ class AlbumFileItem extends AlbumItem {
       file.compareServerIdentity(other.file) &&
       addedBy == other.addedBy &&
       addedAt == other.addedAt;
-
-  AlbumFileItem copyWith({
-    CiString? addedBy,
-    DateTime? addedAt,
-    FileDescriptor? file,
-    CiString? ownerId,
-  }) {
-    return AlbumFileItem(
-      addedBy: addedBy ?? this.addedBy,
-      addedAt: addedAt ?? this.addedAt,
-      file: file ?? this.file,
-      ownerId: ownerId ?? this.ownerId,
-    );
-  }
 
   @override
   List<Object?> get props => [

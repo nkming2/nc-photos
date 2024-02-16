@@ -327,18 +327,25 @@ class CollectionItemsController {
       return;
     }
     await _mutex.protect(() async {
-      final newItems = _dataStreamController.value.items.where((e) {
-        if (e is CollectionFileItem) {
-          return ev.dataMap.containsKey(e.file.fdId);
-        } else {
-          return true;
-        }
-      }).toList();
-      if (newItems.length != _dataStreamController.value.items.length) {
-        _dataStreamController.addWithValue((value) => value.copyWith(
-              items: newItems,
-            ));
-      }
+      final newItems = _dataStreamController.value.items
+          .map((e) {
+            if (e is CollectionFileItem) {
+              final file = ev.dataMap[e.file.fdId];
+              if (file == null) {
+                // removed
+                return null;
+              } else {
+                return e.copyWith(file: file);
+              }
+            } else {
+              return e;
+            }
+          })
+          .whereNotNull()
+          .toList();
+      _dataStreamController.addWithValue((value) => value.copyWith(
+            items: newItems,
+          ));
     });
   }
 
