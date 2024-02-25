@@ -385,6 +385,7 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
         )
       : null;
 
+  final tzOffset = clock.now().timeZoneOffset;
   final transformed = <_Item>[];
   for (int i = 0; i < sortedFiles.length; ++i) {
     final file = sortedFiles[i];
@@ -392,12 +393,13 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
     if (item == null) {
       continue;
     }
-    final date = dateHelper?.onFile(file);
+    final localDate = file.fdDateTime.add(tzOffset);
+    final date = dateHelper?.onFile(file, localDate: localDate);
     if (date != null) {
       transformed.add(_DateItem(date: date, isMonthOnly: !arg.isGroupByDay));
     }
     transformed.add(item);
-    memoryCollectionHelper?.addFile(file);
+    memoryCollectionHelper?.addFile(file, localDate: localDate);
   }
   final memoryCollections = memoryCollectionHelper
       ?.build((year) => L10n.of(arg.locale).memoryAlbumName(today.year - year));

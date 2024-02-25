@@ -15,15 +15,20 @@ part 'photo_list_util.g.dart';
 class DateGroupHelper {
   DateGroupHelper({
     required this.isMonthOnly,
-  });
+  }) : _tzOffset = clock.now().timeZoneOffset;
 
-  DateTime? onFile(FileDescriptor file) {
-    final newDate = file.fdDateTime.toLocal();
-    if (newDate.year != _currentDate?.year ||
-        newDate.month != _currentDate?.month ||
-        (!isMonthOnly && newDate.day != _currentDate?.day)) {
-      _currentDate = newDate;
-      return newDate;
+  DateTime? onFile(
+    FileDescriptor file, {
+    DateTime? localDate,
+  }) {
+    // toLocal is way too slow
+    // final localDate = file.fdDateTime.toLocal();
+    localDate ??= file.fdDateTime.add(_tzOffset);
+    if (localDate.year != _currentDate?.year ||
+        localDate.month != _currentDate?.month ||
+        (!isMonthOnly && localDate.day != _currentDate?.day)) {
+      _currentDate = localDate;
+      return localDate;
     } else {
       return null;
     }
@@ -31,6 +36,7 @@ class DateGroupHelper {
 
   final bool isMonthOnly;
   DateTime? _currentDate;
+  final Duration _tzOffset;
 }
 
 /// Build memory collection from files
@@ -42,20 +48,33 @@ class MemoryCollectionHelper {
     this.account, {
     DateTime? today,
     required int dayRange,
-  })  : today = (today?.toLocal() ?? clock.now()).toMidnight(),
-        dayRange = math.max(dayRange, 0);
+  })  : _tzOffset = clock.now().timeZoneOffset,
+        // today = (today?.toLocal() ?? clock.now()).toMidnight(),
+        dayRange = math.max(dayRange, 0) {
+    this.today = (today ?? clock.now()).toUtc().add(_tzOffset).toMidnight();
+  }
 
-  void addFile(FileDescriptor f) {
-    final date = f.fdDateTime.toLocal().toMidnight();
-    final diff = today.difference(date).inDays;
+  void addFile(
+    FileDescriptor f, {
+    DateTime? localDate,
+  }) {
+    // too slow
+    // final localDate = f.fdDateTime.toLocal().toMidnight();
+    localDate = (localDate ?? f.fdDateTime.add(_tzOffset)).toMidnight();
+    final diff = today.difference(localDate).inDays;
     if (diff < 300) {
       return;
     }
     for (final dy in [0, -1, 1]) {
-      if (today.copyWith(year: date.year + dy).difference(date).abs().inDays <=
+      if (today
+              .copyWith(year: localDate.year + dy)
+              .difference(localDate)
+              .abs()
+              .inDays <=
           dayRange) {
-        _log.fine("[addFile] Add file (${f.fdDateTime}) to ${date.year + dy}");
-        _addFileToYear(f, date.year + dy);
+        _log.fine(
+            "[addFile] Add file (${f.fdDateTime}) to ${localDate.year + dy}");
+        _addFileToYear(f, localDate.year + dy);
         break;
       }
     }
@@ -96,8 +115,9 @@ class MemoryCollectionHelper {
   }
 
   final Account account;
-  final DateTime today;
+  late final DateTime today;
   final int dayRange;
+  final Duration _tzOffset;
   final _data = <int, _MemoryCollectionHelperItem>{};
 }
 
