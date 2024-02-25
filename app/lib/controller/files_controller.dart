@@ -90,9 +90,10 @@ class FilesController {
 
       _c.touchManager.clearTouchCache();
       final progress = IntProgress(account.roots.length);
+      var hasChange = false;
       for (final r in account.roots) {
         final dirPath = file_util.unstripPath(account, r);
-        await SyncDir(_c)(
+        hasChange |= await SyncDir(_c)(
           account,
           dirPath,
           onProgressUpdate: (value) {
@@ -107,10 +108,13 @@ class FilesController {
 
       if (!isShareDirIncluded) {
         _log.info("[syncRemote] Explicitly scanning share folder");
-        await SyncDir(_c)(account, shareDir.path, isRecursive: false);
+        hasChange |=
+            await SyncDir(_c)(account, shareDir.path, isRecursive: false);
       }
-      // load the synced content to stream
-      unawaited(_reload());
+      if (hasChange) {
+        // load the synced content to stream
+        unawaited(_reload());
+      }
     } finally {
       _isSyncing = false;
     }
