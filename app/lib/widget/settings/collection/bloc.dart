@@ -5,7 +5,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          isBrowserShowDate: prefController.isAlbumBrowserShowDate.value,
+          isBrowserShowDate: prefController.isAlbumBrowserShowDateValue,
         )) {
     on<_Init>(_onInit);
     on<_SetBrowserShowDate>(_onSetBrowserShowDate);
@@ -17,7 +17,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
     return emit.forEach<bool>(
-      prefController.isAlbumBrowserShowDate,
+      prefController.isAlbumBrowserShowDateChange,
       onData: (data) => state.copyWith(isBrowserShowDate: data),
       onError: (e, stackTrace) {
         _log.severe("[_onInit] Uncaught exception", e, stackTrace);

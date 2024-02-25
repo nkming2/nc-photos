@@ -13,9 +13,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.personsController,
     required this.metadataController,
   }) : super(_State.init(
-          zoom: prefController.homePhotosZoomLevel.value,
+          zoom: prefController.homePhotosZoomLevelValue,
           isEnableMemoryCollection:
-              accountPrefController.isEnableMemoryAlbum.value,
+              accountPrefController.isEnableMemoryAlbumValue,
         )) {
     on<_LoadItems>(_onLoad);
     on<_RequestRefresh>(_onRequestRefresh);
@@ -46,13 +46,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetError>(_onSetError);
 
     _subscriptions
-        .add(accountPrefController.isEnableMemoryAlbum.listen((event) {
+        .add(accountPrefController.isEnableMemoryAlbumChange.listen((event) {
       add(_SetEnableMemoryCollection(event));
     }));
-    _subscriptions.add(prefController.isPhotosTabSortByName.listen((event) {
+    _subscriptions
+        .add(prefController.isPhotosTabSortByNameChange.listen((event) {
       add(_SetSortByName(event));
     }));
-    _subscriptions.add(prefController.memoriesRange.listen((event) {
+    _subscriptions.add(prefController.memoriesRangeChange.listen((event) {
       add(_SetMemoriesRange(event));
     }));
   }
@@ -138,7 +139,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       account: account,
       filesController: controller,
       personsController: personsController,
-      personProvider: accountPrefController.personProvider.value,
+      personProvider: accountPrefController.personProviderValue,
     );
   }
 
@@ -303,11 +304,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       _ItemTransformerArgument(
         account: account,
         files: files,
-        sort: prefController.isPhotosTabSortByName.value
+        sort: prefController.isPhotosTabSortByNameValue
             ? _ItemSort.filename
             : _ItemSort.dateTime,
-        isGroupByDay: prefController.homePhotosZoomLevel.value >= 0,
-        memoriesDayRange: prefController.memoriesRange.value,
+        isGroupByDay: prefController.homePhotosZoomLevelValue >= 0,
+        memoriesDayRange: prefController.memoriesRangeValue,
         locale: language_util.getSelectedLocale() ??
             PlatformDispatcher.instance.locale,
       ),

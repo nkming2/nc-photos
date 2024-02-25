@@ -22,7 +22,8 @@ class MetadataController {
     required this.prefController,
   }) {
     _subscriptions.add(filesController.stream.listen(_onFilesEvent));
-    _subscriptions.add(prefController.isEnableExif.listen(_onSetEnableExif));
+    _subscriptions
+        .add(prefController.isEnableExifChange.listen(_onSetEnableExif));
   }
 
   void dispose() {
@@ -39,7 +40,7 @@ class MetadataController {
 
   Future<void> _onFilesEvent(FilesStreamEvent ev) async {
     _log.info("[_onFilesEvent]");
-    if (!prefController.isEnableExif.value) {
+    if (!prefController.isEnableExifValue) {
       // disabled
       return;
     }

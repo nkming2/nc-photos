@@ -71,7 +71,7 @@ class PersonsController {
     _personStreamContorller.add(lastData);
     final completer = Completer();
     ListPerson(_c.withLocalRepo())(
-            account, accountPrefController.personProvider.value)
+            account, accountPrefController.personProviderValue)
         .listen(
       (results) {
         lastData = PersonStreamEvent(

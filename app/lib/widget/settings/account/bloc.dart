@@ -10,13 +10,13 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   })  : _c = container,
         super(_State.init(
           account: account,
-          label: accountPrefController.accountLabel.value,
-          shareFolder: accountPrefController.shareFolder.value,
-          personProvider: accountPrefController.personProvider.value,
+          label: accountPrefController.accountLabelValue,
+          shareFolder: accountPrefController.shareFolderValue,
+          personProvider: accountPrefController.personProviderValue,
         )) {
     on<_SetLabel>(_onSetLabel);
     on<_OnUpdateLabel>(_onOnUpdateLabel);
-    _subscriptions.add(accountPrefController.accountLabel.listen(
+    _subscriptions.add(accountPrefController.accountLabelChange.listen(
       (event) {
         add(_OnUpdateLabel(event));
       },
@@ -30,7 +30,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_SetShareFolder>(_onSetShareFolder);
     on<_OnUpdateShareFolder>(_onOnUpdateShareFolder);
-    _subscriptions.add(accountPrefController.shareFolder.listen(
+    _subscriptions.add(accountPrefController.shareFolderChange.listen(
       (event) {
         add(_OnUpdateShareFolder(event));
       },
@@ -41,7 +41,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_SetPersonProvider>(_onSetPersonProvider);
     on<_OnUpdatePersonProvider>(_onOnUpdatePersonProvider);
-    _subscriptions.add(accountPrefController.personProvider.listen(
+    _subscriptions.add(accountPrefController.personProviderChange.listen(
       (event) {
         add(_OnUpdatePersonProvider(event));
       },

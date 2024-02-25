@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -187,8 +188,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         context
             .read<AccountController>()
             .accountPrefController
-            .shareFolder
-            .value,
+            .shareFolderValue,
       );
     } catch (e, stacktrace) {
       _log.shout(

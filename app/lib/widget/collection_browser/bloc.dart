@@ -15,7 +15,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         super(_State.init(
           collection: collection,
           coverUrl: _getCoverUrl(collection),
-          zoom: prefController.albumBrowserZoomLevel.value,
+          zoom: prefController.albumBrowserZoomLevelValue,
         )) {
     _initItemController(collection);
 

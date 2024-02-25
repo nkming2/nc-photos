@@ -6,8 +6,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.prefController,
   }) : super(_State(
           isSaveEditResultToServer:
-              prefController.isSaveEditResultToServer.value,
-          maxSize: prefController.enhanceMaxSize.value,
+              prefController.isSaveEditResultToServerValue,
+          maxSize: prefController.enhanceMaxSizeValue,
         )) {
     on<_Init>(_onInit);
     on<_SetSaveEditResultToServer>(_onSetSaveEditResultToServer);
@@ -21,7 +21,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEach<bool>(
-        prefController.isSaveEditResultToServer,
+        prefController.isSaveEditResultToServerChange,
         onData: (data) => state.copyWith(isSaveEditResultToServer: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -29,7 +29,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<SizeInt>(
-        prefController.enhanceMaxSize,
+        prefController.enhanceMaxSizeChange,
         onData: (data) => state.copyWith(maxSize: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);

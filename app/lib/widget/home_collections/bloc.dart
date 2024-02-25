@@ -20,7 +20,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_SetError>(_onSetError);
 
-    _subscriptions.add(prefController.homeAlbumsSort.distinct().listen((event) {
+    _subscriptions.add(prefController.homeAlbumsSortChange.listen((event) {
       add(_UpdateCollectionSort(collection_util.CollectionSort.values[event]));
     }));
     _subscriptions.add(controller.stream.listen((event) {

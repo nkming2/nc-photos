@@ -112,7 +112,7 @@ ThemeData buildDarkTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
 }
 
 Color? getSeedColor(BuildContext context) {
-  return context.read<PrefController>().seedColor.value;
+  return context.read<PrefController>().seedColorValue;
 }
 
 ColorScheme _getColorScheme(

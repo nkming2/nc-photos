@@ -102,8 +102,8 @@ class _EditContentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-      stream: context.read<PrefController>().albumBrowserZoomLevel,
-      initialData: context.read<PrefController>().albumBrowserZoomLevel.value,
+      stream: context.read<PrefController>().albumBrowserZoomLevelChange,
+      initialData: context.read<PrefController>().albumBrowserZoomLevelValue,
       builder: (_, zoomLevel) {
         if (zoomLevel.hasError) {
           context.addEvent(
@@ -159,9 +159,9 @@ class _UnmodifiableEditContentList extends StatelessWidget {
       sliver: SliverOpacity(
         opacity: .25,
         sliver: StreamBuilder<int>(
-          stream: context.read<PrefController>().albumBrowserZoomLevel,
+          stream: context.read<PrefController>().albumBrowserZoomLevelChange,
           initialData:
-              context.read<PrefController>().albumBrowserZoomLevel.value,
+              context.read<PrefController>().albumBrowserZoomLevelValue,
           builder: (_, zoomLevel) {
             if (zoomLevel.hasError) {
               context.addEvent(_SetMessage(

@@ -7,7 +7,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.controller,
     required this.prefController,
   }) : super(_State.init(
-          zoom: prefController.albumBrowserZoomLevel.value,
+          zoom: prefController.albumBrowserZoomLevelValue,
         )) {
     on<_LoadItems>(_onLoad);
     on<_TransformItems>(_onTransformItems);

@@ -5,8 +5,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          isEnable: prefController.isEnableExif.value,
-          isWifiOnly: prefController.shouldProcessExifWifiOnly.value,
+          isEnable: prefController.isEnableExifValue,
+          isWifiOnly: prefController.shouldProcessExifWifiOnlyValue,
         )) {
     on<_Init>(_onInit);
     on<_SetEnable>(_onSetEnable);
@@ -20,7 +20,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEach<bool>(
-        prefController.isEnableExif,
+        prefController.isEnableExifChange,
         onData: (data) => state.copyWith(isEnable: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -28,7 +28,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<bool>(
-        prefController.shouldProcessExifWifiOnly,
+        prefController.shouldProcessExifWifiOnlyChange,
         onData: (data) => state.copyWith(isWifiOnly: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);

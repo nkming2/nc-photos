@@ -43,7 +43,7 @@ class FilesController {
     required this.account,
     required this.accountPrefController,
   }) {
-    _subscriptions.add(accountPrefController.shareFolder.listen((event) {
+    _subscriptions.add(accountPrefController.shareFolderChange.listen((event) {
       // sync remote if share folder is modified
       if (_isDataStreamInited) {
         syncRemote();
@@ -84,7 +84,7 @@ class FilesController {
     try {
       final shareDir = File(
         path: file_util.unstripPath(
-            account, accountPrefController.shareFolder.value),
+            account, accountPrefController.shareFolderValue),
       );
       var isShareDirIncluded = false;
 
@@ -320,7 +320,7 @@ class FilesController {
     final completer = Completer();
     ListFile(_c)(
       account,
-      file_util.unstripPath(account, accountPrefController.shareFolder.value),
+      file_util.unstripPath(account, accountPrefController.shareFolderValue),
     ).listen(
       (ev) {
         lastData = _convertListResultsToEvent(ev, hasNext: true);
@@ -338,7 +338,7 @@ class FilesController {
     final completer = Completer();
     ListFile(_c)(
       account,
-      file_util.unstripPath(account, accountPrefController.shareFolder.value),
+      file_util.unstripPath(account, accountPrefController.shareFolderValue),
     ).listen(
       (ev) {
         results = ev;

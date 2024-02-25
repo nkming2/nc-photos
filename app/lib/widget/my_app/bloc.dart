@@ -5,11 +5,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          language: prefController.language.value,
-          isDarkTheme: prefController.isDarkTheme.value,
-          isFollowSystemTheme: prefController.isFollowSystemTheme.value,
-          isUseBlackInDarkTheme: prefController.isUseBlackInDarkTheme.value,
-          seedColor: prefController.seedColor.value?.value,
+          language: prefController.languageValue,
+          isDarkTheme: prefController.isDarkThemeValue,
+          isFollowSystemTheme: prefController.isFollowSystemThemeValue,
+          isUseBlackInDarkTheme: prefController.isUseBlackInDarkThemeValue,
+          seedColor: prefController.seedColorValue?.value,
         )) {
     on<_Init>(_onInit);
   }
@@ -21,23 +21,23 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEachIgnoreError<language_util.AppLanguage>(
-        prefController.language,
+        prefController.languageChange,
         onData: (data) => state.copyWith(language: data),
       ),
       emit.forEachIgnoreError<bool>(
-        prefController.isDarkTheme,
+        prefController.isDarkThemeChange,
         onData: (data) => state.copyWith(isDarkTheme: data),
       ),
       emit.forEachIgnoreError<bool>(
-        prefController.isFollowSystemTheme,
+        prefController.isFollowSystemThemeChange,
         onData: (data) => state.copyWith(isFollowSystemTheme: data),
       ),
       emit.forEachIgnoreError<bool>(
-        prefController.isUseBlackInDarkTheme,
+        prefController.isUseBlackInDarkThemeChange,
         onData: (data) => state.copyWith(isUseBlackInDarkTheme: data),
       ),
       emit.forEachIgnoreError<Color?>(
-        prefController.seedColor,
+        prefController.seedColorChange,
         onData: (data) => state.copyWith(seedColor: data?.value),
       ),
     ]);
