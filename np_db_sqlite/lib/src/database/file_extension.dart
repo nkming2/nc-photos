@@ -459,6 +459,8 @@ extension SqliteDbFileExtension on SqliteDb {
       }
       if (mimes != null) {
         query.where(files.contentType.isIn(mimes));
+      } else {
+        query.where(files.isCollection.isNotValue(true));
       }
       for (final k in relativePathKeywords ?? const []) {
         query.where(accountFiles.relativePath.like("%$k%"));
