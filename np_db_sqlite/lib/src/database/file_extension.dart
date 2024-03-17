@@ -40,6 +40,14 @@ class FileDescriptor {
   final DateTime bestDateTime;
 }
 
+class CountFileGroupsByDateResult {
+  const CountFileGroupsByDateResult({
+    required this.dateCount,
+  });
+
+  final Map<DateTime, int> dateCount;
+}
+
 extension SqliteDbFileExtension on SqliteDb {
   /// Return files located inside [dir]
   Future<List<CompleteFile>> queryFilesByDirKey({
@@ -572,6 +580,62 @@ extension SqliteDbFileExtension on SqliteDb {
       return q.build()..limit(1);
     });
     return query.map((r) => r.read(files.fileId)!).getSingleOrNull();
+  }
+
+  /// Count number of files per date
+  Future<CountFileGroupsByDateResult> countFileGroupsByDate({
+    required ByAccount account,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  }) async {
+    _log.info(
+      "[countFileGroupsByDate] "
+      "includeRelativeRoots: $includeRelativeRoots, "
+      "excludeRelativeRoots: $excludeRelativeRoots, "
+      "mimes: $mimes",
+    );
+
+    final count = countAll();
+    final localDate = accountFiles.bestDateTime
+        .modify(const DateTimeModifier.localTime())
+        .date;
+    final query = _queryFiles().let((q) {
+      q
+        ..setQueryMode(
+          FilesQueryMode.expression,
+          expressions: [localDate, count],
+        )
+        ..setAccount(account);
+      if (includeRelativeRoots != null) {
+        if (includeRelativeRoots.none((p) => p.isEmpty)) {
+          for (final r in includeRelativeRoots) {
+            q.byOrRelativePathPattern("$r/%");
+          }
+        }
+      }
+      return q.build();
+    });
+    if (excludeRelativeRoots != null) {
+      for (final r in excludeRelativeRoots) {
+        query.where(accountFiles.relativePath.like("$r/%").not());
+      }
+    }
+    if (mimes != null) {
+      query.where(files.contentType.isIn(mimes));
+    } else {
+      query.where(files.isCollection.isNotValue(true));
+    }
+    query
+      ..orderBy([OrderingTerm.desc(accountFiles.bestDateTime)])
+      ..groupBy([localDate]);
+    final results = await query
+        .map((r) => MapEntry<DateTime, int>(
+              DateTime.parse(r.read(localDate)!),
+              r.read(count)!,
+            ))
+        .get();
+    return CountFileGroupsByDateResult(dateCount: results.toMap());
   }
 
   /// Update Db files

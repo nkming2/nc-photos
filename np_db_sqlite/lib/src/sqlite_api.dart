@@ -462,6 +462,27 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
+  Future<DbFilesSummary> getFilesSummary({
+    required DbAccount account,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  }) async {
+    final result = await _db.use((db) async {
+      return await db.countFileGroupsByDate(
+        account: ByAccount.db(account),
+        includeRelativeRoots: includeRelativeRoots,
+        excludeRelativeRoots: excludeRelativeRoots,
+        mimes: mimes,
+      );
+    });
+    return DbFilesSummary(
+      items: result.dateCount
+          .map((key, value) => MapEntry(key, DbFilesSummaryItem(count: value))),
+    );
+  }
+
+  @override
   Future<DbLocationGroupResult> groupLocations({
     required DbAccount account,
     List<String>? includeRelativeRoots,

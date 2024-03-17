@@ -37,3 +37,17 @@ extension _$DbLocationGroupResultToString on DbLocationGroupResult {
     return "DbLocationGroupResult {name: [length: ${name.length}], admin1: [length: ${admin1.length}], admin2: [length: ${admin2.length}], countryCode: [length: ${countryCode.length}]}";
   }
 }
+
+extension _$DbFilesSummaryItemToString on DbFilesSummaryItem {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "DbFilesSummaryItem {count: $count}";
+  }
+}
+
+extension _$DbFilesSummaryToString on DbFilesSummary {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "DbFilesSummary {items: {length: ${items.length}}}";
+  }
+}

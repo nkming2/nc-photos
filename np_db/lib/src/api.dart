@@ -126,6 +126,31 @@ class DbLocationGroupResult {
   final List<DbLocationGroup> countryCode;
 }
 
+@toString
+class DbFilesSummaryItem {
+  const DbFilesSummaryItem({
+    required this.count,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  final int count;
+}
+
+@toString
+class DbFilesSummary {
+  const DbFilesSummary({
+    required this.items,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @Format(r"{length: ${$?.length}}")
+  final Map<DateTime, DbFilesSummaryItem> items;
+}
+
 @npLog
 abstract class NpDb {
   factory NpDb() => NpDbSqlite();
@@ -321,7 +346,21 @@ abstract class NpDb {
     String? location,
     bool? isFavorite,
     List<String>? mimes,
+    int? offset,
     int? limit,
+  });
+
+  /// Summarize files matching some specific requirements
+  ///
+  /// See [getFileDescriptors]
+  ///
+  /// Returned data are sorted by [DbFileDescriptor.bestDateTime] in descending
+  /// order
+  Future<DbFilesSummary> getFilesSummary({
+    required DbAccount account,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
   });
 
   Future<DbLocationGroupResult> groupLocations({
