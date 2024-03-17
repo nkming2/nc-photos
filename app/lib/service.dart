@@ -260,7 +260,7 @@ class _MetadataTask {
       final dir = File(path: file_util.unstripPath(account, r));
       hasScanShareFolder |= file_util.isOrUnderDir(shareFolder, dir);
       final updater = UpdateMissingMetadata(
-          c.fileRepo, const _UpdateMissingMetadataConfigProvider(), geocoder);
+          c, const _UpdateMissingMetadataConfigProvider(), geocoder);
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         updater.stop();
@@ -283,7 +283,7 @@ class _MetadataTask {
     }
     if (!hasScanShareFolder) {
       final shareUpdater = UpdateMissingMetadata(
-          c.fileRepo, const _UpdateMissingMetadataConfigProvider(), geocoder);
+          c, const _UpdateMissingMetadataConfigProvider(), geocoder);
       void onServiceStop() {
         _log.info("[_updateMetadata] Stopping task: user canceled");
         shareUpdater.stop();

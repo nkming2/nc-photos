@@ -30,9 +30,6 @@ class RemoveFromAlbum {
 
   /// Remove a list of AlbumItems from [album]
   ///
-  /// The items are compared with [identical], so it must come from [album] for
-  /// it to work
-  ///
   /// If [shouldUnshare] is false, files will not be unshared after removing
   /// from the album
   Future<Album> call(
@@ -65,7 +62,8 @@ class RemoveFromAlbum {
         .toList();
     final provider = album.provider as AlbumStaticProvider;
     final newItems = provider.items
-        .where((element) => !filtered.containsIdentical(element))
+        .where((e) =>
+            !filtered.containsIf(e, (a, b) => a.compareServerIdentity(b)))
         .toList();
     var newAlbum = album.copyWith(
       provider: AlbumStaticProvider.of(album).copyWith(
@@ -108,7 +106,7 @@ class RemoveFromAlbum {
         isNeedUpdate = true;
         break;
       }
-      if (fileItem.file.bestDateTime == newAlbum.provider.latestItemTime) {
+      if (fileItem.file.fdDateTime == newAlbum.provider.latestItemTime) {
         isNeedUpdate = true;
         break;
       }
@@ -130,7 +128,7 @@ class RemoveFromAlbum {
   }
 
   Future<void> _unshareFiles(
-      Account account, Album album, List<File> files) async {
+      Account account, Album album, List<FileDescriptor> files) async {
     final albumShares = (album.shares!.map((e) => e.userId).toList()
           ..add(album.albumFile!.ownerId ?? account.userId))
         .where((element) => element != account.userId)

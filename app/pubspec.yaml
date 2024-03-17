@@ -136,6 +136,7 @@ dependencies:
   page_view_indicators: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.15
+  provider: any
   rxdart: ^0.27.7
   screen_brightness:  ^0.2.2
   shared_preferences: ^2.0.8

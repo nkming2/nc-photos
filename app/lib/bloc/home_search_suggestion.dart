@@ -219,7 +219,7 @@ class HomeSearchSuggestionBloc
     }
     try {
       final persons = await ListPerson(_c)(
-              account, accountPrefController.personProvider.value)
+              account, accountPrefController.personProviderValue)
           .last;
       product.addAll(persons.map((t) => _PersonSearcheable(t)));
       _log.info("[_onEventPreloadData] Loaded ${persons.length} people");

@@ -337,7 +337,7 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
-  Future<DbSyncResult> syncFavoriteFiles({
+  Future<DbSyncIdResult> syncFavoriteFiles({
     required DbAccount account,
     required List<int> favoriteFileIds,
   }) async {
@@ -370,10 +370,10 @@ class NpDbSqlite implements NpDb {
           isFavorite: const OrNull(false),
         );
       }
-      return DbSyncResult(
-        insert: inserts.length,
-        delete: deletes.length,
-        update: 0,
+      return DbSyncIdResult(
+        insert: inserts,
+        delete: deletes,
+        update: const [],
       );
     });
   }
@@ -834,7 +834,7 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
-  Future<DbSyncResult> syncTags({
+  Future<DbSyncIdResult> syncTags({
     required DbAccount account,
     required List<DbTag> tags,
   }) async {
@@ -863,10 +863,10 @@ class NpDbSqlite implements NpDb {
           updates: updates,
         );
       }
-      return DbSyncResult(
-        insert: inserts.length,
-        delete: deletes.length,
-        update: updates.length,
+      return DbSyncIdResult(
+        insert: inserts.map((e) => e.id).toList(),
+        delete: deletes.map((e) => e.id).toList(),
+        update: updates.map((e) => e.id).toList(),
       );
     });
   }

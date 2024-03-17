@@ -5,7 +5,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/stream_extension.dart';
@@ -22,8 +21,7 @@ part 'unshare_file_from_album.g.dart';
 class UnshareFileFromAlbum {
   UnshareFileFromAlbum(this._c)
       : assert(require(_c)),
-        assert(ListAlbum.require(_c)),
-        assert(ListShare.require(_c));
+        assert(ListAlbum.require(_c));
 
   static bool require(DiContainer c) => DiContainer.has(c, DiType.shareRepo);
 
@@ -34,7 +32,7 @@ class UnshareFileFromAlbum {
   Future<void> call(
     Account account,
     Album album,
-    List<File> files,
+    List<FileDescriptor> files,
     List<CiString> unshareWith, {
     ErrorWithValueHandler<Share>? onUnshareFileFailed,
   }) async {
@@ -57,7 +55,7 @@ class UnshareFileFromAlbum {
         exclusiveShares.addAll(
             shares.where((element) => unshareWith.contains(element.shareWith)));
       } catch (e, stackTrace) {
-        _log.severe("[call] Failed while ListShare: '${logFilename(f.path)}'",
+        _log.severe("[call] Failed while ListShare: '${logFilename(f.fdPath)}'",
             e, stackTrace);
       }
     }
@@ -77,7 +75,7 @@ class UnshareFileFromAlbum {
       // remove files shared as part of this other shared album
       exclusiveShares.removeWhere((s) =>
           sharesOfInterest.any((i) => i.userId == s.shareWith) &&
-          albumFiles.any((f) => f.fileId == s.itemSource));
+          albumFiles.any((f) => f.fdId == s.itemSource));
     }
     _log.fine("[call] Post-filter shares: $exclusiveShares");
 

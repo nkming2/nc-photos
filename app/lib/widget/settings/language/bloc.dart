@@ -5,7 +5,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State.init(
-          selected: prefController.language.value,
+          selected: prefController.languageValue,
         )) {
     on<_Init>(_onInit);
     on<_SelectLanguage>(_onSelectLanguage);
@@ -31,10 +31,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onInit(_Init ev, Emitter<_State> emit) {
     _log.info(ev);
     return emit.forEach<language_util.AppLanguage>(
-      prefController.language,
-      onData: (data) => state.copyWith(
-        selected: data,
-      ),
+      prefController.languageChange,
+      onData: (data) => state.copyWith(selected: data),
       onError: (e, stackTrace) {
         _log.severe("[_onInit] Uncaught exception", e, stackTrace);
         return state.copyWith(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/language_util.dart' as language_util;
+import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/size.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -14,21 +14,21 @@ import 'package:rxdart/rxdart.dart';
 part 'pref_controller.g.dart';
 
 @npLog
+@npSubjectAccessor
 class PrefController {
   PrefController(this._c);
 
-  ValueStream<language_util.AppLanguage> get language =>
-      _languageController.stream;
-
-  Future<void> setAppLanguage(language_util.AppLanguage value) =>
-      _set<language_util.AppLanguage>(
+  Future<void> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
         controller: _languageController,
         setter: (pref, value) => pref.setLanguage(value.langId),
         value: value,
       );
 
-  ValueStream<int> get albumBrowserZoomLevel =>
-      _albumBrowserZoomLevelController.stream;
+  Future<void> setHomePhotosZoomLevel(int value) => _set<int>(
+        controller: _homePhotosZoomLevelController,
+        setter: (pref, value) => pref.setHomePhotosZoomLevel(value),
+        value: value,
+      );
 
   Future<void> setAlbumBrowserZoomLevel(int value) => _set<int>(
         controller: _albumBrowserZoomLevelController,
@@ -36,15 +36,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<int> get homeAlbumsSort => _homeAlbumsSortController.stream;
-
   Future<void> setHomeAlbumsSort(int value) => _set<int>(
         controller: _homeAlbumsSortController,
         setter: (pref, value) => pref.setHomeAlbumsSort(value),
         value: value,
       );
-
-  ValueStream<bool> get isEnableExif => _isEnableExifController.stream;
 
   Future<void> setEnableExif(bool value) => _set<bool>(
         controller: _isEnableExifController,
@@ -52,16 +48,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get shouldProcessExifWifiOnly =>
-      _shouldProcessExifWifiOnlyController.stream;
-
   Future<void> setProcessExifWifiOnly(bool value) => _set<bool>(
         controller: _shouldProcessExifWifiOnlyController,
         setter: (pref, value) => pref.setProcessExifWifiOnly(value),
         value: value,
       );
-
-  ValueStream<int> get memoriesRange => _memoriesRangeController.stream;
 
   Future<void> setMemoriesRange(int value) => _set<int>(
         controller: _memoriesRangeController,
@@ -69,17 +60,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isPhotosTabSortByName =>
-      _isPhotosTabSortByNameController.stream;
-
   Future<void> setPhotosTabSortByName(bool value) => _set<bool>(
         controller: _isPhotosTabSortByNameController,
         setter: (pref, value) => pref.setPhotosTabSortByName(value),
         value: value,
       );
-
-  ValueStream<int> get viewerScreenBrightness =>
-      _viewerScreenBrightnessController.stream;
 
   Future<void> setViewerScreenBrightness(int value) => _set<int>(
         controller: _viewerScreenBrightnessController,
@@ -87,17 +72,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isViewerForceRotation =>
-      _isViewerForceRotationController.stream;
-
   Future<void> setViewerForceRotation(bool value) => _set<bool>(
         controller: _isViewerForceRotationController,
         setter: (pref, value) => pref.setViewerForceRotation(value),
         value: value,
       );
-
-  ValueStream<GpsMapProvider> get gpsMapProvider =>
-      _gpsMapProviderController.stream;
 
   Future<void> setGpsMapProvider(GpsMapProvider value) => _set<GpsMapProvider>(
         controller: _gpsMapProviderController,
@@ -105,16 +84,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isAlbumBrowserShowDate =>
-      _isAlbumBrowserShowDateController.stream;
-
   Future<void> setAlbumBrowserShowDate(bool value) => _set<bool>(
         controller: _isAlbumBrowserShowDateController,
         setter: (pref, value) => pref.setAlbumBrowserShowDate(value),
         value: value,
       );
-
-  ValueStream<bool> get isDoubleTapExit => _isDoubleTapExitController.stream;
 
   Future<void> setDoubleTapExit(bool value) => _set<bool>(
         controller: _isDoubleTapExitController,
@@ -122,16 +96,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isSaveEditResultToServer =>
-      _isSaveEditResultToServerController.stream;
-
   Future<void> setSaveEditResultToServer(bool value) => _set<bool>(
         controller: _isSaveEditResultToServerController,
         setter: (pref, value) => pref.setSaveEditResultToServer(value),
         value: value,
       );
-
-  ValueStream<SizeInt> get enhanceMaxSize => _enhanceMaxSizeController.stream;
 
   Future<void> setEnhanceMaxSize(SizeInt value) => _set<SizeInt>(
         controller: _enhanceMaxSizeController,
@@ -145,16 +114,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isDarkTheme => _isDarkThemeController.stream;
-
   Future<void> setDarkTheme(bool value) => _set<bool>(
         controller: _isDarkThemeController,
         setter: (pref, value) => pref.setDarkTheme(value),
         value: value,
       );
-
-  ValueStream<bool> get isFollowSystemTheme =>
-      _isFollowSystemThemeController.stream;
 
   Future<void> setFollowSystemTheme(bool value) => _set<bool>(
         controller: _isFollowSystemThemeController,
@@ -162,16 +126,11 @@ class PrefController {
         value: value,
       );
 
-  ValueStream<bool> get isUseBlackInDarkTheme =>
-      _isUseBlackInDarkThemeController.stream;
-
   Future<void> setUseBlackInDarkTheme(bool value) => _set<bool>(
         controller: _isUseBlackInDarkThemeController,
         setter: (pref, value) => pref.setUseBlackInDarkTheme(value),
         value: value,
       );
-
-  ValueStream<Color?> get seedColor => _seedColorController.stream;
 
   Future<void> setSeedColor(Color? value) => _setOrRemove<Color>(
         controller: _seedColorController,
@@ -226,49 +185,70 @@ class PrefController {
     }
   }
 
-  static language_util.AppLanguage _langIdToAppLanguage(int langId) {
+  static AppLanguage _langIdToAppLanguage(int langId) {
     try {
-      return language_util.supportedLanguages[langId]!;
+      return supportedLanguages[langId]!;
     } catch (_) {
-      return language_util.supportedLanguages[0]!;
+      return supportedLanguages[0]!;
     }
   }
 
   final DiContainer _c;
+  @npSubjectAccessor
   late final _languageController =
       BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
+  @npSubjectAccessor
+  late final _homePhotosZoomLevelController =
+      BehaviorSubject.seeded(_c.pref.getHomePhotosZoomLevelOr(0));
+  @npSubjectAccessor
   late final _albumBrowserZoomLevelController =
       BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
+  @npSubjectAccessor
   late final _homeAlbumsSortController =
       BehaviorSubject.seeded(_c.pref.getHomeAlbumsSortOr(0));
+  @npSubjectAccessor
   late final _isEnableExifController =
       BehaviorSubject.seeded(_c.pref.isEnableExifOr(true));
+  @npSubjectAccessor
   late final _shouldProcessExifWifiOnlyController =
       BehaviorSubject.seeded(_c.pref.shouldProcessExifWifiOnlyOr(true));
+  @npSubjectAccessor
   late final _memoriesRangeController =
       BehaviorSubject.seeded(_c.pref.getMemoriesRangeOr(2));
+  @npSubjectAccessor
   late final _isPhotosTabSortByNameController =
       BehaviorSubject.seeded(_c.pref.isPhotosTabSortByNameOr(false));
+  @npSubjectAccessor
   late final _viewerScreenBrightnessController =
       BehaviorSubject.seeded(_c.pref.getViewerScreenBrightnessOr(-1));
+  @npSubjectAccessor
   late final _isViewerForceRotationController =
       BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
+  @npSubjectAccessor
   late final _gpsMapProviderController = BehaviorSubject.seeded(
       GpsMapProvider.values[_c.pref.getGpsMapProviderOr(0)]);
+  @npSubjectAccessor
   late final _isAlbumBrowserShowDateController =
       BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
+  @npSubjectAccessor
   late final _isDoubleTapExitController =
       BehaviorSubject.seeded(_c.pref.isDoubleTapExitOr(false));
+  @npSubjectAccessor
   late final _isSaveEditResultToServerController =
       BehaviorSubject.seeded(_c.pref.isSaveEditResultToServerOr(true));
+  @npSubjectAccessor
   late final _enhanceMaxSizeController = BehaviorSubject.seeded(
       SizeInt(_c.pref.getEnhanceMaxWidthOr(), _c.pref.getEnhanceMaxHeightOr()));
+  @npSubjectAccessor
   late final _isDarkThemeController =
       BehaviorSubject.seeded(_c.pref.isDarkThemeOr(false));
+  @npSubjectAccessor
   late final _isFollowSystemThemeController =
       BehaviorSubject.seeded(_c.pref.isFollowSystemThemeOr(false));
+  @npSubjectAccessor
   late final _isUseBlackInDarkThemeController =
       BehaviorSubject.seeded(_c.pref.isUseBlackInDarkThemeOr(false));
+  @NpSubjectAccessor(type: "Color?")
   late final _seedColorController =
       BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.run(Color.new));
 }

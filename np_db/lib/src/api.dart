@@ -49,6 +49,36 @@ class DbSyncResult {
   final int update;
 }
 
+/// Sync results with ids
+///
+/// The meaning of the ids returned depends on the specific call
+class DbSyncIdResult {
+  const DbSyncIdResult({
+    required this.insert,
+    required this.delete,
+    required this.update,
+  });
+
+  factory DbSyncIdResult.fromJson(JsonObj json) => DbSyncIdResult(
+        insert: (json["insert"] as List).cast<int>(),
+        delete: (json["delete"] as List).cast<int>(),
+        update: (json["update"] as List).cast<int>(),
+      );
+
+  JsonObj toJson() => {
+        "insert": insert,
+        "delete": delete,
+        "update": update,
+      };
+
+  bool get isEmpty => insert.isEmpty && delete.isEmpty && update.isEmpty;
+  bool get isNotEmpty => !isEmpty;
+
+  final List<int> insert;
+  final List<int> delete;
+  final List<int> update;
+}
+
 @toString
 class DbLocationGroup with EquatableMixin {
   const DbLocationGroup({
@@ -235,7 +265,9 @@ abstract class NpDb {
   });
 
   /// Add or replace nc albums in db
-  Future<DbSyncResult> syncFavoriteFiles({
+  ///
+  /// Return fileIds affected by this call
+  Future<DbSyncIdResult> syncFavoriteFiles({
     required DbAccount account,
     required List<int> favoriteFileIds,
   });
@@ -374,7 +406,7 @@ abstract class NpDb {
   });
 
   /// Replace all tags for [account]
-  Future<DbSyncResult> syncTags({
+  Future<DbSyncIdResult> syncTags({
     required DbAccount account,
     required List<DbTag> tags,
   });

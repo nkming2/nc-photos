@@ -8,6 +8,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/widget/measurable_item_list.dart';
 import 'package:nc_photos/widget/selectable.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
@@ -36,6 +37,7 @@ class SelectableItemList<T extends SelectableItemMetadata>
     this.indicatorAlignment = Alignment.topLeft,
     this.onItemTap,
     this.onSelectionChange,
+    this.onMaxExtentChange,
   });
 
   @override
@@ -53,6 +55,7 @@ class SelectableItemList<T extends SelectableItemMetadata>
 
   final void Function(BuildContext context, int index, T metadata)? onItemTap;
   final void Function(BuildContext context, Set<T> selected)? onSelectionChange;
+  final ValueChanged<double?>? onMaxExtentChange;
 }
 
 @npLog
@@ -90,32 +93,46 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
   }
 
   Widget _buildBody(BuildContext context) {
-    return SliverStaggeredGrid.extentBuilder(
-      key: ObjectKey(widget.maxCrossAxisExtent),
-      maxCrossAxisExtent: widget.maxCrossAxisExtent,
-      itemCount: widget.items.length,
-      itemBuilder: (context, i) {
-        final meta = widget.items[i];
-        if (meta.isSelectable) {
-          return Selectable(
-            isSelected: widget.selectedItems.contains(meta),
-            iconSize: 32,
-            childBorderRadius:
-                widget.childBorderRadius ?? BorderRadius.circular(24),
-            indicatorAlignment: widget.indicatorAlignment,
-            onTap: _isSelecting
-                ? () => _onItemSelect(context, i, meta)
-                : () => _onItemTap(context, i, meta),
-            onLongPress: () => _onItemLongPress(i, meta),
-            child: widget.itemBuilder(context, i, meta),
-          );
-        } else {
-          return widget.itemBuilder(context, i, meta);
-        }
-      },
-      staggeredTileBuilder: (i) =>
-          widget.staggeredTileBuilder(i, widget.items[i]),
-    );
+    if (widget.onMaxExtentChange != null) {
+      return MeasurableItemList(
+        key: _listKey,
+        maxCrossAxisExtent: widget.maxCrossAxisExtent,
+        itemCount: widget.items.length,
+        itemBuilder: _buildItem,
+        staggeredTileBuilder: (i) =>
+            widget.staggeredTileBuilder(i, widget.items[i]),
+        onMaxExtentChanged: widget.onMaxExtentChange,
+      );
+    } else {
+      return SliverStaggeredGrid.extentBuilder(
+        key: ObjectKey(widget.maxCrossAxisExtent),
+        maxCrossAxisExtent: widget.maxCrossAxisExtent,
+        itemCount: widget.items.length,
+        itemBuilder: _buildItem,
+        staggeredTileBuilder: (i) =>
+            widget.staggeredTileBuilder(i, widget.items[i]),
+      );
+    }
+  }
+
+  Widget _buildItem(BuildContext context, int index) {
+    final meta = widget.items[index];
+    if (meta.isSelectable) {
+      return Selectable(
+        isSelected: widget.selectedItems.contains(meta),
+        iconSize: 32,
+        childBorderRadius:
+            widget.childBorderRadius ?? BorderRadius.circular(24),
+        indicatorAlignment: widget.indicatorAlignment,
+        onTap: _isSelecting
+            ? () => _onItemSelect(context, index, meta)
+            : () => _onItemTap(context, index, meta),
+        onLongPress: () => _onItemLongPress(index, meta),
+        child: widget.itemBuilder(context, index, meta),
+      );
+    } else {
+      return widget.itemBuilder(context, index, meta);
+    }
   }
 
   void _onItemTap(BuildContext context, int index, T metadata) {
@@ -214,6 +231,12 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
           "[_remapSelected] ${widget.selectedItems.length - newSelected.length} items not found in the new list");
     }
     widget.onSelectionChange?.call(context, newSelected);
+    // TODO remap lastSelectPosition
+
+    _log.info("[_remapSelected] updateListHeight: list item changed");
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        (_listKey.currentState as MeasurableItemListState?)
+            ?.updateListHeight());
   }
 
   bool get _isSelecting => widget.selectedItems.isNotEmpty;
@@ -222,4 +245,6 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
   final _keyboardFocus = FocusNode();
   int? _lastSelectPosition;
   bool _isKeyboardRangeSelecting = false;
+
+  final _listKey = GlobalKey();
 }

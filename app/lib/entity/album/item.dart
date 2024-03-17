@@ -1,9 +1,9 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
@@ -57,11 +57,13 @@ abstract class AlbumItem with EquatableMixin {
 
   JsonObj toContentJson();
 
+  bool compareServerIdentity(AlbumItem other);
+
   @override
   String toString() => _$toString();
 
   @override
-  get props => [
+  List<Object?> get props => [
         addedBy,
         addedAt,
       ];
@@ -72,32 +74,23 @@ abstract class AlbumItem with EquatableMixin {
   static final _log = _$AlbumItemNpLog.log;
 }
 
+@genCopyWith
 @toString
 class AlbumFileItem extends AlbumItem {
   AlbumFileItem({
-    required CiString addedBy,
-    required DateTime addedAt,
+    required super.addedBy,
+    required super.addedAt,
     required this.file,
-  }) : super(addedBy: addedBy, addedAt: addedAt);
-
-  @override
-  // ignore: hash_and_equals
-  bool operator ==(Object? other) => equals(other, isDeep: true);
-
-  bool equals(Object? other, {bool isDeep = false}) {
-    if (other is AlbumFileItem) {
-      return super == other && (file.equals(other.file, isDeep: isDeep));
-    } else {
-      return false;
-    }
-  }
+    required this.ownerId,
+  });
 
   factory AlbumFileItem.fromJson(
       JsonObj json, CiString addedBy, DateTime addedAt) {
     return AlbumFileItem(
       addedBy: addedBy,
       addedAt: addedAt,
-      file: File.fromJson(json["file"].cast<String, dynamic>()),
+      file: FileDescriptor.fromJson(json["file"].cast<String, dynamic>()),
+      ownerId: (json["ownerId"] as String).toCi(),
     );
   }
 
@@ -105,37 +98,29 @@ class AlbumFileItem extends AlbumItem {
   String toString() => _$toString();
 
   @override
-  toContentJson() {
+  JsonObj toContentJson() {
     return {
-      "file": file.toJson(),
+      "file": file.toFdJson(),
+      "ownerId": ownerId.raw,
     };
   }
 
-  AlbumFileItem copyWith({
-    CiString? addedBy,
-    DateTime? addedAt,
-    File? file,
-  }) {
-    return AlbumFileItem(
-      addedBy: addedBy ?? this.addedBy,
-      addedAt: addedAt ?? this.addedAt,
-      file: file ?? this.file,
-    );
-  }
-
-  AlbumFileItem minimize() => AlbumFileItem(
-        addedBy: addedBy,
-        addedAt: addedAt,
-        file: file.copyWith(metadata: const OrNull(null)),
-      );
+  @override
+  bool compareServerIdentity(AlbumItem other) =>
+      other is AlbumFileItem &&
+      file.compareServerIdentity(other.file) &&
+      addedBy == other.addedBy &&
+      addedAt == other.addedAt;
 
   @override
-  get props => [
+  List<Object?> get props => [
         ...super.props,
-        // file is handled separately, see [equals]
+        file,
+        ownerId,
       ];
 
-  final File file;
+  final FileDescriptor file;
+  final CiString ownerId;
 
   static const _type = "file";
 }
@@ -161,11 +146,18 @@ class AlbumLabelItem extends AlbumItem {
   String toString() => _$toString();
 
   @override
-  toContentJson() {
+  JsonObj toContentJson() {
     return {
       "text": text,
     };
   }
+
+  @override
+  bool compareServerIdentity(AlbumItem other) =>
+      other is AlbumLabelItem &&
+      text == other.text &&
+      addedBy == other.addedBy &&
+      addedAt == other.addedAt;
 
   AlbumLabelItem copyWith({
     CiString? addedBy,
@@ -180,7 +172,7 @@ class AlbumLabelItem extends AlbumItem {
   }
 
   @override
-  get props => [
+  List<Object?> get props => [
         ...super.props,
         text,
       ];

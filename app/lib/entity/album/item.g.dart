@@ -3,6 +3,47 @@
 part of 'item.dart';
 
 // **************************************************************************
+// CopyWithLintRuleGenerator
+// **************************************************************************
+
+// ignore_for_file: library_private_types_in_public_api, duplicate_ignore
+
+// **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+abstract class $AlbumFileItemCopyWithWorker {
+  AlbumFileItem call(
+      {CiString? addedBy,
+      DateTime? addedAt,
+      FileDescriptor? file,
+      CiString? ownerId});
+}
+
+class _$AlbumFileItemCopyWithWorkerImpl
+    implements $AlbumFileItemCopyWithWorker {
+  _$AlbumFileItemCopyWithWorkerImpl(this.that);
+
+  @override
+  AlbumFileItem call(
+      {dynamic addedBy, dynamic addedAt, dynamic file, dynamic ownerId}) {
+    return AlbumFileItem(
+        addedBy: addedBy as CiString? ?? that.addedBy,
+        addedAt: addedAt as DateTime? ?? that.addedAt,
+        file: file as FileDescriptor? ?? that.file,
+        ownerId: ownerId as CiString? ?? that.ownerId);
+  }
+
+  final AlbumFileItem that;
+}
+
+extension $AlbumFileItemCopyWith on AlbumFileItem {
+  $AlbumFileItemCopyWithWorker get copyWith => _$copyWith;
+  $AlbumFileItemCopyWithWorker get _$copyWith =>
+      _$AlbumFileItemCopyWithWorkerImpl(this);
+}
+
+// **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
@@ -27,7 +68,7 @@ extension _$AlbumItemToString on AlbumItem {
 extension _$AlbumFileItemToString on AlbumFileItem {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AlbumFileItem {addedBy: $addedBy, addedAt: $addedAt, file: ${file.path}}";
+    return "AlbumFileItem {addedBy: $addedBy, addedAt: $addedAt, file: ${file.fdPath}, ownerId: $ownerId}";
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,8 +20,8 @@ import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/collection_items_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
+import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -41,9 +42,6 @@ import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/use_case/archive_file.dart';
-import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
-import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
@@ -103,13 +101,14 @@ class CollectionBrowser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accountController = context.read<AccountController>();
     return BlocProvider(
       create: (_) => _Bloc(
         container: KiwiContainer().resolve(),
-        account: context.read<AccountController>().account,
+        account: accountController.account,
         prefController: context.read(),
-        collectionsController:
-            context.read<AccountController>().collectionsController,
+        collectionsController: accountController.collectionsController,
+        filesController: accountController.filesController,
         collection: collection,
       ),
       child: const _WrappedCollectionBrowser(),
@@ -211,14 +210,22 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                 }
               },
             ),
-            _BlocListener(
-              listenWhen: (previous, current) =>
-                  previous.error != current.error,
-              listener: (context, state) {
-                if (state.error != null && isPageVisible()) {
+            _BlocListenerT<ExceptionEvent?>(
+              selector: (state) => state.error,
+              listener: (context, error) {
+                if (error != null && isPageVisible()) {
+                  final String content;
+                  if (error.error is _ArchiveFailedError) {
+                    content = L10n.global().archiveSelectedFailureNotification(
+                        (error.error as _ArchiveFailedError).count);
+                  } else if (error.error is _RemoveFailedError) {
+                    content = L10n.global().deleteSelectedFailureNotification(
+                        (error.error as _RemoveFailedError).count);
+                  } else {
+                    content = exception_util.toUserString(error.error);
+                  }
                   SnackBarManager().showSnackBar(SnackBar(
-                    content:
-                        Text(exception_util.toUserString(state.error!.error)),
+                    content: Text(content),
                     duration: k.snackBarDurationNormal,
                   ));
                 }
@@ -395,6 +402,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
 // typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {

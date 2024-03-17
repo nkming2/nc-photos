@@ -45,7 +45,7 @@ class RemoveFromNcAlbum {
     var count = fileItems.length;
     await Remove(_c)(
       account,
-      fileItems.map((e) => e.file.toFile()).toList(),
+      fileItems.map((e) => e.file).toList(),
       onError: (i, f, e, stackTrace) {
         --count;
         try {

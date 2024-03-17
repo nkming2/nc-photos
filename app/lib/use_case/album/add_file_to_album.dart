@@ -27,7 +27,6 @@ class AddFileToAlbum {
   static bool require(DiContainer c) =>
       DiContainer.has(c, DiType.albumRepo) &&
       DiContainer.has(c, DiType.shareRepo) &&
-      ListShare.require(c) &&
       PreProcessAlbum.require(c);
 
   /// Add list of files to [album]
@@ -47,7 +46,8 @@ class AddFileToAlbum {
         .map((f) => AlbumFileItem(
               addedBy: account.userId,
               addedAt: clock.now(),
-              file: f,
+              file: f.toDescriptor(),
+              ownerId: f.ownerId ?? account.userId,
             ))
         .where((i) => itemSet.add(OverrideComparator<AlbumItem>(
             i, _isItemFileEqual, _getItemHashCode)))
@@ -63,18 +63,14 @@ class AddFileToAlbum {
     );
     // UpdateAlbumWithActualItems only persists when there are changes to
     // several properties, so we can't rely on it
-    newAlbum = await UpdateAlbumWithActualItems(null)(
-      account,
-      newAlbum,
-      newItems,
-    );
+    newAlbum =
+        await UpdateAlbumWithActualItems(null)(account, newAlbum, newItems);
     await UpdateAlbum(_c.albumRepo)(account, newAlbum);
 
     if (album.shares?.isNotEmpty == true) {
-      final newFiles =
-          addItems.whereType<AlbumFileItem>().map((e) => e.file).toList();
-      if (newFiles.isNotEmpty) {
-        await _shareFiles(account, newAlbum, newFiles);
+      final newFileItems = addItems.whereType<AlbumFileItem>().toList();
+      if (newFileItems.isNotEmpty) {
+        await _shareFiles(account, newAlbum, newFileItems);
       }
     }
 
@@ -82,7 +78,7 @@ class AddFileToAlbum {
   }
 
   Future<void> _shareFiles(
-      Account account, Album album, List<File> files) async {
+      Account account, Album album, List<AlbumFileItem> fileItems) async {
     final albumShares = (album.shares!.map((e) => e.userId).toList()
           ..add(album.albumFile!.ownerId ?? account.userId))
         .where((element) => element != account.userId)
@@ -90,30 +86,30 @@ class AddFileToAlbum {
     if (albumShares.isEmpty) {
       return;
     }
-    for (final f in files) {
+    for (final i in fileItems) {
       try {
-        final fileShares = (await ListShare(_c)(account, f))
+        final fileShares = (await ListShare(_c)(account, i.file))
             .where((element) => element.shareType == ShareType.user)
             .map((e) => e.shareWith!)
             .toSet();
         final diffShares = albumShares.difference(fileShares);
         for (final s in diffShares) {
-          if (s == f.ownerId) {
+          if (s == i.ownerId) {
             // skip files already owned by the target user
             continue;
           }
           try {
-            await CreateUserShare(_c.shareRepo)(account, f, s.raw);
+            await CreateUserShare(_c.shareRepo)(account, i.file, s.raw);
           } catch (e, stackTrace) {
             _log.shout(
-                "[_shareFiles] Failed while CreateUserShare: ${logFilename(f.path)}",
+                "[_shareFiles] Failed while CreateUserShare: ${logFilename(i.file.fdPath)}",
                 e,
                 stackTrace);
           }
         }
       } catch (e, stackTrace) {
         _log.shout(
-            "[_shareFiles] Failed while listing shares: ${logFilename(f.path)}",
+            "[_shareFiles] Failed while listing shares: ${logFilename(i.file.fdPath)}",
             e,
             stackTrace);
       }
@@ -133,7 +129,7 @@ bool _isItemFileEqual(AlbumItem a, AlbumItem b) {
 
 int _getItemHashCode(AlbumItem a) {
   if (a is AlbumFileItem) {
-    return a.file.fileId?.hashCode ?? a.file.path.hashCode;
+    return a.file.fdId.hashCode;
   } else {
     return a.hashCode;
   }

@@ -2,6 +2,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/use_case/album/remove_album.dart';
@@ -36,6 +37,7 @@ Future<void> _removeAlbum() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo([album1, album2]),
     fileRepo: MockFileMemoryRepo([albumFile1, albumFile2]),
+    fileRepo2: MockFileMemoryRepo2([albumFile1, albumFile2]),
     shareRepo: MockShareRepo(),
     npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
@@ -44,7 +46,7 @@ Future<void> _removeAlbum() async {
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile1.path));
-  expect(c.fileMemoryRepo.files, [albumFile2]);
+  expect(c.fileMemoryRepo2.files, [albumFile2.toDescriptor()]);
 }
 
 /// Remove a shared album (admin -> user1)
@@ -64,6 +66,7 @@ Future<void> _removeSharedAlbum() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files]),
+    fileRepo2: MockFileMemoryRepo2([albumFile, ...files]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
@@ -77,7 +80,7 @@ Future<void> _removeSharedAlbum() async {
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));
-  expect(c.fileMemoryRepo.files, [files[0]]);
+  expect(c.fileMemoryRepo2.files, [files[0].toDescriptor()]);
   expect(c.shareMemoryRepo.shares, const []);
 }
 
@@ -105,6 +108,7 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo(albums),
     fileRepo: MockFileMemoryRepo([...albumFiles, ...files]),
+    fileRepo2: MockFileMemoryRepo2([...albumFiles, ...files]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(id: "0", file: albumFiles[0], shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
@@ -119,7 +123,10 @@ Future<void> _removeSharedAlbumFileInOtherAlbum() async {
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFiles[0].path));
-  expect(c.fileMemoryRepo.files, [albumFiles[1], files[0]]);
+  expect(
+    c.fileMemoryRepo2.files,
+    [albumFiles[1].toDescriptor(), files[0].toDescriptor()],
+  );
   expect(c.shareMemoryRepo.shares, [
     util.buildShare(id: "1", file: files[0], shareWith: "user1"),
     util.buildShare(id: "2", file: albumFiles[1], shareWith: "user1"),
@@ -147,6 +154,7 @@ Future<void> _removeSharedAlbumResyncedFile() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo([album]),
     fileRepo: MockFileMemoryRepo([albumFile, ...files, ...user1Files]),
+    fileRepo2: MockFileMemoryRepo2([albumFile, ...files, ...user1Files]),
     shareRepo: MockShareMemoryRepo([
       util.buildShare(id: "0", file: albumFile, shareWith: "user1"),
       util.buildShare(id: "1", file: files[0], shareWith: "user1"),
@@ -167,6 +175,9 @@ Future<void> _removeSharedAlbumResyncedFile() async {
 
   await RemoveAlbum(c)(
       account, c.albumMemoryRepo.findAlbumByPath(albumFile.path));
-  expect(c.fileMemoryRepo.files, [...files, ...user1Files]);
+  expect(
+    c.fileMemoryRepo2.files,
+    [...files, ...user1Files].map((e) => e.toDescriptor()),
+  );
   expect(c.shareMemoryRepo.shares, []);
 }

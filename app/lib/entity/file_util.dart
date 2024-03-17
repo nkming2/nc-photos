@@ -49,11 +49,17 @@ bool isNcAlbumFile(Account account, FileDescriptor file) =>
 bool isUnderDir(FileDescriptor file, FileDescriptor dir) =>
     file.fdPath.startsWith("${dir.fdPath}/");
 
+bool isUnderDirPath(String filePath, String dirPath) =>
+    filePath.startsWith("$dirPath/");
+
 /// Return if [file] is [dir] or located under [dir]
 ///
 /// See [isUnderDir]
 bool isOrUnderDir(FileDescriptor file, FileDescriptor dir) =>
     file.fdPath == dir.fdPath || isUnderDir(file, dir);
+
+bool isOrUnderDirPath(String filePath, String dirPath) =>
+    filePath == dirPath || isUnderDirPath(filePath, dirPath);
 
 /// Convert a stripped path to a full path
 ///
@@ -64,15 +70,18 @@ String unstripPath(Account account, String strippedPath) {
 }
 
 /// For a path "remote.php/dav/files/foo/bar.jpg", return foo
-CiString getUserDirName(File file) {
-  if (file.path.startsWith("remote.php/dav/files/")) {
+CiString getUserDirName(File file) => getUserDirNamePath(file.path);
+
+/// For a path "remote.php/dav/files/foo/bar.jpg", return foo
+CiString getUserDirNamePath(String filePath) {
+  if (filePath.startsWith("remote.php/dav/files/")) {
     const beg = "remote.php/dav/files/".length;
-    final end = file.path.indexOf("/", beg);
+    final end = filePath.indexOf("/", beg);
     if (end != -1) {
-      return file.path.substring(beg, end).toCi();
+      return filePath.substring(beg, end).toCi();
     }
   }
-  throw ArgumentError("Invalid path: ${file.path}");
+  throw ArgumentError("Invalid path: $filePath");
 }
 
 String renameConflict(String filename, int conflictCount) {

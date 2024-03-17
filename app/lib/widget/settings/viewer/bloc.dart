@@ -5,9 +5,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          screenBrightness: prefController.viewerScreenBrightness.value,
-          isForceRotation: prefController.isViewerForceRotation.value,
-          gpsMapProvider: prefController.gpsMapProvider.value,
+          screenBrightness: prefController.viewerScreenBrightnessValue,
+          isForceRotation: prefController.isViewerForceRotationValue,
+          gpsMapProvider: prefController.gpsMapProviderValue,
         )) {
     on<_Init>(_onInit);
     on<_SetScreenBrightness>(_onSetScreenBrightness);
@@ -22,7 +22,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEach<int>(
-        prefController.viewerScreenBrightness,
+        prefController.viewerScreenBrightnessChange,
         onData: (data) => state.copyWith(screenBrightness: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -30,7 +30,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<bool>(
-        prefController.isViewerForceRotation,
+        prefController.isViewerForceRotationChange,
         onData: (data) => state.copyWith(isForceRotation: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -38,7 +38,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<GpsMapProvider>(
-        prefController.gpsMapProvider,
+        prefController.gpsMapProviderChange,
         onData: (data) => state.copyWith(gpsMapProvider: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);

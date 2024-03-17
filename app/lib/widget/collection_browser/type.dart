@@ -174,3 +174,23 @@ class _DateItem extends _Item {
 
   final DateTime date;
 }
+
+@toString
+class _ArchiveFailedError implements Exception {
+  const _ArchiveFailedError(this.count);
+
+  @override
+  String toString() => _$toString();
+
+  final int count;
+}
+
+@toString
+class _RemoveFailedError implements Exception {
+  const _RemoveFailedError(this.count);
+
+  @override
+  String toString() => _$toString();
+
+  final int count;
+}

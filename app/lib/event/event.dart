@@ -37,6 +37,7 @@ class AppEventListener<T> {
   final _log = Logger("event.event.AppEventListener<${T.runtimeType}>");
 }
 
+@Deprecated("not fired anymore, to be removed")
 class AccountPrefUpdatedEvent {
   const AccountPrefUpdatedEvent(this.pref, this.key, this.value);
 
@@ -49,7 +50,7 @@ class FilePropertyUpdatedEvent {
   FilePropertyUpdatedEvent(this.account, this.file, this.properties);
 
   final Account account;
-  final File file;
+  final FileDescriptor file;
   final int properties;
 
   // Bit masks for properties field
@@ -89,6 +90,7 @@ class ShareRemovedEvent {
   final Share share;
 }
 
+@Deprecated("not fired anymore, to be removed")
 class FavoriteResyncedEvent {
   const FavoriteResyncedEvent(this.account);
 
@@ -115,6 +117,7 @@ class MetadataTaskStateChangedEvent {
   final MetadataTaskState state;
 }
 
+@Deprecated("not fired anymore, to be removed")
 class PrefUpdatedEvent {
   PrefUpdatedEvent(this.key, this.value);
 

@@ -1,304 +1,197 @@
-import 'dart:ui';
+import 'dart:async';
 
+import 'package:collection/collection.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/bloc/scan_account_dir.dart';
-import 'package:nc_photos/debug_util.dart';
-import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/bloc_util.dart';
+import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/files_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/exception_util.dart' as exception_util;
+import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
-import 'package:nc_photos/language_util.dart' as language_util;
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
-import 'package:nc_photos/use_case/update_property.dart';
-import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
+import 'package:nc_photos/widget/finger_listener.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
-import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:nc_photos/widget/selectable_item_list.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
+import 'package:nc_photos/widget/sliver_visualized_scale.dart';
 import 'package:nc_photos/widget/viewer.dart';
-import 'package:nc_photos/widget/zoom_menu_button.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_common/object_util.dart';
+import 'package:np_common/or_null.dart';
+import 'package:to_string/to_string.dart';
 
 part 'archive_browser.g.dart';
+part 'archive_browser/app_bar.dart';
+part 'archive_browser/bloc.dart';
+part 'archive_browser/state_event.dart';
+part 'archive_browser/type.dart';
+part 'archive_browser/view.dart';
 
-class ArchiveBrowserArguments {
-  ArchiveBrowserArguments(this.account);
-
-  final Account account;
-}
-
-class ArchiveBrowser extends StatefulWidget {
+class ArchiveBrowser extends StatelessWidget {
   static const routeName = "/archive-browser";
 
-  static Route buildRoute(ArchiveBrowserArguments args) => MaterialPageRoute(
-        builder: (context) => ArchiveBrowser.fromArgs(args),
+  static Route buildRoute() => MaterialPageRoute(
+        builder: (_) => const ArchiveBrowser(),
       );
 
-  const ArchiveBrowser({
-    Key? key,
-    required this.account,
-  }) : super(key: key);
-
-  ArchiveBrowser.fromArgs(ArchiveBrowserArguments args, {Key? key})
-      : this(
-          key: key,
-          account: args.account,
-        );
+  const ArchiveBrowser({super.key});
 
   @override
-  createState() => _ArchiveBrowserState();
+  Widget build(BuildContext context) {
+    final accountController = context.read<AccountController>();
+    return BlocProvider(
+      create: (_) => _Bloc(
+        account: accountController.account,
+        controller: accountController.filesController,
+        prefController: context.read(),
+      ),
+      child: const _WrappedArchiveBrowser(),
+    );
+  }
+}
 
-  final Account account;
+class _WrappedArchiveBrowser extends StatefulWidget {
+  const _WrappedArchiveBrowser();
+
+  @override
+  State<StatefulWidget> createState() => _WrappedArchiveBrowserState();
 }
 
 @npLog
-class _ArchiveBrowserState extends State<ArchiveBrowser>
-    with SelectableItemStreamListMixin<ArchiveBrowser> {
+class _WrappedArchiveBrowserState extends State<_WrappedArchiveBrowser>
+    with RouteAware, PageVisibilityMixin {
   @override
-  initState() {
+  void initState() {
     super.initState();
-    _initBloc();
-    _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
+    _bloc.add(const _LoadItems());
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<ScanAccountDirBloc, ScanAccountDirBlocState>(
-        bloc: _bloc,
-        listener: (context, state) => _onStateChange(context, state),
-        child: BlocBuilder<ScanAccountDirBloc, ScanAccountDirBlocState>(
-          bloc: _bloc,
-          builder: (context, state) => _buildContent(context, state),
-        ),
-      ),
-    );
-  }
-
-  @override
-  onItemTap(SelectableItem item, int index) {
-    item.as<PhotoListFileItem>()?.run((fileItem) {
-      Navigator.pushNamed(
-        context,
-        Viewer.routeName,
-        arguments:
-            ViewerArguments(widget.account, _backingFiles, fileItem.fileIndex),
-      );
-    });
-  }
-
-  void _initBloc() {
-    if (_bloc.state is ScanAccountDirBlocInit) {
-      _log.info("[_initBloc] Initialize bloc");
-      _reqQuery();
-    } else {
-      // process the current state
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _onStateChange(context, _bloc.state);
-          });
-        }
-      });
-    }
-  }
-
-  Widget _buildContent(BuildContext context, ScanAccountDirBlocState state) {
-    if (state is ScanAccountDirBlocSuccess &&
-        !_buildItemQueue.isProcessing &&
-        itemStreamListItems.isEmpty) {
-      return Column(
-        children: [
-          AppBar(
-            title: Text(L10n.global().albumArchiveLabel),
-            elevation: 0,
+      body: MultiBlocListener(
+        listeners: [
+          _BlocListenerT<List<FileDescriptor>>(
+            selector: (state) => state.files,
+            listener: (context, files) {
+              _bloc.add(_TransformItems(files));
+            },
           ),
-          Expanded(
-            child: EmptyListIndicator(
-              icon: Icons.archive_outlined,
-              text: L10n.global().listEmptyText,
-            ),
+          _BlocListenerT<ExceptionEvent?>(
+            selector: (state) => state.error,
+            listener: (context, error) {
+              if (error != null && isPageVisible()) {
+                if (error.error is _UnarchiveFailedError) {
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(L10n.global()
+                        .unarchiveSelectedFailureNotification(
+                            (error.error as _UnarchiveFailedError).count)),
+                    duration: k.snackBarDurationNormal,
+                  ));
+                } else {
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(exception_util.toUserString(error.error)),
+                    duration: k.snackBarDurationNormal,
+                  ));
+                }
+              }
+            },
           ),
         ],
-      );
-    } else {
-      return Stack(
-        children: [
-          buildItemStreamListOuter(
-            context,
+        child: FingerListener(
+          onFingerChanged: (finger) {
+            setState(() {
+              _finger = finger;
+            });
+          },
+          child: GestureDetector(
+            onScaleStart: (_) {
+              _bloc.add(const _StartScaling());
+            },
+            onScaleUpdate: (details) {
+              _bloc.add(_SetScale(details.scale));
+            },
+            onScaleEnd: (_) {
+              _bloc.add(const _EndScaling());
+            },
             child: CustomScrollView(
+              physics:
+                  _finger >= 2 ? const NeverScrollableScrollPhysics() : null,
               slivers: [
-                _buildAppBar(context),
-                buildItemStreamList(
-                  maxCrossAxisExtent: _thumbSize.toDouble(),
+                _BlocSelector<bool>(
+                  selector: (state) => state.selectedItems.isEmpty,
+                  builder: (context, isEmpty) =>
+                      isEmpty ? const _AppBar() : const _SelectionAppBar(),
+                ),
+                SliverToBoxAdapter(
+                  child: _BlocSelector<bool>(
+                    selector: (state) => state.isLoading,
+                    builder: (context, isLoading) => isLoading
+                        ? const LinearProgressIndicator()
+                        : const SizedBox(height: 4),
+                  ),
+                ),
+                _BlocBuilder(
+                  buildWhen: (previous, current) =>
+                      previous.transformedItems.isEmpty !=
+                          current.transformedItems.isEmpty ||
+                      previous.isLoading != current.isLoading,
+                  builder: (context, state) => state.transformedItems.isEmpty &&
+                          !state.isLoading
+                      ? SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: EmptyListIndicator(
+                            icon: Icons.archive_outlined,
+                            text: L10n.global().listEmptyText,
+                          ),
+                        )
+                      : _BlocSelector<double?>(
+                          selector: (state) => state.scale,
+                          builder: (context, scale) => SliverTransitionedScale(
+                            scale: scale,
+                            baseSliver: const _ContentList(),
+                            overlaySliver: const _ScalingList(),
+                          ),
+                        ),
                 ),
               ],
             ),
           ),
-          if (state is ScanAccountDirBlocLoading ||
-              _buildItemQueue.isProcessing)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: LinearProgressIndicator(),
-            ),
-        ],
-      );
-    }
-  }
-
-  Widget _buildAppBar(BuildContext context) {
-    if (isSelectionMode) {
-      return _buildSelectionAppBar(context);
-    } else {
-      return _buildNormalAppBar(context);
-    }
-  }
-
-  Widget _buildSelectionAppBar(BuildContext context) {
-    return SelectionAppBar(
-      count: selectedListItems.length,
-      onClosePressed: () {
-        setState(() {
-          clearSelectedItems();
-        });
-      },
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.unarchive),
-          tooltip: L10n.global().unarchiveTooltip,
-          onPressed: () {
-            _onSelectionAppBarUnarchivePressed();
-          },
         ),
-      ],
-    );
-  }
-
-  Widget _buildNormalAppBar(BuildContext context) {
-    return SliverAppBar(
-      title: Text(L10n.global().albumArchiveLabel),
-      floating: true,
-      actions: [
-        ZoomMenuButton(
-          initialZoom: _thumbZoomLevel,
-          minZoom: 0,
-          maxZoom: 2,
-          onZoomChanged: (value) {
-            setState(() {
-              _thumbZoomLevel = value.round();
-            });
-            Pref().setAlbumBrowserZoomLevel(_thumbZoomLevel);
-          },
-        ),
-      ],
-    );
-  }
-
-  void _onStateChange(BuildContext context, ScanAccountDirBlocState state) {
-    if (state is ScanAccountDirBlocInit) {
-      itemStreamListItems = [];
-    } else if (state is ScanAccountDirBlocSuccess ||
-        state is ScanAccountDirBlocLoading) {
-      _transformItems(state.files);
-    } else if (state is ScanAccountDirBlocFailure) {
-      _transformItems(state.files);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
-    } else if (state is ScanAccountDirBlocInconsistent) {
-      _reqQuery();
-    }
-  }
-
-  Future<void> _onSelectionAppBarUnarchivePressed() async {
-    SnackBarManager().showSnackBar(SnackBar(
-      content: Text(L10n.global()
-          .unarchiveSelectedProcessingNotification(selectedListItems.length)),
-      duration: k.snackBarDurationShort,
-    ));
-    final selection = selectedListItems
-        .whereType<PhotoListFileItem>()
-        .map((e) => e.file)
-        .toList();
-    setState(() {
-      clearSelectedItems();
-    });
-    final c = KiwiContainer().resolve<DiContainer>();
-    final selectedFiles =
-        await InflateFileDescriptor(c)(widget.account, selection);
-    final failures = <File>[];
-    for (final f in selectedFiles) {
-      try {
-        await UpdateProperty(c.fileRepo)
-            .updateIsArchived(widget.account, f, false);
-      } catch (e, stacktrace) {
-        _log.shout(
-            "[_onSelectionAppBarUnarchivePressed] Failed while unarchiving file: ${logFilename(f.path)}",
-            e,
-            stacktrace);
-        failures.add(f);
-      }
-    }
-    if (failures.isEmpty) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().unarchiveSelectedSuccessNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    } else {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global()
-            .unarchiveSelectedFailureNotification(failures.length)),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  void _transformItems(List<FileDescriptor> files) {
-    _buildItemQueue.addJob(
-      PhotoListItemBuilderArguments(
-        widget.account,
-        files,
-        isArchived: true,
-        sorter: photoListFileDateTimeSorter,
-        locale: language_util.getSelectedLocale() ??
-            PlatformDispatcher.instance.locale,
       ),
-      buildPhotoListItem,
-      (result) {
-        if (mounted) {
-          setState(() {
-            _backingFiles = result.backingFiles;
-            itemStreamListItems = result.listItems;
-          });
-        }
-      },
     );
   }
 
-  void _reqQuery() {
-    _bloc.add(const ScanAccountDirBlocQuery());
-  }
+  late final _bloc = context.bloc;
 
-  late final _bloc = ScanAccountDirBloc.of(widget.account);
-
-  var _backingFiles = <FileDescriptor>[];
-
-  final _buildItemQueue =
-      ComputeQueue<PhotoListItemBuilderArguments, PhotoListItemBuilderResult>();
-
-  var _thumbZoomLevel = 0;
-  int get _thumbSize => photo_list_util.getThumbSize(_thumbZoomLevel);
+  var _finger = 0;
 }
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  // _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
+}
+
+@npLog
+// ignore: camel_case_types
+class __ {}

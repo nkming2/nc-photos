@@ -14,8 +14,7 @@ import 'package:nc_photos/use_case/resync_album.dart';
 class PreProcessAlbum {
   PreProcessAlbum(this._c)
       : assert(require(_c)),
-        assert(PopulateAlbum.require(_c)),
-        assert(ResyncAlbum.require(_c));
+        assert(PopulateAlbum.require(_c));
 
   static bool require(DiContainer c) => true;
 

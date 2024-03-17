@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/cache_favorite.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 
 part 'sync_favorite.g.dart';
 
@@ -18,7 +19,7 @@ class SyncFavorite {
   /// Sync favorites in cache db with remote server
   ///
   /// Return number of files updated
-  Future<int> call(Account account) async {
+  Future<DbSyncIdResult> call(Account account) async {
     _log.info("[call] Sync favorites with remote");
     final remote = await _getRemoteFavoriteFileIds(account);
     return await CacheFavorite(_c)(account, remote);

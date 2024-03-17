@@ -2,7 +2,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
-import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:np_common/or_null.dart';
 
@@ -49,7 +48,7 @@ class UpdateAlbumTime {
           .map((e) => e.file)
           .where((element) => file_util.isSupportedFormat(element))
           .first;
-      latestItemTime = latestFile.bestDateTime;
+      latestItemTime = latestFile.fdDateTime;
     } catch (_) {
       latestItemTime = null;
     }

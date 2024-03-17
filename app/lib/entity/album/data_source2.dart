@@ -147,6 +147,11 @@ class AlbumSqliteDbDataSource2 implements AlbumDataSource2 {
             if (dbAlbum.version < 9) {
               dbAlbum = AlbumUpgraderV8(logFilePath: file.path).doDb(dbAlbum)!;
             }
+            if (dbAlbum.version < 10) {
+              dbAlbum =
+                  AlbumUpgraderV9(account: account, logFilePath: file.path)
+                      .doDb(dbAlbum)!;
+            }
             return DbAlbumConverter.fromDb(file, dbAlbum);
           } catch (e, stackTrace) {
             _log.severe(

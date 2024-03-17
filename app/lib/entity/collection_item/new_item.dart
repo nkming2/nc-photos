@@ -15,6 +15,13 @@ class NewCollectionFileItem implements CollectionFileItem, NewCollectionItem {
   const NewCollectionFileItem(this.file);
 
   @override
+  NewCollectionFileItem copyWith({
+    FileDescriptor? file,
+  }) {
+    return NewCollectionFileItem(file ?? this.file);
+  }
+
+  @override
   String toString() => _$toString();
 
   @override

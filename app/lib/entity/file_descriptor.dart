@@ -55,7 +55,7 @@ class FileDescriptor with EquatableMixin {
   JsonObj toFdJson() => toJson(this);
 
   @override
-  get props => [
+  List<Object?> get props => [
         fdPath,
         fdId,
         fdMime,
@@ -135,4 +135,24 @@ extension FileDescriptorExtension on FileDescriptor {
       isFavorite: fdIsFavorite,
     );
   }
+}
+
+class FileDescriptorServerIdentityComparator {
+  const FileDescriptorServerIdentityComparator(this.file);
+
+  @override
+  bool operator ==(Object other) {
+    if (other is FileDescriptorServerIdentityComparator) {
+      return file.compareServerIdentity(other.file);
+    } else if (other is FileDescriptor) {
+      return file.compareServerIdentity(other);
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  int get hashCode => file.fdId.hashCode;
+
+  final FileDescriptor file;
 }

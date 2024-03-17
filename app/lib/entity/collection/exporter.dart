@@ -50,6 +50,7 @@ class CollectionExporter {
                     addedBy: account.userId,
                     addedAt: clock.now().toUtc(),
                     file: f,
+                    ownerId: f.ownerId ?? account.userId,
                   );
                 }
               } else if (e is CollectionLabelItem) {

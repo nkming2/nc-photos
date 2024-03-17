@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
@@ -19,7 +20,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_collections.dart';
-import 'package:nc_photos/widget/home_photos.dart';
+import 'package:nc_photos/widget/home_photos2.dart';
 import 'package:nc_photos/widget/home_search.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
@@ -141,9 +142,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget _buildPage(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return HomePhotos(
-          account: widget.account,
-        );
+        return const HomePhotos2();
 
       case 1:
         return HomeSearch(
@@ -163,7 +162,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       if (index == 0) {
         KiwiContainer()
             .resolve<EventBus>()
-            .fire(const HomePhotosBackToTopEvent());
+            .fire(const HomePhotos2BackToTopEvent());
       }
       return;
     }
@@ -189,8 +188,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         context
             .read<AccountController>()
             .accountPrefController
-            .shareFolder
-            .value,
+            .shareFolderValue,
       );
     } catch (e, stacktrace) {
       _log.shout(

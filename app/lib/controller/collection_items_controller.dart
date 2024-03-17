@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -13,7 +14,6 @@ import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/rx_extension.dart';
@@ -46,18 +46,28 @@ class CollectionItemStreamData {
 class CollectionItemsController {
   CollectionItemsController(
     this._c, {
+    required this.filesController,
     required this.account,
     required this.collection,
     required this.onCollectionUpdated,
   }) {
-    _fileRemovedEventListener.begin();
+    _countStreamController = BehaviorSubject.seeded(collection.count);
+    _subscriptions.add(_dataStreamController.stream.listen((event) {
+      if (!event.hasNext) {
+        _countStreamController.add(event.items.length);
+      }
+    }));
+
+    _subscriptions.add(filesController.stream.listen(_onFilesEvent));
   }
 
   /// Dispose this controller and release all internal resources
   ///
   /// MUST be called
   void dispose() {
-    _fileRemovedEventListener.end();
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     _dataStreamController.close();
   }
 
@@ -78,6 +88,8 @@ class CollectionItemsController {
 
   /// Peek the stream and return the current value
   CollectionItemStreamData peekStream() => _dataStreamController.stream.value;
+
+  ValueStream<int?> get countStream => _countStreamController.stream;
 
   /// Add list of [files] to [collection]
   Future<void> addFiles(List<FileDescriptor> files) async {
@@ -309,26 +321,36 @@ class CollectionItemsController {
     }
   }
 
-  void _onFileRemovedEvent(FileRemovedEvent ev) {
-    // if (account != ev.account) {
-    //   return;
-    // }
-    // final newItems = _dataStreamController.value.items.where((e) {
-    //   if (e is CollectionFileItem) {
-    //     return !e.file.compareServerIdentity(ev.file);
-    //   } else {
-    //     return true;
-    //   }
-    // }).toList();
-    // if (newItems.length != _dataStreamController.value.items.length) {
-    //   // item of interest
-    //   _dataStreamController.addWithValue((value) => value.copyWith(
-    //         items: newItems,
-    //       ));
-    // }
+  Future<void> _onFilesEvent(FilesStreamEvent ev) async {
+    if (!_isDataStreamInited || ev.hasNext || collection.isDynamicCollection) {
+      // clean up only make sense for static albums
+      return;
+    }
+    await _mutex.protect(() async {
+      final newItems = _dataStreamController.value.items
+          .map((e) {
+            if (e is CollectionFileItem) {
+              final file = ev.dataMap[e.file.fdId];
+              if (file == null) {
+                // removed
+                return null;
+              } else {
+                return e.copyWith(file: file);
+              }
+            } else {
+              return e;
+            }
+          })
+          .whereNotNull()
+          .toList();
+      _dataStreamController.addWithValue((value) => value.copyWith(
+            items: newItems,
+          ));
+    });
   }
 
   final DiContainer _c;
+  final FilesController filesController;
   final Account account;
   Collection collection;
   ValueChanged<Collection> onCollectionUpdated;
@@ -340,9 +362,8 @@ class CollectionItemsController {
       hasNext: true,
     ),
   );
-
-  late final _fileRemovedEventListener =
-      AppEventListener<FileRemovedEvent>(_onFileRemovedEvent);
+  late final BehaviorSubject<int?> _countStreamController;
 
   final _mutex = Mutex();
+  final _subscriptions = <StreamSubscription>[];
 }

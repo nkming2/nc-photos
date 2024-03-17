@@ -6,6 +6,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/cover_provider.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/album/sort_provider.dart';
+import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
 import 'package:nc_photos/use_case/remove.dart';
@@ -46,6 +47,7 @@ Future<void> _removeFile() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo(),
     fileRepo: MockFileMemoryRepo(files),
+    fileRepo2: MockFileMemoryRepo2(files),
     shareRepo: MockShareMemoryRepo(),
     npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
@@ -57,7 +59,7 @@ Future<void> _removeFile() async {
   });
 
   await Remove(c)(account, [files[0]]);
-  expect(c.fileMemoryRepo.files, [files[1]]);
+  expect(c.fileMemoryRepo2.files, [files[1].toDescriptor()]);
 }
 
 /// Remove a file, skip clean up
@@ -72,6 +74,7 @@ Future<void> _removeFileNoCleanUp() async {
   final c = DiContainer(
     albumRepo: MockAlbumMemoryRepo(),
     fileRepo: MockFileMemoryRepo(files),
+    fileRepo2: MockFileMemoryRepo2(files),
     shareRepo: MockShareMemoryRepo(),
     npDb: util.buildTestDb(),
     pref: Pref.scoped(PrefMemoryProvider()),
@@ -83,7 +86,7 @@ Future<void> _removeFileNoCleanUp() async {
   });
 
   await Remove(c)(account, [files[0]], shouldCleanUp: false);
-  expect(c.fileMemoryRepo.files, [files[1]]);
+  expect(c.fileMemoryRepo2.files, [files[1].toDescriptor()]);
 }
 
 /// Remove a file included in an album

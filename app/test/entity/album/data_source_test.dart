@@ -178,7 +178,8 @@ Future<void> _dbUpdateExisting() async {
         AlbumFileItem(
           addedBy: "admin".toCi(),
           addedAt: DateTime.utc(2021, 2, 3, 4, 5, 6),
-          file: files[1],
+          file: files[1].toDescriptor(),
+          ownerId: "admin".toCi(),
         ),
       ],
     ),
@@ -258,7 +259,8 @@ Future<void> _dbUpdateShares() async {
         AlbumFileItem(
           addedBy: "admin".toCi(),
           addedAt: DateTime.utc(2021, 2, 3, 4, 5, 6),
-          file: files[1],
+          file: files[1].toDescriptor(),
+          ownerId: "admin".toCi(),
         ),
       ],
     ),
@@ -320,7 +322,8 @@ Future<void> _dbUpdateDeleteShares() async {
         AlbumFileItem(
           addedBy: "admin".toCi(),
           addedAt: DateTime.utc(2021, 2, 3, 4, 5, 6),
-          file: files[1],
+          file: files[1].toDescriptor(),
+          ownerId: "admin".toCi(),
         ),
       ],
     ),

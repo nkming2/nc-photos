@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/list_share.dart';
@@ -28,12 +29,12 @@ class ListAlbumShareOutlierItem with EquatableMixin {
   String toString() => _$toString();
 
   @override
-  get props => [
+  List<Object?> get props => [
         file,
         shareItems,
       ];
 
-  final File file;
+  final FileDescriptor file;
   @Format(r"${$?.toReadableString()}")
   final List<ListAlbumShareOutlierShareItem> shareItems;
 }
@@ -164,7 +165,6 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     ListAlbumShareOutlierBlocState> {
   ListAlbumShareOutlierBloc(this._c)
       : assert(require(_c)),
-        assert(ListShare.require(_c)),
         super(ListAlbumShareOutlierBlocInit()) {
     on<ListAlbumShareOutlierBlocEvent>(_onEvent);
   }
@@ -282,7 +282,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
         });
       } catch (e, stackTrace) {
         _log.severe(
-            "[_processAlbumItems] Failed while _processSingleFile: ${logFilename(fi.file.path)}",
+            "[_processAlbumItems] Failed while _processSingleFile: ${logFilename(fi.file.fdPath)}",
             e,
             stackTrace);
         errors.add(e);
@@ -312,7 +312,7 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
         .map((s) => s.userId)
         .toSet();
     _log.info(
-        "[_processSingleFileItem] Sharees: ${albumSharees.map((s) => managedAlbumSharees.contains(s) ? "(managed)$s" : s).toReadableString()} for file: ${logFilename(fileItem.file.path)}");
+        "[_processSingleFileItem] Sharees: ${albumSharees.map((s) => managedAlbumSharees.contains(s) ? "(managed)$s" : s).toReadableString()} for file: ${logFilename(fileItem.file.fdPath)}");
 
     // check all shares (including reshares) against sharees that are managed by
     // us
@@ -320,10 +320,10 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
     var missings = managedAlbumSharees
         .difference(allSharees)
         // Can't share to ourselves or the file owner
-        .where((s) => s != account.userId && s != fileItem.file.ownerId)
+        .where((s) => s != account.userId && s != fileItem.ownerId)
         .toList();
     _log.info(
-        "[_processSingleFileItem] Missing shares: ${missings.toReadableString()} for file: ${logFilename(fileItem.file.path)}");
+        "[_processSingleFileItem] Missing shares: ${missings.toReadableString()} for file: ${logFilename(fileItem.file.fdPath)}");
     for (final m in missings) {
       final as = albumShares[m]!;
       shareItems.add(
@@ -338,14 +338,14 @@ class ListAlbumShareOutlierBloc extends Bloc<ListAlbumShareOutlierBlocEvent,
         .toSet();
     final extras = ownedSharees.difference(albumSharees);
     _log.info(
-        "[_processSingleFileItem] Extra shares: ${extras.toReadableString()} for file: ${logFilename(fileItem.file.path)}");
+        "[_processSingleFileItem] Extra shares: ${extras.toReadableString()} for file: ${logFilename(fileItem.file.fdPath)}");
     for (final e in extras) {
       try {
         shareItems.add(ListAlbumShareOutlierExtraShareItem(
             shares.firstWhere((s) => s.shareWith == e)));
       } catch (e, stackTrace) {
         _log.severe(
-            "[_processSingleFileItem] Failed while processing extra share for file: ${logFilename(fileItem.file.path)}",
+            "[_processSingleFileItem] Failed while processing extra share for file: ${logFilename(fileItem.file.fdPath)}",
             e,
             stackTrace);
         errors.add(e);

@@ -5,9 +5,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          isFollowSystemTheme: prefController.isFollowSystemTheme.value,
-          isUseBlackInDarkTheme: prefController.isUseBlackInDarkTheme.value,
-          seedColor: prefController.seedColor.value?.value,
+          isFollowSystemTheme: prefController.isFollowSystemThemeValue,
+          isUseBlackInDarkTheme: prefController.isUseBlackInDarkThemeValue,
+          seedColor: prefController.seedColorValue?.value,
         )) {
     on<_Init>(_onInit);
     on<_SetFollowSystemTheme>(_onSetFollowSystemTheme);
@@ -22,7 +22,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEach<bool>(
-        prefController.isFollowSystemTheme,
+        prefController.isFollowSystemThemeChange,
         onData: (data) => state.copyWith(isFollowSystemTheme: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -30,7 +30,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<bool>(
-        prefController.isUseBlackInDarkTheme,
+        prefController.isUseBlackInDarkThemeChange,
         onData: (data) => state.copyWith(isUseBlackInDarkTheme: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -38,7 +38,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
       emit.forEach<Color?>(
-        prefController.seedColor,
+        prefController.seedColorChange,
         onData: (data) => state.copyWith(seedColor: data?.value),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);

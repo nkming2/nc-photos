@@ -192,7 +192,7 @@ class CollectionAlbumAdapter implements CollectionAdapter {
       _provider.album,
       sharee,
       onShareFileFailed: (f, e, stackTrace) {
-        _log.severe("[share] Failed to share file: ${logFilename(f.path)}", e,
+        _log.severe("[share] Failed to share file: ${logFilename(f.fdPath)}", e,
             stackTrace);
         fileFailed = true;
       },

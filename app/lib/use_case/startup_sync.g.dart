@@ -12,3 +12,14 @@ extension _$StartupSyncNpLog on StartupSync {
 
   static final log = Logger("use_case.startup_sync.StartupSync");
 }
+
+// **************************************************************************
+// ToStringGenerator
+// **************************************************************************
+
+extension _$SyncResultToString on SyncResult {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "SyncResult {syncFavoriteResult: $syncFavoriteResult, syncTagResult: $syncTagResult, isSyncPersonUpdated: $isSyncPersonUpdated}";
+  }
+}

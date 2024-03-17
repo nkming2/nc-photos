@@ -70,10 +70,12 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (_) => AccountController(),
+          create: (_) => PrefController(_c),
         ),
         RepositoryProvider(
-          create: (_) => PrefController(_c),
+          create: (context) => AccountController(
+            prefController: context.read(),
+          ),
         ),
         RepositoryProvider<NpDb>(
           create: (_) => _c.npDb,
@@ -197,6 +199,7 @@ class _WrappedAppState extends State<_WrappedApp>
         Settings.routeName: Settings.buildRoute,
         SharingBrowser.routeName: SharingBrowser.buildRoute,
         PlacesBrowser.routeName: PlacesBrowser.buildRoute,
+        ArchiveBrowser.routeName: ArchiveBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -208,7 +211,6 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleConnectLegacyRoute(settings);
     route ??= _handleHomeRoute(settings);
     route ??= _handleRootPickerRoute(settings);
-    route ??= _handleArchiveBrowserRoute(settings);
     route ??= _handleAlbumDirPickerRoute(settings);
     route ??= _handleAlbumImporterRoute(settings);
     route ??= _handleTrashbinBrowserRoute(settings);
@@ -296,20 +298,6 @@ class _WrappedAppState extends State<_WrappedApp>
       }
     } catch (e) {
       _log.severe("[_handleRootPickerRoute] Failed while handling route", e);
-    }
-    return null;
-  }
-
-  Route<dynamic>? _handleArchiveBrowserRoute(RouteSettings settings) {
-    try {
-      if (settings.name == ArchiveBrowser.routeName &&
-          settings.arguments != null) {
-        final args = settings.arguments as ArchiveBrowserArguments;
-        return ArchiveBrowser.buildRoute(args);
-      }
-    } catch (e) {
-      _log.severe(
-          "[_handleArchiveBrowserRoute] Failed while handling route", e);
     }
     return null;
   }

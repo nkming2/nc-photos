@@ -14,6 +14,8 @@ import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/favorite/data_source.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
+import 'package:nc_photos/entity/file/data_source2.dart';
+import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/nc_album/data_source.dart';
@@ -147,6 +149,10 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
   c.fileRepo = FileRepo(FileCachedDataSource(c));
   c.fileRepoRemote = const FileRepo(FileWebdavDataSource());
   c.fileRepoLocal = FileRepo(FileSqliteDbDataSource(c));
+  c.fileRepo2 =
+      CachedFileRepo(const FileRemoteDataSource(), FileNpDbDataSource(c.npDb));
+  c.fileRepo2Remote = const BasicFileRepo(FileRemoteDataSource());
+  c.fileRepo2Local = BasicFileRepo(FileNpDbDataSource(c.npDb));
   c.shareRepo = ShareRepo(ShareRemoteDataSource());
   c.shareeRepo = ShareeRepo(ShareeRemoteDataSource());
   c.favoriteRepo = const FavoriteRepo(FavoriteRemoteDataSource());

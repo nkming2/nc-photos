@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
@@ -315,10 +317,11 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
   }
 
   Future<void> _delete(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
     final file = widget.streamFiles[_viewerController.currentPage];
     _log.info("[_delete] Removing file: ${file.path}");
-    final count = await RemoveSelectionHandler(c)(
+    final count = await RemoveSelectionHandler(
+      filesController: context.read<AccountController>().filesController,
+    )(
       account: widget.account,
       selection: [file],
       shouldCleanupAlbum: false,

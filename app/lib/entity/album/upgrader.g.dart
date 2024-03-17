@@ -61,3 +61,10 @@ extension _$AlbumUpgraderV8NpLog on AlbumUpgraderV8 {
 
   static final log = Logger("entity.album.upgrader.AlbumUpgraderV8");
 }
+
+extension _$AlbumUpgraderV9NpLog on AlbumUpgraderV9 {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("entity.album.upgrader.AlbumUpgraderV9");
+}

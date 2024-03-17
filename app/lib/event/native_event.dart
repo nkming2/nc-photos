@@ -4,7 +4,11 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:np_platform_message_relay/np_platform_message_relay.dart';
+import 'package:to_string/to_string.dart';
 
+part 'native_event.g.dart';
+
+@Deprecated("See AccountController.NativeEventRelay")
 class NativeEventListener<T> {
   NativeEventListener(this.listener);
 
@@ -28,7 +32,7 @@ class NativeEventListener<T> {
   static final _mappedStream =
       MessageRelay.stream.whereType<Message>().map((ev) {
     switch (ev.event) {
-      case FileExifUpdatedEvent._id:
+      case FileExifUpdatedEvent.id:
         return FileExifUpdatedEvent.fromEvent(ev);
 
       default:
@@ -43,24 +47,28 @@ class NativeEventListener<T> {
       Logger("event.native_event.NativeEventListener<${T.runtimeType}>");
 }
 
+@toString
 class FileExifUpdatedEvent {
   const FileExifUpdatedEvent(this.fileIds);
 
   factory FileExifUpdatedEvent.fromEvent(Message ev) {
-    assert(ev.event == _id);
+    assert(ev.event == id);
     assert(ev.data != null);
     final dataJson = jsonDecode(ev.data!) as Map;
     return FileExifUpdatedEvent((dataJson["fileIds"] as List).cast<int>());
   }
 
   Message toEvent() => Message(
-        _id,
+        id,
         jsonEncode({
           "fileIds": fileIds,
         }),
       );
 
-  static const _id = "FileExifUpdatedEvent";
+  @override
+  String toString() => _$toString();
+
+  static const id = "FileExifUpdatedEvent";
 
   final List<int> fileIds;
 }

@@ -2,12 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:event_bus/event_bus.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/pref/provider/memory.dart';
-import 'package:nc_photos/event/event.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
 
@@ -30,14 +27,8 @@ class Pref {
   }
 
   Future<bool> _set<T>(PrefKey key, T value,
-      Future<bool> Function(PrefKey key, T value) setFn) async {
-    if (await setFn(key, value)) {
-      KiwiContainer().resolve<EventBus>().fire(PrefUpdatedEvent(key, value));
-      return true;
-    } else {
-      return false;
-    }
-  }
+          Future<bool> Function(PrefKey key, T value) setFn) =>
+      setFn(key, value);
 
   Future<bool> _remove(PrefKey key) => provider.remove(key);
 
@@ -69,16 +60,8 @@ class AccountPref {
   Future<JsonObj> toJson() => provider.toJson();
 
   Future<bool> _set<T>(AccountPrefKey key, T value,
-      Future<bool> Function(AccountPrefKey key, T value) setFn) async {
-    if (await setFn(key, value)) {
-      KiwiContainer()
-          .resolve<EventBus>()
-          .fire(AccountPrefUpdatedEvent(this, key, value));
-      return true;
-    } else {
-      return false;
-    }
-  }
+          Future<bool> Function(AccountPrefKey key, T value) setFn) =>
+      setFn(key, value);
 
   Future<bool> _remove(AccountPrefKey key) => provider.remove(key);
 

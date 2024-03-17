@@ -4,7 +4,7 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/item.dart';
 import 'package:nc_photos/entity/album/provider.dart';
-import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/use_case/create_share.dart';
@@ -25,7 +25,7 @@ class ShareAlbumWithUser {
     Account account,
     Album album,
     Sharee sharee, {
-    ErrorWithValueHandler<File>? onShareFileFailed,
+    ErrorWithValueHandler<FileDescriptor>? onShareFileFailed,
   }) async {
     assert(album.provider is AlbumStaticProvider);
     final newShares = (album.shares ?? [])
@@ -56,12 +56,12 @@ class ShareAlbumWithUser {
     Account account,
     Album album,
     CiString shareWith, {
-    ErrorWithValueHandler<File>? onShareFileFailed,
+    ErrorWithValueHandler<FileDescriptor>? onShareFileFailed,
   }) async {
     final files = AlbumStaticProvider.of(album)
         .items
         .whereType<AlbumFileItem>()
-        .where((item) => item.file.ownerId != shareWith)
+        .where((item) => item.ownerId != shareWith)
         .map((e) => e.file);
     try {
       await CreateUserShare(shareRepo)(
@@ -74,12 +74,12 @@ class ShareAlbumWithUser {
       onShareFileFailed?.call(album.albumFile!, e, stackTrace);
     }
     for (final f in files) {
-      _log.info("[_createFileShares] Sharing '${f.path}' with '$shareWith'");
+      _log.info("[_createFileShares] Sharing '${f.fdPath}' with '$shareWith'");
       try {
         await CreateUserShare(shareRepo)(account, f, shareWith.raw);
       } catch (e, stackTrace) {
         _log.severe(
-            "[_createFileShares] Failed sharing file '${logFilename(f.path)}' with '$shareWith'",
+            "[_createFileShares] Failed sharing file '${logFilename(f.fdPath)}' with '$shareWith'",
             e,
             stackTrace);
         onShareFileFailed?.call(f, e, stackTrace);

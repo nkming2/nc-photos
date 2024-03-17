@@ -16,18 +16,36 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_UpdateCollectionSort>(_onUpdateCollectionSort);
     on<_SetCollectionSort>(_onSetCollectionSort);
+    on<_SetItemCount>(_onSetItemCount);
 
     on<_SetError>(_onSetError);
 
-    _homeAlbumsSortSubscription =
-        prefController.homeAlbumsSort.distinct().listen((event) {
+    _subscriptions.add(prefController.homeAlbumsSortChange.listen((event) {
       add(_UpdateCollectionSort(collection_util.CollectionSort.values[event]));
-    });
+    }));
+    _subscriptions.add(controller.stream.listen((event) {
+      for (final s in _itemSubscriptions) {
+        s.cancel();
+      }
+      _itemSubscriptions.clear();
+      for (final d in event.data) {
+        _itemSubscriptions.add(d.controller.countStream.listen((event) {
+          if (event != null) {
+            add(_SetItemCount(d.collection, event));
+          }
+        }));
+      }
+    }));
   }
 
   @override
   Future<void> close() {
-    _homeAlbumsSortSubscription?.cancel();
+    for (final s in _itemSubscriptions) {
+      s.cancel();
+    }
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     return super.close();
   }
 
@@ -105,6 +123,13 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     prefController.setHomeAlbumsSort(ev.sort.index);
   }
 
+  void _onSetItemCount(_SetItemCount ev, Emitter<_State> emit) {
+    _log.info(ev);
+    final next = Map.of(state.itemCounts);
+    next[ev.collection.id] = ev.value;
+    emit(state.copyWith(itemCounts: next));
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -122,6 +147,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final CollectionsController controller;
   final PrefController prefController;
 
-  StreamSubscription<int>? _homeAlbumsSortSubscription;
+  final _subscriptions = <StreamSubscription>[];
+  final _itemSubscriptions = <StreamSubscription>[];
   var _isHandlingError = false;
 }

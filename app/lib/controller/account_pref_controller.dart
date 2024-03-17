@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 part 'account_pref_controller.g.dart';
 
 @npLog
+@npSubjectAccessor
 class AccountPrefController {
   AccountPrefController({
     required this.account,
@@ -20,15 +21,11 @@ class AccountPrefController {
     _isEnableMemoryAlbumController.close();
   }
 
-  ValueStream<String> get shareFolder => _shareFolderController.stream;
-
   Future<void> setShareFolder(String value) => _set<String>(
         controller: _shareFolderController,
         setter: (pref, value) => pref.setShareFolder(value),
         value: value,
       );
-
-  ValueStream<String?> get accountLabel => _accountLabelController.stream;
 
   Future<void> setAccountLabel(String? value) => _set<String?>(
         controller: _accountLabelController,
@@ -36,17 +33,11 @@ class AccountPrefController {
         value: value,
       );
 
-  ValueStream<PersonProvider> get personProvider =>
-      _personProviderController.stream;
-
   Future<void> setPersonProvider(PersonProvider value) => _set<PersonProvider>(
         controller: _personProviderController,
         setter: (pref, value) => pref.setPersonProvider(value.index),
         value: value,
       );
-
-  ValueStream<bool> get isEnableMemoryAlbum =>
-      _isEnableMemoryAlbumController.stream;
 
   Future<void> setEnableMemoryAlbum(bool value) => _set<bool>(
         controller: _isEnableMemoryAlbumController,
@@ -76,12 +67,16 @@ class AccountPrefController {
   final Account account;
 
   final AccountPref _accountPref;
+  @npSubjectAccessor
   late final _shareFolderController =
       BehaviorSubject.seeded(_accountPref.getShareFolderOr(""));
+  @npSubjectAccessor
   late final _accountLabelController =
       BehaviorSubject.seeded(_accountPref.getAccountLabel());
+  @npSubjectAccessor
   late final _personProviderController = BehaviorSubject.seeded(
       PersonProvider.fromValue(_accountPref.getPersonProviderOr()));
+  @npSubjectAccessor
   late final _isEnableMemoryAlbumController =
       BehaviorSubject.seeded(_accountPref.isEnableMemoryAlbumOr(true));
 }

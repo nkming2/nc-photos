@@ -54,7 +54,7 @@ class _SetArchiveFile {
     var count = 0;
     for (final f in files) {
       try {
-        await UpdateProperty(_c.fileRepo).updateIsArchived(account, f, flag);
+        await UpdateProperty(_c).updateIsArchived(account, f, flag);
         ++count;
       } catch (e, stackTrace) {
         _log.severe(

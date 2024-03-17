@@ -1,32 +1,32 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'progress.dart';
+part of 'files_controller.dart';
 
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
 
-extension _$ProgressBlocNpLog on ProgressBloc {
+extension _$FilesControllerNpLog on FilesController {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("bloc.progress.ProgressBloc");
+  static final log = Logger("controller.files_controller.FilesController");
 }
 
 // **************************************************************************
 // ToStringGenerator
 // **************************************************************************
 
-extension _$ProgressBlocUpdateToString on ProgressBlocUpdate {
+extension _$UpdatePropertyFailureErrorToString on UpdatePropertyFailureError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "ProgressBlocUpdate {progress: ${progress.toStringAsFixed(3)}, text: $text}";
+    return "UpdatePropertyFailureError {fileIds: [length: ${fileIds.length}]}";
   }
 }
 
-extension _$ProgressBlocStateToString on ProgressBlocState {
+extension _$RemoveFailureErrorToString on RemoveFailureError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "ProgressBlocState {progress: ${progress.toStringAsFixed(3)}, text: $text}";
+    return "RemoveFailureError {fileIds: [length: ${fileIds.length}]}";
   }
 }

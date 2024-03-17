@@ -3,6 +3,7 @@ import 'package:nc_photos/entity/album/repo2.dart';
 import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/pref.dart';
@@ -26,6 +27,9 @@ enum DiType {
   fileRepo,
   fileRepoRemote,
   fileRepoLocal,
+  fileRepo2,
+  fileRepo2Remote,
+  fileRepo2Local,
   shareRepo,
   shareeRepo,
   favoriteRepo,
@@ -60,6 +64,9 @@ class DiContainer {
     FileRepo? fileRepo,
     FileRepo? fileRepoRemote,
     FileRepo? fileRepoLocal,
+    FileRepo2? fileRepo2,
+    FileRepo2? fileRepo2Remote,
+    FileRepo2? fileRepo2Local,
     ShareRepo? shareRepo,
     ShareeRepo? shareeRepo,
     FavoriteRepo? favoriteRepo,
@@ -90,6 +97,9 @@ class DiContainer {
         _fileRepo = fileRepo,
         _fileRepoRemote = fileRepoRemote,
         _fileRepoLocal = fileRepoLocal,
+        _fileRepo2 = fileRepo2,
+        _fileRepo2Remote = fileRepo2Remote,
+        _fileRepo2Local = fileRepo2Local,
         _shareRepo = shareRepo,
         _shareeRepo = shareeRepo,
         _favoriteRepo = favoriteRepo,
@@ -134,6 +144,12 @@ class DiContainer {
         return contianer._fileRepoRemote != null;
       case DiType.fileRepoLocal:
         return contianer._fileRepoLocal != null;
+      case DiType.fileRepo2:
+        return contianer._fileRepo2 != null;
+      case DiType.fileRepo2Remote:
+        return contianer._fileRepo2Remote != null;
+      case DiType.fileRepo2Local:
+        return contianer._fileRepo2Local != null;
       case DiType.shareRepo:
         return contianer._shareRepo != null;
       case DiType.shareeRepo:
@@ -183,6 +199,7 @@ class DiContainer {
     OrNull<AlbumRepo>? albumRepo,
     OrNull<AlbumRepo2>? albumRepo2,
     OrNull<FileRepo>? fileRepo,
+    OrNull<FileRepo2>? fileRepo2,
     OrNull<ShareRepo>? shareRepo,
     OrNull<ShareeRepo>? shareeRepo,
     OrNull<FavoriteRepo>? favoriteRepo,
@@ -201,6 +218,7 @@ class DiContainer {
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
       albumRepo2: albumRepo2 == null ? _albumRepo2 : albumRepo2.obj,
       fileRepo: fileRepo == null ? _fileRepo : fileRepo.obj,
+      fileRepo2: fileRepo2 == null ? _fileRepo2 : fileRepo2.obj,
       shareRepo: shareRepo == null ? _shareRepo : shareRepo.obj,
       shareeRepo: shareeRepo == null ? _shareeRepo : shareeRepo.obj,
       favoriteRepo: favoriteRepo == null ? _favoriteRepo : favoriteRepo.obj,
@@ -231,6 +249,9 @@ class DiContainer {
   FileRepo get fileRepo => _fileRepo!;
   FileRepo get fileRepoRemote => _fileRepoRemote!;
   FileRepo get fileRepoLocal => _fileRepoLocal!;
+  FileRepo2 get fileRepo2 => _fileRepo2!;
+  FileRepo2 get fileRepo2Remote => _fileRepo2Remote!;
+  FileRepo2 get fileRepo2Local => _fileRepo2Local!;
   ShareRepo get shareRepo => _shareRepo!;
   ShareeRepo get shareeRepo => _shareeRepo!;
   FavoriteRepo get favoriteRepo => _favoriteRepo!;
@@ -300,6 +321,21 @@ class DiContainer {
   set fileRepoLocal(FileRepo v) {
     assert(_fileRepoLocal == null);
     _fileRepoLocal = v;
+  }
+
+  set fileRepo2(FileRepo2 v) {
+    assert(_fileRepo2 == null);
+    _fileRepo2 = v;
+  }
+
+  set fileRepo2Remote(FileRepo2 v) {
+    assert(_fileRepo2Remote == null);
+    _fileRepo2Remote = v;
+  }
+
+  set fileRepo2Local(FileRepo2 v) {
+    assert(_fileRepo2Local == null);
+    _fileRepo2Local = v;
   }
 
   set shareRepo(ShareRepo v) {
@@ -419,6 +455,9 @@ class DiContainer {
   FileRepo? _fileRepoRemote;
   // Explicitly request a FileRepo backed by local source
   FileRepo? _fileRepoLocal;
+  FileRepo2? _fileRepo2;
+  FileRepo2? _fileRepo2Remote;
+  FileRepo2? _fileRepo2Local;
   ShareRepo? _shareRepo;
   ShareeRepo? _shareeRepo;
   FavoriteRepo? _favoriteRepo;

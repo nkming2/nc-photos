@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/collection_items_controller.dart';
+import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
@@ -64,6 +65,7 @@ class CollectionStreamEvent {
 class CollectionsController {
   CollectionsController(
     this._c, {
+    required this.filesController,
     required this.account,
     required this.serverController,
   });
@@ -309,6 +311,7 @@ class CollectionsController {
       final k = _CollectionKey(c);
       _itemControllers[k] ??= CollectionItemsController(
         _c,
+        filesController: filesController,
         account: account,
         collection: k.collection,
         onCollectionUpdated: _updateCollection,
@@ -347,6 +350,7 @@ class CollectionsController {
   }
 
   final DiContainer _c;
+  final FilesController filesController;
   final Account account;
   final ServerController serverController;
 

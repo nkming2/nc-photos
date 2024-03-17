@@ -11,9 +11,6 @@ enum _ItemType {
 class _Item implements SelectableItemMetadata {
   _Item(this.collection)
       : isShared = collection.shares.isNotEmpty || !collection.isOwned {
-    if (collection.count != null) {
-      _subtitle = L10n.global().albumSize(collection.count!);
-    }
     try {
       _coverUrl = collection.getCoverUrl(k.coverSize, k.coverSize);
     } catch (e, stackTrace) {
@@ -35,7 +32,15 @@ class _Item implements SelectableItemMetadata {
 
   String get name => collection.name;
 
-  String? get subtitle => _subtitle;
+  String? getSubtitle({
+    int? itemCountOverride,
+  }) {
+    if (collection.count != null) {
+      return L10n.global().albumSize(itemCountOverride ?? collection.count!);
+    } else {
+      return null;
+    }
+  }
 
   String? get coverUrl => _coverUrl;
 
@@ -64,7 +69,6 @@ class _Item implements SelectableItemMetadata {
   final Collection collection;
   final bool isShared;
 
-  String? _subtitle;
   String? _coverUrl;
   late _ItemType _itemType;
 }
