@@ -75,6 +75,10 @@ class FilesQueryBuilder {
     _byOrRelativePathBuilder((relativePath) => relativePath.like(pattern));
   }
 
+  void byOrDirRowId(int id) {
+    (_byOrDirRowIds ??= []).add(id);
+  }
+
   void byMimePattern(String pattern) {
     (_byMimePatterns ??= []).add(pattern);
   }
@@ -112,7 +116,7 @@ class FilesQueryBuilder {
         innerJoin(db.servers, db.servers.rowId.equalsExp(db.accounts.server),
             useColumns: false),
       ],
-      if (_byDirRowId != null)
+      if (_byDirRowId != null || _byOrDirRowIds?.isNotEmpty == true)
         innerJoin(db.dirFiles, db.dirFiles.child.equalsExp(db.files.rowId),
             useColumns: false),
       if (_queryMode == FilesQueryMode.completeFile) ...[
@@ -149,14 +153,24 @@ class FilesQueryBuilder {
     if (_byRelativePath != null) {
       query.where(db.accountFiles.relativePath.equals(_byRelativePath!));
     }
-    if (_byOrRelativePathBuilders?.isNotEmpty == true) {
-      final expression = _byOrRelativePathBuilders!
-          .sublist(1)
-          .fold<Expression<bool>>(
-              _byOrRelativePathBuilders![0](db.accountFiles.relativePath),
-              (previousValue, builder) =>
-                  previousValue | builder(db.accountFiles.relativePath));
-      query.where(expression);
+    if (_byOrRelativePathBuilders?.isNotEmpty == true ||
+        _byOrDirRowIds?.isNotEmpty == true) {
+      Expression<bool>? expression;
+      if (_byOrRelativePathBuilders?.isNotEmpty == true) {
+        expression = _byOrRelativePathBuilders!
+            .sublist(1)
+            .fold<Expression<bool>>(
+                _byOrRelativePathBuilders![0](db.accountFiles.relativePath),
+                (previousValue, builder) =>
+                    previousValue | builder(db.accountFiles.relativePath));
+      }
+      if (_byOrDirRowIds?.isNotEmpty == true) {
+        final e = _byOrDirRowIds!.sublist(1).fold<Expression<bool>>(
+            db.dirFiles.dir.equals(_byOrDirRowIds![0]),
+            (previousValue, id) => previousValue | db.dirFiles.dir.equals(id));
+        expression = (expression == null) ? e : (expression | e);
+      }
+      query.where(expression!);
     }
     if (_byMimePatterns?.isNotEmpty == true) {
       final expression = _byMimePatterns!.sublist(1).fold<Expression<bool>>(
@@ -215,6 +229,7 @@ class FilesQueryBuilder {
   Iterable<int>? _byFileIds;
   String? _byRelativePath;
   List<FilesQueryRelativePathBuilder>? _byOrRelativePathBuilders;
+  List<int>? _byOrDirRowIds;
   List<String>? _byMimePatterns;
   bool? _byFavorite;
   int? _byDirRowId;

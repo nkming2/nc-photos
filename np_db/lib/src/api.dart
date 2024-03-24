@@ -341,6 +341,7 @@ abstract class NpDb {
     required DbAccount account,
     List<int>? fileIds,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? relativePathKeywords,
     String? location,

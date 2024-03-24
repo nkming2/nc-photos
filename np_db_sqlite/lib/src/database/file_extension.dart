@@ -398,17 +398,19 @@ extension SqliteDbFileExtension on SqliteDb {
     required ByAccount account,
     List<int>? fileIds,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? relativePathKeywords,
     String? location,
     bool? isFavorite,
     List<String>? mimes,
     int? limit,
-  }) {
+  }) async {
     _log.info(
       "[queryFileDescriptors] "
       "fileIds: $fileIds, "
       "includeRelativeRoots: $includeRelativeRoots, "
+      "includeRelativeDirs: $includeRelativeDirs, "
       "excludeRelativeRoots: $excludeRelativeRoots, "
       "relativePathKeywords: $relativePathKeywords, "
       "location: $location, "
@@ -416,6 +418,18 @@ extension SqliteDbFileExtension on SqliteDb {
       "mimes: $mimes, "
       "limit: $limit",
     );
+
+    List<int>? dirIds;
+    if (includeRelativeDirs?.isNotEmpty == true) {
+      final sqlAccount = await accountOf(account);
+      final result = await _accountFileRowIdsOf(ByAccount.sql(sqlAccount),
+              includeRelativeDirs!.map((e) => DbFileKey.byPath(e)).toList())
+          .notNull();
+      dirIds = result.values.map((e) => e.fileRowId).toList();
+      if (dirIds.length != includeRelativeDirs.length) {
+        _log.warning("Some dirs not found: $includeRelativeDirs");
+      }
+    }
 
     Future<List<FileDescriptor>> query({
       List<int>? fileIds,
@@ -442,6 +456,11 @@ extension SqliteDbFileExtension on SqliteDb {
             for (final r in includeRelativeRoots) {
               q.byOrRelativePathPattern("$r/%");
             }
+          }
+        }
+        if (dirIds != null) {
+          for (final i in dirIds) {
+            q.byOrDirRowId(i);
           }
         }
         if (location != null) {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/db/entity_converter.dart';
-import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -105,7 +104,7 @@ class FileNpDbDataSource implements FileDataSource2 {
       Account account, String shareDirPath) async* {
     _log.info("[getFileDescriptors] $account");
     final stopwatch = Stopwatch()..start();
-    yield await _getPartialFileDescriptors(account);
+    yield await _getPartialFileDescriptors(account, shareDirPath);
     yield await _getCompleteFileDescriptors(account, shareDirPath);
     _log.info(
         "[getFileDescriptors] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
@@ -163,7 +162,7 @@ class FileNpDbDataSource implements FileDataSource2 {
   }
 
   Future<List<FileDescriptor>> _getPartialFileDescriptors(
-      Account account) async {
+      Account account, String shareDirPath) async {
     _log.info("[_getPartialFileDescriptors] $account");
     final results = await db.getFileDescriptors(
       account: account.toDb(),
@@ -172,6 +171,7 @@ class FileNpDbDataSource implements FileDataSource2 {
           .map((e) => File(path: file_util.unstripPath(account, e))
               .strippedPathWithEmpty)
           .toList(),
+      includeRelativeDirs: [File(path: shareDirPath).strippedPathWithEmpty],
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
       limit: _partialCount,
@@ -191,6 +191,7 @@ class FileNpDbDataSource implements FileDataSource2 {
           .map((e) => File(path: file_util.unstripPath(account, e))
               .strippedPathWithEmpty)
           .toList(),
+      includeRelativeDirs: [File(path: shareDirPath).strippedPathWithEmpty],
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
     );
@@ -198,29 +199,6 @@ class FileNpDbDataSource implements FileDataSource2 {
         .map((e) => DbFileDescriptorConverter.fromDb(
             account.userId.toCaseInsensitiveString(), e))
         .toList();
-    final isShareDirIncluded = account.roots.any((e) => file_util
-        .isOrUnderDirPath(shareDirPath, file_util.unstripPath(account, e)));
-    if (!isShareDirIncluded) {
-      _log.info(
-          "[_getCompleteFileDescriptors] Explicitly getting share folder");
-      try {
-        final shareDirResults = await db.getFilesByDirKey(
-          account: account.toDb(),
-          dir: File(path: shareDirPath).toDbKey(),
-        );
-        results.addAll(shareDirResults.where((f) => f.isCollection != true).map(
-            (e) => DbFileConverter.fromDb(
-                    account.userId.toCaseInsensitiveString(), e)
-                .toDescriptor()));
-      } on DbNotFoundException catch (_) {
-        // normal when there's no cache
-      } catch (e, stackTrace) {
-        _log.shout(
-            "[_getCompleteFileDescriptors] Failed while getFilesByDirKey: ${logFilename(shareDirPath)}",
-            e,
-            stackTrace);
-      }
-    }
     return results;
   }
 
