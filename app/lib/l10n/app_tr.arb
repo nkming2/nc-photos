@@ -1,0 +1,1467 @@
+{
+    "appTitle": "Fotoğraflar",
+    "translator": "Çeviren",
+    "@translator": {
+        "description": "Name of the translator(s) for this language"
+    },
+    "photosTabLabel": "Fotoğraflar",
+    "@photosTabLabel": {
+        "description": "Label of the tab that lists user photos"
+    },
+    "collectionsTooltip": "Koleksiyonlar",
+    "@collectionsTooltip": {
+        "description": "Groups of photos, e.g., albums, trash bin, etc"
+    },
+    "zoomTooltip": "Yakınlaştır",
+    "@zoomTooltip": {
+        "description": "Tooltip of the zoom button"
+    },
+    "refreshMenuLabel": "Yenile",
+    "@refreshMenuLabel": {
+        "description": "Label of the refresh entry in menu"
+    },
+    "settingsMenuLabel": "Ayarlar",
+    "@settingsMenuLabel": {
+        "description": "Label of the settings entry in menu"
+    },
+    "selectionAppBarTitle": "{count, plural, other{{count} seçildi}}",
+    "@selectionAppBarTitle": {
+        "description": "Title of the contextual app bar that shows number of selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedProcessingNotification": "{count, plural, one{1 öğe siliniyor} other{{count} öğe siliniyor}}",
+    "@deleteSelectedProcessingNotification": {
+        "description": "Inform user that the selected items are being deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedSuccessNotification": "Tüm öğeler başarıyla silindi",
+    "@deleteSelectedSuccessNotification": {
+        "description": "Inform user that the selected items are deleted successfully"
+    },
+    "deleteSelectedFailureNotification": "{count, plural, one{1 öğe silinemedi} other{{count} öğe silinemedi}}",
+    "@deleteSelectedFailureNotification": {
+        "description": "Inform user that some/all the selected items cannot be deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveTooltip": "Arşiv",
+    "@archiveTooltip": {
+        "description": "Archive selected items"
+    },
+    "archiveSelectedProcessingNotification": "{count, plural, one{1 öğe arşivleniyor} other{{count} öğe arşivleniyor}}",
+    "@archiveSelectedProcessingNotification": {
+        "description": "Archiving the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveSelectedSuccessNotification": "Tüm öğeler başarıyla arşivlendi",
+    "@archiveSelectedSuccessNotification": {
+        "description": "Archived all selected items successfully"
+    },
+    "archiveSelectedFailureNotification": "{count, plural, one{1 öğe arşivlenemedi} other{{count} öğe arşivlenemedi}}",
+    "@archiveSelectedFailureNotification": {
+        "description": "Cannot archive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveTooltip": "Arşivden çıkar",
+    "@unarchiveTooltip": {
+        "description": "Unarchive selected items"
+    },
+    "unarchiveSelectedProcessingNotification": "{count, plural, one{1 öğe arşivden kaldırılıyor} other{{count} öğe arşivden kaldırılıyor}}",
+    "@unarchiveSelectedProcessingNotification": {
+        "description": "Unarchiving selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveSelectedSuccessNotification": "Tüm öğeler başarıyla arşivden kaldırıldı",
+    "@unarchiveSelectedSuccessNotification": {
+        "description": "Unarchived all selected items successfully"
+    },
+    "unarchiveSelectedFailureNotification": "{count, plural, one{1 öğe arşivden kaldırılamadı} other{{count} öğe arşivden kaldırılamadı}}",
+    "@unarchiveSelectedFailureNotification": {
+        "description": "Cannot unarchive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteTooltip": "Sil",
+    "@deleteTooltip": {
+        "description": "Delete selected items"
+    },
+    "deleteProcessingNotification": "Öğeler siliniyor",
+    "@deleteProcessingNotification": {
+        "description": "Inform user that the item is being deleted"
+    },
+    "deleteSuccessNotification": "Öğeler başarıyla silindi",
+    "@deleteSuccessNotification": {
+        "description": "Inform user that the item is deleted successfully"
+    },
+    "deleteFailureNotification": "Öğeler silinirken bir hata oluştu",
+    "@deleteFailureNotification": {
+        "description": "Inform user that the item cannot be deleted"
+    },
+    "removeSelectedFromAlbumFailureNotification": "Öğe albümden kaldırılırken bir hata oluştu",
+    "@removeSelectedFromAlbumFailureNotification": {
+        "description": "Inform user that the selected items cannot be removed from an album"
+    },
+    "addServerTooltip": "Sunucu Ekle",
+    "@addServerTooltip": {
+        "description": "Tooltip of the button that adds a new server"
+    },
+    "removeServerSuccessNotification": "{server} başarıyla kaldırıldı",
+    "@removeServerSuccessNotification": {
+        "description": "Inform user that a server is removed successfully",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "createAlbumTooltip": "Yeni Albüm",
+    "@createAlbumTooltip": {
+        "description": "Tooltip of the button that creates a new album"
+    },
+    "albumSize": "{count, plural, =0{Empty} one{1 öğe} other{{count} öğe}}",
+    "@albumSize": {
+        "description": "Number of items inside an album",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "albumArchiveLabel": "Arşiv",
+    "@albumArchiveLabel": {
+        "description": "A collection containing all archived photos"
+    },
+    "connectingToServer": "{server}'a\nBağlanılıyor",
+    "@connectingToServer": {
+        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "connectingToServer2": "Sunucu tarafından yetkilendirme bekleniyor",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Lütfen açılan tarayıcı üzerinden giriş yapın",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "nameInputHint": "İsim",
+    "@nameInputHint": {
+        "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "İsim gereklidir",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
+    "skipButtonLabel": "ATLA",
+    "@skipButtonLabel": {
+        "description": "Label of the skip button"
+    },
+    "confirmButtonLabel": "ONAYLA",
+    "@confirmButtonLabel": {
+        "description": "Label of the confirm button"
+    },
+    "signInHeaderText": "Nextcloud sunucunuzda oturum açın",
+    "@signInHeaderText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signIn2faHintText": "İki aşamalı doğrulamayı etkinleştirdiyseniz bir uygulama şifresi kullanın",
+    "@signIn2faHintText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\nGiriş Yap",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
+    },
+    "serverAddressInputHint": "Sunucu Adresi",
+    "@serverAddressInputHint": {
+        "description": "Hint of the text field expecting server address data"
+    },
+    "serverAddressInputInvalidEmpty": "Lütfen sunucu adresinizi girin",
+    "@serverAddressInputInvalidEmpty": {
+        "description": "Inform user that the server address input field cannot be empty"
+    },
+    "usernameInputHint": "Kullanıcı adı",
+    "@usernameInputHint": {
+        "description": "Hint of the text field expecting username data"
+    },
+    "usernameInputInvalidEmpty": "Lütfen kullanıcı adınızı girin",
+    "@usernameInputInvalidEmpty": {
+        "description": "Inform user that the username input field cannot be empty"
+    },
+    "passwordInputHint": "Şifre",
+    "@passwordInputHint": {
+        "description": "Hint of the text field expecting password data"
+    },
+    "passwordInputInvalidEmpty": "Lütfen şifrenizi girin",
+    "@passwordInputInvalidEmpty": {
+        "description": "Inform user that the password input field cannot be empty"
+    },
+    "rootPickerHeaderText": "Dahil edilecek klasörleri seçin",
+    "@rootPickerHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerSubHeaderText": "Yalnızca klasörlerin içindeki fotoğraflar gösterilecektir. Tümünü eklemek için Atla'ya basın",
+    "@rootPickerSubHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerNavigateUpItemText": "(geri gel)",
+    "@rootPickerNavigateUpItemText": {
+        "description": "Text of the list item to navigate up the directory tree"
+    },
+    "rootPickerUnpickFailureNotification": "Öğenin seçimi kaldırılamadı",
+    "@rootPickerUnpickFailureNotification": {
+        "description": "Failed while unpicking an item in the root picker list"
+    },
+    "rootPickerListEmptyNotification": "Lütfen en az bir klasör seçin veya tümünü eklemek için atla tuşuna basın",
+    "@rootPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "setupWidgetTitle": "Başlarken",
+    "@setupWidgetTitle": {
+        "description": "Title of the introductory widget"
+    },
+    "setupSettingsModifyLaterHint": "Bu ayarı istediğiniz zaman ayarlardan değiştirebilirsiniz",
+    "@setupSettingsModifyLaterHint": {
+        "description": "Inform user that they can modify this setting after the setup process"
+    },
+    "setupHiddenPrefDirNoticeDetail": "Bu uygulama, ayarlarınızı depolamak için Nextcloud sunucusunda bir klasör oluşturur. Bu uygulamayı kaldırmayı planlamıyorsanız lütfen değiştirmeyin veya kaldırmayın",
+    "@setupHiddenPrefDirNoticeDetail": {
+        "description": "Inform user about the preference folder created by this app"
+    },
+    "settingsWidgetTitle": "Ayarlar",
+    "@settingsWidgetTitle": {
+        "description": "Title of the Settings widget"
+    },
+    "settingsLanguageTitle": "Dil",
+    "@settingsLanguageTitle": {
+        "description": "Set display language"
+    },
+    "settingsLanguageOptionSystemDefaultLabel": "Sistem Varsayılanı",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
+    "settingsExifSupportTitle": "EXIF Desteği",
+    "@settingsExifSupportTitle": {
+        "description": "Title of the EXIF support setting"
+    },
+    "settingsExifSupportTrueSubtitle": "Bu özellik daha fazla ağ kullanımına sebep olabilir",
+    "@settingsExifSupportTrueSubtitle": {
+        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsExifWifiOnlyTitle": "EXIF dosyalarını sadece WIFI ile işle",
+    "@settingsExifWifiOnlyTitle": {
+        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+    },
+    "settingsExifWifiOnlyFalseSubtitle": "Ek veri ücretlerine sebep olabilir",
+    "@settingsExifWifiOnlyFalseSubtitle": {
+        "description": "Shown when users allow processing exif data over any network"
+    },
+    "settingsMemoriesTitle": "Anılar",
+    "@settingsMemoriesTitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsMemoriesSubtitle": "Geçmişte çekilen fotoğrafları gör",
+    "@settingsMemoriesSubtitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsAccountTitle": "Hesap",
+    "settingsAccountLabelTitle": "Başlık",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Sunucu URL'si yerine gösterilecek bir başlık ayarlayın",
+    "settingsIncludedFoldersTitle": "Dahil edilen Klasörler",
+    "@settingsIncludedFoldersTitle": {
+        "description": "Change the included folders of an account"
+    },
+    "settingsShareFolderTitle": "Klasörü Paylaş",
+    "@settingsShareFolderTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogTitle": "Paylaşım klasörünü bulun",
+    "@settingsShareFolderDialogTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogDescription": "Bu ayar config.php'de bulunan share_folder parametresine karşılık gelir. Bu iki değer aynı OLMALIDIR.\n\nLütfen config.php dosyasındakiyle aynı şekilde ayarlayın.",
+    "@settingsShareFolderDialogDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderPickerDescription": "Lütfen config.php dosyasındakiyle aynı şekilde ayarlayın. Parametreyi ayarlamadıysanız varsayılana basabilirsiniz.",
+    "@settingsShareFolderPickerDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsServerAppSectionTitle": "Sunucu eklentileri desteği",
+    "@settingsServerAppSectionTitle": {
+        "description": "Enable/disable various server apps"
+    },
+    "settingsPhotosDescription": "Fotoğraflar sekmesinin içeriklerini özelleştirin",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "Anılar aralığı",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be inclded in memories for a particular year"
+    },
+    "settingsMemoriesRangeValueText": "{range, plural, one{+-{range} gün} other{+-{range} gün}}",
+    "@settingsMemoriesRangeValueText": {
+        "description": "How many adjacent days to be inclded in memories for a particular year, could be 0",
+        "placeholders": {
+            "range": {
+                "example": "1"
+            }
+        }
+    },
+    "settingsViewerTitle": "Görüntüleyici",
+    "settingsViewerDescription": "Fotoğraf/Video görüntüleyicinizi Özelleştirin",
+    "settingsScreenBrightnessTitle": "Ekran Parlaklığı",
+    "settingsScreenBrightnessDescription": "Sistem parlaklık düzeyini geçersiz kıl",
+    "settingsForceRotationTitle": "Döndürme kilidini yoksay",
+    "settingsForceRotationDescription": "Bu ayar Otomatik Döndürme ayarı devre dışı olsa dahi ekranı döndürmenizi sağlar",
+    "settingsMapProviderTitle": "Harita Sağlayıcısı",
+    "settingsShowDateInAlbumTitle": "Fotoğrafları tarihe göre gruplara ayır",
+    "settingsShowDateInAlbumDescription": "Yalnızca albüm zamana göre sıralandığında uygula",
+    "settingsImageEditTitle": "Editör",
+    "@settingsImageEditTitle": {
+        "description": "Include settings for image enhancements and the image editor"
+    },
+    "settingsImageEditDescription": "Görüntü iyileştirmelerini ve görüntü düzenleyiciyi özelleştirin",
+    "settingsEnhanceMaxResolutionTitle2": "İyileştirmeler için görüntü çözünürlüğü",
+    "settingsEnhanceMaxResolutionDescription": "Seçilen çözünürlükten daha büyük fotoğrafların çözünürlüğü otomatik olarak küçültülecektir.\n\nYüksek çözünürlüklü fotoğrafların işlenmesi daha fazla bellek ve zaman gerektirir. Fotoğraflarınızı iyileştirirken uygulama çökerse lütfen bu ayarı düşürün.",
+    "settingsImageEditSaveResultsToServerTitle": "Düzenlenmiş versiyonu Sunucuya kaydet",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "Düzenlenmiş versiyon sunucuya kaydedilir, başarısız olursa cihaz depolama alanına kaydedilir",
+    "settingsImageEditSaveResultsToServerFalseDescription": "Düzenlenmiş versiyon bu cihaza kaydedildi",
+    "settingsThemeTitle": "Tema",
+    "settingsThemeDescription": "Uygulamanın görünümünü özelleştirin",
+    "settingsFollowSystemThemeTitle": "Sistem temasını kullan",
+    "@settingsFollowSystemThemeTitle": {
+        "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "Tema rengi",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorDescription": "Uygulamada kullanılan tüm renkleri türetmek için kullanılır",
+    "@settingsSeedColorDescription": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorPickerTitle": "Bir renk seçin",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
+    },
+    "settingsUseBlackInDarkThemeTitle": "Koyu tema",
+    "@settingsUseBlackInDarkThemeTitle": {
+        "description": "Make the dark theme darker"
+    },
+    "settingsUseBlackInDarkThemeTrueDescription": "Siyah renkli koyu tema kullanın",
+    "@settingsUseBlackInDarkThemeTrueDescription": {
+        "description": "When black in dark theme is set to true"
+    },
+    "settingsUseBlackInDarkThemeFalseDescription": "Gri renkli koyu tema kullanın",
+    "@settingsUseBlackInDarkThemeFalseDescription": {
+        "description": "When black in dark theme is set to false"
+    },
+    "settingsMiscellaneousTitle": "Çeşitli",
+    "settingsDoubleTapExitTitle": "Çıkmak için iki kez dokunun",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "Fotoğrafları dosya ismine göre sırala",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
+    "settingsExperimentalTitle": "Deneysel",
+    "settingsExperimentalDescription": "Henüz geliştirme aşamasındaki özellikler",
+    "settingsExpertTitle": "Gelişmiş",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "Lütfen devam etmeden önce her seçeneğin ne işe yaradığını tam olarak anladığınızdan emin olun",
+    "settingsClearCacheDatabaseTitle": "Dosya veritabanını temizle",
+    "settingsClearCacheDatabaseDescription": "Önbelleğe alınmış dosya bilgilerini temizler ve sunucu ile tekrar senkronize eder",
+    "settingsClearCacheDatabaseSuccessNotification": "Veritabanı başarıyla temizlendi. Uygulamayı yeniden başlatmanız tavsiye edilir",
+    "settingsAboutSectionTitle": "Hakkında",
+    "@settingsAboutSectionTitle": {
+        "description": "Title of the about section in settings widget"
+    },
+    "settingsVersionTitle": "Sürüm",
+    "@settingsVersionTitle": {
+        "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Sunucu",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
+    },
+    "settingsSourceCodeTitle": "Kaynak Kodu",
+    "@settingsSourceCodeTitle": {
+        "description": "Title of the source code item"
+    },
+    "settingsBugReportTitle": "Hata Bildir",
+    "@settingsBugReportTitle": {
+        "description": "Report issue"
+    },
+    "settingsCaptureLogsTitle": "Kayıtları İncele",
+    "@settingsCaptureLogsTitle": {
+        "description": "Capture app logs for bug report"
+    },
+    "settingsCaptureLogsDescription": "Geliştiricilerin hataları teşhis etmesine yardımcı olun",
+    "settingsTranslatorTitle": "Çeviren",
+    "@settingsTranslatorTitle": {
+        "description": "Title of the translator item"
+    },
+    "writePreferenceFailureNotification": "Yapılandırma klasörü değiştirilemedi",
+    "@writePreferenceFailureNotification": {
+        "description": "Inform user that the preference file cannot be modified"
+    },
+    "enableButtonLabel": "ETKİNLEŞTİR",
+    "@enableButtonLabel": {
+        "description": "Label of the enable button"
+    },
+    "exifSupportDetails": "EXIF desteğinin etkinleştirilmesi, çekilme tarihi, kamera modeli gibi çeşitli üst verileri kullanılabilir hale getirecektir. Bu üst verileri okumak ve orijinal tam boyutlu görüntüyü indirmek için ekstra ağ kullanımı gerekir. Uygulama yalnızca bir Wi-Fi ağına bağlanıldığında indirilmeye başlayacaktır",
+    "@exifSupportDetails": {
+        "description": "Detailed description of the exif support feature"
+    },
+    "exifSupportConfirmationDialogTitle": "EXIF Desteğini Etkinleştir?",
+    "@exifSupportConfirmationDialogTitle": {
+        "description": "Title of the dialog to confirm enabling exif support"
+    },
+    "captureLogDetails": "Bir hata raporuna yönelik günlükleri almak için:\n\n1. Bu ayarı etkinleştirin\n2. Sorunu tekrar yaşayın\n3. Bu ayarı devre dışı bırakın\n4. İndirme klasöründe nc-photos.log dosyasını arayın\n\n*Sorun uygulamanın çökmesine neden oluyorsa günlük kaydı gerçekleştirilemez. Böyle bir durumda farklı yöntemler için lütfen geliştiricilerle iletişime geçin",
+    "@captureLogDetails": {
+        "description": "Detailed description on capturing logs"
+    },
+    "captureLogSuccessNotification": "Kayıtlar başarıyla kaydedildi",
+    "@captureLogSuccessNotification": {
+        "description": "Captured logs are successfully saved to the download directory"
+    },
+    "doneButtonLabel": "TAMAMLA",
+    "@doneButtonLabel": {
+        "description": "Label of the done button"
+    },
+    "nextButtonLabel": "İLERİ",
+    "@nextButtonLabel": {
+        "description": "Label of the next button"
+    },
+    "connectButtonLabel": "BAĞLAN",
+    "@connectButtonLabel": {
+        "description": "Label of the connect button"
+    },
+    "rootPickerSkipConfirmationDialogContent2": "Tüm dosyalarınız dahil edilecektir. Bu, bellek kullanımını artırabilir ve performansı düşürebilir",
+    "@rootPickerSkipConfirmationDialogContent2": {
+        "description": "Warn user not to include all files in their server"
+    },
+    "megapixelCount": "{count}MP",
+    "@megapixelCount": {
+        "description": "Resolution of an image in megapixel",
+        "placeholders": {
+            "count": {
+                "example": "1.3"
+            }
+        }
+    },
+    "secondCountSymbol": "{count}s",
+    "@secondCountSymbol": {
+        "description": "Number of seconds",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "millimeterCountSymbol": "{count}mm",
+    "@millimeterCountSymbol": {
+        "description": "Number of millimeters",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "detailsTooltip": "Detaylar",
+    "@detailsTooltip": {
+        "description": "Tooltip of the details button"
+    },
+    "downloadTooltip": "İndir",
+    "@downloadTooltip": {
+        "description": "Tooltip of the download button"
+    },
+    "downloadProcessingNotification": "Dosya indiriliyor",
+    "@downloadProcessingNotification": {
+        "description": "Inform user that the file is being downloaded"
+    },
+    "downloadSuccessNotification": "Dosya başarıyla indirildi",
+    "@downloadSuccessNotification": {
+        "description": "Inform user that the file is downloaded successfully"
+    },
+    "downloadFailureNotification": "Dosya indirilemedi",
+    "@downloadFailureNotification": {
+        "description": "Inform user that the file cannot be downloaded"
+    },
+    "nextTooltip": "İleri",
+    "@nextTooltip": {
+        "description": "Tooltip of the next button"
+    },
+    "previousTooltip": "Geri",
+    "@previousTooltip": {
+        "description": "Tooltip of the previous button"
+    },
+    "webSelectRangeNotification": "Aradakilerin hepsini seçmek için Shift tuşunu basılı tutun ardından + tıklayın",
+    "@webSelectRangeNotification": {
+        "description": "Inform web user how to select items in range"
+    },
+    "mobileSelectRangeNotification": "Aradaki tüm öğeleri seçmek için başka bir öğeye uzun basın",
+    "@mobileSelectRangeNotification": {
+        "description": "Inform mobile user how to select items in range"
+    },
+    "updateDateTimeDialogTitle": "Tarih ve saati düzenle",
+    "@updateDateTimeDialogTitle": {
+        "description": "Dialog to modify the date & time of a file"
+    },
+    "dateSubtitle": "Tarih",
+    "timeSubtitle": "Saat",
+    "dateYearInputHint": "Yıl",
+    "dateMonthInputHint": "Ay",
+    "dateDayInputHint": "Gün",
+    "timeHourInputHint": "Saat",
+    "timeMinuteInputHint": "Dakika",
+    "timeSecondInputHint": "Saniye",
+    "dateTimeInputInvalid": "Geçersiz Değer",
+    "@dateTimeInputInvalid": {
+        "description": "Invalid date/time input (e.g., non-numeric characters)"
+    },
+    "updateDateTimeFailureNotification": "Tarih ve saat değiştirilemedi",
+    "@updateDateTimeFailureNotification": {
+        "description": "Failed to set the date & time of a file"
+    },
+    "albumDirPickerHeaderText": "Albümle ilişkilendirilecek klasörleri seçin",
+    "@albumDirPickerHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerSubHeaderText": "Bu albüme yalnızca eklediğiniz klasörlerdeki fotoğraflar dahil edilecek",
+    "@albumDirPickerSubHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerListEmptyNotification": "Lütfen en az bir klasör seçin",
+    "@albumDirPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "importFoldersTooltip": "Klasörleri içe aktar",
+    "@importFoldersTooltip": {
+        "description": "Menu entry in the album page to import folders as albums"
+    },
+    "albumImporterHeaderText": "Klasörleri albüme ekle",
+    "@albumImporterHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "albumImporterSubHeaderText": "Önerilen klasörler aşağıda listelenmiştir. Sunucunuzdaki dosya sayısına bağlı olarak tamamlanması biraz zaman alabilir",
+    "@albumImporterSubHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "importButtonLabel": "İÇE AKTAR",
+    "albumImporterProgressText": "Klasörler içe aktarılıyor",
+    "@albumImporterProgressText": {
+        "description": "Message shown while importing"
+    },
+    "doneButtonTooltip": "Bitir",
+    "editTooltip": "Düzenle",
+    "editAccountConflictFailureNotification": "Bu ayarlara sahip başka bir hesap zaten mevcut",
+    "@editAccountConflictFailureNotification": {
+        "description": "Error when user modified an account such that it's identical to another one"
+    },
+    "genericProcessingDialogContent": "Lütfen bekleyin",
+    "@genericProcessingDialogContent": {
+        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+    },
+    "sortTooltip": "Sırala",
+    "sortOptionDialogTitle": "Şuna göre sırala",
+    "@sortOptionDialogTitle": {
+        "description": "Select how the photos should be sorted"
+    },
+    "sortOptionTimeAscendingLabel": "Eskiden yeniye",
+    "@sortOptionTimeAscendingLabel": {
+        "description": "Sort by time, in ascending order"
+    },
+    "sortOptionTimeDescendingLabel": "Yeniden eskiye",
+    "@sortOptionTimeDescendingLabel": {
+        "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "Dosya ismi",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "Dosya adı (azalan)",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
+    },
+    "sortOptionAlbumNameLabel": "Albüm İsmi",
+    "@sortOptionAlbumNameLabel": {
+        "description": "Sort by album name, in ascending order"
+    },
+    "sortOptionAlbumNameDescendingLabel": "Albüm İsmi (azalan)",
+    "@sortOptionAlbumNameDescendingLabel": {
+        "description": "Sort by album name, in descending order"
+    },
+    "sortOptionManualLabel": "Manuel",
+    "@sortOptionManualLabel": {
+        "description": "Sort manually"
+    },
+    "albumEditDragRearrangeNotification": "Bir öğeyi manuel olarak yeniden düzenlemek için uzun basın ve sürükleyin",
+    "@albumEditDragRearrangeNotification": {
+        "description": "Instructions on how to rearrange photos"
+    },
+    "albumAddTextTooltip": "Yazı Ekle",
+    "@albumAddTextTooltip": {
+        "description": "Add some text that display between photos to an album"
+    },
+    "shareTooltip": "Paylaş",
+    "@shareTooltip": {
+        "description": "Share selected items to other apps"
+    },
+    "shareSelectedEmptyNotification": "Paylaşılacak fotoğrafları seçin",
+    "@shareSelectedEmptyNotification": {
+        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+    },
+    "shareDownloadingDialogContent": "İndiriliyor",
+    "@shareDownloadingDialogContent": {
+        "description": "Downloading photos to be shared"
+    },
+    "searchTooltip": "Ara",
+    "clearTooltip": "Temizle",
+    "@clearTooltip": {
+        "description": "Clear some sort of user input, typically a text field"
+    },
+    "listNoResultsText": "Sonuç Yok",
+    "@listNoResultsText": {
+        "description": "When there's nothing in a list"
+    },
+    "listEmptyText": "Boş",
+    "@listEmptyText": {
+        "description": "When there's nothing in a list"
+    },
+    "albumTrashLabel": "Çöp",
+    "@albumTrashLabel": {
+        "description": "Deleted photos"
+    },
+    "restoreTooltip": "Geri Yükle",
+    "@restoreTooltip": {
+        "description": "Restore selected items from trashbin"
+    },
+    "restoreSelectedProcessingNotification": "{count, plural, one{1 öğe geri yükleniyor} other{{count} öğe geri yükleniyor}}",
+    "@restoreSelectedProcessingNotification": {
+        "description": "Restoring selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreSelectedSuccessNotification": "Tüm öğeler geri yüklendi",
+    "@restoreSelectedSuccessNotification": {
+        "description": "Restored all selected items from trashbin successfully"
+    },
+    "restoreSelectedFailureNotification": "{count, plural, one{1 öğe geri yüklenemedi} other{{count} öğe geri yüklenemedi}}",
+    "@restoreSelectedFailureNotification": {
+        "description": "Cannot restore some of the selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreProcessingNotification": "Öğe geri yükleniyor",
+    "@restoreProcessingNotification": {
+        "description": "Restoring the opened item from trashbin"
+    },
+    "restoreSuccessNotification": "Öğe geri yüklendi",
+    "@restoreSuccessNotification": {
+        "description": "Restored the opened item from trashbin successfully"
+    },
+    "restoreFailureNotification": "Öğe geri yüklenemedi",
+    "@restoreFailureNotification": {
+        "description": "Cannot restore the opened item from trashbin"
+    },
+    "deletePermanentlyTooltip": "Kalıcı olarak sil",
+    "@deletePermanentlyTooltip": {
+        "description": "Permanently delete selected items from trashbin"
+    },
+    "deletePermanentlyConfirmationDialogTitle": "Kalıcı olarak sil",
+    "@deletePermanentlyConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "deletePermanentlyConfirmationDialogContent": "Seçili öğeler sunucudan kalıcı olarak silinecek.\n\nBu işlem geri alınamaz",
+    "@deletePermanentlyConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "albumSharedLabel": "Paylaşılan",
+    "@albumSharedLabel": {
+        "description": "A small label placed next to a shared album"
+    },
+    "metadataTaskProcessingNotification": "Görüntü üst verileri arka planda işleniyor",
+    "@metadataTaskProcessingNotification": {
+        "description": "Shown when the app is reading image metadata"
+    },
+    "metadataTaskPauseNoWiFiNotification": "WIFI bekleniyor",
+    "@metadataTaskPauseNoWiFiNotification": {
+        "description": "Shown when the app has paused reading image metadata"
+    },
+    "configButtonLabel": "YAPILANDIRMA",
+    "useAsAlbumCoverTooltip": "Albüm kapağı olarak kullan",
+    "helpTooltip": "Yardım",
+    "helpButtonLabel": "YARDIM",
+    "removeFromAlbumTooltip": "Albümden Kaldır",
+    "@removeFromAlbumTooltip": {
+        "description": "Remove the opened photo from an album"
+    },
+    "changelogTitle": "Değişiklik Günlüğü",
+    "@changelogTitle": {
+        "description": "Title of the changelog page"
+    },
+    "serverCertErrorDialogTitle": "Sunucu sertifikası güvenilir değil",
+    "@serverCertErrorDialogTitle": {
+        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
+    },
+    "serverCertErrorDialogContent": "Sunucu saldırıya uğramış olabilir veya birisi bilgilerinizi çalmaya çalışıyor olabilir",
+    "@serverCertErrorDialogContent": {
+        "description": "Warn user about an untrusted SSL certificate"
+    },
+    "advancedButtonLabel": "GELİŞMİŞ",
+    "@advancedButtonLabel": {
+        "description": "Label of the advanced button"
+    },
+    "whitelistCertDialogTitle": "Bilinmeyen sertifika beyaz listeye alınsın mı?",
+    "@whitelistCertDialogTitle": {
+        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+    },
+    "whitelistCertDialogContent": "Uygulamanın kabul etmesini sağlamak için sertifikayı beyaz listeye ekleyebilirsiniz. UYARI: Bu büyük bir güvenlik riski oluşturur. Sertifikanın sizin tarafınızdan veya güvenilir bir tarafça imzalandığından emin olun\n\nAnabilgisayar: {host}\nParmak izi: {fingerprint}",
+    "@whitelistCertDialogContent": {
+        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
+        "placeholders": {
+            "host": {
+                "example": "www.example.com"
+            },
+            "fingerprint": {
+                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+            }
+        }
+    },
+    "whitelistCertButtonLabel": "RİSKLERİ KABUL ET VE BEYAZ LİSTEYE EKLE",
+    "@whitelistCertButtonLabel": {
+        "description": "Label of the whitelist certificate button"
+    },
+    "fileSharedByDescription": "Bu kullanıcı tarafından sizinle paylaşıldı",
+    "@fileSharedByDescription": {
+        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+    },
+    "emptyTrashbinTooltip": "Çöpü Boşalt",
+    "@emptyTrashbinTooltip": {
+        "description": "Permanently delete all items from trashbin"
+    },
+    "emptyTrashbinConfirmationDialogTitle": "Çöpü Boşalt",
+    "@emptyTrashbinConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "emptyTrashbinConfirmationDialogContent": "Tüm öğeler sunucudan kalıcı olarak silinecek.\n\nBu işlem geri alınamaz",
+    "@emptyTrashbinConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "unsetAlbumCoverTooltip": "Kapağı kaldır",
+    "@unsetAlbumCoverTooltip": {
+        "description": "Unset the cover of the opened album"
+    },
+    "muteTooltip": "Sesi Kapat",
+    "@muteTooltip": {
+        "description": "Mute the video player"
+    },
+    "unmuteTooltip": "Sesi Aç",
+    "@unmuteTooltip": {
+        "description": "Unmute the video player"
+    },
+    "collectionPeopleLabel": "Kişiler",
+    "@collectionPeopleLabel": {
+        "description": "Browse photos grouped by person"
+    },
+    "slideshowTooltip": "Slayt Gösterisi",
+    "@slideshowTooltip": {
+        "description": "A button to start a slideshow from the current collection"
+    },
+    "slideshowSetupDialogTitle": "Slayt gösterisini ayarla",
+    "@slideshowSetupDialogTitle": {
+        "description": "Setup slideshow before starting"
+    },
+    "slideshowSetupDialogDurationTitle": "Görüntü süresi (DD:SS)",
+    "@slideshowSetupDialogDurationTitle": {
+        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+    },
+    "slideshowSetupDialogShuffleTitle": "Karıştır",
+    "@slideshowSetupDialogShuffleTitle": {
+        "description": "Whether to shuffle the collection"
+    },
+    "slideshowSetupDialogRepeatTitle": "Döngü",
+    "@slideshowSetupDialogRepeatTitle": {
+        "description": "Whether to restart the slideshow from the beginning after the last slide"
+    },
+    "slideshowSetupDialogReverseTitle": "Tersten",
+    "@slideshowSetupDialogReverseTitle": {
+        "description": "Whether to play the slideshow in reverse order"
+    },
+    "linkCopiedNotification": "Bağlantı kopyalandı",
+    "@linkCopiedNotification": {
+        "description": "Copied the share link to clipboard"
+    },
+    "shareMethodDialogTitle": "Paylaş",
+    "@shareMethodDialogTitle": {
+        "description": "Let the user pick how they want to share"
+    },
+    "shareMethodPreviewTitle": "Önizle",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "Düşük kaliteli bir önizlemeyi diğer uygulamalarla paylaşın (yalnızca resimlerde desteklenir)",
+    "shareMethodOriginalFileTitle": "Orjinal Dosya",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "Orijinal dosyayı indirin ve diğer uygulamalarla paylaşın",
+    "shareMethodPublicLinkTitle": "Herkese açık bağlantı",
+    "@shareMethodPublicLinkTitle": {
+        "description": "Create a share link on server and share it"
+    },
+    "shareMethodPublicLinkDescription": "Sunucuda herkese açık bağlantı oluşturun. Bağlantıya sahip olan herkes dosyaya erişebilir",
+    "shareMethodPasswordLinkTitle": "Şifre korumalı bağlantı",
+    "@shareMethodPasswordLinkTitle": {
+        "description": "Create a password protected share link on server and share it"
+    },
+    "shareMethodPasswordLinkDescription": "Sunucuda yeni bir parola korumalı bağlantı oluşturun",
+    "collectionSharingLabel": "Paylaşılmakta",
+    "@collectionSharingLabel": {
+        "description": "List items being shared by the current account"
+    },
+    "fileLastSharedDescription": "Son paylaşım {date} tarihinde gerçekleşti",
+    "@fileLastSharedDescription": {
+        "description": "The date when this file was last shared by you",
+        "placeholders": {
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "fileLastSharedByOthersDescription": "{user} sizinle {date} tarihinde paylaştı",
+    "@fileLastSharedByOthersDescription": {
+        "description": "The date when this file was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "albumLastSharedByOthersDescription": "{user}, {date} tarihinde sizinle bir albüm paylaştı",
+    "@albumLastSharedByOthersDescription": {
+        "description": "The date when this album was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "sharedWithLabel": "Paylaşılanlar",
+    "@sharedWithLabel": {
+        "description": "A list of users or links where this file is sharing with"
+    },
+    "unshareTooltip": "Paylaşımı durdur",
+    "@unshareTooltip": {
+        "description": "Remove a share"
+    },
+    "unshareSuccessNotification": "Paylaşım durduruldu",
+    "@unshareSuccessNotification": {
+        "description": "Removed a share"
+    },
+    "locationLabel": "Konum",
+    "@locationLabel": {
+        "description": "Show where the file is located"
+    },
+    "multipleFilesLinkShareDialogContent": "Nextcloud üzerinde birden fazla dosya tek paylaşım bağlantısı ile desteklenmemektedir. Uygulama bunun yerine dosyaları yeni bir klasöre KOPYALAYACAK ve bunun yerine klasörü paylaşacaktır.",
+    "@multipleFilesLinkShareDialogContent": {
+        "description": "Dialog shown when sharing multiple files as link"
+    },
+    "folderNameInputHint": "Klasör İsmi",
+    "@folderNameInputHint": {
+        "description": "Input field for folder name"
+    },
+    "folderNameInputInvalidEmpty": "Lütfen klasör ismi girin",
+    "@folderNameInputInvalidEmpty": {
+        "description": "Folder name cannot be left empty"
+    },
+    "folderNameInputInvalidCharacters": "Geçersiz karakterler içeriyor",
+    "@folderNameInputInvalidCharacters": {
+        "description": "Folder name contains characters that are not allowed"
+    },
+    "createShareProgressText": "Paylaşım oluşturuluyor",
+    "@createShareProgressText": {
+        "description": "Message shown when sharing files"
+    },
+    "copyItemsFailureNotification": "{count, plural, one{1 öğe kopyalanamadı} other{{count} öğe kopyalanamadı}}",
+    "@copyItemsFailureNotification": {
+        "description": "Error message shown when some files cannot be copied",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unshareLinkShareDirDialogTitle": "Klasörü Sil?",
+    "@unshareLinkShareDirDialogTitle": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "unshareLinkShareDirDialogContent": "Bu klasör, uygulama tarafından birden fazla dosyayı bağlantı ile paylaşmak için oluşturuldu. Artık hiç kimse ile paylaşılmıyor, Bu klasörü silmek istiyor musunuz?",
+    "@unshareLinkShareDirDialogContent": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "addToCollectionsViewTooltip": "Koleksiyonlara Ekle",
+    "@addToCollectionsViewTooltip": {
+        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+    },
+    "shareAlbumDialogTitle": "Başka biriyle paylaş",
+    "@shareAlbumDialogTitle": {
+        "description": "Dialog to share an album with another user"
+    },
+    "shareAlbumSuccessWithErrorNotification": "Albüm {user} ile paylaşıldı ancak bazı dosyalar paylaşılamadı",
+    "@shareAlbumSuccessWithErrorNotification": {
+        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "unshareAlbumSuccessWithErrorNotification": "Albümün {user} ile paylaşımı durduruldu, ancak bazı dosyaların paylaşımı iptal edilemedi",
+    "@unshareAlbumSuccessWithErrorNotification": {
+        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "fixSharesTooltip": "Paylaşımı Düzelt",
+    "@fixSharesTooltip": {
+        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+    },
+    "fixTooltip": "Düzelt",
+    "@fixTooltip": {
+        "description": "Fix an issue"
+    },
+    "fixAllTooltip": "Tümünü Düzelt",
+    "@fixAllTooltip": {
+        "description": "Fix all listed issues"
+    },
+    "missingShareDescription": "{user} ile paylaşılmıyor",
+    "@missingShareDescription": {
+        "description": "The album is shared with user but a file is NOT",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "extraShareDescription": "{user} ile paylaşılıyor",
+    "@extraShareDescription": {
+        "description": "The album is NOT shared with user but a file is",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "defaultButtonLabel": "VARSAYILAN",
+    "addUserInputHint": "Kullanıcı Ekle",
+    "@addUserInputHint": {
+        "description": "Input a user name to share this album with"
+    },
+    "sharedAlbumInfoDialogTitle": "Albüm Paylaşımıyla tanışın",
+    "@sharedAlbumInfoDialogTitle": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "sharedAlbumInfoDialogContent": "Albüm Paylaşımı----------------------------------------------------------------------------------------------------------, aynı sunucudaki birden fazla kullanıcının aynı albüme erişmesine olanak tanır. Devam etmeden önce lütfen sınırlamaları dikkatlice okuyun",
+    "@sharedAlbumInfoDialogContent": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "learnMoreButtonLabel": "DAHA FAZLA",
+    "migrateDatabaseProcessingNotification": "Veritabanı güncelleniyor",
+    "@migrateDatabaseProcessingNotification": {
+        "description": "Migrate database to work with the updated app"
+    },
+    "migrateDatabaseFailureNotification": "Veritabanı güncellemesi başarısız oldu",
+    "memoryAlbumName": "{count, plural, one{1 yıl önce} other{{count} yıl önce}}",
+    "@memoryAlbumName": {
+        "description": "Memory albums are generated by the app and include photos in the past years",
+        "placeholders": {
+            "count": {
+                "example": "2"
+            }
+        }
+    },
+    "homeFolderNotFoundDialogTitle": "Ana dizin bulunamadı",
+    "@homeFolderNotFoundDialogTitle": {
+        "description": "The app failed to scan the user's home folder on signing in"
+    },
+    "homeFolderNotFoundDialogContent": "Lütfen aşağıda gösterilen WebDAV URL'sini düzeltin. URL'yi Nextcloud web arayüzünde bulabilirsiniz.",
+    "@homeFolderNotFoundDialogContent": {
+        "description": "Ask the user to provide us the correct WebDAV URL"
+    },
+    "homeFolderInputInvalidEmpty": "Lütfen ana dizininizin adını girin",
+    "@homeFolderInputInvalidEmpty": {
+        "description": "Home folder can't be left empty"
+    },
+    "createCollectionTooltip": "Yeni Koleksiyon",
+    "@createCollectionTooltip": {
+        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+    },
+    "createCollectionDialogAlbumLabel": "Albüm",
+    "@createCollectionDialogAlbumLabel": {
+        "description": "Create an album as collection"
+    },
+    "createCollectionDialogAlbumDescription": "Sunucuda sizin tarafınızdan eklenen fotoğrafları ekleyin",
+    "@createCollectionDialogAlbumDescription": {
+        "description": "Describe how an album collection works"
+    },
+    "createCollectionDialogFolderLabel": "Klasör",
+    "@createCollectionDialogFolderLabel": {
+        "description": "Create a folder as collection"
+    },
+    "createCollectionDialogFolderDescription": "Fotoğrafları bir klasör içinde göster",
+    "@createCollectionDialogFolderDescription": {
+        "description": "Describe how a folder collection works"
+    },
+    "collectionFavoritesLabel": "Favoriler",
+    "@collectionFavoritesLabel": {
+        "description": "Browse photos added to favorites"
+    },
+    "favoriteTooltip": "Favoriye Ekle",
+    "@favoriteTooltip": {
+        "description": "Add photo to favorites"
+    },
+    "favoriteSuccessNotification": "Favorilere eklendi",
+    "@favoriteSuccessNotification": {
+        "description": "Successfully added photos to favorites"
+    },
+    "favoriteFailureNotification": "Favorilere eklenemedi",
+    "@favoriteFailureNotification": {
+        "description": "Failed adding photos to favorites"
+    },
+    "unfavoriteTooltip": "Favorilerden Çıkar",
+    "@unfavoriteTooltip": {
+        "description": "Remove photo to favorites"
+    },
+    "unfavoriteSuccessNotification": "Favorilerden çıkarıldı",
+    "@unfavoriteSuccessNotification": {
+        "description": "Successfully removed photos from favorites"
+    },
+    "unfavoriteFailureNotification": "Favorilerden çıkarılamadı",
+    "@unfavoriteFailureNotification": {
+        "description": "Failed removing photos from favorites"
+    },
+    "createCollectionDialogTagLabel": "Etiket",
+    "@createCollectionDialogTagLabel": {
+        "description": "Create a collection containing files with tags"
+    },
+    "createCollectionDialogTagDescription": "Fotoğrafları belirli etiketlerle göster",
+    "@createCollectionDialogTagDescription": {
+        "description": "Describe how a tag collection works"
+    },
+    "addTagInputHint": "Etiket Ekle",
+    "@addTagInputHint": {
+        "description": "Input a tag"
+    },
+    "tagPickerNoTagSelectedNotification": "Lütfen en az 1 etiket ekleyin",
+    "@tagPickerNoTagSelectedNotification": {
+        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+    },
+    "backgroundServiceStopping": "Servis durduruluyor",
+    "@backgroundServiceStopping": {
+        "description": "The background service is stopping itself"
+    },
+    "metadataTaskPauseLowBatteryNotification": "Batarya zayıf",
+    "@metadataTaskPauseLowBatteryNotification": {
+        "description": "Shown when the app has paused reading image metadata due to low battery"
+    },
+    "enhanceTooltip": "İyileştir",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "İYİLEŞTİR",
+    "enhanceIntroDialogTitle": "Fotoğrafları iyileştir",
+    "enhanceIntroDialogDescription": "Fotoğraflarınız cihazınızda yerel olarak işlenir. Varsayılan olarak 2048x1536 boyutundadır. Bu çözünürlüğü Ayarlar'dan ayarlayabilirsiniz",
+    "enhanceLowLightTitle": "Düşük ışık iyileştirmesi",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "Düşük ışıklı ortamlarda çekilen fotoğraflarınızı parlaklaştırır",
+    "enhanceLowLightParamBrightnessLabel": "Parlaklık",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "Düzenlendi (Yerel)",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "Seçilen öğeler bu cihazdan kalıcı olarak silinecek.\n\nBu işlem geri alınamaz",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "Portre bulanıklığı",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "Fotoğraflarınızın arka planını bulanıklaştırır, portrelerde en iyi sonucu sağlar",
+    "enhancePortraitBlurParamBlurLabel": "Parlaklık",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Süper-çözünürlük (4x)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "Fotoğraflarınızı orijinal çözünürlüğünün 4 katına kadar yükseltin (maksimum çözünürlüğün nasıl uygulandığına ilişkin ayrıntılar için Yardım'a bakın)",
+    "enhanceStyleTransferTitle": "Stil transferi",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "Bir stil seç",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "Görüntü stilini referans görselden fotoğraflarınıza aktarın",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Lütfen bir stil seçin",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopTitle": "Renk doygunluğu",
+    "@enhanceColorPopTitle": {
+        "description": "Desaturate the background of a photo"
+    },
+    "enhanceColorPopDescription": "Fotoğraflarınızın arka plan doygunluğunu gidererek portrelerde en iyi sonucu alın",
+    "enhanceGenericParamWeightLabel": "Ağırlık",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchTitle": "Otomatik iyileştir",
+    "@enhanceRetouchTitle": {
+        "description": "Automatically improve your photo"
+    },
+    "enhanceRetouchDescription": "Fotoğraflarınıza otomatik olarak iyileştirin, genel rengi ve canlılığı iyileştirin",
+    "doubleTapExitNotification": "Çıkmak için tekrar dokunun",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "Değişiklikleri sil?",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "Değişiklikleriniz kaydedilmedi",
+    "discardButtonLabel": "İPTAL",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "Kaydet",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditColorBrightness": "Parlaklık",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "imageEditColorContrast": "Kontrast",
+    "@imageEditColorContrast": {
+        "description": "Adjust the contrast of an image"
+    },
+    "imageEditColorWhitePoint": "Beyaz nokta",
+    "@imageEditColorWhitePoint": {
+        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+    },
+    "imageEditColorBlackPoint": "Siyah nokta",
+    "@imageEditColorBlackPoint": {
+        "description": "Adjust the black point of an image"
+    },
+    "imageEditColorSaturation": "Doygunluk",
+    "@imageEditColorSaturation": {
+        "description": "Adjust the color saturation of an image"
+    },
+    "imageEditColorWarmth": "Sıcaklık",
+    "@imageEditColorWarmth": {
+        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+    },
+    "imageEditColorTint": "Ton",
+    "@imageEditColorTint": {
+        "description": "Shift colors from a green to a magenta tint"
+    },
+    "imageEditTitle": "Değişikliklere göz at",
+    "@imageEditTitle": {
+        "description": "Title of the image editor"
+    },
+    "imageEditToolbarColorLabel": "Renk",
+    "@imageEditToolbarColorLabel": {
+        "description": "Label of the color tools. These can be used to adjust the color of an image"
+    },
+    "imageEditToolbarTransformLabel": "Dönüştür",
+    "@imageEditToolbarTransformLabel": {
+        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+    },
+    "imageEditTransformOrientation": "Yön",
+    "@imageEditTransformOrientation": {
+        "description": "Change the orientation of the image, 90 degree per step"
+    },
+    "imageEditTransformOrientationClockwise": "cw",
+    "@imageEditTransformOrientationClockwise": {
+        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformOrientationCounterclockwise": "ccw",
+    "@imageEditTransformOrientationCounterclockwise": {
+        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformCrop": "Kırp",
+    "@imageEditTransformCrop": {
+        "description": "Crop the image"
+    },
+    "categoriesLabel": "Kategoriler",
+    "searchLandingCategoryVideosLabel": "VİDEOLAR",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "FİLTRELER",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "Filtre Ara",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "UYGULA",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "Herhangi biri",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "Doğru",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "Yanlış",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "Tür",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "Fotoğraf",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "fotoğraflar",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "Video",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "Videolar",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "Favori",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "searchFilterBubbleFavoriteTrueText": "favoriler",
+    "@searchFilterBubbleFavoriteTrueText": {
+        "description": "List of active search filters shown in the result page (by favorites, true)"
+    },
+    "searchFilterBubbleFavoriteFalseText": "favoride olmayanlar",
+    "@searchFilterBubbleFavoriteFalseText": {
+        "description": "List of active search filters shown in the result page (by favorites, false)"
+    },
+    "showAllButtonLabel": "TÜMÜNÜ GÖSTER",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceText": "{place} yakını",
+    "@gpsPlaceText": {
+        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+        "placeholders": {
+            "place": {}
+        }
+    },
+    "gpsPlaceAboutDialogTitle": "Yer Hakkında",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "Burada gösterilen yer tahminidir ve doğruluğu garanti edilemez. Herhangi bir yere ilişkin görüşlerimizi temsil etmemektedir.",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "Yerler",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "Sonuçların Kaydı",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogContent": "Bu ve gelecekte işlenecek görüntülerin nereye kaydedileceğini seçin. Sunucuyu seçtiyseniz ancak uygulama bunu yükleyemediyse cihazınıza kaydedilecektir.",
+    "@imageSaveOptionDialogContent": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "CİHAZ",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "SUNUCU",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "İlk kurulum için senkronizasyon gerçekleşiyor",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "loopTooltip": "DÖNGÜ",
+    "@loopTooltip": {
+        "description": "Enable or disable loop in the video player"
+    },
+    "createCollectionFailureNotification": "Koleksiyon oluşturulamadı",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Koleksiyona Ekle",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Koleksiyona eklenemedi",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Koleksiyon kapağı ayarlanamadı",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Dışa Aktar",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Koleksiyonu Dışa Aktar",
+    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud Albüm",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "Sunucu taraflı Albüm, Nextcloud 25 veya daha yüksek bir sürüm gerektirir",
+    "removeCollectionsFailedNotification": "Bazı koleksiyonlar kaldırılamadı",
+    "errorUnauthenticated": "Erişim kimliğiniz doğrulanamadı. Sorun devam ederse lütfen tekrar oturum açın",
+    "@errorUnauthenticated": {
+        "description": "Error message when server responds with HTTP401"
+    },
+    "errorDisconnected": "Bağlantı başarısız. Sunucu çevrimdışı olabilir veya cihazınızın bağlantısı kesilmiş olabilir",
+    "@errorDisconnected": {
+        "description": "Error message when the app can't connect to the server"
+    },
+    "errorLocked": "Dosya sunucuda kilitli. Lütfen daha sonra tekrar deneyiniz",
+    "@errorLocked": {
+        "description": "Error message when server responds with HTTP423"
+    },
+    "errorInvalidBaseUrl": "Bağlantı kurulamıyor. Lütfen adresin Nextcloud sunucunuzun temel URL'si olduğundan emin olun",
+    "@errorInvalidBaseUrl": {
+        "description": "Error message when the base URL is invalid"
+    },
+    "errorWrongPassword": "Kimlik doğrulaması yapılamıyor. Lütfen kullanıcı adınızı ve şifrenizi tekrar kontrol edin",
+    "@errorWrongPassword": {
+        "description": "Error message when the username or password is wrong"
+    },
+    "errorServerError": "Bir sunucu hatası oluştu. Lütfen sunucunun doğru kurulduğundan emin olun",
+    "@errorServerError": {
+        "description": "HTTP 500"
+    },
+    "errorAlbumDowngrade": "Bu uygulamanın daha sonraki bir sürümü tarafından oluşturulduğu için bu albüm değiştirilemiyor. Lütfen uygulamayı güncelleyin ve tekrar deneyin",
+    "@errorAlbumDowngrade": {
+        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+    },
+    "errorNoStoragePermission": "Depolama erişimi gerekiyor",
+    "@errorNoStoragePermission": {
+        "description": "Missing permission on Android"
+    },
+    "settingsMetadataTitle": "Dosya Üstverisi",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsPersonProviderTitle": "Kişi Sağlayıcısı",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsSeedColorSystemColorDescription": "Sistem rengini kullan",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerSystemColorButtonLabel": "SİSTEM RENGİNİ KULLAN",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "searchLandingPeopleListEmptyText2": "Sağlayıcıyı değiştirmek için ayarlara basın veya daha fazla bilgi edinmek için yardıma basın",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "accountSettingsTooltip": "Hesap Ayarları",
+    "contributorsTooltip": "Katkıda bulunanlar",
+    "setAsTooltip": "Ayarla:",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "{server} oturumunuz kapatılıyor",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    }
+}
