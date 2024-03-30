@@ -45,7 +45,7 @@ class CountFileGroupsByDateResult {
     required this.dateCount,
   });
 
-  final Map<DateTime, int> dateCount;
+  final Map<Date, int> dateCount;
 }
 
 extension SqliteDbFileExtension on SqliteDb {
@@ -657,8 +657,8 @@ extension SqliteDbFileExtension on SqliteDb {
       ..orderBy([OrderingTerm.desc(accountFiles.bestDateTime)])
       ..groupBy([localDate]);
     final results = await query
-        .map((r) => MapEntry<DateTime, int>(
-              DateTime.parse(r.read(localDate)!),
+        .map((r) => MapEntry<Date, int>(
+              DateTime.parse(r.read(localDate)!).toDate(),
               r.read(count)!,
             ))
         .get();

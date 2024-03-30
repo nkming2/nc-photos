@@ -1,4 +1,3 @@
-import 'package:clock/clock.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -14,6 +13,7 @@ import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_datetime/np_datetime.dart';
 
 part 'photo_list_item_builder.g.dart';
 
@@ -135,7 +135,7 @@ class _PhotoListItemBuilder {
 
   PhotoListItemBuilderResult _fromSortedItems(
       Account account, List<FileDescriptor> files) {
-    final today = clock.now();
+    final today = Date.today();
     final memoryAlbumHelper = smartAlbumConfig != null
         ? MemoryCollectionHelper(account,
             today: today, dayRange: smartAlbumConfig!.memoriesDayRange)

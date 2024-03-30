@@ -376,7 +376,7 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
   final dateHelper = arg.sort == _ItemSort.dateTime
       ? photo_list_util.DateGroupHelper(isMonthOnly: !arg.isGroupByDay)
       : null;
-  final today = clock.now();
+  final today = Date.today();
   final memoryCollectionHelper = arg.sort == _ItemSort.dateTime
       ? photo_list_util.MemoryCollectionHelper(
           arg.account,
@@ -393,7 +393,7 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
     if (item == null) {
       continue;
     }
-    final localDate = file.fdDateTime.add(tzOffset);
+    final localDate = file.fdDateTime.add(tzOffset).toDate();
     final date = dateHelper?.onFile(file, localDate: localDate);
     if (date != null) {
       transformed.add(_DateItem(date: date, isMonthOnly: !arg.isGroupByDay));

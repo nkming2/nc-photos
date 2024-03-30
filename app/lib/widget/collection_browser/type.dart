@@ -172,7 +172,7 @@ class _DateItem extends _Item {
     );
   }
 
-  final DateTime date;
+  final Date date;
 }
 
 @toString

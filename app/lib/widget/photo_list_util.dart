@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_datetime/np_datetime.dart';
 
 part 'photo_list_util.g.dart';
 
@@ -17,13 +18,13 @@ class DateGroupHelper {
     required this.isMonthOnly,
   }) : _tzOffset = clock.now().timeZoneOffset;
 
-  DateTime? onFile(
+  Date? onFile(
     FileDescriptor file, {
-    DateTime? localDate,
+    Date? localDate,
   }) {
     // toLocal is way too slow
     // final localDate = file.fdDateTime.toLocal();
-    localDate ??= file.fdDateTime.add(_tzOffset);
+    localDate ??= file.fdDateTime.add(_tzOffset).toDate();
     if (localDate.year != _currentDate?.year ||
         localDate.month != _currentDate?.month ||
         (!isMonthOnly && localDate.day != _currentDate?.day)) {
@@ -35,7 +36,7 @@ class DateGroupHelper {
   }
 
   final bool isMonthOnly;
-  DateTime? _currentDate;
+  Date? _currentDate;
   final Duration _tzOffset;
 }
 
@@ -46,21 +47,21 @@ class DateGroupHelper {
 class MemoryCollectionHelper {
   MemoryCollectionHelper(
     this.account, {
-    DateTime? today,
+    Date? today,
     required int dayRange,
   })  : _tzOffset = clock.now().timeZoneOffset,
         // today = (today?.toLocal() ?? clock.now()).toMidnight(),
         dayRange = math.max(dayRange, 0) {
-    this.today = (today ?? clock.now()).toUtc().add(_tzOffset).toMidnight();
+    this.today = today ?? Date.today();
   }
 
   void addFile(
     FileDescriptor f, {
-    DateTime? localDate,
+    Date? localDate,
   }) {
     // too slow
     // final localDate = f.fdDateTime.toLocal().toMidnight();
-    localDate = (localDate ?? f.fdDateTime.add(_tzOffset)).toMidnight();
+    localDate ??= f.fdDateTime.add(_tzOffset).toDate();
     final diff = today.difference(localDate).inDays;
     if (diff < 300) {
       return;
@@ -115,7 +116,7 @@ class MemoryCollectionHelper {
   }
 
   final Account account;
-  late final DateTime today;
+  late final Date today;
   final int dayRange;
   final Duration _tzOffset;
   final _data = <int, _MemoryCollectionHelperItem>{};
@@ -142,10 +143,14 @@ class _MemoryCollectionHelperItem {
   _MemoryCollectionHelperItem(this.date, this.coverFile)
       : coverDiff = getCoverDiff(date, coverFile);
 
-  static Duration getCoverDiff(DateTime date, FileDescriptor f) =>
-      f.fdDateTime.difference(date.copyWith(hour: 12)).abs();
+  static Duration getCoverDiff(Date date, FileDescriptor f) => f.fdDateTime
+      .add(_tzOffset)
+      .difference(date.toLocalDateTime().copyWith(hour: 12))
+      .abs();
 
-  final DateTime date;
+  final Date date;
   FileDescriptor coverFile;
   Duration coverDiff;
+
+  static final Duration _tzOffset = clock.now().timeZoneOffset;
 }

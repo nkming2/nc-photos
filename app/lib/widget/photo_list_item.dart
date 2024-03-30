@@ -12,6 +12,7 @@ import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/selectable_item_stream_list_mixin.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:to_string/to_string.dart';
 
 part 'photo_list_item.g.dart';
@@ -116,7 +117,7 @@ class PhotoListDateItem extends SelectableItem {
         isMonthOnly: isMonthOnly,
       );
 
-  final DateTime date;
+  final Date date;
   final bool isMonthOnly;
 }
 
@@ -392,18 +393,18 @@ class PhotoListLabelEdit extends PhotoListLabel {
 
 class PhotoListDate extends StatelessWidget {
   const PhotoListDate({
-    Key? key,
+    super.key,
     required this.date,
     this.isMonthOnly = false,
-  }) : super(key: key);
+  });
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final pattern =
         isMonthOnly ? DateFormat.YEAR_MONTH : DateFormat.YEAR_MONTH_DAY;
     final subtitle =
         DateFormat(pattern, Localizations.localeOf(context).languageCode)
-            .format(date.toLocal());
+            .format(date.toUtcDateTime());
     return Align(
       alignment: AlignmentDirectional.centerStart,
       child: Padding(
@@ -416,6 +417,6 @@ class PhotoListDate extends StatelessWidget {
     );
   }
 
-  final DateTime date;
+  final Date date;
   final bool isMonthOnly;
 }

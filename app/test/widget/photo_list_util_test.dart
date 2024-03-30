@@ -1,6 +1,7 @@
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/content_provider/memory.dart';
 import 'package:nc_photos/widget/photo_list_util.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:test/test.dart';
 
 import '../test_util.dart' as util;
@@ -52,7 +53,7 @@ void main() {
 /// Expect: empty
 void _sameYear() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 2, 3));
@@ -68,7 +69,7 @@ void _sameYear() {
 /// Expect: empty
 void _nextYear() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2022, 2, 3));
@@ -83,7 +84,7 @@ void _nextYear() {
 /// Expect: [2020]
 void _prevYear() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 3));
@@ -107,7 +108,7 @@ void _prevYear() {
 /// Expect: empty
 void _prevYear3DaysBefore() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 31));
@@ -122,7 +123,7 @@ void _prevYear3DaysBefore() {
 /// Expect: [2020]
 void _prevYear2DaysBefore() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 1));
@@ -146,7 +147,7 @@ void _prevYear2DaysBefore() {
 /// Expect: empty
 void _prevYear3DaysAfter() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 6));
@@ -161,7 +162,7 @@ void _prevYear3DaysAfter() {
 /// Expect: [2020]
 void _prevYear2DaysAfter() {
   final account = util.buildAccount();
-  final today = DateTime(2021, 2, 3);
+  final today = Date(2021, 2, 3);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 2, 5));
@@ -185,7 +186,7 @@ void _prevYear2DaysAfter() {
 /// Expect: empty
 void _onFeb29AddFeb26() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 26));
@@ -200,7 +201,7 @@ void _onFeb29AddFeb26() {
 /// Expect: [2019]
 void _onFeb29AddFeb27() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 2, 27));
@@ -224,7 +225,7 @@ void _onFeb29AddFeb27() {
 /// Expect: empty
 void _onFeb29AddMar4() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 4));
@@ -239,7 +240,7 @@ void _onFeb29AddMar4() {
 /// Expect: [2019]
 void _onFeb29AddMar3() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 3, 3));
@@ -263,7 +264,7 @@ void _onFeb29AddMar3() {
 /// Expect: empty
 void _onFeb29AddMar3LeapYear() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 3));
@@ -278,7 +279,7 @@ void _onFeb29AddMar3LeapYear() {
 /// Expect: [2016]
 void _onFeb29AddMar2LeapYear() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 2, 29);
+  final today = Date(2020, 2, 29);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2016, 3, 2));
@@ -302,7 +303,7 @@ void _onFeb29AddMar2LeapYear() {
 /// Expect: empty
 void _onJan1AddDec31() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 1, 1);
+  final today = Date(2020, 1, 1);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2019, 12, 31));
@@ -317,7 +318,7 @@ void _onJan1AddDec31() {
 /// Expect: [2019]
 void _onJan1AddDec31PrevYear() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 1, 1);
+  final today = Date(2020, 1, 1);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2018, 12, 31));
@@ -341,7 +342,7 @@ void _onJan1AddDec31PrevYear() {
 /// Expect: [2019]
 void _onDec31AddJan1() {
   final account = util.buildAccount();
-  final today = DateTime(2020, 12, 31);
+  final today = Date(2020, 12, 31);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 2);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2020, 1, 1));
@@ -365,7 +366,7 @@ void _onDec31AddJan1() {
 /// Expect: [2022]
 void _onMay15AddMay15Range0() {
   final account = util.buildAccount();
-  final today = DateTime(2022, 5, 15);
+  final today = Date(2022, 5, 15);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 0);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 15));
@@ -389,7 +390,7 @@ void _onMay15AddMay15Range0() {
 /// Expect: []
 void _onMay15AddMay16Range0() {
   final account = util.buildAccount();
-  final today = DateTime(2022, 5, 15);
+  final today = Date(2022, 5, 15);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: 0);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));
@@ -404,7 +405,7 @@ void _onMay15AddMay16Range0() {
 /// Expect: []
 void _onMay15AddMay16RangeNegative() {
   final account = util.buildAccount();
-  final today = DateTime(2022, 5, 15);
+  final today = Date(2022, 5, 15);
   final obj = MemoryCollectionHelper(account, today: today, dayRange: -1);
   final file = util.buildJpegFile(
       path: "", fileId: 0, lastModified: DateTime.utc(2021, 5, 16));

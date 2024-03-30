@@ -7,6 +7,9 @@ publish_to: none
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
+dependencies:
+  clock: ^1.1.1
+
 dev_dependencies:
   np_lints:
     path: ../np_lints

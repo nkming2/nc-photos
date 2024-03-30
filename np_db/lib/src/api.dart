@@ -148,7 +148,7 @@ class DbFilesSummary {
   String toString() => _$toString();
 
   @Format(r"{length: ${$?.length}}")
-  final Map<DateTime, DbFilesSummaryItem> items;
+  final Map<Date, DbFilesSummaryItem> items;
 }
 
 @npLog
