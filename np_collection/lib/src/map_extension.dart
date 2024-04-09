@@ -11,4 +11,6 @@ extension MapExtension<T, U> on Map<T, U> {
         entries.map((e) async => await convert(e.key, e.value)));
     return Map.fromEntries(results);
   }
+
+  Map<T, U> addedAll(Map<T, U> other) => {...this, ...other};
 }
