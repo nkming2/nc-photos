@@ -613,6 +613,7 @@ extension SqliteDbFileExtension on SqliteDb {
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
+    bool? isArchived,
   }) async {
     _log.info(
       "[countFileGroupsByDate] "
@@ -650,6 +651,14 @@ extension SqliteDbFileExtension on SqliteDb {
       query.where(files.contentType.isIn(mimes));
     } else {
       query.where(files.isCollection.isNotValue(true));
+    }
+    if (isArchived != null) {
+      if (isArchived) {
+        query.where(accountFiles.isArchived.equals(true));
+      } else {
+        query.where(accountFiles.isArchived.equals(false) |
+            accountFiles.isArchived.isNull());
+      }
     }
     query
       ..orderBy([OrderingTerm.desc(accountFiles.bestDateTime)])

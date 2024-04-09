@@ -476,6 +476,7 @@ class NpDbSqlite implements NpDb {
         includeRelativeRoots: includeRelativeRoots,
         excludeRelativeRoots: excludeRelativeRoots,
         mimes: mimes,
+        isArchived: false,
       );
     });
     return DbFilesSummary(
