@@ -456,11 +456,17 @@ extension SqliteDbFileExtension on SqliteDb {
             for (final r in includeRelativeRoots) {
               q.byOrRelativePathPattern("$r/%");
             }
+            if (dirIds != null) {
+              for (final i in dirIds) {
+                q.byOrDirRowId(i);
           }
         }
+          }
+        } else {
         if (dirIds != null) {
           for (final i in dirIds) {
             q.byOrDirRowId(i);
+            }
           }
         }
         if (location != null) {
