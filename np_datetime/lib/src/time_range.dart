@@ -5,9 +5,9 @@ enum TimeRangeBound {
 
 class TimeRange {
   const TimeRange({
-    required this.from,
+    this.from,
     this.fromBound = TimeRangeBound.inclusive,
-    required this.to,
+    this.to,
     this.toBound = TimeRangeBound.exclusive,
   });
 
@@ -18,9 +18,9 @@ class TimeRange {
         "${toBound == TimeRangeBound.inclusive ? "]" : ")"}";
   }
 
-  final DateTime from;
+  final DateTime? from;
   final TimeRangeBound fromBound;
-  final DateTime to;
+  final DateTime? to;
   final TimeRangeBound toBound;
 }
 
@@ -30,20 +30,24 @@ extension TimeRangeExtension on TimeRange {
   /// The comparison is independent of whether the time is in UTC or in the
   /// local time zone
   bool isIn(DateTime a) {
-    if (a.isBefore(from)) {
-      return false;
-    }
-    if (fromBound == TimeRangeBound.exclusive) {
-      if (a.isAtSameMomentAs(from)) {
+    if (from != null) {
+      if (a.isBefore(from!)) {
         return false;
       }
+      if (fromBound == TimeRangeBound.exclusive) {
+        if (a.isAtSameMomentAs(from!)) {
+          return false;
+        }
+      }
     }
-    if (a.isAfter(to)) {
-      return false;
-    }
-    if (toBound == TimeRangeBound.exclusive) {
-      if (a.isAtSameMomentAs(to)) {
+    if (to != null) {
+      if (a.isAfter(to!)) {
         return false;
+      }
+      if (toBound == TimeRangeBound.exclusive) {
+        if (a.isAtSameMomentAs(to!)) {
+          return false;
+        }
       }
     }
     return true;

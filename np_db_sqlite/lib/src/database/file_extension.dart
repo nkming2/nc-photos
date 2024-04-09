@@ -143,12 +143,10 @@ extension SqliteDbFileExtension on SqliteDb {
       }
       return q.build();
     });
-    final dateTime = accountFiles.bestDateTime.unixepoch;
-    query
-      ..where(dateTime.isBetweenValues(
-          range.from.millisecondsSinceEpoch ~/ 1000,
-          (range.to.millisecondsSinceEpoch ~/ 1000) - 1))
-      ..orderBy([OrderingTerm.desc(dateTime)]);
+    accountFiles.bestDateTime
+        .isBetweenTimeRange(range)
+        ?.let((e) => query.where(e));
+    query.orderBy([OrderingTerm.desc(accountFiles.bestDateTime.unixepoch)]);
     return _mapCompleteFile(query);
   }
 

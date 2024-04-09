@@ -18,6 +18,7 @@ import 'package:np_db_sqlite/src/files_query_builder.dart';
 import 'package:np_db_sqlite/src/isolate_util.dart';
 import 'package:np_db_sqlite/src/k.dart' as k;
 import 'package:np_db_sqlite/src/table.dart';
+import 'package:np_db_sqlite/src/util.dart';
 import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_platform_lock/np_platform_lock.dart';
 import 'package:np_platform_util/np_platform_util.dart';
