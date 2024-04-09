@@ -21,6 +21,7 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 
@@ -307,7 +308,12 @@ class MockFileMemoryRepo extends FileRepo {
 class MockFileDataSource2 implements FileDataSource2 {
   @override
   Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath) {
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    int? offset,
+    int? limit,
+  }) {
     throw UnimplementedError();
   }
 
@@ -337,7 +343,12 @@ class MockFileMemoryDataSource2 extends MockFileDataSource2 {
 
   @override
   Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath) async* {
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    int? offset,
+    int? limit,
+  }) async* {
     yield files.where((f) {
       if (account.roots.any((r) => file_util.isOrUnderDirPath(
           f.fdPath, file_util.unstripPath(account, r)))) {

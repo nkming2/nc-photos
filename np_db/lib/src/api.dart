@@ -347,6 +347,8 @@ abstract class NpDb {
     String? location,
     bool? isFavorite,
     List<String>? mimes,
+    TimeRange? timeRange,
+    int? offset,
     int? limit,
   });
 

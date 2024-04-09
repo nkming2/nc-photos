@@ -444,6 +444,8 @@ class NpDbSqlite implements NpDb {
     String? location,
     bool? isFavorite,
     List<String>? mimes,
+    TimeRange? timeRange,
+    int? offset,
     int? limit,
   }) async {
     final sqlObjs = await _db.use((db) async {
@@ -457,6 +459,8 @@ class NpDbSqlite implements NpDb {
         location: location,
         isFavorite: isFavorite,
         mimes: mimes,
+        timeRange: timeRange,
+        offset: offset,
         limit: limit,
       );
     });

@@ -402,6 +402,8 @@ extension SqliteDbFileExtension on SqliteDb {
     String? location,
     bool? isFavorite,
     List<String>? mimes,
+    TimeRange? timeRange,
+    int? offset,
     int? limit,
   }) async {
     _log.info(
@@ -414,6 +416,8 @@ extension SqliteDbFileExtension on SqliteDb {
       "location: $location, "
       "isFavorite: $isFavorite, "
       "mimes: $mimes, "
+      "timeRange: $timeRange, "
+      "offset: $offset, "
       "limit: $limit",
     );
 
@@ -457,13 +461,13 @@ extension SqliteDbFileExtension on SqliteDb {
             if (dirIds != null) {
               for (final i in dirIds) {
                 q.byOrDirRowId(i);
-          }
-        }
+              }
+            }
           }
         } else {
-        if (dirIds != null) {
-          for (final i in dirIds) {
-            q.byOrDirRowId(i);
+          if (dirIds != null) {
+            for (final i in dirIds) {
+              q.byOrDirRowId(i);
             }
           }
         }
@@ -490,7 +494,12 @@ extension SqliteDbFileExtension on SqliteDb {
       }
       query.orderBy([OrderingTerm.desc(accountFiles.bestDateTime)]);
       if (limit != null) {
-        query.limit(limit);
+        query.limit(limit, offset: offset);
+      }
+      if (timeRange != null) {
+        accountFiles.bestDateTime
+            .isBetweenTimeRange(timeRange)
+            ?.let((e) => query.where(e));
       }
       return query
           .map((r) => FileDescriptor(
