@@ -112,3 +112,7 @@ extension IterableFlattenExtension<T> on Iterable<Iterable<T>> {
   /// This function originated in the xml package
   Iterable<T> flatten() => expand((values) => values);
 }
+
+extension IterableComparableExtension<T extends Comparable<T>> on Iterable<T> {
+  List<T> sortedBySelf() => sortedBy((e) => e);
+}
