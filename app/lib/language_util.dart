@@ -68,6 +68,8 @@ final supportedLanguages = {
       _AppLanguageEnum.russian.index, "Русский", "Russian", const Locale("ru")),
   _AppLanguageEnum.spanish.index: AppLanguage(
       _AppLanguageEnum.spanish.index, "Español", "Spanish", const Locale("es")),
+  _AppLanguageEnum.turkish.index: AppLanguage(
+      _AppLanguageEnum.turkish.index, "Türkçe", "Turkish", const Locale("tr")),
 };
 
 enum _AppLanguageEnum {
@@ -88,6 +90,7 @@ enum _AppLanguageEnum {
   italian,
   dutch,
   catalan,
+  turkish,
 }
 
 AppLanguage _getSelectedLanguage() {
