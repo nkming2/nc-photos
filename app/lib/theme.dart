@@ -125,9 +125,10 @@ ColorScheme _getColorScheme(
       seedColor = defaultSeedColor;
     }
   }
-  return ColorScheme.fromSeed(
-    seedColor: seedColor,
+  return SeedColorScheme.fromSeeds(
     brightness: brightness,
+    primaryKey: seedColor,
+    tones: FlexTones.oneHue(brightness),
   );
 }
 
