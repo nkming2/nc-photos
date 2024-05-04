@@ -401,6 +401,7 @@ extension SqliteDbFileExtension on SqliteDb {
     List<String>? relativePathKeywords,
     String? location,
     bool? isFavorite,
+    bool? isArchived,
     List<String>? mimes,
     TimeRange? timeRange,
     int? offset,
@@ -415,6 +416,7 @@ extension SqliteDbFileExtension on SqliteDb {
       "relativePathKeywords: $relativePathKeywords, "
       "location: $location, "
       "isFavorite: $isFavorite, "
+      "isArchived: $isArchived, "
       "mimes: $mimes, "
       "timeRange: $timeRange, "
       "offset: $offset, "
@@ -476,6 +478,9 @@ extension SqliteDbFileExtension on SqliteDb {
         }
         if (isFavorite != null) {
           q.byFavorite(isFavorite);
+        }
+        if (isArchived != null) {
+          q.byArchived(isArchived);
         }
         return q.build();
       });

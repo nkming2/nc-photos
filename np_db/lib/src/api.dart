@@ -346,6 +346,7 @@ abstract class NpDb {
     List<String>? relativePathKeywords,
     String? location,
     bool? isFavorite,
+    bool? isArchived,
     List<String>? mimes,
     TimeRange? timeRange,
     int? offset,

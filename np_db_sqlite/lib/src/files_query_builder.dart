@@ -87,6 +87,10 @@ class FilesQueryBuilder {
     _byFavorite = favorite;
   }
 
+  void byArchived(bool archived) {
+    _byArchived = archived;
+  }
+
   void byDirRowId(int dirRowId) {
     _byDirRowId = dirRowId;
   }
@@ -188,6 +192,15 @@ class FilesQueryBuilder {
             db.accountFiles.isFavorite.isNull());
       }
     }
+    if (_byArchived != null) {
+      if (_byArchived!) {
+        query.where(db.accountFiles.isArchived.equals(true));
+      } else {
+        // null are treated as false
+        query.where(db.accountFiles.isArchived.equals(false) |
+            db.accountFiles.isArchived.isNull());
+      }
+    }
     if (_byDirRowId != null) {
       query.where(db.dirFiles.dir.equals(_byDirRowId!));
     }
@@ -232,6 +245,7 @@ class FilesQueryBuilder {
   List<int>? _byOrDirRowIds;
   List<String>? _byMimePatterns;
   bool? _byFavorite;
+  bool? _byArchived;
   int? _byDirRowId;
   int? _byServerRowId;
   String? _byLocation;
