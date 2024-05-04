@@ -76,7 +76,11 @@ extension DateExtension on Date {
     return day < other.day;
   }
 
+  bool operator <(Date other) => isBefore(other);
+
   bool isBeforeOrAt(Date other) => !isAfter(other);
+
+  bool operator <=(Date other) => isBeforeOrAt(other);
 
   bool isAfter(Date other) {
     if (year < other.year) {
@@ -92,7 +96,17 @@ extension DateExtension on Date {
     return day > other.day;
   }
 
+  bool operator >(Date other) => isAfter(other);
+
   bool isAfterOrAt(Date other) => !isBefore(other);
+
+  bool operator >=(Date other) => isAfterOrAt(other);
+
+  /// Return the earlier date
+  Date min(Date other) => isBefore(other) ? this : other;
+
+  /// Return the later date
+  Date max(Date other) => isAfter(other) ? this : other;
 }
 
 extension DateTimeDateExtension on DateTime {
